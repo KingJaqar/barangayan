@@ -24,8 +24,20 @@ export default function AppTabs() {
           <TabTrigger name="home" href="/" asChild>
             <TabButton>Home</TabButton>
           </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
+          <TabTrigger name="services" href="/services" asChild>
+            <TabButton>Services</TabButton>
+          </TabTrigger>
+          <TabTrigger name="maps" href="/maps" asChild>
+            <TabButton>Maps</TabButton>
+          </TabTrigger>
+          <TabTrigger name="health" href="/health" asChild>
+            <TabButton>Health</TabButton>
+          </TabTrigger>
+          <TabTrigger name="reports" href="/reports" asChild>
+            <TabButton>Reports</TabButton>
+          </TabTrigger>
+          <TabTrigger name="settings" href="/settings" asChild>
+            <TabButton>Settings</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>
@@ -55,7 +67,7 @@ export function CustomTabList(props: TabListProps) {
     <View {...props} style={styles.tabListContainer}>
       <ThemedView type="backgroundElement" style={styles.innerContainer}>
         <ThemedText type="smallBold" style={styles.brandText}>
-          Expo Starter
+          Barangayan
         </ThemedText>
 
         {props.children}

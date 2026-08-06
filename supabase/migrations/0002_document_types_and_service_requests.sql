@@ -17,7 +17,9 @@ create table public.document_types (
   processing_target_hours integer not null default 24 check (processing_target_hours > 0),
   requirements text[] not null default '{}'::text[],
   is_active boolean not null default true,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  -- Also gives seed.sql a natural idempotency key (ON CONFLICT (barangay_id, name)).
+  unique (barangay_id, name)
 );
 
 alter table public.document_types enable row level security;
