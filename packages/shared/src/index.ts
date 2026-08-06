@@ -2,6 +2,7 @@ export * from './types/domain';
 export * from './types/database';
 export * from './types/map-bridge';
 
+export * from './schemas/auth';
 export * from './schemas/request-form';
 export * from './schemas/incident-report';
 export * from './schemas/drive-registration';
