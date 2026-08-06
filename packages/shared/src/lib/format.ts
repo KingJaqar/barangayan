@@ -21,6 +21,11 @@ export function formatDateTime(iso: string): string {
   }).format(new Date(iso));
 }
 
+/** Short, locale-consistent date-only formatting (no time) — parallel to formatDateTime. */
+export function formatDate(iso: string): string {
+  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium' }).format(new Date(iso));
+}
+
 /**
  * Buckets a document_types.processing_target_hours value into a human-readable
  * estimate. General/data-driven, not tied to any specific seeded document type — renders

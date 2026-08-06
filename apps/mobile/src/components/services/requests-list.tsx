@@ -1,4 +1,6 @@
+import { Ionicons } from '@expo/vector-icons';
 import type { Tables } from '@barangayan/shared';
+import { formatDate } from '@barangayan/shared';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -8,12 +10,14 @@ import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { getDocumentIcon } from '@/constants/document-icons';
+import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type ServiceRequest = Tables<'service_requests'> & {
-  document_types: Pick<Tables<'document_types'>, 'name'> | null;
+  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours'> | null;
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -22,6 +26,19 @@ const STATUS_LABEL: Record<string, string> = {
   completed: 'Ready for Pickup',
   cancelled: 'Cancelled',
 };
+
+// Fixed brand green/blue — deliberately NOT theme.primary (see status-badge.tsx's own
+// comment on this). theme.primary is the user's Settings > App Theme accent color, so
+// status semantics must never key off it.
+const STATUS_GREEN = Colors.light.primary; // '#0F6E5B' — same green StatusBadge uses
+const STATUS_BLUE = '#2563EB'; // same literal StatusBadge uses for in_progress
+
+interface RequestStatusConfig {
+  icon: keyof typeof Ionicons.glyphMap;
+  color: string;
+  /** true only for 'completed' — pill renders as a solid fill, not a tint. */
+  solid: boolean;
+}
 
 type Filter = 'all' | 'active' | 'ready' | 'history';
 
@@ -34,8 +51,47 @@ function matchesFilter(status: string, filter: Filter): boolean {
   return status === 'cancelled';
 }
 
+/** 0-1 fill fraction for the progress bar, derived from real created_at/target-hours data
+ * — never called for 'cancelled' (no progress row rendered for that status). */
+function progressFraction(request: ServiceRequest): number {
+  if (request.status === 'completed') return 1;
+  const targetHours = request.document_types?.processing_target_hours ?? 24;
+  const elapsedHours = (Date.now() - new Date(request.created_at).getTime()) / 3_600_000;
+  const raw = targetHours > 0 ? elapsedHours / targetHours : 0;
+  // Floor so the bar never looks broken/empty; cap below 1 so only a real 'completed'
+  // status ever shows a full bar (100% must mean "done", not "on track").
+  const min = request.status === 'submitted' ? 0.08 : 0.15;
+  return Math.min(Math.max(raw, min), 0.95);
+}
+
+/** "Est. N hour(s)/day(s)" countdown for the progress row's trailing label — a live
+ * per-request estimate, distinct from formatProcessingTime's static catalog bucketing.
+ * Not called for 'completed' (always "100%") or 'cancelled' (no progress row). */
+function estimateLabel(request: ServiceRequest): string {
+  const targetHours = request.document_types?.processing_target_hours ?? 24;
+  const elapsedHours = (Date.now() - new Date(request.created_at).getTime()) / 3_600_000;
+  const remainingHours = Math.max(targetHours - elapsedHours, 0);
+  if (remainingHours <= 0) return 'Est. any moment';
+  if (remainingHours <= 24) {
+    const hours = Math.ceil(remainingHours);
+    return `Est. ${hours} hour${hours === 1 ? '' : 's'}`;
+  }
+  const days = Math.ceil(remainingHours / 24);
+  return `Est. ${days} day${days === 1 ? '' : 's'}`;
+}
+
+function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
+  const theme = useTheme();
+  return (
+    <View style={[styles.progressTrack, { backgroundColor: theme.backgroundSelected }]}>
+      <View style={[styles.progressFill, { backgroundColor: color, width: `${fraction * 100}%` }]} />
+    </View>
+  );
+}
+
 export function RequestsList() {
   const { session } = useAuth();
+  const theme = useTheme();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
 
@@ -54,7 +110,7 @@ export function RequestsList() {
     function load() {
       supabase
         .from('service_requests')
-        .select('*, document_types(name)')
+        .select('*, document_types(name, processing_target_hours)')
         .eq('resident_id', session!.user.id)
         .order('created_at', { ascending: false })
         .then(({ data }) => setRequests((data as ServiceRequest[]) ?? []));
@@ -68,6 +124,16 @@ export function RequestsList() {
 
   const filtered = requests?.filter((r) => matchesFilter(r.status, filter)) ?? [];
 
+  function statusConfig(status: string): RequestStatusConfig {
+    const config: Record<string, RequestStatusConfig> = {
+      submitted: { icon: 'time-outline', color: theme.textSecondary, solid: false },
+      in_progress: { icon: 'sync-outline', color: STATUS_BLUE, solid: false },
+      completed: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: true },
+      cancelled: { icon: 'close-circle-outline', color: theme.accentRed, solid: false },
+    };
+    return config[status] ?? { icon: 'help-circle-outline', color: theme.textSecondary, solid: false };
+  }
+
   if (!session) {
     return (
       <View style={styles.container}>
@@ -78,6 +144,15 @@ export function RequestsList() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <ThemedText type="subtitle" style={{ color: theme.primary }}>
+          My Requests
+        </ThemedText>
+        <ThemedText type="small" themeColor="textSecondary">
+          Track your service applications
+        </ThemedText>
+      </View>
+
       <SegmentedControl
         segments={[
           { key: 'all', label: 'All' },
@@ -87,6 +162,7 @@ export function RequestsList() {
         ]}
         activeKey={filter}
         onChange={setFilter}
+        variant="outline"
       />
 
       {requests === null ? (
@@ -95,23 +171,67 @@ export function RequestsList() {
         <PlaceholderPanel label="No requests in this filter yet." />
       ) : (
         <View style={styles.list}>
-          {filtered.map((request) => (
-            <Link key={request.id} href={`/services/requests/${request.id}`} asChild>
-              <Pressable>
-                <ThemedView type="backgroundElement" style={styles.card}>
-                  <View style={styles.cardInfo}>
-                    <ThemedText type="smallBold">
-                      {request.document_types?.name ?? 'Document Request'}
-                    </ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                      Ref #{request.reference_number}
-                    </ThemedText>
-                  </View>
-                  <ThemedText type="small">{STATUS_LABEL[request.status] ?? request.status}</ThemedText>
-                </ThemedView>
-              </Pressable>
-            </Link>
-          ))}
+          {filtered.map((request) => {
+            const config = statusConfig(request.status);
+            return (
+              <Link key={request.id} href={`/services/requests/${request.id}`} asChild>
+                <Pressable>
+                  <ThemedView style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+                    <View style={styles.cardTop}>
+                      <View style={[styles.iconCircle, { backgroundColor: `${config.color}26` }]}>
+                        <Ionicons
+                          name={getDocumentIcon(request.document_types?.name ?? '')}
+                          size={20}
+                          color={config.color}
+                        />
+                      </View>
+                      <View style={styles.cardInfo}>
+                        <ThemedText type="smallBold">
+                          {request.document_types?.name ?? 'Document Request'}
+                        </ThemedText>
+                        <ThemedText type="small" themeColor="textSecondary">
+                          Req ID: #{request.reference_number} • {formatDate(request.created_at)}
+                        </ThemedText>
+                      </View>
+                    </View>
+
+                    <View
+                      style={[
+                        styles.pill,
+                        { backgroundColor: config.solid ? config.color : `${config.color}26` },
+                      ]}>
+                      <Ionicons
+                        name={config.icon}
+                        size={12}
+                        color={config.solid ? theme.onPrimary : config.color}
+                      />
+                      <ThemedText
+                        type="small"
+                        style={{ color: config.solid ? theme.onPrimary : config.color }}>
+                        {STATUS_LABEL[request.status] ?? request.status}
+                      </ThemedText>
+                    </View>
+
+                    {request.status !== 'cancelled' ? (
+                      <View style={styles.progressRow}>
+                        <ProgressBar fraction={progressFraction(request)} color={config.color} />
+                        <ThemedText
+                          type="small"
+                          themeColor={request.status === 'completed' ? undefined : 'textSecondary'}
+                          style={
+                            request.status === 'completed'
+                              ? { color: STATUS_GREEN, fontWeight: '700' }
+                              : undefined
+                          }>
+                          {request.status === 'completed' ? '100%' : estimateLabel(request)}
+                        </ThemedText>
+                      </View>
+                    ) : null}
+                  </ThemedView>
+                </Pressable>
+              </Link>
+            );
+          })}
         </View>
       )}
     </View>
@@ -123,17 +243,56 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     gap: Spacing.three,
   },
+  header: {
+    gap: Spacing.half,
+  },
   list: {
     gap: Spacing.two,
   },
   card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: Spacing.three,
+    borderWidth: 1,
     borderRadius: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.two,
+  },
+  cardTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  iconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardInfo: {
+    flex: 1,
     gap: Spacing.half,
+  },
+  pill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.half,
+    borderRadius: Spacing.four,
+    alignSelf: 'flex-start',
+  },
+  progressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 6,
+    borderRadius: 3,
   },
 });
