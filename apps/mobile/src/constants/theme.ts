@@ -35,6 +35,12 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+// Green, blue, red, purple — the one real "App Theme" accent palette, shared by both the
+// Onboarding Personalization screen and Settings so a color picked during onboarding
+// still shows as the selected swatch later in Settings (and vice versa). The first entry
+// matches use-theme-preference.tsx's DEFAULT_ACCENT_COLOR.
+export const ACCENT_COLORS = ['#0F6E5B', '#2563EB', '#DC2626', '#7C3AED'];
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

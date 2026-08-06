@@ -35,6 +35,14 @@ interface AuthContextValue {
    */
   isGuest: boolean;
   setGuest: (value: boolean) => void;
+  /**
+   * Settings > Logout. Flips into Guest Mode instead of bouncing the user back to the
+   * Onboarding welcome screen — signs out, then sets isGuest so Stack.Protected's
+   * appReachable (session || isGuest) stays true throughout and (app) never unmounts.
+   * The caller (Settings) stays on its current screen; only the session-gated content
+   * within it switches to the guest view.
+   */
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -46,6 +54,7 @@ const AuthContext = createContext<AuthContextValue>({
   setOnboarding: () => {},
   isGuest: false,
   setGuest: () => {},
+  logout: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -69,15 +78,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === 'PASSWORD_RECOVERY') {
         setIsPasswordRecovery(true);
       }
-      // A future Log Out action should return to the real auth flow, not silently fall
-      // back into guest browsing from a stale isGuest=true.
-      if (event === 'SIGNED_OUT') {
-        setIsGuest(false);
-      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  async function logout() {
+    // Set isGuest before awaiting signOut so appReachable (session || isGuest) never dips
+    // to false in the gap while the signOut network round-trip is in flight — otherwise
+    // Stack.Protected would briefly consider (app) unreachable and bounce the user to
+    // (auth) instead of leaving them on their current Settings screen.
+    setIsGuest(true);
+    try {
+      // signOut()'s server round-trip revokes the refresh token, but a caller showing a
+      // blocking "Logging out..." indicator must never be stuck behind it forever if the
+      // network stalls — race it against a timeout. Either way the user is already local
+      // Guest Mode (isGuest, above) by the time this settles; a stalled revoke just means
+      // the old refresh token dies later server-side (on its own expiry) instead of
+      // immediately, not that anything in this app stays signed in.
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((resolve) => setTimeout(resolve, 6000)),
+      ]);
+    } catch (error) {
+      console.warn('supabase.auth.signOut() failed (already switched to local Guest Mode):', error);
+    }
+  }
 
   return (
     <AuthContext.Provider
@@ -90,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setOnboarding: setIsOnboarding,
         isGuest,
         setGuest: setIsGuest,
+        logout,
       }}>
       {children}
     </AuthContext.Provider>

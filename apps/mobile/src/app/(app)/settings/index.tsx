@@ -6,37 +6,39 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
+import { LoadingOverlay } from '@/components/loading-overlay';
 import { PreferenceToggle } from '@/components/preference-toggle';
 import { SegmentedControl } from '@/components/segmented-control';
 import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { ACCENT_COLORS, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { useThemePreference, type ThemePreference } from '@/hooks/use-theme-preference';
-import { supabase } from '@/lib/supabase';
-
-// Green, blue, red, purple — matches the reference screenshots' 4 accent swatches (a
-// different set from the presentational-only Personalization onboarding screen).
-const ACCENT_COLORS = ['#0F6E5B', '#2563EB', '#DC2626', '#7C3AED'];
 
 export default function SettingsScreen() {
-  const { session } = useAuth();
+  const { session, logout } = useAuth();
   const { profile } = useProfile();
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { themePreference, scheme, accentColor, setThemePreference, setAccentColor } = useThemePreference();
+  const { scheme, accentColor, setThemePreference, setAccentColor } = useThemePreference();
 
   // Presentational only for this pass, per the plan's explicit scope call — App Theme is
   // the one Preferences control that's real.
   const [pushEnabled, setPushEnabled] = useState(true);
   const [smsEnabled, setSmsEnabled] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   async function handleLogout() {
-    await supabase.auth.signOut();
+    // Stays on this screen the whole time — logout() flips into Guest Mode instead of
+    // returning to Onboarding, so this just re-renders with the guest view once it
+    // resolves (see useAuth's logout for why isGuest is set before the signOut await).
+    setIsLoggingOut(true);
+    await logout();
+    setIsLoggingOut(false);
   }
 
   return (
@@ -187,6 +189,8 @@ export default function SettingsScreen() {
           </Card>
         </Section>
       </ScrollView>
+
+      <LoadingOverlay visible={isLoggingOut} label="Logging out..." />
     </View>
   );
 }

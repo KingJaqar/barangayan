@@ -1,7 +1,6 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { useColorScheme } from 'react-native';
 
-import { Colors } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 // 6-tab bottom bar confirmed against the design file (see the plan's Design Reference
 // Review) — Home, Services, Maps, Health, Reports, Settings. "Maps" is the Emergency &
@@ -9,14 +8,17 @@ import { Colors } from '@/constants/theme';
 // section (titled "Reports and Announcements" — Announcements lives as a sub-tab there,
 // not its own bottom-tab item).
 export default function AppTabs() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  // useTheme() resolves the app's own theme preference (Settings > App Theme), not just
+  // the OS scheme — so the tab bar's colors, and the active tab's accent-colored icon/
+  // label, stay in sync with the rest of the app instead of only following the device.
+  const theme = useTheme();
 
   return (
     <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
+      backgroundColor={theme.background}
+      indicatorColor={theme.backgroundSelected}
+      iconColor={{ default: theme.textSecondary, selected: theme.primary }}
+      labelStyle={{ default: { color: theme.textSecondary }, selected: { color: theme.primary } }}>
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="house" md="home" />

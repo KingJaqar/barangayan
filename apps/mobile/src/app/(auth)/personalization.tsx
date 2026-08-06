@@ -1,24 +1,23 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { ACCENT_COLORS, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useThemePreference } from '@/hooks/use-theme-preference';
 
-const ACCENT_COLORS = ['#0F6E5B', '#6C5CE7', '#F39C12', '#E84393'];
-
-// Presentational for now — the app follows the OS color scheme (useColorScheme), and
-// there's no per-user theme-preference storage yet. Matches the design's own copy
-// ("You can change this anytime in Settings.") — real persistence is a Settings-tab
-// concern, not part of this Auth-flow task.
+// Real, not presentational — wired straight into ThemePreferenceProvider. There's no
+// session yet at this point in the flow, so setThemePreference/setAccentColor apply
+// locally for this app session only (same "guest" behavior the provider already gives
+// Settings' guest view); it becomes a persisted account preference automatically the
+// moment registration creates a real profile row. Shares ACCENT_COLORS with Settings so a
+// color picked here still shows as the selected swatch there.
 export default function PersonalizationScreen() {
   const router = useRouter();
   const theme = useTheme();
-  const [scheme, setScheme] = useState<'light' | 'dark'>('light');
-  const [accent, setAccent] = useState(ACCENT_COLORS[0]);
+  const { scheme, accentColor, setThemePreference, setAccentColor } = useThemePreference();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -32,7 +31,7 @@ export default function PersonalizationScreen() {
           {(['light', 'dark'] as const).map((option) => (
             <Pressable
               key={option}
-              onPress={() => setScheme(option)}
+              onPress={() => setThemePreference(option)}
               style={[styles.schemeOption, scheme === option && { backgroundColor: theme.backgroundSelected }]}>
               <ThemedText type="small" style={styles.capitalize}>
                 {option}
@@ -46,12 +45,12 @@ export default function PersonalizationScreen() {
         </ThemedText>
         <View style={styles.swatchRow}>
           {ACCENT_COLORS.map((color) => (
-            <Pressable key={color} onPress={() => setAccent(color)} style={styles.swatchPressable}>
+            <Pressable key={color} onPress={() => setAccentColor(color)} style={styles.swatchPressable}>
               <View
                 style={[
                   styles.swatch,
                   { backgroundColor: color },
-                  accent === color && styles.swatchSelected,
+                  accentColor === color && [styles.swatchSelected, { borderColor: theme.text }],
                 ]}
               />
             </Pressable>
@@ -116,8 +115,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   swatchSelected: {
+    // borderColor applied inline (theme.text) — a fixed black border would be invisible
+    // against a dark-mode background.
     borderWidth: 3,
-    borderColor: '#000',
   },
   note: {
     marginTop: Spacing.two,
