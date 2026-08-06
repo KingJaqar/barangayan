@@ -1,10 +1,10 @@
 import type { Tables } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/lib/supabase';
 
-type Profile = Tables<'profiles'> & { barangays: Pick<Tables<'barangays'>, 'name'> | null };
+export type Profile = Tables<'profiles'> & { barangays: Pick<Tables<'barangays'>, 'name'> | null };
 
 /**
  * The logged-in resident's own profile row (RLS: auth.uid() = id), joined with their
@@ -17,32 +17,28 @@ export function useProfile() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const refetch = useCallback(() => {
     if (!session) {
       setProfile(null);
       setIsLoading(false);
       return;
     }
 
-    let cancelled = false;
     setIsLoading(true);
-
-    supabase
+    return supabase
       .from('profiles')
       .select('*, barangays(name)')
       .eq('id', session.user.id)
       .single()
       .then(({ data }) => {
-        if (!cancelled) {
-          setProfile(data as Profile | null);
-          setIsLoading(false);
-        }
+        setProfile(data as Profile | null);
+        setIsLoading(false);
       });
-
-    return () => {
-      cancelled = true;
-    };
   }, [session]);
 
-  return { profile, isLoading };
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  return { profile, isLoading, refetch };
 }
