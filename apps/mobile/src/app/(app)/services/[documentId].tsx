@@ -1,5 +1,5 @@
 import type { Tables } from '@barangayan/shared';
-import { formatCentavosAsPHP } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
@@ -66,8 +66,7 @@ export default function DocumentDetailScreen() {
         <ThemedView type="backgroundElement" style={styles.section}>
           <ThemedText type="smallBold">Processing & Pickup</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
-            Estimated time: {Math.ceil(doc.processing_target_hours / 24)} Working Day
-            {doc.processing_target_hours > 24 ? 's' : ''}
+            Estimated time: {formatProcessingTime(doc.processing_target_hours)}
           </ThemedText>
         </ThemedView>
       </ScrollView>

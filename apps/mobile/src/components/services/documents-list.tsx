@@ -1,5 +1,6 @@
+import { Ionicons } from '@expo/vector-icons';
 import type { Tables } from '@barangayan/shared';
-import { formatCentavosAsPHP } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -7,13 +8,16 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { getDocumentIcon } from '@/constants/document-icons';
 import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
 
 /** Real document_types catalog for the resident's own barangay (RLS-scoped). */
 export function DocumentsList() {
+  const theme = useTheme();
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
 
   useEffect(() => {
@@ -37,18 +41,34 @@ export function DocumentsList() {
       {documents.map((doc) => (
         <Link key={doc.id} href={`/services/${doc.id}`} asChild>
           <Pressable>
-            <ThemedView type="backgroundElement" style={styles.card}>
+            <ThemedView style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+              <View style={[styles.iconCircle, { backgroundColor: `${theme.primary}26` }]}>
+                <Ionicons name={getDocumentIcon(doc.name)} size={20} color={theme.primary} />
+              </View>
+
               <View style={styles.cardInfo}>
                 <ThemedText type="smallBold">{doc.name}</ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  {doc.processing_target_hours <= 24
-                    ? '1 Working Day'
-                    : `${Math.ceil(doc.processing_target_hours / 24)} Working Days`}
-                </ThemedText>
+                <View style={styles.processingRow}>
+                  <Ionicons name="time-outline" size={12} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary">
+                    {formatProcessingTime(doc.processing_target_hours)}
+                  </ThemedText>
+                </View>
               </View>
-              <ThemedText type="smallBold">
-                {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
-              </ThemedText>
+
+              {doc.fee_centavos === 0 ? (
+                <View style={[styles.pricePill, styles.pricePillFree, { borderColor: theme.textSecondary }]}>
+                  <ThemedText type="small" themeColor="textSecondary">
+                    Free
+                  </ThemedText>
+                </View>
+              ) : (
+                <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
+                  <ThemedText type="smallBold" style={{ color: theme.primary }}>
+                    {formatCentavosAsPHP(doc.fee_centavos)}
+                  </ThemedText>
+                </View>
+              )}
             </ThemedView>
           </Pressable>
         </Link>
@@ -64,12 +84,35 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: Spacing.three,
     padding: Spacing.three,
     borderRadius: Spacing.three,
+    borderWidth: 1,
+  },
+  iconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardInfo: {
+    flex: 1,
     gap: Spacing.half,
+  },
+  processingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  pricePill: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.half,
+    borderRadius: Spacing.four,
+    alignSelf: 'flex-start',
+  },
+  pricePillFree: {
+    borderWidth: 1,
   },
 });

@@ -4,8 +4,8 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Fragment, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppHeader } from '@/components/app-header';
 import { Avatar } from '@/components/avatar';
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
@@ -55,7 +55,6 @@ export default function HomeScreen() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
@@ -90,16 +89,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.screen}>
-      <View style={[styles.banner, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <Image
-          source={require('@/assets/logo/barangayan-logo-1024.png')}
-          style={styles.bannerLogo}
-          contentFit="contain"
-        />
-        <ThemedText type="smallBold" style={[styles.bannerWordmark, { color: theme.onPrimary }]}>
-          Barangayan
-        </ThemedText>
-      </View>
+      <AppHeader />
 
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
         <View style={styles.profileRow}>
@@ -240,22 +230,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  },
-  banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    paddingHorizontal: Spacing.four,
-    paddingBottom: Spacing.three,
-  },
-  bannerLogo: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  bannerWordmark: {
-    fontFamily: Fonts.serif,
-    fontSize: 20,
   },
   content: {
     padding: Spacing.four,

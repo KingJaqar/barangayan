@@ -20,3 +20,15 @@ export function formatDateTime(iso: string): string {
     timeStyle: 'short',
   }).format(new Date(iso));
 }
+
+/**
+ * Buckets a document_types.processing_target_hours value into a human-readable
+ * estimate. General/data-driven, not tied to any specific seeded document type — renders
+ * correctly for any processing_target_hours value, now or in the future.
+ */
+export function formatProcessingTime(hours: number): string {
+  if (hours <= 24) return 'Same Day';
+  if (hours <= 48) return '1-2 Working Days';
+  if (hours <= 120) return '3-5 Working Days';
+  return `${Math.ceil(hours / 24)} Working Days`;
+}
