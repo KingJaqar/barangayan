@@ -3,6 +3,7 @@ import { formatDateTime } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -40,6 +41,13 @@ export function LogsList() {
       .then(({ data }) => setRequests((data as ServiceRequest[]) ?? []));
   }, [session]);
 
+  if (!session) {
+    return (
+      <View style={styles.list}>
+        <GuestPrompt label="Log in to see your activity." />
+      </View>
+    );
+  }
   if (requests === null) {
     return <PlaceholderPanel label="Loading activity…" />;
   }

@@ -4,11 +4,13 @@ import { Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function AuthChoiceScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { setGuest } = useAuth();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -34,9 +36,14 @@ export default function AuthChoiceScreen() {
           />
           <ChoiceRow
             title="I'll Sign In Later"
-            subtitle="Browse public community updates (coming soon)"
-            disabled
-            onPress={() => {}}
+            subtitle="Browse public community updates"
+            onPress={() => {
+              // Unlike the other transitions in this app, this one needs an explicit
+              // navigate: entering guest mode makes BOTH (app) and (auth) reachable at
+              // once (see _layout.tsx), so nothing auto-redirects away from this screen.
+              setGuest(true);
+              router.replace('/');
+            }}
           />
         </View>
       </View>

@@ -3,6 +3,7 @@ import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
@@ -66,6 +67,14 @@ export function RequestsList() {
   }, [session]);
 
   const filtered = requests?.filter((r) => matchesFilter(r.status, filter)) ?? [];
+
+  if (!session) {
+    return (
+      <View style={styles.container}>
+        <GuestPrompt label="Log in to see your requests." />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

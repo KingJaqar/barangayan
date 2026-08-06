@@ -25,6 +25,16 @@ interface AuthContextValue {
    */
   isOnboarding: boolean;
   setOnboarding: (value: boolean) => void;
+  /**
+   * "I'll Sign In Later" on the Auth Choice screen — lets Stack.Protected's guard admit
+   * (app) with no real session, for real read-only browsing (Announcements, the Documents
+   * catalog; see the 0005 migration's anon RLS policies). Cleared implicitly once a real
+   * session exists (nothing should ever check isGuest in isolation, only alongside
+   * !!session) — logging in from Settings just makes the same tabs show real personal
+   * data, no redirect dance.
+   */
+  isGuest: boolean;
+  setGuest: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -34,6 +44,8 @@ const AuthContext = createContext<AuthContextValue>({
   setPasswordRecovery: () => {},
   isOnboarding: false,
   setOnboarding: () => {},
+  isGuest: false,
+  setGuest: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -41,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [isOnboarding, setIsOnboarding] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -56,6 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === 'PASSWORD_RECOVERY') {
         setIsPasswordRecovery(true);
       }
+      // A future Log Out action should return to the real auth flow, not silently fall
+      // back into guest browsing from a stale isGuest=true.
+      if (event === 'SIGNED_OUT') {
+        setIsGuest(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -70,6 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setPasswordRecovery: setIsPasswordRecovery,
         isOnboarding,
         setOnboarding: setIsOnboarding,
+        isGuest,
+        setGuest: setIsGuest,
       }}>
       {children}
     </AuthContext.Provider>

@@ -9,6 +9,7 @@ import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
@@ -16,6 +17,7 @@ type DocumentType = Tables<'document_types'>;
 export default function DocumentDetailScreen() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
   const router = useRouter();
+  const { session } = useAuth();
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
 
   useEffect(() => {
@@ -71,10 +73,16 @@ export default function DocumentDetailScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <PrimaryButton
-          label="Request This Document"
-          onPress={() => router.push(`/services/request/${doc.id}`)}
-        />
+        {session ? (
+          <PrimaryButton
+            label="Request This Document"
+            onPress={() => router.push(`/services/request/${doc.id}`)}
+          />
+        ) : (
+          // Submitting a request requires an identity — guests get routed to Login
+          // instead of the Request Form.
+          <PrimaryButton label="Log In to Request" onPress={() => router.push('/(auth)/login')} />
+        )}
       </View>
     </SafeAreaView>
   );

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GuestPrompt } from '@/components/guest-prompt';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, Spacing } from '@/constants/theme';
@@ -41,7 +42,23 @@ export default function HomeScreen() {
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
 
   useEffect(() => {
-    if (!session) return;
+    // Real guest browsing per the 0005 migration's anon RLS policy — this must run
+    // regardless of session, or a guest would never see the Announcements preview.
+    supabase
+      .from('announcements')
+      .select('*')
+      .order('published_at', { ascending: false })
+      .limit(1)
+      .then(({ data }) => setAnnouncement(data?.[0] ?? null));
+  }, []);
+
+  useEffect(() => {
+    // Personal data — service_requests stays authenticated + auth.uid()-scoped, so this
+    // only runs (and only can succeed) once a real session exists.
+    if (!session) {
+      setRequests([]);
+      return;
+    }
 
     supabase
       .from('service_requests')
@@ -50,20 +67,13 @@ export default function HomeScreen() {
       .order('created_at', { ascending: false })
       .limit(3)
       .then(({ data }) => setRequests((data as ServiceRequest[]) ?? []));
-
-    supabase
-      .from('announcements')
-      .select('*')
-      .order('published_at', { ascending: false })
-      .limit(1)
-      .then(({ data }) => setAnnouncement(data?.[0] ?? null));
   }, [session]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
         <ThemedText type="title" style={styles.greetingName}>
-          {profile?.full_name ?? 'Welcome'}
+          {session ? (profile?.full_name ?? 'Welcome') : 'Welcome, Guest'}
         </ThemedText>
         <ThemedText themeColor="textSecondary">
           {profile?.barangays?.name ?? 'Barangayan'}
@@ -93,7 +103,9 @@ export default function HomeScreen() {
           </Link>
         </View>
 
-        {requests.length === 0 ? (
+        {!session ? (
+          <GuestPrompt label="Log in to see your requests." />
+        ) : requests.length === 0 ? (
           <ThemedView type="backgroundElement" style={styles.emptyCard}>
             <ThemedText type="small" themeColor="textSecondary">
               No requests yet — tap "Request Document" to get started.

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
+import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
@@ -58,6 +59,12 @@ export default function ProfileScreen() {
 
     setSaved(true);
     refetch();
+  }
+
+  // Defensive — Settings hides the Profile entry point for guests, but this stays
+  // reachable directly (e.g. a stale deep link) so it needs its own fallback too.
+  if (!session) {
+    return <GuestPrompt label="Log in to see your profile." />;
   }
 
   if (isLoading) {
