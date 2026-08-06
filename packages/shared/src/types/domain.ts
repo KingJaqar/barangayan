@@ -1,3 +1,5 @@
+import type { Polygon } from 'geojson';
+
 /**
  * Hand-written domain types shared by apps/mobile and apps/web.
  *
@@ -60,5 +62,5 @@ export interface Barangay {
   id: string;
   name: string;
   /** GeoJSON polygon used by the Point-in-Polygon geofencing check on registration. */
-  boundary: GeoJSON.Polygon | null;
+  boundary: Polygon | null;
 }
