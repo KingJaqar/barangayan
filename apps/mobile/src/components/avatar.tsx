@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -12,20 +13,40 @@ function getInitials(fullName: string): string {
 
 /**
  * Initials-based avatar — no photo storage exists yet (same deferral as Register/
- * Profile's ID upload), so this stands in for a real profile photo.
+ * Profile's ID upload), so this stands in for a real profile photo. Pass `icon` instead
+ * of `fullName` for a non-person placeholder (e.g. Home's guest-mode "Login" avatar).
  */
-export function Avatar({ fullName, size = 48 }: { fullName: string; size?: number }) {
+export function Avatar({
+  fullName,
+  size = 48,
+  icon,
+  color,
+}: {
+  fullName?: string;
+  size?: number;
+  /** Renders this Ionicons glyph instead of computing initials from fullName. */
+  icon?: keyof typeof Ionicons.glyphMap;
+  /** Overrides the default theme.primary background — e.g. theme.accentRed for guest. */
+  color?: string;
+}) {
   const theme = useTheme();
+  const backgroundColor = color ?? theme.primary;
 
   return (
     <View
       style={[
         styles.circle,
-        { width: size, height: size, borderRadius: size / 2, backgroundColor: theme.primary },
+        { width: size, height: size, borderRadius: size / 2, backgroundColor },
       ]}>
-      <ThemedText type="smallBold" style={[styles.initials, { color: theme.onPrimary }]}>
-        {getInitials(fullName)}
-      </ThemedText>
+      {icon ? (
+        <Ionicons name={icon} size={size * 0.5} color={theme.onPrimary} />
+      ) : (
+        <ThemedText
+          type="smallBold"
+          style={[styles.initials, { color: theme.onPrimary, fontSize: size * 0.33 }]}>
+          {getInitials(fullName ?? '?')}
+        </ThemedText>
+      )}
     </View>
   );
 }
@@ -35,7 +56,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  initials: {
-    fontSize: 16,
-  },
+  initials: {},
 });

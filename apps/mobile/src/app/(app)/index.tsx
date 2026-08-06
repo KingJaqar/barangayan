@@ -1,14 +1,21 @@
+import { Ionicons } from '@expo/vector-icons';
 import type { Tables } from '@barangayan/shared';
 import { Image } from 'expo-image';
-import { Link, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Link } from 'expo-router';
+import { Fragment, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Avatar } from '@/components/avatar';
+import { Card } from '@/components/card';
+import { Divider } from '@/components/divider';
 import { GuestPrompt } from '@/components/guest-prompt';
+import { NotificationBell } from '@/components/notification-bell';
+import { SearchBar } from '@/components/search-bar';
+import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { BottomTabInset, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -19,24 +26,36 @@ type ServiceRequest = Tables<'service_requests'> & {
 };
 type Announcement = Tables<'announcements'>;
 
-const STATUS_LABEL: Record<string, string> = {
-  submitted: 'Submitted',
-  in_progress: 'Processing',
-  completed: 'Ready for Pickup',
-  cancelled: 'Cancelled',
-};
-
 const QUICK_ACTIONS = [
-  { label: 'Request Document', href: '/services' as const, icon: '📄' },
-  { label: 'Report Issue', href: '/reports' as const, icon: '⚠️' },
-  { label: 'Emergency', href: '/maps' as const, icon: '🚨' },
-  { label: 'Medical Info', href: '/health' as const, icon: '➕' },
+  { label: 'Request Document', href: '/services' as const, icon: 'document-text-outline' as const },
+  { label: 'Report Issue', href: '/reports' as const, icon: 'warning-outline' as const },
+  { label: 'Emergency Info', href: '/maps' as const, icon: 'medkit-outline' as const },
+  { label: 'Medical Info', href: '/health' as const, icon: 'pulse-outline' as const },
 ];
+
+/** "TODAY, 9:00 AM" for same-day announcements, else "AUG 6, 2026, 9:00 AM". Deliberately
+ * not packages/shared's formatDateTime — that has no relative-day logic and the design
+ * specifically calls for "TODAY". */
+function formatAnnouncementTimestamp(iso: string): string {
+  const date = new Date(iso);
+  const now = new Date();
+  const isToday =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate();
+
+  const time = new Intl.DateTimeFormat('en-PH', { timeStyle: 'short' }).format(date);
+  const day = isToday
+    ? 'TODAY'
+    : new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium' }).format(date).toUpperCase();
+  return `${day}, ${time}`;
+}
 
 export default function HomeScreen() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
@@ -70,22 +89,58 @@ export default function HomeScreen() {
   }, [session]);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={styles.screen}>
+      <View style={[styles.banner, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+        <Image
+          source={require('@/assets/logo/barangayan-logo-1024.png')}
+          style={styles.bannerLogo}
+          contentFit="contain"
+        />
+        <ThemedText type="smallBold" style={[styles.bannerWordmark, { color: theme.onPrimary }]}>
+          Barangayan
+        </ThemedText>
+      </View>
+
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
-        <ThemedText type="title" style={styles.greetingName}>
-          {session ? (profile?.full_name ?? 'Welcome') : 'Welcome, Guest'}
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">
-          {profile?.barangays?.name ?? 'Barangayan'}
-        </ThemedText>
+        <View style={styles.profileRow}>
+          {session ? (
+            <View style={styles.profileInfo}>
+              <Avatar fullName={profile?.full_name ?? 'Resident'} size={56} />
+              <View>
+                <ThemedText type="smallBold" style={[styles.profileNameFont, { color: theme.primary }]}>
+                  {profile?.full_name ?? 'Resident'}
+                </ThemedText>
+                <ThemedText type="small" themeColor="textSecondary">
+                  {profile?.barangays?.name ?? 'Barangayan'}
+                </ThemedText>
+              </View>
+            </View>
+          ) : (
+            <Link href="/(auth)/login" asChild>
+              <Pressable style={styles.profileInfo}>
+                <Avatar icon="person" color={theme.accentRed} size={56} />
+                <ThemedText type="smallBold" style={[styles.profileNameFont, { color: theme.primary }]}>
+                  Login
+                </ThemedText>
+              </Pressable>
+            </Link>
+          )}
+          <NotificationBell />
+        </View>
+
+        <SearchBar />
 
         <View style={styles.quickActionsRow}>
           {QUICK_ACTIONS.map((action) => (
             <Link key={action.label} href={action.href} asChild>
               <Pressable style={styles.quickActionPressable}>
-                <ThemedView type="backgroundElement" style={styles.quickActionIcon}>
-                  <ThemedText style={styles.quickActionEmoji}>{action.icon}</ThemedText>
-                </ThemedView>
+                <View
+                  style={[
+                    styles.quickActionIcon,
+                    { backgroundColor: `${theme.primary}26`, borderColor: theme.primary },
+                  ]}>
+                  <Ionicons name={action.icon} size={22} color={theme.primary} />
+                </View>
                 <ThemedText type="small" style={styles.quickActionLabel}>
                   {action.label}
                 </ThemedText>
@@ -112,23 +167,27 @@ export default function HomeScreen() {
             </ThemedText>
           </ThemedView>
         ) : (
-          requests.map((request) => (
-            <Link key={request.id} href={`/services/requests/${request.id}`} asChild>
-              <Pressable>
-                <ThemedView type="backgroundElement" style={styles.requestRow}>
-                  <View style={styles.requestInfo}>
-                    <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                      Ref #{request.reference_number}
-                    </ThemedText>
-                  </View>
-                  <ThemedText type="small" style={{ color: theme.primary }}>
-                    {STATUS_LABEL[request.status] ?? request.status}
-                  </ThemedText>
-                </ThemedView>
-              </Pressable>
-            </Link>
-          ))
+          <Card>
+            {requests.map((request, index) => (
+              <Fragment key={request.id}>
+                <Link href={`/services/requests/${request.id}`} asChild>
+                  <Pressable style={styles.requestRow}>
+                    <ThemedView type="backgroundSelected" style={styles.requestIconBox}>
+                      <Ionicons name="id-card-outline" size={18} color={theme.textSecondary} />
+                    </ThemedView>
+                    <View style={styles.requestInfo}>
+                      <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
+                      <ThemedText type="small" themeColor="textSecondary">
+                        Ref #{request.reference_number}
+                      </ThemedText>
+                    </View>
+                    <StatusBadge status={request.status} />
+                  </Pressable>
+                </Link>
+                {index < requests.length - 1 ? <Divider /> : null}
+              </Fragment>
+            ))}
+          </Card>
         )}
 
         <View style={styles.sectionHeader}>
@@ -143,9 +202,23 @@ export default function HomeScreen() {
         {announcement ? (
           <ThemedView type="backgroundElement" style={styles.announcementCard}>
             {announcement.image_url ? (
-              <Image source={{ uri: announcement.image_url }} style={styles.announcementImage} />
+              <View style={styles.announcementImageWrap}>
+                <Image source={{ uri: announcement.image_url }} style={styles.announcementImage} contentFit="cover" />
+                <View style={[styles.categoryPill, { backgroundColor: theme.primary }]}>
+                  <Ionicons name="people-outline" size={12} color={theme.onPrimary} />
+                  <ThemedText type="small" style={{ color: theme.onPrimary }}>
+                    {announcement.category}
+                  </ThemedText>
+                </View>
+              </View>
             ) : null}
             <View style={styles.announcementBody}>
+              <View style={styles.announcementMeta}>
+                <Ionicons name="time-outline" size={14} color={theme.textSecondary} />
+                <ThemedText type="small" themeColor="textSecondary">
+                  {formatAnnouncementTimestamp(announcement.published_at)}
+                </ThemedText>
+              </View>
               <ThemedText type="smallBold">{announcement.title}</ThemedText>
               <ThemedText type="small" themeColor="textSecondary" numberOfLines={2}>
                 {announcement.body}
@@ -160,21 +233,47 @@ export default function HomeScreen() {
           </ThemedView>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  screen: {
     flex: 1,
+  },
+  banner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    paddingHorizontal: Spacing.four,
+    paddingBottom: Spacing.three,
+  },
+  bannerLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  bannerWordmark: {
+    fontFamily: Fonts.serif,
+    fontSize: 20,
   },
   content: {
     padding: Spacing.four,
     gap: Spacing.two,
   },
-  greetingName: {
-    fontSize: 26,
-    lineHeight: 30,
+  profileRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  profileInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  profileNameFont: {
+    fontFamily: Fonts.serif,
+    fontSize: 16,
   },
   quickActionsRow: {
     flexDirection: 'row',
@@ -188,14 +287,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   quickActionIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 56,
+    height: 56,
+    borderRadius: Spacing.three,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  quickActionEmoji: {
-    fontSize: 22,
   },
   quickActionLabel: {
     textAlign: 'center',
@@ -212,25 +309,50 @@ const styles = StyleSheet.create({
   },
   requestRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: Spacing.three,
     padding: Spacing.three,
-    borderRadius: Spacing.three,
-    marginBottom: Spacing.two,
+  },
+  requestIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: Spacing.two,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   requestInfo: {
+    flex: 1,
     gap: Spacing.half,
   },
   announcementCard: {
     borderRadius: Spacing.three,
     overflow: 'hidden',
   },
+  announcementImageWrap: {
+    position: 'relative',
+  },
   announcementImage: {
     width: '100%',
     height: 140,
   },
+  categoryPill: {
+    position: 'absolute',
+    top: Spacing.two,
+    left: Spacing.two,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.half,
+    borderRadius: Spacing.four,
+  },
   announcementBody: {
     padding: Spacing.three,
     gap: Spacing.half,
+  },
+  announcementMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
   },
 });

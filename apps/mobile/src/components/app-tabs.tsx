@@ -26,22 +26,22 @@ export default function AppTabs() {
 
       <NativeTabs.Trigger name="services">
         <NativeTabs.Trigger.Label>Services</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="doc.text" md="description" />
+        <NativeTabs.Trigger.Icon sf="list.clipboard" md="fact_check" />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="maps">
         <NativeTabs.Trigger.Label>Maps</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="map" md="map" />
+        <NativeTabs.Trigger.Icon sf="mappin.and.ellipse" md="location_on" />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="health">
         <NativeTabs.Trigger.Label>Health</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="cross.case" md="medical_services" />
+        <NativeTabs.Trigger.Icon sf="heart" md="favorite_border" />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="reports">
         <NativeTabs.Trigger.Label>Reports</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="exclamationmark.bubble" md="report" />
+        <NativeTabs.Trigger.Icon sf="bell" md="notifications_none" />
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="settings">

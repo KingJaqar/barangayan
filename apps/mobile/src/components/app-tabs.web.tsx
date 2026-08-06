@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import {
   Tabs,
   TabList,
@@ -23,22 +24,22 @@ export default function AppTabs() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
-            <TabButton>Home</TabButton>
+            <TabButton icon="home-outline">Home</TabButton>
           </TabTrigger>
           <TabTrigger name="services" href="/services" asChild>
-            <TabButton>Services</TabButton>
+            <TabButton icon="clipboard-outline">Services</TabButton>
           </TabTrigger>
           <TabTrigger name="maps" href="/maps" asChild>
-            <TabButton>Maps</TabButton>
+            <TabButton icon="location-outline">Maps</TabButton>
           </TabTrigger>
           <TabTrigger name="health" href="/health" asChild>
-            <TabButton>Health</TabButton>
+            <TabButton icon="heart-outline">Health</TabButton>
           </TabTrigger>
           <TabTrigger name="reports" href="/reports" asChild>
-            <TabButton>Reports</TabButton>
+            <TabButton icon="notifications-outline">Reports</TabButton>
           </TabTrigger>
           <TabTrigger name="settings" href="/settings" asChild>
-            <TabButton>Settings</TabButton>
+            <TabButton icon="settings-outline">Settings</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>
@@ -46,14 +47,21 @@ export default function AppTabs() {
   );
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+export function TabButton({
+  children,
+  icon,
+  isFocused,
+  ...props
+}: TabTriggerSlotProps & { icon: keyof typeof Ionicons.glyphMap }) {
   const theme = useTheme();
+  const color = isFocused ? theme.primary : theme.textSecondary;
 
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
       <ThemedView
         type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
         style={styles.tabButtonView}>
+        <Ionicons name={icon} size={18} color={color} />
         <ThemedText
           type={isFocused ? 'smallBold' : 'small'}
           themeColor={isFocused ? undefined : 'textSecondary'}
@@ -120,6 +128,9 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   tabButtonView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
     paddingVertical: Spacing.one,
     paddingHorizontal: Spacing.three,
     borderRadius: Spacing.three,

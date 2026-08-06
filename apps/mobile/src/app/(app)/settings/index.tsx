@@ -6,6 +6,8 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
+import { Card } from '@/components/card';
+import { Divider } from '@/components/divider';
 import { LoadingOverlay } from '@/components/loading-overlay';
 import { PreferenceToggle } from '@/components/preference-toggle';
 import { SegmentedControl } from '@/components/segmented-control';
@@ -206,18 +208,6 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function Card({ children }: { children: ReactNode }) {
-  return (
-    <ThemedView type="backgroundElement" style={styles.card}>
-      {children}
-    </ThemedView>
-  );
-}
-
-function Divider() {
-  return <ThemedView type="backgroundSelected" style={styles.divider} />;
-}
-
 function Chevron({ color }: { color?: string }) {
   return (
     <ThemedText themeColor={color ? undefined : 'textSecondary'} style={color ? { color } : undefined}>
@@ -266,10 +256,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginBottom: Spacing.two,
   },
-  card: {
-    borderRadius: Spacing.three,
-    overflow: 'hidden',
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -283,10 +269,6 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     flex: 1,
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginHorizontal: Spacing.three,
   },
   themeSection: {
     padding: Spacing.three,
