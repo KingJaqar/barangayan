@@ -4,11 +4,15 @@
  */
 
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useThemePreference } from '@/hooks/use-theme-preference';
 
 export function useTheme() {
-  const scheme = useColorScheme();
-  const theme = scheme === 'unspecified' ? 'light' : scheme;
+  const { scheme, accentColor } = useThemePreference();
 
-  return Colors[theme];
+  return {
+    ...Colors[scheme],
+    // Real per-account accent color (Settings > App Theme) overrides the constant —
+    // onPrimary stays white regardless, it reads fine against all 4 accent swatches.
+    primary: accentColor,
+  };
 }
