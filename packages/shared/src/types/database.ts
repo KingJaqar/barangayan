@@ -202,7 +202,7 @@ export type Database = {
           document_type_id: string
           id?: string
           payment_status?: string
-          reference_number: string
+          reference_number?: string
           requester_notes?: string | null
           resident_id: string
           status?: string

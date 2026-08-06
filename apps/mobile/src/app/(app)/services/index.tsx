@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { PlaceholderPanel } from '@/components/placeholder-panel';
+import { DocumentsList } from './_components/documents-list';
+import { LogsList } from './_components/logs-list';
+import { RequestsList } from './_components/requests-list';
+
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 
 type ServicesSegment = 'documents' | 'requests' | 'logs';
 
-// Documents/Requests/Logs — confirmed against the design file. Content wiring (real
-// document_types catalog, request submission, Request Tracking drill-down, logs) is the
-// "Services tab" task; this screen establishes the real segmented-control navigation.
+// Documents/Requests/Logs — confirmed against the design file.
 export default function ServicesScreen() {
   const [segment, setSegment] = useState<ServicesSegment>('documents');
 
@@ -28,9 +29,11 @@ export default function ServicesScreen() {
         />
       </ThemedView>
 
-      {segment === 'documents' && <PlaceholderPanel label="Document catalog goes here." />}
-      {segment === 'requests' && <PlaceholderPanel label="My Requests list goes here." />}
-      {segment === 'logs' && <PlaceholderPanel label="Transaction/activity log goes here." />}
+      <ScrollView>
+        {segment === 'documents' && <DocumentsList />}
+        {segment === 'requests' && <RequestsList />}
+        {segment === 'logs' && <LogsList />}
+      </ScrollView>
     </SafeAreaView>
   );
 }
