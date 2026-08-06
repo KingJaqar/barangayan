@@ -1,20 +1,33 @@
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AuthProvider, useAuth } from '@/hooks/use-auth';
+import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  return (
+    <AuthProvider>
+      {/* Needs session/profile (via useAuth/useProfile inside), so it has to nest under
+          AuthProvider — everything below, including React Navigation's own DarkTheme/
+          DefaultTheme, resolves through this instead of the raw OS scheme, so "App
+          Theme" in Settings is genuinely app-wide, not just our own ThemedView/ThemedText
+          components. */}
+      <ThemePreferenceProvider>
+        <ThemedRoot />
+      </ThemePreferenceProvider>
+    </AuthProvider>
+  );
+}
+
+function ThemedRoot() {
+  const { scheme } = useThemePreference();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <SplashGatedNavigator />
-      </AuthProvider>
+    <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <SplashGatedNavigator />
     </ThemeProvider>
   );
 }

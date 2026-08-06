@@ -17,6 +17,13 @@ export interface SegmentedControlProps<Key extends string> {
   /** Locked design decision: the Maps (Emergency & DRRM) section's List/Map toggle uses a
    * red active pill instead of the default brand green — see AGENTS.md §4. */
   activeColor?: 'primary' | 'accentRed';
+  /**
+   * 'filled' (default): solid accent-color pill + white text — Services/Reports/Maps/
+   * Health. 'outline': active segment is a plain background-color pill + bold accent
+   * text instead — matches the Settings > App Theme Light/Dark control's reference
+   * screenshot, which doesn't use the solid-fill look.
+   */
+  variant?: 'filled' | 'outline';
 }
 
 /**
@@ -31,14 +38,19 @@ export function SegmentedControl<Key extends string>({
   activeKey,
   onChange,
   activeColor = 'primary',
+  variant = 'filled',
 }: SegmentedControlProps<Key>) {
   const theme = useTheme();
-  const activeBg = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
+  const accent = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
 
   return (
     <ThemedView type="backgroundElement" style={styles.container}>
       {segments.map((segment) => {
         const isActive = segment.key === activeKey;
+        const activeSegmentStyle =
+          variant === 'filled' ? { backgroundColor: accent } : { backgroundColor: theme.background };
+        const activeTextStyle = variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
+
         return (
           <Pressable
             key={segment.key}
@@ -46,11 +58,11 @@ export function SegmentedControl<Key extends string>({
             style={styles.segmentPressable}
             accessibilityRole="tab"
             accessibilityState={{ selected: isActive }}>
-            <View style={[styles.segment, isActive && { backgroundColor: activeBg }]}>
+            <View style={[styles.segment, isActive && activeSegmentStyle]}>
               <ThemedText
-                type="small"
+                type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
                 themeColor={isActive ? undefined : 'textSecondary'}
-                style={isActive ? { color: theme.onPrimary } : undefined}>
+                style={isActive ? activeTextStyle : undefined}>
                 {segment.label}
               </ThemedText>
             </View>

@@ -143,6 +143,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accent_color: string
           barangay_id: string
           created_at: string
           full_name: string
@@ -150,9 +151,11 @@ export type Database = {
           id: string
           mobile_number: string | null
           role: string
+          theme_preference: string
           updated_at: string
         }
         Insert: {
+          accent_color?: string
           barangay_id: string
           created_at?: string
           full_name: string
@@ -160,9 +163,11 @@ export type Database = {
           id: string
           mobile_number?: string | null
           role?: string
+          theme_preference?: string
           updated_at?: string
         }
         Update: {
+          accent_color?: string
           barangay_id?: string
           created_at?: string
           full_name?: string
@@ -170,6 +175,7 @@ export type Database = {
           id?: string
           mobile_number?: string | null
           role?: string
+          theme_preference?: string
           updated_at?: string
         }
         Relationships: [

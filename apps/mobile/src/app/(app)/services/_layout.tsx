@@ -5,5 +5,11 @@ import { Stack } from 'expo-router';
 // Documents/Requests/Logs segmented-control index screen — see Expo Router's guidance on
 // nesting a Stack inside NativeTabs for header + push support.
 export default function ServicesLayout() {
-  return <Stack />;
+  return (
+    <Stack>
+      {/* index.tsx builds its own segmented-control header — the native Stack header
+          would otherwise show a stray "index" title above it (same fix as Settings). */}
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
+  );
 }

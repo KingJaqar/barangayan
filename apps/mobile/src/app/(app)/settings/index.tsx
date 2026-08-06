@@ -1,73 +1,200 @@
-import { useRouter } from 'expo-router';
-import type { ReactNode } from 'react';
-import { ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
+import { Href, Link, useRouter } from 'expo-router';
+import { useState, type ReactNode } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PrimaryButton } from '@/components/primary-button';
-import { SettingsRow } from '@/components/settings-row';
+import { Avatar } from '@/components/avatar';
+import { PreferenceToggle } from '@/components/preference-toggle';
+import { SegmentedControl } from '@/components/segmented-control';
+import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
+import { useThemePreference, type ThemePreference } from '@/hooks/use-theme-preference';
+import { supabase } from '@/lib/supabase';
 
-// Settings landing screen — one scrollable screen with sections (Account, Preferences,
-// Privacy & Data, About), matching the design file. Preferences toggles and Privacy&Data
-// actions are inline here, not separate pushed screens; Profile/Change Password/Terms &
-// Privacy/About/Help Center are. Toggle/action wiring is real UI, not yet backed by
-// Supabase — that lands with the rest of the "Static shells" task.
+// Green, blue, red, purple — matches the reference screenshots' 4 accent swatches (a
+// different set from the presentational-only Personalization onboarding screen).
+const ACCENT_COLORS = ['#0F6E5B', '#2563EB', '#DC2626', '#7C3AED'];
+
 export default function SettingsScreen() {
   const { session } = useAuth();
+  const { profile } = useProfile();
   const router = useRouter();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const { themePreference, scheme, accentColor, setThemePreference, setAccentColor } = useThemePreference();
+
+  // Presentational only for this pass, per the plan's explicit scope call — App Theme is
+  // the one Preferences control that's real.
+  const [pushEnabled, setPushEnabled] = useState(true);
+  const [smsEnabled, setSmsEnabled] = useState(false);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+  }
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      {session ? (
-        <Section title="Account">
-          <SettingsRow label="Profile" href="/settings/profile" subtitle="View and edit your details" />
-          <SettingsRow label="Change Password" href="/settings/change-password" />
-        </Section>
-      ) : (
-        <Section title="Account">
-          <ThemedView type="backgroundElement" style={styles.guestCard}>
-            <ThemedText type="small" themeColor="textSecondary">
-              You're browsing as a guest. Log in or create an account to request documents,
-              track requests, and see your profile.
-            </ThemedText>
-            <PrimaryButton label="Log In" onPress={() => router.push('/(auth)/login')} />
-            <PrimaryButton
-              label="Create an Account"
-              variant="secondary"
-              onPress={() => router.push('/(auth)/register')}
-            />
-          </ThemedView>
-        </Section>
-      )}
+    <View style={styles.screen}>
+      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+        <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+          Settings
+        </ThemedText>
+      </View>
 
-      <Section title="Preferences">
-        <ToggleRow label="Push Notifications" />
-        <ToggleRow label="SMS Notifications" />
-      </Section>
+      <ScrollView contentContainerStyle={styles.content}>
+        {session ? (
+          <Section title="Account">
+            <Card>
+              <Link href="/settings/profile" asChild>
+                <Pressable style={styles.row}>
+                  <Avatar fullName={profile?.full_name ?? 'Resident'} />
+                  <View style={styles.rowText}>
+                    <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary">
+                      Edit Profile
+                    </ThemedText>
+                  </View>
+                  <Chevron />
+                </Pressable>
+              </Link>
+              <Divider />
+              <Link href="/settings/change-password" asChild>
+                <Pressable style={styles.row}>
+                  <SettingsIcon name="lock-closed" />
+                  <ThemedText style={styles.rowLabel}>Change Password</ThemedText>
+                  <Chevron />
+                </Pressable>
+              </Link>
+            </Card>
+          </Section>
+        ) : null}
 
-      {session ? (
-        <Section title="Privacy & Data">
-          <ThemedText themeColor="textSecondary" type="small">
-            Download My Data / Delete My Account — coming soon.
-          </ThemedText>
+        <Section title="Preferences">
+          <Card>
+            {session ? (
+              <>
+                <View style={styles.row}>
+                  <SettingsIcon name="notifications" />
+                  <View style={styles.rowText}>
+                    <ThemedText>Push Notifications</ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary">
+                      Alerts and updates
+                    </ThemedText>
+                  </View>
+                  <PreferenceToggle value={pushEnabled} onValueChange={setPushEnabled} />
+                </View>
+                <Divider />
+                <View style={styles.row}>
+                  <SettingsIcon name="chatbubble-ellipses" />
+                  <View style={styles.rowText}>
+                    <ThemedText>SMS Notifications</ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary">
+                      Urgent community alerts
+                    </ThemedText>
+                  </View>
+                  <PreferenceToggle value={smsEnabled} onValueChange={setSmsEnabled} />
+                </View>
+                <Divider />
+              </>
+            ) : null}
+
+            <View style={styles.themeSection}>
+              <View style={styles.themeRow}>
+                <SettingsIcon name="color-palette" />
+                <ThemedText style={styles.rowLabel}>App Theme</ThemedText>
+              </View>
+
+              <SegmentedControl
+                variant="outline"
+                segments={[
+                  { key: 'light', label: 'Light' },
+                  { key: 'dark', label: 'Dark' },
+                ]}
+                activeKey={scheme}
+                onChange={(key) => setThemePreference(key as ThemePreference)}
+              />
+
+              <View style={styles.swatchRow}>
+                {ACCENT_COLORS.map((color) => (
+                  <Pressable key={color} onPress={() => setAccentColor(color)}>
+                    <View style={[styles.swatch, { backgroundColor: color }]}>
+                      {accentColor === color ? <Ionicons name="checkmark" size={18} color="#ffffff" /> : null}
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+          </Card>
         </Section>
-      ) : null}
 
-      <Section title="About">
-        <SettingsRow label="Help Center" href="/settings/help" />
-        <SettingsRow label="Terms & Privacy Policy" href="/settings/terms-privacy" />
-        <SettingsRow label="About Barangayan" href="/settings/about" />
-      </Section>
-    </ScrollView>
+        {session ? (
+          <Section title="Privacy & Data">
+            <Card>
+              <View style={styles.row}>
+                <SettingsIcon name="download" />
+                <ThemedText style={styles.rowLabel}>Download My Data</ThemedText>
+                <Chevron />
+              </View>
+              <Divider />
+              <View style={styles.row}>
+                <SettingsIcon name="trash" color={theme.accentRed} />
+                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Delete My Account</ThemedText>
+                <Chevron color={theme.accentRed} />
+              </View>
+            </Card>
+          </Section>
+        ) : null}
+
+        <Section title="About">
+          <Card>
+            <AboutRow icon="help-circle" label="Help Center" href="/settings/help" />
+            <Divider />
+            <AboutRow icon="document-text" label="Terms & Privacy Policy" href="/settings/terms-privacy" />
+            <Divider />
+            <View style={styles.row}>
+              <SettingsIcon name="information-circle" />
+              <ThemedText style={styles.rowLabel}>App Version</ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">
+                v{Constants.expoConfig?.version ?? '1.0.0'}
+              </ThemedText>
+            </View>
+            <Divider />
+            <AboutRow icon="people" label="About Us" href="/settings/about" />
+          </Card>
+        </Section>
+
+        <Section title="Session">
+          <Card>
+            {session ? (
+              <Pressable style={styles.row} onPress={handleLogout}>
+                <SettingsIcon name="log-out" color={theme.accentRed} />
+                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Logout</ThemedText>
+                <Chevron color={theme.accentRed} />
+              </Pressable>
+            ) : (
+              <Pressable style={styles.row} onPress={() => router.push('/(auth)/login')}>
+                <SettingsIcon name="log-in" color={theme.accentRed} />
+                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Login</ThemedText>
+                <Chevron color={theme.accentRed} />
+              </Pressable>
+            )}
+          </Card>
+        </Section>
+      </ScrollView>
+    </View>
   );
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View style={styles.section}>
-      <ThemedText type="smallBold" style={styles.sectionTitle}>
+      <ThemedText type="smallBold" themeColor="primary" style={styles.sectionTitle}>
         {title.toUpperCase()}
       </ThemedText>
       {children}
@@ -75,16 +202,57 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function ToggleRow({ label }: { label: string }) {
+function Card({ children }: { children: ReactNode }) {
   return (
-    <View style={styles.toggleRow}>
-      <ThemedText>{label}</ThemedText>
-      <Switch value={false} onValueChange={() => {}} />
-    </View>
+    <ThemedView type="backgroundElement" style={styles.card}>
+      {children}
+    </ThemedView>
+  );
+}
+
+function Divider() {
+  return <ThemedView type="backgroundSelected" style={styles.divider} />;
+}
+
+function Chevron({ color }: { color?: string }) {
+  return (
+    <ThemedText themeColor={color ? undefined : 'textSecondary'} style={color ? { color } : undefined}>
+      {'›'}
+    </ThemedText>
+  );
+}
+
+function AboutRow({
+  icon,
+  label,
+  href,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  href: Href;
+}) {
+  return (
+    <Link href={href} asChild>
+      <Pressable style={styles.row}>
+        <SettingsIcon name={icon} />
+        <ThemedText style={styles.rowLabel}>{label}</ThemedText>
+        <Chevron />
+      </Pressable>
+    </Link>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+  },
   content: {
     padding: Spacing.three,
   },
@@ -93,17 +261,48 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     marginBottom: Spacing.two,
-    opacity: 0.6,
   },
-  toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: Spacing.two,
-  },
-  guestCard: {
-    padding: Spacing.three,
+  card: {
     borderRadius: Spacing.three,
+    overflow: 'hidden',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: Spacing.three,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.three,
+  },
+  rowText: {
+    flex: 1,
+    gap: Spacing.half,
+  },
+  rowLabel: {
+    flex: 1,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: Spacing.three,
+  },
+  themeSection: {
+    padding: Spacing.three,
+    gap: Spacing.three,
+  },
+  themeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  swatchRow: {
+    flexDirection: 'row',
+    gap: Spacing.three,
+    justifyContent: 'center',
+  },
+  swatch: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

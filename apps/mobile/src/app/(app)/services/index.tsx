@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-import { DocumentsList } from './_components/documents-list';
-import { LogsList } from './_components/logs-list';
-import { RequestsList } from './_components/requests-list';
-
+import { DocumentsList } from '@/components/services/documents-list';
+import { LogsList } from '@/components/services/logs-list';
+import { RequestsList } from '@/components/services/requests-list';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
