@@ -1,5 +1,8 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
@@ -10,6 +13,7 @@ import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 // Real, editable — the same profile row created at the end of Register/OTP verification
@@ -17,8 +21,11 @@ import { supabase } from '@/lib/supabase';
 // here after they log in. Household Information and Identification (design file) stay
 // out of scope: no household_members table or ID storage bucket exists yet.
 export default function ProfileScreen() {
+  const router = useRouter();
   const { session } = useAuth();
   const { profile, isLoading, refetch } = useProfile();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -72,12 +79,23 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.screen}>
+      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Go back to Settings"
+          hitSlop={Spacing.one}
+          onPress={() => router.back()}
+          style={styles.backButton}>
+          <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
+        </Pressable>
+        <View style={styles.headerContent}>
+          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Profile
+          </ThemedText>
+        </View>
+      </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Profile
-        </ThemedText>
-
         <ThemedView type="backgroundElement" style={styles.section}>
           <ThemedText type="smallBold">Personal Information</ThemedText>
 
@@ -107,20 +125,38 @@ export default function ProfileScreen() {
 
         <PrimaryButton label="Save Changes" loading={saving} onPress={handleSave} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  screen: {
     flex: 1,
+  },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 40,
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.one,
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
-  },
-  title: {
-    fontSize: 26,
   },
   section: {
     padding: Spacing.three,

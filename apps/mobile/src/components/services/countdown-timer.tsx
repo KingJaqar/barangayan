@@ -16,7 +16,8 @@ function formatRemaining(ms: number): string {
 /** "Expires in HH:MM:SS" pill counting down to a fixed expiry timestamp (unix ms). */
 export function CountdownTimer({ expiresAt }: { expiresAt: number }) {
   const theme = useTheme();
-  const [now, setNow] = useState(Date.now());
+  // Lazy initialiser: Date.now() runs once at mount, not on every re-render.
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);

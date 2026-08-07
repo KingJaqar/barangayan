@@ -1,19 +1,20 @@
 import { registerSchema } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
-import { useAuth } from '@/hooks/use-auth';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { setOnboarding } = useAuth();
+  const theme = useTheme();
 
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -21,6 +22,8 @@ export default function RegisterScreen() {
   const [homeAddress, setHomeAddress] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
   // Looked up, never hardcoded (AGENTS.md §0) — auto-selects when there's exactly one
   // barangay (true today); a real picker only matters once a second barangay exists.
@@ -29,6 +32,15 @@ export default function RegisterScreen() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [successfulRegistrationEmail, setSuccessfulRegistrationEmail] = useState<string | null>(null);
+
+  const hasEnteredBothPasswords = password.length > 0 && confirmPassword.length > 0;
+  const passwordsMatch = hasEnteredBothPasswords && password === confirmPassword;
+  // The status row below is the single place that reports a mismatch in real time.
+  // Keep any other Confirm Password validation message, but avoid duplicating the
+  // schema's mismatch message directly under the field after submission.
+  const confirmPasswordError =
+    fieldErrors.confirmPassword === "Passwords don't match" ? undefined : fieldErrors.confirmPassword;
 
   useEffect(() => {
     supabase
@@ -69,34 +81,94 @@ export default function RegisterScreen() {
     }
 
     setLoading(true);
-    const { error: signUpError, data } = await supabase.auth.signUp({
-      email: result.data.email,
-      password: result.data.password,
-    });
-    setLoading(false);
 
-    if (signUpError || !data.user) {
-      setError(signUpError?.message ?? 'Could not create account.');
-      return;
-    }
-
-    // Held in (auth) despite verifyOtp establishing a session next — see use-auth.tsx.
-    setOnboarding(true);
-    router.push({
-      pathname: '/(auth)/otp',
-      params: {
-        type: 'signup',
+    // Profile fields travel as signup metadata so the handle_new_user() database
+    // trigger can create the profiles row atomically with the auth.users row —
+    // see migration 0012. Confirm Email must be disabled in the hosted project;
+    // signUp() will then return a live session immediately. We sign that session
+    // out right after so the resident must go through Login explicitly.
+    let signUpSucceeded = false;
+    try {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: result.data.email,
-        fullName: result.data.fullName,
-        mobileNumber: result.data.mobileNumber ?? '',
-        homeAddress: result.data.homeAddress ?? '',
-        barangayId: barangay.id,
-      },
+        password: result.data.password,
+        options: {
+          data: {
+            full_name: result.data.fullName,
+            mobile_number: result.data.mobileNumber ?? null,
+            home_address: result.data.homeAddress ?? null,
+            barangay_id: barangay.id,
+          },
+        },
+      });
+
+      if (signUpError) {
+        setError(signUpError.message);
+        return;
+      }
+
+      // If no session came back, Confirm Email is still enabled on the hosted project.
+      // Surface a clear, actionable message instead of silently routing to Login.
+      if (!signUpData.session) {
+        setError(
+          'Account creation requires email confirmation, but that is not yet supported. ' +
+            'Please contact support or try again later.',
+        );
+        return;
+      }
+
+      // The trigger created the profile. Use local scope so only this device's
+      // session is cleared — we do not want to revoke tokens across other devices
+      // (relevant during testing with multiple clients). Navigation to Login goes
+      // in finally so it runs even if the remote revoke stalls or fails.
+      const { error: signOutError } = await supabase.auth.signOut({ scope: 'local' });
+      if (signOutError) {
+        // Non-fatal: the local session is already cleared by the local scope.
+        // The user will still land on Login with no active session in this app.
+        console.warn('Local sign-out after registration returned an error:', signOutError.message);
+      }
+      signUpSucceeded = true;
+    } finally {
+      setLoading(false);
+      // Only navigate to Login on the success path. Error paths set an error
+      // message and stay on this screen so the resident can correct and retry.
+      if (signUpSucceeded) {
+        setSuccessfulRegistrationEmail(result.data.email);
+      }
+    }
+  }
+
+  function goToLogin() {
+    if (!successfulRegistrationEmail) return;
+    router.replace({
+      pathname: '/(auth)/login',
+      params: { email: successfulRegistrationEmail },
     });
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Modal
+        transparent
+        visible={successfulRegistrationEmail !== null}
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => {}}>
+        <View style={styles.successModalBackdrop}>
+          <ThemedView type="backgroundElement" style={styles.successModalCard}>
+            <View style={[styles.successIcon, { backgroundColor: `${theme.primary}20` }]}>
+              <Ionicons name="checkmark" size={30} color={theme.primary} />
+            </View>
+            <ThemedText type="title" style={styles.successModalTitle}>
+              Account Successfully Created
+            </ThemedText>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.successModalMessage}>
+              Your account is ready. Log in to continue to Barangayan.
+            </ThemedText>
+            <PrimaryButton label="Login" onPress={goToLogin} />
+          </ThemedView>
+        </View>
+      </Modal>
       <ScrollView contentContainerStyle={styles.content}>
         <ThemedText type="title" style={styles.title}>
           Create Account
@@ -124,18 +196,42 @@ export default function RegisterScreen() {
           <TextField label="Home Address" value={homeAddress} onChangeText={setHomeAddress} />
           <TextField
             label="Password"
-            secureTextEntry
+            secureTextEntry={!isPasswordVisible}
             value={password}
             onChangeText={setPassword}
             error={fieldErrors.password}
+            passwordVisibility={{
+              visible: isPasswordVisible,
+              onToggle: () => setIsPasswordVisible((visible) => !visible),
+            }}
           />
           <TextField
             label="Confirm Password"
-            secureTextEntry
+            secureTextEntry={!isConfirmPasswordVisible}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            error={fieldErrors.confirmPassword}
+            error={confirmPasswordError}
+            passwordVisibility={{
+              visible: isConfirmPasswordVisible,
+              onToggle: () => setIsConfirmPasswordVisible((visible) => !visible),
+            }}
           />
+          {hasEnteredBothPasswords ? (
+            <View
+              accessibilityLiveRegion="polite"
+              style={styles.passwordMatchIndicator}>
+              <Ionicons
+                name={passwordsMatch ? 'checkmark-circle-outline' : 'alert-circle-outline'}
+                size={16}
+                color={passwordsMatch ? theme.primary : theme.accentRed}
+              />
+              <ThemedText
+                type="small"
+                style={{ color: passwordsMatch ? theme.primary : theme.accentRed }}>
+                {passwordsMatch ? 'Passwords match' : "Passwords don't match"}
+              </ThemedText>
+            </View>
+          ) : null}
 
           <ThemedView type="backgroundElement" style={styles.barangayRow}>
             <ThemedText type="small">Barangay</ThemedText>
@@ -162,7 +258,7 @@ export default function RegisterScreen() {
             </ThemedText>
           ) : null}
 
-          <PrimaryButton label="Continue →" loading={loading} onPress={handleSubmit} />
+          <PrimaryButton label="Create Account" loading={loading} onPress={handleSubmit} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -183,6 +279,37 @@ const styles = StyleSheet.create({
   form: {
     gap: Spacing.three,
     marginTop: Spacing.three,
+  },
+  passwordMatchIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  successModalBackdrop: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: Spacing.four,
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  },
+  successModalCard: {
+    padding: Spacing.four,
+    borderRadius: Spacing.four,
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  successIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successModalTitle: {
+    fontSize: 24,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    textAlign: 'center',
   },
   barangayRow: {
     padding: Spacing.three,

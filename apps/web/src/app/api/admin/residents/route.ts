@@ -58,14 +58,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: inviteError?.message ?? 'Failed to invite resident.' }, { status: 400 });
   }
 
-  const { error: profileError } = await serviceRoleClient.from('profiles').insert({
-    id: invited.user.id,
-    barangay_id: profile.barangay_id,
-    role: 'resident',
-    full_name: fullName,
-    mobile_number: mobileNumber,
-    home_address: homeAddress,
-  });
+  // Upsert (not insert) so this is idempotent in case the handle_new_user() trigger
+  // already created the profile (e.g. if the invite email link is clicked before this
+  // route finishes, or in a retry scenario). Invited users arrive without registration
+  // metadata, so the trigger skips them — but upsert keeps this route safe regardless.
+  const { error: profileError } = await serviceRoleClient.from('profiles').upsert(
+    {
+      id: invited.user.id,
+      barangay_id: profile.barangay_id,
+      role: 'resident',
+      full_name: fullName,
+      mobile_number: mobileNumber,
+      home_address: homeAddress,
+    },
+    { onConflict: 'id' },
+  );
 
   if (profileError) {
     // Don't leave an auth.users row with no matching profile behind.

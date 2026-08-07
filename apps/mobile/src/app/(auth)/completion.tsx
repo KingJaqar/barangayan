@@ -1,13 +1,13 @@
+// This screen is no longer used in the primary registration flow — signup OTP
+// was removed when Confirm Email was disabled (migration 0012). The file is kept
+// to avoid breaking any deep-link or back-stack reference while the codebase
+// transitions; it can be deleted once all entry points have been audited.
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 
-import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
-import { useAuth } from '@/hooks/use-auth';
 
 export default function CompletionScreen() {
-  const { setOnboarding } = useAuth();
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.content}>
@@ -15,12 +15,6 @@ export default function CompletionScreen() {
           You're all set.
         </ThemedText>
         <ThemedText themeColor="textSecondary">Explore the services of Barangayan.</ThemedText>
-      </View>
-
-      <View style={styles.footer}>
-        {/* Clearing isOnboarding is what actually lets Stack.Protected route into (app) —
-            the session has been active since verifyOtp succeeded on the OTP screen. */}
-        <PrimaryButton label="Go to Home" onPress={() => setOnboarding(false)} />
       </View>
     </SafeAreaView>
   );
@@ -39,8 +33,5 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-  },
-  footer: {
-    padding: Spacing.four,
   },
 });

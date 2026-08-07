@@ -52,13 +52,24 @@ export default function PaymentMethodScreen() {
   async function handleContinue() {
     if (isQrphBlocked) return;
     setSubmitting(true);
-    const { error } = await supabase
-      .from('service_requests')
-      .update({ payment_method: selected })
-      .eq('id', requestId);
+
+    // A plain `.update()` here is silently swallowed by RLS — the 0002 migration
+    // deliberately has no resident UPDATE policy on service_requests (status transitions
+    // are admin-only). The 0010 migration adds a security-definer RPC that lets a
+    // resident set *only* payment_method on rows they own, without opening a broad
+    // UPDATE policy on the whole table.
+    const { error } = await supabase.rpc('set_service_request_payment_method', {
+      p_request_id: requestId,
+      p_method: selected,
+    });
     setSubmitting(false);
 
-    if (error) return;
+    if (error) {
+      // Surface the error so the resident knows something went wrong rather than
+      // silently navigating to a confirmation screen with stale data.
+      console.error('[payment] set_service_request_payment_method:', error.message);
+      return;
+    }
 
     router.replace(
       selected === 'cash' ? `/services/payment/cod/${requestId}` : `/services/payment/qrph/${requestId}`,

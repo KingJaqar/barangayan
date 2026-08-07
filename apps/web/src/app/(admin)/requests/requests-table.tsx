@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { formatDateTime, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
@@ -43,7 +43,7 @@ function AddRequestForm({
   const [referenceNumber, setReferenceNumber] = useState('');
   const [residentId, setResidentId] = useState('');
   const [documentTypeId, setDocumentTypeId] = useState('');
-  const [status, setStatus] = useState<'submitted' | 'in_progress' | 'completed' | 'cancelled'>('submitted');
+  const [status, setStatus] = useState<'submitted' | 'in_progress' | 'out_for_delivery' | 'completed' | 'cancelled'>('submitted');
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid' | 'waived'>('pending');
   const [submittedAt, setSubmittedAt] = useState(currentDateTimeLocal);
   const [notes, setNotes] = useState('');
@@ -139,7 +139,8 @@ function AddRequestForm({
         <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
           <option value="submitted">Submitted</option>
           <option value="in_progress">Processing</option>
-          <option value="completed">Ready for Pickup</option>
+          <option value="out_for_delivery">Out for Delivery</option>
+          <option value="completed">Completed/Delivered</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </label>
@@ -194,6 +195,18 @@ export function RequestsTable({
   const router = useRouter();
   const toast = useToast();
   const [referenceOrder, setReferenceOrder] = useState<'asc' | 'desc'>('asc');
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient();
+    const channel = supabase
+      .channel('admin-service-requests')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_requests' }, () => router.refresh())
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [router]);
 
   const sortedRequests = [...requests].sort((a, b) =>
     a.reference_number.localeCompare(b.reference_number) * (referenceOrder === 'asc' ? 1 : -1),
@@ -265,7 +278,8 @@ export function RequestsTable({
         options: [
           { value: 'submitted', label: 'Submitted' },
           { value: 'in_progress', label: 'Processing' },
-          { value: 'completed', label: 'Ready for Pickup' },
+          { value: 'out_for_delivery', label: 'Out for Delivery' },
+          { value: 'completed', label: 'Completed/Delivered' },
           { value: 'cancelled', label: 'Cancelled' },
         ],
         // Same bare .update({status}) the FSM buttons in RequestStatusActions use — the

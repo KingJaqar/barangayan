@@ -1,6 +1,5 @@
+import { formatCentavosAsPHP, formatProcessingTime, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import type { Tables } from '@barangayan/shared';
-import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -19,6 +18,13 @@ type DocumentType = Tables<'document_types'>;
 export function DocumentsList() {
   const theme = useTheme();
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
+  // Each mount gets its own unique channel name so that fast re-mounts (e.g. via
+  // router.replace('/services') from the COD confirmation screen) never try to add
+  // postgres_changes listeners to a channel that a previous instance already
+  // subscribed — Supabase throws "cannot add callbacks after subscribe()" in that case.
+  // useState lazy initialiser so Date.now() runs once at mount, not on re-renders.
+  // Value is stable (no setter used) — same role as useRef but avoids the purity lint.
+  const [channelName] = useState(() => `document-types-${Date.now()}`);
 
   useEffect(() => {
     function load() {
@@ -35,14 +41,14 @@ export function DocumentsList() {
     // should show up here without a manual pull-to-refresh — same pattern as
     // requests-list.tsx's existing subscription.
     const channel = supabase
-      .channel('document-types')
+      .channel(channelName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'document_types' }, load)
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [channelName]);
 
   if (documents === null) {
     return <PlaceholderPanel label="Loading catalog…" />;

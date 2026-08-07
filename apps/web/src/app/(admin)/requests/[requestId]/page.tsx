@@ -20,7 +20,8 @@ interface StatusHistoryEntry {
 const STEP_LABEL: Record<string, string> = {
   submitted: 'Request Submitted',
   in_progress: 'Processing',
-  completed: 'Ready for Pickup',
+  out_for_delivery: 'Out for Delivery',
+  completed: 'Completed/Delivered',
   cancelled: 'Cancelled',
 };
 

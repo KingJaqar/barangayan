@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 /** Fill-fraction bar shared by RequestsList and the Request Tracking screen — feed it a

@@ -1,6 +1,5 @@
+import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import type { Tables } from '@barangayan/shared';
-import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.half,
     borderRadius: Spacing.four,
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-end',
   },
   pricePillFree: {
     borderWidth: 1,

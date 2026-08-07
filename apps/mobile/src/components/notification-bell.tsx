@@ -3,8 +3,10 @@ import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '@/hooks/use-theme';
 
-/** Presentational-only unread indicator — no notifications table/screen exists yet, so
- * there's no real tap target; a plain View (not Pressable) is more honest than a dead one. */
+/** Presentational unread indicator. The tap target is provided by the caller — on the
+ * Home screen it is wrapped in a `Link href="/reports?tab=announcements"` + `Pressable`,
+ * which navigates to the Announcements sub-tab. Keep this component itself tap-target-free
+ * so it can be embedded in any context without double-Pressable nesting. */
 export function NotificationBell({ size = 24 }: { size?: number }) {
   const theme = useTheme();
 

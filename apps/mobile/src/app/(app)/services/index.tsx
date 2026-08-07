@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -16,6 +17,8 @@ import { useTheme } from '@/hooks/use-theme';
 
 type ServicesSegment = 'documents' | 'requests' | 'logs';
 
+const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
+
 const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
   documents: 'Search documents...',
   requests: 'Search requests...',
@@ -29,7 +32,20 @@ const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
 export default function ServicesScreen() {
   const { session } = useAuth();
   const theme = useTheme();
-  const [segment, setSegment] = useState<ServicesSegment>('documents');
+
+  // `segment` can be passed as a URL query param (e.g. /services?segment=requests) so
+  // that screens deep in the payment flow — like the COD confirmation screen's
+  // "View My Requests" button — can land directly on the right tab without the resident
+  // having to tap the control manually. Unknown or missing values fall back to
+  // 'documents'. Guests can never reach 'requests'/'logs' via the UI anyway (the
+  // SegmentedControl is hidden for them), so an invalid deep-link just shows Documents.
+  const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
+  const initialSegment: ServicesSegment =
+    session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
+      ? (segmentParam as ServicesSegment)
+      : 'documents';
+
+  const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
 
   return (
     <View style={styles.screen}>

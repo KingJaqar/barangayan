@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
 import * as DocumentPicker from 'expo-document-picker';
+import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
@@ -37,7 +38,8 @@ export default function RequestFormScreen() {
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
-  const [pickedFileName, setPickedFileName] = useState<string | null>(null);
+  const [pickedIdImage, setPickedIdImage] = useState<{ name: string; uri: string } | null>(null);
+  const [idUploadError, setIdUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -50,11 +52,25 @@ export default function RequestFormScreen() {
     // "Coming soon" note) — this captures the picked file's name for display; wiring it
     // to a storage bucket + RLS policy is separate follow-up work.
     const picked = await DocumentPicker.getDocumentAsync({
-      type: ['image/*', 'application/pdf'],
+      type: 'image/*',
       copyToCacheDirectory: true,
     });
     if (!picked.canceled && picked.assets[0]) {
-      setPickedFileName(picked.assets[0].name);
+      const asset = picked.assets[0];
+      const isImage = asset.mimeType?.startsWith('image/') ?? false;
+      const isTooLarge = (asset.size ?? 0) > 5 * 1024 * 1024;
+
+      if (!isImage) {
+        setIdUploadError('Please choose a JPG or PNG image of your valid ID.');
+        return;
+      }
+      if (isTooLarge) {
+        setIdUploadError('Your ID image must be 5MB or smaller.');
+        return;
+      }
+
+      setIdUploadError(null);
+      setPickedIdImage({ name: asset.name, uri: asset.uri });
     }
   }
 
@@ -137,17 +153,33 @@ export default function RequestFormScreen() {
             Please upload a clear copy of a government-issued ID.
           </ThemedText>
 
-          <Pressable onPress={handlePickFile}>
-            <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
-              <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
-              <ThemedText type="smallBold">
-                {pickedFileName ?? 'Tap or drag file here'}
-              </ThemedText>
-              <ThemedText type="small" themeColor="textSecondary">
-                JPG, PNG, PDF up to 5MB
-              </ThemedText>
+          {pickedIdImage ? (
+            <View style={styles.idPreview} accessibilityLabel="Uploaded ID preview">
+              <ThemedText type="smallBold">Uploaded ID preview</ThemedText>
+              <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
+              <View style={styles.idPreviewFooter}>
+                <ThemedText type="small" themeColor="textSecondary" numberOfLines={1} style={styles.fileName}>
+                  {pickedIdImage.name}
+                </ThemedText>
+              </View>
+              <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />
             </View>
-          </Pressable>
+          ) : (
+            <Pressable accessibilityRole="button" accessibilityLabel="Upload a valid ID image" onPress={handlePickFile}>
+              <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
+                <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
+                <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
+                <ThemedText type="small" themeColor="textSecondary">
+                  JPG or PNG up to 5MB
+                </ThemedText>
+              </View>
+            </Pressable>
+          )}
+          {idUploadError ? (
+            <ThemedText type="small" themeColor="accentRed">
+              {idUploadError}
+            </ThemedText>
+          ) : null}
         </ThemedView>
 
         {error ? (
@@ -210,6 +242,23 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.five,
     alignItems: 'center',
     gap: Spacing.one,
+  },
+  idPreview: {
+    marginTop: Spacing.two,
+    gap: Spacing.two,
+  },
+  idPreviewImage: {
+    width: '100%',
+    height: 220,
+    borderRadius: Spacing.three,
+  },
+  idPreviewFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  fileName: {
+    flex: 1,
   },
   feeRow: {
     flexDirection: 'row',

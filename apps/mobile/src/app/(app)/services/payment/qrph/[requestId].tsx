@@ -28,7 +28,8 @@ export default function QrPhPaymentScreen() {
   const router = useRouter();
   const theme = useTheme();
   const [request, setRequest] = useState<ServiceRequest | null | undefined>(undefined);
-  const pulse = useRef(new Animated.Value(1)).current;
+  // Keep a ref to the Animated.Value; access .current outside render (in useEffect).
+  const pulseRef = useRef(new Animated.Value(1));
 
   useEffect(() => {
     supabase
@@ -49,11 +50,11 @@ export default function QrPhPaymentScreen() {
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(pulse, { toValue: 0.3, duration: 700, useNativeDriver: true }),
-        Animated.timing(pulse, { toValue: 1, duration: 700, useNativeDriver: true }),
+        Animated.timing(pulseRef.current, { toValue: 0.3, duration: 700, useNativeDriver: true }),
+        Animated.timing(pulseRef.current, { toValue: 1, duration: 700, useNativeDriver: true }),
       ]),
     ).start();
-  }, [pulse]);
+  }, [pulseRef]);
 
   useEffect(() => {
     if (status === 'paid' && request) {
@@ -117,7 +118,7 @@ export default function QrPhPaymentScreen() {
 
         {status === 'pending' ? (
           <View style={styles.waitingRow}>
-            <Animated.View style={[styles.dot, { backgroundColor: theme.primary, opacity: pulse }]} />
+            <Animated.View style={[styles.dot, { backgroundColor: theme.primary, opacity: pulseRef.current }]} />
             <View>
               <ThemedText type="smallBold" style={{ color: theme.primary }}>
                 Waiting for payment...

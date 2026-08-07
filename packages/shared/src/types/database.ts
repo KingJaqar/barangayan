@@ -241,6 +241,9 @@ export type Database = {
           barangay_id: string
           created_at: string
           deleted_at: string | null
+          email_verification_status: string
+          email_verification_requested_at: string | null
+          email_verified_at: string | null
           full_name: string
           home_address: string | null
           id: string
@@ -254,6 +257,9 @@ export type Database = {
           barangay_id: string
           created_at?: string
           deleted_at?: string | null
+          email_verification_status?: string
+          email_verification_requested_at?: string | null
+          email_verified_at?: string | null
           full_name: string
           home_address?: string | null
           id: string
@@ -267,6 +273,9 @@ export type Database = {
           barangay_id?: string
           created_at?: string
           deleted_at?: string | null
+          email_verification_status?: string
+          email_verification_requested_at?: string | null
+          email_verified_at?: string | null
           full_name?: string
           home_address?: string | null
           id?: string
@@ -395,8 +404,20 @@ export type Database = {
         Args: { p_note: string; p_request_id: string }
         Returns: undefined
       }
+      complete_service_request: {
+        Args: { p_request_id: string }
+        Returns: undefined
+      }
       current_barangay_id: { Args: never; Returns: string }
       current_role: { Args: never; Returns: string }
+      mark_request_out_for_delivery: {
+        Args: { p_request_id: string }
+        Returns: undefined
+      }
+      set_service_request_payment_method: {
+        Args: { p_request_id: string; p_method: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

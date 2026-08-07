@@ -13,7 +13,6 @@ import { PreferenceToggle } from '@/components/preference-toggle';
 import { SegmentedControl } from '@/components/segmented-control';
 import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { ACCENT_COLORS, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
@@ -46,9 +45,12 @@ export default function SettingsScreen() {
   return (
     <View style={styles.screen}>
       <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
-          Settings
-        </ThemedText>
+        {/* height:40 matches AppHeader's logo size so all green banners are the same height */}
+        <View style={styles.headerContent}>
+          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Settings
+          </ThemedText>
+        </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -75,6 +77,20 @@ export default function SettingsScreen() {
                   <Chevron />
                 </Pressable>
               </Link>
+              <Divider />
+              {/* Deferred verification — nonblocking, informational only. Once SMTP is
+                  available this becomes an active "Verify Email" entry point. */}
+              <View style={styles.row}>
+                <SettingsIcon name="mail" />
+                <View style={styles.rowText}>
+                  <ThemedText>Email Verification</ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary">
+                    {profile?.email_verification_status === 'verified'
+                      ? 'Your email is verified ✓'
+                      : 'Verification not yet available'}
+                  </ThemedText>
+                </View>
+              </View>
             </Card>
           </Section>
         ) : null}
@@ -243,6 +259,12 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
+  },
+  // height:40 matches AppHeader's logo image height — keeps all green banners the same
+  // total height (insets.top + Spacing.two + 40 + Spacing.three = same as AppHeader).
+  headerContent: {
+    height: 40,
+    justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 20,

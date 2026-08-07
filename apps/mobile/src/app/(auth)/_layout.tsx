@@ -10,7 +10,6 @@ export default function AuthLayout() {
       <Stack.Screen name="value-prop" options={{ headerShown: false }} />
       <Stack.Screen name="personalization" options={{ headerShown: false }} />
       <Stack.Screen name="auth-choice" options={{ headerShown: false }} />
-      <Stack.Screen name="completion" options={{ headerShown: false }} />
     </Stack>
   );
 }

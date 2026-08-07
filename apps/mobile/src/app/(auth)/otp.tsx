@@ -11,22 +11,20 @@ import { supabase } from '@/lib/supabase';
 const RESEND_COOLDOWN_SECONDS = 45;
 
 type OtpParams = {
-  type: 'signup' | 'recovery';
+  // Only 'recovery' is supported now — signup OTP was removed when email
+  // confirmation was disabled (migration 0012 / register.tsx refactor).
+  type: 'recovery';
   email: string;
-  fullName?: string;
-  mobileNumber?: string;
-  homeAddress?: string;
-  barangayId?: string;
 };
 
-// Shared by both the signup email-verification flow and the password-recovery flow —
-// same screen, different `type`/copy, matching the design file (there's only one OTP
-// mock, reused). One simplification from the design: a single 6-digit text input rather
-// than 6 separate auto-advancing boxes — same function, much less fragile to implement.
+// Password-recovery OTP screen. The signup branch was removed: with Confirm Email
+// disabled in the hosted project, signUp() creates a live session immediately, so
+// signup OTP is neither sent nor needed. Profile creation now happens via a database
+// trigger (handle_new_user) — see migration 0012 and register.tsx.
 export default function OtpScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<OtpParams>();
-  const { type, email } = params;
+  const { email } = params;
 
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +42,7 @@ export default function OtpScreen() {
     setError(null);
     setLoading(true);
     const { error: verifyError } = await supabase.auth.verifyOtp({
-      type,
+      type: 'recovery',
       email,
       token: code,
     });
@@ -55,32 +53,13 @@ export default function OtpScreen() {
       return;
     }
 
-    if (type === 'signup') {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from('profiles').insert({
-          id: user.id,
-          barangay_id: params.barangayId!,
-          full_name: params.fullName || email,
-          mobile_number: params.mobileNumber || null,
-          home_address: params.homeAddress || null,
-        });
-      }
-      router.replace('/(auth)/completion');
-    } else {
-      router.replace('/(auth)/reset-password');
-    }
+    router.replace('/(auth)/reset-password');
   }
 
   async function handleResend() {
     setError(null);
     setResending(true);
-    const { error: resendError } =
-      type === 'signup'
-        ? await supabase.auth.resend({ type: 'signup', email })
-        : await supabase.auth.resetPasswordForEmail(email);
+    const { error: resendError } = await supabase.auth.resetPasswordForEmail(email);
     setResending(false);
 
     if (resendError) {
@@ -96,7 +75,7 @@ export default function OtpScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.content}>
         <ThemedText type="title" style={styles.title}>
-          {type === 'signup' ? 'Verify Your Email' : 'Enter Reset Code'}
+          Enter Reset Code
         </ThemedText>
         <ThemedText themeColor="textSecondary" style={styles.subtitle}>
           We've sent a 6-digit code to{'\n'}

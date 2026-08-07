@@ -6,6 +6,7 @@ export default function SettingsLayout() {
       {/* index.tsx builds its own colored header (matching the reference screenshot) —
           the native Stack header would otherwise show a stray "index" title above it. */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
     </Stack>
   );
 }

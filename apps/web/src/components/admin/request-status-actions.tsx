@@ -44,6 +44,32 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
     router.refresh();
   }
 
+  async function completeRequest() {
+    setBusy(true);
+    const supabase = createSupabaseBrowserClient();
+    const { error } = await supabase.rpc('complete_service_request', { p_request_id: requestId });
+    setBusy(false);
+    if (error) {
+      toast.showError(`Failed to complete request: ${error.message}`);
+      return;
+    }
+    toast.showSuccess('Request marked as completed/delivered.');
+    router.refresh();
+  }
+
+  async function markOutForDelivery() {
+    setBusy(true);
+    const supabase = createSupabaseBrowserClient();
+    const { error } = await supabase.rpc('mark_request_out_for_delivery', { p_request_id: requestId });
+    setBusy(false);
+    if (error) {
+      toast.showError(`Failed to mark request out for delivery: ${error.message}`);
+      return;
+    }
+    toast.showSuccess('Request marked out for delivery.');
+    router.refresh();
+  }
+
   async function handleCancel() {
     if (!cancelNote.trim()) return;
     setBusy(true);
@@ -93,8 +119,14 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       ) : null}
 
       {status === 'in_progress' ? (
-        <button onClick={() => updateStatus('completed')} disabled={busy} className={`${btnClass} bg-[#0F6E5B] text-white`}>
-          Mark Ready for Pickup
+        <button onClick={markOutForDelivery} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
+          Mark Out for Delivery
+        </button>
+      ) : null}
+
+      {status === 'out_for_delivery' ? (
+        <button onClick={completeRequest} disabled={busy} className={`${btnClass} bg-[#0F6E5B] text-white`}>
+          Mark as Completed/Delivered
         </button>
       ) : null}
 

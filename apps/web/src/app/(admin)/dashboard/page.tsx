@@ -42,8 +42,7 @@ export default async function DashboardPage() {
     supabase
       .from('service_requests')
       .select('id', { count: 'exact', head: true })
-      .eq('status', 'completed')
-      .neq('payment_status', 'paid'),
+      .eq('status', 'out_for_delivery'),
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'resident'),
     supabase.from('payments').select('amount_centavos').eq('status', 'paid').gte('paid_at', today.toISOString()),
     supabase
@@ -71,7 +70,7 @@ export default async function DashboardPage() {
 
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
         <KpiCard label="Pending Requests" value={pendingCount ?? 0} />
-        <KpiCard label="Ready for Pickup" value={readyCount ?? 0} />
+        <KpiCard label="Out for Delivery" value={readyCount ?? 0} />
         <KpiCard label="Today's Collections" value={formatCentavosAsPHP(todayTotal)} />
         <KpiCard label="Registered Residents" value={residentCount ?? 0} />
       </div>

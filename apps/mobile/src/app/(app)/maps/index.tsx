@@ -1,11 +1,14 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { SegmentedControl } from '@/components/segmented-control';
+import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 type MapsSegment = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
 
@@ -15,6 +18,8 @@ type MapsSegment = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
 // see AGENTS.md §4's locked structural decisions.
 export default function MapsScreen() {
   const router = useRouter();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [segment, setSegment] = useState<MapsSegment>('hub');
 
   function handleChange(next: MapsSegment) {
@@ -27,6 +32,13 @@ export default function MapsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.topHeader, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+        <View style={styles.headerContent}>
+          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Maps
+          </ThemedText>
+        </View>
+      </View>
       <ThemedView style={styles.header}>
         <SegmentedControl
           segments={[
@@ -55,6 +67,17 @@ export default function MapsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+  },
+  topHeader: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+  },
+  headerContent: {
+    height: 40,
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
   },
   header: {
     padding: Spacing.three,

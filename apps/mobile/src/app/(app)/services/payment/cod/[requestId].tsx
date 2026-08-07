@@ -93,13 +93,13 @@ export default function CodConfirmationScreen() {
           <ThemedText type="small" themeColor="textSecondary" style={styles.notice}>
             {fee === 0
               ? 'This document has no processing fee.'
-              : `Pay ${formatCentavosAsPHP(fee)} in cash when you claim this document at the Barangay Hall.`}
+              : `Pay ${formatCentavosAsPHP(fee)} in cash when you claim this document in your home address.`}
           </ThemedText>
         </ThemedView>
       </View>
 
       <View style={styles.footer}>
-        <PrimaryButton label="View My Requests" onPress={() => router.replace('/services')} />
+        <PrimaryButton label="View My Requests" onPress={() => router.replace('/services?segment=requests')} />
       </View>
     </SafeAreaView>
   );

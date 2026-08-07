@@ -18,14 +18,6 @@ interface AuthContextValue {
   isPasswordRecovery: boolean;
   setPasswordRecovery: (value: boolean) => void;
   /**
-   * Same idea as isPasswordRecovery: signup verification also establishes a real session
-   * immediately, but the design's flow wants an interstitial Completion screen ("You're
-   * all set") before landing in the main app. Set true right before verifying the signup
-   * OTP, cleared when the user taps "Go to Home" on completion.tsx.
-   */
-  isOnboarding: boolean;
-  setOnboarding: (value: boolean) => void;
-  /**
    * "I'll Sign In Later" on the Auth Choice screen — lets Stack.Protected's guard admit
    * (app) with no real session, for real read-only browsing (Announcements, the Documents
    * catalog; see the 0005 migration's anon RLS policies). Cleared implicitly once a real
@@ -50,8 +42,6 @@ const AuthContext = createContext<AuthContextValue>({
   isLoading: true,
   isPasswordRecovery: false,
   setPasswordRecovery: () => {},
-  isOnboarding: false,
-  setOnboarding: () => {},
   isGuest: false,
   setGuest: () => {},
   logout: async () => {},
@@ -61,7 +51,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-  const [isOnboarding, setIsOnboarding] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
@@ -112,8 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isPasswordRecovery,
         setPasswordRecovery: setIsPasswordRecovery,
-        isOnboarding,
-        setOnboarding: setIsOnboarding,
         isGuest,
         setGuest: setIsGuest,
         logout,

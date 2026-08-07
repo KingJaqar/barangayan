@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -42,6 +43,14 @@ export default function AdminLoginPage() {
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-2xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+        <Image
+          src="/assets/logo/barangayan-logo-1024.png"
+          alt="Barangayan logo"
+          width={96}
+          height={96}
+          priority
+          className="mx-auto mb-3 h-24 w-24 object-contain"
+        />
         <h1 className="mb-1 text-center text-2xl font-bold text-[#0F6E5B]">Barangayan</h1>
         <p className="mb-6 text-center text-sm text-zinc-500">Admin Dashboard</p>
 

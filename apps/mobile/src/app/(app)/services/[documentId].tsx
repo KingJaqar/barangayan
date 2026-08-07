@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { Tables } from '@barangayan/shared';
-import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatProcessingTime, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';

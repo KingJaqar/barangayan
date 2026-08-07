@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { Tables } from '@barangayan/shared';
-import { estimateLabel, formatDate, progressFraction } from '@barangayan/shared';
+import { estimateLabel, formatDate, progressFraction, type Tables } from '@barangayan/shared';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -24,7 +23,8 @@ type ServiceRequest = Tables<'service_requests'> & {
 const STATUS_LABEL: Record<string, string> = {
   submitted: 'Submitted',
   in_progress: 'Processing',
-  completed: 'Ready for Pickup',
+  out_for_delivery: 'Out for Delivery',
+  completed: 'Completed/Delivered',
   cancelled: 'Cancelled',
 };
 
@@ -41,15 +41,15 @@ interface RequestStatusConfig {
   solid: boolean;
 }
 
-type Filter = 'all' | 'active' | 'ready' | 'history';
+type Filter = 'all' | 'active' | 'delivery' | 'history';
 
 // Filter chips match the design file (All/Active/Ready/History); our status enum maps
 // as: Active = submitted+in_progress, Ready = completed, History = cancelled.
 function matchesFilter(status: string, filter: Filter): boolean {
   if (filter === 'all') return true;
   if (filter === 'active') return status === 'submitted' || status === 'in_progress';
-  if (filter === 'ready') return status === 'completed';
-  return status === 'cancelled';
+  if (filter === 'delivery') return status === 'out_for_delivery';
+  return status === 'completed' || status === 'cancelled';
 }
 
 export function RequestsList() {
@@ -91,6 +91,7 @@ export function RequestsList() {
     const config: Record<string, RequestStatusConfig> = {
       submitted: { icon: 'time-outline', color: theme.textSecondary, solid: false },
       in_progress: { icon: 'sync-outline', color: STATUS_BLUE, solid: false },
+      out_for_delivery: { icon: 'car-outline', color: STATUS_GREEN, solid: false },
       completed: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: true },
       cancelled: { icon: 'close-circle-outline', color: theme.accentRed, solid: false },
     };
@@ -120,7 +121,7 @@ export function RequestsList() {
         segments={[
           { key: 'all', label: 'All' },
           { key: 'active', label: 'Active' },
-          { key: 'ready', label: 'Ready' },
+          { key: 'delivery', label: 'Delivery' },
           { key: 'history', label: 'History' },
         ]}
         activeKey={filter}
@@ -195,7 +196,9 @@ export function RequestsList() {
                           }>
                           {request.status === 'completed'
                             ? '100%'
-                            : estimateLabel(
+                            : request.status === 'out_for_delivery'
+                              ? 'On its way'
+                              : estimateLabel(
                                 request.created_at,
                                 request.document_types?.processing_target_hours ?? 24,
                               )}

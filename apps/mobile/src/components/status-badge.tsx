@@ -25,7 +25,8 @@ function useStatusConfig(status: string): StatusConfig {
   const config: Record<string, StatusConfig> = {
     submitted: { label: 'Submitted', icon: 'time-outline', color: theme.textSecondary },
     in_progress: { label: 'Processing', icon: 'sync-outline', color: STATUS_BLUE },
-    completed: { label: 'Ready for Pickup', icon: 'checkmark-circle-outline', color: STATUS_GREEN },
+    out_for_delivery: { label: 'Out for Delivery', icon: 'car-outline', color: STATUS_GREEN },
+    completed: { label: 'Completed/Delivered', icon: 'checkmark-circle-outline', color: STATUS_GREEN },
     cancelled: { label: 'Cancelled', icon: 'close-circle-outline', color: theme.accentRed },
   };
   return config[status] ?? { label: status, icon: 'help-circle-outline', color: theme.textSecondary };

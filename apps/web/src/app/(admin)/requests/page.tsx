@@ -10,11 +10,11 @@ export type ServiceRequest = Tables<'service_requests'> & {
   profiles: Pick<Tables<'profiles'>, 'full_name'> | null;
 };
 
-type Tab = 'active' | 'ready' | 'completed' | 'cancelled' | 'all';
+type Tab = 'active' | 'delivery' | 'completed' | 'cancelled' | 'all';
 
 const TABS: { key: Tab; label: string }[] = [
   { key: 'active', label: 'Active' },
-  { key: 'ready', label: 'Ready' },
+  { key: 'delivery', label: 'Out for Delivery' },
   { key: 'completed', label: 'Completed' },
   { key: 'cancelled', label: 'Cancelled' },
   { key: 'all', label: 'All' },
@@ -22,16 +22,15 @@ const TABS: { key: Tab; label: string }[] = [
 
 // The FSM the 0002 migration deferred to "admin/backend concern" — reuses the exact
 // service_requests.status values the mobile app already renders (submitted, in_progress,
-// completed, cancelled). "Ready" and "Completed" are both status='completed'; the split
-// is purely payment_status, matching the plan's Part C4 filter table.
+// out_for_delivery, completed, cancelled).
 function matchesTab(request: ServiceRequest, tab: Tab): boolean {
   switch (tab) {
     case 'active':
       return request.status === 'submitted' || request.status === 'in_progress';
-    case 'ready':
-      return request.status === 'completed' && request.payment_status !== 'paid';
+    case 'delivery':
+      return request.status === 'out_for_delivery';
     case 'completed':
-      return request.status === 'completed' && request.payment_status === 'paid';
+      return request.status === 'completed';
     case 'cancelled':
       return request.status === 'cancelled';
     case 'all':
@@ -45,7 +44,7 @@ export default async function RequestsPage({
   searchParams: Promise<{ tab?: string; q?: string }>;
 }) {
   const { tab: tabParam, q } = await searchParams;
-  const tab: Tab = (['active', 'ready', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
+  const tab: Tab = (['active', 'delivery', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
     ? (tabParam as Tab)
     : 'active';
 

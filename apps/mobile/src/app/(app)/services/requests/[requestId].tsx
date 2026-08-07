@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { estimateLabel, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
+import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
+import { Divider } from '@/components/divider';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ProgressBar } from '@/components/progress-bar';
 import { ThemedText } from '@/components/themed-text';
@@ -14,7 +15,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type ServiceRequest = Tables<'service_requests'> & {
-  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours'> | null;
+  document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
 };
 
 interface StatusHistoryEntry {
@@ -23,16 +24,18 @@ interface StatusHistoryEntry {
   note: string | null;
 }
 
-const STEP_ORDER = ['submitted', 'in_progress', 'completed'];
+const STEP_ORDER = ['submitted', 'in_progress', 'out_for_delivery', 'completed'];
 const STEP_LABEL: Record<string, string> = {
   submitted: 'Request Submitted',
   in_progress: 'Processing',
-  completed: 'Ready for Pickup',
+  out_for_delivery: 'Out for Delivery',
+  completed: 'Completed/Delivered',
 };
 const STEP_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   submitted: 'checkmark',
   in_progress: 'sync-outline',
-  completed: 'archive-outline',
+  out_for_delivery: 'car-outline',
+  completed: 'checkmark-circle-outline',
 };
 
 // Amber/orange, distinct from theme.primary/status colors — matches the reference
@@ -51,7 +54,7 @@ export default function RequestTrackingScreen() {
     function load() {
       supabase
         .from('service_requests')
-        .select('*, document_types(name, processing_target_hours)')
+        .select('*, document_types(name, processing_target_hours, fee_centavos)')
         .eq('id', requestId)
         .single()
         .then(({ data }) => {
@@ -91,6 +94,23 @@ export default function RequestTrackingScreen() {
   const fraction = isCancelled ? 0 : progressFraction(request.status, request.created_at, targetHours);
   const progressColor = request.status === 'completed' ? theme.primary : PROGRESS_AMBER;
 
+  const fee = request.document_types?.fee_centavos ?? 0;
+  // payment_method is null until the resident reaches the payment selection screen
+  // (Stage 4). Show a "Not yet selected" fallback for requests still in that gap.
+  const paymentMethodLabel =
+    request.payment_method === 'cash'
+      ? 'Cash on Delivery'
+      : request.payment_method === 'qrph'
+        ? 'QR Ph'
+        : 'Not yet selected';
+  const paymentMethodIcon: keyof typeof Ionicons.glyphMap =
+    request.payment_method === 'cash'
+      ? 'cash-outline'
+      : request.payment_method === 'qrph'
+        ? 'qr-code-outline'
+        : 'help-circle-outline';
+  const isPaid = request.payment_status === 'paid';
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -106,7 +126,7 @@ export default function RequestTrackingScreen() {
                 <ThemedText type="smallBold">Processing Time</ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">
                   {request.status === 'completed'
-                    ? 'Ready for pickup'
+                    ? 'Completed and delivered'
                     : `Estimated completion — ${estimateLabel(request.created_at, targetHours)}`}
                 </ThemedText>
               </View>
@@ -117,6 +137,31 @@ export default function RequestTrackingScreen() {
             <ProgressBar fraction={fraction} color={progressColor} />
           </Card>
         ) : null}
+
+        <Card style={styles.paymentCard}>
+          <View style={styles.cardHeader}>
+            <Ionicons name="wallet-outline" size={18} color={theme.primary} />
+            <ThemedText type="smallBold">Payment</ThemedText>
+          </View>
+          <Divider />
+          <View style={styles.paymentRow}>
+            <View style={styles.paymentMethodCell}>
+              <Ionicons name={paymentMethodIcon} size={16} color={theme.textSecondary} />
+              <ThemedText type="small">{paymentMethodLabel}</ThemedText>
+            </View>
+            <View style={[styles.paymentStatusPill, { backgroundColor: isPaid ? `${theme.primary}26` : `${theme.textSecondary}1A` }]}>
+              <ThemedText type="small" style={{ color: isPaid ? theme.primary : theme.textSecondary }}>
+                {isPaid ? 'Paid' : 'Pending'}
+              </ThemedText>
+            </View>
+          </View>
+          <View style={styles.paymentAmountRow}>
+            <ThemedText type="small" themeColor="textSecondary">Amount Due</ThemedText>
+            <ThemedText type="smallBold">
+              {fee === 0 ? 'Free' : formatCentavosAsPHP(fee)}
+            </ThemedText>
+          </View>
+        </Card>
 
         <ThemedView type="backgroundElement" style={styles.timeline}>
           <ThemedText type="smallBold">Status History</ThemedText>
@@ -270,5 +315,37 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     borderRadius: Spacing.three,
     gap: Spacing.one,
+  },
+  paymentCard: {
+    gap: 0,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    padding: Spacing.three,
+  },
+  paymentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+  },
+  paymentMethodCell: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  paymentStatusPill: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: 2,
+    borderRadius: Spacing.four,
+  },
+  paymentAmountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: Spacing.three,
+    paddingBottom: Spacing.three,
   },
 });
