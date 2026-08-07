@@ -1,7 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
+import * as DocumentPicker from 'expo-document-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
@@ -11,24 +13,50 @@ import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
+
+function Chip({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) {
+  const theme = useTheme();
+  return (
+    <ThemedView type="backgroundElement" style={styles.chip}>
+      <Ionicons name={icon} size={14} color={theme.textSecondary} />
+      <ThemedText type="small">{label}</ThemedText>
+    </ThemedView>
+  );
+}
 
 export default function RequestFormScreen() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
   const router = useRouter();
   const { session } = useAuth();
   const { profile } = useProfile();
+  const theme = useTheme();
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
+  const [pickedFileName, setPickedFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     supabase.from('document_types').select('*').eq('id', documentId).single().then(({ data }) => setDoc(data));
   }, [documentId]);
+
+  async function handlePickFile() {
+    // Real file upload to Supabase Storage is deferred (see the Request Form's original
+    // "Coming soon" note) — this captures the picked file's name for display; wiring it
+    // to a storage bucket + RLS policy is separate follow-up work.
+    const picked = await DocumentPicker.getDocumentAsync({
+      type: ['image/*', 'application/pdf'],
+      copyToCacheDirectory: true,
+    });
+    if (!picked.canceled && picked.assets[0]) {
+      setPickedFileName(picked.assets[0].name);
+    }
+  }
 
   async function handleSubmit() {
     if (!doc || !session) return;
@@ -74,18 +102,19 @@ export default function RequestFormScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Request Form
-        </ThemedText>
-
         <ThemedView type="backgroundElement" style={styles.section}>
-          <ThemedText type="small">Purpose of Request</ThemedText>
+          <ThemedText type="small" style={{ color: theme.primary }}>
+            Purpose of Request
+          </ThemedText>
           <TextField
             placeholder="e.g. Employment requirement"
             value={notes}
             onChangeText={setNotes}
             multiline
           />
+          <ThemedText type="small" themeColor="textSecondary">
+            e.g., Employment, Bank Requirements
+          </ThemedText>
         </ThemedView>
 
         <ThemedView type="backgroundElement" style={styles.section}>
@@ -95,33 +124,31 @@ export default function RequestFormScreen() {
               Edit in Profile
             </ThemedText>
           </View>
-          <ThemedText type="small" themeColor="textSecondary">
-            {profile?.full_name ?? '—'}
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
-            {profile?.home_address ?? 'No address on file'}
-          </ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
-            {profile?.mobile_number ?? 'No mobile number on file'}
-          </ThemedText>
+          <View style={styles.chipRow}>
+            <Chip icon="person-outline" label={profile?.full_name ?? '—'} />
+            <Chip icon="home-outline" label={profile?.home_address ?? 'No address on file'} />
+            <Chip icon="call-outline" label={profile?.mobile_number ?? 'No mobile number on file'} />
+          </View>
         </ThemedView>
 
-        {/* Real file upload (Supabase Storage bucket + RLS) is deferred — same
-            simplification as Register's Location Verification step. */}
         <ThemedView type="backgroundElement" style={styles.section}>
           <ThemedText type="small">Valid ID Upload</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
-            Please upload a clear copy of a government-issued ID. (Coming soon — bring a
-            physical copy to the barangay hall for now.)
+            Please upload a clear copy of a government-issued ID.
           </ThemedText>
-        </ThemedView>
 
-        <View style={styles.feeRow}>
-          <ThemedText type="small">Processing Fee</ThemedText>
-          <ThemedText type="smallBold">
-            {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
-          </ThemedText>
-        </View>
+          <Pressable onPress={handlePickFile}>
+            <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
+              <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
+              <ThemedText type="smallBold">
+                {pickedFileName ?? 'Tap or drag file here'}
+              </ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">
+                JPG, PNG, PDF up to 5MB
+              </ThemedText>
+            </View>
+          </Pressable>
+        </ThemedView>
 
         {error ? (
           <ThemedText type="small" themeColor="accentRed">
@@ -131,7 +158,13 @@ export default function RequestFormScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <PrimaryButton label="Proceed to Payment" loading={submitting} onPress={handleSubmit} />
+        <View style={styles.feeRow}>
+          <ThemedText type="small">Processing Fee</ThemedText>
+          <ThemedText type="smallBold">
+            {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
+          </ThemedText>
+        </View>
+        <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
       </View>
     </SafeAreaView>
   );
@@ -145,9 +178,6 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
-  title: {
-    fontSize: 26,
-  },
   section: {
     padding: Spacing.three,
     borderRadius: Spacing.three,
@@ -158,10 +188,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.two,
+    marginTop: Spacing.one,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.one,
+    borderRadius: 999,
+  },
+  dropZone: {
+    marginTop: Spacing.two,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderRadius: Spacing.three,
+    paddingVertical: Spacing.five,
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
   feeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: Spacing.two,
+    marginBottom: Spacing.two,
   },
   footer: {
     padding: Spacing.four,

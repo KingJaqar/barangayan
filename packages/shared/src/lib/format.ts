@@ -37,3 +37,36 @@ export function formatProcessingTime(hours: number): string {
   if (hours <= 120) return '3-5 Working Days';
   return `${Math.ceil(hours / 24)} Working Days`;
 }
+
+/**
+ * 0-1 fill fraction for a service_request's progress bar, derived from real
+ * created_at/target-hours data. Shared by the mobile RequestsList and Request Tracking
+ * screens (and reusable from the web admin's request detail page) so there's exactly one
+ * implementation of "how far along is this request." Never called for 'cancelled'.
+ */
+export function progressFraction(status: string, createdAt: string, targetHours: number): number {
+  if (status === 'completed') return 1;
+  const elapsedHours = (Date.now() - new Date(createdAt).getTime()) / 3_600_000;
+  const raw = targetHours > 0 ? elapsedHours / targetHours : 0;
+  // Floor so the bar never looks broken/empty; cap below 1 so only a real 'completed'
+  // status ever shows a full bar (100% must mean "done", not "on track").
+  const min = status === 'submitted' ? 0.08 : 0.15;
+  return Math.min(Math.max(raw, min), 0.95);
+}
+
+/**
+ * "Est. N hour(s)/day(s)" countdown label — a live per-request estimate, distinct from
+ * formatProcessingTime's static catalog bucketing. Not called for 'completed' (always
+ * "100%") or 'cancelled' (no progress row).
+ */
+export function estimateLabel(createdAt: string, targetHours: number): string {
+  const elapsedHours = (Date.now() - new Date(createdAt).getTime()) / 3_600_000;
+  const remainingHours = Math.max(targetHours - elapsedHours, 0);
+  if (remainingHours <= 0) return 'Est. any moment';
+  if (remainingHours <= 24) {
+    const hours = Math.ceil(remainingHours);
+    return `Est. ${hours} hour${hours === 1 ? '' : 's'}`;
+  }
+  const days = Math.ceil(remainingHours / 24);
+  return `Est. ${days} day${days === 1 ? '' : 's'}`;
+}

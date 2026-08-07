@@ -5,6 +5,7 @@
 
 import '@/global.css';
 
+import { ACCENT_COLORS as SHARED_ACCENT_COLORS } from '@barangayan/shared';
 import { Platform } from 'react-native';
 
 // primary/onPrimary/accentRed sampled directly from the design file (see the plan's
@@ -35,11 +36,11 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
-// Green, blue, red, purple — the one real "App Theme" accent palette, shared by both the
-// Onboarding Personalization screen and Settings so a color picked during onboarding
-// still shows as the selected swatch later in Settings (and vice versa). The first entry
-// matches use-theme-preference.tsx's DEFAULT_ACCENT_COLOR.
-export const ACCENT_COLORS = ['#0F6E5B', '#2563EB', '#DC2626', '#7C3AED'];
+// Re-exported from packages/shared (now also read by the web admin's Theme page) —
+// kept as a named export here so existing mobile imports (Onboarding Personalization,
+// Settings) don't need to change. See theme-colors.ts's own comment for why this lives
+// in shared. The first entry matches use-theme-preference.tsx's DEFAULT_ACCENT_COLOR.
+export const ACCENT_COLORS = SHARED_ACCENT_COLORS;
 
 export const Fonts = Platform.select({
   ios: {

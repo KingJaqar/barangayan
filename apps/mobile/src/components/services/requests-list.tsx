@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { Tables } from '@barangayan/shared';
-import { formatDate } from '@barangayan/shared';
+import { estimateLabel, formatDate, progressFraction } from '@barangayan/shared';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
+import { ProgressBar } from '@/components/progress-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -49,44 +50,6 @@ function matchesFilter(status: string, filter: Filter): boolean {
   if (filter === 'active') return status === 'submitted' || status === 'in_progress';
   if (filter === 'ready') return status === 'completed';
   return status === 'cancelled';
-}
-
-/** 0-1 fill fraction for the progress bar, derived from real created_at/target-hours data
- * — never called for 'cancelled' (no progress row rendered for that status). */
-function progressFraction(request: ServiceRequest): number {
-  if (request.status === 'completed') return 1;
-  const targetHours = request.document_types?.processing_target_hours ?? 24;
-  const elapsedHours = (Date.now() - new Date(request.created_at).getTime()) / 3_600_000;
-  const raw = targetHours > 0 ? elapsedHours / targetHours : 0;
-  // Floor so the bar never looks broken/empty; cap below 1 so only a real 'completed'
-  // status ever shows a full bar (100% must mean "done", not "on track").
-  const min = request.status === 'submitted' ? 0.08 : 0.15;
-  return Math.min(Math.max(raw, min), 0.95);
-}
-
-/** "Est. N hour(s)/day(s)" countdown for the progress row's trailing label — a live
- * per-request estimate, distinct from formatProcessingTime's static catalog bucketing.
- * Not called for 'completed' (always "100%") or 'cancelled' (no progress row). */
-function estimateLabel(request: ServiceRequest): string {
-  const targetHours = request.document_types?.processing_target_hours ?? 24;
-  const elapsedHours = (Date.now() - new Date(request.created_at).getTime()) / 3_600_000;
-  const remainingHours = Math.max(targetHours - elapsedHours, 0);
-  if (remainingHours <= 0) return 'Est. any moment';
-  if (remainingHours <= 24) {
-    const hours = Math.ceil(remainingHours);
-    return `Est. ${hours} hour${hours === 1 ? '' : 's'}`;
-  }
-  const days = Math.ceil(remainingHours / 24);
-  return `Est. ${days} day${days === 1 ? '' : 's'}`;
-}
-
-function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
-  const theme = useTheme();
-  return (
-    <View style={[styles.progressTrack, { backgroundColor: theme.backgroundSelected }]}>
-      <View style={[styles.progressFill, { backgroundColor: color, width: `${fraction * 100}%` }]} />
-    </View>
-  );
 }
 
 export function RequestsList() {
@@ -214,7 +177,14 @@ export function RequestsList() {
 
                     {request.status !== 'cancelled' ? (
                       <View style={styles.progressRow}>
-                        <ProgressBar fraction={progressFraction(request)} color={config.color} />
+                        <ProgressBar
+                          fraction={progressFraction(
+                            request.status,
+                            request.created_at,
+                            request.document_types?.processing_target_hours ?? 24,
+                          )}
+                          color={config.color}
+                        />
                         <ThemedText
                           type="small"
                           themeColor={request.status === 'completed' ? undefined : 'textSecondary'}
@@ -223,7 +193,12 @@ export function RequestsList() {
                               ? { color: STATUS_GREEN, fontWeight: '700' }
                               : undefined
                           }>
-                          {request.status === 'completed' ? '100%' : estimateLabel(request)}
+                          {request.status === 'completed'
+                            ? '100%'
+                            : estimateLabel(
+                                request.created_at,
+                                request.document_types?.processing_target_hours ?? 24,
+                              )}
                         </ThemedText>
                       </View>
                     ) : null}
@@ -284,15 +259,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-  },
-  progressTrack: {
-    flex: 1,
-    height: 6,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: 6,
-    borderRadius: 3,
   },
 });

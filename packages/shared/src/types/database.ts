@@ -1,11 +1,3 @@
-/**
- * Generated Supabase database types — DO NOT hand-edit.
- * Regenerate after any migration change with:
- *   npx supabase gen types typescript --linked --schema public > packages/shared/src/types/database.ts
- * (requires `npx supabase login --token <personal-access-token>` and
- * `npx supabase link --project-ref pwjbucnyqexiepoinoke` first — see the plan's Supabase
- * Setup section.)
- */
 export type Json =
   | string
   | number
@@ -19,6 +11,31 @@ export type Database = {
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.15"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -101,6 +118,7 @@ export type Database = {
         Row: {
           barangay_id: string
           created_at: string
+          deleted_at: string | null
           description: string | null
           fee_centavos: number
           id: string
@@ -112,6 +130,7 @@ export type Database = {
         Insert: {
           barangay_id: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           fee_centavos?: number
           id?: string
@@ -123,6 +142,7 @@ export type Database = {
         Update: {
           barangay_id?: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           fee_centavos?: number
           id?: string
@@ -141,11 +161,86 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount_centavos: number
+          barangay_id: string
+          collected_by: string | null
+          created_at: string
+          deleted_at: string | null
+          id: string
+          method: string
+          paid_at: string | null
+          paymongo_source_id: string | null
+          service_request_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_centavos: number
+          barangay_id: string
+          collected_by?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          method: string
+          paid_at?: string | null
+          paymongo_source_id?: string | null
+          service_request_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_centavos?: number
+          barangay_id?: string
+          collected_by?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          method?: string
+          paid_at?: string | null
+          paymongo_source_id?: string | null
+          service_request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_collected_by_fkey"
+            columns: ["collected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_service_request_id_fkey"
+            columns: ["service_request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_notifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_service_request_id_fkey"
+            columns: ["service_request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           accent_color: string
           barangay_id: string
           created_at: string
+          deleted_at: string | null
           full_name: string
           home_address: string | null
           id: string
@@ -158,6 +253,7 @@ export type Database = {
           accent_color?: string
           barangay_id: string
           created_at?: string
+          deleted_at?: string | null
           full_name: string
           home_address?: string | null
           id: string
@@ -170,6 +266,7 @@ export type Database = {
           accent_color?: string
           barangay_id?: string
           created_at?: string
+          deleted_at?: string | null
           full_name?: string
           home_address?: string | null
           id?: string
@@ -192,8 +289,10 @@ export type Database = {
         Row: {
           barangay_id: string
           created_at: string
+          deleted_at: string | null
           document_type_id: string
           id: string
+          payment_method: string | null
           payment_status: string
           reference_number: string
           requester_notes: string | null
@@ -205,8 +304,10 @@ export type Database = {
         Insert: {
           barangay_id: string
           created_at?: string
+          deleted_at?: string | null
           document_type_id: string
           id?: string
+          payment_method?: string | null
           payment_status?: string
           reference_number?: string
           requester_notes?: string | null
@@ -218,8 +319,10 @@ export type Database = {
         Update: {
           barangay_id?: string
           created_at?: string
+          deleted_at?: string | null
           document_type_id?: string
           id?: string
+          payment_method?: string | null
           payment_status?: string
           reference_number?: string
           requester_notes?: string | null
@@ -254,9 +357,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_notifications: {
+        Row: {
+          barangay_id: string | null
+          created_at: string | null
+          id: string | null
+          reference_number: string | null
+          status: string | null
+        }
+        Insert: {
+          barangay_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          reference_number?: string | null
+          status?: string | null
+        }
+        Update: {
+          barangay_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          reference_number?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      cancel_service_request: {
+        Args: { p_note: string; p_request_id: string }
+        Returns: undefined
+      }
       current_barangay_id: { Args: never; Returns: string }
       current_role: { Args: never; Returns: string }
     }
@@ -387,6 +525,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

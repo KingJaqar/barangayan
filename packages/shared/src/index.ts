@@ -6,10 +6,13 @@ export * from './schemas/auth';
 export * from './schemas/request-form';
 export * from './schemas/incident-report';
 export * from './schemas/drive-registration';
+export * from './schemas/payment';
+export * from './schemas/document-type';
 
 export * from './constants/document-catalog-shape';
 export * from './constants/incident-categories';
 export * from './constants/priority-weights';
+export * from './constants/theme-colors';
 
 export * from './lib/supabase-client';
 export * from './lib/haversine';

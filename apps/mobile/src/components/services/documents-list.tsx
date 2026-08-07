@@ -21,11 +21,27 @@ export function DocumentsList() {
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
 
   useEffect(() => {
-    supabase
-      .from('document_types')
-      .select('*')
-      .order('name')
-      .then(({ data }) => setDocuments(data ?? []));
+    function load() {
+      supabase
+        .from('document_types')
+        .select('*')
+        .order('name')
+        .then(({ data }) => setDocuments(data ?? []));
+    }
+
+    load();
+
+    // Realtime: an admin editing/deactivating a document type on the web dashboard
+    // should show up here without a manual pull-to-refresh — same pattern as
+    // requests-list.tsx's existing subscription.
+    const channel = supabase
+      .channel('document-types')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'document_types' }, load)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   if (documents === null) {
