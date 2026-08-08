@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
-import * as DocumentPicker from 'expo-document-picker';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -15,9 +14,19 @@ import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import {
+  type PickedImage,
+  displayName,
+  imageExtension,
+  isWithinSizeLimit,
+  pickImageAsset,
+  readImageBytes,
+} from '@/lib/image-upload';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
+
+const MAX_ID_BYTES = 5 * 1024 * 1024;
 
 function Chip({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) {
   const theme = useTheme();
@@ -38,7 +47,7 @@ export default function RequestFormScreen() {
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
-  const [pickedIdImage, setPickedIdImage] = useState<{ name: string; uri: string } | null>(null);
+  const [pickedIdImage, setPickedIdImage] = useState<PickedImage | null>(null);
   const [idUploadError, setIdUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -48,29 +57,44 @@ export default function RequestFormScreen() {
   }, [documentId]);
 
   async function handlePickFile() {
-    // Real file upload to Supabase Storage is deferred (see the Request Form's original
-    // "Coming soon" note) — this captures the picked file's name for display; wiring it
-    // to a storage bucket + RLS policy is separate follow-up work.
-    const picked = await DocumentPicker.getDocumentAsync({
-      type: 'image/*',
-      copyToCacheDirectory: true,
-    });
-    if (!picked.canceled && picked.assets[0]) {
-      const asset = picked.assets[0];
-      const isImage = asset.mimeType?.startsWith('image/') ?? false;
-      const isTooLarge = (asset.size ?? 0) > 5 * 1024 * 1024;
+    const picked = await pickImageAsset();
+    if (!picked) return;
 
-      if (!isImage) {
-        setIdUploadError('Please choose a JPG or PNG image of your valid ID.');
-        return;
-      }
-      if (isTooLarge) {
-        setIdUploadError('Your ID image must be 5MB or smaller.');
-        return;
-      }
+    if (!picked.mimeType.startsWith('image/')) {
+      setIdUploadError('Please choose a JPG or PNG image of your valid ID.');
+      return;
+    }
+    if (!isWithinSizeLimit(picked, MAX_ID_BYTES)) {
+      setIdUploadError('Your ID image must be 5MB or smaller.');
+      return;
+    }
 
-      setIdUploadError(null);
-      setPickedIdImage({ name: asset.name, uri: asset.uri });
+    setIdUploadError(null);
+    setPickedIdImage(picked);
+  }
+
+  // S0-8: uploads the picked ID image to Storage *before* the service_requests insert
+  // and returns its path. Must happen first — residents have no UPDATE/DELETE policy on
+  // service_requests (see 0002's "no client update/delete policy" comment), so there's
+  // no way to patch the path in after the fact or roll back a row left without one.
+  async function uploadIdDocument(userId: string): Promise<{ path: string | null; error: string | null }> {
+    if (!pickedIdImage) return { path: null, error: null };
+
+    const ext = imageExtension(pickedIdImage.mimeType);
+    const folderId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    const path = `${userId}/${folderId}/id.${ext}`;
+
+    try {
+      const bytes = await readImageBytes(pickedIdImage);
+      const { error: uploadError } = await supabase.storage
+        .from('id-documents')
+        .upload(path, bytes, { contentType: pickedIdImage.mimeType, upsert: false });
+      if (uploadError) {
+        return { path: null, error: uploadError.message };
+      }
+      return { path, error: null };
+    } catch (readError) {
+      return { path: null, error: (readError as Error).message };
     }
   }
 
@@ -88,6 +112,14 @@ export default function RequestFormScreen() {
     }
 
     setSubmitting(true);
+
+    const { path: idDocumentPath, error: uploadError } = await uploadIdDocument(session.user.id);
+    if (uploadError) {
+      setSubmitting(false);
+      setError(uploadError);
+      return;
+    }
+
     const { data, error: insertError } = await supabase
       .from('service_requests')
       .insert({
@@ -95,6 +127,7 @@ export default function RequestFormScreen() {
         resident_id: session.user.id,
         document_type_id: doc.id,
         requester_notes: result.data.requesterNotes ?? null,
+        id_document_path: idDocumentPath,
       })
       .select()
       .single();
@@ -159,7 +192,7 @@ export default function RequestFormScreen() {
               <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
               <View style={styles.idPreviewFooter}>
                 <ThemedText type="small" themeColor="textSecondary" numberOfLines={1} style={styles.fileName}>
-                  {pickedIdImage.name}
+                  {displayName(pickedIdImage)}
                 </ThemedText>
               </View>
               <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />

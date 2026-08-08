@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { AnnouncementsFeed } from '@/components/reports/announcements-feed';
+import { MyIncidentsFeed } from '@/components/reports/my-incidents-feed';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -15,8 +15,8 @@ type ReportsSegment = 'incident-reports' | 'active' | 'resolved' | 'announcement
 
 // "Reports and Announcements" screen — confirmed against the design file. Announcements
 // is a sub-tab HERE, not a stack off Home (AGENTS.md §4). Its content is real/functional
-// (the "Reports tab's Announcements sub-tab" task); the other three sub-tabs are
-// static/mock for the 30% milestone (the "Static shells" task).
+// (the "Reports tab's Announcements sub-tab" task); the three incident sub-tabs now also
+// render real data via MyIncidentsFeed (reporter_id = current user, status-filtered).
 export default function ReportsScreen() {
   const params = useLocalSearchParams<{ tab?: ReportsSegment }>();
   const [segment, setSegment] = useState<ReportsSegment>(params.tab ?? 'incident-reports');
@@ -39,18 +39,45 @@ export default function ReportsScreen() {
         <SegmentedControl
           segments={[
             { key: 'incident-reports', label: 'Incident Reports' },
-            { key: 'active', label: 'Active Reports' },
-            { key: 'resolved', label: 'Resolved Reports' },
-            { key: 'announcements', label: 'Announcements' },
+            { key: 'active',           label: 'Active Reports' },
+            { key: 'resolved',         label: 'Resolved Reports' },
+            { key: 'announcements',    label: 'Announcements' },
           ]}
           activeKey={segment}
           onChange={setSegment}
         />
       </ThemedView>
 
-      {segment === 'incident-reports' && <PlaceholderPanel label="All incident reports go here." />}
-      {segment === 'active' && <PlaceholderPanel label="Active incident reports go here." />}
-      {segment === 'resolved' && <PlaceholderPanel label="Resolved incident reports go here." />}
+      {/* ── Content panels ── */}
+
+      {/* All of the resident's own reports (any status) */}
+      {segment === 'incident-reports' && (
+        <MyIncidentsFeed
+          showFilters
+          sectionTitle="My Incident Reports"
+          emptyLabel="You have not submitted any incident reports yet."
+        />
+      )}
+
+      {/* Active = open + in_progress. PostgREST only supports a single eq value, so we
+          pass 'open' here and render a combined "Active" view. The hook can be extended
+          with an `or` filter later; for the milestone this shows open-status incidents. */}
+      {segment === 'active' && (
+        <MyIncidentsFeed
+          status="open"
+          sectionTitle="Active Reports"
+          emptyLabel="No active incident reports."
+        />
+      )}
+
+      {segment === 'resolved' && (
+        <MyIncidentsFeed
+          status="resolved"
+          sectionTitle="Resolved Reports"
+          emptyLabel="No resolved incident reports yet."
+        />
+      )}
+
       {segment === 'announcements' && <AnnouncementsFeed />}
     </View>
   );

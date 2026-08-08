@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 import { ToastProvider } from "@/components/ui/toast";
-import { ThemeControllerProvider, ThemeInitScript } from "@/components/ui/theme-controller";
+import { ThemeControllerProvider, THEME_INIT_SCRIPT } from "@/components/ui/theme-controller";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        <ThemeInitScript />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
       </head>
       <body className="h-full flex flex-col overflow-hidden">
         <ThemeControllerProvider>

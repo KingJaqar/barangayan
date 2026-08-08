@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/lib/supabase';
 
-export type Profile = Tables<'profiles'> & { barangays: Pick<Tables<'barangays'>, 'name'> | null };
+export type Profile = Tables<'profiles'> & {
+  barangays: Pick<Tables<'barangays'>, 'name' | 'boundary'> | null;
+};
 
 /**
  * The logged-in resident's own profile row (RLS: auth.uid() = id), joined with their
@@ -27,7 +29,7 @@ export function useProfile() {
     setIsLoading(true);
     return supabase
       .from('profiles')
-      .select('*, barangays(name)')
+      .select('*, barangays(name, boundary)')
       .eq('id', session.user.id)
       .single()
       .then(({ data }) => {

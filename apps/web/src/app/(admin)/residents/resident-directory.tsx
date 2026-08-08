@@ -113,10 +113,7 @@ export function ResidentDirectory({ residents, initialQuery }: { residents: Resi
   }, [residents, query]);
 
   useEffect(() => {
-    if (!selected) {
-      setRequests(null);
-      return;
-    }
+    if (!selected) return;
     const supabase = createSupabaseBrowserClient();
     supabase
       .from('service_requests')
@@ -126,6 +123,16 @@ export function ResidentDirectory({ residents, initialQuery }: { residents: Resi
       .order('created_at', { ascending: false })
       .then(({ data }) => setRequests((data as unknown as ResidentRequest[]) ?? []));
   }, [selected]);
+
+  function selectResident(resident: Resident) {
+    setRequests(null);
+    setSelected(resident);
+  }
+
+  function closeResident() {
+    setSelected(null);
+    setRequests(null);
+  }
 
   async function updateField(resident: Resident, patch: Partial<Tables<'profiles'>>) {
     const supabase = createSupabaseBrowserClient();
@@ -203,12 +210,12 @@ export function ResidentDirectory({ residents, initialQuery }: { residents: Resi
         rows={filtered}
         rowKey={(r) => r.id}
         emptyLabel="No residents found."
-        onRowClick={(r) => setSelected(r)}
+        onRowClick={(r) => selectResident(r)}
         columns={columns}
       />
 
       {selected ? (
-        <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/40 p-4" onClick={() => setSelected(null)}>
+        <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/40 p-4" onClick={closeResident}>
           <div
             className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 dark:bg-zinc-900"
             onClick={(e) => e.stopPropagation()}>
@@ -218,7 +225,7 @@ export function ResidentDirectory({ residents, initialQuery }: { residents: Resi
                 <p className="text-sm text-zinc-500">{selected.mobile_number ?? 'No mobile number'}</p>
                 <p className="text-sm text-zinc-500">{selected.home_address ?? 'No address on file'}</p>
               </div>
-              <button onClick={() => setSelected(null)} className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
+              <button onClick={closeResident} className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200">
                 ✕
               </button>
             </div>

@@ -39,6 +39,203 @@ export type Database = {
   }
   public: {
     Tables: {
+      evacuation_centers: {
+        Row: {
+          address: string | null
+          barangay_id: string
+          capacity: number | null
+          contact_number: string | null
+          created_at: string
+          current_occupancy: number
+          deleted_at: string | null
+          facilities: string[]
+          id: string
+          is_active: boolean
+          name: string
+          position: Json            // { lat: number; lng: number }
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          barangay_id: string
+          capacity?: number | null
+          contact_number?: string | null
+          created_at?: string
+          current_occupancy?: number
+          deleted_at?: string | null
+          facilities?: string[]
+          id?: string
+          is_active?: boolean
+          name: string
+          position: Json
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          barangay_id?: string
+          capacity?: number | null
+          contact_number?: string | null
+          created_at?: string
+          current_occupancy?: number
+          deleted_at?: string | null
+          facilities?: string[]
+          id?: string
+          is_active?: boolean
+          name?: string
+          position?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evacuation_centers_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_confirmations: {
+        Row: {
+          incident_id: string
+          user_id:     string
+          created_at:  string
+        }
+        Insert: {
+          incident_id: string
+          user_id:     string
+          created_at?: string
+        }
+        Update: {
+          incident_id?: string
+          user_id?:     string
+          created_at?:  string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_confirmations_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incident_confirmations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_categories: {
+        Row: {
+          barangay_id: string
+          color: string
+          created_at: string
+          icon: string | null
+          id: string
+          is_trash_related: boolean
+          name: string
+        }
+        Insert: {
+          barangay_id: string
+          color?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_trash_related?: boolean
+          name: string
+        }
+        Update: {
+          barangay_id?: string
+          color?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_trash_related?: boolean
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_categories_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          barangay_id: string
+          category_id: string | null
+          confirmation_count: number
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          id: string
+          location: Json            // { lat: number; lng: number }
+          photo_urls: string[]
+          reporter_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          category_id?: string | null
+          confirmation_count?: number
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          location: Json
+          photo_urls?: string[]
+          reporter_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          category_id?: string | null
+          confirmation_count?: number
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          location?: Json
+          photo_urls?: string[]
+          reporter_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidents_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidents_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "incident_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidents_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       announcements: {
         Row: {
           barangay_id: string
@@ -46,6 +243,7 @@ export type Database = {
           category: string
           created_at: string
           created_by: string | null
+          deleted_at: string | null
           id: string
           image_url: string | null
           published_at: string
@@ -57,6 +255,7 @@ export type Database = {
           category?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
           id?: string
           image_url?: string | null
           published_at?: string
@@ -68,6 +267,7 @@ export type Database = {
           category?: string
           created_at?: string
           created_by?: string | null
+          deleted_at?: string | null
           id?: string
           image_url?: string | null
           published_at?: string
@@ -241,8 +441,8 @@ export type Database = {
           barangay_id: string
           created_at: string
           deleted_at: string | null
-          email_verification_status: string
           email_verification_requested_at: string | null
+          email_verification_status: string
           email_verified_at: string | null
           full_name: string
           home_address: string | null
@@ -257,8 +457,8 @@ export type Database = {
           barangay_id: string
           created_at?: string
           deleted_at?: string | null
-          email_verification_status?: string
           email_verification_requested_at?: string | null
+          email_verification_status?: string
           email_verified_at?: string | null
           full_name: string
           home_address?: string | null
@@ -273,8 +473,8 @@ export type Database = {
           barangay_id?: string
           created_at?: string
           deleted_at?: string | null
-          email_verification_status?: string
           email_verification_requested_at?: string | null
+          email_verification_status?: string
           email_verified_at?: string | null
           full_name?: string
           home_address?: string | null
@@ -301,6 +501,7 @@ export type Database = {
           deleted_at: string | null
           document_type_id: string
           id: string
+          id_document_path: string | null
           payment_method: string | null
           payment_status: string
           reference_number: string
@@ -316,6 +517,7 @@ export type Database = {
           deleted_at?: string | null
           document_type_id: string
           id?: string
+          id_document_path?: string | null
           payment_method?: string | null
           payment_status?: string
           reference_number?: string
@@ -331,6 +533,7 @@ export type Database = {
           deleted_at?: string | null
           document_type_id?: string
           id?: string
+          id_document_path?: string | null
           payment_method?: string | null
           payment_status?: string
           reference_number?: string
@@ -400,6 +603,10 @@ export type Database = {
       }
     }
     Functions: {
+      begin_processing_request: {
+        Args: { request_id: string }
+        Returns: undefined
+      }
       cancel_service_request: {
         Args: { p_note: string; p_request_id: string }
         Returns: undefined
@@ -415,7 +622,23 @@ export type Database = {
         Returns: undefined
       }
       set_service_request_payment_method: {
-        Args: { p_request_id: string; p_method: string }
+        Args: { p_method: string; p_request_id: string }
+        Returns: undefined
+      }
+      confirm_incident: {
+        Args: { p_incident_id: string }
+        Returns: boolean
+      }
+      update_incident_status: {
+        Args: { p_incident_id: string; p_status: string }
+        Returns: undefined
+      }
+      soft_delete_incident: {
+        Args: { p_incident_id: string }
+        Returns: undefined
+      }
+      withdraw_incident: {
+        Args: { p_incident_id: string }
         Returns: undefined
       }
     }

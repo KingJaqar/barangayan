@@ -84,32 +84,33 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
         {!collapsed ? <span>Theme</span> : null}
       </Link>
       {!collapsed ? (
+        // Appearance is driven entirely by CSS `dark:` variants rather than the `theme`
+        // state value. The theme is applied to <html> by THEME_INIT_SCRIPT before first
+        // paint, so on the client `theme` is already 'dark' on the very first render while
+        // the server rendered 'light' — deriving any className/attribute from it produces a
+        // hydration mismatch. CSS variants keep the server and client HTML byte-identical
+        // while still reflecting the real theme. `theme` is only read inside onClick, which
+        // runs long after hydration and therefore always sees the correct value.
         <button
           type="button"
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          aria-label="Toggle color theme"
           onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
           className="relative flex h-8 w-[81px] shrink-0 items-center justify-between rounded-full border border-[#e3e7ed] bg-[#f5f6f8] px-[9px] transition-colors dark:border-zinc-700 dark:bg-zinc-800">
           {/* Sliding knob — sits behind the icons */}
           <span
             aria-hidden
-            className={`absolute left-[4px] size-[25px] rounded-full bg-white shadow-sm transition-transform duration-200 dark:bg-zinc-700 ${
-              theme === 'dark' ? 'translate-x-[48px]' : 'translate-x-0'
-            }`}
+            className="absolute left-[4px] size-[25px] translate-x-0 rounded-full bg-white shadow-sm transition-transform duration-200 dark:translate-x-[48px] dark:bg-zinc-700"
           />
-          {/* Sun always on left */}
+          {/* Sun always on left — highlighted in light mode */}
           <Sun
-            className={`relative z-10 size-4 transition-colors ${
-              theme === 'light' ? 'text-[#374151] dark:text-zinc-200' : 'text-[#a0aab8]'
-            }`}
+            className="relative z-10 size-4 text-[#374151] transition-colors dark:text-[#a0aab8]"
             strokeWidth={1.75}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Moon always on right */}
+          {/* Moon always on right — highlighted in dark mode */}
           <Moon
-            className={`relative z-10 size-4 transition-colors ${
-              theme === 'dark' ? 'text-[#374151] dark:text-zinc-200' : 'text-[#a0aab8]'
-            }`}
+            className="relative z-10 size-4 text-[#a0aab8] transition-colors dark:text-zinc-200"
             strokeWidth={1.75}
             strokeLinecap="round"
             strokeLinejoin="round"

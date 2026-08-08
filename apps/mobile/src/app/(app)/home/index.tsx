@@ -29,7 +29,7 @@ type Announcement = Tables<'announcements'>;
 const QUICK_ACTIONS = [
   { label: 'Request Document', href: '/services' as const, icon: 'document-text-outline' as const },
   { label: 'Report Issue', href: '/reports' as const, icon: 'warning-outline' as const },
-  { label: 'Emergency Info', href: '/maps' as const, icon: 'medkit-outline' as const },
+  { label: 'Emergency Info', href: '/home/emergency-info' as const, icon: 'medkit-outline' as const },
   { label: 'Medical Info', href: '/health' as const, icon: 'pulse-outline' as const },
 ];
 

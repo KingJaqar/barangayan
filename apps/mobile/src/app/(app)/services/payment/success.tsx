@@ -77,7 +77,7 @@ export default function PaymentSuccessScreen() {
         <ThemedText
           type="link"
           style={styles.returnLink}
-          onPress={() => router.replace('/')}>
+          onPress={() => router.replace('/home')}>
           Return to Home
         </ThemedText>
       </View>

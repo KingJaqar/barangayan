@@ -89,17 +89,25 @@ export function Header({ barangayName, adminName, onToggleSidebar }: HeaderProps
   // Directory (by name) have real data to search against. Debounced to avoid a query per
   // keystroke.
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      return;
-    }
+    if (!query.trim()) return;
     const timeout = setTimeout(async () => {
       const supabase = createSupabaseBrowserClient();
       const needle = `%${query}%`;
 
       const [{ data: requests }, { data: residents }] = await Promise.all([
-        supabase.from('service_requests').select('id, reference_number').ilike('reference_number', needle).limit(5),
-        supabase.from('profiles').select('id, full_name').eq('role', 'resident').ilike('full_name', needle).limit(5),
+        supabase
+          .from('service_requests')
+          .select('id, reference_number')
+          .ilike('reference_number', needle)
+          .is('deleted_at', null)
+          .limit(5),
+        supabase
+          .from('profiles')
+          .select('id, full_name')
+          .eq('role', 'resident')
+          .ilike('full_name', needle)
+          .is('deleted_at', null)
+          .limit(5),
       ]);
 
       setResults([
@@ -152,7 +160,7 @@ export function Header({ barangayName, adminName, onToggleSidebar }: HeaderProps
           placeholder="Search residents, requests, incidents..."
           className="w-full rounded-full border border-zinc-300 bg-zinc-50 px-4 py-2 text-sm outline-none focus:border-[#0F6E5B] dark:border-zinc-700 dark:bg-zinc-900"
         />
-        {results.length > 0 ? (
+        {query.trim() && results.length > 0 ? (
           <div className="absolute top-full z-10 mt-1 w-full rounded-lg border border-black/10 bg-white shadow-lg dark:border-white/10 dark:bg-zinc-900">
             {results.map((r) => (
               <Link

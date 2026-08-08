@@ -41,11 +41,7 @@ export default function QrPhPaymentScreen() {
   }, [requestId]);
 
   const fee = request?.document_types?.fee_centavos ?? 0;
-  const { source, status } = usePaymongoSource(
-    requestId,
-    fee,
-    request?.document_types?.name ?? 'Document Request',
-  );
+  const { source, status } = usePaymongoSource(requestId);
 
   useEffect(() => {
     Animated.loop(

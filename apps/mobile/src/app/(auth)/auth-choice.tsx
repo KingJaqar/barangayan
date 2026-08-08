@@ -42,7 +42,7 @@ export default function AuthChoiceScreen() {
               // navigate: entering guest mode makes BOTH (app) and (auth) reachable at
               // once (see _layout.tsx), so nothing auto-redirects away from this screen.
               setGuest(true);
-              router.replace('/');
+              router.replace('/home');
             }}
           />
         </View>

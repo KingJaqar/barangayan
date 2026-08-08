@@ -5,9 +5,12 @@ import { z } from 'zod';
  * `categoryId` always points at a barangay-scoped `incident_categories` row.
  */
 export const incidentReportSchema = z.object({
-  categoryId: z.string().uuid(),
-  description: z.string().min(1).max(1000),
-  photoUrls: z.array(z.string().url()).min(1).max(5),
+  /** Short human-readable title (required by the DB, absent from the original schema). */
+  title: z.string().min(3, 'Title must be at least 3 characters').max(100, 'Title must be 100 characters or fewer'),
+  categoryId: z.string().uuid('Please select a valid category'),
+  description: z.string().max(1000, 'Description must be 1000 characters or fewer').optional(),
+  /** Storage-uploaded photo public URLs. 0–5 photos; photos are optional for MVP. */
+  photoUrls: z.array(z.string().url()).min(0).max(5),
   location: z.object({
     lat: z.number().min(-90).max(90),
     lng: z.number().min(-180).max(180),

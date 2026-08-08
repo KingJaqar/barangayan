@@ -32,10 +32,12 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       ? 'rounded-full px-3 py-1 text-xs font-semibold disabled:opacity-50'
       : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
 
-  async function updateStatus(next: string) {
+  async function beginProcessing() {
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('service_requests').update({ status: next }).eq('id', requestId);
+    // S0-4: validated submitted -> in_progress transition (barangay + status checked
+    // server-side), replacing the previous unguarded raw update.
+    const { error } = await supabase.rpc('begin_processing_request', { request_id: requestId });
     setBusy(false);
     if (error) {
       toast.showError(`Failed to update status: ${error.message}`);
@@ -113,7 +115,7 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
   return (
     <div className="flex flex-wrap items-center gap-2">
       {status === 'submitted' ? (
-        <button onClick={() => updateStatus('in_progress')} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
+        <button onClick={beginProcessing} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
           Move to Processing
         </button>
       ) : null}

@@ -7,6 +7,8 @@
  * against raw strings — see the plan's "Pre-Development Technical Risk Mitigations".
  */
 
+import type { MultiPolygon, Polygon } from 'geojson';
+
 export interface LatLng {
   lat: number;
   lng: number;
@@ -16,6 +18,8 @@ export interface LatLng {
 export type MapBridgeInboundMessage =
   | { type: 'SET_CENTER'; payload: LatLng }
   | { type: 'SET_MARKERS'; payload: { markers: MapMarker[] } }
+  /** Draws (or clears, if geometry is null) a barangay's boundary outline and fits the map to it. */
+  | { type: 'SET_BOUNDARY'; payload: { geometry: Polygon | MultiPolygon | null } }
   | { type: 'DRAW_ROUTE'; payload: { points: LatLng[] } }
   | { type: 'CLEAR_ROUTE' };
 

@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Lint web
+        run: npm run lint --workspace=@barangayan/web
+      - name: Typecheck web
+        run: npm run typecheck --workspace=@barangayan/web
+      - name: Build web
+        run: npm run build --workspace=@barangayan/web
+      - name: Typecheck mobile
+        run: npx tsc --noEmit --project apps/mobile/tsconfig.json
+      - name: Test shared
+        run: npm test --workspace=@barangayan/shared --if-present

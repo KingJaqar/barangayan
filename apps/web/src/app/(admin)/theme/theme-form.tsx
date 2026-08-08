@@ -11,6 +11,20 @@ interface ThemeFormProps {
   initialAccentColor: string;
 }
 
+/**
+ * Which of the two buttons reads as "selected" is expressed purely in CSS, keyed off the
+ * `.dark` class that THEME_INIT_SCRIPT puts on <html> before first paint. Deriving these
+ * classes from the `theme` state instead would hydration-mismatch: the server always
+ * renders 'light', while the client's first render already sees the restored theme.
+ */
+const SELECTION_CLASS = {
+  // Selected in light mode, deselected in dark mode.
+  light:
+    'border-[#0F6E5B] bg-[#0F6E5B]/10 text-[#0F6E5B] dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300',
+  // Deselected in light mode, selected in dark mode.
+  dark: 'border-zinc-300 bg-transparent text-zinc-600 dark:border-[#0F6E5B] dark:bg-[#0F6E5B]/10 dark:text-[#0F6E5B]',
+} as const;
+
 export function ThemeForm({ initialTheme, initialAccentColor }: ThemeFormProps) {
   const { theme, setTheme } = useThemeController();
   const [accentColor, setAccentColor] = useState(initialAccentColor);
@@ -59,11 +73,7 @@ export function ThemeForm({ initialTheme, initialAccentColor }: ThemeFormProps) 
             <button
               key={option}
               onClick={() => handleThemeChange(option)}
-              className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium capitalize ${
-                theme === option
-                  ? 'border-[#0F6E5B] bg-[#0F6E5B]/10 text-[#0F6E5B]'
-                  : 'border-zinc-300 text-zinc-600 dark:border-zinc-700 dark:text-zinc-300'
-              }`}>
+              className={`flex-1 rounded-lg border px-4 py-2 text-sm font-medium capitalize ${SELECTION_CLASS[option]}`}>
               {option}
             </button>
           ))}

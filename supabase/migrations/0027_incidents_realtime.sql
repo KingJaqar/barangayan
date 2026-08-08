@@ -1,0 +1,16 @@
+-- Add `incidents` to the Realtime publication.
+--
+-- useMyIncidents (apps/mobile) has always subscribed to postgres_changes on
+-- public.incidents so that a status change shows up without a manual refresh — but the
+-- table was never added to the supabase_realtime publication (0002/0003/0007/0008 did
+-- this for service_requests, announcements, payments and document_types), so no event
+-- was ever delivered and the subscription was silently inert.
+--
+-- The visible symptom was on withdrawal: soft_delete_incident moves the report to
+-- status = 'withdrawn' (0026), the resident is returned to the Reports list — which is
+-- still mounted underneath the detail screen — and the card kept showing "Submitted",
+-- making it look like withdrawing had done nothing.
+--
+-- RLS still applies to Realtime, so residents only receive changes to rows their SELECT
+-- policy already lets them read ("residents read own barangay incidents", 0022).
+alter publication supabase_realtime add table public.incidents;

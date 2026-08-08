@@ -83,10 +83,9 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
 
   async function archive() {
     const supabase = createSupabaseBrowserClient();
-    // deleted_at is added by migration 0011; cast until types are regenerated after db reset.
     const { error: archiveError } = await supabase
       .from('announcements')
-      .update({ deleted_at: new Date().toISOString() } as any)
+      .update({ deleted_at: new Date().toISOString() })
       .eq('id', announcement.id);
     if (archiveError) {
       toast.showError(`Failed to archive: ${archiveError.message}`);

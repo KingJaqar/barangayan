@@ -1,7 +1,6 @@
 'use client';
 
-import Script from 'next/script';
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 
 export type ResolvedTheme = 'light' | 'dark';
 
@@ -23,7 +22,13 @@ function applyThemeClass(theme: ResolvedTheme) {
   document.documentElement.classList.toggle('dark', theme === 'dark');
 }
 
-const INIT_SCRIPT = `
+/** Render-blocking script source — must run before first paint to avoid a flash of the
+ * wrong theme. Reads localStorage first (an explicit prior choice), falls back to the
+ * OS/browser's prefers-color-scheme only on a genuinely first-ever visit. Exported as a
+ * string (not a component) because next/script's beforeInteractive strategy must be
+ * placed directly in app/layout.tsx for the framework/lint tooling to recognize it —
+ * see layout.tsx. */
+export const THEME_INIT_SCRIPT = `
   (function () {
     try {
       var stored = localStorage.getItem('${STORAGE_KEY}');
@@ -35,23 +40,13 @@ const INIT_SCRIPT = `
   })();
 `;
 
-/** Render-blocking script — must run before first paint to avoid a flash of the wrong
- * theme. Reads localStorage first (an explicit prior choice), falls back to the
- * OS/browser's prefers-color-scheme only on a genuinely first-ever visit. Uses
- * next/script's beforeInteractive strategy (not a raw <script> tag) — the App Router
- * warns/mishandles literal <script> elements rendered from a component tree otherwise. */
-export function ThemeInitScript() {
-  return <Script id="theme-init" strategy="beforeInteractive">{INIT_SCRIPT}</Script>;
-}
-
 export function ThemeControllerProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<ResolvedTheme>('light');
-
-  // Sync React state to whatever ThemeInitScript already applied pre-hydration, so the
+  // Lazy initializer reads whatever ThemeInitScript already applied pre-hydration, so the
   // Theme page's toggle starts in the right position instead of always showing "Light".
-  useEffect(() => {
-    setThemeState(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-  }, []);
+  // (document is undefined during SSR; the client's first render is what matters here.)
+  const [theme, setThemeState] = useState<ResolvedTheme>(() =>
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+  );
 
   const setTheme = useCallback((next: ResolvedTheme) => {
     setThemeState(next);
