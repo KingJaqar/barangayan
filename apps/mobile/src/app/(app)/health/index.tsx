@@ -400,28 +400,27 @@ function DriveCalendar({
 
       {/* Month header */}
       <View style={calStyles.header}>
-        {/* Tapping "August 2026 ▾" opens the picker */}
         <Pressable
           style={calStyles.monthLabel}
           hitSlop={8}
           onPress={() => setPickerVisible(true)}
           accessibilityRole="button"
           accessibilityLabel={`Open month and year picker, currently ${MONTH_NAMES[month - 1]} ${year}`}>
-          <ThemedText type="smallBold" style={{ color: PRIMARY_GREEN, fontSize: 16 }}>
+          <ThemedText style={{ color: PRIMARY_GREEN, fontSize: 15, fontWeight: '700', lineHeight: 20 }}>
             {MONTH_NAMES[month - 1]} {year}
           </ThemedText>
           <Ionicons
             name={pickerVisible ? 'chevron-up' : 'chevron-down'}
-            size={14}
+            size={13}
             color={PRIMARY_GREEN}
           />
         </Pressable>
         <View style={calStyles.navRow}>
-          <Pressable onPress={() => onMonthChange(-1)} hitSlop={10} style={calStyles.navBtn}>
-            <Ionicons name="chevron-back" size={18} color={theme.text} />
+          <Pressable onPress={() => onMonthChange(-1)} hitSlop={12} style={calStyles.navBtn}>
+            <Ionicons name="chevron-back" size={17} color={theme.text} />
           </Pressable>
-          <Pressable onPress={() => onMonthChange(1)} hitSlop={10} style={calStyles.navBtn}>
-            <Ionicons name="chevron-forward" size={18} color={theme.text} />
+          <Pressable onPress={() => onMonthChange(1)} hitSlop={12} style={calStyles.navBtn}>
+            <Ionicons name="chevron-forward" size={17} color={theme.text} />
           </Pressable>
         </View>
       </View>
@@ -430,12 +429,7 @@ function DriveCalendar({
       <View style={calStyles.dayHeaderRow}>
         {DAY_LABELS.map((l, i) => (
           <View key={i} style={calStyles.dayHeaderCell}>
-            <ThemedText
-              type="small"
-              themeColor="textSecondary"
-              style={calStyles.dayHeaderText}>
-              {l}
-            </ThemedText>
+            <ThemedText style={calStyles.dayHeaderText}>{l}</ThemedText>
           </View>
         ))}
       </View>
@@ -444,11 +438,10 @@ function DriveCalendar({
       {rows.map((row, ri) => (
         <View key={ri} style={calStyles.row}>
           {row.map((cell, ci) => {
-            const isSelected   = cell.date === selectedDate;
-            const isToday      = cell.date === today;
-            // Colors from eventDateMap — up to 3 distinct type colors
-            const eventColors  = eventDateMap[cell.date] ?? [];
-            const hasEvent     = eventColors.length > 0;
+            const isSelected  = cell.date === selectedDate;
+            const isToday     = cell.date === today;
+            const eventColors = eventDateMap[cell.date] ?? [];
+            const hasEvent    = eventColors.length > 0;
 
             return (
               <Pressable
@@ -460,37 +453,33 @@ function DriveCalendar({
                   style={[
                     calStyles.circle,
                     isSelected && { backgroundColor: PRIMARY_GREEN },
-                    isToday && !isSelected && {
-                      borderWidth: 2,
-                      borderColor: PRIMARY_GREEN,
-                    },
+                    isToday && !isSelected && { borderWidth: 2, borderColor: PRIMARY_GREEN },
                   ]}>
                   <ThemedText
-                    type="small"
                     style={[
                       calStyles.dayNum,
-                      !cell.inMonth && { color: theme.textSecondary, opacity: 0.5 },
-                      isSelected && { color: '#ffffff', fontWeight: '700' },
-                      isToday && !isSelected && { color: PRIMARY_GREEN, fontWeight: '700' },
+                      !cell.inMonth && { color: theme.textSecondary, opacity: 0.4 },
+                      isSelected && { color: '#ffffff' },
+                      isToday && !isSelected && { color: PRIMARY_GREEN },
                     ]}>
                     {cell.day}
                   </ThemedText>
-                </View>
 
-                {/* Colored dots — one per drive type scheduled on this date */}
-                {hasEvent && (
-                  <View style={calStyles.dotsRow}>
-                    {eventColors.slice(0, 3).map((color, idx) => (
-                      <View
-                        key={idx}
-                        style={[
-                          calStyles.eventDot,
-                          { backgroundColor: isSelected ? '#ffffff' : color },
-                        ]}
-                      />
-                    ))}
-                  </View>
-                )}
+                  {/* Event accent — thin colored bar(s) at bottom of circle */}
+                  {hasEvent && (
+                    <View style={calStyles.accentRow}>
+                      {eventColors.slice(0, 3).map((color, idx) => (
+                        <View
+                          key={idx}
+                          style={[
+                            calStyles.accentBar,
+                            { backgroundColor: isSelected ? 'rgba(255,255,255,0.75)' : color },
+                          ]}
+                        />
+                      ))}
+                    </View>
+                  )}
+                </View>
               </Pressable>
             );
           })}
@@ -503,45 +492,49 @@ function DriveCalendar({
 const calStyles = StyleSheet.create({
   container: {
     borderWidth: 1.5,
-    borderRadius: 16,
+    borderRadius: 14,
     marginHorizontal: Spacing.three,
     marginBottom: Spacing.two,
     overflow: 'hidden',
     backgroundColor: '#ffffff',
-    padding: Spacing.two,
+    paddingHorizontal: Spacing.two,
+    paddingTop: Spacing.one,
+    paddingBottom: Spacing.one,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.two,
-    marginBottom: Spacing.half,
+    paddingHorizontal: Spacing.one,
+    paddingVertical: Spacing.one,
+    marginBottom: 2,
   },
   monthLabel: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 3,
   },
   navRow: {
     flexDirection: 'row',
-    gap: Spacing.two,
+    gap: Spacing.one,
   },
   navBtn: {
-    padding: 4,
+    padding: 3,
   },
   dayHeaderRow: {
     flexDirection: 'row',
-    marginBottom: 2,
+    marginBottom: 1,
   },
   dayHeaderCell: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   dayHeaderText: {
-    fontWeight: '600',
-    fontSize: 12,
+    fontWeight: '700',
+    fontSize: 13,
+    color: PRIMARY_GREEN,
+    lineHeight: 17,
   },
   row: {
     flexDirection: 'row',
@@ -549,30 +542,35 @@ const calStyles = StyleSheet.create({
   cell: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 3,
+    paddingVertical: 2,
   },
+  // Circle is tighter; event accents live inside it at the bottom
   circle: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   dayNum: {
-    fontSize: 14,
-    lineHeight: 18,
+    fontSize: 15,
+    fontWeight: '700',
+    lineHeight: 19,
   },
-  dotsRow: {
+  // Thin colored accent bars pinned to the bottom edge of the circle
+  accentRow: {
+    position: 'absolute',
+    bottom: 3,
     flexDirection: 'row',
     gap: 2,
-    marginTop: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  eventDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
+  accentBar: {
+    width: 5,
+    height: 3,
+    borderRadius: 1.5,
   },
 });
 
@@ -694,8 +692,8 @@ const hcnStyles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.two,
+    flex: 1,
+    paddingHorizontal: Spacing.one,
   },
   chevron: {
     padding: 6,
@@ -748,48 +746,57 @@ function DriveCard({
 
   return (
     <View style={[dCardStyles.card, { backgroundColor: theme.background }]}>
-      {/* Title + badge */}
+
+      {/* ── Row 1: title + type badge ─────────────────────────────────── */}
       <View style={dCardStyles.titleRow}>
         <ThemedText style={dCardStyles.title} numberOfLines={2}>
           {drive.title}
         </ThemedText>
-        <View style={[dCardStyles.badge, { backgroundColor: cfg.color + '26' }]}>
+        <View style={[dCardStyles.badge, { backgroundColor: cfg.color + '22' }]}>
           <ThemedText style={[dCardStyles.badgeText, { color: cfg.color }]}>
             {cfg.label}
           </ThemedText>
         </View>
       </View>
 
-      {/* Date · time · location */}
-      <ThemedText type="small" themeColor="textSecondary" style={dCardStyles.info}>
-        {fmtShortDate(drive.drive_date)}
-        {' · '}
-        {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
-        {' · '}
-        {drive.location}
-      </ThemedText>
-
-      {/* Eligibility */}
-      <ThemedText type="small" themeColor="textSecondary" style={dCardStyles.info}>
-        Eligible: {drive.eligible_criteria}
-      </ThemedText>
-
-      {/* Stock row */}
-      <View style={dCardStyles.stockRow}>
-        <ThemedText type="smallBold">{drive.stock_label}</ThemedText>
-        <ThemedText type="small" themeColor="textSecondary">
-          {drive.stock_remaining} / {drive.stock_total} {drive.stock_unit}
+      {/* ── Row 2: date · time · location (icon-prefixed, one line) ──── */}
+      <View style={dCardStyles.metaRow}>
+        <Ionicons name="calendar-outline" size={13} color={PRIMARY_GREEN} style={dCardStyles.metaIcon} />
+        <ThemedText themeColor="textSecondary" style={dCardStyles.metaText} numberOfLines={1}>
+          {fmtShortDate(drive.drive_date)}
+          {'  ·  '}
+          {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
+        </ThemedText>
+        <View style={dCardStyles.metaDot} />
+        <Ionicons name="location-outline" size={13} color={PRIMARY_GREEN} style={dCardStyles.metaIcon} />
+        <ThemedText themeColor="textSecondary" style={dCardStyles.metaText} numberOfLines={1}>
+          {drive.location}
         </ThemedText>
       </View>
 
-      <ProgressBar fraction={fraction} color={PROGRESS_GREEN} />
+      {/* ── Row 3: eligibility (icon-prefixed) ───────────────────────── */}
+      <View style={dCardStyles.metaRow}>
+        <Ionicons name="person-outline" size={13} color={PRIMARY_GREEN} style={dCardStyles.metaIcon} />
+        <ThemedText themeColor="textSecondary" style={dCardStyles.metaText} numberOfLines={1}>
+          {drive.eligible_criteria}
+        </ThemedText>
+      </View>
 
-      {/* Footer action */}
-      <View style={dCardStyles.footer}>
+      {/* ── Row 4: stock label + count + action (all one row) ─────────── */}
+      <View style={dCardStyles.stockRow}>
+        <View style={dCardStyles.stockLeft}>
+          <ThemedText style={dCardStyles.stockLabel}>{drive.stock_label}</ThemedText>
+          <ThemedText style={dCardStyles.stockCount}>
+            <ThemedText style={dCardStyles.stockRemaining}>{drive.stock_remaining}</ThemedText>
+            {'/'}{drive.stock_total} {drive.stock_unit}
+          </ThemedText>
+        </View>
+
+        {/* Action button pushed to the right */}
         {isRegistered ? (
-          <View style={dCardStyles.registeredPill}>
+          <View style={[dCardStyles.registeredPill, { backgroundColor: PRIMARY_GREEN + '18' }]}>
             <Ionicons name="checkmark-circle" size={13} color={PRIMARY_GREEN} />
-            <ThemedText type="small" style={{ color: PRIMARY_GREEN, fontWeight: '600' }}>
+            <ThemedText style={[dCardStyles.actionText, { color: PRIMARY_GREEN }]}>
               Registered
             </ThemedText>
           </View>
@@ -801,22 +808,22 @@ function DriveCard({
               dCardStyles.registerBtn,
               {
                 backgroundColor:
-                  drive.stock_remaining === 0
-                    ? theme.backgroundSelected
-                    : PRIMARY_GREEN,
+                  drive.stock_remaining === 0 ? theme.backgroundSelected : PRIMARY_GREEN,
               },
             ]}>
             <ThemedText
-              type="smallBold"
-              style={{
-                color:
-                  drive.stock_remaining === 0 ? theme.textSecondary : '#ffffff',
-              }}>
+              style={[
+                dCardStyles.actionText,
+                { color: drive.stock_remaining === 0 ? theme.textSecondary : '#ffffff' },
+              ]}>
               {drive.stock_remaining === 0 ? 'Full' : 'Register'}
             </ThemedText>
           </Pressable>
         )}
       </View>
+
+      {/* ── Progress bar (slim, no extra margin row) ──────────────────── */}
+      <ProgressBar fraction={fraction} color={PROGRESS_GREEN} />
     </View>
   );
 }
@@ -824,21 +831,21 @@ function DriveCard({
 const dCardStyles = StyleSheet.create({
   card: {
     marginHorizontal: Spacing.three,
-    marginBottom: Spacing.three,
-    borderRadius: 16,
-    padding: Spacing.three,
-    gap: Spacing.two,
-    // iOS shadow
+    marginBottom: Spacing.two,
+    borderRadius: 14,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two + 2,
+    gap: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    // Android shadow
-    elevation: 3,
+    shadowOpacity: 0.07,
+    shadowRadius: 5,
+    elevation: 2,
   },
+  // Row 1 — title + badge
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: Spacing.two,
   },
@@ -849,44 +856,90 @@ const dCardStyles = StyleSheet.create({
     lineHeight: 20,
   },
   badge: {
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    alignSelf: 'center',
     flexShrink: 0,
   },
   badgeText: {
-    fontSize: 12,
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 15,
+  },
+  // Rows 2 & 3 — icon-prefixed meta lines
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  metaIcon: {
+    flexShrink: 0,
+  },
+  metaText: {
+    fontSize: 13,
     fontWeight: '600',
-    lineHeight: 16,
+    lineHeight: 17,
+    flexShrink: 1,
   },
-  info: {
-    lineHeight: 18,
+  metaDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: PRIMARY_GREEN + '55',
+    marginHorizontal: 2,
+    flexShrink: 0,
   },
+  // Row 4 — stock + action
   stockRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: Spacing.two,
     marginTop: 2,
   },
-  footer: {
+  stockLeft: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 2,
+    alignItems: 'baseline',
+    gap: 5,
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  stockLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 17,
+  },
+  stockCount: {
+    fontSize: 13,
+    fontWeight: '500',
+    lineHeight: 17,
+    opacity: 0.75,
+  },
+  stockRemaining: {
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  // Shared action text (Register / Registered / Full)
+  actionText: {
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 17,
   },
   registerBtn: {
-    borderRadius: 20,
-    paddingHorizontal: 22,
-    paddingVertical: 9,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    flexShrink: 0,
   },
   registeredPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    backgroundColor: PRIMARY_GREEN + '18',
+    gap: 4,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    flexShrink: 0,
   },
 });
 
@@ -1199,6 +1252,708 @@ const modalStyles = StyleSheet.create({
   },
 });
 
+// ─── Registration Status Filter ───────────────────────────────────────────────
+
+type RegStatusFilter = 'all' | 'pending' | 'confirmed' | 'attended' | 'cancelled';
+
+const REG_STATUS_CONFIG: Record<RegStatusFilter, { label: string; color: string }> = {
+  all:       { label: 'All',       color: PRIMARY_GREEN },
+  pending:   { label: 'Pending',   color: '#F59E0B' },
+  confirmed: { label: 'Confirmed', color: PRIMARY_GREEN },
+  attended:  { label: 'Attended',  color: '#6366F1' },
+  cancelled: { label: 'Cancelled', color: '#EF4444' },
+};
+
+const REG_STATUS_KEYS: RegStatusFilter[] = ['all', 'pending', 'confirmed', 'attended', 'cancelled'];
+
+/**
+ * Horizontally-scrollable status filter chips — same design as HorizontalCategoryNav
+ * in the Active Medical Drives segment.
+ */
+function RegStatusFilterBar({
+  active,
+  onSelect,
+}: {
+  active: RegStatusFilter;
+  onSelect: (k: RegStatusFilter) => void;
+}) {
+  return (
+    <View style={hcnStyles.wrapper}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={hcnStyles.scrollContent}>
+        {REG_STATUS_KEYS.map((key) => {
+          const { label, color } = REG_STATUS_CONFIG[key];
+          const isActive = active === key;
+          return (
+            <Pressable
+              key={key}
+              onPress={() => onSelect(key)}
+              style={[
+                hcnStyles.chip,
+                isActive
+                  ? { backgroundColor: color }
+                  : { borderWidth: 1.5, borderColor: color },
+              ]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}>
+              {key !== 'all' && !isActive && (
+                <View style={[hcnStyles.dot, { backgroundColor: color }]} />
+              )}
+              <ThemedText
+                type="small"
+                style={[hcnStyles.chipLabel, { color: isActive ? '#ffffff' : color }]}>
+                {label}
+              </ThemedText>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+// ─── Registration Detail Bottom Sheet ────────────────────────────────────────
+
+/**
+ * Status cycle definition — the four ordered lifecycle states a registration
+ * moves through.  Each step carries its colour, a short label, and a one-liner
+ * description used in the status-timeline inside the detail sheet.
+ */
+const STATUS_CYCLE: {
+  key: string;
+  label: string;
+  color: string;
+  icon: React.ComponentProps<typeof Ionicons>['name'];
+  description: string;
+}[] = [
+  {
+    key: 'pending',
+    label: 'Pending',
+    color: '#F59E0B',
+    icon: 'time-outline',
+    description: 'Your application has been received and is awaiting barangay review.',
+  },
+  {
+    key: 'confirmed',
+    label: 'Confirmed',
+    color: PRIMARY_GREEN,
+    icon: 'checkmark-circle-outline',
+    description: 'Your slot is confirmed. Please arrive on time on the drive date.',
+  },
+  {
+    key: 'attended',
+    label: 'Attended',
+    color: '#6366F1',
+    icon: 'ribbon-outline',
+    description: 'You have successfully attended this medical drive. Thank you!',
+  },
+  {
+    key: 'cancelled',
+    label: 'Cancelled',
+    color: '#EF4444',
+    icon: 'close-circle-outline',
+    description: 'This registration has been cancelled.',
+  },
+];
+
+/**
+ * Full-detail bottom sheet for a single DriveRegistration.
+ *
+ * Layout (top → bottom inside the sheet):
+ *   • Drag handle
+ *   • Drive title + type badge header
+ *   • ── Registration Info ── (applicant #, priority score, registered-on date)
+ *   • ── Drive Details ──     (date, time, location, eligibility, stock)
+ *   • ── Status Timeline ──   (vertical stepper showing the full cycle)
+ *   • Close button
+ */
+function RegistrationDetailSheet({
+  registration,
+  visible,
+  onClose,
+}: {
+  registration: DriveRegistration | null;
+  visible: boolean;
+  onClose: () => void;
+}) {
+  const theme   = useTheme();
+  const insets  = useSafeAreaInsets();
+  const slideAnim = useRef(new Animated.Value(700)).current;
+
+  useEffect(() => {
+    if (visible) {
+      // Reset to off-screen first so every open animates from the bottom,
+      // regardless of where the previous close animation left the value.
+      slideAnim.setValue(700);
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        damping: 24,
+        stiffness: 200,
+      }).start();
+    } else {
+      // Reset to fully visible first so every close animates from the resting
+      // position, regardless of where a previous animation left the value.
+      slideAnim.setValue(0);
+      Animated.timing(slideAnim, {
+        toValue: 700,
+        duration: 230,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible, slideAnim]);
+
+  if (!registration) return null;
+
+  const drive = registration.drive;
+  const cfg   = drive ? DRIVE_TYPE_CONFIG[drive.type] ?? DRIVE_TYPE_CONFIG.others : null;
+
+  // Which step in the cycle is current?
+  const currentStepIdx = STATUS_CYCLE.findIndex((s) => s.key === registration.status);
+  // If cancelled, only show steps up-to-and-including cancelled (remove attended)
+  const isCancelled = registration.status === 'cancelled';
+  const visibleSteps = isCancelled
+    ? STATUS_CYCLE.filter((s) => s.key !== 'attended')
+    : STATUS_CYCLE.filter((s) => s.key !== 'cancelled');
+
+  const currentVisibleIdx = visibleSteps.findIndex((s) => s.key === registration.status);
+
+  // Formatted registered-on date
+  const registeredOn = registration.created_at
+    ? new Date(registration.created_at).toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric',
+      })
+    : null;
+
+  const stock_fraction =
+    drive && drive.stock_total > 0 ? drive.stock_remaining / drive.stock_total : 0;
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="none"
+      onRequestClose={onClose}
+      statusBarTranslucent>
+
+      {/* Backdrop */}
+      <Pressable style={rdStyles.backdrop} onPress={onClose} />
+
+      {/* Animated sheet */}
+      <Animated.View
+        style={[
+          rdStyles.sheet,
+          {
+            backgroundColor: theme.background,
+            paddingBottom: insets.bottom + Spacing.three,
+            transform: [{ translateY: slideAnim }],
+          },
+        ]}>
+
+        {/* ── Drag handle ──────────────────────────────────────────────── */}
+        <View style={[rdStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
+
+        {/* ── Scrollable content ───────────────────────────────────────── */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={rdStyles.scrollContent}
+          bounces={false}>
+
+          {/* ══ Header: title + type badge ══════════════════════════════ */}
+          <View style={rdStyles.headerRow}>
+            <View style={{ flex: 1 }}>
+              <ThemedText style={rdStyles.driveTitle} numberOfLines={3}>
+                {drive?.title ?? 'Medical Drive'}
+              </ThemedText>
+            </View>
+            {cfg && (
+              <View style={[rdStyles.typeBadge, { backgroundColor: cfg.color + '22' }]}>
+                <ThemedText style={[rdStyles.typeBadgeText, { color: cfg.color }]}>
+                  {cfg.label}
+                </ThemedText>
+              </View>
+            )}
+          </View>
+
+          {/* ══ Section: Registration Info ══════════════════════════════ */}
+          <View style={rdStyles.section}>
+            <View style={rdStyles.sectionHeader}>
+              <View style={[rdStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText style={[rdStyles.sectionTitle, { color: PRIMARY_GREEN }]}>
+                Registration Info
+              </ThemedText>
+            </View>
+
+            <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+              {/* Applicant number — prominent */}
+              <View style={rdStyles.appNumRow}>
+                <View>
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Applicant Number
+                  </ThemedText>
+                  <ThemedText style={[rdStyles.appNum, { color: PRIMARY_GREEN }]}>
+                    {registration.applicant_number}
+                  </ThemedText>
+                </View>
+                {/* Priority score badge */}
+                {registration.priority_score !== undefined && registration.priority_score !== null && (
+                  <View style={[rdStyles.scoreBadge, { backgroundColor: PRIMARY_GREEN + '18', borderColor: PRIMARY_GREEN + '40' }]}>
+                    <Ionicons name="star" size={12} color={PRIMARY_GREEN} />
+                    <ThemedText style={[rdStyles.scoreText, { color: PRIMARY_GREEN }]}>
+                      {registration.priority_score} pts
+                    </ThemedText>
+                  </View>
+                )}
+              </View>
+
+              {/* Divider */}
+              <View style={[rdStyles.infoRowDivider, { backgroundColor: theme.backgroundSelected }]} />
+
+              {/* Registered-on */}
+              {registeredOn && (
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Registered on
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {registeredOn}
+                  </ThemedText>
+                </View>
+              )}
+
+              {/* PWD */}
+              {registration.is_pwd !== undefined && (
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="accessibility-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    PWD
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {registration.is_pwd ? 'Yes' : 'No'}
+                  </ThemedText>
+                </View>
+              )}
+
+              {/* Age */}
+              {registration.age !== undefined && registration.age !== null && (
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="person-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Age at Registration
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {registration.age} yrs
+                  </ThemedText>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* ══ Section: Drive Details ══════════════════════════════════ */}
+          {drive && (
+            <View style={rdStyles.section}>
+              <View style={rdStyles.sectionHeader}>
+                <View style={[rdStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+                <ThemedText style={[rdStyles.sectionTitle, { color: PRIMARY_GREEN }]}>
+                  Drive Details
+                </ThemedText>
+              </View>
+
+              <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+                {/* Date */}
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Date
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {fmtFullDate(drive.drive_date)}
+                  </ThemedText>
+                </View>
+
+                <View style={[rdStyles.infoRowDivider, { backgroundColor: theme.backgroundSelected }]} />
+
+                {/* Time */}
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="time-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Time
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {fmt12h(drive.time_start)} – {fmt12h(drive.time_end)}
+                  </ThemedText>
+                </View>
+
+                <View style={[rdStyles.infoRowDivider, { backgroundColor: theme.backgroundSelected }]} />
+
+                {/* Location */}
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="location-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Location
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {drive.location}
+                  </ThemedText>
+                </View>
+
+                <View style={[rdStyles.infoRowDivider, { backgroundColor: theme.backgroundSelected }]} />
+
+                {/* Eligibility */}
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="people-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    Eligible For
+                  </ThemedText>
+                  <ThemedText type="small" style={rdStyles.infoRowValue}>
+                    {drive.eligible_criteria}
+                  </ThemedText>
+                </View>
+
+                <View style={[rdStyles.infoRowDivider, { backgroundColor: theme.backgroundSelected }]} />
+
+                {/* Stock */}
+                <View style={rdStyles.infoRow}>
+                  <Ionicons name="layers-outline" size={14} color={theme.textSecondary} />
+                  <ThemedText type="small" themeColor="textSecondary" style={rdStyles.infoRowLabel}>
+                    {drive.stock_label}
+                  </ThemedText>
+                  <ThemedText type="small" style={[rdStyles.infoRowValue, { color: PROGRESS_GREEN, fontWeight: '700' }]}>
+                    {drive.stock_remaining}/{drive.stock_total} {drive.stock_unit}
+                  </ThemedText>
+                </View>
+
+                {/* Slim progress bar */}
+                <View style={rdStyles.stockBarTrack}>
+                  <View
+                    style={[
+                      rdStyles.stockBarFill,
+                      {
+                        width: `${Math.round(stock_fraction * 100)}%` as `${number}%`,
+                        backgroundColor: PROGRESS_GREEN,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* ══ Section: Status Timeline ════════════════════════════════ */}
+          <View style={rdStyles.section}>
+            <View style={rdStyles.sectionHeader}>
+              <View style={[rdStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText style={[rdStyles.sectionTitle, { color: PRIMARY_GREEN }]}>
+                Status Timeline
+              </ThemedText>
+            </View>
+
+            <View style={[rdStyles.timelineCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+              {visibleSteps.map((step, idx) => {
+                const isPast    = idx < currentVisibleIdx;
+                const isCurrent = idx === currentVisibleIdx;
+                const isFuture  = idx > currentVisibleIdx;
+                const isLast    = idx === visibleSteps.length - 1;
+
+                // Connector line tint
+                const lineColor = isPast ? step.color : theme.backgroundSelected;
+
+                return (
+                  <View key={step.key} style={rdStyles.stepRow}>
+
+                    {/* Left column: icon + connector line */}
+                    <View style={rdStyles.stepLeft}>
+                      {/* Step icon circle */}
+                      <View
+                        style={[
+                          rdStyles.stepCircle,
+                          isPast    && { backgroundColor: step.color, borderColor: step.color },
+                          isCurrent && { backgroundColor: step.color, borderColor: step.color },
+                          isFuture  && { backgroundColor: 'transparent', borderColor: theme.backgroundSelected },
+                        ]}>
+                        <Ionicons
+                          name={isPast ? 'checkmark' : step.icon}
+                          size={isCurrent ? 16 : 14}
+                          color={isFuture ? theme.textSecondary : '#ffffff'}
+                        />
+                      </View>
+
+                      {/* Vertical connector to next step */}
+                      {!isLast && (
+                        <View style={[rdStyles.stepLine, { backgroundColor: isPast ? step.color : theme.backgroundSelected }]} />
+                      )}
+                    </View>
+
+                    {/* Right column: label + description */}
+                    <View style={rdStyles.stepRight}>
+                      <View style={rdStyles.stepLabelRow}>
+                        <ThemedText
+                          style={[
+                            rdStyles.stepLabel,
+                            isCurrent && { color: step.color },
+                            isFuture  && { color: theme.textSecondary, fontWeight: '500' },
+                          ]}>
+                          {step.label}
+                        </ThemedText>
+                        {isCurrent && (
+                          <View style={[rdStyles.currentBadge, { backgroundColor: step.color + '22', borderColor: step.color + '55' }]}>
+                            <ThemedText style={[rdStyles.currentBadgeText, { color: step.color }]}>
+                              Current
+                            </ThemedText>
+                          </View>
+                        )}
+                      </View>
+                      <ThemedText
+                        type="small"
+                        style={[
+                          rdStyles.stepDesc,
+                          isFuture && { color: theme.textSecondary, opacity: 0.55 },
+                          isCurrent && { color: theme.text },
+                        ]}>
+                        {step.description}
+                      </ThemedText>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+
+        </ScrollView>
+
+        {/* ── Close button pinned at the bottom ─────────────────────── */}
+        <Pressable
+          onPress={onClose}
+          style={[rdStyles.closeBtn, { backgroundColor: PRIMARY_GREEN }]}>
+          <ThemedText style={rdStyles.closeBtnText}>Close</ThemedText>
+        </Pressable>
+      </Animated.View>
+    </Modal>
+  );
+}
+
+const rdStyles = StyleSheet.create({
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  sheet: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    maxHeight: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    elevation: 20,
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.two,
+  },
+  handle: {
+    alignSelf: 'center',
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    marginBottom: Spacing.three,
+  },
+  scrollContent: {
+    paddingBottom: Spacing.three,
+    gap: 0,
+  },
+  // ── Header ──────────────────────────────────────────────────────────────
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.two,
+    marginBottom: Spacing.three,
+  },
+  driveTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    lineHeight: 24,
+  },
+  typeBadge: {
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    flexShrink: 0,
+  },
+  typeBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  // ── Section chrome ───────────────────────────────────────────────────────
+  section: {
+    marginBottom: Spacing.three,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    marginBottom: Spacing.two,
+  },
+  sectionAccent: {
+    width: 3,
+    height: 14,
+    borderRadius: 2,
+  },
+  sectionTitle: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  // ── Info card (used in Registration Info + Drive Details) ────────────────
+  infoCard: {
+    borderRadius: 14,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    gap: 6,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+  },
+  infoRowLabel: {
+    width: 112,
+    flexShrink: 0,
+    fontWeight: '600',
+  },
+  infoRowValue: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 17,
+  },
+  infoRowDivider: {
+    height: 1,
+    marginVertical: 3,
+  },
+  // ── Applicant number block ───────────────────────────────────────────────
+  appNumRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  appNum: {
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    lineHeight: 28,
+  },
+  scoreBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  scoreText: {
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 17,
+  },
+  // ── Stock progress bar ───────────────────────────────────────────────────
+  stockBarTrack: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    marginTop: 6,
+    overflow: 'hidden',
+  },
+  stockBarFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  // ── Timeline ─────────────────────────────────────────────────────────────
+  timelineCard: {
+    borderRadius: 14,
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.two + 2,
+    paddingBottom: Spacing.two,
+  },
+  stepRow: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+  },
+  stepLeft: {
+    alignItems: 'center',
+    width: 32,
+  },
+  stepCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepLine: {
+    width: 2,
+    flex: 1,
+    minHeight: 16,
+    borderRadius: 1,
+    marginVertical: 3,
+  },
+  stepRight: {
+    flex: 1,
+    paddingBottom: Spacing.three,
+    gap: 4,
+  },
+  stepLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  stepLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 19,
+  },
+  currentBadge: {
+    borderRadius: 6,
+    borderWidth: 1,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  currentBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+  },
+  stepDesc: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
+  // ── Bottom close button ───────────────────────────────────────────────────
+  closeBtn: {
+    borderRadius: 24,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: Spacing.two,
+  },
+  closeBtnText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '700',
+    lineHeight: 20,
+  },
+});
+
 // ─── My Registrations Panel ───────────────────────────────────────────────────
 
 function MyRegistrationsPanel({
@@ -1209,6 +1964,8 @@ function MyRegistrationsPanel({
   loading: boolean;
 }) {
   const theme = useTheme();
+  const [statusFilter, setStatusFilter] = useState<RegStatusFilter>('all');
+  const [detailReg, setDetailReg]       = useState<DriveRegistration | null>(null);
 
   const STATUS_COLOR: Record<string, string> = {
     pending:   '#F59E0B',
@@ -1223,92 +1980,158 @@ function MyRegistrationsPanel({
     cancelled: 'Cancelled',
   };
 
-  if (loading) {
-    return (
-      <View style={myRegStyles.center}>
-        <ActivityIndicator color={PRIMARY_GREEN} />
-      </View>
-    );
-  }
-
-  if (registrations.length === 0) {
-    return (
-      <View style={myRegStyles.center}>
-        <Ionicons name="calendar-outline" size={52} color={theme.textSecondary} />
-        <ThemedText themeColor="textSecondary" style={{ textAlign: 'center', marginTop: Spacing.two }}>
-          You haven't registered for any medical drives yet.
-        </ThemedText>
-      </View>
-    );
-  }
+  const filtered =
+    statusFilter === 'all'
+      ? registrations
+      : registrations.filter((r) => r.status === statusFilter);
 
   return (
-    <ScrollView
-      contentContainerStyle={myRegStyles.list}
-      showsVerticalScrollIndicator={false}>
-      {registrations.map((reg) => {
-        const drive = reg.drive;
-        const cfg = drive ? DRIVE_TYPE_CONFIG[drive.type] ?? DRIVE_TYPE_CONFIG.others : null;
-        const statusColor = STATUS_COLOR[reg.status] ?? theme.textSecondary;
-        const statusLabel = STATUS_LABEL[reg.status] ?? reg.status;
+    <>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={myRegStyles.outerList}
+        showsVerticalScrollIndicator={false}>
 
-        return (
-          <View key={reg.id} style={[myRegStyles.card, { backgroundColor: theme.background }]}>
-            {/* Drive title + type badge */}
-            <View style={myRegStyles.titleRow}>
-              <ThemedText style={myRegStyles.cardTitle} numberOfLines={2}>
-                {drive?.title ?? '—'}
-              </ThemedText>
-              {cfg && (
-                <View style={[myRegStyles.typeBadge, { backgroundColor: cfg.color + '26' }]}>
-                  <ThemedText style={[myRegStyles.typeBadgeText, { color: cfg.color }]}>
-                    {cfg.label}
-                  </ThemedText>
-                </View>
-              )}
-            </View>
-
-            {/* Date · time · location */}
-            {drive && (
-              <ThemedText type="small" themeColor="textSecondary">
-                {fmtShortDate(drive.drive_date)} · {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
-                {'  ·  '}{drive.location}
-              </ThemedText>
-            )}
-
-            {/* Applicant number + status pill */}
-            <View style={myRegStyles.bottomRow}>
-              <View style={myRegStyles.appNumWrap}>
-                <ThemedText type="small" themeColor="textSecondary">Applicant #</ThemedText>
-                <ThemedText type="smallBold" style={{ color: PRIMARY_GREEN }}>
-                  {reg.applicant_number}
-                </ThemedText>
-              </View>
-              <View style={[myRegStyles.statusPill, { backgroundColor: statusColor + '22' }]}>
-                <ThemedText type="small" style={{ color: statusColor, fontWeight: '600' }}>
-                  {statusLabel}
-                </ThemedText>
-              </View>
-            </View>
+        {/* ════════════════════════════════════════════════════════════════
+            SECTION 1 — Status Filter
+        ════════════════════════════════════════════════════════════════ */}
+        <View style={sectionStyles.section}>
+          <View style={sectionStyles.sectionLabelRow}>
+            <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+            <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+              Filter by Status
+            </ThemedText>
           </View>
-        );
-      })}
-    </ScrollView>
+
+          <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+            <RegStatusFilterBar active={statusFilter} onSelect={setStatusFilter} />
+          </View>
+        </View>
+
+        {/* Section divider */}
+        <View style={[sectionStyles.divider, { backgroundColor: theme.backgroundSelected }]} />
+
+        {/* ════════════════════════════════════════════════════════════════
+            SECTION 2 — Registrations List
+        ════════════════════════════════════════════════════════════════ */}
+        <View style={sectionStyles.section}>
+          <View style={sectionStyles.sectionLabelRow}>
+            <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+            <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+              My Applications
+            </ThemedText>
+          </View>
+
+          {loading ? (
+            <View style={myRegStyles.center}>
+              <ActivityIndicator color={PRIMARY_GREEN} />
+            </View>
+          ) : registrations.length === 0 ? (
+            <View style={myRegStyles.center}>
+              <Ionicons name="calendar-outline" size={52} color={theme.textSecondary} />
+              <ThemedText themeColor="textSecondary" style={{ textAlign: 'center', marginTop: Spacing.two }}>
+                You haven't registered for any medical drives yet.
+              </ThemedText>
+            </View>
+          ) : filtered.length === 0 ? (
+            <View style={myRegStyles.center}>
+              <Ionicons name="filter-outline" size={44} color={theme.textSecondary} />
+              <ThemedText themeColor="textSecondary" style={{ textAlign: 'center', marginTop: Spacing.two }}>
+                No {STATUS_LABEL[statusFilter]?.toLowerCase()} registrations found.
+              </ThemedText>
+            </View>
+          ) : (
+            <View style={myRegStyles.list}>
+              {filtered.map((reg) => {
+                const drive = reg.drive;
+                const cfg = drive ? DRIVE_TYPE_CONFIG[drive.type] ?? DRIVE_TYPE_CONFIG.others : null;
+                const statusColor = STATUS_COLOR[reg.status] ?? theme.textSecondary;
+                const statusLabel = STATUS_LABEL[reg.status] ?? reg.status;
+
+                return (
+                  <Pressable
+                    key={reg.id}
+                    onPress={() => setDetailReg(reg)}
+                    style={({ pressed }) => [
+                      myRegStyles.card,
+                      { backgroundColor: theme.background },
+                      pressed && { opacity: 0.82 },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`View details for ${drive?.title ?? 'registration'}`}>
+
+                    {/* Drive title + type badge */}
+                    <View style={myRegStyles.titleRow}>
+                      <ThemedText style={myRegStyles.cardTitle} numberOfLines={2}>
+                        {drive?.title ?? '—'}
+                      </ThemedText>
+                      {cfg && (
+                        <View style={[myRegStyles.typeBadge, { backgroundColor: cfg.color + '26' }]}>
+                          <ThemedText style={[myRegStyles.typeBadgeText, { color: cfg.color }]}>
+                            {cfg.label}
+                          </ThemedText>
+                        </View>
+                      )}
+                    </View>
+
+                    {/* Date · time · location */}
+                    {drive && (
+                      <ThemedText type="small" themeColor="textSecondary">
+                        {fmtShortDate(drive.drive_date)} · {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
+                        {'  ·  '}{drive.location}
+                      </ThemedText>
+                    )}
+
+                    {/* Bottom row: applicant # · status pill · chevron hint */}
+                    <View style={myRegStyles.bottomRow}>
+                      <View style={myRegStyles.appNumWrap}>
+                        <ThemedText type="small" themeColor="textSecondary">Applicant #</ThemedText>
+                        <ThemedText type="smallBold" style={{ color: PRIMARY_GREEN }}>
+                          {reg.applicant_number}
+                        </ThemedText>
+                      </View>
+                       <View style={myRegStyles.bottomRight}>
+                         <View style={[myRegStyles.statusPill, { backgroundColor: statusColor + '22' }]}>
+                           <View style={[myRegStyles.statusDot, { backgroundColor: statusColor }]} />
+                           <ThemedText type="small" style={{ color: statusColor, fontWeight: '600' }}>
+                             {statusLabel}
+                           </ThemedText>
+                         </View>
+                       </View>
+                    </View>
+                  </Pressable>
+                );
+              })}
+            </View>
+          )}
+        </View>
+      </ScrollView>
+
+      {/* ── Registration detail bottom sheet ──────────────────────────── */}
+      <RegistrationDetailSheet
+        registration={detailReg}
+        visible={detailReg !== null}
+        onClose={() => setDetailReg(null)}
+      />
+    </>
   );
 }
 
 const myRegStyles = StyleSheet.create({
+  // Outer scroll content — sections render directly inside
+  outerList: {
+    paddingBottom: 40,
+  },
   center: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: Spacing.six,
     gap: Spacing.two,
+    marginHorizontal: Spacing.three,
   },
   list: {
-    padding: Spacing.three,
     gap: Spacing.three,
-    paddingBottom: Spacing.six,
+    paddingHorizontal: Spacing.three,
   },
   card: {
     borderRadius: 16,
@@ -1351,10 +2174,23 @@ const myRegStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 5,
   },
+  bottomRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   statusPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
 });
 
@@ -1480,86 +2316,186 @@ export default function HealthScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
 
-          {/* Calendar — dots are colored per drive type */}
-          <DriveCalendar
-            selectedDate={selectedDate}
-            onDateSelect={handleDateSelect}
-            eventDateMap={monthEventMap}
-            currentMonth={currentMonth}
-            onMonthChange={handleMonthChange}
-            onJumpTo={handleJumpTo}
-          />
-
-          {/* ── Month-view filter toggle ──────────────────────────────────── */}
-          <Pressable
-            onPress={() => setMonthViewActive((v) => !v)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: monthViewActive }}
-            style={[
-              monthBtnStyles.btn,
-              monthViewActive
-                ? { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN }
-                : { borderColor: PRIMARY_GREEN },
-            ]}>
-            <Ionicons
-              name="calendar"
-              size={15}
-              color={monthViewActive ? '#ffffff' : PRIMARY_GREEN}
+          {/* ════════════════════════════════════════════════════════════════
+              SECTION 1 — Calendar
+          ════════════════════════════════════════════════════════════════ */}
+          <View style={sectionStyles.section}>
+            <View style={sectionStyles.sectionLabelRow}>
+              <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+                Calendar
+              </ThemedText>
+            </View>
+            <DriveCalendar
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+              eventDateMap={monthEventMap}
+              currentMonth={currentMonth}
+              onMonthChange={handleMonthChange}
+              onJumpTo={handleJumpTo}
             />
-            <ThemedText
-              type="small"
-              style={[monthBtnStyles.label, { color: monthViewActive ? '#ffffff' : PRIMARY_GREEN }]}>
-              All Medical Drives for {MONTH_NAMES[currentMonth.month - 1]}
-            </ThemedText>
-            {monthViewActive && (
-              <Ionicons name="close-circle" size={15} color="#ffffff" style={{ marginLeft: 2 }} />
-            )}
-          </Pressable>
-
-          {/* ── Horizontal category filter ────────────────────────────────── */}
-          <HorizontalCategoryNav active={typeFilter} onSelect={setTypeFilter} />
-
-          {/* ── Header card: date or month ────────────────────────────────── */}
-          <View style={[dateHdrStyles.card, { borderColor: PRIMARY_GREEN }]}>
-            <ThemedText style={[dateHdrStyles.text, { color: PRIMARY_GREEN }]}>
-              {monthViewActive
-                ? `${MONTH_NAMES[currentMonth.month - 1]} ${currentMonth.year}`
-                : fmtFullDate(selectedDate)}
-            </ThemedText>
           </View>
 
-          {/* ── Drive list ────────────────────────────────────────────────── */}
-          {activeDriveLoading ? (
-            <View style={rootStyles.loadingBox}>
-              <ActivityIndicator color={PRIMARY_GREEN} />
-            </View>
-          ) : !monthViewActive && error ? (
-            <View style={rootStyles.loadingBox}>
-              <Ionicons name="alert-circle-outline" size={32} color="#EF4444" />
-              <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
-                {error}
+          {/* Section divider */}
+          <View style={[sectionStyles.divider, { backgroundColor: theme.backgroundSelected }]} />
+
+          {/* ════════════════════════════════════════════════════════════════
+              SECTION 2 — Month toggle + category filters
+          ════════════════════════════════════════════════════════════════ */}
+          <View style={sectionStyles.section}>
+            <View style={sectionStyles.sectionLabelRow}>
+              <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+                Filter Drives
               </ThemedText>
             </View>
-          ) : activeDrives.length === 0 ? (
-            <View style={rootStyles.emptyBox}>
-              <Ionicons name="medkit-outline" size={44} color={theme.textSecondary} />
-              <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
-                {monthViewActive
-                  ? `No active medical drives in ${MONTH_NAMES[currentMonth.month - 1]}`
-                  : 'No medical drives on this date'}
-                {typeFilter !== 'all' ? ` for ${DRIVE_TYPE_CONFIG[typeFilter].label}` : ''}.
+
+            {/* Filter bar — month toggle + chips on one row */}
+            <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+              {/* Month-view icon toggle (compact square button) */}
+              <Pressable
+                onPress={() => setMonthViewActive((v) => !v)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: monthViewActive }}
+                accessibilityLabel={
+                  monthViewActive
+                    ? `Showing all drives for ${MONTH_NAMES[currentMonth.month - 1]}. Tap to clear.`
+                    : `Show all drives for ${MONTH_NAMES[currentMonth.month - 1]}`
+                }
+                style={[
+                  filterPanelStyles.monthIconBtn,
+                  monthViewActive
+                    ? { backgroundColor: PRIMARY_GREEN }
+                    : { backgroundColor: 'transparent' },
+                ]}>
+                <Ionicons
+                  name={monthViewActive ? 'calendar' : 'calendar-outline'}
+                  size={17}
+                  color={monthViewActive ? '#ffffff' : PRIMARY_GREEN}
+                />
+              </Pressable>
+
+              {/* Vertical separator */}
+              <View style={[filterPanelStyles.vSep, { backgroundColor: theme.backgroundSelected }]} />
+
+              {/* Chip scroll — fills remaining width */}
+              <HorizontalCategoryNav active={typeFilter} onSelect={setTypeFilter} />
+            </View>
+
+            {/* Month-view active label — slim single-line indicator */}
+            {monthViewActive && (
+              <View style={filterPanelStyles.monthLabelRow}>
+                <ThemedText type="small" style={[filterPanelStyles.monthLabelText, { color: PRIMARY_GREEN }]}>
+                  All drives for {MONTH_NAMES[currentMonth.month - 1]} {currentMonth.year}
+                </ThemedText>
+                <Pressable onPress={() => setMonthViewActive(false)} hitSlop={8}>
+                  <Ionicons name="close-circle" size={14} color={PRIMARY_GREEN} />
+                </Pressable>
+              </View>
+            )}
+          </View>
+
+          {/* Section divider */}
+          <View style={[sectionStyles.divider, { backgroundColor: theme.backgroundSelected }]} />
+
+          {/* ════════════════════════════════════════════════════════════════
+              SECTION 3 — Date / Month header
+          ════════════════════════════════════════════════════════════════ */}
+          <View style={sectionStyles.section}>
+            <View style={sectionStyles.sectionLabelRow}>
+              <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+                {monthViewActive ? 'Viewing Month' : 'Selected Date'}
               </ThemedText>
             </View>
-          ) : (
-            activeDrives.map((drive) => (
-              <DriveCard
-                key={drive.id}
-                drive={drive}
-                isRegistered={registeredDriveIds.has(drive.id)}
-                onRegister={() => handleRegister(drive)}
-              />
-            ))
-          )}
+
+            {monthViewActive ? (
+              /* Month-view — single pill row: calendar icon · Month · Year */
+              <View style={[dateHdrStyles.row, { borderColor: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN + '0D' }]}>
+                <Ionicons name="calendar" size={15} color={PRIMARY_GREEN} />
+                <ThemedText style={[dateHdrStyles.rowText, { color: PRIMARY_GREEN }]}>
+                  {MONTH_NAMES[currentMonth.month - 1]}
+                </ThemedText>
+                <View style={[dateHdrStyles.yearPill, { backgroundColor: PRIMARY_GREEN + '22' }]}>
+                  <ThemedText style={[dateHdrStyles.yearPillText, { color: PRIMARY_GREEN }]}>
+                    {currentMonth.year}
+                  </ThemedText>
+                </View>
+              </View>
+            ) : (
+              /* Date-view — single pill row: weekday · dot · month day · Today tag */
+              <View style={[dateHdrStyles.row, { borderColor: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN + '0D' }]}>
+                <Ionicons name="today-outline" size={15} color={PRIMARY_GREEN} />
+                {/* Weekday */}
+                <ThemedText style={[dateHdrStyles.rowText, { color: PRIMARY_GREEN }]}>
+                  {parseLocalDate(selectedDate).toLocaleDateString('en-US', { weekday: 'long' })}
+                </ThemedText>
+                {/* Separator dot */}
+                <View style={[dateHdrStyles.dot, { backgroundColor: PRIMARY_GREEN + '55' }]} />
+                {/* Month + day */}
+                <ThemedText style={[dateHdrStyles.rowSub, { color: PRIMARY_GREEN }]}>
+                  {parseLocalDate(selectedDate).toLocaleDateString('en-US', { month: 'short' })}{' '}
+                  {parseLocalDate(selectedDate).getDate()}
+                </ThemedText>
+                {/* "Today" tag — right-aligned via flex spacer */}
+                {selectedDate === localToday() && (
+                  <>
+                    <View style={{ flex: 1 }} />
+                    <View style={[dateHdrStyles.todayTag, { backgroundColor: PRIMARY_GREEN }]}>
+                      <ThemedText style={dateHdrStyles.todayTagText}>Today</ThemedText>
+                    </View>
+                  </>
+                )}
+              </View>
+            )}
+          </View>
+
+          {/* Section divider */}
+          <View style={[sectionStyles.divider, { backgroundColor: theme.backgroundSelected }]} />
+
+          {/* ════════════════════════════════════════════════════════════════
+              SECTION 4 — Drive list
+          ════════════════════════════════════════════════════════════════ */}
+          <View style={sectionStyles.section}>
+            <View style={sectionStyles.sectionLabelRow}>
+              <View style={[sectionStyles.sectionAccent, { backgroundColor: PRIMARY_GREEN }]} />
+              <ThemedText type="small" style={[sectionStyles.sectionLabel, { color: PRIMARY_GREEN }]}>
+                Medical Drives
+              </ThemedText>
+            </View>
+
+            {activeDriveLoading ? (
+              <View style={rootStyles.loadingBox}>
+                <ActivityIndicator color={PRIMARY_GREEN} />
+              </View>
+            ) : !monthViewActive && error ? (
+              <View style={rootStyles.loadingBox}>
+                <Ionicons name="alert-circle-outline" size={32} color="#EF4444" />
+                <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
+                  {error}
+                </ThemedText>
+              </View>
+            ) : activeDrives.length === 0 ? (
+              <View style={rootStyles.emptyBox}>
+                <Ionicons name="medkit-outline" size={44} color={theme.textSecondary} />
+                <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
+                  {monthViewActive
+                    ? `No active medical drives in ${MONTH_NAMES[currentMonth.month - 1]}`
+                    : 'No medical drives on this date'}
+                  {typeFilter !== 'all' ? ` for ${DRIVE_TYPE_CONFIG[typeFilter].label}` : ''}.
+                </ThemedText>
+              </View>
+            ) : (
+              activeDrives.map((drive) => (
+                <DriveCard
+                  key={drive.id}
+                  drive={drive}
+                  isRegistered={registeredDriveIds.has(drive.id)}
+                  onRegister={() => handleRegister(drive)}
+                />
+              ))
+            )}
+          </View>
         </ScrollView>
       )}
 
@@ -1622,39 +2558,132 @@ const rootStyles = StyleSheet.create({
   },
 });
 
-const dateHdrStyles = StyleSheet.create({
-  card: {
-    marginHorizontal: Spacing.three,
-    marginBottom: Spacing.three,
-    borderWidth: 1.5,
-    borderRadius: 12,
-    paddingVertical: Spacing.three,
-    alignItems: 'center',
+// ─── Section layout styles ────────────────────────────────────────────────────
+
+const sectionStyles = StyleSheet.create({
+  section: {
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.two,
   },
-  text: {
-    fontSize: 16,
+  sectionLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    marginHorizontal: Spacing.three,
+    marginBottom: Spacing.two,
+  },
+  sectionAccent: {
+    width: 3,
+    height: 14,
+    borderRadius: 2,
+  },
+  sectionLabel: {
+    fontSize: 11,
     fontWeight: '700',
-    lineHeight: 22,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  divider: {
+    height: 1,
+    marginHorizontal: Spacing.three,
   },
 });
 
-const monthBtnStyles = StyleSheet.create({
-  btn: {
+// ─── Filter panel (Section 2) ─────────────────────────────────────────────────
+
+const filterPanelStyles = StyleSheet.create({
+  // Single-row bar containing the month icon button + chip scroll
+  bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
     marginHorizontal: Spacing.three,
-    marginTop: Spacing.one,
-    marginBottom: Spacing.half,
-    borderWidth: 1.5,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    alignSelf: 'flex-start',
+    borderRadius: 10,
+    overflow: 'hidden',
+    height: 42,
   },
-  label: {
+  // Compact square icon-only toggle on the left of the bar
+  monthIconBtn: {
+    width: 42,
+    height: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  // Thin vertical rule between the icon button and the chip scroll
+  vSep: {
+    width: 1,
+    height: 24,
+    flexShrink: 0,
+  },
+  // Slim indicator shown below the bar when month-view is active
+  monthLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginHorizontal: Spacing.three,
+    marginTop: 5,
+  },
+  monthLabelText: {
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: 11,
+    lineHeight: 15,
+  },
+});
+
+// ─── Date header card (Section 3) ────────────────────────────────────────────
+
+const dateHdrStyles = StyleSheet.create({
+  // Shared single-row pill container
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    marginHorizontal: Spacing.three,
+    borderWidth: 1.5,
+    borderRadius: 10,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+  },
+  // Primary label (weekday name or month name)
+  rowText: {
+    fontSize: 14,
+    fontWeight: '700',
     lineHeight: 18,
+  },
+  // Secondary label (short month + day number)
+  rowSub: {
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 18,
+    opacity: 0.85,
+  },
+  // Small separator dot between weekday and month-day
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+  },
+  // "Today" right-aligned compact tag
+  todayTag: {
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  todayTagText: {
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 15,
+  },
+  // Month-view: year pill next to month name
+  yearPill: {
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  yearPillText: {
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 17,
   },
 });

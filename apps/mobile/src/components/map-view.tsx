@@ -15,8 +15,8 @@
 import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapMarker } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
 import type { ViewStyle } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 /**
  * Fallback focus when no barangay boundary is loaded yet (e.g. a guest with no profile,
@@ -59,9 +59,10 @@ const LEAFLET_HTML = `
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, #map { width: 100%; height: 100%; }
-    /* Push the zoom (+/-) control down so it clears the floating filter pills
-       row the RN screen renders on top of this map. */
-    .leaflet-top.leaflet-left { margin-top: 60px; }
+    /* Push the zoom (+/-) control down so it clears the floating search bar
+       (12+44), segment toggle (10+40), filter pills (10+34) and a small gap:
+       ≈ 12+44+10+40+10+34+8 = 158px total clearance. */
+    .leaflet-top.leaflet-left { margin-top: 158px; }
   </style>
 </head>
 <body>
@@ -100,6 +101,30 @@ const LEAFLET_HTML = `
         iconSize: [24, 36],
         iconAnchor: [12, 36],
         popupAnchor: [0, -36],
+      });
+    }
+
+    /** Red pin containing a standing-person silhouette — used for the "You" marker. */
+    function makePersonIcon() {
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 42" width="28" height="42">'
+        // pin body
+        + '<path d="M14 0C6.3 0 0 6.3 0 14c0 10.5 14 28 14 28S28 24.5 28 14C28 6.3 21.7 0 14 0z" fill="#DC2626"/>'
+        // head
+        + '<circle cx="14" cy="8" r="3.4" fill="white"/>'
+        // torso
+        + '<rect x="10.5" y="12.5" width="7" height="6" rx="1.5" fill="white"/>'
+        // arms
+        + '<rect x="7" y="13.5" width="14" height="2" rx="1" fill="white"/>'
+        // left leg
+        + '<path d="M11.5 18.5 L9.5 25" stroke="white" stroke-width="2.2" stroke-linecap="round"/>'
+        // right leg
+        + '<path d="M16.5 18.5 L18.5 25" stroke="white" stroke-width="2.2" stroke-linecap="round"/>'
+        + '</svg>';
+      return L.icon({
+        iconUrl: 'data:image/svg+xml;base64,' + btoa(svg),
+        iconSize: [28, 42],
+        iconAnchor: [14, 42],
+        popupAnchor: [0, -42],
       });
     }
 
@@ -160,9 +185,10 @@ const LEAFLET_HTML = `
           markerLayer.clearLayers();
           msg.payload.markers.forEach(function (m) {
             if (!m || typeof m.position !== 'object') return;
+            var icon = m.kind === 'user-location' ? makePersonIcon() : makeIcon(colorForKind(m.kind));
             var marker = L.marker(
               [m.position.lat, m.position.lng],
-              { icon: makeIcon(colorForKind(m.kind)) }
+              { icon: icon }
             );
             if (m.label) marker.bindPopup(m.label);
             marker.on('click', function () {
@@ -242,7 +268,7 @@ export function MapView({ markers, center, kindColors, boundary, onMarkerTap, on
   const isReadyRef = useRef(false);
 
   // Helper: post a typed command into the WebView.
-  function sendMessage(msg: MapBridgeInboundMessage & { kindColors?: Record<string, string> }) {
+  function sendMessage(msg: MapBridgeInboundMessage) {
     if (!webViewRef.current || !isReadyRef.current) return;
     const js = `
       (function() {
@@ -259,9 +285,8 @@ export function MapView({ markers, center, kindColors, boundary, onMarkerTap, on
     if (!isReadyRef.current) return;
     sendMessage({
       type: 'SET_MARKERS',
-      payload: { markers },
-      ...(kindColors ? { kindColors } : {}),
-    } as MapBridgeInboundMessage & { kindColors?: Record<string, string> });
+      payload: { markers, ...(kindColors ? { kindColors } : {}) },
+    });
   }, [markers, kindColors]);
 
   // Re-center whenever the user's location changes.
@@ -295,9 +320,15 @@ export function MapView({ markers, center, kindColors, boundary, onMarkerTap, on
           payload: { markers },
           ...(kindColors ? { kindColors } : {}),
         } as MapBridgeInboundMessage & { kindColors?: Record<string, string> });
+        // Always draw the boundary outline when available so the barangay
+        // perimeter is visible regardless of where the user is standing.
         if (boundary) {
           sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary } });
-        } else if (center) {
+        }
+        // If the device location is known, move the viewport there — this
+        // overrides the boundary fit so users outside Ampid I see their real
+        // position rather than being snapped back to the barangay centre.
+        if (center) {
           sendMessage({ type: 'SET_CENTER', payload: center });
         }
         break;

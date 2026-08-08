@@ -29,12 +29,14 @@
  */
 import { Ionicons } from '@expo/vector-icons';
 import { DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Animated,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -261,6 +263,20 @@ const dhS = StyleSheet.create({
   },
 });
 
+// ─── Household member type (mirrors the shape stored in profiles.household_members) ──
+
+interface HouseholdMember {
+  id: string;
+  name: string;
+  relation: string;
+  role: string;
+}
+
+// Either the resident themselves or one of their household members.
+type ApplicantSelection =
+  | { type: 'self' }
+  | { type: 'member'; member: HouseholdMember };
+
 // ─── Main screen ─────────────────────────────────────────────────────────────
 
 export default function ApplicantRegistrationScreen() {
@@ -273,14 +289,40 @@ export default function ApplicantRegistrationScreen() {
   const [drive, setDrive] = useState<MedicalDrive | null>(null);
   const [loadingDrive, setLoadingDrive] = useState(true);
 
+  // ── Applicant selector ─────────────────────────────────────────────────────
+  const [selection, setSelection] = useState<ApplicantSelection>({ type: 'self' });
+  const [pickerVisible, setPickerVisible] = useState(false);
+
+  // Household members parsed from the profile JSONB column.
+  const householdMembers = useMemo<HouseholdMember[]>(() => {
+    const raw = (profile as any)?.household_members;
+    return Array.isArray(raw) ? (raw as HouseholdMember[]) : [];
+  }, [profile]);
+
+  // Derived display values for the currently selected applicant.
+  const selectedName =
+    selection.type === 'self'
+      ? (profile?.full_name ?? 'My Profile')
+      : selection.member.name;
+
+  const selectedAvatarUrl: string | null =
+    selection.type === 'self' ? ((profile as any)?.avatar_url ?? null) : null;
+
+  const selectedInitials = getInitials(selectedName);
+
   // ── Form state ─────────────────────────────────────────────────────────────
   const [isPwd, setIsPwd] = useState(false);
   const [selectedComorbidities, setSelectedComorbidities] = useState<Set<Comorbidity>>(
     new Set(),
   );
   const [doseHistory, setDoseHistory] = useState<DoseOption>('1st Dose');
-  const [ageOverride, setAgeOverride] = useState('');   // only shown when profile has no birth_date
+  // Age override: always needed for household members (they have no birth_date);
+  // also used for the resident when their profile has no birth_date.
+  const [ageOverride, setAgeOverride] = useState('');
   const [consented, setConsented] = useState(false);
+
+  // Reset age override whenever the selection changes so stale numbers don't carry over.
+  useEffect(() => { setAgeOverride(''); }, [selection]);
 
   // ── Submission ─────────────────────────────────────────────────────────────
   const [submitting, setSubmitting] = useState(false);
@@ -330,10 +372,16 @@ export default function ApplicantRegistrationScreen() {
     ? drive.stock_remaining / drive.stock_total
     : 0;
 
-  const profileAge = computeAge(profile?.birth_date);
-  const effectiveAge: number | null = profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
+  // Age logic:
+  //   • Resident selected + has birth_date  → computed automatically
+  //   • Resident selected + no birth_date   → ageOverride input shown
+  //   • Household member selected           → ageOverride input always shown
+  const profileAge = selection.type === 'self' ? computeAge(profile?.birth_date) : null;
+  const effectiveAge: number | null =
+    profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
 
-  const initials = profile?.full_name ? getInitials(profile.full_name) : '?';
+  // The "initials" variable is kept for backward compat with helpers that use it.
+  const initials = selectedInitials;
 
   // Map dose-history tab to prior_dose_date sentinel
   function priorDoseDate(): string | null {
@@ -561,30 +609,51 @@ export default function ApplicantRegistrationScreen() {
         <View style={s.sectionGap}>
           <ThemedText style={s.sectionCaption}>REGISTERING FOR</ThemedText>
 
-          {/* Profile selector (single user for now) */}
-          <Card>
-            <View style={s.profileSelectorRow}>
-              <View style={s.avatarCircle}>
-                <ThemedText style={s.avatarInitials}>{initials}</ThemedText>
+          {/* Profile selector — tap to open household picker */}
+          <Pressable onPress={() => setPickerVisible(true)}>
+            <Card>
+              <View style={s.profileSelectorRow}>
+                <View style={s.avatarCircle}>
+                  {selectedAvatarUrl ? (
+                    <Image
+                      source={{ uri: selectedAvatarUrl }}
+                      style={s.avatarImage}
+                      contentFit="cover"
+                      cachePolicy="memory-disk"
+                    />
+                  ) : (
+                    <ThemedText style={s.avatarInitials}>{selectedInitials}</ThemedText>
+                  )}
+                </View>
+                <ThemedText style={s.profileName}>{selectedName}</ThemedText>
+                {selection.type === 'member' && (
+                  <ThemedText style={s.selectionTag}>{selection.member.relation}</ThemedText>
+                )}
+                <Ionicons name="chevron-down" size={18} color={MUTED} />
               </View>
-              <ThemedText style={s.profileName}>
-                {profile?.full_name ?? 'My Profile'}
-              </ThemedText>
-              <Ionicons name="chevron-down" size={18} color={MUTED} />
-            </View>
-          </Card>
+            </Card>
+          </Pressable>
 
-          {/* Profile details */}
+          {/* Profile details for the selected applicant */}
           <Card style={{ marginTop: 8 }}>
             {/* Name */}
-            <ProfileRow label="Name" value={profile?.full_name ?? '—'} />
+            <ProfileRow label="Name" value={selectedName} />
             <View style={s.divider} />
 
-            {/* Age */}
+            {selection.type === 'member' && (
+              <>
+                <ProfileRow label="Relation" value={selection.member.relation} />
+                <View style={s.divider} />
+                <ProfileRow label="Role" value={selection.member.role} />
+                <View style={s.divider} />
+              </>
+            )}
+
+            {/* Age — computed for resident with birth_date; manual input for members or
+                 resident without birth_date */}
             {profileAge !== null ? (
               <ProfileRow label="Age" value={String(profileAge)} />
             ) : (
-              /* No birth_date in profile → show inline age input */
               <View style={s.profileRow}>
                 <ThemedText style={s.profileRowLabel}>Age</ThemedText>
                 <TextInput
@@ -599,10 +668,14 @@ export default function ApplicantRegistrationScreen() {
                 />
               </View>
             )}
-            <View style={s.divider} />
 
-            {/* Address */}
-            <ProfileRow label="Address" value={profile?.home_address ?? '—'} />
+            {/* Address — only shown for the resident (members share the household address) */}
+            {selection.type === 'self' && (
+              <>
+                <View style={s.divider} />
+                <ProfileRow label="Address" value={profile?.home_address ?? '—'} />
+              </>
+            )}
 
             {/* Edit in Profile link */}
             <Pressable
@@ -612,6 +685,17 @@ export default function ApplicantRegistrationScreen() {
             </Pressable>
           </Card>
         </View>
+
+        {/* ── Applicant picker sheet ─────────────────────────────────────────── */}
+        <ApplicantPickerSheet
+          visible={pickerVisible}
+          residentName={profile?.full_name ?? 'My Profile'}
+          residentAvatarUrl={(profile as any)?.avatar_url ?? null}
+          householdMembers={householdMembers}
+          selection={selection}
+          onSelect={(sel) => { setSelection(sel); setPickerVisible(false); }}
+          onClose={() => setPickerVisible(false)}
+        />
 
         {/* ── 4. Eligibility Information ────────────────────────────────────── */}
         <View style={s.sectionGap}>
@@ -717,6 +801,227 @@ export default function ApplicantRegistrationScreen() {
     </View>
   );
 }
+
+// ─── ApplicantPickerSheet ─────────────────────────────────────────────────────
+// Bottom-sheet modal that lists the resident themselves + their household members
+// so the user can choose who they are registering for.
+
+function ApplicantPickerSheet({
+  visible,
+  residentName,
+  residentAvatarUrl,
+  householdMembers,
+  selection,
+  onSelect,
+  onClose,
+}: {
+  visible: boolean;
+  residentName: string;
+  residentAvatarUrl: string | null;
+  householdMembers: HouseholdMember[];
+  selection: ApplicantSelection;
+  onSelect: (sel: ApplicantSelection) => void;
+  onClose: () => void;
+}) {
+  const isResidentSelected = selection.type === 'self';
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+      statusBarTranslucent>
+      {/* Tap-outside backdrop */}
+      <Pressable style={ps.backdrop} onPress={onClose} />
+
+      <View style={ps.sheet}>
+        {/* Handle */}
+        <View style={ps.handle} />
+        <ThemedText style={ps.title}>Registering for</ThemedText>
+
+        {/* ── Resident (self) row ────────────────────────────────────────── */}
+        <Pressable
+          style={[ps.row, isResidentSelected && ps.rowSelected]}
+          onPress={() => onSelect({ type: 'self' })}>
+          <View style={ps.avatarCircle}>
+            {residentAvatarUrl ? (
+              <Image
+                source={{ uri: residentAvatarUrl }}
+                style={ps.avatarImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+              />
+            ) : (
+              <ThemedText style={ps.avatarInitials}>
+                {getInitials(residentName)}
+              </ThemedText>
+            )}
+          </View>
+          <View style={ps.rowInfo}>
+            <ThemedText style={ps.rowName}>{residentName}</ThemedText>
+            <ThemedText style={ps.rowSub}>Myself (Resident)</ThemedText>
+          </View>
+          {isResidentSelected && (
+            <Ionicons name="checkmark-circle" size={22} color={PRIMARY_GREEN} />
+          )}
+        </Pressable>
+
+        {/* ── Household members ──────────────────────────────────────────── */}
+        {householdMembers.length === 0 ? (
+          <View style={ps.emptyBox}>
+            <Ionicons name="people-outline" size={28} color="#C0C4CC" />
+            <ThemedText style={ps.emptyText}>
+              No household members added yet.{'\n'}Go to Profile → Household Information to add them.
+            </ThemedText>
+            <Pressable
+              style={ps.goToProfileBtn}
+              onPress={() => {
+                onClose();
+                router.push('/(app)/settings/profile');
+              }}>
+              <ThemedText style={ps.goToProfileText}>Go to Profile</ThemedText>
+            </Pressable>
+          </View>
+        ) : (
+          <ScrollView
+            style={ps.memberList}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled">
+            {householdMembers.map((m) => {
+              const isSel = selection.type === 'member' && selection.member.id === m.id;
+              return (
+                <Pressable
+                  key={m.id}
+                  style={[ps.row, isSel && ps.rowSelected]}
+                  onPress={() => onSelect({ type: 'member', member: m })}>
+                  <View style={[ps.avatarCircle, ps.memberAvatarBg]}>
+                    <ThemedText style={ps.avatarInitials}>{getInitials(m.name)}</ThemedText>
+                  </View>
+                  <View style={ps.rowInfo}>
+                    <ThemedText style={ps.rowName}>{m.name}</ThemedText>
+                    <ThemedText style={ps.rowSub}>
+                      {m.relation} · {m.role}
+                    </ThemedText>
+                  </View>
+                  {isSel && (
+                    <Ionicons name="checkmark-circle" size={22} color={PRIMARY_GREEN} />
+                  )}
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        )}
+      </View>
+    </Modal>
+  );
+}
+
+const ps = StyleSheet.create({
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+  },
+  sheet: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: CARD_BG,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: Spacing.three,
+    paddingBottom: 40,
+    paddingTop: Spacing.two,
+    maxHeight: '75%',
+  },
+  handle: {
+    alignSelf: 'center',
+    width: 38,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E0E1E6',
+    marginBottom: Spacing.two,
+  },
+  title: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#111111',
+    marginBottom: Spacing.two + 4,
+  },
+  memberList: {
+    flexGrow: 0,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two + 4,
+    paddingVertical: Spacing.two + 2,
+    paddingHorizontal: Spacing.two,
+    borderRadius: 12,
+    marginBottom: 4,
+  },
+  rowSelected: {
+    backgroundColor: PRIMARY_GREEN + '14',
+  },
+  avatarCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: PRIMARY_GREEN,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  memberAvatarBg: {
+    backgroundColor: '#D1D5DB',
+  },
+  avatarImage: {
+    width: 44,
+    height: 44,
+  },
+  avatarInitials: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  rowInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  rowName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111111',
+  },
+  rowSub: {
+    fontSize: 13,
+    color: MUTED,
+  },
+  emptyBox: {
+    alignItems: 'center',
+    paddingVertical: Spacing.four,
+    gap: Spacing.two,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: MUTED,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  goToProfileBtn: {
+    marginTop: Spacing.one,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    backgroundColor: PRIMARY_GREEN,
+    borderRadius: 20,
+  },
+  goToProfileText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#fff',
+  },
+});
 
 // ─── ScreenHeader ─────────────────────────────────────────────────────────────
 
@@ -889,6 +1194,12 @@ const s = StyleSheet.create({
     backgroundColor: '#D1D5DB',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
   },
   avatarInitials: {
     fontSize: 14,
@@ -901,6 +1212,17 @@ const s = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     lineHeight: 22,
+  },
+  selectionTag: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: PRIMARY_GREEN,
+    backgroundColor: PRIMARY_GREEN + '1A',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginRight: 4,
   },
 
   // Profile detail rows

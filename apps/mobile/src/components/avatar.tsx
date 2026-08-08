@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -12,17 +13,24 @@ function getInitials(fullName: string): string {
 }
 
 /**
- * Initials-based avatar — no photo storage exists yet (same deferral as Register/
- * Profile's ID upload), so this stands in for a real profile photo. Pass `icon` instead
- * of `fullName` for a non-person placeholder (e.g. Home's guest-mode "Login" avatar).
+ * Avatar — shows a profile photo when `imageUrl` is provided, otherwise falls
+ * back to computed initials from `fullName`, or an icon glyph when `icon` is set.
+ *
+ * Pass `icon` instead of `fullName` for a non-person placeholder (e.g. Home's
+ * guest-mode "Login" avatar). The `imageUrl` prop accepts any public URL (the
+ * avatar_url stored in the profiles table).
  */
 export function Avatar({
   fullName,
+  imageUrl,
   size = 48,
   icon,
   color,
 }: {
   fullName?: string;
+  /** Public URL of the resident's profile photo. When set, renders the photo
+   *  instead of initials. Supply the avatar_url from the profiles table. */
+  imageUrl?: string | null;
   size?: number;
   /** Renders this Ionicons glyph instead of computing initials from fullName. */
   icon?: keyof typeof Ionicons.glyphMap;
@@ -38,7 +46,14 @@ export function Avatar({
         styles.circle,
         { width: size, height: size, borderRadius: size / 2, backgroundColor },
       ]}>
-      {icon ? (
+      {imageUrl ? (
+        <Image
+          source={{ uri: imageUrl }}
+          style={{ width: size, height: size, borderRadius: size / 2 }}
+          contentFit="cover"
+          cachePolicy="memory-disk"
+        />
+      ) : icon ? (
         <Ionicons name={icon} size={size * 0.5} color={theme.onPrimary} />
       ) : (
         <ThemedText
@@ -55,6 +70,7 @@ const styles = StyleSheet.create({
   circle: {
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   initials: {},
 });

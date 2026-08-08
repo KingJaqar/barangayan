@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AuthProvider, useAuth } from '@/hooks/use-auth';
+import { ProfileProvider } from '@/hooks/use-profile';
 import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
 
 SplashScreen.preventAutoHideAsync();
@@ -10,6 +11,10 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   return (
     <AuthProvider>
+      {/* ProfileProvider sits inside AuthProvider so it can access the session for its
+          initial fetch, and outside ThemePreferenceProvider / ThemedRoot so every screen
+          in the tree shares one cached profile — avatar updates propagate immediately. */}
+      <ProfileProvider>
       {/* Needs session/profile (via useAuth/useProfile inside), so it has to nest under
           AuthProvider — everything below, including React Navigation's own DarkTheme/
           DefaultTheme, resolves through this instead of the raw OS scheme, so "App
@@ -18,6 +23,7 @@ export default function RootLayout() {
       <ThemePreferenceProvider>
         <ThemedRoot />
       </ThemePreferenceProvider>
+      </ProfileProvider>
     </AuthProvider>
   );
 }

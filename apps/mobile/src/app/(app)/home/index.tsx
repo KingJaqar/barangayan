@@ -95,7 +95,11 @@ export default function HomeScreen() {
         <View style={styles.profileRow}>
           {session ? (
             <View style={styles.profileInfo}>
-              <Avatar fullName={profile?.full_name ?? 'Resident'} size={56} />
+              <Avatar
+                fullName={profile?.full_name ?? 'Resident'}
+                imageUrl={(profile as any)?.avatar_url ?? null}
+                size={56}
+              />
               <View>
                 <ThemedText type="smallBold" style={[styles.profileNameFont, { color: theme.primary }]}>
                   {profile?.full_name ?? 'Resident'}

@@ -59,7 +59,10 @@ export default function SettingsScreen() {
             <Card>
               <Link href="/settings/profile" asChild>
                 <Pressable style={styles.row}>
-                  <Avatar fullName={profile?.full_name ?? 'Resident'} />
+                  <Avatar
+                    fullName={profile?.full_name ?? 'Resident'}
+                    imageUrl={(profile as any)?.avatar_url ?? null}
+                  />
                   <View style={styles.rowText}>
                     <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
                     <ThemedText type="small" themeColor="textSecondary">
@@ -87,7 +90,7 @@ export default function SettingsScreen() {
                   <ThemedText type="small" themeColor="textSecondary">
                     {profile?.email_verification_status === 'verified'
                       ? 'Your email is verified ✓'
-                      : 'Verification not yet available'}
+                      : 'Verify Your Email'}
                   </ThemedText>
                 </View>
               </View>
