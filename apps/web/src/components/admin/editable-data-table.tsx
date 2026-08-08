@@ -10,7 +10,7 @@ export interface EditableSelectOption {
 }
 
 export interface EditableCellConfig<T> {
-  type: 'text' | 'number' | 'select' | 'datetime';
+  type: 'text' | 'number' | 'select' | 'datetime' | 'date';
   options?: EditableSelectOption[]; // required when type === 'select'
   getValue: (row: T) => string | number;
   /** Return { error: null } on success, { error: <message> } on failure — never throw. */
@@ -181,7 +181,15 @@ export function EditableDataTable<T>({
                         ) : (
                           <input
                             autoFocus
-                            type={edit.type === 'number' ? 'number' : edit.type === 'datetime' ? 'datetime-local' : 'text'}
+                            type={
+                              edit.type === 'number'
+                                ? 'number'
+                                : edit.type === 'datetime'
+                                  ? 'datetime-local'
+                                  : edit.type === 'date'
+                                    ? 'date'
+                                    : 'text'
+                            }
                             value={draft}
                             disabled={saving}
                             onChange={(e) => setDraft(e.target.value)}

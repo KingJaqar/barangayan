@@ -494,6 +494,134 @@ export type Database = {
           },
         ]
       }
+      medical_drives: {
+        Row: {
+          id: string
+          barangay_id: string
+          title: string
+          type: string  // drive_type enum
+          drive_date: string
+          time_start: string
+          time_end: string
+          location: string
+          eligible_criteria: string
+          stock_label: string
+          stock_unit: string
+          stock_total: number
+          stock_remaining: number
+          is_active: boolean
+          deleted_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          barangay_id: string
+          title: string
+          type: string
+          drive_date: string
+          time_start: string
+          time_end: string
+          location?: string
+          eligible_criteria: string
+          stock_label?: string
+          stock_unit?: string
+          stock_total: number
+          stock_remaining?: number
+          is_active?: boolean
+          deleted_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          barangay_id?: string
+          title?: string
+          type?: string
+          drive_date?: string
+          time_start?: string
+          time_end?: string
+          location?: string
+          eligible_criteria?: string
+          stock_label?: string
+          stock_unit?: string
+          stock_total?: number
+          stock_remaining?: number
+          is_active?: boolean
+          deleted_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_drives_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drive_registrations: {
+        Row: {
+          id: string
+          drive_id: string
+          user_id: string
+          applicant_number: string
+          age: number
+          is_pwd: boolean
+          comorbidities: string[]
+          prior_dose_date: string | null
+          priority_score: number
+          status: string  // drive_registration_status enum
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          drive_id: string
+          user_id: string
+          applicant_number: string
+          age: number
+          is_pwd?: boolean
+          comorbidities?: string[]
+          prior_dose_date?: string | null
+          priority_score?: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          drive_id?: string
+          user_id?: string
+          applicant_number?: string
+          age?: number
+          is_pwd?: boolean
+          comorbidities?: string[]
+          prior_dose_date?: string | null
+          priority_score?: number
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drive_registrations_drive_id_fkey"
+            columns: ["drive_id"]
+            isOneToOne: false
+            referencedRelation: "medical_drives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drive_registrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_requests: {
         Row: {
           barangay_id: string
@@ -640,6 +768,16 @@ export type Database = {
       withdraw_incident: {
         Args: { p_incident_id: string }
         Returns: undefined
+      }
+      register_for_drive: {
+        Args: {
+          p_drive_id: string
+          p_age: number
+          p_is_pwd: boolean
+          p_comorbidities: string[]
+          p_prior_dose_date?: string | null
+        }
+        Returns: Json
       }
     }
     Enums: {

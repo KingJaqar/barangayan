@@ -438,3 +438,141 @@ from (values
 
 ) as v(id, category_name, title, description, location, status, confirmation_count, age_hours)
 on conflict (id) do nothing;
+
+-- ============================================================================
+-- Sample medical drives (Module 10) — one realistic entry per drive_type so the
+-- resident mobile Health screen's category filter chips and the admin web Health
+-- screen (created in this same change) both render real data for every category
+-- straight after `supabase db reset`, without manual entry.
+--
+-- Dates are spread across the current and next few days from a mix of drive types
+-- so the mobile calendar's "event dot" markers and the admin Today/Upcoming/Past
+-- tabs all have something to show. All rows use fixed UUIDs in the 0x501 namespace.
+-- ============================================================================
+insert into public.medical_drives (
+  id, barangay_id, title, type, drive_date, time_start, time_end, location,
+  eligible_criteria, stock_label, stock_unit, stock_total, stock_remaining, is_active
+)
+values
+  (
+    '00000000-0000-0000-0000-000000000501',
+    '00000000-0000-0000-0000-000000000001',
+    'Free COVID-19 & Flu Vaccination Day',
+    'vaccination',
+    current_date + 2,
+    '08:00', '16:00',
+    'Barangay Health Center',
+    'Open to all residents aged 6 months and up. Bring your vaccination card, if available.',
+    'Remaining Doses', 'doses', 150, 132, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000502',
+    '00000000-0000-0000-0000-000000000001',
+    'Prenatal Check-up & Maternal Care Clinic',
+    'maternal_care',
+    current_date + 3,
+    '08:00', '12:00',
+    'Barangay Health Center, Room 2',
+    'Pregnant residents of Barangay Ampid I, all trimesters welcome. Walk-ins accepted; priority given to first-time and high-risk pregnancies.',
+    'Remaining Slots', 'slots', 30, 22, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000503',
+    '00000000-0000-0000-0000-000000000001',
+    'Community Blood Donation Drive',
+    'blood_drive',
+    current_date + 5,
+    '09:00', '15:00',
+    'Barangay Multi-Purpose Hall',
+    'Donors aged 18–65, weighing at least 50 kg, in good general health, and not donated blood in the last 3 months.',
+    'Remaining Slots', 'slots', 80, 61, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000504',
+    '00000000-0000-0000-0000-000000000001',
+    'Free Medicine Distribution for Senior Citizens',
+    'medicine',
+    current_date + 1,
+    '08:00', '11:00',
+    'Barangay Health Center',
+    'Senior citizens (60+) and PWD residents with a valid barangay ID. Maintenance medicines for hypertension and diabetes prioritized.',
+    'Remaining Stock', 'packs', 100, 100, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000505',
+    '00000000-0000-0000-0000-000000000001',
+    'Oral Health & Free Tooth Extraction Mission',
+    'dental',
+    current_date + 7,
+    '08:00', '15:00',
+    'Barangay Covered Court',
+    'All residents; children under 12 must be accompanied by a parent or guardian. Bring a valid ID.',
+    'Remaining Slots', 'slots', 60, 45, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000506',
+    '00000000-0000-0000-0000-000000000001',
+    'Free Eye Check-up & Reading Glasses Distribution',
+    'optical',
+    current_date + 9,
+    '09:00', '14:00',
+    'Barangay Health Center',
+    'Open to all residents, priority given to senior citizens experiencing blurred near vision.',
+    'Remaining Slots', 'pairs', 50, 50, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000507',
+    '00000000-0000-0000-0000-000000000001',
+    'Family Emergency Kit Give-away',
+    'emergency_kit',
+    current_date + 4,
+    '08:00', '17:00',
+    'Barangay Hall Grounds',
+    'One kit per household. Households must be registered residents of Barangay Ampid I; bring proof of residency.',
+    'Remaining Stock', 'kits', 200, 178, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000508',
+    '00000000-0000-0000-0000-000000000001',
+    'Free Medical Screening: Blood Pressure & Blood Sugar',
+    'screening',
+    current_date,
+    '07:00', '11:00',
+    'Barangay Health Center',
+    'Open to all residents 18 years old and above. Fasting for at least 6 hours recommended for blood sugar testing.',
+    'Remaining Slots', 'slots', 120, 97, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000509',
+    '00000000-0000-0000-0000-000000000001',
+    'General Medical Consultation with Barangay Physician',
+    'consultation',
+    current_date + 6,
+    '13:00', '17:00',
+    'Barangay Health Center, Room 1',
+    'Open to all residents. First-come, first-served queue; bring your barangay health card if you have one.',
+    'Remaining Slots', 'slots', 40, 31, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000510',
+    '00000000-0000-0000-0000-000000000001',
+    'Minor Surgical Procedures Mission (Cyst & Lipoma Removal)',
+    'minor_surgical',
+    current_date + 10,
+    '08:00', '16:00',
+    'Rural Health Unit Annex',
+    'Pre-screened patients only. Register at the Barangay Health Center at least 3 days before the mission for evaluation.',
+    'Remaining Slots', 'slots', 25, 25, true
+  ),
+  (
+    '00000000-0000-0000-0000-000000000511',
+    '00000000-0000-0000-0000-000000000001',
+    'Deworming & Vitamin A Supplementation for Children',
+    'others',
+    current_date - 3,
+    '08:00', '12:00',
+    'Barangay Day Care Center',
+    'Children aged 6 months to 12 years old. Parent or guardian must accompany the child and bring their immunization record.',
+    'Remaining Doses', 'doses', 90, 12, true
+  )
+on conflict (id) do nothing;

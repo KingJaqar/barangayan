@@ -12,6 +12,7 @@ export * from './schemas/document-type';
 
 export * from './constants/announcement-categories';
 export * from './constants/document-catalog-shape';
+export * from './constants/drive-types';
 export * from './constants/incident-categories';
 export * from './constants/priority-weights';
 export * from './constants/theme-colors';
