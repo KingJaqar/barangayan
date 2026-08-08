@@ -438,15 +438,22 @@ export type Database = {
       profiles: {
         Row: {
           accent_color: string
+          avatar_url: string | null
           barangay_id: string
+          birth_date: string | null
           created_at: string
           deleted_at: string | null
+          email: string | null
           email_verification_requested_at: string | null
           email_verification_status: string
           email_verified_at: string | null
           full_name: string
           home_address: string | null
+          household_members: Json   // [{ id, name, relation, role }]
           id: string
+          id_photo_urls: string[]
+          id_type: string | null
+          id_verification_status: 'pending' | 'verified' | null
           mobile_number: string | null
           role: string
           theme_preference: string
@@ -454,15 +461,22 @@ export type Database = {
         }
         Insert: {
           accent_color?: string
+          avatar_url?: string | null
           barangay_id: string
+          birth_date?: string | null
           created_at?: string
           deleted_at?: string | null
+          email?: string | null
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
           full_name: string
           home_address?: string | null
+          household_members?: Json
           id: string
+          id_photo_urls?: string[]
+          id_type?: string | null
+          id_verification_status?: 'pending' | 'verified' | null
           mobile_number?: string | null
           role?: string
           theme_preference?: string
@@ -470,15 +484,22 @@ export type Database = {
         }
         Update: {
           accent_color?: string
+          avatar_url?: string | null
           barangay_id?: string
+          birth_date?: string | null
           created_at?: string
           deleted_at?: string | null
+          email?: string | null
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
           full_name?: string
           home_address?: string | null
+          household_members?: Json
           id?: string
+          id_photo_urls?: string[]
+          id_type?: string | null
+          id_verification_status?: 'pending' | 'verified' | null
           mobile_number?: string | null
           role?: string
           theme_preference?: string

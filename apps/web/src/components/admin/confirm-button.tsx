@@ -10,6 +10,8 @@ interface ConfirmButtonProps {
   onConfirm: () => Promise<void> | void;
   title?: string;
   className?: string;
+  /** Prevent the button from entering confirm mode (e.g. prerequisite not met). */
+  disabled?: boolean;
 }
 
 /** Two-step confirm, replacing window.confirm() — native dialogs render inconsistently
@@ -17,7 +19,7 @@ interface ConfirmButtonProps {
  * plus they can't be themed to match the rest of the admin panel. First click reveals a
  * compact "Confirm / Cancel" pair inline, mirroring the existing Cancel-note pattern in
  * RequestStatusActions. */
-export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, title, className }: ConfirmButtonProps) {
+export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, title, className, disabled }: ConfirmButtonProps) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -47,9 +49,10 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
 
   return (
     <button
+      disabled={disabled}
       onClick={(e) => {
         e.stopPropagation();
-        setConfirming(true);
+        if (!disabled) setConfirming(true);
       }}
       title={title}
       className={className}>

@@ -2,9 +2,10 @@
  * Health & Medical Drive screen — Module 10.
  *
  * Active Medical Drives segment:
- *   Calendar  →  wrapped category-filter pills  →  date header card
- *   →  drive cards (title, type badge, time/location, stock bar, Register btn)
- *   →  RegistrationModal (age · PWD · comorbidities → register_for_drive RPC)
+ *   Calendar (with per-type color dots)
+ *   →  "All Medical Drives for [Month]" toggle filter
+ *   →  Horizontal scrollable category filter (with edge chevrons)
+ *   →  date header card  →  drive cards  →  /health/register (full-screen)
  *
  * My Registrations segment:
  *   List of drive_registrations joined with medical_drives, grouped by status.
@@ -17,7 +18,8 @@
  *   Drive card: white bg, 16 px radius, iOS shadow / Android elevation 3
  */
 import { Ionicons } from '@expo/vector-icons';
-import { DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { DRIVE_TYPES, DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -69,14 +71,10 @@ const DRIVE_TYPE_CONFIG: Record<DriveTypeFilter, { label: string; color: string 
 };
 
 /**
- * Three visual sections separated by a hairline divider.
- * Each inner array is rendered as one wrapped row-group.
+ * Flat ordered list of all filter keys for the horizontal category nav.
+ * 'all' leads, followed by every drive type in canonical order.
  */
-const FILTER_SECTIONS: DriveTypeFilter[][] = [
-  ['all', 'vaccination', 'maternal_care', 'blood_drive', 'medicine'],
-  ['dental', 'optical', 'emergency_kit', 'screening'],
-  ['consultation', 'minor_surgical', 'others'],
-];
+const ALL_FILTER_KEYS: DriveTypeFilter[] = ['all', ...DRIVE_TYPES];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -322,17 +320,24 @@ const mpStyles = StyleSheet.create({
 
 // ─── DriveCalendar ───────────────────────────────────────────────────────────
 
+/**
+ * Calendar widget with per-type color dots under each day number.
+ *
+ * `eventDateMap` maps YYYY-MM-DD → array of up to 3 hex colors, one per
+ * distinct drive type scheduled on that date.  The calendar renders a row of
+ * colored dots so users can identify drive categories at a glance.
+ */
 function DriveCalendar({
   selectedDate,
   onDateSelect,
-  eventDates,
+  eventDateMap,
   currentMonth,      // { year, month } where month is 1-indexed
   onMonthChange,
   onJumpTo,
 }: {
   selectedDate: string;
   onDateSelect: (date: string) => void;
-  eventDates: string[];
+  eventDateMap: Record<string, string[]>;
   currentMonth: { year: number; month: number };
   onMonthChange: (delta: 1 | -1) => void;
   onJumpTo: (year: number, month: number) => void;
@@ -439,9 +444,11 @@ function DriveCalendar({
       {rows.map((row, ri) => (
         <View key={ri} style={calStyles.row}>
           {row.map((cell, ci) => {
-            const isSelected = cell.date === selectedDate;
-            const isToday    = cell.date === today;
-            const hasEvent   = eventDates.includes(cell.date);
+            const isSelected   = cell.date === selectedDate;
+            const isToday      = cell.date === today;
+            // Colors from eventDateMap — up to 3 distinct type colors
+            const eventColors  = eventDateMap[cell.date] ?? [];
+            const hasEvent     = eventColors.length > 0;
 
             return (
               <Pressable
@@ -469,13 +476,20 @@ function DriveCalendar({
                     {cell.day}
                   </ThemedText>
                 </View>
+
+                {/* Colored dots — one per drive type scheduled on this date */}
                 {hasEvent && (
-                  <View
-                    style={[
-                      calStyles.eventDot,
-                      { backgroundColor: isSelected ? '#fff' : PRIMARY_GREEN },
-                    ]}
-                  />
+                  <View style={calStyles.dotsRow}>
+                    {eventColors.slice(0, 3).map((color, idx) => (
+                      <View
+                        key={idx}
+                        style={[
+                          calStyles.eventDot,
+                          { backgroundColor: isSelected ? '#ffffff' : color },
+                        ]}
+                      />
+                    ))}
+                  </View>
                 )}
               </Pressable>
             );
@@ -548,85 +562,154 @@ const calStyles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 18,
   },
+  dotsRow: {
+    flexDirection: 'row',
+    gap: 2,
+    marginTop: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   eventDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    marginTop: 1,
   },
 });
 
-// ─── Category Filter Chips ────────────────────────────────────────────────────
+// ─── Horizontal Category Navigation ──────────────────────────────────────────
 
-function CategoryFilterChips({
+/**
+ * A single horizontally-scrollable row of category filter chips.
+ * Chevron buttons on the left/right edges signal scrollability and
+ * allow tap-to-scroll for accessibility.  Chevrons fade when the list
+ * is already scrolled to that edge.
+ */
+function HorizontalCategoryNav({
   active,
   onSelect,
 }: {
   active: DriveTypeFilter;
   onSelect: (k: DriveTypeFilter) => void;
 }) {
-  const theme = useTheme();
+  const scrollRef = useRef<ScrollView>(null);
+
+  const [canScrollLeft,  setCanScrollLeft]  = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  // Track scroll position + dimensions via refs (no re-render needed)
+  const scrollXRef       = useRef(0);
+  const contentWidthRef  = useRef(0);
+  const viewWidthRef     = useRef(0);
+
+  const handleScroll = (e: {
+    nativeEvent: {
+      contentOffset: { x: number };
+      contentSize: { width: number };
+      layoutMeasurement: { width: number };
+    };
+  }) => {
+    const x   = e.nativeEvent.contentOffset.x;
+    const max = e.nativeEvent.contentSize.width - e.nativeEvent.layoutMeasurement.width;
+    scrollXRef.current = x;
+    setCanScrollLeft(x > 5);
+    setCanScrollRight(x < max - 5);
+  };
+
+  /** Tap a chevron to scroll the list by ~120 px in that direction. */
+  const scrollBy = (dir: 'left' | 'right') => {
+    const step = 120;
+    const newX =
+      dir === 'left'
+        ? Math.max(0, scrollXRef.current - step)
+        : Math.min(
+            contentWidthRef.current - viewWidthRef.current,
+            scrollXRef.current + step,
+          );
+    scrollRef.current?.scrollTo({ x: newX, animated: true });
+  };
 
   return (
-    <View style={chipStyles.outer}>
-      {FILTER_SECTIONS.map((section, si) => (
-        <View key={si}>
-          {/* Hairline divider above sections 2 and 3 */}
-          {si > 0 && (
-            <View style={[chipStyles.divider, { backgroundColor: theme.backgroundSelected }]} />
-          )}
+    <View style={hcnStyles.wrapper}>
+      {/* Left edge chevron */}
+      <Pressable
+        onPress={() => scrollBy('left')}
+        hitSlop={8}
+        accessibilityLabel="Scroll categories left"
+        style={[hcnStyles.chevron, !canScrollLeft && hcnStyles.chevronFaded]}>
+        <Ionicons name="chevron-back" size={18} color={PRIMARY_GREEN} />
+      </Pressable>
 
-          {/* Wrapped chip row for this section */}
-          <View style={chipStyles.sectionRow}>
-            {section.map((key) => {
-              const { label, color } = DRIVE_TYPE_CONFIG[key];
-              const isActive = active === key;
-              return (
-                <Pressable
-                  key={key}
-                  onPress={() => onSelect(key)}
-                  style={[
-                    chipStyles.chip,
-                    isActive
-                      ? { backgroundColor: color }
-                      : { borderWidth: 1.5, borderColor: color },
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: isActive }}>
-                  {key !== 'all' && !isActive && (
-                    <View style={[chipStyles.dot, { backgroundColor: color }]} />
-                  )}
-                  <ThemedText
-                    type="small"
-                    style={[chipStyles.chipLabel, { color: isActive ? '#ffffff' : color }]}>
-                    {label}
-                  </ThemedText>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
-      ))}
+      {/* Scrollable chip row */}
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        onContentSizeChange={(w) => { contentWidthRef.current = w; }}
+        onLayout={(e) => { viewWidthRef.current = e.nativeEvent.layout.width; }}
+        contentContainerStyle={hcnStyles.scrollContent}>
+        {ALL_FILTER_KEYS.map((key) => {
+          const { label, color } = DRIVE_TYPE_CONFIG[key];
+          const isActive = active === key;
+          return (
+            <Pressable
+              key={key}
+              onPress={() => onSelect(key)}
+              style={[
+                hcnStyles.chip,
+                isActive
+                  ? { backgroundColor: color }
+                  : { borderWidth: 1.5, borderColor: color },
+              ]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}>
+              {/* Color dot for inactive non-"all" chips */}
+              {key !== 'all' && !isActive && (
+                <View style={[hcnStyles.dot, { backgroundColor: color }]} />
+              )}
+              <ThemedText
+                type="small"
+                style={[hcnStyles.chipLabel, { color: isActive ? '#ffffff' : color }]}>
+                {label}
+              </ThemedText>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      {/* Right edge chevron */}
+      <Pressable
+        onPress={() => scrollBy('right')}
+        hitSlop={8}
+        accessibilityLabel="Scroll categories right"
+        style={[hcnStyles.chevron, !canScrollRight && hcnStyles.chevronFaded]}>
+        <Ionicons name="chevron-forward" size={18} color={PRIMARY_GREEN} />
+      </Pressable>
     </View>
   );
 }
 
-const chipStyles = StyleSheet.create({
-  outer: {
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.two,
-    paddingBottom: Spacing.one,
-    gap: 0, // dividers carry the visual break; no extra gap needed
-  },
-  sectionRow: {
+const hcnStyles = StyleSheet.create({
+  wrapper: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: Spacing.two,
+    alignItems: 'center',
+    paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.two,
   },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginVertical: 1,
+  chevron: {
+    padding: 6,
+    borderRadius: 16,
+    backgroundColor: PRIMARY_GREEN + '18',
+  },
+  chevronFaded: {
+    opacity: 0.3,
+  },
+  scrollContent: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+    paddingHorizontal: Spacing.two,
+    alignItems: 'center',
   },
   chip: {
     flexDirection: 'row',
@@ -1287,6 +1370,7 @@ export default function HealthScreen() {
   const [segment, setSegment]           = useState<HealthSegment>('active-drives');
   const [selectedDate, setSelectedDate]  = useState<string>(localToday);
   const [typeFilter, setTypeFilter]      = useState<DriveTypeFilter>('all');
+  const [monthViewActive, setMonthViewActive] = useState(false);
   const [currentMonth, setCurrentMonth]  = useState(() => {
     const t = new Date();
     return { year: t.getFullYear(), month: t.getMonth() + 1 };
@@ -1296,8 +1380,11 @@ export default function HealthScreen() {
   const {
     drives,
     loadingDrives,
-    monthEventDates,
+    monthEventMap,
     fetchMonthEventDates,
+    monthDrives,
+    loadingMonthDrives,
+    fetchMonthDrives,
     myRegistrations,
     loadingRegistrations,
     registeredDriveIds,
@@ -1305,10 +1392,19 @@ export default function HealthScreen() {
     error,
   } = useMedicalDrives({ selectedDate, typeFilter });
 
-  // Re-fetch event dots whenever the visible month changes
+  // Re-fetch calendar event dots whenever the visible month changes
   useEffect(() => {
     fetchMonthEventDates(currentMonth.year, currentMonth.month);
   }, [currentMonth, fetchMonthEventDates]);
+
+  // Re-fetch month drives whenever month view is active or context changes.
+  // `fetchMonthDrives` is recreated when `typeFilter` changes, so this
+  // effect re-runs automatically when the user changes the category filter.
+  useEffect(() => {
+    if (monthViewActive) {
+      fetchMonthDrives(currentMonth.year, currentMonth.month);
+    }
+  }, [currentMonth, fetchMonthDrives, monthViewActive]);
 
   const handleMonthChange = (delta: 1 | -1) => {
     setCurrentMonth((prev) => {
@@ -1327,6 +1423,8 @@ export default function HealthScreen() {
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
+    // Tapping a specific date exits month-view and shows that date's drives
+    setMonthViewActive(false);
     // Snap visible month if user taps a trailing/leading cell from adjacent month
     const d = parseLocalDate(date);
     setCurrentMonth({ year: d.getFullYear(), month: d.getMonth() + 1 });
@@ -1341,8 +1439,13 @@ export default function HealthScreen() {
       Alert.alert('Sign In Required', 'Guest mode does not support registrations. Please sign in.');
       return;
     }
-    setModalDrive(drive);
+    // Navigate to the full-screen Applicant Registration form.
+    router.push({ pathname: '/(app)/health/register', params: { driveId: drive.id } });
   };
+
+  // ── Drive list to render (date-view vs month-view) ────────────────────────
+  const activeDrives   = monthViewActive ? monthDrives : drives;
+  const activeDriveLoading = monthViewActive ? loadingMonthDrives : loadingDrives;
 
   return (
     <View style={[rootStyles.root, { backgroundColor: theme.background }]}>
@@ -1376,48 +1479,79 @@ export default function HealthScreen() {
           contentContainerStyle={rootStyles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
-          {/* Calendar */}
+
+          {/* Calendar — dots are colored per drive type */}
           <DriveCalendar
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
-            eventDates={monthEventDates}
+            eventDateMap={monthEventMap}
             currentMonth={currentMonth}
             onMonthChange={handleMonthChange}
             onJumpTo={handleJumpTo}
           />
 
-          {/* Category filter chips */}
-          <CategoryFilterChips active={typeFilter} onSelect={setTypeFilter} />
+          {/* ── Month-view filter toggle ──────────────────────────────────── */}
+          <Pressable
+            onPress={() => setMonthViewActive((v) => !v)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: monthViewActive }}
+            style={[
+              monthBtnStyles.btn,
+              monthViewActive
+                ? { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN }
+                : { borderColor: PRIMARY_GREEN },
+            ]}>
+            <Ionicons
+              name="calendar"
+              size={15}
+              color={monthViewActive ? '#ffffff' : PRIMARY_GREEN}
+            />
+            <ThemedText
+              type="small"
+              style={[monthBtnStyles.label, { color: monthViewActive ? '#ffffff' : PRIMARY_GREEN }]}>
+              All Medical Drives for {MONTH_NAMES[currentMonth.month - 1]}
+            </ThemedText>
+            {monthViewActive && (
+              <Ionicons name="close-circle" size={15} color="#ffffff" style={{ marginLeft: 2 }} />
+            )}
+          </Pressable>
 
-          {/* Selected-date header card */}
+          {/* ── Horizontal category filter ────────────────────────────────── */}
+          <HorizontalCategoryNav active={typeFilter} onSelect={setTypeFilter} />
+
+          {/* ── Header card: date or month ────────────────────────────────── */}
           <View style={[dateHdrStyles.card, { borderColor: PRIMARY_GREEN }]}>
             <ThemedText style={[dateHdrStyles.text, { color: PRIMARY_GREEN }]}>
-              {fmtFullDate(selectedDate)}
+              {monthViewActive
+                ? `${MONTH_NAMES[currentMonth.month - 1]} ${currentMonth.year}`
+                : fmtFullDate(selectedDate)}
             </ThemedText>
           </View>
 
-          {/* Drive list */}
-          {loadingDrives ? (
+          {/* ── Drive list ────────────────────────────────────────────────── */}
+          {activeDriveLoading ? (
             <View style={rootStyles.loadingBox}>
               <ActivityIndicator color={PRIMARY_GREEN} />
             </View>
-          ) : error ? (
+          ) : !monthViewActive && error ? (
             <View style={rootStyles.loadingBox}>
               <Ionicons name="alert-circle-outline" size={32} color="#EF4444" />
               <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
                 {error}
               </ThemedText>
             </View>
-          ) : drives.length === 0 ? (
+          ) : activeDrives.length === 0 ? (
             <View style={rootStyles.emptyBox}>
               <Ionicons name="medkit-outline" size={44} color={theme.textSecondary} />
               <ThemedText themeColor="textSecondary" style={{ textAlign: 'center' }}>
-                No medical drives on this date
+                {monthViewActive
+                  ? `No active medical drives in ${MONTH_NAMES[currentMonth.month - 1]}`
+                  : 'No medical drives on this date'}
                 {typeFilter !== 'all' ? ` for ${DRIVE_TYPE_CONFIG[typeFilter].label}` : ''}.
               </ThemedText>
             </View>
           ) : (
-            drives.map((drive) => (
+            activeDrives.map((drive) => (
               <DriveCard
                 key={drive.id}
                 drive={drive}
@@ -1501,5 +1635,26 @@ const dateHdrStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     lineHeight: 22,
+  },
+});
+
+const monthBtnStyles = StyleSheet.create({
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginHorizontal: Spacing.three,
+    marginTop: Spacing.one,
+    marginBottom: Spacing.half,
+    borderWidth: 1.5,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    alignSelf: 'flex-start',
+  },
+  label: {
+    fontWeight: '600',
+    fontSize: 13,
+    lineHeight: 18,
   },
 });

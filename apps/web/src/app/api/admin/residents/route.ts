@@ -68,6 +68,7 @@ export async function POST(request: Request) {
       barangay_id: profile.barangay_id,
       role: 'resident',
       full_name: fullName,
+      email: email,           // migration 0039: denormalised from auth.users
       mobile_number: mobileNumber,
       home_address: homeAddress,
     },

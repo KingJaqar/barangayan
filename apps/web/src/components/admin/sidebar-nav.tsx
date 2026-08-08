@@ -16,6 +16,7 @@ import {
   Settings,
   Sun,
   TriangleAlert,
+  Users,
   UsersRound,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -27,6 +28,9 @@ interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+  /** When true, active state requires an exact pathname match — used for `/health`
+   * so it doesn't stay highlighted while on `/health/applicants`. */
+  exactMatch?: boolean;
 }
 
 interface NavGroup {
@@ -54,7 +58,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/residents', label: 'Resident directory', icon: UsersRound },
       { href: '/incident-reports', label: 'Incident reports', icon: TriangleAlert },
       { href: '/incident-map', label: 'Incident map', icon: MapPin },
-      { href: '/health', label: 'Health', icon: Heart },
+      { href: '/health', label: 'Health', icon: Heart, exactMatch: true },
+      { href: '/health/applicants', label: 'Medical Applicants', icon: Users },
     ],
   },
   {
@@ -138,9 +143,9 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
             <div className="space-y-[4px]">
               {group.items.map((item) => {
                 const Icon = item.icon;
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== '/dashboard' && pathname?.startsWith(`${item.href}/`));
+                const isActive = item.exactMatch
+                  ? pathname === item.href
+                  : pathname === item.href || (item.href !== '/dashboard' && pathname?.startsWith(`${item.href}/`));
                 return (
                   <Link
                     key={item.href}
