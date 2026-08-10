@@ -80,7 +80,7 @@ values
   ),
   -- Hotlines
   (
-    '00000000-0000-0000-0000-00000000h100',
+    '00000000-0000-0000-0000-00000000a100',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Police',
@@ -97,7 +97,7 @@ values
     true
   ),
   (
-    '00000000-0000-0000-0000-00000000h101',
+    '00000000-0000-0000-0000-00000000a101',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Fire Department',
@@ -114,7 +114,7 @@ values
     true
   ),
   (
-    '00000000-0000-0000-0000-00000000h102',
+    '00000000-0000-0000-0000-00000000a102',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Barangay DRRM Office',
@@ -133,116 +133,166 @@ values
 on conflict (id) do nothing;
 
 -- ============================================================================
--- 2. household_members (4 members for Alex Reyes)
+-- 2. Profile-dependent seed data (household_members, checkins, confirmations)
+--    Uses a DO block so we can resolve or create the resident user/profile
+--    before inserting FK-dependent rows.
 -- ============================================================================
-insert into public.household_members
-  (id, profile_id, name, relation, role, avatar_url, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, sort_order)
-values
-  (
-    '00000000-0000-0000-0000-00000000f001',
-    '00000000-0000-0000-0000-000000000010',
-    'Maria Dela Cruz',
-    'Wife',
-    'member',
-    null,
-    true,
-    now() - interval '2 hours',
-    '00000000-0000-0000-0000-00000000c002',
-    'San Mateo Civic Center',
-    0
-  ),
-  (
-    '00000000-0000-0000-0000-00000000f002',
-    '00000000-0000-0000-0000-000000000010',
-    'Miguel Dela Cruz',
-    'Son',
-    'member',
-    null,
-    false,
-    null,
-    null,
-    null,
-    1
-  ),
-  (
-    '00000000-0000-0000-0000-00000000f003',
-    '00000000-0000-0000-0000-000000000010',
-    'Sofia Dela Cruz',
-    'Daughter',
-    'member',
-    null,
-    false,
-    null,
-    null,
-    null,
-    2
-  ),
-  (
-    '00000000-0000-0000-0000-00000000f004',
-    '00000000-0000-0000-0000-000000000010',
-    'Lolo Ramon',
-    'Grandfather',
-    'member',
-    null,
-    false,
-    null,
-    null,
-    null,
-    3
-  )
-on conflict (id) do nothing;
+do $$
+declare
+  v_user_id uuid;
+begin
+  select id into v_user_id from auth.users where email = 'alex@gmaiil.com';
 
--- ============================================================================
--- 3. evacuation_center_checkins (3 rows for Alex's family)
--- ============================================================================
-insert into public.evacuation_center_checkins
-  (id, evacuation_center_id, user_id, barangay_id, checked_in_at, created_at)
-values
-  (
-    '00000000-0000-0000-0000-00000000x001',
-    '00000000-0000-0000-0000-00000000c002',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '2 hours',
-    now() - interval '2 hours'
-  ),
-  (
-    '00000000-0000-0000-0000-00000000x002',
-    '00000000-0000-0000-0000-00000000c001',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '5 hours',
-    now() - interval '5 hours'
-  ),
-  (
-    '00000000-0000-0000-0000-00000000x003',
-    '00000000-0000-0000-0000-00000000c003',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '1 day',
-    now() - interval '1 day'
-  )
-on conflict (evacuation_center_id, user_id, checked_in_at) do nothing;
+  if v_user_id is null then
+    insert into auth.users
+      (id, email, encrypted_password, email_confirmed_at, confirmation_sent_at,
+       last_sign_in_at, raw_user_meta_data, created_at, updated_at,
+       is_super_admin, is_anonymous, aud, role)
+    values
+      (
+        '00000000-0000-0000-0000-000000000010',
+        'alex@gmaiil.com',
+        'Alex1234!',
+        now(), now(), now(),
+        jsonb_build_object(
+          'full_name',    'Alex Reyes',
+          'barangay_id',  '00000000-0000-0000-0000-000000000001',
+          'mobile_number','+639175551234',
+          'home_address', 'Purok 3, Sitio Pag-asa, Barangay Ampid I'
+        ),
+        now(), now(),
+        false, false, 'authenticated', 'authenticated'
+      )
+    returning id into v_user_id;
+  end if;
 
--- ============================================================================
--- 4. incident_confirmations (3 confirmations by Alex)
--- NOTE: In production, confirmations should be written through the
--- confirm_incident RPC so incidents.confirmation_count stays in sync.
--- ============================================================================
-insert into public.incident_confirmations
-  (incident_id, user_id, created_at)
-values
-  ('00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000010', now() - interval '36 hours'),
-  ('00000000-0000-0000-0000-000000000204', '00000000-0000-0000-0000-000000000010', now() - interval '24 hours'),
-  ('00000000-0000-0000-0000-000000000206', '00000000-0000-0000-0000-000000000010', now() - interval '12 hours')
-on conflict (incident_id, user_id) do nothing;
+  insert into auth.identities
+    (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+  values
+    (
+      v_user_id,
+      v_user_id,
+      'alex@gmaiil.com',
+      jsonb_build_object('sub', v_user_id::text, 'email', 'alex@gmaiil.com'),
+      'email',
+      now(), now(), now()
+    )
+  on conflict (id) do nothing;
 
--- Sync confirmation_count to match inserted rows
-update public.incidents
-  set confirmation_count = confirmation_count + 1
-where id in (
-  '00000000-0000-0000-0000-000000000201',
-  '00000000-0000-0000-0000-000000000204',
-  '00000000-0000-0000-0000-000000000206'
-)
-  and deleted_at is null;
+  update public.profiles
+    set email_verification_status = 'verified',
+        accent_color              = '#0F6E5B',
+        theme_preference          = 'light',
+        updated_at                = now()
+  where id = v_user_id;
+
+  -- household_members
+  insert into public.household_members
+    (id, profile_id, name, relation, role, avatar_url, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, sort_order)
+  values
+    (
+      '00000000-0000-0000-0000-00000000f001',
+      v_user_id,
+      'Maria Dela Cruz',
+      'Wife',
+      'member',
+      null,
+      true,
+      now() - interval '2 hours',
+      '00000000-0000-0000-0000-00000000c002',
+      'San Mateo Civic Center',
+      0
+    ),
+    (
+      '00000000-0000-0000-0000-00000000f002',
+      v_user_id,
+      'Miguel Dela Cruz',
+      'Son',
+      'member',
+      null,
+      false,
+      null,
+      null,
+      null,
+      1
+    ),
+    (
+      '00000000-0000-0000-0000-00000000f003',
+      v_user_id,
+      'Sofia Dela Cruz',
+      'Daughter',
+      'member',
+      null,
+      false,
+      null,
+      null,
+      null,
+      2
+    ),
+    (
+      '00000000-0000-0000-0000-00000000f004',
+      v_user_id,
+      'Lolo Ramon',
+      'Grandfather',
+      'member',
+      null,
+      false,
+      null,
+      null,
+      null,
+      3
+    )
+  on conflict (id) do nothing;
+
+  -- evacuation_center_checkins
+  insert into public.evacuation_center_checkins
+    (id, evacuation_center_id, user_id, barangay_id, checked_in_at, created_at)
+  values
+    (
+      '00000000-0000-0000-0000-00000000b001',
+      '00000000-0000-0000-0000-00000000c002',
+      v_user_id,
+      '00000000-0000-0000-0000-000000000001',
+      now() - interval '2 hours',
+      now() - interval '2 hours'
+    ),
+    (
+      '00000000-0000-0000-0000-00000000b002',
+      '00000000-0000-0000-0000-00000000c001',
+      v_user_id,
+      '00000000-0000-0000-0000-000000000001',
+      now() - interval '5 hours',
+      now() - interval '5 hours'
+    ),
+    (
+      '00000000-0000-0000-0000-00000000b003',
+      '00000000-0000-0000-0000-00000000c003',
+      v_user_id,
+      '00000000-0000-0000-0000-000000000001',
+      now() - interval '1 day',
+      now() - interval '1 day'
+    )
+  on conflict (evacuation_center_id, user_id, checked_in_at) do nothing;
+
+  -- incident_confirmations (only if the referenced incidents exist)
+  insert into public.incident_confirmations
+    (incident_id, user_id, created_at)
+  select v.id::uuid, v_user_id, v.created_at
+  from (values
+      ('00000000-0000-0000-0000-000000000201', now() - interval '36 hours'),
+      ('00000000-0000-0000-0000-000000000204', now() - interval '24 hours'),
+      ('00000000-0000-0000-0000-000000000206', now() - interval '12 hours')
+    ) as v(id, created_at)
+  where exists (select 1 from public.incidents where id = v.id::uuid and deleted_at is null)
+  on conflict (incident_id, user_id) do nothing;
+
+  -- Sync confirmation_count to match inserted rows
+  update public.incidents
+    set confirmation_count = confirmation_count + 1
+  where id in (
+      '00000000-0000-0000-0000-000000000201',
+      '00000000-0000-0000-0000-000000000204',
+      '00000000-0000-0000-0000-000000000206'
+    )
+    and deleted_at is null;
+end $$;
