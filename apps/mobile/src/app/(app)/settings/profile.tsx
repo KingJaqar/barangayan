@@ -50,14 +50,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
-import { Colors, Spacing } from '@/constants/theme';
+import { Colors, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
+import { useTheme } from '@/hooks/use-theme';
 import {
   imageExtension,
   pickImageAsset,
@@ -457,22 +458,6 @@ function MemberModal({
 
   const isEdit = !!initial;
 
-  const OptionRow = ({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) => (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: Spacing.two, flexDirection: 'row' }}>
-      {options.map((opt) => (
-        <Pressable
-          key={opt}
-          onPress={() => onChange(opt)}
-          style={[
-            mModalStyles.chip,
-            value === opt && { backgroundColor: PRIMARY_GREEN },
-          ]}>
-          <ThemedText style={[mModalStyles.chipText, value === opt && { color: '#fff' }]}>{opt}</ThemedText>
-        </Pressable>
-      ))}
-    </ScrollView>
-  );
-
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={mModalStyles.backdrop} onPress={onClose} />
@@ -575,6 +560,24 @@ const mModalStyles = StyleSheet.create({
   },
 });
 
+function OptionRow({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: Spacing.two, flexDirection: 'row' }}>
+      {options.map((opt) => (
+        <Pressable
+          key={opt}
+          onPress={() => onChange(opt)}
+          style={[
+            mModalStyles.chip,
+            value === opt && { backgroundColor: PRIMARY_GREEN },
+          ]}>
+          <ThemedText style={[mModalStyles.chipText, value === opt && { color: '#fff' }]}>{opt}</ThemedText>
+        </Pressable>
+      ))}
+    </ScrollView>
+  );
+}
+
 // ─── ID Type Modal ────────────────────────────────────────────────────────────
 
 function IdTypeModal({
@@ -648,6 +651,7 @@ export default function ProfileScreen() {
   const { session } = useAuth();
   const { profile, isLoading, refetch } = useProfile();
   const insets   = useSafeAreaInsets();
+  const theme    = useTheme();
 
   // ── Personal info fields ──────────────────────────────────────────────────
   const [fullName, setFullName]       = useState('');
@@ -894,10 +898,11 @@ export default function ProfileScreen() {
   const hasIdPhoto  = idPhotoUrls.length > 0;
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
 
       {/* ── ① Header ──────────────────────────────────────────────────────── */}
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.two, backgroundColor: PRIMARY_GREEN }]}>
+      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
         <Pressable
           onPress={() => router.back()}
           style={styles.backBtn}
@@ -906,7 +911,11 @@ export default function ProfileScreen() {
           hitSlop={Spacing.two}>
           <Ionicons name="chevron-back" size={26} color="#fff" />
         </Pressable>
-        <ThemedText style={styles.headerTitle}>Profile</ThemedText>
+        <View style={styles.headerContent}>
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Profile
+          </ThemedText>
+        </View>
       </View>
 
       <ScrollView
@@ -1156,6 +1165,7 @@ export default function ProfileScreen() {
         onSelect={(t) => setIdType(t)}
       />
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -1187,15 +1197,18 @@ const idStatusStyles = StyleSheet.create({
 // ─── Screen styles ─────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F6F6F6' },
+  safeArea: { flex: 1 },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
 
   /* Header */
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 60,
     position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
   },
   backBtn: {
     position: 'absolute',
@@ -1205,7 +1218,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#fff', lineHeight: 28 },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
 
   /* Avatar */
   avatarSection: {

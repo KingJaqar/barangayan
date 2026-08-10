@@ -44,7 +44,30 @@ export function useEmergencyGuidelines(barangayId: string | null): {
   }, [barangayId]);
 
   useEffect(() => {
+    let cancelled = false;
+
     doFetch();
+
+    const channel = supabase
+      .channel('emergency-guidelines')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'emergency_information',
+          filter: `category=eq.guidelines`,
+        },
+        () => {
+          if (!cancelled) doFetch();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
   }, [doFetch]);
 
   return { guidelines, isLoading, error, refetch: doFetch };

@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { Href, Link, useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
 import { Card } from '@/components/card';
@@ -13,7 +13,7 @@ import { PreferenceToggle } from '@/components/preference-toggle';
 import { SegmentedControl } from '@/components/segmented-control';
 import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
-import { ACCENT_COLORS, Spacing } from '@/constants/theme';
+import { ACCENT_COLORS, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -43,17 +43,17 @@ export default function SettingsScreen() {
   }
 
   return (
-    <View style={styles.screen}>
-      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        {/* height:40 matches AppHeader's logo size so all green banners are the same height */}
-        <View style={styles.headerContent}>
-          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Settings
-          </ThemedText>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Settings
+            </ThemedText>
+          </View>
         </View>
-      </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView contentContainerStyle={styles.content}>
         {session ? (
           <Section title="Account">
             <Card>
@@ -210,9 +210,10 @@ export default function SettingsScreen() {
           </Card>
         </Section>
       </ScrollView>
+      </View>
 
       <LoadingOverlay visible={isLoggingOut} label="Logging out..." />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -256,21 +257,23 @@ function AboutRow({
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
+    flex: 1,
+  },
+  root: {
     flex: 1,
   },
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
   },
-  // height:40 matches AppHeader's logo image height — keeps all green banners the same
-  // total height (insets.top + Spacing.two + 40 + Spacing.three = same as AppHeader).
   headerContent: {
-    height: 40,
+    height: 25,
     justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
   },
   content: {
     padding: Spacing.three,

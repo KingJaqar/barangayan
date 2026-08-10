@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, type PaymentMethod, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';

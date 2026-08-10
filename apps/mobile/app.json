@@ -8,7 +8,10 @@
     "scheme": "barangayan",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to scan barangay QR codes for evacuation check-in."
+      }
     },
     "android": {
       "adaptiveIcon": {

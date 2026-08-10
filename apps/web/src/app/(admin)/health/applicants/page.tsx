@@ -60,10 +60,22 @@ export default async function MedicalApplicantsPage({
 
   const { data: registrations, error: regError } = await supabase
     .from('drive_registrations')
-    .select(`*, medical_drives ( id, title, type, drive_date, location ), profiles!user_id ( full_name )`)
+    .select(`*, medical_drives ( id, title, type, drive_date, location )`)
     .order('created_at', { ascending: false });
 
-  const allRows = (registrations ?? []) as unknown as ApplicantRow[];
+  const userIds = [...new Set((registrations ?? []).map((r) => r.user_id))];
+  const { data: profiles } = userIds.length
+    ? await supabase
+        .from('profiles')
+        .select('id, full_name')
+        .in('id', userIds)
+    : { data: [] as { id: string; full_name: string }[] };
+
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+  const allRows = (registrations ?? []).map((r) => ({
+    ...r,
+    profiles: profileMap.get(r.user_id) ?? null,
+  })) as unknown as ApplicantRow[];
 
   const counts = {
     total: allRows.length,

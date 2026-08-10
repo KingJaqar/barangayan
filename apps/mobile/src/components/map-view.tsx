@@ -174,6 +174,12 @@ const LEAFLET_HTML = `
           }
           break;
         }
+        case 'SET_VIEW': {
+          if (map && msg.payload) {
+            map.setView([msg.payload.lat, msg.payload.lng], msg.payload.zoom, { animate: true });
+          }
+          break;
+        }
         case 'SET_MARKERS': {
           if (!map || !msg.payload || !Array.isArray(msg.payload.markers)) break;
 
@@ -246,9 +252,17 @@ const LEAFLET_HTML = `
 
 // ── Props ────────────────────────────────────────────────────────────────────
 
+export interface FocusPosition {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
+
 export interface MapViewProps {
   markers: MapMarker[];
   center?: LatLng;
+  /** Center + zoom to fly the map to a specific position. */
+  focusPosition?: FocusPosition;
   /** Map from marker `kind` to hex colour — used for custom icon colours. */
   kindColors?: Record<string, string>;
   /**
@@ -256,6 +270,8 @@ export interface MapViewProps {
    * map's view. Takes priority over `center`/marker-based fitting while set.
    */
   boundary?: Polygon | MultiPolygon | null;
+  /** Changing this value forces the map to re-fit to the current boundary. */
+  boundaryRefitKey?: number;
   onMarkerTap?: (markerId: string) => void;
   onMapReady?: () => void;
   style?: ViewStyle;
@@ -263,7 +279,7 @@ export interface MapViewProps {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function MapView({ markers, center, kindColors, boundary, onMarkerTap, onMapReady, style }: MapViewProps) {
+export function MapView({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, onMarkerTap, onMapReady, style }: MapViewProps) {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
 
@@ -295,11 +311,17 @@ export function MapView({ markers, center, kindColors, boundary, onMarkerTap, on
     sendMessage({ type: 'SET_CENTER', payload: center });
   }, [center]);
 
+  // Fly to a specific position + zoom when focusPosition changes.
+  useEffect(() => {
+    if (!isReadyRef.current || !focusPosition) return;
+    sendMessage({ type: 'SET_VIEW', payload: focusPosition });
+  }, [focusPosition]);
+
   // Draw/update the boundary outline whenever it changes.
   useEffect(() => {
     if (!isReadyRef.current) return;
     sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary ?? null } });
-  }, [boundary]);
+  }, [boundary, boundaryRefitKey]);
 
   // Incoming messages from the WebView.
   function handleMessage(event: { nativeEvent: { data: string } }) {

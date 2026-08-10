@@ -2,7 +2,8 @@
 // was removed when Confirm Email was disabled (migration 0012). The file is kept
 // to avoid breaking any deep-link or back-stack reference while the codebase
 // transitions; it can be deleted once all entry points have been audited.
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';

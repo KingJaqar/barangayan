@@ -64,3 +64,26 @@ export interface Barangay {
   /** GeoJSON polygon used by the Point-in-Polygon geofencing check on registration. */
   boundary: Polygon | null;
 }
+
+/** A waste collection zone within a barangay — groups streets/puroks for scheduling. */
+export interface WasteZone {
+  id: string;
+  barangayId: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
+
+/** A recurring waste collection schedule attached to a zone. */
+export interface WasteCollectionSchedule {
+  id: string;
+  barangayId: string;
+  zoneId: string;
+  wasteType: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  notes: string;
+  isActive: boolean;
+  sortOrder: number;
+}

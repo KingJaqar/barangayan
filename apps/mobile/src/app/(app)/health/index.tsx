@@ -17,8 +17,8 @@
  *   Date-header card: 1.5 px green border, 12 px radius, bold green text
  *   Drive card: white bg, 16 px radius, iOS shadow / Android elevation 3
  */
-import { Ionicons } from '@expo/vector-icons';
 import { DRIVE_TYPES, DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -36,15 +36,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 
 import { ProgressBar } from '@/components/progress-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors, Spacing } from '@/constants/theme';
+import { Colors, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
-import { type DriveType, type MedicalDrive, type DriveRegistration, useMedicalDrives } from '@/hooks/use-medical-drives';
+import { type DriveRegistration, type DriveType, type MedicalDrive, useMedicalDrives } from '@/hooks/use-medical-drives';
 import { useTheme } from '@/hooks/use-theme';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -1298,9 +1298,6 @@ function RegStatusFilterBar({
               ]}
               accessibilityRole="button"
               accessibilityState={{ selected: isActive }}>
-              {key !== 'all' && !isActive && (
-                <View style={[hcnStyles.dot, { backgroundColor: color }]} />
-              )}
               <ThemedText
                 type="small"
                 style={[hcnStyles.chipLabel, { color: isActive ? '#ffffff' : color }]}>
@@ -1486,7 +1483,7 @@ function RegistrationDetailSheet({
               </ThemedText>
             </View>
 
-            <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+            <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement }]}>
               {/* Applicant number — prominent */}
               <View style={rdStyles.appNumRow}>
                 <View>
@@ -1562,7 +1559,7 @@ function RegistrationDetailSheet({
                 </ThemedText>
               </View>
 
-              <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+              <View style={[rdStyles.infoCard, { backgroundColor: theme.backgroundElement }]}>
                 {/* Date */}
                 <View style={rdStyles.infoRow}>
                   <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
@@ -1651,7 +1648,7 @@ function RegistrationDetailSheet({
               </ThemedText>
             </View>
 
-            <View style={[rdStyles.timelineCard, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+            <View style={[rdStyles.timelineCard, { backgroundColor: theme.backgroundElement }]}>
               {visibleSteps.map((step, idx) => {
                 const isPast    = idx < currentVisibleIdx;
                 const isCurrent = idx === currentVisibleIdx;
@@ -2003,7 +2000,7 @@ function MyRegistrationsPanel({
             </ThemedText>
           </View>
 
-          <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+          <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement }]}>
             <RegStatusFilterBar active={statusFilter} onSelect={setStatusFilter} />
           </View>
         </View>
@@ -2284,17 +2281,21 @@ export default function HealthScreen() {
   const activeDriveLoading = monthViewActive ? loadingMonthDrives : loadingDrives;
 
   return (
-    <View style={[rootStyles.root, { backgroundColor: theme.background }]}>
-      {/* ── Green header bar ─────────────────────────────────────────────── */}
-      <View
-        style={[
-          rootStyles.header,
-          { backgroundColor: PRIMARY_GREEN, paddingTop: insets.top + Spacing.two },
-        ]}>
-        <ThemedText style={rootStyles.headerTitle}>
-          Health and Medical Drive Info
-        </ThemedText>
-      </View>
+    <SafeAreaView style={[rootStyles.safeArea, { backgroundColor: PRIMARY_GREEN }]}>
+      <View style={[rootStyles.root, { backgroundColor: theme.background }]}>
+        {/* ── Green header bar ─────────────────────────────────────────────── */}
+        <View
+          style={[
+            rootStyles.header,
+            { backgroundColor: PRIMARY_GREEN, paddingTop: insets.top + Spacing.two },
+          ]}>
+          {/* height:25 matches maps screen headerContent height */}
+          <View style={rootStyles.headerContent}>
+            <ThemedText style={[rootStyles.headerTitle, { color: theme.onPrimary }]}>
+              Health and Medical Drive Info
+            </ThemedText>
+          </View>
+        </View>
 
       {/* ── Segmented control ────────────────────────────────────────────── */}
       <ThemedView style={rootStyles.segmentRow}>
@@ -2351,7 +2352,7 @@ export default function HealthScreen() {
             </View>
 
             {/* Filter bar — month toggle + chips on one row */}
-            <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement ?? theme.backgroundSelected }]}>
+            <View style={[filterPanelStyles.bar, { backgroundColor: theme.backgroundElement }]}>
               {/* Month-view icon toggle (compact square button) */}
               <Pressable
                 onPress={() => setMonthViewActive((v) => !v)}
@@ -2515,24 +2516,28 @@ export default function HealthScreen() {
         onConfirm={registerForDrive}
       />
     </View>
+    </SafeAreaView>
   );
 }
 
 const rootStyles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   root: {
     flex: 1,
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
     paddingBottom: Spacing.three,
-    minHeight: 60,
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
   },
   headerTitle: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 24,
+    fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
   },
   segmentRow: {
     padding: Spacing.three,

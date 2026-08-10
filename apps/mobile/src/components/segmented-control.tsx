@@ -1,4 +1,10 @@
+import { useMemo, useState, useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -14,25 +20,10 @@ export interface SegmentedControlProps<Key extends string> {
   segments: SegmentOption<Key>[];
   activeKey: Key;
   onChange: (key: Key) => void;
-  /** Locked design decision: the Maps (Emergency & DRRM) section's List/Map toggle uses a
-   * red active pill instead of the default brand green — see AGENTS.md §4. */
   activeColor?: 'primary' | 'accentRed';
-  /**
-   * 'filled' (default): solid accent-color pill + white text — Services/Reports/Maps/
-   * Health. 'outline': active segment is a plain background-color pill + bold accent
-   * text instead — matches the Settings > App Theme Light/Dark control's reference
-   * screenshot, which doesn't use the solid-fill look.
-   */
   variant?: 'filled' | 'outline';
 }
 
-/**
- * The pill-row segmented control used throughout the design file (Services'
- * Documents/Requests/Logs, Reports' Incident Reports/Active/Resolved/Announcements,
- * Health's Active Drives/My Registrations, Maps' List/Map toggle). Not the same as the
- * bottom NativeTabs bar — this is an in-page switcher implemented with plain React state
- * per Expo Router's own guidance for secondary in-page tab bars.
- */
 export function SegmentedControl<Key extends string>({
   segments,
   activeKey,
@@ -42,14 +33,60 @@ export function SegmentedControl<Key extends string>({
 }: SegmentedControlProps<Key>) {
   const theme = useTheme();
   const accent = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
+  const pillColor = variant === 'filled' ? accent : theme.background;
+
+  const translateX = useSharedValue(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  const activeIndex = useMemo(
+    () => segments.findIndex((s) => s.key === activeKey),
+    [segments, activeKey]
+  );
+
+  const segmentWidth = useMemo(() => {
+    if (containerWidth <= 2 * Spacing.half) return 0;
+    return (
+      (containerWidth - 2 * Spacing.half - (segments.length - 1) * Spacing.half) /
+      segments.length
+    );
+  }, [containerWidth, segments.length]);
+
+  const activeTextStyle = variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
+
+  useEffect(() => {
+    if (segmentWidth > 0) {
+      translateX.value = withSpring(activeIndex * (segmentWidth + Spacing.half), {
+        damping: 18,
+        stiffness: 150,
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex, segmentWidth]);
+
+  const pillAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
 
   return (
-    <ThemedView type="backgroundElement" style={styles.container}>
+    <ThemedView
+      type="backgroundElement"
+      style={styles.container}
+      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
+      {segmentWidth > 0 && (
+        <Animated.View
+          style={[
+            styles.pill,
+            {
+              left: Spacing.half,
+              width: segmentWidth,
+              backgroundColor: pillColor,
+            },
+            pillAnimatedStyle,
+          ]}
+        />
+      )}
       {segments.map((segment) => {
         const isActive = segment.key === activeKey;
-        const activeSegmentStyle =
-          variant === 'filled' ? { backgroundColor: accent } : { backgroundColor: theme.background };
-        const activeTextStyle = variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
 
         return (
           <Pressable
@@ -58,7 +95,7 @@ export function SegmentedControl<Key extends string>({
             style={styles.segmentPressable}
             accessibilityRole="tab"
             accessibilityState={{ selected: isActive }}>
-            <View style={[styles.segment, isActive && activeSegmentStyle]}>
+            <View style={styles.segment}>
               <ThemedText
                 type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
                 themeColor={isActive ? undefined : 'textSecondary'}
@@ -79,9 +116,18 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.four,
     padding: Spacing.half,
     gap: Spacing.half,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  pill: {
+    position: 'absolute',
+    top: Spacing.half,
+    bottom: Spacing.half,
+    borderRadius: Spacing.three,
   },
   segmentPressable: {
     flex: 1,
+    zIndex: 1,
   },
   segment: {
     paddingVertical: Spacing.two,

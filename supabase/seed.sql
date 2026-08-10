@@ -891,3 +891,37 @@ values
     3
   )
 on conflict (id) do nothing;
+
+-- ============================================================================
+-- 3. emergency_qr_content (Why Scan + How It Works)
+-- ============================================================================
+insert into public.emergency_qr_content
+  (id, barangay_id, section, title, body, content, icon, icon_color, icon_bg, sort_order, is_active)
+values
+  (
+    '00000000-0000-0000-0000-00000000q101',
+    '00000000-0000-0000-0000-000000000001',
+    'why_scan',
+    'Why Scan the Evacuation Center QR?',
+    'Scanning registers your household instantly during an emergency evacuation.',
+    '[
+      {"step": 1, "title": "Instant Attendance", "desc": "Automatically registers your profile and family members in the municipal registry."},
+      {"step": 2, "title": "Relief Distribution", "desc": "Ensures accurate headcount for food packs, medical kits, and relief assistance."},
+      {"step": 3, "title": "Family Tracking", "desc": "Helps DRRM officers confirm your safety and reconnect separated family members."}
+    ]'::jsonb,
+    'qr-code-outline', '#2563EB', '#DBEAFE', 1, true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000q102',
+    '00000000-0000-0000-0000-000000000001',
+    'how_it_works',
+    'How to Check In via QR',
+    'Follow these 3 steps upon arriving at any accredited evacuation center.',
+    '[
+      {"step": 1, "title": "Locate Poster", "desc": "Find the official Barangay DRRM QR code displayed at the entrance or registration desk."},
+      {"step": 2, "title": "Scan Code", "desc": "Open the Scan tab in this app and align the QR code within the camera frame."},
+      {"step": 3, "title": "Confirm Members", "desc": "Select which household members are present with you and submit check-in."}
+    ]'::jsonb,
+    'help-circle-outline', '#16A34A', '#DCFCE7', 2, true
+  )
+on conflict (id) do nothing;

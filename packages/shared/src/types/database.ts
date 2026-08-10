@@ -39,6 +39,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      faq_articles: {
+        Row: {
+          answer: string
+          barangay_id: string
+          category: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_active: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer?: string
+          barangay_id: string
+          category?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          barangay_id?: string
+          category?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_articles_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       household_members: {
         Row: {
           avatar_url: string | null
@@ -206,6 +253,103 @@ export type Database = {
             columns: ["barangay_id"]
             isOneToOne: false
             referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_qr_content: {
+        Row: {
+          barangay_id: string
+          body: string
+          content: Json
+          created_at: string
+          deleted_at: string | null
+          icon: string
+          icon_bg: string
+          icon_color: string
+          id: string
+          is_active: boolean
+          section: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          body?: string
+          content?: Json
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          section: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          body?: string
+          content?: Json
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          section?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_qr_content_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evacuation_center_qr_codes: {
+        Row: {
+          created_at: string
+          evacuation_center_id: string
+          id: string
+          is_active: boolean
+          qr_image_url: string | null
+          qr_payload: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          evacuation_center_id: string
+          id?: string
+          is_active?: boolean
+          qr_image_url?: string | null
+          qr_payload: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          evacuation_center_id?: string
+          id?: string
+          is_active?: boolean
+          qr_image_url?: string | null
+          qr_payload?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evacuation_center_qr_codes_evacuation_center_id_fkey"
+            columns: ["evacuation_center_id"]
+            isOneToOne: false
+            referencedRelation: "evacuation_centers"
             referencedColumns: ["id"]
           },
         ]
@@ -1005,6 +1149,113 @@ export type Database = {
             columns: ["resident_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waste_zones: {
+        Row: {
+          barangay_id: string
+          created_at: string
+          deleted_at: string | null
+          description: string
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          created_at?: string
+          deleted_at?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          description?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waste_zones_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waste_collection_schedules: {
+        Row: {
+          barangay_id: string
+          created_at: string
+          day_of_week: number
+          deleted_at: string | null
+          end_time: string
+          id: string
+          is_active: boolean
+          notes: string
+          sort_order: number
+          start_time: string
+          updated_at: string
+          waste_type: string
+          zone_id: string
+        }
+        Insert: {
+          barangay_id: string
+          created_at?: string
+          day_of_week: number
+          deleted_at?: string | null
+          end_time: string
+          id?: string
+          is_active?: boolean
+          notes?: string
+          sort_order?: number
+          start_time: string
+          updated_at?: string
+          waste_type: string
+          zone_id: string
+        }
+        Update: {
+          barangay_id?: string
+          created_at?: string
+          day_of_week?: number
+          deleted_at?: string | null
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          notes?: string
+          sort_order?: number
+          start_time?: string
+          updated_at?: string
+          waste_type?: string
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waste_collection_schedules_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "waste_zones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "waste_collection_schedules_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
             referencedColumns: ["id"]
           },
         ]

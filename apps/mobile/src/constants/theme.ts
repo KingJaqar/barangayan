@@ -48,6 +48,8 @@ export const Fonts = Platform.select({
     sans: 'system-ui',
     /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
+    /** Custom Gideon Roman serif */
+    gideonRoman: 'GideonRoman',
     /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
     /** iOS `UIFontDescriptorSystemDesignMonospaced` */
@@ -56,12 +58,14 @@ export const Fonts = Platform.select({
   default: {
     sans: 'normal',
     serif: 'serif',
+    gideonRoman: 'GideonRoman',
     rounded: 'normal',
     mono: 'monospace',
   },
   web: {
     sans: 'var(--font-display)',
     serif: 'var(--font-serif)',
+    gideonRoman: 'GideonRoman',
     rounded: 'var(--font-rounded)',
     mono: 'var(--font-mono)',
   },

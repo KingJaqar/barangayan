@@ -1,5 +1,5 @@
 import type { LatLng, MapMarker, Tables } from '@barangayan/shared';
-import { sortByDistanceFrom } from '@barangayan/shared';
+import { haversineDistanceMeters, sortByDistanceFrom } from '@barangayan/shared';
 import { useCallback, useEffect, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
@@ -9,6 +9,8 @@ export type EvacuationCenterRow = Tables<'evacuation_centers'>;
 /** EvacuationCenterRow with an optional distance (metres) from the user's location. */
 export type EvacuationCenterWithDistance = EvacuationCenterRow & {
   distanceMeters?: number;
+  /** Estimated walking time in minutes (assumes ~1.2 m/s walking pace). */
+  estimatedMinutes?: number;
   /** Parsed from the `position` JSON column for convenience. */
   position: LatLng;
 };
@@ -81,7 +83,12 @@ export function useEvacuationCenters(options: {
     })
     .map((c) => {
       const pos = c.position as { lat: number; lng: number };
-      return { ...c, position: { lat: pos.lat, lng: pos.lng } };
+      const base = { ...c, position: { lat: pos.lat, lng: pos.lng } } as EvacuationCenterWithDistance;
+      if (userPosition) {
+        base.distanceMeters = haversineDistanceMeters(userPosition, base.position);
+        base.estimatedMinutes = Math.max(1, Math.round(base.distanceMeters / 72));
+      }
+      return base;
     });
 
   const centers: EvacuationCenterWithDistance[] = userPosition

@@ -1,16 +1,29 @@
 import { ANNOUNCEMENT_CATEGORIES, ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
-import { FilterChips, type FilterChip } from '@/components/filter-chips';
+import { type FilterChip } from '@/components/filter-chips';
 import { AnnouncementCard } from '@/components/reports/announcement-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAnnouncements } from '@/hooks/use-announcements';
 import { useTheme } from '@/hooks/use-theme';
 
-type FilterKey = AnnouncementCategory | 'all';
+export type FilterKey = AnnouncementCategory | 'all';
+
+type AnnouncementsFeedProps = {
+  categoryFilter?: 'emergency';
+  emptyLabel?: string;
+  /** Optional heading rendered above the list. */
+  heading?: ReactNode;
+  /** Optional filter controls rendered below the heading. */
+  filters?: ReactNode;
+  /** Controlled active filter key. */
+  activeFilter?: FilterKey;
+  /** Called when the active filter changes. */
+  onFilterChange?: (key: FilterKey) => void;
+};
 
 // ---------------------------------------------------------------------------
 // Skeleton
@@ -58,7 +71,7 @@ const skeletonStyles = StyleSheet.create({
 // ---------------------------------------------------------------------------
 
 /** Chip presentation now lives in `components/filter-chips.tsx` — shared with My Incident Reports. */
-function useAnnouncementChips(): FilterChip<FilterKey>[] {
+export function useAnnouncementChips(): FilterChip<FilterKey>[] {
   const theme = useTheme();
   return [
     { key: 'all', label: 'All', color: theme.primary },
@@ -75,26 +88,27 @@ function useAnnouncementChips(): FilterChip<FilterKey>[] {
 // ---------------------------------------------------------------------------
 
 /** The full "What's New?" announcements feed — filter chips + list of AnnouncementCards. */
-export function AnnouncementsFeed() {
-  const [activeFilter, setActiveFilter] = useState<FilterKey>('all');
-  const { items, loading } = useAnnouncements(activeFilter);
-  const chips = useAnnouncementChips();
-  const theme = useTheme();
+export function AnnouncementsFeed({
+  categoryFilter,
+  emptyLabel = 'No announcements yet.',
+  heading,
+  filters,
+  activeFilter: controlledActiveFilter,
+  onFilterChange,
+}: AnnouncementsFeedProps) {
+  const [internalActiveFilter] = useState<FilterKey>(categoryFilter ?? 'all');
+
+  const activeFilter = controlledActiveFilter ?? internalActiveFilter;
+
+  const queryCategory = categoryFilter === 'emergency' ? 'emergency' : activeFilter;
+  const { items, loading } = useAnnouncements(queryCategory);
 
   return (
     <View style={styles.container}>
-      {/* Section 1 — header: "What's New?" title + filter category controls */}
-      <View style={styles.headerSection}>
-        <ThemedText
-          type="default"
-          style={[styles.heading, { color: theme.primary, fontFamily: Fonts.serif }]}>
-          What's New?
-        </ThemedText>
+      {heading}
+      {filters}
 
-        <FilterChips chips={chips} active={activeFilter} onSelect={setActiveFilter} />
-      </View>
-
-      {/* Section 2 — content: the list of announcement items */}
+      {/* Content: the list of announcement items */}
       <View style={styles.contentSection}>
         {loading ? (
           <View style={styles.list}>
@@ -111,7 +125,7 @@ export function AnnouncementsFeed() {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
               <ThemedText themeColor="textSecondary" style={styles.empty}>
-                No announcements yet.
+                {categoryFilter === 'emergency' ? 'No active emergency alerts.' : emptyLabel}
               </ThemedText>
             }
           />
@@ -125,20 +139,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // Section 1 — heading + filters, grouped and visually separated from the feed below
-  headerSection: {
-    paddingBottom: Spacing.two,
-  },
-  // Section 2 — dedicated area for the announcement list itself
+  // Dedicated area for the announcement list itself
   contentSection: {
     flex: 1,
-  },
-  heading: {
-    fontSize: 22,
-    fontWeight: '700',
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.two,
   },
   list: {
     paddingHorizontal: Spacing.three,

@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from 'lucide-react';
 import {
+  Building2,
   CalendarDays,
   CircleHelp,
   FileText,
@@ -12,7 +13,9 @@ import {
   MapPin,
   Megaphone,
   Moon,
+  QrCode,
   ReceiptText,
+  Recycle,
   Settings,
   Sun,
   TriangleAlert,
@@ -60,6 +63,16 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/incident-map', label: 'Incident map', icon: MapPin },
       { href: '/health', label: 'Health', icon: Heart, exactMatch: true },
       { href: '/health/applicants', label: 'Medical Applicants', icon: Users },
+      { href: '/waste-management', label: 'Waste Management', icon: Recycle },
+    ],
+  },
+  {
+    title: 'Emergency & DRRM',
+    items: [
+      { href: '/hub', label: 'Hub', icon: Building2 },
+      { href: '/evacuation-centers', label: 'Evacuation Centers', icon: MapPin },
+      { href: '/emergency-qr', label: 'Emergency QR', icon: QrCode },
+      { href: '/households-residents', label: 'Households & Residents', icon: Users },
     ],
   },
   {

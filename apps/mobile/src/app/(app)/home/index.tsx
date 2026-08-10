@@ -4,8 +4,8 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Fragment, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AppHeader } from '@/components/app-header';
 import { Avatar } from '@/components/avatar';
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
@@ -55,6 +55,7 @@ export default function HomeScreen() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
@@ -88,10 +89,26 @@ export default function HomeScreen() {
   }, [session]);
 
   return (
-    <View style={styles.screen}>
-      <AppHeader />
-
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
+        ]}
+      >
+        <View style={styles.headerContent}>
+          <Image
+            source={require('@/assets/logo/barangayan-logo-1024.png')}
+            style={styles.headerLogo}
+            contentFit="contain"
+          />
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Barangayan
+          </ThemedText>
+        </View>
+      </View>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
         <View style={styles.profileRow}>
           {session ? (
             <View style={styles.profileInfo}>
@@ -243,12 +260,36 @@ export default function HomeScreen() {
           </ThemedView>
         )}
       </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  headerLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
+  },
+  contentWrapper: {
     flex: 1,
   },
   content: {

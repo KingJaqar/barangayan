@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';

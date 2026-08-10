@@ -4,6 +4,7 @@ import Image from 'next/image';
 import type { LucideIcon } from 'lucide-react';
 import {
   Bell,
+  Building2,
   CalendarDays,
   ChevronDown,
   CircleHelp,
@@ -14,10 +15,12 @@ import {
   MapPin,
   Megaphone,
   Menu,
+  QrCode,
   ReceiptText,
   Settings,
   Sun,
   TriangleAlert,
+  Users,
   UsersRound,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -42,6 +45,10 @@ const SECTION_LABELS: Record<string, { icon: LucideIcon; label: string }> = {
   '/staff': { icon: CalendarDays, label: 'Staff Member' },
   '/faq': { icon: CircleHelp, label: 'FAQ Content' },
   '/settings': { icon: Settings, label: 'Settings' },
+  '/hub': { icon: Building2, label: 'Hub' },
+  '/evacuation-centers': { icon: MapPin, label: 'Evacuation Centers' },
+  '/emergency-qr': { icon: QrCode, label: 'Emergency QR' },
+  '/households-residents': { icon: Users, label: 'Households & Residents' },
 };
 
 interface SearchResult {

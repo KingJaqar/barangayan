@@ -1,16 +1,34 @@
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import { useEffect } from 'react';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AuthProvider, useAuth } from '@/hooks/use-auth';
 import { ProfileProvider } from '@/hooks/use-profile';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    GideonRoman: require('@/assets/fonts/GideonRoman-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
       {/* ProfileProvider sits inside AuthProvider so it can access the session for its
           initial fetch, and outside ThemePreferenceProvider / ThemedRoot so every screen
           in the tree shares one cached profile — avatar updates propagate immediately. */}
@@ -24,7 +42,8 @@ export default function RootLayout() {
         <ThemedRoot />
       </ThemePreferenceProvider>
       </ProfileProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
 

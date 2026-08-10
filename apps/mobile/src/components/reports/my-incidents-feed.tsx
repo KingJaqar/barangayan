@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
-import { FilterChips, type FilterChip } from '@/components/filter-chips';
+import { type FilterChip } from '@/components/filter-chips';
 import { IncidentCard } from '@/components/reports/incident-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -21,9 +21,7 @@ import { useTheme } from '@/hooks/use-theme';
 function SkeletonCard() {
   return (
     <ThemedView type="background" style={skeletonStyles.card}>
-      {/* thumb */}
       <ThemedView type="backgroundSelected" style={skeletonStyles.thumb} />
-      {/* lines */}
       <View style={skeletonStyles.lines}>
         <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '55%' }]} />
         <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '90%' }]} />
@@ -128,7 +126,7 @@ const fabStyles = StyleSheet.create({
 
 // ─── Status filter ───────────────────────────────────────────────────────────
 
-type StatusFilterKey = IncidentStatus | 'all';
+export type StatusFilterKey = IncidentStatus | 'all';
 
 /**
  * All / Submitted / Progress / Resolved / Withdrawn / Unresolved — one chip per stage of
@@ -136,7 +134,7 @@ type StatusFilterKey = IncidentStatus | 'all';
  * component the Announcements segment uses, so the two filter rows are identical by
  * construction rather than by copy.
  */
-function useStatusChips(): FilterChip<StatusFilterKey>[] {
+export function useStatusChips(): FilterChip<StatusFilterKey>[] {
   const theme = useTheme();
   return [
     { key: 'all', label: 'All', color: theme.primary },
@@ -157,12 +155,16 @@ interface MyIncidentsFeedProps {
    * Omit (undefined) to show all of the resident's own reports.
    */
   status?: IncidentStatus;
-  /** Show the All / Submitted / … status filter chips under the heading. */
-  showFilters?: boolean;
-  /** Section heading shown above the list. */
-  sectionTitle?: string;
   /** Message when the filtered list is empty. */
   emptyLabel?: string;
+  /** Optional heading rendered above the list. */
+  heading?: ReactNode;
+  /** Optional filter controls rendered below the heading. */
+  filters?: ReactNode;
+  /** Controlled active filter key. */
+  activeFilter?: StatusFilterKey;
+  /** Called when the active filter changes. */
+  onFilterChange?: (key: StatusFilterKey) => void;
 }
 
 /**
@@ -173,37 +175,31 @@ interface MyIncidentsFeedProps {
  */
 export function MyIncidentsFeed({
   status,
-  showFilters = false,
-  sectionTitle = 'My Incident Reports',
   emptyLabel = 'You have not submitted any incident reports yet.',
+  heading,
+  filters,
+  activeFilter: controlledActiveFilter,
+  onFilterChange,
 }: MyIncidentsFeedProps) {
-  const theme = useTheme();
-  const chips = useStatusChips();
-  const [activeFilter, setActiveFilter] = useState<StatusFilterKey>('all');
+  const [internalActiveFilter] = useState<StatusFilterKey>('all');
+
+  const activeFilter = controlledActiveFilter ?? internalActiveFilter;
 
   // An explicit `status` prop always wins — the chips only drive the unscoped feed.
   const effectiveStatus =
-    status ?? (showFilters && activeFilter !== 'all' ? activeFilter : undefined);
+    status ?? (activeFilter !== 'all' ? activeFilter : undefined);
 
   const { incidents, isLoading } = useMyIncidents({ status: effectiveStatus });
 
   const emptyMessage =
-    showFilters && activeFilter !== 'all'
+    activeFilter !== 'all'
       ? `No ${INCIDENT_STATUS_META[activeFilter].label.toLowerCase()} incident reports.`
       : emptyLabel;
 
   return (
     <View style={styles.container}>
-      {/* Heading + filters, grouped exactly as the Announcements feed groups its own */}
-      <View style={showFilters ? styles.headerSection : undefined}>
-        <ThemedText style={[styles.sectionTitle, { color: theme.primary }]}>
-          {sectionTitle}
-        </ThemedText>
-
-        {showFilters && (
-          <FilterChips chips={chips} active={activeFilter} onSelect={setActiveFilter} />
-        )}
-      </View>
+      {heading}
+      {filters}
 
       {/* List or skeleton */}
       {isLoading ? (
@@ -234,21 +230,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // Matches announcements-feed's headerSection so both segments space their filter
-  // row against the list below identically.
-  headerSection: {
-    paddingBottom: Spacing.two,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 28,
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.two,
-  },
   list: {
     paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
     paddingBottom: 96, // clearance for FAB
   },
   separator: {

@@ -54,10 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setIsLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(({ data }) => {
+        setSession(data.session);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
 
     const {
       data: { subscription },

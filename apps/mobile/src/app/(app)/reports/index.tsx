@@ -1,14 +1,14 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnnouncementsFeed } from '@/components/reports/announcements-feed';
-import { MyIncidentsFeed } from '@/components/reports/my-incidents-feed';
+import { FilterChips } from '@/components/filter-chips';
+import { AnnouncementsFeed, FilterKey, useAnnouncementChips } from '@/components/reports/announcements-feed';
+import { MyIncidentsFeed, StatusFilterKey, useStatusChips } from '@/components/reports/my-incidents-feed';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type ReportsSegment = 'incident-reports' | 'active' | 'resolved' | 'announcements';
@@ -23,38 +23,117 @@ export default function ReportsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
+  const [incidentFilter, setIncidentFilter] = useState<StatusFilterKey>('all');
+  const [announcementFilter, setAnnouncementFilter] = useState<FilterKey>('all');
+
+  const incidentChips = useStatusChips();
+  const announcementChips = useAnnouncementChips();
+
+  useEffect(() => {
+    setIncidentFilter('all');
+    setAnnouncementFilter('all');
+  }, [segment]);
+
+  const renderHeading = () => {
+    switch (segment) {
+      case 'incident-reports':
+        return (
+          <ThemedText style={[styles.incidentHeading, { color: theme.primary }]}>
+            My Incident Reports
+          </ThemedText>
+        );
+      case 'active':
+        return (
+          <ThemedText style={[styles.incidentHeading, { color: theme.primary }]}>
+            Active Reports
+          </ThemedText>
+        );
+      case 'resolved':
+        return (
+          <ThemedText style={[styles.incidentHeading, { color: theme.primary }]}>
+            Resolved Reports
+          </ThemedText>
+        );
+      case 'announcements':
+        return (
+          <ThemedText
+            style={[styles.announcementHeading, { color: theme.primary, fontFamily: Fonts.serif }]}>
+            What&apos;s New
+          </ThemedText>
+        );
+    }
+  };
+
+  const renderFilters = () => {
+    if (segment === 'incident-reports') {
+      return (
+        <FilterChips
+          chips={incidentChips}
+          active={incidentFilter}
+          onSelect={setIncidentFilter}
+        />
+      );
+    }
+    if (segment === 'announcements') {
+      return (
+        <FilterChips
+          chips={announcementChips}
+          active={announcementFilter}
+          onSelect={setAnnouncementFilter}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
-    <View style={styles.screen}>
-      {/* Header — mirrors Settings screen exactly: centred title, no back button */}
-      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
+      {/* ① Header */}
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
+        ]}
+      >
         <View style={styles.headerContent}>
-          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
             Reports and Announcements
           </ThemedText>
         </View>
       </View>
 
-      {/* Segmented control */}
-      <ThemedView style={styles.segmentWrap}>
+      {/* Section 1 — Segmented control */}
+      <View style={styles.section1}>
         <SegmentedControl
           segments={[
             { key: 'incident-reports', label: 'Incident Reports' },
-            { key: 'active',           label: 'Active Reports' },
-            { key: 'resolved',         label: 'Resolved Reports' },
-            { key: 'announcements',    label: 'Announcements' },
+            { key: 'active', label: 'Active Reports' },
+            { key: 'resolved', label: 'Resolved Reports' },
+            { key: 'announcements', label: 'Announcements' },
           ]}
           activeKey={segment}
           onChange={setSegment}
         />
-      </ThemedView>
+      </View>
 
-      {/* ── Content panels ── */}
+      {/* Section 2 — Heading */}
+      <View style={styles.section2}>
+        {renderHeading()}
+      </View>
+
+      {/* Section 3 — Category filter controls */}
+      <View style={styles.section3}>
+        {renderFilters()}
+      </View>
+
+      {/* Section 4 — Content panels */}
 
       {/* All of the resident's own reports (any status) */}
       {segment === 'incident-reports' && (
         <MyIncidentsFeed
-          showFilters
-          sectionTitle="My Incident Reports"
+          activeFilter={incidentFilter}
+          onFilterChange={setIncidentFilter}
           emptyLabel="You have not submitted any incident reports yet."
         />
       )}
@@ -65,7 +144,6 @@ export default function ReportsScreen() {
       {segment === 'active' && (
         <MyIncidentsFeed
           status="open"
-          sectionTitle="Active Reports"
           emptyLabel="No active incident reports."
         />
       )}
@@ -73,35 +151,71 @@ export default function ReportsScreen() {
       {segment === 'resolved' && (
         <MyIncidentsFeed
           status="resolved"
-          sectionTitle="Resolved Reports"
           emptyLabel="No resolved incident reports yet."
         />
       )}
 
-      {segment === 'announcements' && <AnnouncementsFeed />}
-    </View>
+      {segment === 'announcements' && (
+        <AnnouncementsFeed
+          activeFilter={announcementFilter}
+          onFilterChange={setAnnouncementFilter}
+        />
+      )}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
     flex: 1,
   },
-  // Mirrors settings/index.tsx header exactly
+
+  root: {
+    flex: 1,
+  },
+
+  // ── Header ──────────────────────────────────────────────────────────────
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
   },
   headerContent: {
-    height: 40,
+    height: 25,
     justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
   },
-  segmentWrap: {
+
+  // ── Section 1 — Segmented control ──────────────────────────────────────
+  section1: {
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.two,
     paddingBottom: Spacing.two,
   },
+
+  // ── Section 2 — Heading ────────────────────────────────────────────────
+  section2: {},
+  incidentHeading: {
+    fontSize: 20,
+    fontWeight: '700',
+    lineHeight: 28,
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.two,
+  },
+  announcementHeading: {
+    fontSize: 22,
+    fontWeight: '700',
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.four,
+    paddingBottom: Spacing.two,
+  },
+
+  // ── Section 3 — Filters ────────────────────────────────────────────────
+  section3: {},
+
+  // ── Section 4 — List panels are flex:1 inside their feed components ────
 });

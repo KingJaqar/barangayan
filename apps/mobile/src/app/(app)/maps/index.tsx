@@ -12,7 +12,6 @@ import {
   AppState,
   PanResponder,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,10 +19,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
 import { ThemedText } from '@/components/themed-text';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useIncidentCategories } from '@/hooks/use-incident-categories';
 import { useIncidents } from '@/hooks/use-incidents';
@@ -148,7 +148,7 @@ export default function MapsScreen() {
       cancelled = true;
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Re-check on foreground: detects both grants (via Settings) and revocations.
@@ -167,7 +167,7 @@ export default function MapsScreen() {
       if (status === 'granted') hideTooltip();
     });
     return () => sub.remove();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSetLocation = async () => {
@@ -236,14 +236,14 @@ export default function MapsScreen() {
   // always see where "You" are, even when that location is outside Ampid I.
   const displayMarkers = userLocation
     ? [
-        ...activeMarkers,
-        {
-          id: '__user_location__',
-          position: userLocation,
-          kind: 'user-location',
-          label: 'You are here',
-        },
-      ]
+      ...activeMarkers,
+      {
+        id: '__user_location__',
+        position: userLocation,
+        kind: 'user-location',
+        label: 'You are here',
+      },
+    ]
     : activeMarkers;
   const activeLoading = activeTab === 'incidents' ? incidentsLoading : evacuationLoading;
   const activeError = activeTab === 'incidents' ? incidentsError : evacuationError;
@@ -393,15 +393,20 @@ export default function MapsScreen() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       {/* ① Header */}
       <View
         style={[
           styles.header,
-          { backgroundColor: theme.primary, paddingTop: insets.top + 12 },
+          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
         ]}
       >
-        <ThemedText style={styles.headerTitle}>Maps & DRRM Info Hub</ThemedText>
+        {/* height:40 matches AppHeader's logo size so all green banners are the same height */}
+        <View style={styles.headerContent}>
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Maps & DRRM Info Hub
+          </ThemedText>
+        </View>
       </View>
 
       {/* ② Map area — fills everything below the header; search bar, segment toggle,
@@ -687,15 +692,18 @@ const styles = StyleSheet.create({
 
   // ── Header ──────────────────────────────────────────────────────────────
   header: {
-    paddingBottom: 14,
-    paddingHorizontal: 16,
+    paddingBottom: Spacing.three,
     alignItems: 'center',
   },
+  // height:40 matches AppHeader's logo size — keeps all green banners the same
+  // total height (insets.top + Spacing.two + 40 + Spacing.three = same as AppHeader).
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.1,
+    fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
   },
 
   // ── Search bar ──────────────────────────────────────────────────────────

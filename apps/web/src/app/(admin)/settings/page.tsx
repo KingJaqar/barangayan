@@ -1,13 +1,39 @@
-import { StaticPlaceholder } from '@/components/admin/static-placeholder';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-// Barangay-wide config UI (against barangays.config jsonb) — no schema decided yet.
-// Distinct from the Theme page, which is the admin's own personal appearance setting.
-export default function SettingsPage() {
+import { SettingsForm } from './settings-form';
+
+export default async function SettingsPage() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('barangay_id')
+    .eq('id', user!.id)
+    .single();
+
+  if (!profile?.barangay_id) {
+    return (
+      <div className="mx-auto max-w-2xl">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="mt-4 text-sm text-zinc-500">No barangay assigned to your account.</p>
+      </div>
+    );
+  }
+
   return (
-    <StaticPlaceholder
-      icon="⚙"
-      title="Settings"
-      description="Barangay-wide configuration options are planned for a future update."
-    />
+    <div className="mx-auto max-w-4xl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="text-sm text-zinc-500">
+          Manage your barangay&apos;s contact details, operating hours, and feature flags.
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
+        <SettingsForm barangayId={profile.barangay_id} />
+      </div>
+    </div>
   );
 }

@@ -44,7 +44,30 @@ export function useEmergencyHotlines(barangayId: string | null): {
   }, [barangayId]);
 
   useEffect(() => {
+    let cancelled = false;
+
     doFetch();
+
+    const channel = supabase
+      .channel('emergency-hotlines')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'emergency_information',
+          filter: `category=eq.hotlines`,
+        },
+        () => {
+          if (!cancelled) doFetch();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
   }, [doFetch]);
 
   return { hotlines, isLoading, error, refetch: doFetch };

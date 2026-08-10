@@ -2,8 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AppHeader } from '@/components/app-header';
+import { Image } from 'expo-image';
 import { SearchBar } from '@/components/search-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { DocumentsList } from '@/components/services/documents-list';
@@ -11,7 +12,7 @@ import { LogsList } from '@/components/services/logs-list';
 import { RequestsList } from '@/components/services/requests-list';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, Spacing } from '@/constants/theme';
+import { Colors, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -32,13 +33,8 @@ const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
 export default function ServicesScreen() {
   const { session } = useAuth();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
-  // `segment` can be passed as a URL query param (e.g. /services?segment=requests) so
-  // that screens deep in the payment flow — like the COD confirmation screen's
-  // "View My Requests" button — can land directly on the right tab without the resident
-  // having to tap the control manually. Unknown or missing values fall back to
-  // 'documents'. Guests can never reach 'requests'/'logs' via the UI anyway (the
-  // SegmentedControl is hidden for them), so an invalid deep-link just shows Documents.
   const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
   const initialSegment: ServicesSegment =
     session && segmentParam && VALID_SEGMENTS.includes(segmentParam as ServicesSegment)
@@ -48,10 +44,26 @@ export default function ServicesScreen() {
   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
 
   return (
-    <View style={styles.screen}>
-      <AppHeader />
-
-      <View style={styles.controls}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
+        ]}
+      >
+        <View style={styles.headerContent}>
+          <Image
+            source={require('@/assets/logo/barangayan-logo-1024.png')}
+            style={styles.headerLogo}
+            contentFit="contain"
+          />
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Barangayan
+          </ThemedText>
+        </View>
+      </View>
+      <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
+        <View style={styles.controls}>
         <SearchBar placeholder={SEARCH_PLACEHOLDER[segment]} />
 
         {session ? (
@@ -86,25 +98,48 @@ export default function ServicesScreen() {
       </ScrollView>
 
       {session && segment === 'requests' ? (
-        // "Start a new request" — this app's only real entry point for that is picking a
-        // document type first via the Documents tab, so the FAB just switches segments
-        // back rather than pointing at a screen that doesn't exist. Sibling of
-        // ScrollView (not inside RequestsList, which is mounted *inside* it) so it stays
-        // fixed at the viewport's bottom-right instead of scrolling away with the list.
         <Pressable
           onPress={() => setSegment('documents')}
-          style={[styles.fab, { backgroundColor: theme.primary, bottom: BottomTabInset + Spacing.three }]}
+          style={({ pressed }) => [
+            styles.fab,
+            { backgroundColor: Colors.light.primary, bottom: 28 },
+            pressed && styles.fabPressed,
+          ]}
           accessibilityRole="button"
           accessibilityLabel="Start a new document request">
-          <Ionicons name="add" size={28} color={theme.onPrimary} />
+          <Ionicons name="add" size={30} color="#FFFFFF" />
         </Pressable>
       ) : null}
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  headerLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
+  },
+  contentWrapper: {
     flex: 1,
   },
   controls: {
@@ -123,16 +158,20 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: Spacing.three,
+    right: 20,
     width: 56,
     height: 56,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
     elevation: 6,
+  },
+  fabPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.96 }],
   },
 });

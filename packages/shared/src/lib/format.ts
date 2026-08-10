@@ -70,3 +70,20 @@ export function estimateLabel(createdAt: string, targetHours: number): string {
   const days = Math.ceil(remainingHours / 24);
   return `Est. ${days} day${days === 1 ? '' : 's'}`;
 }
+
+/**
+ * Time-Decay Weighted Frequency Score for trash/illegal-dumping incidents.
+ *
+ * Formula: score = confirmationCount * exp(-ln(2) / halfLifeDays * ageInDays)
+ *
+ * - `confirmationCount` acts as the frequency weight (more confirmations = higher score).
+ * - `halfLifeDays` controls how fast old reports decay. A 14-day half-life means a
+ *   10-confirmation report from 14 days ago scores ~5, while one from today scores 10.
+ * - Returns 0 for incidents with 0 confirmations, regardless of age.
+ */
+export function trashIncidentScore(createdAt: string, confirmationCount: number, halfLifeDays: number): number {
+  if (confirmationCount <= 0 || halfLifeDays <= 0) return 0;
+  const ageInDays = (Date.now() - new Date(createdAt).getTime()) / 86_400_000;
+  const decay = Math.exp(-Math.LN2 / halfLifeDays * ageInDays);
+  return Math.round(confirmationCount * decay * 100) / 100;
+}

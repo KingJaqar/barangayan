@@ -3,7 +3,8 @@ import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Animated, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { CountdownTimer } from '@/components/services/countdown-timer';

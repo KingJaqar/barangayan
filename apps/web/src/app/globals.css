@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 /* Class-based dark mode (Tailwind v4) — driven by the .dark class ThemeInitScript /
  * theme-controller.tsx put on <html>, NOT by prefers-color-scheme. This is the fix for
@@ -86,4 +87,62 @@ main {
 }
 .dark main {
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+/* ─── Leaflet custom markers ─── */
+.custom-map-marker {
+  background: transparent;
+  border: none;
+}
+
+/* ─── Leaflet popup polish ─── */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  padding: 4px !important;
+}
+.leaflet-popup-content {
+  margin: 8px 12px !important;
+  line-height: 1.5 !important;
+}
+.leaflet-popup-tip {
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+.dark .leaflet-popup-content-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #18181b !important;
+}
+.dark .leaflet-popup-content {
+  color: #e4e4e7 !important;
+}
+
+/* ─── Shimmer skeleton animation ─── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04) 25%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.dark .shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+}
+
+/* ─── Map container transitions ─── */
+.leaflet-container {
+  transition: opacity 0.3s ease-out;
+}
+
+/* ─── Leaflet zoom control placement ─── */
+.leaflet-top.leaflet-left {
+  left: auto;
+  right: 12px;
 }
