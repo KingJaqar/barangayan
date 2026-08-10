@@ -261,7 +261,54 @@ from (values
     '{"lat":14.6827,"lng":121.1153}',
     'in_progress', 5, 36
   )
- on conflict (id) do nothing;
+on conflict (id) do nothing;
+
+-- ============================================================================
+-- Evacuation center check-ins for household members (Alex's family)
+-- ============================================================================
+insert into public.evacuation_center_checkins
+  (id, evacuation_center_id, user_id, barangay_id, checked_in_at, created_at)
+values
+  (
+    '00000000-0000-0000-0000-00000000x001',
+    '00000000-0000-0000-0000-00000000c002',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '2 hours',
+    now() - interval '2 hours'
+  ),
+  (
+    '00000000-0000-0000-0000-00000000x002',
+    '00000000-0000-0000-0000-00000000c001',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '5 hours',
+    now() - interval '5 hours'
+  ),
+  (
+    '00000000-0000-0000-0000-00000000x003',
+    '00000000-0000-0000-0000-00000000c003',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '1 day',
+    now() - interval '1 day'
+  )
+on conflict (evacuation_center_id, user_id, checked_in_at) do nothing;
+
+-- ============================================================================
+-- Incident confirmations — Alex corroborates community reports
+-- NOTE: These rows are inserted directly for seed purposes. In production,
+-- confirmations should be written through the confirm_incident RPC so that
+-- incidents.confirmation_count stays in sync.
+-- ============================================================================
+insert into public.incident_confirmations
+  (incident_id, user_id, created_at)
+values
+  ('00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000010', now() - interval '36 hours'),
+  ('00000000-0000-0000-0000-000000000204', '00000000-0000-0000-0000-000000000010', now() - interval '24 hours'),
+  ('00000000-0000-0000-0000-000000000206', '00000000-0000-0000-0000-000000000010', now() - interval '12 hours')
+on conflict (incident_id, user_id) do nothing;
+
 
 
 -- pgcrypto is required for crypt() / gen_salt() used in the test-account block
@@ -577,148 +624,7 @@ values
   )
 on conflict (id) do nothing;
 
--- Emergency Guidelines for Barangay Ampid I
-insert into public.emergency_guidelines
-  (id, barangay_id, category, title, icon, icon_color, icon_bg, content, sort_order, is_active)
-values
-  (
-    '00000000-0000-0000-0000-00000000e001',
-    '00000000-0000-0000-0000-000000000001',
-    'typhoon',
-    'Typhoon Preparedness',
-    'water-outline',
-    '#0F6E5B',
-    '#E6F2EF',
-    '[
-      "Monitor weather updates through PAGASA and barangay announcements.",
-      "Secure outdoor furniture, plants, and loose objects that could become projectiles.",
-      "Store at least 3 days of drinking water and non-perishable food.",
-      "Charge all devices and keep flashlights/power banks ready.",
-      "Know your barangay evacuation center route and location."
-    ]'::jsonb,
-    1,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000e002',
-    '00000000-0000-0000-0000-000000000001',
-    'earthquake',
-    'Earthquake Safety',
-    'warning-outline',
-    '#D97706',
-    '#FEF3C7',
-    '[
-      "Drop, Cover, and Hold On — stay away from windows and heavy furniture.",
-      "If indoors, stay inside until shaking stops; do not use elevators.",
-      "If outdoors, move to an open area away from buildings and power lines.",
-      "After the shaking stops, evacuate via stairs and check for injuries.",
-      "Do not re-enter buildings until they are inspected by authorities."
-    ]'::jsonb,
-    2,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000e003',
-    '00000000-0000-0000-0000-000000000001',
-    'fire',
-    'Fire Emergency',
-    'flame-outline',
-    '#DC2626',
-    '#FEE2E2',
-    '[
-      "Activate the nearest fire alarm and call the fire department immediately.",
-      "If smoke is present, stay low to the ground where air is cleaner.",
-      "Do not open doors that are warm to the touch; find an alternate escape route.",
-      "Once outside, meet at your designated assembly point.",
-      "Never re-enter a burning building."
-    ]'::jsonb,
-    3,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000e004',
-    '00000000-0000-0000-0000-000000000001',
-    'flood',
-    'Flood Response',
-    'home-outline',
-    '#0F6E5B',
-    '#E6F2EF',
-    '[
-      "Move to higher ground immediately if advised by authorities.",
-      "Do not walk, swim, or drive through flood waters — six inches can knock you down.",
-      "Disconnect electrical appliances and avoid contact with wet surfaces.",
-      "Bring emergency supplies and important documents in waterproof bags.",
-      "Return home only after official clearance from barangay officials."
-    ]'::jsonb,
-    4,
-    true
-  )
-on conflict (id) do nothing;
-
--- Emergency Hotlines for Barangay Ampid I
-insert into public.emergency_hotlines
-  (id, barangay_id, name, numbers, icon, icon_color, icon_bg, sort_order, is_active)
-values
-  (
-    '00000000-0000-0000-0000-00000000h001',
-    '00000000-0000-0000-0000-000000000001',
-    'Police',
-    '[{"label": "117", "number": "117"}, {"label": "(02) 8123-4567", "number": "021234567"}]'::jsonb,
-    'shield-outline',
-    '#1D4ED8',
-    '#DBEAFE',
-    1,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000h002',
-    '00000000-0000-0000-0000-000000000001',
-    'Fire Department',
-    '[{"label": "911", "number": "911"}, {"label": "(02) 8765-4321", "number": "0287654321"}]'::jsonb,
-    'flame-outline',
-    '#DC2626',
-    '#FEE2E2',
-    2,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000h003',
-    '00000000-0000-0000-0000-000000000001',
-    'Ambulance',
-    '[{"label": "143", "number": "143"}, {"label": "(02) 8999-8888", "number": "0289998888"}]'::jsonb,
-    'heart-outline',
-    '#EF4444',
-    '#FEE2E2',
-    3,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000h004',
-    '00000000-0000-0000-0000-000000000001',
-    'Barangay DRRM Office',
-    '[{"label": "0917 123 4567", "number": "09171234567"}]'::jsonb,
-    'call-outline',
-    '#0F6E5B',
-    '#E6F2EF',
-    4,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-00000000h005',
-    '00000000-0000-0000-0000-000000000001',
-    'General Hospital',
-    '[{"label": "(02) 8234-5678", "number": "0282345678"}]'::jsonb,
-    'medkit-outline',
-    '#7C3AED',
-    '#EDE9FE',
-    5,
-    true
-  )
-on conflict (id) do nothing;
-
--- ============================================================================
 -- Unified Emergency Information for Barangay Ampid I (3 guidelines + 3 hotlines)
--- ============================================================================
 insert into public.emergency_information
   (id, barangay_id, category, title, body, published_at, created_at, created_by, deleted_at, icon, icon_color, icon_bg, content, sort_order, is_active)
 values
