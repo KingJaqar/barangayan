@@ -261,8 +261,8 @@ from (values
     '{"lat":14.6827,"lng":121.1153}',
     'in_progress', 5, 36
   )
-) as v(id, category_name, title, description, location, status, confirmation_count, age_hours)
-on conflict (id) do nothing;
+ on conflict (id) do nothing;
+
 
 -- pgcrypto is required for crypt() / gen_salt() used in the test-account block
 -- below. Supabase local dev always bundles it; this is just an explicit guard.
@@ -574,5 +574,414 @@ values
     'Barangay Day Care Center',
     'Children aged 6 months to 12 years old. Parent or guardian must accompany the child and bring their immunization record.',
     'Remaining Doses', 'doses', 90, 12, true
+  )
+on conflict (id) do nothing;
+
+-- Emergency Guidelines for Barangay Ampid I
+insert into public.emergency_guidelines
+  (id, barangay_id, category, title, icon, icon_color, icon_bg, content, sort_order, is_active)
+values
+  (
+    '00000000-0000-0000-0000-00000000e001',
+    '00000000-0000-0000-0000-000000000001',
+    'typhoon',
+    'Typhoon Preparedness',
+    'water-outline',
+    '#0F6E5B',
+    '#E6F2EF',
+    '[
+      "Monitor weather updates through PAGASA and barangay announcements.",
+      "Secure outdoor furniture, plants, and loose objects that could become projectiles.",
+      "Store at least 3 days of drinking water and non-perishable food.",
+      "Charge all devices and keep flashlights/power banks ready.",
+      "Know your barangay evacuation center route and location."
+    ]'::jsonb,
+    1,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000e002',
+    '00000000-0000-0000-0000-000000000001',
+    'earthquake',
+    'Earthquake Safety',
+    'warning-outline',
+    '#D97706',
+    '#FEF3C7',
+    '[
+      "Drop, Cover, and Hold On — stay away from windows and heavy furniture.",
+      "If indoors, stay inside until shaking stops; do not use elevators.",
+      "If outdoors, move to an open area away from buildings and power lines.",
+      "After the shaking stops, evacuate via stairs and check for injuries.",
+      "Do not re-enter buildings until they are inspected by authorities."
+    ]'::jsonb,
+    2,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000e003',
+    '00000000-0000-0000-0000-000000000001',
+    'fire',
+    'Fire Emergency',
+    'flame-outline',
+    '#DC2626',
+    '#FEE2E2',
+    '[
+      "Activate the nearest fire alarm and call the fire department immediately.",
+      "If smoke is present, stay low to the ground where air is cleaner.",
+      "Do not open doors that are warm to the touch; find an alternate escape route.",
+      "Once outside, meet at your designated assembly point.",
+      "Never re-enter a burning building."
+    ]'::jsonb,
+    3,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000e004',
+    '00000000-0000-0000-0000-000000000001',
+    'flood',
+    'Flood Response',
+    'home-outline',
+    '#0F6E5B',
+    '#E6F2EF',
+    '[
+      "Move to higher ground immediately if advised by authorities.",
+      "Do not walk, swim, or drive through flood waters — six inches can knock you down.",
+      "Disconnect electrical appliances and avoid contact with wet surfaces.",
+      "Bring emergency supplies and important documents in waterproof bags.",
+      "Return home only after official clearance from barangay officials."
+    ]'::jsonb,
+    4,
+    true
+  )
+on conflict (id) do nothing;
+
+-- Emergency Hotlines for Barangay Ampid I
+insert into public.emergency_hotlines
+  (id, barangay_id, name, numbers, icon, icon_color, icon_bg, sort_order, is_active)
+values
+  (
+    '00000000-0000-0000-0000-00000000h001',
+    '00000000-0000-0000-0000-000000000001',
+    'Police',
+    '[{"label": "117", "number": "117"}, {"label": "(02) 8123-4567", "number": "021234567"}]'::jsonb,
+    'shield-outline',
+    '#1D4ED8',
+    '#DBEAFE',
+    1,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h002',
+    '00000000-0000-0000-0000-000000000001',
+    'Fire Department',
+    '[{"label": "911", "number": "911"}, {"label": "(02) 8765-4321", "number": "0287654321"}]'::jsonb,
+    'flame-outline',
+    '#DC2626',
+    '#FEE2E2',
+    2,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h003',
+    '00000000-0000-0000-0000-000000000001',
+    'Ambulance',
+    '[{"label": "143", "number": "143"}, {"label": "(02) 8999-8888", "number": "0289998888"}]'::jsonb,
+    'heart-outline',
+    '#EF4444',
+    '#FEE2E2',
+    3,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h004',
+    '00000000-0000-0000-0000-000000000001',
+    'Barangay DRRM Office',
+    '[{"label": "0917 123 4567", "number": "09171234567"}]'::jsonb,
+    'call-outline',
+    '#0F6E5B',
+    '#E6F2EF',
+    4,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h005',
+    '00000000-0000-0000-0000-000000000001',
+    'General Hospital',
+    '[{"label": "(02) 8234-5678", "number": "0282345678"}]'::jsonb,
+    'medkit-outline',
+    '#7C3AED',
+    '#EDE9FE',
+    5,
+    true
+  )
+on conflict (id) do nothing;
+
+-- ============================================================================
+-- Unified Emergency Information for Barangay Ampid I (3 guidelines + 3 hotlines)
+-- ============================================================================
+insert into public.emergency_information
+  (id, barangay_id, category, title, body, published_at, created_at, created_by, deleted_at, icon, icon_color, icon_bg, content, sort_order, is_active)
+values
+  -- Guidelines
+  (
+    '00000000-0000-0000-0000-00000000e100',
+    '00000000-0000-0000-0000-000000000001',
+    'guidelines',
+    'Typhoon Preparedness',
+    'Before, during, and after a typhoon — stay informed and follow official evacuation orders.',
+    now() - interval '30 days',
+    now() - interval '30 days',
+    null,
+    null,
+    'warning-outline',
+    '#D97706',
+    '#FEF3C7',
+    '[
+      "Secure loose objects outside your home and bring them indoors.",
+      "Stock emergency supplies: water, food, flashlight, batteries, and first-aid kit.",
+      "Monitor official updates via the Barangay DRRM Office and PAGASA.",
+      "Evacuate to the nearest designated center if advised by authorities.",
+      "After the typhoon, avoid damaged structures and report hazards to barangay officials."
+    ]'::jsonb,
+    1,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000e101',
+    '00000000-0000-0000-0000-000000000001',
+    'guidelines',
+    'Earthquake Safety',
+    'Drop, Cover, and Hold On during shaking. Evacuate safely once the tremors stop.',
+    now() - interval '25 days',
+    now() - interval '25 days',
+    null,
+    null,
+    'warning-outline',
+    '#DC2626',
+    '#FEE2E2',
+    '[
+      "Drop to your hands and knees, cover your head and neck under sturdy furniture.",
+      "Hold on to your shelter until the shaking stops.",
+      "Stay away from windows, exterior walls, and anything that could fall.",
+      "If in a vehicle, pull over and stay inside until shaking stops.",
+      "Check for injuries and damages after; do not use elevators."
+    ]'::jsonb,
+    2,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000e102',
+    '00000000-0000-0000-0000-000000000001',
+    'guidelines',
+    'Fire Emergency Response',
+    'Act quickly: raise the alarm, evacuate low, and meet at your assembly point.',
+    now() - interval '20 days',
+    now() - interval '20 days',
+    null,
+    null,
+    'flame-outline',
+    '#DC2626',
+    '#FEE2E2',
+    '[
+      "Activate the nearest fire alarm and call the fire department immediately.",
+      "If smoke is present, stay low to the ground where air is cleaner.",
+      "Do not open doors that are warm to the touch; find an alternate escape route.",
+      "Once outside, meet at your designated assembly point.",
+      "Never re-enter a burning building."
+    ]'::jsonb,
+    3,
+    true
+  ),
+  -- Hotlines
+  (
+    '00000000-0000-0000-0000-00000000h100',
+    '00000000-0000-0000-0000-000000000001',
+    'hotlines',
+    'Police',
+    'Emergency police response and assistance.',
+    now() - interval '15 days',
+    now() - interval '15 days',
+    null,
+    null,
+    'shield-outline',
+    '#1D4ED8',
+    '#DBEAFE',
+    '[{"label": "117", "number": "117"}, {"label": "(02) 8123-4567", "number": "021234567"}]'::jsonb,
+    1,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h101',
+    '00000000-0000-0000-0000-000000000001',
+    'hotlines',
+    'Fire Department',
+    'Fire emergencies and rescue operations.',
+    now() - interval '10 days',
+    now() - interval '10 days',
+    null,
+    null,
+    'flame-outline',
+    '#DC2626',
+    '#FEE2E2',
+    '[{"label": "911", "number": "911"}, {"label": "(02) 8765-4321", "number": "0287654321"}]'::jsonb,
+    2,
+    true
+  ),
+  (
+    '00000000-0000-0000-0000-00000000h102',
+    '00000000-0000-0000-0000-000000000001',
+    'hotlines',
+    'Barangay DRRM Office',
+    'Local disaster risk reduction and management coordination.',
+    now() - interval '5 days',
+    now() - interval '5 days',
+    null,
+    null,
+    'call-outline',
+    '#0F6E5B',
+    '#E6F2EF',
+    '[{"label": "0917 123 4567", "number": "09171234567"}]'::jsonb,
+    3,
+    true
+  )
+on conflict (id) do nothing;
+
+-- ============================================================================
+-- Sample evacuation centers for Barangay Ampid I (matching the Emergency & DRRM
+-- Centers tab design). Coordinates are approximate real locations in San Mateo.
+-- ============================================================================
+insert into public.evacuation_centers
+  (id, barangay_id, name, address, position, capacity, current_occupancy,
+   is_active, contact_number, facilities, verified, created_at, updated_at)
+values
+  (
+    '00000000-0000-0000-0000-00000000c001',
+    '00000000-0000-0000-0000-000000000001',
+    'Ampid 1 Elementary',
+    'General Luna St, Ampid 1, San Mateo',
+    '{"lat": 14.684583, "lng": 121.112071}'::jsonb,
+    1000,
+    450,
+    true,
+    '(02) 8123-4501',
+    array['medical_desk', 'pet_friendly'],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c002',
+    '00000000-0000-0000-0000-000000000001',
+    'San Mateo Civic Center',
+    'Kambal Rd, Guitnang Bayan 2',
+    '{"lat": 14.683500, "lng": 121.115500}'::jsonb,
+    2000,
+    1640,
+    true,
+    '(02) 8123-4502',
+    array['generator'],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c003',
+    '00000000-0000-0000-0000-000000000001',
+    'Dulong Bayan Covered Court',
+    'Gen. Luna St, Dulong Bayan 1',
+    '{"lat": 14.682000, "lng": 121.114000}'::jsonb,
+    800,
+    800,
+    true,
+    '(02) 8123-4503',
+    array[]::text[],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c004',
+    '00000000-0000-0000-0000-000000000001',
+    'Malanday National High School',
+    'P. Zamora St, Malanday',
+    '{"lat": 14.681000, "lng": 121.113000}'::jsonb,
+    800,
+    120,
+    true,
+    '(02) 8123-4504',
+    array[]::text[],
+    true,
+    now(),
+    now()
+  )
+ on conflict (id) do update set
+  name         = excluded.name,
+  address      = excluded.address,
+  position     = excluded.position,
+  capacity     = excluded.capacity,
+  current_occupancy = excluded.current_occupancy,
+  is_active    = excluded.is_active,
+  contact_number = excluded.contact_number,
+  facilities   = excluded.facilities,
+  verified     = excluded.verified,
+  updated_at   = now();
+
+-- ============================================================================
+-- Sample household members for the test account (Alex Reyes)
+-- ============================================================================
+insert into public.household_members
+  (id, profile_id, name, relation, role, avatar_url, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, sort_order)
+values
+  (
+    '00000000-0000-0000-0000-00000000f001',
+    '00000000-0000-0000-0000-000000000010',
+    'Maria Dela Cruz',
+    'Wife',
+    'member',
+    null,
+    true,
+    now() - interval '2 hours',
+    '00000000-0000-0000-0000-00000000c002',
+    'San Mateo Civic Center',
+    0
+  ),
+  (
+    '00000000-0000-0000-0000-00000000f002',
+    '00000000-0000-0000-0000-000000000010',
+    'Miguel Dela Cruz',
+    'Son',
+    'member',
+    null,
+    false,
+    null,
+    null,
+    null,
+    1
+  ),
+  (
+    '00000000-0000-0000-0000-00000000f003',
+    '00000000-0000-0000-0000-000000000010',
+    'Sofia Dela Cruz',
+    'Daughter',
+    'member',
+    null,
+    false,
+    null,
+    null,
+    null,
+    2
+  ),
+  (
+    '00000000-0000-0000-0000-00000000f004',
+    '00000000-0000-0000-0000-000000000010',
+    'Lolo Ramon',
+    'Grandfather',
+    'member',
+    null,
+    false,
+    null,
+    null,
+    null,
+    3
   )
 on conflict (id) do nothing;

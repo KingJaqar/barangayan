@@ -1,0 +1,7 @@
+-- Emergency & DRRM Content
+--
+-- This migration previously defined separate emergency_guidelines and
+-- emergency_hotlines tables. Those tables are now superseded by the unified
+-- emergency_information table introduced in 0047_emergency_information.sql.
+-- This file is kept as a no-op placeholder to preserve migration history.
+-- Do NOT re-add table or policy definitions here; use 0047 instead.

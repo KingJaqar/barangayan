@@ -30,7 +30,7 @@ import Animated, {
 import { useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
 import { FamilyContent } from '@/components/family-content';
@@ -161,18 +161,19 @@ export default function EmergencyInfoScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-      <View style={[styles.topHeader, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+        <View style={[styles.root, { backgroundColor: theme.background }]}>
+          <View style={[styles.topHeader, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Go back to Home"
-          hitSlop={Spacing.one}
+          hitSlop={Spacing.two}
           onPress={() => router.back()}
           style={styles.backButton}>
           <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
         </Pressable>
         <View style={styles.headerContent}>
-          <ThemedText type="smallBold" style={[styles.headerTitle, { color: theme.onPrimary }]}>
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
             Emergency & DRRM Info
           </ThemedText>
         </View>
@@ -272,7 +273,8 @@ export default function EmergencyInfoScreen() {
           </ScrollView>
         </Animated.View>
       )}
-      </SafeAreaView>
+    </View>
+    </SafeAreaView>
     </SafeAreaProvider>
   );
 }
@@ -421,8 +423,8 @@ function HubContent({
             hotlines.map((h) => (
               <HotlineRow
                 key={h.id}
-                name={h.name}
-                numbers={h.numbers as { label: string; number: string }[]}
+                name={h.title}
+                numbers={h.content as { label: string; number: string }[]}
                 icon={h.icon}
                 iconColor={h.icon_color}
                 iconBg={h.icon_bg}
@@ -1131,22 +1133,26 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: {
+    flex: 1,
+  },
   topHeader: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
     position: 'relative',
   },
   headerContent: {
-    height: 40,
+    height: 25,
     justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 20,
+    fontFamily: Fonts.gideonRoman,
   },
   backButton: {
     position: 'absolute',
     left: Spacing.two,
-    bottom: Spacing.one,
+    bottom: Spacing.two,
     width: 44,
     height: 44,
     alignItems: 'center',

@@ -39,6 +39,118 @@ export type Database = {
   }
   public: {
     Tables: {
+      household_members: {
+        Row: {
+          avatar_url: string | null
+          checked_in_at: string | null
+          checked_in_center_id: string | null
+          checked_in_center_name: string | null
+          created_at: string
+          id: string
+          is_checked_in: boolean
+          name: string
+          profile_id: string
+          relation: string
+          role: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          checked_in_at?: string | null
+          checked_in_center_id?: string | null
+          checked_in_center_name?: string | null
+          created_at?: string
+          id?: string
+          is_checked_in?: boolean
+          name: string
+          profile_id: string
+          relation: string
+          role?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          checked_in_at?: string | null
+          checked_in_center_id?: string | null
+          checked_in_center_name?: string | null
+          created_at?: string
+          id?: string
+          is_checked_in?: boolean
+          name?: string
+          profile_id?: string
+          relation?: string
+          role?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "household_members_checked_in_center_id_fkey"
+            columns: ["checked_in_center_id"]
+            isOneToOne: false
+            referencedRelation: "evacuation_centers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evacuation_center_checkins: {
+        Row: {
+          barangay_id: string
+          checked_in_at: string
+          created_at: string
+          evacuation_center_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          barangay_id: string
+          checked_in_at?: string
+          created_at?: string
+          evacuation_center_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          barangay_id?: string
+          checked_in_at?: string
+          created_at?: string
+          evacuation_center_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evacuation_center_checkins_evacuation_center_id_fkey"
+            columns: ["evacuation_center_id"]
+            isOneToOne: false
+            referencedRelation: "evacuation_centers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evacuation_center_checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evacuation_center_checkins_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       evacuation_centers: {
         Row: {
           address: string | null
@@ -54,6 +166,7 @@ export type Database = {
           name: string
           position: Json            // { lat: number; lng: number }
           updated_at: string
+          verified: boolean
         }
         Insert: {
           address?: string | null
@@ -69,6 +182,7 @@ export type Database = {
           name: string
           position: Json
           updated_at?: string
+          verified?: boolean
         }
         Update: {
           address?: string | null
@@ -84,6 +198,7 @@ export type Database = {
           name?: string
           position?: Json
           updated_at?: string
+          verified?: boolean
         }
         Relationships: [
           {
@@ -91,6 +206,184 @@ export type Database = {
             columns: ["barangay_id"]
             isOneToOne: false
             referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_guidelines: {
+        Row: {
+          barangay_id: string
+          category: string
+          content: Json
+          created_at: string
+          deleted_at: string | null
+          icon: string
+          icon_bg: string
+          icon_color: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          category: string
+          content: Json
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          category?: string
+          content?: Json
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_guidelines_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_hotlines: {
+        Row: {
+          barangay_id: string
+          created_at: string
+          deleted_at: string | null
+          icon: string
+          icon_bg: string
+          icon_color: string
+          id: string
+          is_active: boolean
+          name: string
+          numbers: Json
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          numbers: Json
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          numbers?: Json
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_hotlines_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      emergency_information: {
+        Row: {
+          barangay_id: string
+          body: string
+          category: string
+          content: Json
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          icon: string
+          icon_bg: string
+          icon_color: string
+          id: string
+          is_active: boolean
+          published_at: string
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          barangay_id: string
+          body?: string
+          category: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          published_at?: string
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          barangay_id?: string
+          body?: string
+          category?: string
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          icon?: string
+          icon_bg?: string
+          icon_color?: string
+          id?: string
+          is_active?: boolean
+          published_at?: string
+          sort_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergency_information_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emergency_information_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
