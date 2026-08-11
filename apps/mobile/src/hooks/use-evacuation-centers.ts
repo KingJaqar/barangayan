@@ -3,6 +3,7 @@ import { haversineDistanceMeters, sortByDistanceFrom } from '@barangayan/shared'
 import { useCallback, useEffect, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import { getCachedData, setCachedData } from '@/lib/emergency-cache';
 
 export type EvacuationCenterRow = Tables<'evacuation_centers'>;
 
@@ -14,6 +15,8 @@ export type EvacuationCenterWithDistance = EvacuationCenterRow & {
   /** Parsed from the `position` JSON column for convenience. */
   position: LatLng;
 };
+
+const CACHE_TAG = 'evacuation_centers';
 
 /**
  * Fetches active evacuation centers for the barangay. No Realtime subscription —
@@ -31,43 +34,65 @@ export function useEvacuationCenters(options: {
   isLoading: boolean;
   error: string | null;
   refetch: () => void;
+  isOffline: boolean;
 } {
   const { barangayId, userPosition } = options;
 
   const [rawCenters, setRawCenters] = useState<EvacuationCenterRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(false);
 
   const doFetch = useCallback(() => {
-    if (!barangayId) {
-      setRawCenters([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
+    setIsOffline(false);
 
-    supabase
+    let query = supabase
       .from('evacuation_centers')
       .select('*')
-      .eq('barangay_id', barangayId)
       .eq('is_active', true)
       .is('deleted_at', null)
-      .order('name', { ascending: true })
-      .then(({ data, error: qErr }) => {
-        if (qErr) {
-          setError(qErr.message);
-        } else {
-          setRawCenters(data ?? []);
-        }
-        setIsLoading(false);
-      });
+      .order('name', { ascending: true });
+
+    if (barangayId) {
+      query = query.eq('barangay_id', barangayId);
+    }
+
+    query.then(({ data, error: qErr }) => {
+      if (qErr) {
+        setError(qErr.message);
+        setIsOffline(true);
+      } else {
+        const parsed = (data ?? []) as EvacuationCenterRow[];
+        setRawCenters(parsed);
+        setCachedData(CACHE_TAG, parsed);
+        setIsOffline(false);
+      }
+      setIsLoading(false);
+    });
   }, [barangayId]);
 
   useEffect(() => {
-    doFetch();
-  }, [doFetch]);
+    let cancelled = false;
+
+    async function init() {
+      const cached = await getCachedData<EvacuationCenterRow[]>(CACHE_TAG);
+      if (cached && cached.length > 0 && !cancelled) {
+        setRawCenters(cached);
+        setIsLoading(false);
+        setIsOffline(true);
+      }
+
+      doFetch();
+    }
+
+    init();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [doFetch, barangayId]);
 
   // Parse each center's `position` JSON column into a typed LatLng, filter out
   // any malformed rows, then optionally sort by distance from the user.
@@ -102,5 +127,5 @@ export function useEvacuationCenters(options: {
     label: c.name,
   }));
 
-  return { centers, markers, isLoading, error, refetch: doFetch };
+  return { centers, markers, isLoading, error, refetch: doFetch, isOffline };
 }

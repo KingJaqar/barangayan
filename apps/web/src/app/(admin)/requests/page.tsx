@@ -10,23 +10,32 @@ export type ServiceRequest = Tables<'service_requests'> & {
   profiles: Pick<Tables<'profiles'>, 'full_name'> | null;
 };
 
-type Tab = 'active' | 'delivery' | 'completed' | 'cancelled' | 'all';
+type Tab = 'active' | 'processing' | 'delivery' | 'completed' | 'cancelled' | 'all';
 
 const TABS: { key: Tab; label: string }[] = [
   { key: 'active', label: 'Active' },
+  { key: 'processing', label: 'Processing' },
   { key: 'delivery', label: 'Out for Delivery' },
   { key: 'completed', label: 'Completed' },
   { key: 'cancelled', label: 'Cancelled' },
   { key: 'all', label: 'All' },
 ];
 
-// The FSM the 0002 migration deferred to "admin/backend concern" — reuses the exact
-// service_requests.status values the mobile app already renders (submitted, in_progress,
-// out_for_delivery, completed, cancelled).
+function SummaryCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
+      <p className="text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-xl font-bold">{value}</p>
+    </div>
+  );
+}
+
 function matchesTab(request: ServiceRequest, tab: Tab): boolean {
   switch (tab) {
     case 'active':
-      return request.status === 'submitted' || request.status === 'in_progress';
+      return request.status === 'submitted';
+    case 'processing':
+      return request.status === 'in_progress';
     case 'delivery':
       return request.status === 'out_for_delivery';
     case 'completed':
@@ -44,7 +53,7 @@ export default async function RequestsPage({
   searchParams: Promise<{ tab?: string; q?: string }>;
 }) {
   const { tab: tabParam, q } = await searchParams;
-  const tab: Tab = (['active', 'delivery', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
+  const tab: Tab = (['active', 'processing', 'delivery', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
     ? (tabParam as Tab)
     : 'active';
 
@@ -87,6 +96,12 @@ export default async function RequestsPage({
     );
   }
 
+  const submittedCount = requests.filter((r) => r.status === 'submitted').length;
+  const processingCount = requests.filter((r) => r.status === 'in_progress').length;
+  const deliveryCount = requests.filter((r) => r.status === 'out_for_delivery').length;
+  const completedCount = requests.filter((r) => r.status === 'completed').length;
+  const cancelledCount = requests.filter((r) => r.status === 'cancelled').length;
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6">
@@ -118,6 +133,14 @@ export default async function RequestsPage({
             className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[#0F6E5B] dark:border-zinc-700 dark:bg-zinc-800"
           />
         </form>
+      </div>
+
+      <div className="mb-6 grid grid-cols-3 gap-4 sm:grid-cols-5">
+        <SummaryCard label="Active" value={submittedCount} />
+        <SummaryCard label="Processing" value={processingCount} />
+        <SummaryCard label="Out for Delivery" value={deliveryCount} />
+        <SummaryCard label="Completed" value={completedCount} />
+        <SummaryCard label="Cancelled" value={cancelledCount} />
       </div>
 
       <RequestsTable

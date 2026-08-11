@@ -3,10 +3,13 @@ import { createContext, createElement, useCallback, useContext, useEffect, useSt
 
 import { useAuth } from '@/hooks/use-auth';
 import { supabase } from '@/lib/supabase';
+import { getCachedData, setCachedData } from '@/lib/emergency-cache';
 
 export type Profile = Tables<'profiles'> & {
   barangays: Pick<Tables<'barangays'>, 'name' | 'boundary'> | null;
 };
+
+const PROFILE_CACHE_TAG = 'resident_profile';
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
@@ -48,13 +51,25 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       .eq('id', session.user.id)
       .single()
       .then(({ data }) => {
-        setProfile(data as Profile | null);
+        const profileData = data as Profile | null;
+        setProfile(profileData);
         setIsLoading(false);
+        if (profileData) {
+          setCachedData(PROFILE_CACHE_TAG, profileData);
+        }
       });
   }, [session]);
 
   useEffect(() => {
-    refetch();
+    async function init() {
+      const cached = await getCachedData<Profile>(PROFILE_CACHE_TAG);
+      if (cached) {
+        setProfile(cached);
+        setIsLoading(false);
+      }
+      refetch();
+    }
+    init();
   }, [refetch]);
 
   return createElement(ProfileContext.Provider, { value: { profile, isLoading, refetch } }, children);

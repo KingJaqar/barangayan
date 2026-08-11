@@ -45,7 +45,7 @@ import { EvacuationCenterCard } from '@/components/evacuation-center-card';
 import { HorizontalCenterPicker, type CenterPickerItem } from '@/components/horizontal-center-picker';
 import { CenterDetailCard } from '@/components/center-detail-card';
 import { Collapsible } from '@/components/ui/collapsible';
-import { MapView, AMPID_I_SAN_MATEO_CENTER } from '@/components/map-view';
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapViewHandle } from '@/components/map-view';
 import { SegmentedControl } from '@/components/segmented-control';
 import { QrGuideContent } from '@/components/qr-guide-content';
 import type { AccordionItem } from '@/components/emergency-accordion';
@@ -226,6 +226,7 @@ export default function EmergencyInfoScreen() {
             nearestFirst={nearestFirst}
             onNearestToggle={setNearestFirst}
             userPosition={userPosition}
+            onFitAll={() => {}}
           />
         </Animated.View>
       ) : (
@@ -258,6 +259,7 @@ export default function EmergencyInfoScreen() {
                 nearestFirst={nearestFirst}
                 onNearestToggle={setNearestFirst}
                 userPosition={userPosition}
+                onFitAll={() => {}}
               />
             )}
             {isFamily && <FamilyContent />}
@@ -448,6 +450,7 @@ function CentersContent({
   nearestFirst,
   onNearestToggle,
   userPosition,
+  onFitAll,
 }: {
   theme: ReturnType<typeof useTheme>;
   centers: ReturnType<typeof useEvacuationCenters>['centers'];
@@ -459,6 +462,7 @@ function CentersContent({
   nearestFirst: boolean;
   onNearestToggle: (v: boolean) => void;
   userPosition: LatLng | null;
+  onFitAll?: () => void;
 }) {
   const boundary = useAmpid1Boundary();
   const [searchQuery, setSearchQuery] = useState('');
@@ -466,6 +470,7 @@ function CentersContent({
   const [focusCenter, setFocusCenter] = useState<LatLng | null>(null);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
   const [boundaryRefitKey] = useState(0);
+  const mapRef = useRef<MapViewHandle>(null);
 
   const cardOpacity = useSharedValue(0);
   const cardTranslateY = useSharedValue(40);
@@ -522,10 +527,11 @@ function CentersContent({
 
   const handleShowAll = () => {
     setSelectedCenterId(null);
-    setFocusCenter(null);
     setSearchQuery('');
     cardOpacity.value = withTiming(0, { duration: 150 });
     cardTranslateY.value = withSpring(40, { damping: 20, stiffness: 200 });
+    mapRef.current?.fitAll();
+    onFitAll?.();
   };
 
   const handleResetMap = () => {
@@ -593,11 +599,12 @@ function CentersContent({
         </Pressable>
       </View>
 
-      <Animated.View style={centersViewStyle}>
+      <Animated.View style={[centersViewStyle, view === 'map' && { flex: 1 }]}>
         {view === 'map' ? (
           <View style={styles.sectionMap}>
             <View style={styles.centersMapContainer}>
             <MapView
+              ref={mapRef}
               markers={evacuationMarkers}
               center={mapCenter}
               focusPosition={mapFocusPosition}
@@ -689,7 +696,8 @@ function CentersContent({
                     address={selectedCenter.address ?? 'No address'}
                     distanceKm={(selectedCenter.distanceMeters ?? 0) / 1000}
                     walkingTimeMins={selectedCenter.estimatedMinutes ?? 0}
-                    occupancyPercent={Math.round((selectedCenter.current_occupancy / (selectedCenter.capacity ?? 1)) * 100)}
+                    currentOccupancy={selectedCenter.current_occupancy}
+                    capacity={selectedCenter.capacity}
                   />
                 </Animated.View>
               ) : null}

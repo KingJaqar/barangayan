@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     minWidth: 120,
     alignItems: 'center',
-
   },
   chipText: {
     fontSize: 13,

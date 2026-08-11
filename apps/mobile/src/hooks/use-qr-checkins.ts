@@ -4,8 +4,11 @@ import { supabase } from '@/lib/supabase';
 import type { Tables } from '@barangayan/shared';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
+import { enqueueCheckin, getQueuedCheckins, clearQueuedCheckins } from '@/lib/emergency-cache';
 
 export type EvacuationCenterCheckin = Tables<'evacuation_center_checkins'>;
+
+const CHECKIN_QUEUE_TAG = 'evacuation_center_checkins_queue';
 
 type UseQrCheckinsResult = {
   checkins: EvacuationCenterCheckin[];
@@ -14,6 +17,7 @@ type UseQrCheckinsResult = {
   checkIn: (evacuationCenterId: string) => Promise<EvacuationCenterCheckin | null>;
   updateHouseholdStatus: () => Promise<boolean>;
   refetch: () => Promise<void>;
+  syncPendingCheckins: () => Promise<void>;
 };
 
 export function useQrCheckins(): UseQrCheckinsResult {
@@ -53,17 +57,24 @@ export function useQrCheckins(): UseQrCheckinsResult {
     setIsLoading(true);
     setError(null);
 
+    const payload = {
+      evacuation_center_id: evacuationCenterId,
+      user_id: session.user.id,
+      barangay_id: profile.barangay_id,
+    };
+
     const { data, error: qErr } = await supabase
       .from('evacuation_center_checkins')
-      .insert({
-        evacuation_center_id: evacuationCenterId,
-        user_id: session.user.id,
-        barangay_id: profile.barangay_id,
-      })
+      .insert(payload)
       .select('*')
       .single();
 
     if (qErr) {
+      await enqueueCheckin(CHECKIN_QUEUE_TAG, {
+        id: `${session.user.id}-${evacuationCenterId}-${Date.now()}`,
+        data: payload as Record<string, unknown>,
+        timestamp: Date.now(),
+      });
       setError(qErr.message);
       setIsLoading(false);
       return null;
@@ -72,6 +83,25 @@ export function useQrCheckins(): UseQrCheckinsResult {
     setCheckins((prev) => [data as EvacuationCenterCheckin, ...prev]);
     setIsLoading(false);
     return data as EvacuationCenterCheckin;
+  }
+
+  async function syncPendingCheckins(): Promise<void> {
+    const pending = await getQueuedCheckins(CHECKIN_QUEUE_TAG);
+    if (pending.length === 0) return;
+
+    for (const entry of pending) {
+      const { data, error: qErr } = await supabase
+        .from('evacuation_center_checkins')
+        .insert(entry.data as Tables<'evacuation_center_checkins'>)
+        .select('*')
+        .single();
+
+      if (!qErr && data) {
+        setCheckins((prev) => [data as EvacuationCenterCheckin, ...prev]);
+      }
+    }
+
+    await clearQueuedCheckins(CHECKIN_QUEUE_TAG);
   }
 
   async function updateHouseholdStatus(): Promise<boolean> {
@@ -92,5 +122,5 @@ export function useQrCheckins(): UseQrCheckinsResult {
     return true;
   }
 
-  return { checkins, isLoading, error, checkIn, updateHouseholdStatus, refetch: fetchCheckins };
+  return { checkins, isLoading, error, checkIn, updateHouseholdStatus, refetch: fetchCheckins, syncPendingCheckins };
 }

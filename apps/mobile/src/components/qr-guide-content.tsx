@@ -16,7 +16,7 @@ export function QrGuideContent() {
   const theme = useTheme();
   const { profile } = useProfile();
   const barangayId = profile?.barangay_id ?? null;
-  const { content, isLoading, error } = useEmergencyQrContent(barangayId);
+  const { content, isLoading, error, isOffline } = useEmergencyQrContent(barangayId);
   const [showScanner, setShowScanner] = useState(false);
   const [showShowQr, setShowShowQr] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
@@ -63,9 +63,17 @@ export function QrGuideContent() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         bounces={false}>
-        <ThemedText style={[styles.mainTitle, { color: theme.primary }]}>
-          QR Check-In Guide
-        </ThemedText>
+        <View style={styles.titleRow}>
+          <ThemedText style={[styles.mainTitle, { color: theme.primary }]}>
+            QR Check-In Guide
+          </ThemedText>
+          {isOffline && (
+            <View style={[styles.offlineBadge, { borderColor: theme.primary }]}>
+              <Ionicons name="wifi-outline" size={10} color={theme.primary} />
+              <ThemedText style={[styles.offlineBadgeText, { color: theme.primary }]}>Offline</ThemedText>
+            </View>
+          )}
+        </View>
         <ThemedText themeColor="textSecondary" style={styles.subtitle}>
           Follow these quick steps to register your presence securely.
         </ThemedText>
@@ -191,6 +199,25 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 34,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    flexWrap: 'wrap',
+  },
+  offlineBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  offlineBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   subtitle: {
     fontSize: 14,

@@ -14,9 +14,13 @@
 
 import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapMarker } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Platform, StyleSheet, Text, View } from 'react-native';
+
+export interface MapViewHandle {
+  fitAll: () => void;
+}
 
 /**
  * Fallback focus when no barangay boundary is loaded yet (e.g. a guest with no profile,
@@ -235,6 +239,18 @@ const LEAFLET_HTML = `
           }
           break;
         }
+        case 'FIT_ALL': {
+          if (!map) break;
+          hasBoundary = true;
+          var allLayers = [];
+          boundaryLayer.eachLayer(function (layer) { allLayers.push(layer); });
+          markerLayer.eachLayer(function (layer) { allLayers.push(layer); });
+          if (allLayers.length > 0) {
+            var group = L.featureGroup(allLayers);
+            map.fitBounds(group.getBounds().pad(0.2));
+          }
+          break;
+        }
         case 'DRAW_ROUTE': {
           // Future: draw a polyline for evacuation routing
           break;
@@ -279,11 +295,10 @@ export interface MapViewProps {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function MapView({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, onMarkerTap, onMapReady, style }: MapViewProps) {
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, onMarkerTap, onMapReady, style }, ref) => {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
 
-  // Helper: post a typed command into the WebView.
   function sendMessage(msg: MapBridgeInboundMessage) {
     if (!webViewRef.current || !isReadyRef.current) return;
     const js = `
@@ -295,6 +310,13 @@ export function MapView({ markers, center, focusPosition, kindColors, boundary, 
     `;
     webViewRef.current.injectJavaScript(js);
   }
+
+  useImperativeHandle(ref, () => ({
+    fitAll: () => {
+      if (!isReadyRef.current) return;
+      sendMessage({ type: 'FIT_ALL' });
+    },
+  }));
 
   // Push new markers whenever the prop changes (after the map is ready).
   useEffect(() => {
@@ -336,20 +358,14 @@ export function MapView({ markers, center, focusPosition, kindColors, boundary, 
       case 'MAP_READY': {
         isReadyRef.current = true;
         onMapReady?.();
-        // Push the initial marker set now that the map is ready.
         sendMessage({
           type: 'SET_MARKERS',
           payload: { markers },
           ...(kindColors ? { kindColors } : {}),
         } as MapBridgeInboundMessage & { kindColors?: Record<string, string> });
-        // Always draw the boundary outline when available so the barangay
-        // perimeter is visible regardless of where the user is standing.
         if (boundary) {
           sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary } });
         }
-        // If the device location is known, move the viewport there — this
-        // overrides the boundary fit so users outside Ampid I see their real
-        // position rather than being snapped back to the barangay centre.
         if (center) {
           sendMessage({ type: 'SET_CENTER', payload: center });
         }
@@ -360,7 +376,6 @@ export function MapView({ markers, center, focusPosition, kindColors, boundary, 
         break;
       }
       case 'MAP_MOVED': {
-        // Available for future use (e.g. updating a visible-area filter).
         break;
       }
     }
@@ -382,17 +397,20 @@ export function MapView({ markers, center, focusPosition, kindColors, boundary, 
       style={[styles.webView, style]}
       source={{ html: LEAFLET_HTML }}
       onMessage={handleMessage}
-      // Allow the WebView to access the internet for OSM tiles and Leaflet CDN.
       originWhitelist={['*']}
-      // Prevent the map from intercepting the parent scroll view.
       scrollEnabled={false}
       javaScriptEnabled
       domStorageEnabled
-      // Smooth hardware acceleration on Android.
       androidHardwareAccelerationDisabled={false}
     />
   );
-}
+});
+
+MapViewInner.displayName = 'MapView';
+
+export const MapView = Object.assign(MapViewInner, {
+  displayName: 'MapView',
+});
 
 const styles = StyleSheet.create({
   webView: {

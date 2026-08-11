@@ -21,6 +21,8 @@ export type MapBridgeInboundMessage =
   | { type: 'SET_MARKERS'; payload: { markers: MapMarker[]; kindColors?: Record<string, string> } }
   /** Draws (or clears, if geometry is null) a barangay's boundary outline and fits the map to it. */
   | { type: 'SET_BOUNDARY'; payload: { geometry: Polygon | MultiPolygon | null } }
+  /** Fits the map to show all current markers regardless of any previously set boundary. */
+  | { type: 'FIT_ALL' }
   | { type: 'DRAW_ROUTE'; payload: { points: LatLng[] } }
   | { type: 'CLEAR_ROUTE' };
 

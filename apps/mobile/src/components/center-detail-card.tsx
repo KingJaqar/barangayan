@@ -8,7 +8,8 @@ export interface CenterDetailCardProps {
   address: string;
   distanceKm: number;
   walkingTimeMins: number;
-  occupancyPercent: number;
+  currentOccupancy: number;
+  capacity: number | null;
 }
 
 export function CenterDetailCard({
@@ -16,9 +17,13 @@ export function CenterDetailCard({
   address,
   distanceKm,
   walkingTimeMins,
-  occupancyPercent,
+  currentOccupancy,
+  capacity,
 }: CenterDetailCardProps) {
   const theme = useTheme();
+
+  const occupancyFraction = capacity && capacity > 0 ? currentOccupancy / capacity : 0;
+  const occupancyPercent = Math.round(occupancyFraction * 100);
 
   const isFull = occupancyPercent >= 100;
   const isHigh = occupancyPercent >= 80;
@@ -27,6 +32,10 @@ export function CenterDetailCard({
   const textColor = isFull ? '#DC2626' : isHigh ? '#D97706' : '#0F6E5B';
 
   const displayOccupancy = isFull ? 'FULL' : `${occupancyPercent}%`;
+  const capacityText =
+    capacity !== null && capacity !== undefined
+      ? ` (${currentOccupancy.toLocaleString()}/${capacity.toLocaleString()})`
+      : '';
 
   const distanceDisplay = distanceKm > 0 ? `${distanceKm.toFixed(1)} km` : '--';
   const walkingDisplay = walkingTimeMins > 0 ? `${walkingTimeMins} min` : '--';
@@ -44,7 +53,7 @@ export function CenterDetailCard({
         </View>
         <View style={[styles.badge, { backgroundColor: isFull ? '#FEE2E2' : isHigh ? '#FEF3C7' : '#D1FAE5' }]}>
           <ThemedText type="smallBold" style={[styles.badgeText, { color: textColor }]}>
-            {displayOccupancy}
+            {displayOccupancy}{capacityText}
           </ThemedText>
         </View>
       </View>

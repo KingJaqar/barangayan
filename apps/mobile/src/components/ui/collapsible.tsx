@@ -4,7 +4,11 @@ import Animated, {
   FadeIn,
   FadeOut,
   LinearTransition,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
 } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -14,10 +18,19 @@ import { useTheme } from '@/hooks/use-theme';
 export function Collapsible({ children, title, defaultOpen = false }: PropsWithChildren & { title: string; defaultOpen?: boolean }) {
   const theme = useTheme();
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const rotation = useSharedValue(defaultOpen ? 1 : 0);
 
   function toggle() {
-    setIsOpen((prev) => !prev);
+    setIsOpen((prev) => {
+      const next = !prev;
+      rotation.value = withTiming(next ? 1 : 0, { duration: 200 });
+      return next;
+    });
   }
+
+  const chevronStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value * 180}deg` }],
+  }));
 
   return (
     <ThemedView style={{ backgroundColor: theme.background }}>
@@ -25,6 +38,9 @@ export function Collapsible({ children, title, defaultOpen = false }: PropsWithC
         style={({ pressed }) => [styles.heading, pressed && styles.pressedHeading]}
         onPress={toggle}>
         <ThemedText type="smallBold" style={{ color: theme.text }}>{title}</ThemedText>
+        <Animated.View style={chevronStyle}>
+          <Ionicons name="chevron-down" size={18} color={theme.textSecondary} />
+        </Animated.View>
       </Pressable>
 
       {isOpen && (

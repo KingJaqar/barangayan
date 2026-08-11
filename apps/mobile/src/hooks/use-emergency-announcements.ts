@@ -1,49 +1,61 @@
 import { ANNOUNCEMENT_CATEGORY_META, type Tables } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import { getCachedData, setCachedData } from '@/lib/emergency-cache';
 
 export type EmergencyAnnouncement = Tables<'announcements'>;
 
-/**
- * Shared hook for emergency announcements.
- *
- * Queries the public `announcements` table filtered to `category = 'emergency'`
- * and subscribes to Realtime changes so both the Emergency & DRRM Alerts tab
- * and the Reports > Emergency feed stay in sync without manual refresh.
- */
+const CACHE_TAG = 'emergency_announcements';
+
 export function useEmergencyAnnouncements() {
   const [items, setItems] = useState<EmergencyAnnouncement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOffline, setIsOffline] = useState(false);
+  const cancelledRef = useRef(false);
+
+  async function fetchEmergencies() {
+    try {
+      const { data, error: qErr } = await supabase
+        .from('announcements')
+        .select('*')
+        .eq('category', 'emergency')
+        .is('deleted_at', null)
+        .order('published_at', { ascending: false });
+
+      if (qErr) throw qErr;
+      if (!cancelledRef.current) {
+        setItems(data ?? []);
+        setError(null);
+        setIsOffline(false);
+        await setCachedData(CACHE_TAG, (data ?? []) as EmergencyAnnouncement[]);
+      }
+    } catch (err) {
+      if (!cancelledRef.current) {
+        setError(err instanceof Error ? err.message : 'Failed to load emergency announcements');
+        setIsOffline(true);
+      }
+    } finally {
+      if (!cancelledRef.current) setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    let cancelled = false;
+    cancelledRef.current = false;
 
-    async function fetchEmergencies() {
-      try {
-        const { data, error: qErr } = await supabase
-          .from('announcements')
-          .select('*')
-          .eq('category', 'emergency')
-          .is('deleted_at', null)
-          .order('published_at', { ascending: false });
-
-        if (qErr) throw qErr;
-        if (!cancelled) {
-          setItems(data ?? []);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load emergency announcements');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+    async function init() {
+      const cached = await getCachedData<EmergencyAnnouncement[]>(CACHE_TAG);
+      if (cached && cached.length > 0 && !cancelledRef.current) {
+        setItems(cached);
+        setLoading(false);
+        setIsOffline(true);
       }
+
+      fetchEmergencies();
     }
 
-    fetchEmergencies();
+    init();
 
     const channel = supabase
       .channel('emergency-announcements')
@@ -62,7 +74,7 @@ export function useEmergencyAnnouncements() {
       .subscribe();
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
       supabase.removeChannel(channel);
     };
   }, []);
@@ -70,6 +82,7 @@ export function useEmergencyAnnouncements() {
   const refetch = () => {
     setLoading(true);
     setError(null);
+    setIsOffline(false);
     supabase
       .from('announcements')
       .select('*')
@@ -79,15 +92,18 @@ export function useEmergencyAnnouncements() {
       .then(({ data, error: qErr }) => {
         if (qErr) {
           setError(qErr.message);
+          setIsOffline(true);
         } else {
           setItems(data ?? []);
           setError(null);
+          setIsOffline(false);
+          setCachedData(CACHE_TAG, (data ?? []) as EmergencyAnnouncement[]);
         }
         setLoading(false);
       });
   };
 
-  return { items, loading, error, refetch };
+  return { items, loading, error, refetch, isOffline };
 }
 
 export { ANNOUNCEMENT_CATEGORY_META };
