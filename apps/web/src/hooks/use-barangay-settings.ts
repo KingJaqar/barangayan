@@ -7,6 +7,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import {
   barangaySettingsSchema,
+  DEFAULT_AUDIT_PREFERENCES,
   type BarangaySettings,
   type ContactSettings,
   type FeatureFlags,
@@ -37,7 +38,9 @@ const DEFAULT_SETTINGS: BarangaySettings = {
     requireIdVerification: true,
     enableWasteNotifications: true,
     enableEmergencyAlerts: true,
+    enableAdminAuditLog: true,
   },
+  adminAuditLogPreferences: DEFAULT_AUDIT_PREFERENCES,
 };
 
 export function useBarangaySettings(barangayId: string | null) {

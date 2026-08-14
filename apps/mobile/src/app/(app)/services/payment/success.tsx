@@ -2,14 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 // Reached only from the QR Ph flow once usePaymongoSource observes status === 'paid'
@@ -25,14 +25,32 @@ export default function PaymentSuccessScreen() {
   }>();
   const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [downloadNotice, setDownloadNotice] = useState(false);
 
   const amountCentavos = Number(amount ?? 0);
   const paidAt = new Date().toISOString();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Payment Successful
+            </ThemedText>
+          </View>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.content}>
         <View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }]}>
           <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
             <Ionicons name="checkmark" size={36} color={theme.onPrimary} />
@@ -82,6 +100,7 @@ export default function PaymentSuccessScreen() {
           Return to Home
         </ThemedText>
       </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -101,6 +120,25 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     alignItems: 'center',

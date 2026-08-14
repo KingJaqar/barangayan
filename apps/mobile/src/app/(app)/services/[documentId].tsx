@@ -2,8 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, formatProcessingTime, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
@@ -12,7 +12,7 @@ import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Fonts } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
@@ -24,6 +24,7 @@ export default function DocumentDetailScreen() {
   const router = useRouter();
   const { session } = useAuth();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
 
   useEffect(() => {
@@ -43,7 +44,24 @@ export default function DocumentDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Requirements & Guidelines
+            </ThemedText>
+          </View>
+        </View>
+
       <ScrollView contentContainerStyle={styles.content}>
         <ThemedView type="backgroundElement" style={styles.illustration}>
           <Ionicons name="document-text-outline" size={72} color={theme.textSecondary} />
@@ -122,6 +140,7 @@ export default function DocumentDetailScreen() {
           <PrimaryButton label="Log In to Request" onPress={() => router.push('/(auth)/login')} />
         )}
       </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -130,6 +149,27 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+
+  /* Header */
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.two,

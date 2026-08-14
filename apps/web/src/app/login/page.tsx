@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { logAdminLogin } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/toast';
 
@@ -33,6 +34,9 @@ export default function AdminLoginPage() {
       toast.showError(`Login failed: ${signInError.message}`);
       return;
     }
+
+    // Fire-and-forget — don't block redirect if audit write fails.
+    logAdminLogin().catch(() => {});
 
     router.replace('/dashboard');
     router.refresh();

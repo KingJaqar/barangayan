@@ -4,7 +4,7 @@ import { Fonts, ThemeColor } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedTextProps = TextProps & {
-  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code';
+  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code' | 'heading' | 'body';
   themeColor?: ThemeColor;
 };
 
@@ -23,6 +23,8 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
         type === 'link' && styles.link,
         type === 'linkPrimary' && styles.linkPrimary,
         type === 'code' && styles.code,
+        type === 'heading' && styles.heading,
+        type === 'body' && styles.body,
         style,
       ]}
       {...rest}
@@ -69,5 +71,15 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.mono,
     fontWeight: Platform.select({ android: 700 }) ?? 500,
     fontSize: 12,
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: '700',
+    lineHeight: 26,
+  },
+  body: {
+    fontSize: 15,
+    lineHeight: 22,
+    fontWeight: '500',
   },
 });

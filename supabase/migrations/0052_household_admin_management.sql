@@ -201,15 +201,24 @@ do $$
 declare
   r record;
   v_member jsonb;
+  v_id uuid;
 begin
   for r in select id, household_members from public.profiles where household_members is not null
   loop
     delete from public.household_members where profile_id = r.id;
     for v_member in select * from jsonb_array_elements(r.household_members)
     loop
+      -- Some legacy rows carry client-generated non-uuid ids; fall back to a
+      -- fresh uuid instead of failing the whole backfill.
+      begin
+        v_id := coalesce((v_member->>'id')::uuid, gen_random_uuid());
+      exception when invalid_text_representation then
+        v_id := gen_random_uuid();
+      end;
+
       insert into public.household_members (id, profile_id, name, relation, role)
       values (
-        coalesce((v_member->>'id')::uuid, gen_random_uuid()),
+        v_id,
         r.id,
         v_member->>'name',
         v_member->>'relation',

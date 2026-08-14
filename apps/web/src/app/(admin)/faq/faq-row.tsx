@@ -26,6 +26,8 @@ export function FaqRow({ article }: { article: FaqArticle }) {
   const [sortOrder, setSortOrder] = useState(String(article.sort_order));
   const [isActive, setIsActive] = useState(article.is_active);
 
+  const isArchived = article.deleted_at !== null;
+
   function startEdit() {
     setQuestion(article.question);
     setAnswer(article.answer);
@@ -88,7 +90,35 @@ export function FaqRow({ article }: { article: FaqArticle }) {
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
-    toast.showSuccess(`Article archived.`);
+    toast.showSuccess('Article archived.');
+    router.refresh();
+  }
+
+  async function unarchive() {
+    const supabase = createSupabaseBrowserClient();
+    const { error: unarchiveError } = await supabase
+      .from('faq_articles')
+      .update({ deleted_at: null })
+      .eq('id', article.id);
+    if (unarchiveError) {
+      toast.showError(`Failed to restore: ${unarchiveError.message}`);
+      return;
+    }
+    toast.showSuccess('Article restored.');
+    router.refresh();
+  }
+
+  async function handleDelete() {
+    const supabase = createSupabaseBrowserClient();
+    const { error: deleteError } = await supabase
+      .from('faq_articles')
+      .delete()
+      .eq('id', article.id);
+    if (deleteError) {
+      toast.showError(`Failed to delete: ${deleteError.message}`);
+      return;
+    }
+    toast.showSuccess('Article permanently deleted.');
     router.refresh();
   }
 
@@ -168,7 +198,12 @@ export function FaqRow({ article }: { article: FaqArticle }) {
   }
 
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
+    <div
+      className={`rounded-xl border bg-white p-4 transition-opacity dark:bg-zinc-900 ${
+        isArchived
+          ? 'border-zinc-200 opacity-60 dark:border-zinc-700'
+          : 'border-black/10 dark:border-white/10'
+      }`}>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -181,8 +216,14 @@ export function FaqRow({ article }: { article: FaqArticle }) {
               style={{ backgroundColor: `${meta?.color}1A`, color: meta?.color }}>
               {meta?.label}
             </span>
-            <span className="font-semibold">{article.question}</span>
-            {!article.is_active ? (
+            <span className={`font-semibold ${isArchived ? 'line-through text-zinc-400' : ''}`}>
+              {article.question}
+            </span>
+            {isArchived ? (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
+                Archived
+              </span>
+            ) : !article.is_active ? (
               <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
                 Draft
               </span>
@@ -192,19 +233,40 @@ export function FaqRow({ article }: { article: FaqArticle }) {
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <button
-            onClick={startEdit}
-            title="Edit"
-            className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[#0F6E5B]/10 hover:text-[#0F6E5B] dark:hover:bg-[#0F6E5B]/20">
-            Edit
-          </button>
-          <ConfirmButton
-            label="Archive"
-            confirmLabel="Archive?"
-            onConfirm={archive}
-            title="Archive article"
-            className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
-          />
+          {isArchived ? (
+            <>
+              <ConfirmButton
+                label="Restore"
+                confirmLabel="Restore?"
+                onConfirm={unarchive}
+                title="Restore article"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[#0F6E5B]/10 hover:text-[#0F6E5B] dark:hover:bg-[#0F6E5B]/20"
+              />
+              <ConfirmButton
+                label="Delete"
+                confirmLabel="Delete forever?"
+                onConfirm={handleDelete}
+                title="Permanently delete article"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+              />
+            </>
+          ) : (
+            <>
+              <button
+                onClick={startEdit}
+                title="Edit"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[#0F6E5B]/10 hover:text-[#0F6E5B] dark:hover:bg-[#0F6E5B]/20">
+                Edit
+              </button>
+              <ConfirmButton
+                label="Archive"
+                confirmLabel="Archive?"
+                onConfirm={archive}
+                title="Archive article"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+              />
+            </>
+          )}
         </div>
       </div>
 

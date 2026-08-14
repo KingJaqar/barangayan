@@ -1,6 +1,12 @@
 'use client';
 
-import { staffSchema, type Tables } from '@barangayan/shared';
+import {
+  OFFICIAL_ROLES,
+  OFFICIAL_ROLE_LABELS,
+  staffSchema,
+  type OfficialRole,
+  type Tables,
+} from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -8,30 +14,40 @@ import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-type Staff = Tables<'profiles'>;
+type Official = Tables<'barangay_officials'> & { profile: Tables<'profiles'> };
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[#0F6E5B] dark:border-zinc-700 dark:bg-zinc-800';
 
-export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId: string }) {
+export function StaffRow({
+  official,
+  currentUserId,
+}: {
+  official: Official;
+  currentUserId: string;
+}) {
   const router = useRouter();
   const toast = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [fullName, setFullName] = useState(staff.full_name);
-  const [role, setRole] = useState<'admin' | 'staff'>(staff.role as 'admin' | 'staff');
-  const [mobileNumber, setMobileNumber] = useState(staff.mobile_number ?? '');
-  const [homeAddress, setHomeAddress] = useState(staff.home_address ?? '');
+  const profile = official.profile;
 
-  const isCurrentUser = staff.id === currentUserId;
+  const [fullName, setFullName] = useState(profile.full_name);
+  const [officialRole, setOfficialRole] = useState<OfficialRole>(
+    official.official_role as OfficialRole,
+  );
+  const [mobileNumber, setMobileNumber] = useState(profile.mobile_number ?? '');
+  const [homeAddress, setHomeAddress] = useState(profile.home_address ?? '');
+
+  const isCurrentUser = profile.id === currentUserId;
 
   function startEdit() {
-    setFullName(staff.full_name);
-    setRole(staff.role as 'admin' | 'staff');
-    setMobileNumber(staff.mobile_number ?? '');
-    setHomeAddress(staff.home_address ?? '');
+    setFullName(profile.full_name);
+    setOfficialRole(official.official_role as OfficialRole);
+    setMobileNumber(profile.mobile_number ?? '');
+    setHomeAddress(profile.home_address ?? '');
     setError(null);
     setIsEditing(true);
   }
@@ -42,7 +58,7 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
 
     const result = staffSchema.safeParse({
       full_name: fullName,
-      role,
+      official_role: officialRole,
       mobile_number: mobileNumber || undefined,
       home_address: homeAddress || undefined,
     });
@@ -54,18 +70,25 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        full_name: result.data.full_name,
-        role: result.data.role,
-        mobile_number: result.data.mobile_number || null,
-        home_address: result.data.home_address || null,
-      })
-      .eq('id', staff.id);
+
+    const [{ error: profileErr }, { error: officialErr }] = await Promise.all([
+      supabase
+        .from('profiles')
+        .update({
+          full_name: result.data.full_name,
+          mobile_number: result.data.mobile_number || null,
+          home_address: result.data.home_address || null,
+        })
+        .eq('id', profile.id),
+      supabase
+        .from('barangay_officials')
+        .update({ official_role: result.data.official_role })
+        .eq('id', official.id),
+    ]);
 
     setSubmitting(false);
 
+    const updateError = profileErr ?? officialErr;
     if (updateError) {
       setError(updateError.message);
       toast.showError(`Failed to save: ${updateError.message}`);
@@ -80,9 +103,9 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
   async function remove() {
     const supabase = createSupabaseBrowserClient();
     const { error: removeError } = await supabase
-      .from('profiles')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', staff.id);
+      .from('barangay_officials')
+      .update({ deleted_at: new Date().toISOString(), is_active: false })
+      .eq('id', official.id);
 
     if (removeError) {
       toast.showError(`Failed to remove: ${removeError.message}`);
@@ -110,13 +133,16 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
           </label>
 
           <label className="text-sm">
-            <span className="mb-1 block font-medium">Role</span>
+            <span className="mb-1 block font-medium">Barangay Role</span>
             <select
               className={inputClass}
-              value={role}
-              onChange={(e) => setRole(e.target.value as 'admin' | 'staff')}>
-              <option value="admin">Admin</option>
-              <option value="staff">Staff</option>
+              value={officialRole}
+              onChange={(e) => setOfficialRole(e.target.value as OfficialRole)}>
+              {OFFICIAL_ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {OFFICIAL_ROLE_LABELS[r]}
+                </option>
+              ))}
             </select>
           </label>
 
@@ -160,8 +186,8 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
     );
   }
 
-  const roleColor = staff.role === 'admin' ? '#0F6E5B' : '#2563EB';
-  const roleLabel = staff.role === 'admin' ? 'Admin' : 'Staff';
+  const roleColor = official.official_role === 'admin' ? '#0F6E5B' : '#2563EB';
+  const roleLabel = OFFICIAL_ROLE_LABELS[official.official_role as OfficialRole] ?? official.official_role;
 
   return (
     <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
@@ -173,14 +199,19 @@ export function StaffRow({ staff, currentUserId }: { staff: Staff; currentUserId
               style={{ backgroundColor: `${roleColor}1A`, color: roleColor }}>
               {roleLabel}
             </span>
-            <span className="font-semibold">{staff.full_name}</span>
+            <span className="font-semibold">{profile.full_name}</span>
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">{staff.email}</p>
-          {staff.mobile_number ? (
-            <p className="text-xs text-zinc-500">{staff.mobile_number}</p>
+          <p className="mt-0.5 text-xs text-zinc-500">{profile.email}</p>
+          {profile.mobile_number ? (
+            <p className="text-xs text-zinc-500">{profile.mobile_number}</p>
           ) : null}
-          {staff.home_address ? (
-            <p className="text-xs text-zinc-500">{staff.home_address}</p>
+          {profile.home_address ? (
+            <p className="text-xs text-zinc-500">{profile.home_address}</p>
+          ) : null}
+          {official.date_hired ? (
+            <p className="text-xs text-zinc-400">
+              Hired {new Date(official.date_hired).toLocaleDateString()}
+            </p>
           ) : null}
         </div>
 

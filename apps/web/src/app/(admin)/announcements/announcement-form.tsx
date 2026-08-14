@@ -4,6 +4,7 @@ import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -55,6 +56,13 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
       toast.showError(`Failed to create announcement: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'announcement',
+      entityLabel: result.data.title,
+      metadata: { category: result.data.category },
+    }).catch(() => {});
 
     setTitle('');
     setBody('');

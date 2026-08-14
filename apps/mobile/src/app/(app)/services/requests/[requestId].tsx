@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
@@ -11,7 +11,7 @@ import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ProgressBar } from '@/components/progress-bar';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
@@ -46,7 +46,9 @@ const PROGRESS_AMBER = '#F59E0B';
 
 export default function RequestTrackingScreen() {
   const { requestId } = useLocalSearchParams<{ requestId: string }>();
+  const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [request, setRequest] = useState<ServiceRequest | null | undefined>(undefined);
 
   useEffect(() => {
@@ -113,15 +115,32 @@ export default function RequestTrackingScreen() {
   const isPaid = request.payment_status === 'paid';
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          {request.document_types?.name ?? 'Document Request'}
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">Ref #{request.reference_number}</ThemedText>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+        {/* ── Header ──────────────────────────────────────────────────────── */}
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Request Tracking
+            </ThemedText>
+          </View>
+        </View>
 
-        {!isCancelled ? (
-          <Card style={styles.progressCard}>
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.four }]}
+          showsVerticalScrollIndicator={false}>
+          <ThemedText themeColor="textSecondary">Ref #{request.reference_number}</ThemedText>
+
+          {!isCancelled ? (
+            <Card style={styles.progressCard}>
             <View style={styles.progressHeaderRow}>
               <View style={styles.progressHeaderText}>
                 <ThemedText type="smallBold">Processing Time</ThemedText>
@@ -245,6 +264,7 @@ export default function RequestTrackingScreen() {
           </ThemedView>
         ) : null}
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -253,12 +273,29 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
-  },
-  title: {
-    fontSize: 24,
   },
   progressCard: {
     padding: Spacing.three,

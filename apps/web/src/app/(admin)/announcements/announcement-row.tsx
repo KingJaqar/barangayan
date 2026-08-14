@@ -4,6 +4,7 @@ import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -76,6 +77,17 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       return;
     }
 
+    logAdminAction({
+      action: 'update',
+      entityType: 'announcement',
+      entityId: announcement.id,
+      entityLabel: result.data.title,
+      changes: {
+        before: { title: announcement.title, body: announcement.body, category: announcement.category },
+        after:  { title: result.data.title,  body: result.data.body,  category: result.data.category },
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Announcement updated.');
     setIsEditing(false);
     router.refresh();
@@ -91,6 +103,14 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'announcement',
+      entityId: announcement.id,
+      entityLabel: announcement.title,
+    }).catch(() => {});
+
     toast.showSuccess(`Announcement archived.`);
     router.refresh();
   }

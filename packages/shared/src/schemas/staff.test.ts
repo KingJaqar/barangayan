@@ -6,7 +6,7 @@ describe('staffSchema', () => {
   it('parses a valid staff update', () => {
     const result = staffSchema.safeParse({
       full_name: 'Juan Dela Cruz',
-      role: 'staff',
+      official_role: 'staff',
       mobile_number: '+639171234567',
       home_address: 'Purok 1, Barangay Ampid I',
     });
@@ -16,23 +16,23 @@ describe('staffSchema', () => {
   it('rejects a missing full_name', () => {
     const result = staffSchema.safeParse({
       full_name: '',
-      role: 'admin',
+      official_role: 'admin',
     });
     expect(result.success).toBe(false);
   });
 
-  it('rejects an invalid role', () => {
+  it('rejects an invalid official_role', () => {
     const result = staffSchema.safeParse({
       full_name: 'Test',
-      role: 'superadmin',
+      official_role: 'superadmin',
     });
     expect(result.success).toBe(false);
   });
 
-  it('accepts optional fields as empty strings', () => {
+  it('accepts a barangay job role', () => {
     const result = staffSchema.safeParse({
       full_name: 'Test User',
-      role: 'staff',
+      official_role: 'kagawad',
       mobile_number: '',
       home_address: '',
     });
@@ -45,7 +45,7 @@ describe('staffInviteSchema', () => {
     const result = staffInviteSchema.safeParse({
       email: 'new.staff@barangay.gov.ph',
       full_name: 'New Staff Member',
-      role: 'staff',
+      official_role: 'staff',
       mobile_number: '+639170000000',
       home_address: 'Purok 4, Barangay Ampid I',
     });
@@ -56,7 +56,7 @@ describe('staffInviteSchema', () => {
     const result = staffInviteSchema.safeParse({
       email: 'not-an-email',
       full_name: 'Test',
-      role: 'admin',
+      official_role: 'admin',
     });
     expect(result.success).toBe(false);
   });
@@ -65,7 +65,7 @@ describe('staffInviteSchema', () => {
     const result = staffInviteSchema.safeParse({
       email: '',
       full_name: 'Test',
-      role: 'staff',
+      official_role: 'staff',
     });
     expect(result.success).toBe(false);
   });
@@ -74,7 +74,16 @@ describe('staffInviteSchema', () => {
     const result = staffInviteSchema.safeParse({
       email: 'test@barangay.gov.ph',
       full_name: '',
-      role: 'staff',
+      official_role: 'staff',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an invalid official_role', () => {
+    const result = staffInviteSchema.safeParse({
+      email: 'test@barangay.gov.ph',
+      full_name: 'Test',
+      official_role: 'superadmin',
     });
     expect(result.success).toBe(false);
   });

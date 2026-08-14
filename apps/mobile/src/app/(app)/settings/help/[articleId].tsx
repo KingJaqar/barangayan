@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,12 +8,13 @@ import { ThemedText } from '@/components/themed-text';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
-import { FAQ_CATEGORY_META } from '@/hooks/use-faq-articles';
+import { FAQ_CATEGORY_META, type FaqCategory } from '@barangayan/shared';
 import { supabase } from '@/lib/supabase';
 import type { FaqArticle } from '@/hooks/use-faq-articles';
 
 export default function HelpArticleScreen() {
   const { articleId } = useLocalSearchParams<{ articleId: string }>();
+  const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { profile } = useProfile();
@@ -57,14 +58,14 @@ export default function HelpArticleScreen() {
     };
   }, [articleId, barangayId]);
 
-  const meta = article ? FAQ_CATEGORY_META[article.category] : null;
+  const meta = article ? FAQ_CATEGORY_META[article.category as FaqCategory] : null;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
-            onPress={() => {}}
+            onPress={() => router.back()}
             style={styles.backBtn}
             accessibilityRole="button"
             accessibilityLabel="Go back"
@@ -73,7 +74,7 @@ export default function HelpArticleScreen() {
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]} numberOfLines={1}>
-              {article?.category ? FAQ_CATEGORY_META[article.category]?.label : 'Help Article'}
+              {article?.category ? FAQ_CATEGORY_META[article.category as FaqCategory]?.label : 'Help Article'}
             </ThemedText>
           </View>
         </View>

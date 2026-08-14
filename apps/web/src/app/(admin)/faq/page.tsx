@@ -1,7 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { FaqForm } from './faq-form';
-import { FaqRow } from './faq-row';
+import { FaqList } from './faq-list';
 
 export default async function FaqPage() {
   const supabase = await createSupabaseServerClient();
@@ -9,10 +9,12 @@ export default async function FaqPage() {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: profile } = await supabase.from('profiles').select('barangay_id').eq('id', user!.id).single();
+
+  // Fetch all articles — including archived (deleted_at IS NOT NULL) so the
+  // client-side segment/filter/search can operate over the full set.
   const { data: articles } = await supabase
     .from('faq_articles')
     .select('*')
-    .is('deleted_at', null)
     .order('sort_order', { ascending: true });
 
   return (
@@ -34,18 +36,9 @@ export default async function FaqPage() {
       </div>
 
       <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-        Published Articles
+        Articles
       </h2>
-      <div className="flex flex-col gap-3">
-        {(articles ?? []).map((a) => (
-          <FaqRow key={a.id} article={a} />
-        ))}
-        {(articles ?? []).length === 0 ? (
-          <p className="text-center text-sm text-zinc-500">
-            No articles yet — create one above.
-          </p>
-        ) : null}
-      </div>
+      <FaqList articles={articles ?? []} />
     </div>
   );
 }

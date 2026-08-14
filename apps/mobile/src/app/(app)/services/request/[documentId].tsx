@@ -4,14 +4,14 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -45,6 +45,7 @@ export default function RequestFormScreen() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
@@ -150,7 +151,23 @@ export default function RequestFormScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={styles.root}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Request Form
+            </ThemedText>
+          </View>
+        </View>
       <ScrollView contentContainerStyle={styles.content}>
         <ThemedView type="backgroundElement" style={styles.section}>
           <ThemedText type="small" style={{ color: theme.primary }}>
@@ -232,6 +249,7 @@ export default function RequestFormScreen() {
         </View>
         <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
       </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -240,6 +258,25 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,

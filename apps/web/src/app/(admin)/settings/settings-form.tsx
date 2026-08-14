@@ -7,6 +7,9 @@ import { useBarangaySettings } from '@/hooks/use-barangay-settings';
 
 import {
   barangaySettingsSchema,
+  DEFAULT_AUDIT_PREFERENCES,
+  type AdminAuditLogCategory,
+  type AdminAuditLogPreferences,
   type BarangaySettings,
   type ContactSettings,
   type DayHours,
@@ -23,6 +26,18 @@ const DAY_LABELS: Record<string, string> = {
   saturday: 'Saturday',
   sunday: 'Sunday',
 };
+
+const AUDIT_CATEGORY_LABELS: { key: keyof AdminAuditLogCategory; label: string }[] = [
+  { key: 'service_requests', label: 'Service Requests' },
+  { key: 'announcements', label: 'Announcements' },
+  { key: 'incidents', label: 'Incident Reports' },
+  { key: 'residents', label: 'Residents' },
+  { key: 'waste_management', label: 'Waste Management' },
+  { key: 'health', label: 'Health Drives' },
+  { key: 'evacuation_centers', label: 'Evacuation Centers' },
+  { key: 'staff', label: 'Staff' },
+  { key: 'system', label: 'System (login / logout)' },
+];
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[#0F6E5B] dark:border-zinc-700 dark:bg-zinc-800';
@@ -43,16 +58,18 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
     requireIdVerification: true,
     enableWasteNotifications: true,
     enableEmergencyAlerts: true,
+    enableAdminAuditLog: true,
   });
+  const [auditPrefs, setAuditPrefs] = useState<AdminAuditLogPreferences>(DEFAULT_AUDIT_PREFERENCES);
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (settings) {
-      // Data-binding from hook state to local form state; eslint-disable scoped to this block.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setContact(settings.contact);
       setOperatingHours(settings.operatingHours);
       setFeatures(settings.features);
+      setAuditPrefs(settings.adminAuditLogPreferences ?? DEFAULT_AUDIT_PREFERENCES);
     }
   }, [settings]);
 
@@ -71,6 +88,17 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
     setFeatures((prev) => ({ ...prev, [field]: !prev[field] }));
   }, []);
 
+  const handleCategoryToggle = useCallback((key: keyof AdminAuditLogCategory) => {
+    setAuditPrefs((prev) => ({
+      ...prev,
+      enabledCategories: { ...prev.enabledCategories, [key]: !prev.enabledCategories[key] },
+    }));
+  }, []);
+
+  const handleAuditPrefToggle = useCallback((field: 'notifyOnLogin' | 'notifyOnLogout') => {
+    setAuditPrefs((prev) => ({ ...prev, [field]: !prev[field] }));
+  }, []);
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setFormError(null);
@@ -79,6 +107,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
       contact,
       operatingHours,
       features,
+      adminAuditLogPreferences: auditPrefs,
     };
 
     const validation = barangaySettingsSchema.safeParse(payload);
@@ -119,6 +148,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
       {formError ? <p className="text-sm text-red-600">{formError}</p> : null}
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
+      {/* Contact */}
       <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
         <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Contact Information</h2>
         <div className="grid grid-cols-2 gap-4">
@@ -157,6 +187,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
         </div>
       </div>
 
+      {/* Operating Hours */}
       <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
         <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Operating Hours</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -181,6 +212,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
         </div>
       </div>
 
+      {/* Feature Flags */}
       <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
         <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Feature Flags</h2>
         <div className="flex flex-col gap-3">
@@ -228,6 +260,63 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
             <span className="text-xs text-zinc-500">Broadcast DRRM advisories to residents</span>
           </label>
         </div>
+      </div>
+
+      {/* Audit Notification Preferences */}
+      <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
+        <h2 className="mb-1 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Audit Notification Preferences</h2>
+        <p className="mb-4 text-xs text-zinc-500">
+          Control which admin actions appear in the notification bell. Disabling the master switch hides all notifications.
+        </p>
+
+        {/* Master toggle */}
+        <label className="mb-4 flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={features.enableAdminAuditLog}
+            onChange={() => handleFeatureToggle('enableAdminAuditLog')}
+            className="h-4 w-4 rounded border-zinc-300"
+          />
+          <span className="font-medium">Enable Admin Audit Notifications</span>
+        </label>
+
+        {/* Per-category checkboxes — disabled when master is off */}
+        <fieldset disabled={!features.enableAdminAuditLog} className="space-y-2 disabled:opacity-50">
+          <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Categories</legend>
+          {AUDIT_CATEGORY_LABELS.map(({ key, label }) => (
+            <label key={key} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={auditPrefs.enabledCategories[key]}
+                onChange={() => handleCategoryToggle(key)}
+                className="h-4 w-4 rounded border-zinc-300"
+              />
+              <span>{label}</span>
+            </label>
+          ))}
+
+          <div className="mt-3 border-t border-black/5 pt-3 dark:border-white/5">
+            <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Auth Events</legend>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={auditPrefs.notifyOnLogin}
+                onChange={() => handleAuditPrefToggle('notifyOnLogin')}
+                className="h-4 w-4 rounded border-zinc-300"
+              />
+              <span>Log admin logins</span>
+            </label>
+            <label className="mt-2 flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={auditPrefs.notifyOnLogout}
+                onChange={() => handleAuditPrefToggle('notifyOnLogout')}
+                className="h-4 w-4 rounded border-zinc-300"
+              />
+              <span>Log admin logouts</span>
+            </label>
+          </div>
+        </fieldset>
       </div>
 
       <div className="flex items-center gap-3">

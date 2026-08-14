@@ -101,6 +101,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f003',
+    '00000000-0000-0000-0000-000000000001',
     'Where are the evacuation centers in my barangay?',
     'Go to the Emergency & DRRM Info tab and select the Centers view. The map and list show all accredited centers with real-time occupancy and contact numbers.',
     'emergency',
@@ -112,6 +113,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f004',
+    '00000000-0000-0000-0000-000000000001',
     'How do I report an incident in my area?',
     'Use the Incident Reports tab. Choose the category, describe what happened, and optionally attach photos. You can track the status and confirm other residents'' reports.',
     'emergency',
@@ -123,6 +125,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f005',
+    '00000000-0000-0000-0000-000000000001',
     'How can I update my profile information?',
     'Open Settings, tap Profile, then Edit Profile. You can update your full name, mobile number, home address, and profile photo. Some fields require re-verification.',
     'account',
@@ -134,6 +137,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f006',
+    '00000000-0000-0000-0000-000000000001',
     'How do I pay for my document requests?',
     'Payments are processed through the Transactions tab. Supported methods include GCash and cash payment at the barangay hall. Your request will be updated once payment is confirmed.',
     'billing',
@@ -145,6 +149,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f007',
+    '00000000-0000-0000-0000-000000000001',
     'Where can I find free health services?',
     'Check the Health tab for upcoming medical drives, vaccination schedules, and free consultation events. You can also view the Emergency Info Hub for health guidelines.',
     'health',
@@ -156,6 +161,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f008',
+    '00000000-0000-0000-0000-000000000001',
     'Is my personal information secure in this app?',
     'Yes. All data is stored in a secure Supabase cloud database with Row-Level Security. Only you and authorized barangay staff can access your information. We never share your data with third parties.',
     'account',
@@ -167,6 +173,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f009',
+    '00000000-0000-0000-0000-000000000001',
     'What should I do during a typhoon or flood?',
     'Monitor official updates in the Alerts section of the Emergency & DRRM Info tab. Follow evacuation orders, move valuables to higher ground, and proceed to the nearest designated evacuation center.',
     'emergency',
@@ -178,6 +185,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f010',
+    '00000000-0000-0000-0000-000000000001',
     'How do I register for waste collection services?',
     'Visit the Waste Management section in the admin portal or contact your barangay office to confirm your zone and pickup schedule. Residents can view their zone schedule in the app under Services.',
     'services',
@@ -189,6 +197,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f011',
+    '00000000-0000-0000-0000-000000000001',
     'How do I register household members?',
     'Go to Settings > Household Members in the app. You can add family members with their names and relationships. This helps barangay staff assist your household during emergencies.',
     'account',
@@ -200,6 +209,7 @@ values
   ),
   (
     '00000000-0000-0000-0000-00000000f012',
+    '00000000-0000-0000-0000-000000000001',
     'What are the barangay health center operating hours?',
     'The Barangay Health Center is open Monday to Friday from 8:00 AM to 5:00 PM, and Saturday from 8:00 AM to 12:00 PM. Walk-in consultations and vaccination drives are announced in the Health tab.',
     'health',

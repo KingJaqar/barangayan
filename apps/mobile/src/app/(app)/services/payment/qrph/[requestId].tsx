@@ -3,14 +3,14 @@ import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Animated, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { CountdownTimer } from '@/components/services/countdown-timer';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { Spacing, Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { usePaymongoSource } from '@/hooks/use-paymongo-source';
 import { supabase } from '@/lib/supabase';
@@ -28,6 +28,7 @@ export default function QrPhPaymentScreen() {
   const { requestId } = useLocalSearchParams<{ requestId: string }>();
   const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const [request, setRequest] = useState<ServiceRequest | null | undefined>(undefined);
   // Keep a ref to the Animated.Value; access .current outside render (in useEffect).
   const pulseRef = useRef(new Animated.Value(1));
@@ -75,16 +76,33 @@ export default function QrPhPaymentScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <ThemedView type="backgroundElement" style={styles.header}>
-          <ThemedText type="small">Payment for</ThemedText>
-          <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
-          <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
-            {fee === 0 ? 'Free' : formatCentavosAsPHP(fee)}
-          </ThemedText>
-          {source ? <CountdownTimer expiresAt={source.expiresAt} /> : null}
-        </ThemedView>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Payment
+            </ThemedText>
+          </View>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.content}>
+          <ThemedView type="backgroundElement" style={styles.summaryCard}>
+            <ThemedText type="small">Payment for</ThemedText>
+            <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
+            <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
+              {fee === 0 ? 'Free' : formatCentavosAsPHP(fee)}
+            </ThemedText>
+            {source ? <CountdownTimer expiresAt={source.expiresAt} /> : null}
+          </ThemedView>
 
         <ThemedView type="backgroundElement" style={styles.qrCard}>
           {status === 'loading' || !source ? (
@@ -128,6 +146,7 @@ export default function QrPhPaymentScreen() {
           </View>
         ) : null}
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -136,11 +155,30 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
   },
-  header: {
+  summaryCard: {
     padding: Spacing.four,
     borderRadius: Spacing.three,
     alignItems: 'center',

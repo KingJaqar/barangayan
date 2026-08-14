@@ -15,9 +15,13 @@ import { staffInviteSchema } from '@barangayan/shared';
  *
  * Flow: verify the caller is a signed-in admin (using the normal cookie-scoped
  * server client, so RLS still gates this check) -> invite the new user by email
- * (auth.admin.inviteUserByEmail, no password ever exists or is displayed) -> insert
- * their profiles row scoped to the admin's own barangay -> roll back the auth user
- * if the profile insert fails, so we never leave an orphaned auth.users row.
+ * (auth.admin.inviteUserByEmail, no password ever exists or is displayed) ->
+ * insert their profiles row (role always 'admin' — that's the system-access
+ * flag) scoped to the admin's own barangay -> upsert the matching
+ * barangay_officials roster row with the chosen job role (the profiles-sync
+ * trigger already creates a default 'staff' row, this upsert overrides it
+ * with what was actually picked) -> roll back the auth user if either insert
+ * fails, so we never leave an orphaned auth.users row.
  */
 export async function POST(request: Request) {
   const supabase = await createSupabaseServerClient();
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { email, full_name, role, mobile_number, home_address } = parsed.data;
+  const { email, full_name, official_role, mobile_number, home_address } = parsed.data;
 
   const serviceRoleClient = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -71,7 +75,7 @@ export async function POST(request: Request) {
     {
       id: invited.user.id,
       barangay_id: profile.barangay_id,
-      role,
+      role: 'admin',
       full_name,
       email,
       mobile_number: mobile_number || null,
@@ -83,6 +87,20 @@ export async function POST(request: Request) {
   if (profileError) {
     await serviceRoleClient.auth.admin.deleteUser(invited.user.id);
     return NextResponse.json({ error: profileError.message }, { status: 400 });
+  }
+
+  const { error: officialError } = await serviceRoleClient.from('barangay_officials').upsert(
+    {
+      profile_id: invited.user.id,
+      barangay_id: profile.barangay_id,
+      official_role,
+    },
+    { onConflict: 'profile_id' },
+  );
+
+  if (officialError) {
+    await serviceRoleClient.auth.admin.deleteUser(invited.user.id);
+    return NextResponse.json({ error: officialError.message }, { status: 400 });
   }
 
   return NextResponse.json({ id: invited.user.id });

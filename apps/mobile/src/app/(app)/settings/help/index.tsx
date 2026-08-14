@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/immutability */
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -18,7 +18,8 @@ import { ThemedText } from '@/components/themed-text';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
-import { useFaqArticles, FAQ_CATEGORY_META } from '@/hooks/use-faq-articles';
+import { useFaqArticles } from '@/hooks/use-faq-articles';
+import { FAQ_CATEGORY_META, type FaqCategory } from '@barangayan/shared';
 
 type CategoryFilter = 'all' | 'general' | 'services' | 'emergency' | 'health' | 'billing' | 'account';
 
@@ -138,7 +139,7 @@ export default function HelpCenterScreen() {
               </View>
             ) : (
               filtered.map((article, index) => {
-                const meta = FAQ_CATEGORY_META[article.category];
+                const meta = FAQ_CATEGORY_META[article.category as FaqCategory];
                 return (
                   <Animated.View key={article.id} entering={FadeIn.duration(300).delay(index * 40)}>
                     <Pressable onPress={() => handlePress(article.id)}>

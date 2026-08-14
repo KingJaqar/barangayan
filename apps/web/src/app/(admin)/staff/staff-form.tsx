@@ -1,6 +1,7 @@
 'use client';
 
-import { staffInviteSchema } from '@barangayan/shared';
+import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, staffInviteSchema } from '@barangayan/shared';
+import type { OfficialRole } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -14,7 +15,7 @@ export function StaffForm({ barangayId }: { barangayId: string }) {
   const toast = useToast();
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'admin' | 'staff'>('staff');
+  const [officialRole, setOfficialRole] = useState<OfficialRole>('staff');
   const [mobileNumber, setMobileNumber] = useState('');
   const [homeAddress, setHomeAddress] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export function StaffForm({ barangayId }: { barangayId: string }) {
     const result = staffInviteSchema.safeParse({
       email,
       full_name: fullName,
-      role,
+      official_role: officialRole,
       mobile_number: mobileNumber || undefined,
       home_address: homeAddress || undefined,
     });
@@ -54,7 +55,7 @@ export function StaffForm({ barangayId }: { barangayId: string }) {
 
       setEmail('');
       setFullName('');
-      setRole('staff');
+      setOfficialRole('staff');
       setMobileNumber('');
       setHomeAddress('');
       toast.showSuccess('Staff account invited successfully.');
@@ -94,13 +95,16 @@ export function StaffForm({ barangayId }: { barangayId: string }) {
       </label>
 
       <label className="text-sm">
-        <span className="mb-1 block font-medium">Role</span>
+        <span className="mb-1 block font-medium">Barangay Role</span>
         <select
           className={inputClass}
-          value={role}
-          onChange={(e) => setRole(e.target.value as 'admin' | 'staff')}>
-          <option value="staff">Staff</option>
-          <option value="admin">Admin</option>
+          value={officialRole}
+          onChange={(e) => setOfficialRole(e.target.value as OfficialRole)}>
+          {OFFICIAL_ROLES.map((r) => (
+            <option key={r} value={r}>
+              {OFFICIAL_ROLE_LABELS[r]}
+            </option>
+          ))}
         </select>
       </label>
 

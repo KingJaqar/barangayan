@@ -18,11 +18,13 @@ export * from './schemas/waste-management';
 export * from './schemas/household';
 export * from './schemas/staff';
 export * from './schemas/settings';
+export * from './schemas/admin-audit-log';
 
 export * from './constants/announcement-categories';
 export * from './constants/document-catalog-shape';
 export * from './constants/drive-types';
 export * from './constants/incident-categories';
+export * from './constants/official-roles';
 export * from './constants/priority-weights';
 export * from './constants/theme-colors';
 export * from './constants/waste-types';
