@@ -19,6 +19,8 @@ export * from './schemas/household';
 export * from './schemas/staff';
 export * from './schemas/settings';
 export * from './schemas/admin-audit-log';
+export * from './schemas/site-content';
+export * from './schemas/about-us';
 
 export * from './constants/announcement-categories';
 export * from './constants/document-catalog-shape';
@@ -27,8 +29,13 @@ export * from './constants/incident-categories';
 export * from './constants/official-roles';
 export * from './constants/priority-weights';
 export * from './constants/theme-colors';
+export * from './constants/theme-fonts';
 export * from './constants/waste-types';
 
 export * from './lib/supabase-client';
 export * from './lib/haversine';
+export * from './lib/point-in-polygon';
+export * from './lib/osrm';
 export * from './lib/format';
+export * from './lib/request-status';
+export * from './lib/service-tracking';

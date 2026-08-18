@@ -1,7 +1,7 @@
 import type { Polygon } from 'geojson';
 
 /**
- * Hand-written domain types shared by apps/mobile and apps/web.
+ * Hand-written domain types shared by apps/resident-android-mobile and apps/admin-web.
  *
  * Rule (AGENTS.md §0 — protects the configurable/multi-tenant design, the project's
  * primary novelty claim): never hardcode a barangay-specific value (a document's name,
@@ -47,9 +47,11 @@ export interface IncidentCategory {
 
 /**
  * One weighted rule in a barangay's vaccination/medicine priority scoring config
- * (Module 10 — Priority Queue with Weighted Eligibility Scoring). The proposal's example
- * weights (senior citizen +3, PWD +2, comorbidity +2, general public +0) are seed defaults,
- * not fixed values — an admin may redefine them per drive.
+ * (Module 10 — Priority Queue with Weighted Eligibility Scoring). See
+ * DEFAULT_VACCINATION_PRIORITY_WEIGHTS for the current values, which mirror what's
+ * hardcoded in the register_for_drive()/admin_register_for_drive() RPCs — there is no
+ * admin-configurable weights table yet, so these are not actually per-drive overridable
+ * today despite the shape suggesting it.
  */
 export interface PriorityWeightRule {
   key: string;

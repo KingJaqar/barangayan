@@ -1,14 +1,23 @@
-// Subscribed to `source.chargeable` in the PayMongo dashboard (Part G, Step 7). Verifies
-// the Paymongo-Signature header, marks the matching `payments` row paid, and lets the
-// sync_payments_to_service_request trigger (0007 migration) mirror that onto
-// service_requests.payment_status. Uses the service_role key — the only Edge Function in
-// this set that needs to, since there's no caller JWT on a webhook — so RLS never gates
-// this write; that's exactly why the signature check below isn't optional.
+// Receives PayMongo webhook events and settles the matching `payments` row. Uses the
+// service_role key — the only Edge Function in this set that needs to, since there's no
+// caller JWT on a webhook — so RLS never gates this write; that's exactly why the
+// signature check below isn't optional.
 //
-// PHASE BOUNDARY (see the plan's Part G2): settlement into the barangay's registered
-// bank account happens on PayMongo's own T+1/T+3 schedule, outside this app. Do NOT add
-// a disbursement/transfer call here for Phase 1. When Phase 2/3 is ready, the only change
-// needed is appending a disbursement API call right after the `paid_at` update below.
+// Events to register in the PayMongo dashboard for this endpoint:
+//   payment.paid     — QR Ph payment succeeded. Carries the real Payment id (pay_...),
+//                      which is the only id the Refunds API accepts.
+//   payment.failed   — payment attempt rejected.
+//   qrph.expired     — the QR lapsed unscanned (30-minute window).
+//   refund.updated   — refunds settle asynchronously; this confirms succeeded/failed.
+//
+// `source.chargeable` is deliberately NOT part of this set: it belongs to the Sources
+// API, which does not support QR Ph at all (see migration 0065). An earlier version of
+// this function only handled that event, so no QR Ph payment could ever have been marked
+// paid by webhook.
+//
+// PHASE BOUNDARY: settlement into the barangay's registered bank account happens on
+// PayMongo's own T+1/T+3 schedule, outside this app. Do NOT add a disbursement/transfer
+// call here for Phase 1.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const PAYMONGO_WEBHOOK_SECRET = Deno.env.get('PAYMONGO_WEBHOOK_SECRET')!;
@@ -38,6 +47,12 @@ async function verifySignature(payload: string, signatureHeader: string): Promis
   return expectedSignature === providedSignature;
 }
 
+const ack = () =>
+  new Response(JSON.stringify({ received: true }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
 Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
@@ -52,33 +67,110 @@ Deno.serve(async (req: Request) => {
 
   const event = JSON.parse(rawBody);
   const eventType = event?.data?.attributes?.type;
-
-  if (eventType !== 'source.chargeable') {
-    // Acknowledge and ignore — this function only subscribes to source.chargeable, but
-    // PayMongo may send others to the same endpoint depending on dashboard config.
-    return new Response(JSON.stringify({ received: true }), { status: 200 });
-  }
-
-  const sourceId = event.data.attributes.data.id;
-
+  const resource = event?.data?.attributes?.data;
+  const attrs = resource?.attributes ?? {};
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-  const { data: payment } = await supabase
-    .from('payments')
-    .select('id, service_request_id')
-    .eq('paymongo_source_id', sourceId)
-    .single();
+  /** Resolves our payments row from whichever PayMongo id this event carries. QR Ph
+   * events reference the PaymentIntent; older Sources-era rows are matched by source id
+   * so historical data still reconciles. */
+  async function findPayment(): Promise<{ id: string; status: string } | null> {
+    const intentId = attrs.payment_intent_id ?? resource?.payment_intent_id;
+    if (intentId) {
+      const { data } = await supabase
+        .from('payments')
+        .select('id, status')
+        .eq('paymongo_payment_intent_id', intentId)
+        .maybeSingle();
+      if (data) return data;
+    }
 
-  if (!payment) {
-    return new Response(JSON.stringify({ error: 'No matching payment for source' }), { status: 404 });
+    const sourceId = attrs.source?.id;
+    if (sourceId) {
+      const { data } = await supabase
+        .from('payments')
+        .select('id, status')
+        .eq('paymongo_source_id', sourceId)
+        .maybeSingle();
+      if (data) return data;
+    }
+
+    return null;
   }
 
-  await supabase
-    .from('payments')
-    .update({ status: 'paid', paid_at: new Date().toISOString() })
-    .eq('id', payment.id);
+  if (eventType === 'payment.paid') {
+    const payment = await findPayment();
+    if (!payment) return ack(); // Not one of ours — acknowledge so PayMongo stops retrying.
 
-  return new Response(JSON.stringify({ received: true }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+    await supabase
+      .from('payments')
+      .update({
+        status: 'paid',
+        paid_at: new Date().toISOString(),
+        // resource.id is the Payment id (pay_...) — the only id the Refunds API accepts.
+        paymongo_payment_id: resource?.id ?? null,
+      })
+      .eq('id', payment.id);
+
+    return ack();
+  }
+
+  if (eventType === 'payment.failed') {
+    const payment = await findPayment();
+    if (!payment) return ack();
+
+    // Never downgrade an already-settled row: a later failed attempt on the same intent
+    // must not undo a successful payment.
+    if (payment.status !== 'paid' && payment.status !== 'refunded') {
+      await supabase.from('payments').update({ status: 'failed' }).eq('id', payment.id);
+    }
+    return ack();
+  }
+
+  if (eventType === 'qrph.expired') {
+    const payment = await findPayment();
+    if (!payment) return ack();
+
+    if (payment.status === 'pending') {
+      await supabase.from('payments').update({ status: 'expired' }).eq('id', payment.id);
+    }
+    return ack();
+  }
+
+  if (eventType === 'refund.updated') {
+    const paymongoPaymentId = attrs.payment_id;
+    if (!paymongoPaymentId) return ack();
+
+    const { data: payment } = await supabase
+      .from('payments')
+      .select('id')
+      .eq('paymongo_payment_id', paymongoPaymentId)
+      .maybeSingle();
+
+    if (!payment) return ack();
+
+    // QRPH refunds report processing -> refunding -> succeeded/failed (migration 0065).
+    const refundStatus = attrs.status as string | undefined;
+
+    if (refundStatus === 'succeeded') {
+      await supabase
+        .from('payments')
+        .update({
+          status: 'refunded',
+          refund_status: 'refunded',
+          refunded_at: new Date().toISOString(),
+        })
+        .eq('id', payment.id);
+    } else if (refundStatus === 'failed') {
+      await supabase.from('payments').update({ refund_status: 'failed' }).eq('id', payment.id);
+    } else if (refundStatus === 'processing' || refundStatus === 'refunding') {
+      await supabase.from('payments').update({ refund_status: refundStatus }).eq('id', payment.id);
+    }
+
+    return ack();
+  }
+
+  // Acknowledge and ignore any other event type — PayMongo may send others to the same
+  // endpoint depending on dashboard config.
+  return ack();
 });

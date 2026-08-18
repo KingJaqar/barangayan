@@ -38,6 +38,15 @@ export const barangaySettingsSchema = z.object({
   adminAuditLogPreferences: adminAuditLogPreferencesSchema.optional().default(DEFAULT_AUDIT_PREFERENCES),
 });
 
+// Global push toggle only for this pass — shaped so per-category toggles (announcements,
+// medical drives, incidents, service requests) can be added as optional fields later
+// without a breaking schema change.
+export const notificationPreferencesSchema = z.object({
+  pushEnabled: z.boolean(),
+});
+
+export type NotificationPreferences = z.infer<typeof notificationPreferencesSchema>;
+
 export type ContactSettings = z.infer<typeof contactSettingsSchema>;
 export type DayHours = z.infer<typeof dayHoursSchema>;
 export type OperatingHours = z.infer<typeof operatingHoursSchema>;

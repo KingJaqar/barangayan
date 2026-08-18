@@ -16,9 +16,9 @@ export interface SupabaseClientConfig {
 }
 
 /**
- * Platform-agnostic Supabase client factory used directly by apps/mobile and by
- * apps/web's client components. apps/web additionally has its own server-side helpers
- * (via @supabase/ssr, under apps/web/src/lib) for Server Components/Route Handlers —
+ * Platform-agnostic Supabase client factory used directly by apps/resident-android-mobile and by
+ * apps/admin-web's client components. apps/admin-web additionally has its own server-side helpers
+ * (via @supabase/ssr, under apps/admin-web/src/lib) for Server Components/Route Handlers —
  * those are NOT built on this factory, since SSR cookie handling is Next.js-specific.
  *
  * Always constructed with the public `anon` key only (AGENTS.md §5 — Secrets & Payment

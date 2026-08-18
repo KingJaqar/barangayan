@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Admin-side create/edit form for a document_types row (apps/web's Documents page).
+ * Admin-side create/edit form for a document_types row (apps/admin-web's Documents page).
  * feeCentavos stays an integer here — the form UI converts a peso input to centavos
  * before validating, same direction as formatCentavosAsPHP's inverse.
  */

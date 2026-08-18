@@ -30,6 +30,9 @@ export const adminEntityTypeSchema = z.enum([
   'payment',
   'staff',
   'system',
+  'site_content',
+  'about_us',
+  'developer_profile',
 ]);
 export type AdminEntityType = z.infer<typeof adminEntityTypeSchema>;
 
@@ -103,6 +106,9 @@ const ENTITY_TO_CATEGORY: Record<AdminEntityType, keyof AdminAuditLogCategory> =
   payment: 'service_requests',
   staff: 'staff',
   system: 'system',
+  site_content: 'system',
+  about_us: 'system',
+  developer_profile: 'system',
 };
 
 export function entityTypeToCategory(entityType: AdminEntityType): keyof AdminAuditLogCategory {

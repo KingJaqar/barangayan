@@ -21,6 +21,6 @@ jobs:
       - name: Build web
         run: npm run build --workspace=@barangayan/web
       - name: Typecheck mobile
-        run: npx tsc --noEmit --project apps/mobile/tsconfig.json
+        run: npx tsc --noEmit --project apps/resident-android-mobile/tsconfig.json
       - name: Test shared
         run: npm test --workspace=@barangayan/shared --if-present

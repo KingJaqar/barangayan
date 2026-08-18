@@ -12,47 +12,131 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.15"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
-      admin_audit_log: {
+      about_us: {
         Row: {
-          id: string
-          barangay_id: string | null
-          admin_id: string | null
-          action: string
-          entity_type: string
-          entity_id: string | null
-          entity_label: string | null
-          changes: { before: Record<string, unknown>; after: Record<string, unknown> } | null
-          metadata: Record<string, unknown> | null
-          is_read: boolean
+          address: string | null
+          barangay_id: string
+          contact_email: string | null
+          contact_phone: string | null
           created_at: string
+          deleted_at: string | null
+          history: string
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          mission: string
+          sort_order: number
+          updated_at: string
+          vision: string
         }
         Insert: {
-          id?: string
-          barangay_id?: string | null
-          admin_id?: string | null
-          action: string
-          entity_type: string
-          entity_id?: string | null
-          entity_label?: string | null
-          changes?: { before: Record<string, unknown>; after: Record<string, unknown> } | null
-          metadata?: Record<string, unknown> | null
-          is_read?: boolean
+          address?: string | null
+          barangay_id: string
+          contact_email?: string | null
+          contact_phone?: string | null
           created_at?: string
+          deleted_at?: string | null
+          history?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          mission?: string
+          sort_order?: number
+          updated_at?: string
+          vision?: string
         }
         Update: {
+          address?: string | null
+          barangay_id?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          history?: string
           id?: string
-          barangay_id?: string | null
+          is_active?: boolean
+          logo_url?: string | null
+          mission?: string
+          sort_order?: number
+          updated_at?: string
+          vision?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "about_us_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_id: string | null
+          barangay_id: string | null
+          changes: Json | null
+          created_at: string
+          entity_id: string | null
+          entity_label: string | null
+          entity_type: string
+          id: string
+          is_read: boolean
+          metadata: Json | null
+        }
+        Insert: {
+          action: string
           admin_id?: string | null
-          action?: string
-          entity_type?: string
+          barangay_id?: string | null
+          changes?: Json | null
+          created_at?: string
           entity_id?: string | null
           entity_label?: string | null
-          changes?: { before: Record<string, unknown>; after: Record<string, unknown> } | null
-          metadata?: Record<string, unknown> | null
+          entity_type: string
+          id?: string
           is_read?: boolean
+          metadata?: Json | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          barangay_id?: string | null
+          changes?: Json | null
           created_at?: string
+          entity_id?: string | null
+          entity_label?: string | null
+          entity_type?: string
+          id?: string
+          is_read?: boolean
+          metadata?: Json | null
         }
         Relationships: [
           {
@@ -60,6 +144,39 @@ export type Database = {
             columns: ["barangay_id"]
             isOneToOne: false
             referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      announcement_reads: {
+        Row: {
+          announcement_id: string
+          read_at: string
+          resident_id: string
+        }
+        Insert: {
+          announcement_id: string
+          read_at?: string
+          resident_id: string
+        }
+        Update: {
+          announcement_id?: string
+          read_at?: string
+          resident_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcement_reads_announcement_id_fkey"
+            columns: ["announcement_id"]
+            isOneToOne: false
+            referencedRelation: "announcements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "announcement_reads_resident_id_fkey"
+            columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -179,6 +296,7 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          shipping_fee_centavos: number
           updated_at: string
         }
         Insert: {
@@ -187,6 +305,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
+          shipping_fee_centavos?: number
           updated_at?: string
         }
         Update: {
@@ -195,9 +314,67 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          shipping_fee_centavos?: number
           updated_at?: string
         }
         Relationships: []
+      }
+      developer_profiles: {
+        Row: {
+          about_us_id: string
+          barangay_id: string
+          bio: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          name: string
+          photo_url: string | null
+          role: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          about_us_id: string
+          barangay_id: string
+          bio?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          photo_url?: string | null
+          role?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          about_us_id?: string
+          barangay_id?: string
+          bio?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          photo_url?: string | null
+          role?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "developer_profiles_about_us_id_fkey"
+            columns: ["about_us_id"]
+            isOneToOne: false
+            referencedRelation: "about_us"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "developer_profiles_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       document_types: {
         Row: {
@@ -766,9 +943,11 @@ export type Database = {
           location: Json
           photo_urls: string[]
           reporter_id: string | null
+          resolved_read_at: string | null
           status: string
           title: string
           updated_at: string
+          zone_id: string | null
         }
         Insert: {
           barangay_id: string
@@ -781,9 +960,11 @@ export type Database = {
           location: Json
           photo_urls?: string[]
           reporter_id?: string | null
+          resolved_read_at?: string | null
           status?: string
           title: string
           updated_at?: string
+          zone_id?: string | null
         }
         Update: {
           barangay_id?: string
@@ -796,9 +977,11 @@ export type Database = {
           location?: Json
           photo_urls?: string[]
           reporter_id?: string | null
+          resolved_read_at?: string | null
           status?: string
           title?: string
           updated_at?: string
+          zone_id?: string | null
         }
         Relationships: [
           {
@@ -820,6 +1003,13 @@ export type Database = {
             columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incidents_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "waste_zones"
             referencedColumns: ["id"]
           },
         ]
@@ -899,11 +1089,23 @@ export type Database = {
           collected_by: string | null
           created_at: string
           deleted_at: string | null
+          document_fee_centavos: number | null
+          expires_at: string | null
           id: string
           method: string
           paid_at: string | null
+          paymongo_payment_id: string | null
+          paymongo_payment_intent_id: string | null
           paymongo_source_id: string | null
+          qr_image_url: string | null
+          refund_amount_centavos: number | null
+          refund_reason: string | null
+          refund_status: string
+          refund_transfer_link: string | null
+          refunded_at: string | null
+          refunded_by: string | null
           service_request_id: string
+          shipping_fee_centavos: number | null
           status: string
           updated_at: string
         }
@@ -913,11 +1115,23 @@ export type Database = {
           collected_by?: string | null
           created_at?: string
           deleted_at?: string | null
+          document_fee_centavos?: number | null
+          expires_at?: string | null
           id?: string
           method: string
           paid_at?: string | null
+          paymongo_payment_id?: string | null
+          paymongo_payment_intent_id?: string | null
           paymongo_source_id?: string | null
+          qr_image_url?: string | null
+          refund_amount_centavos?: number | null
+          refund_reason?: string | null
+          refund_status?: string
+          refund_transfer_link?: string | null
+          refunded_at?: string | null
+          refunded_by?: string | null
           service_request_id: string
+          shipping_fee_centavos?: number | null
           status?: string
           updated_at?: string
         }
@@ -927,11 +1141,23 @@ export type Database = {
           collected_by?: string | null
           created_at?: string
           deleted_at?: string | null
+          document_fee_centavos?: number | null
+          expires_at?: string | null
           id?: string
           method?: string
           paid_at?: string | null
+          paymongo_payment_id?: string | null
+          paymongo_payment_intent_id?: string | null
           paymongo_source_id?: string | null
+          qr_image_url?: string | null
+          refund_amount_centavos?: number | null
+          refund_reason?: string | null
+          refund_status?: string
+          refund_transfer_link?: string | null
+          refunded_at?: string | null
+          refunded_by?: string | null
           service_request_id?: string
+          shipping_fee_centavos?: number | null
           status?: string
           updated_at?: string
         }
@@ -946,6 +1172,13 @@ export type Database = {
           {
             foreignKeyName: "payments_collected_by_fkey"
             columns: ["collected_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_refunded_by_fkey"
+            columns: ["refunded_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -966,11 +1199,13 @@ export type Database = {
           barangay_id: string
           birth_date: string | null
           created_at: string
+          custom_accent_colors: string[]
           deleted_at: string | null
           email: string | null
           email_verification_requested_at: string | null
           email_verification_status: string
           email_verified_at: string | null
+          font_preference: string
           full_name: string
           home_address: string | null
           household_members: Json
@@ -978,7 +1213,10 @@ export type Database = {
           id_photo_urls: string[]
           id_type: string | null
           id_verification_status: string | null
+          location_verified: boolean | null
           mobile_number: string | null
+          push_notifications_enabled: boolean
+          registration_location: Json | null
           role: string
           theme_preference: string
           updated_at: string
@@ -989,11 +1227,13 @@ export type Database = {
           barangay_id: string
           birth_date?: string | null
           created_at?: string
+          custom_accent_colors?: string[]
           deleted_at?: string | null
           email?: string | null
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
+          font_preference?: string
           full_name: string
           home_address?: string | null
           household_members?: Json
@@ -1001,7 +1241,10 @@ export type Database = {
           id_photo_urls?: string[]
           id_type?: string | null
           id_verification_status?: string | null
+          location_verified?: boolean | null
           mobile_number?: string | null
+          push_notifications_enabled?: boolean
+          registration_location?: Json | null
           role?: string
           theme_preference?: string
           updated_at?: string
@@ -1012,11 +1255,13 @@ export type Database = {
           barangay_id?: string
           birth_date?: string | null
           created_at?: string
+          custom_accent_colors?: string[]
           deleted_at?: string | null
           email?: string | null
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
+          font_preference?: string
           full_name?: string
           home_address?: string | null
           household_members?: Json
@@ -1024,7 +1269,10 @@ export type Database = {
           id_photo_urls?: string[]
           id_type?: string | null
           id_verification_status?: string | null
+          location_verified?: boolean | null
           mobile_number?: string | null
+          push_notifications_enabled?: boolean
+          registration_location?: Json | null
           role?: string
           theme_preference?: string
           updated_at?: string
@@ -1038,6 +1286,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      push_tokens: {
+        Row: {
+          created_at: string
+          device_type: string
+          expo_push_token: string
+          id: string
+          last_used_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_type: string
+          expo_push_token: string
+          id?: string
+          last_used_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_type?: string
+          expo_push_token?: string
+          id?: string
+          last_used_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       service_requests: {
         Row: {
@@ -1108,6 +1383,53 @@ export type Database = {
             columns: ["resident_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_content: {
+        Row: {
+          barangay_id: string
+          body: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_active: boolean
+          section: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          barangay_id: string
+          body?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          section: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          barangay_id?: string
+          body?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_active?: boolean
+          section?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_content_barangay_id_fkey"
+            columns: ["barangay_id"]
+            isOneToOne: false
+            referencedRelation: "barangays"
             referencedColumns: ["id"]
           },
         ]
@@ -1185,6 +1507,8 @@ export type Database = {
           is_active: boolean
           name: string
           sort_order: number
+          trash_score: number
+          trash_score_updated_at: string | null
           updated_at: string
         }
         Insert: {
@@ -1196,6 +1520,8 @@ export type Database = {
           is_active?: boolean
           name: string
           sort_order?: number
+          trash_score?: number
+          trash_score_updated_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -1207,6 +1533,8 @@ export type Database = {
           is_active?: boolean
           name?: string
           sort_order?: number
+          trash_score?: number
+          trash_score_updated_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -1251,6 +1579,10 @@ export type Database = {
         Args: { request_id: string }
         Returns: undefined
       }
+      cancel_own_service_request: {
+        Args: { p_note: string | null; p_request_id: string }
+        Returns: undefined
+      }
       cancel_service_request: {
         Args: { p_note: string; p_request_id: string }
         Returns: undefined
@@ -1259,11 +1591,26 @@ export type Database = {
         Args: { p_request_id: string }
         Returns: undefined
       }
+      admin_register_for_drive: {
+        Args: {
+          p_age: number
+          p_comorbidities: string[]
+          p_drive_id: string
+          p_is_pwd: boolean
+          p_prior_dose_date?: string
+          p_target_user_id: string
+        }
+        Returns: Json
+      }
       confirm_incident: { Args: { p_incident_id: string }; Returns: boolean }
       current_barangay_id: { Args: never; Returns: string }
       current_role: { Args: never; Returns: string }
       mark_request_out_for_delivery: {
         Args: { p_request_id: string }
+        Returns: undefined
+      }
+      recompute_waste_zone_scores: {
+        Args: never
         Returns: undefined
       }
       register_for_drive: {
@@ -1276,6 +1623,22 @@ export type Database = {
         }
         Returns: Json
       }
+      save_about_us_with_developers: {
+        Args: {
+          p_address: string
+          p_barangay_id: string
+          p_contact_email: string
+          p_contact_phone: string
+          p_developers: Json
+          p_history: string
+          p_is_active?: boolean
+          p_logo_url: string
+          p_mission: string
+          p_sort_order?: number
+          p_vision: string
+        }
+        Returns: string
+      }
       set_service_request_payment_method: {
         Args: { p_method: string; p_request_id: string }
         Returns: undefined
@@ -1286,6 +1649,10 @@ export type Database = {
       }
       update_incident_status: {
         Args: { p_incident_id: string; p_status: string }
+        Returns: undefined
+      }
+      upsert_push_token: {
+        Args: { p_device_type: string; p_expo_push_token: string }
         Returns: undefined
       }
       withdraw_incident: { Args: { p_incident_id: string }; Returns: undefined }
@@ -1433,6 +1800,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       drive_registration_status: [

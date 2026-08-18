@@ -1,17 +1,20 @@
 import type { PriorityWeightRule } from '../types/domain';
 
 /**
- * Seed defaults only — an admin may redefine these per drive/barangay via the config UI.
- * Never branch runtime logic on these specific values; always read the barangay's actual
- * configured rules from the database.
- *
- * Source: proposal's own example weighting (page 11), Module 10 — Priority Queue with
- * Weighted Eligibility Scoring.
+ * Mirrors the weights hardcoded in the `register_for_drive()` / `admin_register_for_drive()`
+ * Postgres RPCs (supabase/migrations/0035_medical_drives.sql, 0072_admin_register_for_drive.sql)
+ * — the RPCs are the actual source of truth for scoring, since there is no admin-configurable
+ * weights table yet (see the audit report's ticket #16: "reconcile with priority-weights.ts").
+ * There is currently no config UI that reads or writes these values; this constant exists so
+ * client code that wants to *display* the scoring rubric doesn't have to duplicate the numbers.
+ * If the RPCs' weights ever change, update this file in the same commit.
  */
 export const DEFAULT_VACCINATION_PRIORITY_WEIGHTS: PriorityWeightRule[] = [
-  { key: 'senior_citizen', label: 'Senior Citizen', points: 3 },
-  { key: 'pwd', label: 'PWD', points: 2 },
-  { key: 'comorbidity', label: 'Comorbidity', points: 2 },
+  { key: 'pwd', label: 'PWD', points: 30 },
+  { key: 'senior_citizen', label: 'Senior Citizen (60+)', points: 20 },
+  { key: 'infant_toddler', label: 'Infant/Toddler (under 5)', points: 15 },
+  { key: 'prior_dose_on_file', label: 'Prior Dose on File', points: 10 },
+  { key: 'comorbidity', label: 'Comorbidity (each, capped at 20 total)', points: 5 },
   { key: 'general_public', label: 'General Public', points: 0 },
 ];
 

@@ -1,0 +1,212 @@
+import { Ionicons } from '@expo/vector-icons';
+import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Card } from '@/components/card';
+import { Divider } from '@/components/divider';
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { Spacing, Fonts } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+
+// Reached only from the QR Ph flow once usePaymongoSource observes status === 'paid'
+// (payment/qrph/[requestId].tsx's redirect). COD never lands here — it has its own
+// confirmation screen (payment/cod/[requestId].tsx) since there's nothing to "receive"
+// until pickup.
+export default function PaymentSuccessScreen() {
+  const { requestId, refNumber, amount, documentFee, shippingFee, method, sourceId } = useLocalSearchParams<{
+    requestId: string;
+    refNumber: string;
+    amount: string;
+    documentFee?: string;
+    shippingFee?: string;
+    method: string;
+    sourceId?: string;
+  }>();
+  const router = useRouter();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const [downloadNotice, setDownloadNotice] = useState(false);
+
+  const amountCentavos = Number(amount ?? 0);
+  const paidAt = new Date().toISOString();
+
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+              Payment Successful
+            </ThemedText>
+          </View>
+        </View>
+
+        <ScrollView contentContainerStyle={styles.content}>
+        <View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }]}>
+          <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
+            <Ionicons name="checkmark" size={36} color={theme.onPrimary} />
+          </View>
+        </View>
+
+        <ThemedText type="title" style={styles.title}>
+          Payment Successful
+        </ThemedText>
+        <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
+          {formatCentavosAsPHP(amountCentavos)}
+        </ThemedText>
+
+        <Card style={styles.detailsCard}>
+          <ThemedText type="smallBold" style={styles.detailsHeader}>
+            Transaction Details
+          </ThemedText>
+          <Divider />
+          <DetailRow label="Ref Number" value={refNumber ?? '—'} />
+          <Divider />
+          <DetailRow label="Date/Time" value={formatDateTime(paidAt)} />
+          <Divider />
+          <DetailRow label="Method" value={method ?? 'QR Ph'} />
+          {documentFee ? (
+            <>
+              <Divider />
+              <DetailRow label="Document Fee" value={formatCentavosAsPHP(Number(documentFee))} />
+            </>
+          ) : null}
+          {shippingFee ? (
+            <>
+              <Divider />
+              <DetailRow label="Shipping Fee" value={formatCentavosAsPHP(Number(shippingFee))} />
+            </>
+          ) : null}
+          {sourceId ? (
+            <>
+              <Divider />
+              <DetailRow label="Transaction Ref" value={sourceId} />
+            </>
+          ) : null}
+        </Card>
+
+        {downloadNotice ? (
+          <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
+            Receipt download is coming soon.
+          </ThemedText>
+        ) : null}
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <PrimaryButton
+          label="Track My Request →"
+          onPress={() => router.replace(`/services/requests/${requestId}`)}
+        />
+        <PrimaryButton
+          label="Download Receipt ↓"
+          variant="secondary"
+          onPress={() => setDownloadNotice(true)}
+        />
+        <ThemedText
+          type="link"
+          style={styles.returnLink}
+          onPress={() => router.replace('/home')}>
+          Return to Home
+        </ThemedText>
+      </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.detailRow}>
+      <ThemedText type="small" themeColor="textSecondary">
+        {label}
+      </ThemedText>
+      <ThemedText type="smallBold">{value}</ThemedText>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+  content: {
+    padding: Spacing.four,
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
+  checkOuter: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: Spacing.four,
+  },
+  checkInner: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+  },
+  amount: {
+    fontSize: 24,
+  },
+  detailsCard: {
+    width: '100%',
+    marginTop: Spacing.three,
+  },
+  detailsHeader: {
+    padding: Spacing.three,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: Spacing.three,
+  },
+  centerText: {
+    textAlign: 'center',
+  },
+  footer: {
+    padding: Spacing.four,
+    gap: Spacing.two,
+  },
+  returnLink: {
+    textAlign: 'center',
+    marginTop: Spacing.one,
+  },
+});
