@@ -2,7 +2,6 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { DocumentTypeCatalog } from './document-type-catalog';
 import { DocumentTypeForm } from './document-type-form';
-import { ShippingFeeCard } from './shipping-fee-card';
 
 // Admin CRUD for document_types — previously "no client insert/update/delete policy"
 // per the 0002 migration's comment; this is that deferred admin UI, now unlocked by the
@@ -27,12 +26,8 @@ export default async function DocumentsPage() {
         <p className="text-sm text-zinc-500">Manage the barangay&apos;s document request catalog and fees.</p>
       </div>
 
-      {/* Section 2: shipping fee + add item form */}
+      {/* Section 2: add item form */}
       <div className="mb-6 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        <ShippingFeeCard barangayId={profile?.barangay_id ?? ''} />
-
-        <div className="my-4 border-t border-black/5 dark:border-white/5" />
-
         <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Add Document Type</h2>
         <DocumentTypeForm barangayId={profile?.barangay_id ?? ''} />
       </div>

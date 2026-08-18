@@ -1,4 +1,4 @@
-// Admin-triggered full-amount refund of a paid QR Ph transaction, via PayMongo's
+// Admin-triggered full-amount refund of a paid QR PH transaction, via PayMongo's
 // Refunds API. Part of the "instant payment + refunds" plan: since create-payment-source
 // no longer gates on admin review (see that function's comment), a resident can pay
 // before a request is rejected/cancelled — this is how staff undo that.
@@ -78,7 +78,7 @@ Deno.serve(async (req: Request) => {
 
   if (payment.method !== 'qrph') {
     return new Response(
-      JSON.stringify({ error: 'Only QR Ph payments can be refunded through PayMongo' }),
+      JSON.stringify({ error: 'Only QR PH payments can be refunded through PayMongo' }),
       { status: 422 },
     );
   }

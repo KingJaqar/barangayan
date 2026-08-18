@@ -1,4 +1,4 @@
-// Lets a resident cancel their own pending QR Ph payment attempt — e.g. they opened
+// Lets a resident cancel their own pending QR PH payment attempt — e.g. they opened
 // the QR screen but changed their mind, or want to retry with a fresh code. Only
 // 'pending' payments can be cancelled; anything already paid/expired/failed/cancelled
 // is left alone.

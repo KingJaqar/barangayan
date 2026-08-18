@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP } from '@barangayan/shared';
+import { useEffect } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
@@ -8,11 +10,14 @@ import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 /**
- * Centered confirmation shown the instant a QR Ph payment is detected as paid (whether
+ * Centered confirmation shown the instant a QR PH payment is detected as paid (whether
  * the resident is still looking at the QR screen or just switched back to the app from
  * their bank/e-wallet app). Tapping OK is what actually navigates to the success screen
  * — see payment/qrph/[requestId].tsx — rather than auto-navigating the moment `status`
  * flips to 'paid', so the resident gets a clear, deliberate confirmation step.
+ *
+ * The card springs/fades in on mount (Reanimated) purely for polish — dismissal stays
+ * manual via the "OK" button, which is what actually triggers the navigation.
  */
 export function PaymentSuccessModal({
   visible,
@@ -24,11 +29,28 @@ export function PaymentSuccessModal({
   onConfirm: () => void;
 }) {
   const theme = useTheme();
+  const scale = useSharedValue(0.85);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      scale.value = withSpring(1, { damping: 14, stiffness: 180 });
+      opacity.value = withTiming(1, { duration: 180 });
+    } else {
+      scale.value = 0.85;
+      opacity.value = 0;
+    }
+  }, [visible, scale, opacity]);
+
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.backdrop}>
-        <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
+        <Animated.View style={[styles.card, { backgroundColor: theme.backgroundElement }, cardAnimatedStyle]}>
           <View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }]}>
             <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
               <Ionicons name="checkmark" size={32} color={theme.onPrimary} />
@@ -41,12 +63,12 @@ export function PaymentSuccessModal({
             {formatCentavosAsPHP(amountCentavos)}
           </ThemedText>
           <ThemedText type="small" themeColor="textSecondary" style={styles.caption}>
-            We've received your payment via QR Ph.
+            We've received your payment via QR PH.
           </ThemedText>
           <View style={styles.buttonRow}>
             <PrimaryButton label="OK" onPress={onConfirm} />
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -67,6 +89,11 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     alignItems: 'center',
     gap: Spacing.one,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 5,
   },
   checkOuter: {
     width: 72,

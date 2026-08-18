@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { cancelRequestSchema, paymentMethodSchema, paymongoWebhookEventSchema } from './payment';
 
 describe('paymentMethodSchema', () => {
-  it('accepts cash', () => {
-    expect(paymentMethodSchema.safeParse('cash').success).toBe(true);
+  it('accepts pickup', () => {
+    expect(paymentMethodSchema.safeParse('pickup').success).toBe(true);
   });
 
   it('accepts qrph', () => {

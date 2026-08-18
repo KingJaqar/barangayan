@@ -1,6 +1,6 @@
 'use client';
 
-import { formatDate, type Database } from '@barangayan/shared';
+import { EMPLOYMENT_STATUSES, formatDate, SEXES, type Database, type EmploymentStatus, type Sex } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
@@ -580,14 +580,42 @@ const ID_STATUS_OPTIONS: { label: string; value: string }[] = [
   { label: 'Verified ID', value: 'verified' },
 ];
 
+// Sex / Employment Status labels (mirrors resident/profile/profile-form.tsx and the
+// mobile Profile screen — kept local to each app rather than shared, same convention
+// those two already follow).
+const SEX_LABELS: Record<Sex, string> = { male: 'Male', female: 'Female' };
+
+const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
+  employed: 'Employed',
+  unemployed: 'Unemployed',
+  student: 'Student',
+  self_employed: 'Self-Employed',
+  retired: 'Retired',
+};
+
+const SEX_OPTIONS = [{ label: '—', value: '' }, ...SEXES.map((s) => ({ label: SEX_LABELS[s], value: s }))];
+
+const EMPLOYMENT_STATUS_OPTIONS = [
+  { label: '—', value: '' },
+  ...EMPLOYMENT_STATUSES.map((s) => ({ label: EMPLOYMENT_STATUS_LABELS[s], value: s })),
+];
+
 // Drives the <colgroup> and the per-column resize handles below. Order must match the
 // <th>/<td> order in the table markup.
 const COLUMN_HEADERS = [
-  'Name',
+  'First Name',
+  'Last Name',
+  'Middle Name',
+  'Suffix',
+  'Sex',
   'Email',
   'Mobile',
-  'Address',
+  'House No.',
+  'Street',
+  'City',
   'Birthday',
+  'Employment Status',
+  'Occupation',
   'ID Type',
   'ID Status',
   'Household',
@@ -911,7 +939,7 @@ export function ResidentDirectory({
             <tbody>
               {sortedResidents.length === 0 && (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-zinc-400">
+                  <td colSpan={COLUMN_HEADERS.length} className="px-4 py-8 text-center text-zinc-400">
                     No residents found.
                   </td>
                 </tr>
@@ -922,7 +950,7 @@ export function ResidentDirectory({
                   className={`cursor-pointer border-b-2 ${BORDER_CLS} bg-white transition last:border-b-0 hover:bg-zinc-50 dark:bg-zinc-900 dark:hover:bg-zinc-800/50`}
                   onClick={() => setSelected(r)}
                 >
-                  {/* Name — inline editable, with small avatar thumbnail */}
+                  {/* First Name — inline editable, with small avatar thumbnail */}
                   <td className={`overflow-hidden px-4 py-3 font-medium ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-2.5">
                       {r.avatar_url ? (
@@ -941,8 +969,39 @@ export function ResidentDirectory({
                           {r.full_name.charAt(0).toUpperCase()}
                         </div>
                       )}
-                      <EditableCell value={r.full_name} onSave={(val) => updateField(r.id, { full_name: val })} />
+                      <EditableCell value={r.first_name ?? ''} onSave={(val) => updateField(r.id, { first_name: val || null })} />
                     </div>
+                  </td>
+
+                  {/* Last Name */}
+                  <td className={`overflow-hidden px-4 py-3 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
+                    <EditableCell value={r.last_name ?? ''} onSave={(val) => updateField(r.id, { last_name: val || null })} />
+                  </td>
+
+                  {/* Middle Name */}
+                  <td
+                    className={`overflow-hidden px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditableCell value={r.middle_name ?? ''} onSave={(val) => updateField(r.id, { middle_name: val || null })} />
+                  </td>
+
+                  {/* Suffix */}
+                  <td
+                    className={`overflow-hidden px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditableCell value={r.suffix ?? ''} onSave={(val) => updateField(r.id, { suffix: val || null })} />
+                  </td>
+
+                  {/* Sex */}
+                  <td className={`overflow-hidden px-4 py-3 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
+                    <EditableSelectCell
+                      value={r.sex ?? ''}
+                      options={SEX_OPTIONS}
+                      onSave={(val) => updateField(r.id, { sex: val || null })}
+                      renderDisplay={(val) => (val ? (SEX_LABELS[val as Sex] ?? val) : <span className="text-zinc-400">—</span>)}
+                    />
                   </td>
 
                   {/* Email */}
@@ -961,12 +1020,28 @@ export function ResidentDirectory({
                     <EditableCell value={r.mobile_number ?? ''} onSave={(val) => updateField(r.id, { mobile_number: val || null })} />
                   </td>
 
-                  {/* Address */}
+                  {/* House No. */}
                   <td
                     className={`truncate px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <EditableCell value={r.home_address ?? ''} onSave={(val) => updateField(r.id, { home_address: val || null })} />
+                    <EditableCell value={r.house_no ?? ''} onSave={(val) => updateField(r.id, { house_no: val || null })} />
+                  </td>
+
+                  {/* Street */}
+                  <td
+                    className={`truncate px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditableCell value={r.street ?? ''} onSave={(val) => updateField(r.id, { street: val || null })} />
+                  </td>
+
+                  {/* City */}
+                  <td
+                    className={`truncate px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditableCell value={r.city ?? ''} onSave={(val) => updateField(r.id, { city: val || null })} />
                   </td>
 
                   {/* Birthday */}
@@ -980,6 +1055,26 @@ export function ResidentDirectory({
                       display={r.birth_date ? fmtDate(r.birth_date) : undefined}
                       placeholder="YYYY-MM-DD"
                     />
+                  </td>
+
+                  {/* Employment Status */}
+                  <td className={`overflow-hidden px-4 py-3 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
+                    <EditableSelectCell
+                      value={r.employment_status ?? ''}
+                      options={EMPLOYMENT_STATUS_OPTIONS}
+                      onSave={(val) => updateField(r.id, { employment_status: val || null })}
+                      renderDisplay={(val) =>
+                        val ? (EMPLOYMENT_STATUS_LABELS[val as EmploymentStatus] ?? val) : <span className="text-zinc-400">—</span>
+                      }
+                    />
+                  </td>
+
+                  {/* Occupation */}
+                  <td
+                    className={`overflow-hidden px-4 py-3 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <EditableCell value={r.occupation ?? ''} onSave={(val) => updateField(r.id, { occupation: val || null })} />
                   </td>
 
                   {/* ID Type */}

@@ -11,6 +11,8 @@ import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
 import { ActionSuccessModal } from '@/components/services/action-success-modal';
+import { AnimatedAppear } from '@/components/services/animated-appear';
+import { SkeletonBlock } from '@/components/services/skeleton';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
@@ -19,7 +21,7 @@ import { useCountdown } from '@/hooks/use-countdown';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
-/** "Continue Payment 12:34" — mm:ss is enough for a button label; the QR Ph window is a
+/** "Continue Payment 12:34" — mm:ss is enough for a button label; the QR PH window is a
  * fixed 30 minutes, so it never needs the hours digit CountdownTimer's own pill shows. */
 function formatButtonCountdown(ms: number): string {
   const totalSeconds = Math.max(Math.floor(ms / 1000), 0);
@@ -30,7 +32,6 @@ function formatButtonCountdown(ms: number): string {
 
 type ServiceRequest = Tables<'service_requests'> & {
   document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
-  barangays: Pick<Tables<'barangays'>, 'shipping_fee_centavos'> | null;
 };
 
 interface StatusHistoryEntry {
@@ -39,17 +40,17 @@ interface StatusHistoryEntry {
   note: string | null;
 }
 
-const STEP_ORDER = ['submitted', 'in_progress', 'out_for_delivery', 'completed'];
+const STEP_ORDER = ['submitted', 'in_progress', 'ready_for_pickup', 'completed'];
 const STEP_LABEL: Record<string, string> = {
   submitted: 'Request Submitted',
   in_progress: 'Processing',
-  out_for_delivery: 'Out for Delivery',
-  completed: 'Completed/Delivered',
+  ready_for_pickup: 'Ready for Pickup',
+  completed: 'Completed',
 };
 const STEP_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
   submitted: 'checkmark',
   in_progress: 'sync-outline',
-  out_for_delivery: 'car-outline',
+  ready_for_pickup: 'storefront-outline',
   completed: 'checkmark-circle-outline',
 };
 
@@ -58,13 +59,27 @@ const STEP_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
 // Settings > App Theme accent (same reasoning as status-badge.tsx's STATUS_GREEN).
 const PROGRESS_AMBER = '#F59E0B';
 
+/** Shimmer stand-in for the loading state, shaped like the progress/payment/timeline
+ * cards below it. Rendered only while `request === undefined` — same early-return slot
+ * `PlaceholderPanel` used to occupy. */
+function RequestTrackingSkeleton() {
+  return (
+    <View style={styles.skeletonContainer}>
+      <SkeletonBlock width="40%" height={16} />
+      <SkeletonBlock width="100%" height={72} borderRadius={Spacing.three} style={styles.skeletonGap} />
+      <SkeletonBlock width="100%" height={110} borderRadius={Spacing.three} style={styles.skeletonGap} />
+      <SkeletonBlock width="100%" height={220} borderRadius={Spacing.three} style={styles.skeletonGap} />
+    </View>
+  );
+}
+
 export default function RequestTrackingScreen() {
   const { requestId } = useLocalSearchParams<{ requestId: string }>();
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [request, setRequest] = useState<ServiceRequest | null | undefined>(undefined);
-  // The most recent pending QR Ph payment attempt on this request, if any — drives the
+  // The most recent pending QR PH payment attempt on this request, if any — drives the
   // "Cancel Payment" button and the "Continue Payment <timer>" label below. Undefined =
   // not checked yet, null = none pending.
   const [pendingPayment, setPendingPayment] = useState<{ id: string; expiresAt: number } | null | undefined>(
@@ -77,7 +92,7 @@ export default function RequestTrackingScreen() {
   // of the app rather than an OS-level dialog.
   const [successModal, setSuccessModal] = useState<{ title: string; message: string } | null>(null);
   // Ticks once a second while there's a pending payment to count down — drives the "Pay
-  // Now with QR Ph" button's swap to "Continue Payment <mm:ss>" below.
+  // Now with QR PH" button's swap to "Continue Payment <mm:ss>" below.
   const pendingRemaining = useCountdown(pendingPayment?.expiresAt ?? null);
   // Unique per screen instance — same reason use-my-incidents.ts does this.
   // supabase.channel() returns the EXISTING channel when one with the same topic is
@@ -95,7 +110,7 @@ export default function RequestTrackingScreen() {
     function load() {
       supabase
         .from('service_requests')
-        .select('*, document_types(name, processing_target_hours, fee_centavos), barangays(shipping_fee_centavos)')
+        .select('*, document_types(name, processing_target_hours, fee_centavos)')
         .eq('id', requestId)
         .single()
         .then(({ data }) => {
@@ -187,7 +202,7 @@ export default function RequestTrackingScreen() {
                 setPendingPayment(null);
                 setSuccessModal({
                   title: 'Payment Cancelled',
-                  message: 'Your QR Ph payment attempt has been cancelled. You can start a new payment at any time.',
+                  message: 'Your QR PH payment attempt has been cancelled. You can start a new payment at any time.',
                 });
               } else if (data?.status === 'paid') {
                 // Lost the race — payment went through while they were deciding.
@@ -244,7 +259,7 @@ export default function RequestTrackingScreen() {
   }
 
   if (request === undefined) {
-    return <PlaceholderPanel label="Loading…" />;
+    return <RequestTrackingSkeleton />;
   }
   if (request === null) {
     return <PlaceholderPanel label="Request not found." />;
@@ -258,18 +273,17 @@ export default function RequestTrackingScreen() {
   const progressColor = request.status === 'completed' ? theme.primary : PROGRESS_AMBER;
 
   const fee = request.document_types?.fee_centavos ?? 0;
-  const shippingFee = request.barangays?.shipping_fee_centavos ?? 0;
-  const totalDue = fee + shippingFee;
+  const totalDue = fee;
   // payment_method is null until the resident reaches the payment selection screen
   // (Stage 4). Show a "Not yet selected" fallback for requests still in that gap.
   const paymentMethodLabel =
-    request.payment_method === 'cash'
-      ? 'Cash on Delivery'
+    request.payment_method === 'pickup'
+      ? 'Pay at Pickup'
       : request.payment_method === 'qrph'
-        ? 'QR Ph'
+        ? 'QR PH'
         : 'Not yet selected';
   const paymentMethodIcon: keyof typeof Ionicons.glyphMap =
-    request.payment_method === 'cash'
+    request.payment_method === 'pickup'
       ? 'cash-outline'
       : request.payment_method === 'qrph'
         ? 'qr-code-outline'
@@ -292,7 +306,7 @@ export default function RequestTrackingScreen() {
   // started/finished/been cancelled, or once payment has actually cleared, there's
   // nothing left to self-cancel (a paid request needs the admin refund flow instead).
   const showCancelSlot =
-    request.status !== 'out_for_delivery' &&
+    request.status !== 'ready_for_pickup' &&
     request.status !== 'completed' &&
     request.status !== 'cancelled' &&
     request.payment_status !== 'paid';
@@ -323,28 +337,35 @@ export default function RequestTrackingScreen() {
           <ThemedText themeColor="textSecondary">Ref #{request.reference_number}</ThemedText>
 
           {!isCancelled ? (
-            <Card style={styles.progressCard}>
-            <View style={styles.progressHeaderRow}>
-              <View style={styles.progressHeaderText}>
-                <ThemedText type="smallBold">Processing Time</ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  {request.status === 'completed'
-                    ? 'Completed and delivered'
-                    : `Estimated completion — ${estimateLabel(request.created_at, targetHours)}`}
-                </ThemedText>
+            <AnimatedAppear>
+              <View style={styles.cardShadowWrap}>
+                <Card style={styles.progressCard}>
+                  <View style={styles.progressHeaderRow}>
+                    <View style={styles.progressHeaderText}>
+                      <ThemedText type="smallBold">Processing Time</ThemedText>
+                      <ThemedText type="small" themeColor="textSecondary">
+                        {request.status === 'completed'
+                          ? 'Completed'
+                          : `Estimated completion — ${estimateLabel(request.created_at, targetHours)}`}
+                      </ThemedText>
+                    </View>
+                    <ThemedText type="smallBold" style={{ color: progressColor }}>
+                      {Math.round(fraction * 100)}%
+                    </ThemedText>
+                  </View>
+                  <ProgressBar fraction={fraction} color={progressColor} />
+                </Card>
               </View>
-              <ThemedText type="smallBold" style={{ color: progressColor }}>
-                {Math.round(fraction * 100)}%
-              </ThemedText>
-            </View>
-            <ProgressBar fraction={fraction} color={progressColor} />
-          </Card>
-        ) : null}
+            </AnimatedAppear>
+          ) : null}
 
-        <Card style={styles.paymentCard}>
+        <View style={styles.cardShadowWrap}>
+          <Card style={styles.paymentCard}>
           <View style={styles.cardHeader}>
             <Ionicons name="wallet-outline" size={18} color={theme.primary} />
-            <ThemedText type="smallBold">Payment</ThemedText>
+            <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+              Payment
+            </ThemedText>
           </View>
           <Divider />
           <View style={styles.paymentRow}>
@@ -358,18 +379,6 @@ export default function RequestTrackingScreen() {
               </ThemedText>
             </View>
           </View>
-          {shippingFee > 0 ? (
-            <>
-              <View style={styles.paymentAmountRow}>
-                <ThemedText type="small" themeColor="textSecondary">Document Fee</ThemedText>
-                <ThemedText type="small">{fee === 0 ? 'Free' : formatCentavosAsPHP(fee)}</ThemedText>
-              </View>
-              <View style={styles.paymentAmountRow}>
-                <ThemedText type="small" themeColor="textSecondary">Shipping Fee</ThemedText>
-                <ThemedText type="small">{formatCentavosAsPHP(shippingFee)}</ThemedText>
-              </View>
-            </>
-          ) : null}
           <View style={styles.paymentAmountRow}>
             <ThemedText type="small" themeColor="textSecondary">Total Amount Due</ThemedText>
             <ThemedText type="smallBold">
@@ -377,46 +386,53 @@ export default function RequestTrackingScreen() {
             </ThemedText>
           </View>
           {showQrPayNow || showCancelSlot ? (
-            <View style={{ margin: Spacing.three, marginTop: Spacing.two, gap: Spacing.two }}>
+            <AnimatedAppear style={styles.buttonSlot}>
               {showQrPayNow ? (
-                <PrimaryButton
-                  // Same QR/countdown is resumed, not regenerated — see
-                  // create-payment-source's resume check — so this reads as "continue"
-                  // rather than "pay now" once a payment attempt is already in flight.
-                  label={
-                    hasActivePendingPayment
-                      ? `Continue Payment ${formatButtonCountdown(pendingRemaining ?? 0)}`
-                      : 'Pay Now with QR Ph'
-                  }
-                  onPress={() => router.push(`/services/payment/qrph/${requestId}`)}
-                />
+                <AnimatedAppear key={hasActivePendingPayment ? 'continue' : 'pay-now'}>
+                  <PrimaryButton
+                    // Same QR/countdown is resumed, not regenerated — see
+                    // create-payment-source's resume check — so this reads as "continue"
+                    // rather than "pay now" once a payment attempt is already in flight.
+                    label={
+                      hasActivePendingPayment
+                        ? `Continue Payment ${formatButtonCountdown(pendingRemaining ?? 0)}`
+                        : 'Pay Now with QR PH'
+                    }
+                    onPress={() => router.push(`/services/payment/qrph/${requestId}`)}
+                  />
+                </AnimatedAppear>
               ) : null}
               {/* A single slot that swaps, not two buttons shown together: a pending QR
                   payment attempt takes priority (cancelling it is reversible — the
                   resident can start a fresh payment) over cancelling the whole request. */}
               {showCancelSlot ? (
-                pendingPayment ? (
-                  <PrimaryButton
-                    label="Cancel Payment"
-                    variant="destructive"
-                    loading={cancellingPayment}
-                    onPress={handleCancelPendingPayment}
-                  />
-                ) : (
-                  <PrimaryButton
-                    label="Cancel Request"
-                    variant="destructive"
-                    loading={cancellingRequest}
-                    onPress={handleCancelRequest}
-                  />
-                )
+                <AnimatedAppear key={pendingPayment ? 'cancel-payment' : 'cancel-request'}>
+                  {pendingPayment ? (
+                    <PrimaryButton
+                      label="Cancel Payment"
+                      variant="destructive"
+                      loading={cancellingPayment}
+                      onPress={handleCancelPendingPayment}
+                    />
+                  ) : (
+                    <PrimaryButton
+                      label="Cancel Request"
+                      variant="destructive"
+                      loading={cancellingRequest}
+                      onPress={handleCancelRequest}
+                    />
+                  )}
+                </AnimatedAppear>
               ) : null}
-            </View>
+            </AnimatedAppear>
           ) : null}
-        </Card>
+          </Card>
+        </View>
 
-        <ThemedView type="backgroundElement" style={styles.timeline}>
-          <ThemedText type="smallBold">Status History</ThemedText>
+        <ThemedView type="backgroundElement" style={[styles.timeline, styles.shadowSm, styles.hairline]}>
+          <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+            Status History
+          </ThemedText>
 
           {STEP_ORDER.map((step, index) => {
             const entry = history.find((h) => h.status === step);
@@ -459,11 +475,13 @@ export default function RequestTrackingScreen() {
                         {formatDateTime(entry.at)}
                       </ThemedText>
                       {entry.note ? (
-                        <View style={[styles.noteChip, { backgroundColor: theme.backgroundSelected }]}>
-                          <ThemedText type="small" themeColor="textSecondary">
-                            {entry.note}
-                          </ThemedText>
-                        </View>
+                        <AnimatedAppear>
+                          <View style={[styles.noteChip, { backgroundColor: theme.backgroundSelected }]}>
+                            <ThemedText type="small" themeColor="textSecondary">
+                              {entry.note}
+                            </ThemedText>
+                          </View>
+                        </AnimatedAppear>
                       ) : null}
                     </>
                   ) : (
@@ -477,23 +495,27 @@ export default function RequestTrackingScreen() {
           })}
 
           {isCancelled ? (
-            <ThemedText type="small" themeColor="accentRed" style={styles.cancelledNote}>
-              This request was cancelled.
-              {(() => {
-                const cancelEntry = history.find((h) => h.status === 'cancelled');
-                return cancelEntry?.note ? ` ${cancelEntry.note}` : '';
-              })()}
-            </ThemedText>
+            <AnimatedAppear>
+              <ThemedText type="small" themeColor="accentRed" style={styles.cancelledNote}>
+                This request was cancelled.
+                {(() => {
+                  const cancelEntry = history.find((h) => h.status === 'cancelled');
+                  return cancelEntry?.note ? ` ${cancelEntry.note}` : '';
+                })()}
+              </ThemedText>
+            </AnimatedAppear>
           ) : null}
         </ThemedView>
 
         {request.requester_notes ? (
-          <ThemedView type="backgroundElement" style={styles.section}>
-            <ThemedText type="smallBold">Purpose</ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
-              {request.requester_notes}
-            </ThemedText>
-          </ThemedView>
+          <AnimatedAppear>
+            <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+              <ThemedText type="smallBold">Purpose</ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">
+                {request.requester_notes}
+              </ThemedText>
+            </ThemedView>
+          </AnimatedAppear>
         ) : null}
       </ScrollView>
       </View>
@@ -536,6 +558,35 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
+
+  /* Design-system recipes (shared literally across the Services screens) */
+  shadowSm: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  hairline: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  cardShadowWrap: {
+    // Card has overflow:'hidden' internally, which would clip a shadow applied directly
+    // to it — this wrapper carries the shadow instead, without touching Card itself.
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+    borderRadius: Spacing.three,
+  },
+  sectionLabel: {
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    fontSize: 12,
+  },
+
   progressCard: {
     padding: Spacing.three,
     gap: Spacing.two,
@@ -624,5 +675,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.three,
     paddingBottom: Spacing.three,
+  },
+  buttonSlot: {
+    margin: Spacing.three,
+    marginTop: Spacing.two,
+    gap: Spacing.two,
+  },
+
+  /* Loading skeleton */
+  skeletonContainer: {
+    flex: 1,
+    padding: Spacing.four,
+    backgroundColor: '#F6F6F6',
+  },
+  skeletonGap: {
+    marginTop: Spacing.three,
   },
 });

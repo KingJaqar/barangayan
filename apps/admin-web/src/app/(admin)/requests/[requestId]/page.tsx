@@ -21,8 +21,8 @@ interface StatusHistoryEntry {
 const STEP_LABEL: Record<string, string> = {
   submitted: 'Request Submitted',
   in_progress: 'Processing',
-  out_for_delivery: 'Out for Delivery',
-  completed: 'Completed/Delivered',
+  ready_for_pickup: 'Ready for Pickup',
+  completed: 'Completed',
   cancelled: 'Cancelled',
 };
 
@@ -50,7 +50,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
   const { data: payment } = await supabase
     .from('payments')
     .select(
-      'id, method, status, amount_centavos, document_fee_centavos, shipping_fee_centavos, refund_status, refund_transfer_link',
+      'id, method, status, amount_centavos, document_fee_centavos, refund_status, refund_transfer_link',
     )
     .eq('service_request_id', requestId)
     .is('deleted_at', null)
@@ -94,7 +94,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
         <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
           <h2 className="mb-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Payment</h2>
           <p className="text-sm">
-            Method: <span className="font-medium">{request.payment_method === 'qrph' ? 'QR Ph' : request.payment_method === 'cash' ? 'Cash on Delivery' : '—'}</span>
+            Method: <span className="font-medium">{request.payment_method === 'qrph' ? 'QR PH' : request.payment_method === 'pickup' ? 'Pay at Pickup' : '—'}</span>
           </p>
           <p className="text-sm">
             Document Fee:{' '}
@@ -106,11 +106,6 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
                   : 'Free'}
             </span>
           </p>
-          {payment?.shipping_fee_centavos ? (
-            <p className="text-sm">
-              Shipping Fee: <span className="font-medium">{formatCentavosAsPHP(payment.shipping_fee_centavos)}</span>
-            </p>
-          ) : null}
           {payment ? (
             <p className="text-sm">
               Total: <span className="font-medium">{formatCentavosAsPHP(payment.amount_centavos)}</span>

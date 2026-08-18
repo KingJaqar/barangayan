@@ -18,8 +18,8 @@ function matchesTab(payment: Payment, tab: Tab): boolean {
   return tab === 'all' ? true : payment.status === tab;
 }
 
-// Reads the payments ledger the 0007 migration added — COD collections and (once
-// PAYMENT_SETTLEMENT_READY flips on, mobile-side) QR Ph receipts both land here with a
+// Reads the payments ledger the 0007 migration added — pickup collections and (once
+// PAYMENT_SETTLEMENT_READY flips on, mobile-side) QR PH receipts both land here with a
 // real, queryable financial record, distinct from service_requests.payment_status.
 export default async function TransactionsPage({ searchParams }: { searchParams: Promise<{ tab?: string; method?: string; q?: string }> }) {
   const { tab: tabParam, method, q } = await searchParams;
@@ -81,7 +81,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
 
   const { data: documentTypes } = await supabase.from('document_types').select('id, name').is('deleted_at', null).order('name');
 
-  const totalCash = payments.filter((p) => p.method === 'cash' && p.status === 'paid').reduce((sum, p) => sum + p.amount_centavos, 0);
+  const totalCash = payments.filter((p) => p.method === 'pickup' && p.status === 'paid').reduce((sum, p) => sum + p.amount_centavos, 0);
   const totalQrph = payments.filter((p) => p.method === 'qrph' && p.status === 'paid').reduce((sum, p) => sum + p.amount_centavos, 0);
   const totalPending = payments.filter((p) => p.status === 'pending').reduce((sum, p) => sum + p.amount_centavos, 0);
 
@@ -90,13 +90,13 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
       {/* Section 1: header + description */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Financial Transactions</h1>
-        <p className="text-sm text-zinc-500">Cash on Delivery collections and QR Ph receipts.</p>
+        <p className="text-sm text-zinc-500">Pickup collections and QR PH receipts.</p>
       </div>
 
       {/* Section 2: analytics summary cards */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <SummaryCard label="Total Collected (Cash)" value={formatCentavosAsPHP(totalCash)} />
-        <SummaryCard label="Total Collected (QR Ph)" value={formatCentavosAsPHP(totalQrph)} />
+        <SummaryCard label="Total Collected (Pickup)" value={formatCentavosAsPHP(totalCash)} />
+        <SummaryCard label="Total Collected (QR PH)" value={formatCentavosAsPHP(totalQrph)} />
         <SummaryCard label="Total Pending" value={formatCentavosAsPHP(totalPending)} />
       </div>
 

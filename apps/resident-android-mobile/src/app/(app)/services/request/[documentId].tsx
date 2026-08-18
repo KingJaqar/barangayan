@@ -8,6 +8,8 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
+import { AnimatedAppear } from '@/components/services/animated-appear';
+import { SkeletonBlock } from '@/components/services/skeleton';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -32,10 +34,23 @@ const MAX_ID_BYTES = 5 * 1024 * 1024;
 function Chip({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) {
   const theme = useTheme();
   return (
-    <ThemedView type="backgroundElement" style={styles.chip}>
+    <ThemedView type="backgroundElement" style={[styles.chip, styles.hairline]}>
       <Ionicons name={icon} size={14} color={theme.textSecondary} />
       <ThemedText type="small">{label}</ThemedText>
     </ThemedView>
+  );
+}
+
+/** Shimmer stand-in for the loading state, shaped like the form below it. Rendered only
+ * while `doc === undefined` — same early-return slot `PlaceholderPanel` used to occupy. */
+function RequestFormSkeleton() {
+  return (
+    <View style={styles.skeletonContainer}>
+      <SkeletonBlock width="100%" height={96} borderRadius={Spacing.three} />
+      <SkeletonBlock width="100%" height={80} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
+      <SkeletonBlock width="100%" height={64} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
+      <SkeletonBlock width="100%" height={140} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
+    </View>
   );
 }
 
@@ -144,7 +159,7 @@ export default function RequestFormScreen() {
   }
 
   if (doc === undefined) {
-    return <PlaceholderPanel label="Loading…" />;
+    return <RequestFormSkeleton />;
   }
   if (doc === null) {
     return <PlaceholderPanel label="Document not found." />;
@@ -169,7 +184,7 @@ export default function RequestFormScreen() {
           </View>
         </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <ThemedView type="backgroundElement" style={styles.section}>
+        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
           <ThemedText type="small" style={{ color: theme.primary }}>
             Purpose of Request
           </ThemedText>
@@ -184,28 +199,36 @@ export default function RequestFormScreen() {
           </ThemedText>
         </ThemedView>
 
-        <ThemedView type="backgroundElement" style={styles.section}>
+        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
           <View style={styles.rowBetween}>
-            <ThemedText type="smallBold">Resident Details</ThemedText>
+            <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+              Resident Details
+            </ThemedText>
             <ThemedText type="link" onPress={() => router.push('/settings/profile')}>
               Edit in Profile
             </ThemedText>
           </View>
           <View style={styles.chipRow}>
             <Chip icon="person-outline" label={profile?.full_name ?? '—'} />
-            <Chip icon="home-outline" label={profile?.home_address ?? 'No address on file'} />
             <Chip icon="call-outline" label={profile?.mobile_number ?? 'No mobile number on file'} />
           </View>
         </ThemedView>
 
-        <ThemedView type="backgroundElement" style={styles.section}>
+        <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline]}>
+          <Ionicons name="storefront-outline" size={18} color={theme.primary} />
+          <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
+            You&apos;ll pick up this document in person at the Barangay Hall once it&apos;s ready.
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
           <ThemedText type="small">Valid ID Upload</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
             Please upload a clear copy of a government-issued ID.
           </ThemedText>
 
           {pickedIdImage ? (
-            <View style={styles.idPreview} accessibilityLabel="Uploaded ID preview">
+            <AnimatedAppear style={styles.idPreview}>
               <ThemedText type="smallBold">Uploaded ID preview</ThemedText>
               <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
               <View style={styles.idPreviewFooter}>
@@ -214,22 +237,30 @@ export default function RequestFormScreen() {
                 </ThemedText>
               </View>
               <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />
-            </View>
+            </AnimatedAppear>
           ) : (
-            <Pressable accessibilityRole="button" accessibilityLabel="Upload a valid ID image" onPress={handlePickFile}>
-              <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
-                <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
-                <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  JPG or PNG up to 5MB
-                </ThemedText>
-              </View>
-            </Pressable>
+            <AnimatedAppear>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Upload a valid ID image"
+                onPress={handlePickFile}
+                style={({ pressed }) => [pressed && styles.dropZonePressed]}>
+                <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
+                  <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
+                  <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary">
+                    JPG or PNG up to 5MB
+                  </ThemedText>
+                </View>
+              </Pressable>
+            </AnimatedAppear>
           )}
           {idUploadError ? (
-            <ThemedText type="small" themeColor="accentRed">
-              {idUploadError}
-            </ThemedText>
+            <AnimatedAppear>
+              <ThemedText type="small" themeColor="accentRed">
+                {idUploadError}
+              </ThemedText>
+            </AnimatedAppear>
           ) : null}
         </ThemedView>
 
@@ -281,6 +312,25 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
+
+  /* Design-system recipes (shared literally across the Services screens) */
+  shadowSm: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  hairline: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  sectionLabel: {
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    fontSize: 12,
+  },
+
   section: {
     padding: Spacing.three,
     borderRadius: Spacing.three,
@@ -305,6 +355,16 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.one,
     borderRadius: 999,
   },
+  noticeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    padding: Spacing.three,
+    borderRadius: Spacing.three,
+  },
+  noticeText: {
+    flex: 1,
+  },
   dropZone: {
     marginTop: Spacing.two,
     borderWidth: 1.5,
@@ -313,6 +373,10 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.five,
     alignItems: 'center',
     gap: Spacing.one,
+  },
+  dropZonePressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
   },
   idPreview: {
     marginTop: Spacing.two,
@@ -338,5 +402,15 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: Spacing.four,
+  },
+
+  /* Loading skeleton */
+  skeletonContainer: {
+    flex: 1,
+    padding: Spacing.four,
+    backgroundColor: '#F6F6F6',
+  },
+  skeletonBlockGap: {
+    marginTop: Spacing.three,
   },
 });

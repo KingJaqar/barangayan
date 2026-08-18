@@ -9,6 +9,7 @@ import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
+import { SkeletonBlock } from '@/components/services/skeleton';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
@@ -18,6 +19,25 @@ import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 type DocumentType = Tables<'document_types'>;
+
+/** Shimmer stand-in for the loading state, shaped like the real content below it so
+ * nothing reflows once the document loads. Rendered only while `doc === undefined` —
+ * same early-return slot `PlaceholderPanel` used to occupy. */
+function DocumentDetailSkeleton() {
+  return (
+    <View style={styles.skeletonContainer}>
+      <SkeletonBlock width="100%" height={180} borderRadius={Spacing.three} />
+      <View style={styles.skeletonTitleRow}>
+        <SkeletonBlock width="70%" height={30} />
+        <SkeletonBlock width={72} height={26} borderRadius={Spacing.four} />
+      </View>
+      <SkeletonBlock width="90%" height={16} />
+      <SkeletonBlock width="60%" height={16} />
+      <SkeletonBlock width="100%" height={140} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
+      <SkeletonBlock width="100%" height={64} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
+    </View>
+  );
+}
 
 export default function DocumentDetailScreen() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
@@ -37,7 +57,7 @@ export default function DocumentDetailScreen() {
   }, [documentId]);
 
   if (doc === undefined) {
-    return <PlaceholderPanel label="Loading…" />;
+    return <DocumentDetailSkeleton />;
   }
   if (doc === null) {
     return <PlaceholderPanel label="Document not found." />;
@@ -63,7 +83,9 @@ export default function DocumentDetailScreen() {
         </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <ThemedView type="backgroundElement" style={styles.illustration}>
+        <ThemedView type="backgroundElement" style={[styles.illustration, styles.shadowSm]}>
+          <View style={[styles.auraBack, { backgroundColor: `${theme.primary}14` }]} />
+          <View style={[styles.auraFront, { backgroundColor: `${theme.primary}0A` }]} />
           <Ionicons name="document-text-outline" size={72} color={theme.textSecondary} />
         </ThemedView>
 
@@ -71,7 +93,7 @@ export default function DocumentDetailScreen() {
           <ThemedText type="title" style={styles.title}>
             {doc.name}
           </ThemedText>
-          <View style={[styles.feePill, { backgroundColor: `${theme.primary}26` }]}>
+          <View style={[styles.feePill, styles.hairline, { backgroundColor: `${theme.primary}26` }]}>
             <ThemedText type="smallBold" style={{ color: theme.primary }}>
               {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
             </ThemedText>
@@ -85,39 +107,47 @@ export default function DocumentDetailScreen() {
         ) : null}
 
         {doc.requirements.length > 0 ? (
-          <Card style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Ionicons name="checkmark-done-outline" size={18} color={theme.primary} />
-              <ThemedText type="smallBold">Requirements</ThemedText>
-            </View>
-            <Divider />
-            {doc.requirements.map((req, index) => (
-              <View key={req}>
-                <View style={styles.requirementRow}>
-                  <Ionicons name="ellipse-outline" size={16} color={theme.textSecondary} />
-                  <ThemedText type="small" style={styles.requirementText}>
-                    {req}
-                  </ThemedText>
-                </View>
-                {index < doc.requirements.length - 1 ? <Divider /> : null}
+          <View style={[styles.cardShadowWrap, styles.card]}>
+            <Card>
+              <View style={styles.cardHeader}>
+                <Ionicons name="checkmark-done-outline" size={18} color={theme.primary} />
+                <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+                  Requirements
+                </ThemedText>
               </View>
-            ))}
-          </Card>
+              <Divider />
+              {doc.requirements.map((req, index) => (
+                <View key={req}>
+                  <View style={styles.requirementRow}>
+                    <Ionicons name="ellipse-outline" size={16} color={theme.textSecondary} />
+                    <ThemedText type="small" style={styles.requirementText}>
+                      {req}
+                    </ThemedText>
+                  </View>
+                  {index < doc.requirements.length - 1 ? <Divider /> : null}
+                </View>
+              ))}
+            </Card>
+          </View>
         ) : null}
 
-        <Card style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Ionicons name="time-outline" size={18} color={theme.primary} />
-            <ThemedText type="smallBold">Processing & Pickup</ThemedText>
-          </View>
-          <Divider />
-          <View style={styles.processingRow}>
-            <ThemedText type="small" themeColor="textSecondary">
-              Estimated Time
-            </ThemedText>
-            <ThemedText type="smallBold">{formatProcessingTime(doc.processing_target_hours)}</ThemedText>
-          </View>
-        </Card>
+        <View style={[styles.cardShadowWrap, styles.card]}>
+          <Card>
+            <View style={styles.cardHeader}>
+              <Ionicons name="time-outline" size={18} color={theme.primary} />
+              <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+                Processing & Pickup
+              </ThemedText>
+            </View>
+            <Divider />
+            <View style={styles.processingRow}>
+              <ThemedText type="small" themeColor="textSecondary">
+                Estimated Time
+              </ThemedText>
+              <ThemedText type="smallBold">{formatProcessingTime(doc.processing_target_hours)}</ThemedText>
+            </View>
+          </Card>
+        </View>
 
         <Collapsible title="Additional Notes">
           <ThemedText type="small" themeColor="textSecondary">
@@ -174,12 +204,58 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.two,
   },
+
+  /* Design-system recipes (shared literally across the Services screens) */
+  shadowSm: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  hairline: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  cardShadowWrap: {
+    // Card has overflow:'hidden' internally, which would clip a shadow applied directly
+    // to it — this wrapper carries the shadow instead, without touching Card itself.
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+    borderRadius: Spacing.three,
+  },
+  sectionLabel: {
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    fontSize: 12,
+  },
+
   illustration: {
     height: 180,
     borderRadius: Spacing.three,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.two,
+    overflow: 'hidden',
+  },
+  auraBack: {
+    position: 'absolute',
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    top: -120,
+    right: -80,
+  },
+  auraFront: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    bottom: -100,
+    left: -60,
   },
   titleRow: {
     flexDirection: 'row',
@@ -189,6 +265,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
+    letterSpacing: -0.3,
     flex: 1,
   },
   feePill: {
@@ -224,5 +301,22 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: Spacing.four,
+  },
+
+  /* Loading skeleton */
+  skeletonContainer: {
+    flex: 1,
+    padding: Spacing.four,
+    gap: Spacing.two,
+    backgroundColor: '#F6F6F6',
+  },
+  skeletonTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: Spacing.two,
+  },
+  skeletonBlockGap: {
+    marginTop: Spacing.two,
   },
 });

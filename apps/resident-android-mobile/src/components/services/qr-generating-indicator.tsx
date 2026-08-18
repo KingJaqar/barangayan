@@ -16,7 +16,7 @@ import { useTheme } from '@/hooks/use-theme';
 
 /**
  * Smooth, purpose-built loading state for the window while create-payment-source mints
- * (or resumes) a QR Ph intent — replaces a static "Generating…" line with a rotating
+ * (or resumes) a QR PH intent — replaces a static "Generating…" line with a rotating
  * ring around a gently breathing QR icon, so the wait reads as active progress instead
  * of a frozen screen. Same visual slot/size as the QR image it's standing in for (see
  * qrCard's minHeight in the payment screen), so nothing reflows once the real QR lands.

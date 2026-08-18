@@ -296,7 +296,6 @@ export type Database = {
           created_at: string
           id: string
           name: string
-          shipping_fee_centavos: number
           updated_at: string
         }
         Insert: {
@@ -305,7 +304,6 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
-          shipping_fee_centavos?: number
           updated_at?: string
         }
         Update: {
@@ -314,7 +312,6 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
-          shipping_fee_centavos?: number
           updated_at?: string
         }
         Relationships: []
@@ -1105,7 +1102,6 @@ export type Database = {
           refunded_at: string | null
           refunded_by: string | null
           service_request_id: string
-          shipping_fee_centavos: number | null
           status: string
           updated_at: string
         }
@@ -1131,7 +1127,6 @@ export type Database = {
           refunded_at?: string | null
           refunded_by?: string | null
           service_request_id: string
-          shipping_fee_centavos?: number | null
           status?: string
           updated_at?: string
         }
@@ -1157,7 +1152,6 @@ export type Database = {
           refunded_at?: string | null
           refunded_by?: string | null
           service_request_id?: string
-          shipping_fee_centavos?: number | null
           status?: string
           updated_at?: string
         }
@@ -1198,6 +1192,7 @@ export type Database = {
           avatar_url: string | null
           barangay_id: string
           birth_date: string | null
+          city: string | null
           created_at: string
           custom_accent_colors: string[]
           deleted_at: string | null
@@ -1205,19 +1200,28 @@ export type Database = {
           email_verification_requested_at: string | null
           email_verification_status: string
           email_verified_at: string | null
+          employment_status: string | null
+          first_name: string | null
           font_preference: string
           full_name: string
           home_address: string | null
+          house_no: string | null
           household_members: Json
           id: string
           id_photo_urls: string[]
           id_type: string | null
           id_verification_status: string | null
+          last_name: string | null
           location_verified: boolean | null
+          middle_name: string | null
           mobile_number: string | null
+          occupation: string | null
           push_notifications_enabled: boolean
           registration_location: Json | null
           role: string
+          sex: string | null
+          street: string | null
+          suffix: string | null
           theme_preference: string
           updated_at: string
         }
@@ -1226,6 +1230,7 @@ export type Database = {
           avatar_url?: string | null
           barangay_id: string
           birth_date?: string | null
+          city?: string | null
           created_at?: string
           custom_accent_colors?: string[]
           deleted_at?: string | null
@@ -1233,19 +1238,28 @@ export type Database = {
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
+          employment_status?: string | null
+          first_name?: string | null
           font_preference?: string
           full_name: string
           home_address?: string | null
+          house_no?: string | null
           household_members?: Json
           id: string
           id_photo_urls?: string[]
           id_type?: string | null
           id_verification_status?: string | null
+          last_name?: string | null
           location_verified?: boolean | null
+          middle_name?: string | null
           mobile_number?: string | null
+          occupation?: string | null
           push_notifications_enabled?: boolean
           registration_location?: Json | null
           role?: string
+          sex?: string | null
+          street?: string | null
+          suffix?: string | null
           theme_preference?: string
           updated_at?: string
         }
@@ -1254,6 +1268,7 @@ export type Database = {
           avatar_url?: string | null
           barangay_id?: string
           birth_date?: string | null
+          city?: string | null
           created_at?: string
           custom_accent_colors?: string[]
           deleted_at?: string | null
@@ -1261,19 +1276,28 @@ export type Database = {
           email_verification_requested_at?: string | null
           email_verification_status?: string
           email_verified_at?: string | null
+          employment_status?: string | null
+          first_name?: string | null
           font_preference?: string
           full_name?: string
           home_address?: string | null
+          house_no?: string | null
           household_members?: Json
           id?: string
           id_photo_urls?: string[]
           id_type?: string | null
           id_verification_status?: string | null
+          last_name?: string | null
           location_verified?: boolean | null
+          middle_name?: string | null
           mobile_number?: string | null
+          occupation?: string | null
           push_notifications_enabled?: boolean
           registration_location?: Json | null
           role?: string
+          sex?: string | null
+          street?: string | null
+          suffix?: string | null
           theme_preference?: string
           updated_at?: string
         }
@@ -1605,7 +1629,7 @@ export type Database = {
       confirm_incident: { Args: { p_incident_id: string }; Returns: boolean }
       current_barangay_id: { Args: never; Returns: string }
       current_role: { Args: never; Returns: string }
-      mark_request_out_for_delivery: {
+      mark_request_ready_for_pickup: {
         Args: { p_request_id: string }
         Returns: undefined
       }

@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { StatusPill } from '@/components/admin/status-pill';
 import { formatDateTime, getSlaFlag } from '@barangayan/shared';
 
-const OPEN_STATUSES = ['submitted', 'in_progress', 'out_for_delivery'];
+const OPEN_STATUSES = ['submitted', 'in_progress', 'ready_for_pickup'];
 
 export default async function ResidentRequestsPage() {
   const supabase = await createSupabaseServerClient();

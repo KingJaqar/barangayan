@@ -4,8 +4,8 @@
 const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   submitted: { label: 'Submitted', className: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200' },
   in_progress: { label: 'Processing', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
-  out_for_delivery: { label: 'Out for Delivery', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
-  completed: { label: 'Completed/Delivered', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },
+  ready_for_pickup: { label: 'Ready for Pickup', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
+  completed: { label: 'Completed', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },
   cancelled: { label: 'Cancelled', className: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' },
   pending: { label: 'Pending', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' },
   paid: { label: 'Paid', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },

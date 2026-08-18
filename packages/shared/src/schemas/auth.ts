@@ -1,12 +1,39 @@
 import { z } from 'zod';
 
+/** 5 options surfaced by the Register/Profile "Employment Status" field. */
+export const EMPLOYMENT_STATUSES = ['employed', 'unemployed', 'student', 'self_employed', 'retired'] as const;
+export type EmploymentStatus = (typeof EMPLOYMENT_STATUSES)[number];
+
+/** Occupation is only meaningful (and only collected by the UI) for these two statuses. */
+export const EMPLOYMENT_STATUSES_WITH_OCCUPATION: readonly EmploymentStatus[] = ['employed', 'self_employed'];
+
+export const SEXES = ['male', 'female'] as const;
+export type Sex = (typeof SEXES)[number];
+
 /** Registration form — used by both apps/resident-android-mobile and (eventually) apps/admin-web's resident portal. */
 export const registerSchema = z
   .object({
-    fullName: z.string().min(1, 'Full name is required'),
+    // Full Name split into structured parts (Register/Profile field-split) — first/last
+    // required, middle/suffix optional. full_name is composed from these by a DB trigger
+    // (migration 0081); the app never needs to build the composed string itself.
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    middleName: z.string().optional(),
+    suffix: z.string().optional(),
+    sex: z.enum(SEXES, { errorMap: () => ({ message: 'Select your sex' }) }),
     mobileNumber: z.string().optional(),
     email: z.string().email('Enter a valid email address'),
-    homeAddress: z.string().optional(),
+    // Home Address split into structured parts — "Barangay" is deliberately not one of
+    // these fields: it's already profiles.barangay_id (assigned automatically at
+    // registration, AGENTS.md §0), so the UI displays barangays.name read-only instead
+    // of collecting a second, potentially-inconsistent value.
+    houseNo: z.string().min(1, 'House No. is required'),
+    street: z.string().min(1, 'Street is required'),
+    city: z.string().min(1, 'City is required'),
+    employmentStatus: z.enum(EMPLOYMENT_STATUSES, { errorMap: () => ({ message: 'Select employment status' }) }),
+    // Always optional, per spec — the UI only *shows* this field for Employed/
+    // Self-Employed (see EMPLOYMENT_STATUSES_WITH_OCCUPATION), but never requires it.
+    occupation: z.string().optional(),
     // YYYY-MM-DD, picked via the calendar UI — never free-typed, so the format is
     // guaranteed. Optional: birthday can still be filled in later from the Profile screen.
     birthDate: z

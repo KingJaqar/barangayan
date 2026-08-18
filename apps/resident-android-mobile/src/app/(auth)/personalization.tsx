@@ -1,8 +1,26 @@
+/* eslint-disable react-hooks/immutability -- Reanimated shared-value mutation in
+   press-feedback handlers (see AnimatedCenterCard in home/emergency-info/index.tsx for
+   the same sanctioned pattern) is not the "mutating immutable render output" case this
+   rule targets. */
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, {
+  FadeInDown,
+  ZoomIn,
+  ZoomOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
+import { OnboardingAmbientBackground } from '@/components/onboarding/onboarding-ambient-background';
+import { OnboardingProgressDots } from '@/components/onboarding/onboarding-progress-dots';
+import { OnboardingToast } from '@/components/onboarding/onboarding-toast';
 import { PrimaryButton } from '@/components/primary-button';
+import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { ACCENT_COLORS, Spacing } from '@/constants/theme';
@@ -19,89 +37,163 @@ export default function PersonalizationScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { scheme, accentColor, setThemePreference, setAccentColor } = useThemePreference();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  function handleSchemeChange(option: 'light' | 'dark') {
+    setThemePreference(option);
+    setToastMessage(`${option === 'light' ? 'Light' : 'Dark'} mode enabled`);
+  }
+
+  function handleAccentChange(color: string) {
+    setAccentColor(color);
+    setToastMessage('Accent color updated');
+  }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Make it yours.
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">Customize your experience.</ThemedText>
+    <ThemedView style={styles.container}>
+      <OnboardingAmbientBackground tint={theme.primary} />
 
-        <ThemedView type="backgroundElement" style={styles.schemeRow}>
-          {(['light', 'dark'] as const).map((option) => (
-            <Pressable
-              key={option}
-              onPress={() => setThemePreference(option)}
-              style={[styles.schemeOption, scheme === option && { backgroundColor: theme.backgroundSelected }]}>
-              <ThemedText type="small" style={styles.capitalize}>
-                {option}
-              </ThemedText>
-            </Pressable>
-          ))}
-        </ThemedView>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
+          <Animated.View entering={FadeInDown.duration(450)}>
+            <ThemedText type="title" style={styles.title}>
+              Make it yours.
+            </ThemedText>
+            <ThemedText themeColor="textSecondary">Customize your experience.</ThemedText>
+          </Animated.View>
 
-        <ThemedText type="small" style={styles.sectionLabel}>
-          ACCENT COLOR
-        </ThemedText>
-        <View style={styles.swatchRow}>
-          {ACCENT_COLORS.map((color) => (
-            <Pressable key={color} onPress={() => setAccentColor(color)} style={styles.swatchPressable}>
-              <View
-                style={[
-                  styles.swatch,
-                  { backgroundColor: color },
-                  accentColor === color && [styles.swatchSelected, { borderColor: theme.text }],
-                ]}
-              />
-            </Pressable>
-          ))}
+          <Animated.View entering={FadeInDown.duration(400).delay(120)}>
+            <ThemedText type="small" style={styles.sectionLabel}>
+              APPEARANCE
+            </ThemedText>
+            <SegmentedControl
+              segments={[
+                { key: 'light', label: 'Light' },
+                { key: 'dark', label: 'Dark' },
+              ]}
+              activeKey={scheme}
+              onChange={(key) => handleSchemeChange(key as 'light' | 'dark')}
+            />
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.duration(400).delay(200)}>
+            <ThemedText type="small" style={styles.sectionLabel}>
+              ACCENT COLOR
+            </ThemedText>
+            <View style={styles.swatchRow}>
+              {ACCENT_COLORS.map((color) => (
+                <AccentSwatch
+                  key={color}
+                  color={color}
+                  selected={accentColor === color}
+                  ringColor={theme.text}
+                  onPress={() => handleAccentChange(color)}
+                />
+              ))}
+            </View>
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.duration(400).delay(260)}>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.note}>
+              You can change this anytime in Settings.
+            </ThemedText>
+          </Animated.View>
         </View>
 
-        <ThemedText type="small" themeColor="textSecondary" style={styles.note}>
-          You can change this anytime in Settings.
-        </ThemedText>
-      </View>
+        <Animated.View entering={FadeInDown.duration(400).delay(320)} style={styles.footer}>
+          <OnboardingProgressDots
+            step={3}
+            activeColor={theme.primary}
+            inactiveColor={theme.backgroundSelected}
+          />
+          <PrimaryButton label="Next →" onPress={() => router.push('/(auth)/auth-choice')} />
+        </Animated.View>
+      </SafeAreaView>
 
-      <ThemedView style={styles.footer}>
-        <PrimaryButton label="Next →" onPress={() => router.push('/(auth)/auth-choice')} />
-      </ThemedView>
-    </SafeAreaView>
+      <OnboardingToast
+        visible={toastMessage !== null}
+        message={toastMessage ?? ''}
+        onHide={() => setToastMessage(null)}
+      />
+    </ThemedView>
+  );
+}
+
+function AccentSwatch({
+  color,
+  selected,
+  ringColor,
+  onPress,
+}: {
+  color: string;
+  selected: boolean;
+  ringColor: string;
+  onPress: () => void;
+}) {
+  const pressScale = useSharedValue(1);
+
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pressScale.value }],
+  }));
+
+  function handlePressIn() {
+    pressScale.value = withSpring(0.9, { damping: 14, stiffness: 260 });
+  }
+
+  function handlePressOut() {
+    pressScale.value = withSpring(1, { damping: 14, stiffness: 260 });
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={styles.swatchPressable}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}>
+      <Animated.View
+        style={[
+          styles.swatch,
+          { backgroundColor: color },
+          selected && [styles.swatchSelected, { borderColor: ringColor }],
+          pressStyle,
+        ]}>
+        {selected && (
+          <Animated.View
+            entering={ZoomIn.springify().damping(14)}
+            exiting={ZoomOut.duration(120)}
+            style={styles.checkBadge}>
+            <Ionicons name="checkmark" size={16} color="#ffffff" />
+          </Animated.View>
+        )}
+      </Animated.View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
   },
   content: {
     flex: 1,
     padding: Spacing.four,
-    gap: Spacing.three,
+    gap: Spacing.four,
   },
   title: {
     fontSize: 28,
     lineHeight: 34,
-  },
-  schemeRow: {
-    flexDirection: 'row',
-    borderRadius: Spacing.three,
-    padding: Spacing.half,
-    gap: Spacing.half,
-    marginTop: Spacing.three,
-  },
-  schemeOption: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.two,
-  },
-  capitalize: {
-    textTransform: 'capitalize',
+    letterSpacing: -0.4,
   },
   sectionLabel: {
-    marginTop: Spacing.three,
+    marginBottom: Spacing.two,
     opacity: 0.6,
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
   },
   swatchRow: {
     flexDirection: 'row',
@@ -111,19 +203,26 @@ const styles = StyleSheet.create({
     padding: Spacing.one,
   },
   swatch: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   swatchSelected: {
     // borderColor applied inline (theme.text) — a fixed black border would be invisible
     // against a dark-mode background.
     borderWidth: 3,
   },
+  checkBadge: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   note: {
-    marginTop: Spacing.two,
+    marginTop: Spacing.one,
   },
   footer: {
     padding: Spacing.four,
+    gap: Spacing.four,
   },
 });

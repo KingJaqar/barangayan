@@ -18,7 +18,7 @@ export type UserRole = 'resident' | 'admin';
  * Algorithm: Finite State Machine + threshold-based expiration (AGENTS.md §3).
  * Not every domain uses every state — e.g. incidents resolve rather than complete.
  */
-export type TrackingStatus = 'submitted' | 'in_progress' | 'out_for_delivery' | 'completed' | 'resolved' | 'cancelled';
+export type TrackingStatus = 'submitted' | 'in_progress' | 'ready_for_pickup' | 'completed' | 'resolved' | 'cancelled';
 
 /**
  * A barangay-defined document/service type, configured by that barangay's administrator.

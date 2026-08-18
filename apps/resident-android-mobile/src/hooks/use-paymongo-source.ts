@@ -10,23 +10,22 @@ export interface PaymongoSource {
   qrImageUrl: string;
   expiresAt: number;
   documentFeeCentavos: number;
-  shippingFeeCentavos: number;
   amountCentavos: number;
 }
 
 const POLL_INTERVAL_MS = 5000;
 
 /**
- * Creates a PayMongo QR Ph charge for a service request (via the create-payment-source
+ * Creates a PayMongo QR PH charge for a service request (via the create-payment-source
  * Edge Function, which holds the secret key — never in this app) and watches for
  * settlement until paid or expired.
  *
- * QR Ph is a PaymentIntent flow, not a Source — see migration 0065 and the Edge
+ * QR PH is a PaymentIntent flow, not a Source — see migration 0065 and the Edge
  * Function's own comment. The hook name is kept for continuity with its callers.
  *
- * S0-2: only `requestId` is sent — the Edge Function derives the fee and description
- * itself from document_types + the barangay's shipping fee, so a tampered amount here
- * has no effect on what's actually charged or recorded.
+ * S0-2: only `requestId` is sent — the Edge Function derives the fee itself from
+ * document_types, so a tampered amount here has no effect on what's actually charged or
+ * recorded.
  */
 export function usePaymongoSource(requestId: string) {
   const [source, setSource] = useState<PaymongoSource | null>(null);
@@ -60,7 +59,7 @@ export function usePaymongoSource(requestId: string) {
           // The Edge Function returns { error: "<reason>" } with a non-2xx status, which
           // supabase-js surfaces as a FunctionsHttpError whose context is the Response.
           // Read it so the resident sees PayMongo's actual reason instead of a generic
-          // failure (e.g. "QR Ph is not activated on this account").
+          // failure (e.g. "QR PH is not activated on this account").
           const context = (error as { context?: Response }).context;
           if (context && typeof context.json === 'function') {
             try {
@@ -85,11 +84,10 @@ export function usePaymongoSource(requestId: string) {
           paymentId: data.paymentId as string,
           paymentIntentId: data.paymentIntentId as string,
           qrImageUrl: data.qrImageUrl as string,
-          // Expiry comes from the Edge Function (30 minutes, PayMongo's dynamic QR Ph
+          // Expiry comes from the Edge Function (30 minutes, PayMongo's dynamic QR PH
           // window) rather than being guessed client-side.
           expiresAt: (data.expiresAt as number) ?? Date.now() + 30 * 60 * 1000,
           documentFeeCentavos: (data.documentFeeCentavos as number) ?? 0,
-          shippingFeeCentavos: (data.shippingFeeCentavos as number) ?? 0,
           amountCentavos: (data.amountCentavos as number) ?? 0,
         });
         setStatus('pending');
@@ -166,7 +164,7 @@ export function usePaymongoSource(requestId: string) {
   }, [source, status, instanceId]);
 
   /**
-   * Cancels the in-flight QR Ph attempt via the cancel-payment Edge Function (which also
+   * Cancels the in-flight QR PH attempt via the cancel-payment Edge Function (which also
    * voids the PaymentIntent on PayMongo's side). No-ops outside 'pending' — nothing to
    * cancel once it's settled, expired, or already cancelled.
    */

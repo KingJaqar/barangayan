@@ -385,6 +385,31 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# ── Edge Function JWT gating ─────────────────────────────────────────────────
+# `supabase functions deploy` defaults verify_jwt to TRUE, and that default is wrong for
+# the PayMongo webhook: PayMongo posts with a `Paymongo-Signature` HMAC header and no
+# Supabase JWT, so gateway-level JWT verification rejects every event with 401 before the
+# function body ever runs — payment.paid / payment.failed / qrph.expired / refund.updated
+# all silently never land. That function authenticates the caller itself by verifying the
+# HMAC (see its verifySignature), which is the actual security boundary here.
+#
+# The resident-called functions are the opposite case and must keep JWT verification on.
+# All five are pinned explicitly so a future deploy cannot silently drift again.
+[functions.paymongo-webhook]
+verify_jwt = false
+
+[functions.create-payment-source]
+verify_jwt = true
+
+[functions.check-payment-status]
+verify_jwt = true
+
+[functions.cancel-payment]
+verify_jwt = true
+
+[functions.refund-payment]
+verify_jwt = true
+
 [analytics]
 enabled = true
 port = 54327

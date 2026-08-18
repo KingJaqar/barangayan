@@ -2,7 +2,7 @@ export type ResidentRequestStatus =
   | 'pending_payment'
   | 'paid'
   | 'processing'
-  | 'out_for_delivery'
+  | 'ready_for_pickup'
   | 'completed'
   | 'cancelled';
 
@@ -14,7 +14,7 @@ export type ResidentRequestStatus =
 export function getResidentRequestStatus(status: string, paymentStatus: string): ResidentRequestStatus {
   if (status === 'cancelled') return 'cancelled';
   if (status === 'completed') return 'completed';
-  if (status === 'out_for_delivery') return 'out_for_delivery';
+  if (status === 'ready_for_pickup') return 'ready_for_pickup';
   if (status === 'in_progress') return 'processing';
   // status === 'submitted'
   return paymentStatus === 'paid' || paymentStatus === 'waived' ? 'paid' : 'pending_payment';
@@ -24,7 +24,7 @@ export const RESIDENT_STATUS_LABEL: Record<ResidentRequestStatus, string> = {
   pending_payment: 'Submitted (Pending Payment)',
   paid: 'Submitted (Paid)',
   processing: 'Processing',
-  out_for_delivery: 'Out for Delivery',
-  completed: 'Completed/Delivered',
+  ready_for_pickup: 'Ready for Pickup',
+  completed: 'Completed',
   cancelled: 'Cancelled',
 };

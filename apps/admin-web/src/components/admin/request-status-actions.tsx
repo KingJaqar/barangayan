@@ -19,7 +19,7 @@ interface RequestStatusActionsProps {
 
 /** The buttons that drive the request FSM the 0002 migration deferred to "admin/backend
  * concern" — Active -> Processing -> Ready, Cancel (with a required note via the
- * cancel_service_request RPC), and Ready -> Payment Collected for Cash on Delivery. */
+ * cancel_service_request RPC), and Ready -> Payment Collected for Pay at Pickup. */
 export function RequestStatusActions({ requestId, status, paymentStatus, paymentMethod, variant = 'full' }: RequestStatusActionsProps) {
   const router = useRouter();
   const toast = useToast();
@@ -55,20 +55,20 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       toast.showError(`Failed to complete request: ${error.message}`);
       return;
     }
-    toast.showSuccess('Request marked as completed/delivered.');
+    toast.showSuccess('Request marked as completed.');
     router.refresh();
   }
 
-  async function markOutForDelivery() {
+  async function markReadyForPickup() {
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('mark_request_out_for_delivery', { p_request_id: requestId });
+    const { error } = await supabase.rpc('mark_request_ready_for_pickup', { p_request_id: requestId });
     setBusy(false);
     if (error) {
-      toast.showError(`Failed to mark request out for delivery: ${error.message}`);
+      toast.showError(`Failed to mark request ready for pickup: ${error.message}`);
       return;
     }
-    toast.showSuccess('Request marked out for delivery.');
+    toast.showSuccess('Request marked ready for pickup.');
     router.refresh();
   }
 
@@ -102,7 +102,7 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
   }
 
   if (status === 'cancelled' || status === 'completed') {
-    if (status === 'completed' && paymentStatus !== 'paid' && paymentMethod === 'cash') {
+    if (status === 'completed' && paymentStatus !== 'paid' && paymentMethod === 'pickup') {
       return (
         <button onClick={markPaymentCollected} disabled={busy} className={`${btnClass} bg-[var(--accent)] text-white`}>
           Mark Payment Collected
@@ -121,14 +121,14 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       ) : null}
 
       {status === 'in_progress' ? (
-        <button onClick={markOutForDelivery} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
-          Mark Out for Delivery
+        <button onClick={markReadyForPickup} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
+          Mark Ready for Pickup
         </button>
       ) : null}
 
-      {status === 'out_for_delivery' ? (
+      {status === 'ready_for_pickup' ? (
         <button onClick={completeRequest} disabled={busy} className={`${btnClass} bg-[var(--accent)] text-white`}>
-          Mark as Completed/Delivered
+          Mark as Completed
         </button>
       ) : null}
 

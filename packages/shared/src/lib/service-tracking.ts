@@ -15,7 +15,7 @@ const NEAR_TARGET_RATIO = 0.8;
 /**
  * Flags an in-flight request against its document type's target processing
  * time. Only meaningful for requests still open (submitted/in_progress/
- * out_for_delivery) — callers should not call this for completed/cancelled
+ * ready_for_pickup) — callers should not call this for completed/cancelled
  * requests, since "elapsed since submission" no longer means anything once
  * the clock has stopped.
  */

@@ -4,15 +4,15 @@
 // signature check below isn't optional.
 //
 // Events to register in the PayMongo dashboard for this endpoint:
-//   payment.paid     — QR Ph payment succeeded. Carries the real Payment id (pay_...),
+//   payment.paid     — QR PH payment succeeded. Carries the real Payment id (pay_...),
 //                      which is the only id the Refunds API accepts.
 //   payment.failed   — payment attempt rejected.
 //   qrph.expired     — the QR lapsed unscanned (30-minute window).
 //   refund.updated   — refunds settle asynchronously; this confirms succeeded/failed.
 //
 // `source.chargeable` is deliberately NOT part of this set: it belongs to the Sources
-// API, which does not support QR Ph at all (see migration 0065). An earlier version of
-// this function only handled that event, so no QR Ph payment could ever have been marked
+// API, which does not support QR PH at all (see migration 0065). An earlier version of
+// this function only handled that event, so no QR PH payment could ever have been marked
 // paid by webhook.
 //
 // PHASE BOUNDARY: settlement into the barangay's registered bank account happens on
@@ -71,7 +71,7 @@ Deno.serve(async (req: Request) => {
   const attrs = resource?.attributes ?? {};
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-  /** Resolves our payments row from whichever PayMongo id this event carries. QR Ph
+  /** Resolves our payments row from whichever PayMongo id this event carries. QR PH
    * events reference the PaymentIntent; older Sources-era rows are matched by source id
    * so historical data still reconciles. */
   async function findPayment(): Promise<{ id: string; status: string } | null> {

@@ -322,7 +322,15 @@ export function IncidentTable({
     },
     {
       header: 'Reporter',
-      render: (r) => r.profiles?.full_name ?? <span className="text-zinc-400">Anonymous</span>,
+      render: (r) =>
+        r.profiles ? (
+          <div>
+            <p>{r.profiles.full_name}</p>
+            {r.profiles.email && <p className="text-xs text-zinc-400">{r.profiles.email}</p>}
+          </div>
+        ) : (
+          <span className="text-zinc-400">Anonymous</span>
+        ),
       edit: {
         type: 'select',
         options: [{ value: '', label: 'Anonymous / Walk-in' }, ...residents.map((res) => ({ value: res.id, label: res.full_name }))],
@@ -433,7 +441,7 @@ export function IncidentTable({
               type="search"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search title, description, reporter…"
+              placeholder="Search title, description, reporter, email…"
               className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
             />
             <button

@@ -199,6 +199,11 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
             {incident.profiles ? (
               <div className="text-sm text-zinc-700 dark:text-zinc-300">
                 <p className="font-medium">{incident.profiles.full_name}</p>
+                {incident.profiles.email && (
+                  <a href={`mailto:${incident.profiles.email}`} className="block text-[var(--accent)] hover:underline">
+                    {incident.profiles.email}
+                  </a>
+                )}
                 {incident.profiles.mobile_number && (
                   <a href={`tel:${incident.profiles.mobile_number}`} className="text-[var(--accent)] hover:underline">
                     {incident.profiles.mobile_number}

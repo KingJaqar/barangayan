@@ -1,7 +1,7 @@
 import type { PaymentMethod } from '@barangayan/shared';
 
 /**
- * Single source of truth for whether QR Ph can complete a real transaction. Flipping
+ * Single source of truth for whether QR PH can complete a real transaction. Flipping
  * this to 'true' (once a settlement bank account is registered in the PayMongo
  * dashboard — see the plan's Part G) is the only mobile-side change needed to go live;
  * the UI, hook, and Edge Functions are already built and dormant behind this flag.
@@ -18,15 +18,15 @@ export interface PaymentMethodOption {
 
 export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
   {
-    key: 'cash',
-    label: 'Cash on Delivery',
+    key: 'pickup',
+    label: 'Pay at Pickup',
     subtitle: 'Pay in person when you pick up your document at the Barangay Hall.',
     icon: 'cash-outline',
   },
   {
     key: 'qrph',
-    label: 'QR Ph',
-    subtitle: "Pay instantly via GCash, Maya, or your bank's QR Ph app.",
+    label: 'QR PH',
+    subtitle: "Pay instantly via GCash, Maya, or your bank's QR PH app.",
     icon: 'qr-code-outline',
   },
 ];

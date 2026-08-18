@@ -4,6 +4,7 @@ import { incidentConfirmationSchema, incidentReportSchema } from './incident-rep
 
 describe('incidentReportSchema', () => {
   const valid = {
+    title: 'Illegal dumping',
     categoryId: '11111111-1111-1111-1111-111111111111',
     description: 'Illegal dumping near the corner store.',
     photoUrls: ['https://example.com/photo.jpg'],
@@ -14,14 +15,19 @@ describe('incidentReportSchema', () => {
     expect(incidentReportSchema.safeParse(valid).success).toBe(true);
   });
 
-  it('rejects an empty description', () => {
-    const result = incidentReportSchema.safeParse({ ...valid, description: '' });
+  it('rejects a too-short title', () => {
+    const result = incidentReportSchema.safeParse({ ...valid, title: 'ab' });
     expect(result.success).toBe(false);
   });
 
-  it('rejects zero photoUrls', () => {
+  it('allows an empty description (optional)', () => {
+    const result = incidentReportSchema.safeParse({ ...valid, description: '' });
+    expect(result.success).toBe(true);
+  });
+
+  it('allows zero photoUrls (optional for MVP)', () => {
     const result = incidentReportSchema.safeParse({ ...valid, photoUrls: [] });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('rejects more than 5 photoUrls', () => {

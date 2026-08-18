@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -10,14 +10,16 @@ import { captureRef } from 'react-native-view-shot';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
+import { AnimatedAppear } from '@/components/services/animated-appear';
 import { CountdownTimer } from '@/components/services/countdown-timer';
 import { PaymentSuccessModal } from '@/components/services/payment-success-modal';
 import { QrGeneratingIndicator } from '@/components/services/qr-generating-indicator';
+import { SkeletonBlock } from '@/components/services/skeleton';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Spacing, Fonts } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { usePaymongoSource } from '@/hooks/use-paymongo-source';
+import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
 const BARANGAYAN_LOGO = require('@/assets/logo/barangayan-logo-1024.png');
@@ -31,7 +33,6 @@ const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreCl
 
 type ServiceRequest = Tables<'service_requests'> & {
   document_types: Pick<Tables<'document_types'>, 'name' | 'fee_centavos'> | null;
-  barangays: Pick<Tables<'barangays'>, 'shipping_fee_centavos'> | null;
 };
 
 /** PayMongo returns next_action.code.image_url as a base64 PNG. Depending on the
@@ -45,11 +46,24 @@ function toRenderableImageUri(imageUrl: string): string {
 
 const PAYMENT_STEPS = [
   'Open your GCash, Maya, or bank’s app',
-  'Tap "Scan QR" or "Pay via QR Ph"',
+  'Tap "Scan QR" or "Pay via QR PH"',
   'Scan the code above',
   'Confirm the amount and complete payment',
   'Return here — we’ll detect it automatically',
 ];
+
+/** Shimmer stand-in for the loading state, shaped like the summary/QR/instructions cards
+ * below it. Rendered only while `request === undefined` — same early-return slot
+ * `PlaceholderPanel` used to occupy. */
+function QrphSkeleton() {
+  return (
+    <View style={styles.skeletonContainer}>
+      <SkeletonBlock width="100%" height={140} borderRadius={Spacing.three} />
+      <SkeletonBlock width="100%" height={340} borderRadius={Spacing.three} style={styles.skeletonGap} />
+      <SkeletonBlock width="100%" height={160} borderRadius={Spacing.three} style={styles.skeletonGap} />
+    </View>
+  );
+}
 
 // State 2b of the payment flow. Only reachable once PAYMENT_SETTLEMENT_READY is true —
 // see constants/payment.ts and the plan's Part G for the settlement-account gating this
@@ -73,7 +87,7 @@ export default function QrPhPaymentScreen() {
   useEffect(() => {
     supabase
       .from('service_requests')
-      .select('*, document_types(name, fee_centavos), barangays(shipping_fee_centavos)')
+      .select('*, document_types(name, fee_centavos)')
       .eq('id', requestId)
       .single()
       .then(({ data }) => setRequest(data as ServiceRequest | null));
@@ -82,9 +96,8 @@ export default function QrPhPaymentScreen() {
   // Fallback breakdown shown before the QR source has loaded — the source response
   // (once available) is the authoritative total actually being charged.
   const documentFee = request?.document_types?.fee_centavos ?? 0;
-  const shippingFee = request?.barangays?.shipping_fee_centavos ?? 0;
   const { source, status, errorMessage, cancelPayment, cancelling } = usePaymongoSource(requestId);
-  const totalDue = source?.amountCentavos ?? documentFee + shippingFee;
+  const totalDue = source?.amountCentavos ?? documentFee;
 
   useEffect(() => {
     Animated.loop(
@@ -112,8 +125,7 @@ export default function QrPhPaymentScreen() {
         refNumber: request.reference_number,
         amount: String(totalDue),
         documentFee: String(source?.documentFeeCentavos ?? documentFee),
-        shippingFee: String(source?.shippingFeeCentavos ?? shippingFee),
-        method: 'QR Ph',
+        method: 'QR PH',
         sourceId: source?.paymentIntentId ?? '',
       },
     });
@@ -189,7 +201,7 @@ export default function QrPhPaymentScreen() {
   }
 
   if (request === undefined) {
-    return <PlaceholderPanel label="Loading…" />;
+    return <QrphSkeleton />;
   }
   if (request === null) {
     return <PlaceholderPanel label="Request not found." />;
@@ -215,7 +227,7 @@ export default function QrPhPaymentScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
-          <ThemedView type="backgroundElement" style={styles.summaryCard}>
+          <ThemedView type="backgroundElement" style={[styles.summaryCard, styles.shadowSm, styles.hairline]}>
             <ThemedText type="small">Payment for</ThemedText>
             <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
@@ -226,10 +238,6 @@ export default function QrPhPaymentScreen() {
               <View style={styles.breakdownRow}>
                 <ThemedText type="small" themeColor="textSecondary">Document Fee</ThemedText>
                 <ThemedText type="small">{formatCentavosAsPHP(source?.documentFeeCentavos ?? documentFee)}</ThemedText>
-              </View>
-              <View style={styles.breakdownRow}>
-                <ThemedText type="small" themeColor="textSecondary">Shipping Fee</ThemedText>
-                <ThemedText type="small">{formatCentavosAsPHP(source?.shippingFeeCentavos ?? shippingFee)}</ThemedText>
               </View>
             </View>
 
@@ -246,96 +254,106 @@ export default function QrPhPaymentScreen() {
             ) : null}
           </ThemedView>
 
-        <ThemedView type="backgroundElement" style={styles.qrCard}>
-          {status === 'loading' || (!source && status !== 'error') ? (
-            <QrGeneratingIndicator />
-          ) : status === 'error' ? (
-            <>
-              <ThemedText type="small" themeColor="accentRed" style={styles.qrCaption}>
-                {errorMessage === 'Request is not ready for payment'
-                  ? 'This request can no longer be paid (it may have been cancelled or completed).'
-                  : (errorMessage ?? 'Could not start a QR Ph payment. Please try again.')}
-              </ThemedText>
-              <Pressable onPress={() => router.back()} hitSlop={Spacing.two}>
-                <ThemedText type="link">Go Back</ThemedText>
-              </Pressable>
-            </>
-          ) : status === 'expired' ? (
-            <ThemedText type="small" themeColor="accentRed">
-              This QR code has expired. Go back and try again.
-            </ThemedText>
-          ) : status === 'cancelled' ? (
-            <ThemedText type="small" themeColor="textSecondary">
-              Payment cancelled. Go back and try again if you'd like to pay.
-            </ThemedText>
-          ) : source ? (
-            <>
-              <View ref={qrFrameRef} collapsable={false} style={styles.qrFrame}>
-                <Image
-                  source={{ uri: toRenderableImageUri(source.qrImageUrl) }}
-                  style={styles.qrImage}
-                  contentFit="contain"
-                />
-              </View>
-              <Pressable onPress={handleSaveQr} disabled={savingQr} style={styles.saveQrRow} hitSlop={Spacing.two}>
-                <Ionicons name={savingQr ? 'reload' : 'download-outline'} size={16} color={theme.primary} />
-                <ThemedText type="small" style={{ color: theme.primary }}>
-                  {savingQr ? 'Saving…' : `Save QR (Ref #${request.reference_number})`}
+          <ThemedView type="backgroundElement" style={[styles.qrCard, styles.shadowMd, styles.hairline]}>
+            <AnimatedAppear key={status} style={styles.qrCardBranch}>
+              {status === 'loading' || (!source && status !== 'error') ? (
+                <QrGeneratingIndicator />
+              ) : status === 'error' ? (
+                <>
+                  <ThemedText type="small" themeColor="accentRed" style={styles.qrCaption}>
+                    {errorMessage === 'Request is not ready for payment'
+                      ? 'This request can no longer be paid (it may have been cancelled or completed).'
+                      : (errorMessage ?? 'Could not start a QR PH payment. Please try again.')}
+                  </ThemedText>
+                  <Pressable onPress={() => router.back()} hitSlop={Spacing.two}>
+                    <ThemedText type="link">Go Back</ThemedText>
+                  </Pressable>
+                </>
+              ) : status === 'expired' ? (
+                <ThemedText type="small" themeColor="accentRed">
+                  This QR code has expired. Go back and try again.
                 </ThemedText>
-              </Pressable>
-            </>
-          ) : null}
-        </ThemedView>
+              ) : status === 'cancelled' ? (
+                <ThemedText type="small" themeColor="textSecondary">
+                  Payment cancelled. Go back and try again if you'd like to pay.
+                </ThemedText>
+              ) : source ? (
+                <>
+                  <View ref={qrFrameRef} collapsable={false} style={styles.qrFrame}>
+                    <Image
+                      source={{ uri: toRenderableImageUri(source.qrImageUrl) }}
+                      style={styles.qrImage}
+                      contentFit="contain"
+                    />
+                  </View>
+                  <Pressable onPress={handleSaveQr} disabled={savingQr} style={styles.saveQrRow} hitSlop={Spacing.two}>
+                    <Ionicons name={savingQr ? 'reload' : 'download-outline'} size={16} color={theme.primary} />
+                    <ThemedText type="small" style={{ color: theme.primary }}>
+                      {savingQr ? 'Saving…' : `Save QR (Ref #${request.reference_number})`}
+                    </ThemedText>
+                  </Pressable>
+                </>
+              ) : null}
+            </AnimatedAppear>
+          </ThemedView>
 
-        {status === 'pending' || status === 'paid' ? (
-          <ThemedView type="backgroundElement" style={styles.instructionsCard}>
-            <ThemedText type="smallBold">How to pay</ThemedText>
-            {PAYMENT_STEPS.map((step, index) => (
-              <View key={step} style={styles.instructionRow}>
-                <View style={[styles.stepBadge, { backgroundColor: theme.primary }]}>
-                  <ThemedText type="small" style={{ color: theme.onPrimary }}>
-                    {index + 1}
+          {status === 'pending' || status === 'paid' ? (
+            <AnimatedAppear>
+              <ThemedView type="backgroundElement" style={[styles.instructionsCard, styles.shadowSm, styles.hairline]}>
+                <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+                  How to Pay
+                </ThemedText>
+                {PAYMENT_STEPS.map((step, index) => (
+                  <View key={step} style={styles.instructionRow}>
+                    <View style={[styles.stepBadge, { backgroundColor: theme.primary }]}>
+                      <ThemedText type="small" style={{ color: theme.onPrimary }}>
+                        {index + 1}
+                      </ThemedText>
+                    </View>
+                    <ThemedText type="small" style={styles.instructionText}>
+                      {step}
+                    </ThemedText>
+                  </View>
+                ))}
+              </ThemedView>
+            </AnimatedAppear>
+          ) : null}
+
+          <View style={styles.brandRow}>
+            <Image source={BARANGAYAN_LOGO} style={styles.brandLogo} contentFit="contain" />
+            <ThemedText style={[styles.brandText, { color: theme.text, fontFamily: Fonts.gideonRoman }]}>
+              barangayan
+            </ThemedText>
+          </View>
+
+          {status === 'pending' ? (
+            <AnimatedAppear>
+              <View style={styles.waitingRow}>
+                <Animated.View style={[styles.dot, { backgroundColor: theme.primary, opacity: pulseRef.current }]} />
+                <View>
+                  <ThemedText type="smallBold" style={{ color: theme.primary }}>
+                    Waiting for payment...
+                  </ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary">
+                    Do not close this screen while paying. It will automatically update once
+                    payment is received.
                   </ThemedText>
                 </View>
-                <ThemedText type="small" style={styles.instructionText}>
-                  {step}
-                </ThemedText>
               </View>
-            ))}
-          </ThemedView>
-        ) : null}
+            </AnimatedAppear>
+          ) : null}
 
-        <View style={styles.brandRow}>
-          <Image source={BARANGAYAN_LOGO} style={styles.brandLogo} contentFit="contain" />
-          <ThemedText style={[styles.brandText, { color: theme.text, fontFamily: Fonts.gideonRoman }]}>
-            barangayan
-          </ThemedText>
-        </View>
-
-        {status === 'pending' ? (
-          <View style={styles.waitingRow}>
-            <Animated.View style={[styles.dot, { backgroundColor: theme.primary, opacity: pulseRef.current }]} />
-            <View>
-              <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                Waiting for payment...
-              </ThemedText>
-              <ThemedText type="small" themeColor="textSecondary">
-                Do not close this screen while paying. It will automatically update once
-                payment is received.
-              </ThemedText>
-            </View>
-          </View>
-        ) : null}
-
-        {status === 'pending' ? (
-          <PrimaryButton
-            label="Cancel Payment"
-            variant="destructive"
-            loading={cancelling}
-            onPress={handleCancelPayment}
-          />
-        ) : null}
-      </ScrollView>
+          {status === 'pending' ? (
+            <AnimatedAppear>
+              <PrimaryButton
+                label="Cancel Payment"
+                variant="destructive"
+                loading={cancelling}
+                onPress={handleCancelPayment}
+              />
+            </AnimatedAppear>
+          ) : null}
+        </ScrollView>
       </View>
 
       <PaymentSuccessModal
@@ -374,6 +392,32 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
+
+  /* Design-system recipes (shared literally across the Services screens) */
+  shadowSm: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  shadowMd: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 5,
+  },
+  hairline: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  sectionLabel: {
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    fontSize: 12,
+  },
+
   summaryCard: {
     padding: Spacing.four,
     borderRadius: Spacing.three,
@@ -401,6 +445,10 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     minHeight: 340,
     justifyContent: 'center',
+  },
+  qrCardBranch: {
+    alignItems: 'center',
+    gap: Spacing.two,
   },
   qrFrame: {
     alignItems: 'center',
@@ -466,5 +514,15 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginTop: Spacing.one,
+  },
+
+  /* Loading skeleton */
+  skeletonContainer: {
+    flex: 1,
+    padding: Spacing.four,
+    backgroundColor: '#F6F6F6',
+  },
+  skeletonGap: {
+    marginTop: Spacing.three,
   },
 });

@@ -10,7 +10,9 @@ export default async function ResidentProfilePage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, full_name, email, mobile_number, home_address, id_verification_status')
+    .select(
+      'id, first_name, last_name, middle_name, suffix, sex, email, mobile_number, house_no, street, city, employment_status, occupation, id_verification_status, barangays(name)',
+    )
     .eq('id', user!.id)
     .single();
 

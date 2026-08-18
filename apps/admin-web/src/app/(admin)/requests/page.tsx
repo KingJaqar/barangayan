@@ -25,8 +25,8 @@ function matchesTab(request: ServiceRequest, tab: Tab): boolean {
       return request.status === 'submitted';
     case 'processing':
       return request.status === 'in_progress';
-    case 'delivery':
-      return request.status === 'out_for_delivery';
+    case 'pickup':
+      return request.status === 'ready_for_pickup';
     case 'completed':
       return request.status === 'completed';
     case 'cancelled':
@@ -42,7 +42,7 @@ export default async function RequestsPage({
   searchParams: Promise<{ tab?: string; q?: string; doc?: string }>;
 }) {
   const { tab: tabParam, q, doc } = await searchParams;
-  const tab: Tab = (['active', 'processing', 'delivery', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
+  const tab: Tab = (['active', 'processing', 'pickup', 'completed', 'cancelled', 'all'] as Tab[]).includes(tabParam as Tab)
     ? (tabParam as Tab)
     : 'active';
 
@@ -91,7 +91,7 @@ export default async function RequestsPage({
 
   const submittedCount = requests.filter((r) => r.status === 'submitted').length;
   const processingCount = requests.filter((r) => r.status === 'in_progress').length;
-  const deliveryCount = requests.filter((r) => r.status === 'out_for_delivery').length;
+  const pickupCount = requests.filter((r) => r.status === 'ready_for_pickup').length;
   const completedCount = requests.filter((r) => r.status === 'completed').length;
   const cancelledCount = requests.filter((r) => r.status === 'cancelled').length;
 
@@ -107,7 +107,7 @@ export default async function RequestsPage({
       <div className="mb-6 grid grid-cols-3 gap-4 sm:grid-cols-5">
         <SummaryCard label="Active" value={submittedCount} />
         <SummaryCard label="Processing" value={processingCount} />
-        <SummaryCard label="Out for Delivery" value={deliveryCount} />
+        <SummaryCard label="Ready for Pickup" value={pickupCount} />
         <SummaryCard label="Completed" value={completedCount} />
         <SummaryCard label="Cancelled" value={cancelledCount} />
       </div>

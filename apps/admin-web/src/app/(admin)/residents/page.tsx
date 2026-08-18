@@ -15,10 +15,24 @@ import { TABS, type Tab } from './types';
 export type ResidentRow = {
   id: string;
   full_name: string;
+  // Structured name/address/employment columns (migration 0081) — full_name/
+  // home_address above stay in the row (sort key, avatar initials, search fallback,
+  // detail-modal header) but the directory table itself now displays these parts
+  // separately instead of the composed strings.
+  first_name: string | null;
+  last_name: string | null;
+  middle_name: string | null;
+  suffix: string | null;
+  sex: string | null;
   avatar_url: string | null;
   email: string | null;
   mobile_number: string | null;
   home_address: string | null;
+  house_no: string | null;
+  street: string | null;
+  city: string | null;
+  employment_status: string | null;
+  occupation: string | null;
   birth_date: string | null;
   email_verification_status: string;
   household_members: Array<{ id: string; name: string; relation: string; role: string }>;
@@ -56,8 +70,9 @@ export default async function ResidentsPage({
   const { data: residents, error } = await supabase
     .from('profiles')
     .select(
-      'id, full_name, avatar_url, email, mobile_number, home_address, birth_date, ' +
-        'email_verification_status, household_members, id_photo_urls, id_type, ' +
+      'id, full_name, first_name, last_name, middle_name, suffix, sex, avatar_url, email, ' +
+        'mobile_number, home_address, house_no, street, city, employment_status, occupation, ' +
+        'birth_date, email_verification_status, household_members, id_photo_urls, id_type, ' +
         'id_verification_status, created_at, location_verified',
     )
     .eq('role', 'resident')
@@ -94,9 +109,16 @@ export default async function ResidentsPage({
     rows = rows.filter(
       (r) =>
         r.full_name.toLowerCase().includes(needle) ||
+        (r.first_name ?? '').toLowerCase().includes(needle) ||
+        (r.last_name ?? '').toLowerCase().includes(needle) ||
+        (r.middle_name ?? '').toLowerCase().includes(needle) ||
         (r.email ?? '').toLowerCase().includes(needle) ||
         (r.mobile_number ?? '').toLowerCase().includes(needle) ||
         (r.home_address ?? '').toLowerCase().includes(needle) ||
+        (r.house_no ?? '').toLowerCase().includes(needle) ||
+        (r.street ?? '').toLowerCase().includes(needle) ||
+        (r.city ?? '').toLowerCase().includes(needle) ||
+        (r.occupation ?? '').toLowerCase().includes(needle) ||
         (r.id_type ?? '').toLowerCase().includes(needle),
     );
   }

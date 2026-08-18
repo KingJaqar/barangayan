@@ -45,7 +45,7 @@ function AddRequestForm({
   const [referenceNumber, setReferenceNumber] = useState('');
   const [residentId, setResidentId] = useState('');
   const [documentTypeId, setDocumentTypeId] = useState('');
-  const [status, setStatus] = useState<'submitted' | 'in_progress' | 'out_for_delivery' | 'completed' | 'cancelled'>('submitted');
+  const [status, setStatus] = useState<'submitted' | 'in_progress' | 'ready_for_pickup' | 'completed' | 'cancelled'>('submitted');
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid' | 'waived'>('pending');
   const [submittedAt, setSubmittedAt] = useState(currentDateTimeLocal);
   const [notes, setNotes] = useState('');
@@ -131,8 +131,8 @@ function AddRequestForm({
         <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
           <option value="submitted">Submitted</option>
           <option value="in_progress">Processing</option>
-          <option value="out_for_delivery">Out for Delivery</option>
-          <option value="completed">Completed/Delivered</option>
+          <option value="ready_for_pickup">Ready for Pickup</option>
+          <option value="completed">Completed</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </label>
@@ -316,8 +316,8 @@ export function RequestsTable({
         options: [
           { value: 'submitted', label: 'Submitted' },
           { value: 'in_progress', label: 'Processing' },
-          { value: 'out_for_delivery', label: 'Out for Delivery' },
-          { value: 'completed', label: 'Completed/Delivered' },
+          { value: 'ready_for_pickup', label: 'Ready for Pickup' },
+          { value: 'completed', label: 'Completed' },
           { value: 'cancelled', label: 'Cancelled' },
         ],
         // Same bare .update({status}) the FSM buttons in RequestStatusActions use — the

@@ -12,9 +12,9 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { TABS, type Tab } from './types';
 
-// Tables<'payments'> already includes document_fee_centavos, shipping_fee_centavos,
-// paymongo_payment_id, refund_status, refund_amount_centavos, refund_reason,
-// refunded_at, refunded_by (migration 0064) — no extra fields needed here.
+// Tables<'payments'> already includes document_fee_centavos, paymongo_payment_id,
+// refund_status, refund_amount_centavos, refund_reason, refunded_at, refunded_by
+// (migration 0064) — no extra fields needed here.
 export type Payment = Tables<'payments'> & {
   service_requests:
     | (Pick<Tables<'service_requests'>, 'reference_number' | 'resident_id' | 'document_type_id'> & {
@@ -26,8 +26,8 @@ export type Payment = Tables<'payments'> & {
 };
 
 const METHOD_OPTIONS = [
-  { value: 'cash', label: 'Cash on Delivery' },
-  { value: 'qrph', label: 'QR Ph' },
+  { value: 'pickup', label: 'Pay at Pickup' },
+  { value: 'qrph', label: 'QR PH' },
 ];
 
 const STATUS_OPTIONS = [
@@ -73,7 +73,7 @@ function AddTransactionForm({
   const router = useRouter();
   const toast = useToast();
   const [reference, setReference] = useState('');
-  const [method, setMethod] = useState<'cash' | 'qrph'>('cash');
+  const [method, setMethod] = useState<'pickup' | 'qrph'>('pickup');
   const [amountPesos, setAmountPesos] = useState('');
   const [status, setStatus] = useState<'pending' | 'paid'>('pending');
   const [submitting, setSubmitting] = useState(false);
@@ -134,7 +134,7 @@ function AddTransactionForm({
     setReference('');
     setAmountPesos('');
     setStatus('pending');
-    setMethod('cash');
+    setMethod('pickup');
     setMatchedRequest(null);
     setLookupState('idle');
     setCollectedBy('');
@@ -155,8 +155,8 @@ function AddTransactionForm({
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
 
-    let resolvedCollectedBy: string | null = method === 'cash' ? collectedBy || null : null;
-    if (method === 'cash' && !resolvedCollectedBy && status === 'paid') {
+    let resolvedCollectedBy: string | null = method === 'pickup' ? collectedBy || null : null;
+    if (method === 'pickup' && !resolvedCollectedBy && status === 'paid') {
       // No admin explicitly picked but this is being recorded as already paid — default
       // to whoever's entering it, same fallback the row-level "Mark Payment Collected"
       // action already uses.
@@ -233,7 +233,7 @@ function AddTransactionForm({
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Method</span>
-        <select className={inputClass} value={method} onChange={(e) => setMethod(e.target.value as 'cash' | 'qrph')}>
+        <select className={inputClass} value={method} onChange={(e) => setMethod(e.target.value as 'pickup' | 'qrph')}>
           {METHOD_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -262,8 +262,8 @@ function AddTransactionForm({
       </label>
 
       <label className="text-sm">
-        <span className="mb-1 block font-medium">{method === 'cash' ? 'Collected By' : 'Source (PayMongo)'}</span>
-        {method === 'cash' ? (
+        <span className="mb-1 block font-medium">{method === 'pickup' ? 'Collected By' : 'Source (PayMongo)'}</span>
+        {method === 'pickup' ? (
           <select className={inputClass} value={collectedBy} onChange={(e) => setCollectedBy(e.target.value)}>
             <option value="">— Not yet collected —</option>
             {admins.map((a) => (
@@ -493,7 +493,7 @@ export function TransactionsTable({
     },
     {
       header: 'Method',
-      render: (p) => (p.method === 'qrph' ? 'QR Ph' : 'Cash on Delivery'),
+      render: (p) => (p.method === 'qrph' ? 'QR PH' : 'Pay at Pickup'),
       edit: {
         type: 'select',
         options: METHOD_OPTIONS,
@@ -503,17 +503,7 @@ export function TransactionsTable({
     },
     {
       header: 'Amount',
-      render: (p) =>
-        p.shipping_fee_centavos ? (
-          <div>
-            <div>{formatCentavosAsPHP(p.amount_centavos)}</div>
-            <div className="text-xs text-zinc-500">
-              Doc {formatCentavosAsPHP(p.document_fee_centavos ?? 0)} + Ship {formatCentavosAsPHP(p.shipping_fee_centavos)}
-            </div>
-          </div>
-        ) : (
-          formatCentavosAsPHP(p.amount_centavos)
-        ),
+      render: (p) => formatCentavosAsPHP(p.amount_centavos),
       edit: {
         type: 'number',
         getValue: (p) => (p.amount_centavos / 100).toFixed(2),
@@ -543,11 +533,11 @@ export function TransactionsTable({
     },
     {
       header: 'Collected By / Source',
-      render: (p) => (p.method === 'cash' ? (p.collector?.full_name ?? '—') : (p.paymongo_source_id ?? '—')),
-      // Cash rows need a select of admins (writes collected_by); QR Ph rows need a free-text
+      render: (p) => (p.method === 'pickup' ? (p.collector?.full_name ?? '—') : (p.paymongo_source_id ?? '—')),
+      // Pickup rows need a select of admins (writes collected_by); QR PH rows need a free-text
       // PayMongo source id (writes paymongo_source_id) — genuinely different controls per row.
       edit: (p): EditableCellConfig<Payment> =>
-        p.method === 'cash'
+        p.method === 'pickup'
           ? {
               type: 'select',
               options: admins.map((a) => ({ value: a.id, label: a.full_name })),

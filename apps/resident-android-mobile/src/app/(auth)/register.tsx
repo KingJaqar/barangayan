@@ -1,4 +1,12 @@
-import { isPointInPolygon, registerSchema } from '@barangayan/shared';
+import {
+  EMPLOYMENT_STATUSES,
+  EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  isPointInPolygon,
+  registerSchema,
+  SEXES,
+  type EmploymentStatus,
+  type Sex,
+} from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
@@ -17,10 +25,67 @@ import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
+const SEX_LABELS: Record<Sex, string> = { male: 'Male', female: 'Female' };
+
+const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
+  employed: 'Employed',
+  unemployed: 'Unemployed',
+  student: 'Student',
+  self_employed: 'Self-Employed',
+  retired: 'Retired',
+};
+
 /** YYYY-MM-DD → "August 8, 2000" */
 function fmtDate(iso: string | null): string {
   if (!iso) return '';
   return isoToLocalDate(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+/**
+ * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
+ * has a `TextField` shape, and unlike SegmentedControl this never implies a default
+ * selection: with `active` unset, no chip renders as chosen.
+ */
+function ChoiceChips<T extends string>({
+  options,
+  labels,
+  active,
+  onChange,
+}: {
+  options: readonly T[];
+  labels: Record<T, string>;
+  active: T | null;
+  onChange: (value: T) => void;
+}) {
+  const theme = useTheme();
+  return (
+    <View style={styles.chipRow}>
+      {options.map((option) => {
+        const isActive = active === option;
+        return (
+          <Pressable
+            key={option}
+            onPress={() => onChange(option)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: isActive }}
+            style={[
+              styles.chip,
+              {
+                backgroundColor: isActive ? theme.primary : theme.backgroundElement,
+                borderColor: isActive ? theme.primary : theme.backgroundSelected,
+              },
+            ]}>
+            <ThemedText
+              type="small"
+              themeColor={isActive ? undefined : 'textSecondary'}
+              style={isActive ? { color: theme.onPrimary, fontWeight: '600' } : undefined}>
+              {labels[option]}
+            </ThemedText>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
 }
 
 export default function RegisterScreen() {
@@ -28,10 +93,22 @@ export default function RegisterScreen() {
   const theme = useTheme();
   const { setRegistering } = useAuth();
 
-  const [fullName, setFullName] = useState('');
+  // Full Name split into structured parts (Register/Profile field-split) — see
+  // registerSchema in @barangayan/shared for the required/optional breakdown.
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [suffix, setSuffix] = useState('');
+  const [sex, setSex] = useState<Sex | null>(null);
   const [mobileNumber, setMobileNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [homeAddress, setHomeAddress] = useState('');
+  // Home Address split into structured parts — "Barangay" isn't one of these; it's
+  // already barangay.name below (profiles.barangay_id, auto-assigned, AGENTS.md §0).
+  const [houseNo, setHouseNo] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | null>(null);
+  const [occupation, setOccupation] = useState('');
   const [birthDateIso, setBirthDateIso] = useState<string | null>(null);
   const [showBirthPicker, setShowBirthPicker] = useState(false);
   const [password, setPassword] = useState('');
@@ -112,10 +189,18 @@ export default function RegisterScreen() {
     }
 
     const result = registerSchema.safeParse({
-      fullName,
+      firstName,
+      lastName,
+      middleName: middleName || undefined,
+      suffix: suffix || undefined,
+      sex: sex ?? undefined,
       mobileNumber: mobileNumber || undefined,
       email,
-      homeAddress: homeAddress || undefined,
+      houseNo,
+      street,
+      city,
+      employmentStatus: employmentStatus ?? undefined,
+      occupation: occupation || undefined,
       birthDate: birthDateIso ?? undefined,
       password,
       confirmPassword,
@@ -141,6 +226,9 @@ export default function RegisterScreen() {
     // see migration 0012. Confirm Email must be disabled in the hosted project;
     // signUp() will then return a live session immediately. We sign that session
     // out right after so the resident must go through Login explicitly.
+    // full_name/home_address are no longer sent — migration 0081's
+    // compose_profiles_display_fields() trigger derives both from the structured
+    // fields below.
     let signUpSucceeded = false;
     try {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -148,9 +236,17 @@ export default function RegisterScreen() {
         password: result.data.password,
         options: {
           data: {
-            full_name: result.data.fullName,
+            first_name: result.data.firstName,
+            last_name: result.data.lastName,
+            middle_name: result.data.middleName ?? null,
+            suffix: result.data.suffix ?? null,
+            sex: result.data.sex,
             mobile_number: result.data.mobileNumber ?? null,
-            home_address: result.data.homeAddress ?? null,
+            house_no: result.data.houseNo,
+            street: result.data.street,
+            city: result.data.city,
+            employment_status: result.data.employmentStatus,
+            occupation: result.data.occupation ?? null,
             birth_date: result.data.birthDate ?? null,
             barangay_id: barangay.id,
             // Soft geofencing flag (0075) — read by handle_new_user(), never blocks signup.
@@ -252,7 +348,33 @@ export default function RegisterScreen() {
         </ThemedText>
 
         <View style={styles.form}>
-          <TextField label="Full Name" value={fullName} onChangeText={setFullName} error={fieldErrors.fullName} />
+          <View style={styles.fieldPairRow}>
+            <View style={styles.fieldPairItem}>
+              <TextField label="First Name" value={firstName} onChangeText={setFirstName} error={fieldErrors.firstName} />
+            </View>
+            <View style={styles.fieldPairItem}>
+              <TextField label="Last Name" value={lastName} onChangeText={setLastName} error={fieldErrors.lastName} />
+            </View>
+          </View>
+          <View style={styles.fieldPairRow}>
+            <View style={styles.fieldPairItem}>
+              <TextField label="Middle Name (optional)" value={middleName} onChangeText={setMiddleName} />
+            </View>
+            <View style={styles.fieldPairItem}>
+              <TextField label="Suffix (optional)" value={suffix} onChangeText={setSuffix} />
+            </View>
+          </View>
+
+          <View style={styles.choiceField}>
+            <ThemedText type="small">Sex</ThemedText>
+            <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
+            {fieldErrors.sex ? (
+              <ThemedText type="small" themeColor="accentRed">
+                {fieldErrors.sex}
+              </ThemedText>
+            ) : null}
+          </View>
+
           <TextField
             label="Mobile Number"
             keyboardType="phone-pad"
@@ -267,7 +389,43 @@ export default function RegisterScreen() {
             onChangeText={setEmail}
             error={fieldErrors.email}
           />
-          <TextField label="Home Address" value={homeAddress} onChangeText={setHomeAddress} />
+
+          <View style={styles.fieldPairRow}>
+            <View style={[styles.fieldPairItem, { flex: 1 }]}>
+              <TextField label="House No." value={houseNo} onChangeText={setHouseNo} error={fieldErrors.houseNo} />
+            </View>
+            <View style={[styles.fieldPairItem, { flex: 2 }]}>
+              <TextField label="Street" value={street} onChangeText={setStreet} error={fieldErrors.street} />
+            </View>
+          </View>
+          <TextField label="City" value={city} onChangeText={setCity} error={fieldErrors.city} />
+
+          <ThemedView type="backgroundElement" style={styles.barangayRow}>
+            <ThemedText type="small">Barangay</ThemedText>
+            <ThemedText type="smallBold">{barangay?.name ?? 'Loading…'}</ThemedText>
+          </ThemedView>
+
+          <View style={styles.choiceField}>
+            <ThemedText type="small">Employment Status</ThemedText>
+            <ChoiceChips
+              options={EMPLOYMENT_STATUSES}
+              labels={EMPLOYMENT_STATUS_LABELS}
+              active={employmentStatus}
+              onChange={(next) => {
+                setEmploymentStatus(next);
+                if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
+              }}
+            />
+            {fieldErrors.employmentStatus ? (
+              <ThemedText type="small" themeColor="accentRed">
+                {fieldErrors.employmentStatus}
+              </ThemedText>
+            ) : null}
+          </View>
+
+          {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
+            <TextField label="Occupation (optional)" value={occupation} onChangeText={setOccupation} />
+          ) : null}
 
           <View style={styles.birthdayField}>
             <ThemedText type="small">Birthday</ThemedText>
@@ -328,11 +486,6 @@ export default function RegisterScreen() {
               </ThemedText>
             </View>
           ) : null}
-
-          <ThemedView type="backgroundElement" style={styles.barangayRow}>
-            <ThemedText type="small">Barangay</ThemedText>
-            <ThemedText type="smallBold">{barangay?.name ?? 'Loading…'}</ThemedText>
-          </ThemedView>
 
           {/* Real point-in-polygon geofencing (Module 3) against the barangay's boundary
               polygon — a soft, preliminary check per the project paper: it never blocks
@@ -465,5 +618,26 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     borderRadius: Spacing.three,
     gap: Spacing.two,
+  },
+  fieldPairRow: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+  },
+  fieldPairItem: {
+    flex: 1,
+  },
+  choiceField: {
+    gap: Spacing.one,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.two,
+  },
+  chip: {
+    borderWidth: 1,
+    borderRadius: Spacing.four,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
   },
 });

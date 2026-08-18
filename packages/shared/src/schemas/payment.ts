@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
-/** The two payment methods offered on the mobile Payment screen. QR Ph stays selectable
- * in the UI even while gated by EXPO_PUBLIC_QRPH_SETTLEMENT_READY — this schema just
- * describes the shape, not the gating (that's a client-side concern, not a validation
- * rule, since an ungated QR Ph submission should never reach here). */
-export const paymentMethodSchema = z.enum(['cash', 'qrph']);
+/** The two payment methods offered on the mobile Payment screen: pay in cash at pickup
+ * ('pickup'), or QR PH. QR PH stays selectable in the UI even while gated by
+ * EXPO_PUBLIC_QRPH_SETTLEMENT_READY — this schema just describes the shape, not the
+ * gating (that's a client-side concern, not a validation rule, since an ungated QR PH
+ * submission should never reach here). */
+export const paymentMethodSchema = z.enum(['pickup', 'qrph']);
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>;
 
 /** Admin-side cancellation payload — mirrors the cancel_service_request RPC's args. */

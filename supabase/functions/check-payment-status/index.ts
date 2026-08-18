@@ -1,10 +1,10 @@
-// Polled every 5s by use-paymongo-source.ts while a QR Ph payment is pending, as a
+// Polled every 5s by use-paymongo-source.ts while a QR PH payment is pending, as a
 // fallback beside the Realtime subscription on `payments`. Read-only lookup against
 // PayMongo's PaymentIntents API — the secret key stays server-side here, same boundary
 // as create-payment-source.
 //
-// QR Ph is a PaymentIntent flow, not a Source (see migration 0065) — this used to GET
-// /v1/sources/{id}, which could never have resolved a QR Ph payment.
+// QR PH is a PaymentIntent flow, not a Source (see migration 0065) — this used to GET
+// /v1/sources/{id}, which could never have resolved a QR PH payment.
 //
 // S0-3: requires the caller's JWT and verifies they own the payment before looking
 // anything up. Accepts `paymentId` (the payments row's uuid) rather than a raw PayMongo

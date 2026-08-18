@@ -17,7 +17,7 @@ interface PaymentRefundActionProps {
   refundTransferLink?: string | null;
 }
 
-/** Full-amount refund trigger for a paid QR Ph transaction — mirrors the Transactions
+/** Full-amount refund trigger for a paid QR PH transaction — mirrors the Transactions
  * ledger's own Refund column (transactions-table.tsx), extracted so the request detail
  * page can offer the same action without duplicating the confirm/toast/refresh wiring. */
 export function PaymentRefundAction({

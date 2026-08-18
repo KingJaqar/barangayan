@@ -1,21 +1,21 @@
-// Creates a PayMongo QR Ph charge for a service_request's fee and stores it on a
+// Creates a PayMongo QR PH charge for a service_request's fee and stores it on a
 // `payments` row. Holds the PayMongo secret key (Edge Function secret, never shipped to
 // the mobile app).
 //
-// QR Ph is a PaymentIntent flow, NOT the Sources API. An earlier version of this
+// QR PH is a PaymentIntent flow, NOT the Sources API. An earlier version of this
 // function called POST /v1/sources with type='qrph'; that endpoint only supports
 // gcash/grab_pay/paymaya, so PayMongo rejected every request and the app showed
-// "Could not start a QR Ph payment". The correct three-step flow (see migration 0065):
+// "Could not start a QR PH payment". The correct three-step flow (see migration 0065):
 //   1. POST /v1/payment_intents      payment_method_allowed: ['qrph']
 //   2. POST /v1/payment_methods      type: 'qrph'
 //   3. POST /v1/payment_intents/{id}/attach  -> next_action.code.image_url
 // The function name is kept for continuity with the deployed function + mobile caller.
 //
 // S0-2: the fee is never trusted from the client. The caller supplies only `requestId`;
-// the amount and description are derived server-side from document_types.fee_centavos
-// plus the barangay's flat shipping_fee_centavos, joined through the service_request.
-// The payments row is inserted with the service_role key since residents have no INSERT
-// policy on `payments` (migration 0017) — this function is the only writer.
+// the amount and description are derived server-side from document_types.fee_centavos,
+// joined through the service_request. The payments row is inserted with the service_role
+// key since residents have no INSERT policy on `payments` (migration 0017) — this
+// function is the only writer.
 //
 // Payment is intentionally allowed as soon as the request exists (any status except
 // 'cancelled'/'completed') — no admin review gate. See migration 0064 for why refunds
@@ -79,12 +79,25 @@ Deno.serve(async (req: Request) => {
   const { data: request, error: requestError } = await supabase
     .from('service_requests')
     .select(
-      'id, barangay_id, resident_id, status, reference_number, document_type:document_types(name, fee_centavos), barangay:barangays(shipping_fee_centavos)',
+      'id, barangay_id, resident_id, status, reference_number, document_type:document_types(name, fee_centavos)',
     )
     .eq('id', requestId)
     .single();
 
-  if (requestError || !request || request.resident_id !== user.id) {
+  // A failed query and a genuine miss are NOT the same thing, and collapsing them into
+  // one 404 is what hid this outage: after migration 0082 dropped
+  // barangays.shipping_fee_centavos, this select (which still asked for it) failed with
+  // PostgREST 42703, and the resident was shown 'Request not found or not yours' — a
+  // message that points every investigation at RLS and ownership instead of the schema.
+  // PGRST116 is PostgREST's 'no rows for .single()'; anything else is a real fault.
+  if (requestError && requestError.code !== 'PGRST116') {
+    console.error('service_requests lookup failed', requestError);
+    return new Response(
+      JSON.stringify({ error: 'Could not load this request. Please try again.' }),
+      { status: 500 },
+    );
+  }
+  if (!request || request.resident_id !== user.id) {
     return new Response(JSON.stringify({ error: 'Request not found or not yours' }), { status: 404 });
   }
 
@@ -104,7 +117,7 @@ Deno.serve(async (req: Request) => {
   const { data: resumable } = await supabaseAdmin
     .from('payments')
     .select(
-      'id, paymongo_payment_intent_id, qr_image_url, expires_at, document_fee_centavos, shipping_fee_centavos, amount_centavos',
+      'id, paymongo_payment_intent_id, qr_image_url, expires_at, document_fee_centavos, amount_centavos',
     )
     .eq('service_request_id', requestId)
     .eq('method', 'qrph')
@@ -121,7 +134,6 @@ Deno.serve(async (req: Request) => {
         qrImageUrl: resumable.qr_image_url,
         expiresAt: new Date(resumable.expires_at).getTime(),
         documentFeeCentavos: resumable.document_fee_centavos,
-        shippingFeeCentavos: resumable.shipping_fee_centavos,
         amountCentavos: resumable.amount_centavos,
       }),
       { headers: { 'Content-Type': 'application/json' } },
@@ -132,11 +144,9 @@ Deno.serve(async (req: Request) => {
   if (!documentType) {
     return new Response(JSON.stringify({ error: 'Document type not found' }), { status: 404 });
   }
-  const barangay = request.barangay as unknown as { shipping_fee_centavos: number } | null;
 
   const documentFeeCentavos = documentType.fee_centavos;
-  const shippingFeeCentavos = barangay?.shipping_fee_centavos ?? 0;
-  const amountCentavos = documentFeeCentavos + shippingFeeCentavos;
+  const amountCentavos = documentFeeCentavos;
   const description = `${documentType.name} — ${request.reference_number}`;
 
   if (amountCentavos < 100) {
@@ -146,10 +156,10 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // ── Step 0: Void any stale pending QR Ph payments for this request ──────────
+  // ── Step 0: Void any stale pending QR PH payments for this request ──────────
   // Reaching here means the resume check above found nothing resumable — either there's
-  // no pending QR Ph row at all, or the one that exists has passed its expires_at. Void
-  // it before creating a fresh one so there's never more than one active QR Ph intent per
+  // no pending QR PH row at all, or the one that exists has passed its expires_at. Void
+  // it before creating a fresh one so there's never more than one active QR PH intent per
   // service request. Best-effort: if the PayMongo cancel or DB update fails, we proceed
   // anyway — the old intent will expire naturally.
   {
@@ -266,12 +276,12 @@ Deno.serve(async (req: Request) => {
   const qrImageUrl = nextAction?.code?.image_url as string | undefined;
   if (!qrImageUrl) {
     return new Response(
-      JSON.stringify({ error: 'PayMongo did not return a QR code — QR Ph may not be activated on this account' }),
+      JSON.stringify({ error: 'PayMongo did not return a QR code — QR PH may not be activated on this account' }),
       { status: 502 },
     );
   }
 
-  // PayMongo dynamic QR Ph codes are single-use and expire 30 minutes after issue. Stored
+  // PayMongo dynamic QR PH codes are single-use and expire 30 minutes after issue. Stored
   // alongside the QR image so the resume check above (and the response below) can both
   // derive from this exact same timestamp — they can never drift apart.
   const expiresAtIso = new Date(Date.now() + 30 * 60 * 1000).toISOString();
@@ -286,7 +296,6 @@ Deno.serve(async (req: Request) => {
       method: 'qrph',
       amount_centavos: amountCentavos,
       document_fee_centavos: documentFeeCentavos,
-      shipping_fee_centavos: shippingFeeCentavos,
       status: 'pending',
       paymongo_payment_intent_id: intentId,
       qr_image_url: qrImageUrl,
@@ -308,7 +317,6 @@ Deno.serve(async (req: Request) => {
       qrImageUrl,
       expiresAt: new Date(expiresAtIso).getTime(),
       documentFeeCentavos,
-      shippingFeeCentavos,
       amountCentavos,
     }),
     { headers: { 'Content-Type': 'application/json' } },

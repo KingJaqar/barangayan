@@ -34,24 +34,27 @@ interface ColorPickerProps {
  * dragging, both already used elsewhere in this app's dependency tree. */
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   const [hsv, setHsv] = useState<HSV>(() => hexToHsv(value));
-  const hueRef = useRef(hsv.h);
-  hueRef.current = hsv.h;
+  // Mirrors the latest HSV so gesture handlers can derive the next value without a
+  // setState updater — calling the parent's onChange inside an updater runs it during
+  // render, which triggers React's 'setState while rendering' warning.
+  const hsvRef = useRef(hsv);
+  hsvRef.current = hsv;
 
-  function updateFromSv(x: number, y: number) {
-    const s = clamp(x / SV_SIZE, 0, 1);
-    const v = clamp(1 - y / SV_SIZE, 0, 1);
-    const next = { h: hueRef.current, s, v };
+  function commit(next: HSV) {
+    hsvRef.current = next;
     setHsv(next);
     onChange(hsvToHex(next));
   }
 
+  function updateFromSv(x: number, y: number) {
+    const s = clamp(x / SV_SIZE, 0, 1);
+    const v = clamp(1 - y / SV_SIZE, 0, 1);
+    commit({ h: hsvRef.current.h, s, v });
+  }
+
   function updateFromHue(x: number) {
     const h = clamp((x / SV_SIZE) * 360, 0, 360);
-    setHsv((prev) => {
-      const next = { ...prev, h };
-      onChange(hsvToHex(next));
-      return next;
-    });
+    commit({ ...hsvRef.current, h });
   }
 
   const svResponder = useMemo(

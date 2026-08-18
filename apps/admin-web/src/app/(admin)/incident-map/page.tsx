@@ -6,7 +6,7 @@ import { IncidentMapClient } from './IncidentMapClient';
 
 export type IncidentRow = Tables<'incidents'> & {
   incident_categories: Pick<Tables<'incident_categories'>, 'name' | 'color' | 'icon'> | null;
-  profiles: Pick<Tables<'profiles'>, 'full_name' | 'mobile_number' | 'home_address'> | null;
+  profiles: Pick<Tables<'profiles'>, 'full_name' | 'email' | 'mobile_number' | 'home_address'> | null;
 };
 
 interface CategoryRow {
@@ -42,7 +42,7 @@ export default async function IncidentMapPage({
   const { data: incidents } = await supabase
     .from('incidents')
     .select(
-      '*, incident_categories(name, color, icon), profiles!incidents_reporter_id_fkey(full_name, mobile_number, home_address)',
+      '*, incident_categories(name, color, icon), profiles!incidents_reporter_id_fkey(full_name, email, mobile_number, home_address)',
     )
     .is('deleted_at', null)
     .order('created_at', { ascending: false });

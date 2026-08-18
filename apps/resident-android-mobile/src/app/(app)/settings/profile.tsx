@@ -7,7 +7,10 @@
  *                        Tap anywhere on the circle or the pencil badge to re-upload.
  *                        Saved immediately (independent of the Save Changes button).
  *  ③ Verified badge    — shows when email_verification_status = 'verified'
- *  ④ Personal Info     — Full Name, Address, Mobile, Birthday (each inline-editable)
+ *  ④ Personal Info     — First/Middle/Last/Suffix, Email, House No./Street/City, Mobile
+ *                        Number are edited directly in the display form (plain
+ *                        TextInput, no modal); Occupation still uses the tap-to-edit
+ *                        bottom sheet, Sex/Employment Status/Birthday use their pickers.
  *  ⑤ Household         — JSONB member list; Add / edit / remove via bottom modal
  *  ⑥ Identification    — ID type picker + stored ID photo display + re-upload
  *  ⑦ Save Changes CTA  — fixed green pill at bottom
@@ -34,6 +37,13 @@
  *   Edit pencil icon   "create-outline"  18 px  primary
  */
 
+import {
+  EMPLOYMENT_STATUSES,
+  EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  SEXES,
+  type EmploymentStatus,
+  type Sex,
+} from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -91,6 +101,16 @@ const ID_TYPES = [
 ] as const;
 
 const RELATIONS = ['Spouse', 'Child', 'Parent', 'Sibling', 'Grandparent', 'Grandchild', 'Other'] as const;
+
+const SEX_LABELS: Record<Sex, string> = { male: 'Male', female: 'Female' };
+
+const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
+  employed: 'Employed',
+  unemployed: 'Unemployed',
+  student: 'Student',
+  self_employed: 'Self-Employed',
+  retired: 'Retired',
+};
 const ROLES     = ['Head of Family', 'Student', 'Employed', 'Unemployed', 'Retired', 'Minor'] as const;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -204,7 +224,50 @@ const fieldStyles = StyleSheet.create({
   label: { fontSize: 12, color: '#60646C', fontWeight: '500' },
   value: { fontSize: 16, color: '#111111' },
   placeholder: { color: '#B0B4BA' },
+  inlineRow: { paddingVertical: Spacing.two, gap: 4 },
+  inlineInput: {
+    fontSize: 16,
+    color: '#111111',
+    paddingVertical: 4,
+  },
 });
+
+/**
+ * A field edited directly in the display form — no tap-to-open bottom sheet.
+ * Used for the fields residents are expected to correct most often (name parts,
+ * address parts, mobile number); the value is written straight into screen state
+ * on every keystroke and persisted by the batched "Save Changes" CTA like every
+ * other field on this screen.
+ */
+function InlineFieldInput({
+  label,
+  value,
+  placeholder,
+  onChangeText,
+  keyboardType,
+}: {
+  label: string;
+  value: string;
+  placeholder: string;
+  onChangeText: (val: string) => void;
+  keyboardType?: 'default' | 'phone-pad' | 'email-address';
+}) {
+  return (
+    <View style={fieldStyles.inlineRow}>
+      <ThemedText style={fieldStyles.label}>{label}</ThemedText>
+      <TextInput
+        style={fieldStyles.inlineInput}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#B0B4BA"
+        keyboardType={keyboardType ?? 'default'}
+        autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
+        returnKeyType="done"
+      />
+    </View>
+  );
+}
 
 /** Household member list item */
 function MemberRow({
@@ -647,6 +710,52 @@ const idModalStyles = StyleSheet.create({
   optionText: { fontSize: 15, color: '#111111' },
 });
 
+// ─── Choice List Modal (Sex / Employment Status) ──────────────────────────────
+// Same bottom-sheet single-select shape as IdTypeModal above, generalized over
+// any string-literal option set so Sex (2 options) and Employment Status (5
+// options) don't need near-duplicate modal components.
+
+function ChoiceListModal<T extends string>({
+  visible,
+  title,
+  options,
+  labels,
+  current,
+  onClose,
+  onSelect,
+}: {
+  visible: boolean;
+  title: string;
+  options: readonly T[];
+  labels: Record<T, string>;
+  current: T | null;
+  onClose: () => void;
+  onSelect: (value: T) => void;
+}) {
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
+      <Pressable style={idModalStyles.backdrop} onPress={onClose} />
+      <View style={idModalStyles.sheet}>
+        <View style={idModalStyles.handle} />
+        <ThemedText style={idModalStyles.title}>{title}</ThemedText>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {options.map((opt) => (
+            <Pressable
+              key={opt}
+              onPress={() => { onSelect(opt); onClose(); }}
+              style={idModalStyles.optionRow}>
+              <ThemedText style={[idModalStyles.optionText, current === opt && { color: PRIMARY_GREEN, fontWeight: '700' }]}>
+                {labels[opt]}
+              </ThemedText>
+              {current === opt && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </Modal>
+  );
+}
+
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
@@ -662,12 +771,30 @@ export default function ProfileScreen() {
   const PRIMARY_GREEN = theme.primary;
 
   // ── Personal info fields ──────────────────────────────────────────────────
-  const [fullName, setFullName]       = useState('');
+  // Full Name split into structured parts (Register/Profile field-split) — the
+  // DB's compose_profiles_display_fields trigger (0081) derives profile.full_name
+  // from these on save; the app never builds that composed string itself.
+  const [firstName, setFirstName]   = useState('');
+  const [lastName, setLastName]     = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [suffix, setSuffix]         = useState('');
+  const [sex, setSex]               = useState<Sex | null>(null);
   const [email, setEmail]             = useState('');
-  const [homeAddress, setHomeAddress] = useState('');
+  // Home Address split into structured parts — "Barangay" isn't one of these; it's
+  // profile.barangays?.name below (profiles.barangay_id, assigned at registration).
+  const [houseNo, setHouseNo] = useState('');
+  const [street, setStreet]   = useState('');
+  const [city, setCity]       = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | null>(null);
+  const [occupation, setOccupation] = useState('');
   const [mobileNumber, setMobile]     = useState('');
   const [birthDateIso, setBirthDateIso] = useState<string | null>(null); // YYYY-MM-DD, source of truth
   const [showBirthPicker, setShowBirthPicker] = useState(false);
+
+  // Locally-composed display name — reflects in-progress edits immediately (avatar
+  // initials, header) instead of waiting for a save + refetch round-trip to see the
+  // DB-composed profile.full_name update.
+  const liveFullName = [firstName, middleName, lastName, suffix].filter(Boolean).join(' ') || profile?.full_name || '';
 
   // ── Household ─────────────────────────────────────────────────────────────
   const [members, setMembers] = useState<HouseholdMember[]>([]);
@@ -727,9 +854,14 @@ export default function ProfileScreen() {
     setTimeout(() => setToast(null), 2800);
   }
 
-  // Edit field modal (text fields only — Birthday uses BirthdayCalendarModal below)
+  // Edit field modal — only for the fields NOT edited directly on the display form:
+  // Occupation. (First/Middle/Last/Suffix, Email, House No./Street/City, and Mobile
+  // Number are plain InlineFieldInput fields now; Birthday uses BirthdayCalendarModal
+  // below.)
   const [editModal, setEditModal] = useState<{
-    label: string; key: 'fullName' | 'email' | 'homeAddress' | 'mobileNumber'; multiline?: boolean;
+    label: string;
+    key: 'occupation';
+    multiline?: boolean;
   } | null>(null);
 
   // Household member modal
@@ -738,13 +870,25 @@ export default function ProfileScreen() {
   // ID type modal
   const [idTypeModal, setIdTypeModal] = useState(false);
 
+  // Sex / Employment Status modals
+  const [sexModal, setSexModal] = useState(false);
+  const [employmentModal, setEmploymentModal] = useState(false);
+
   // ── Sync from profile ────────────────────────────────────────────────────
   useEffect(() => {
     if (!profile) return;
-    setFullName(profile.full_name ?? '');
+    setFirstName(profile.first_name ?? '');
+    setLastName(profile.last_name ?? '');
+    setMiddleName(profile.middle_name ?? '');
+    setSuffix(profile.suffix ?? '');
+    setSex((profile.sex as Sex | null) ?? null);
     setEmail(profile.email ?? '');
     setMobile(profile.mobile_number ?? '');
-    setHomeAddress(profile.home_address ?? '');
+    setHouseNo(profile.house_no ?? '');
+    setStreet(profile.street ?? '');
+    setCity(profile.city ?? '');
+    setEmploymentStatus((profile.employment_status as EmploymentStatus | null) ?? null);
+    setOccupation(profile.occupation ?? '');
     setBirthDateIso(profile.birth_date ?? null);
     setAvatarUrl((profile as any).avatar_url ?? null);
     setEmailVerifStatus((profile as any).email_verification_status ?? null);
@@ -764,9 +908,17 @@ export default function ProfileScreen() {
   // The Save button is disabled (greyed) when false.
   const isDirty = useMemo(() => {
     if (!profile) return false;
-    if (fullName     !== (profile.full_name    ?? ''))  return true;
+    if (firstName    !== (profile.first_name   ?? ''))  return true;
+    if (lastName     !== (profile.last_name    ?? ''))  return true;
+    if (middleName   !== (profile.middle_name  ?? ''))  return true;
+    if (suffix       !== (profile.suffix       ?? ''))  return true;
+    if (sex          !== (profile.sex as Sex | null ?? null)) return true;
     if (email        !== (profile.email ?? '')) return true;
-    if (homeAddress  !== (profile.home_address ?? ''))  return true;
+    if (houseNo      !== (profile.house_no ?? '')) return true;
+    if (street       !== (profile.street   ?? '')) return true;
+    if (city         !== (profile.city     ?? '')) return true;
+    if (employmentStatus !== (profile.employment_status as EmploymentStatus | null ?? null)) return true;
+    if (occupation   !== (profile.occupation ?? '')) return true;
     if (mobileNumber !== (profile.mobile_number ?? '')) return true;
     if (birthDateIso !== (profile.birth_date ?? null))  return true;
     // Household comparison — stringify for deep equality
@@ -778,24 +930,21 @@ export default function ProfileScreen() {
     // New ID photo uploaded this session
     if (newIdUploaded) return true;
     return false;
-  }, [profile, fullName, email, homeAddress, mobileNumber, birthDateIso, members, idType, newIdUploaded]);
+  }, [
+    profile, firstName, lastName, middleName, suffix, sex, email, houseNo, street, city,
+    employmentStatus, occupation, mobileNumber, birthDateIso, members, idType, newIdUploaded,
+  ]);
 
   // ── Edit-field helpers ────────────────────────────────────────────────────
   function currentEditValue() {
     if (!editModal) return '';
-    if (editModal.key === 'fullName')     return fullName;
-    if (editModal.key === 'email')        return email;
-    if (editModal.key === 'homeAddress')  return homeAddress;
-    if (editModal.key === 'mobileNumber') return mobileNumber;
+    if (editModal.key === 'occupation') return occupation;
     return '';
   }
 
   function applyEditSave(val: string) {
     if (!editModal) return;
-    if (editModal.key === 'fullName')     setFullName(val);
-    if (editModal.key === 'email')        setEmail(val.trim());
-    if (editModal.key === 'homeAddress')  setHomeAddress(val);
-    if (editModal.key === 'mobileNumber') setMobile(val);
+    if (editModal.key === 'occupation') setOccupation(val);
   }
 
   // ── Avatar upload ─────────────────────────────────────────────────────────
@@ -913,10 +1062,22 @@ export default function ProfileScreen() {
     const { error: updateErr } = await supabase
       .from('profiles')
       .update({
-        full_name:                fullName.trim() || null,
+        // full_name is derived by the DB from these (migration 0081's
+        // compose_profiles_display_fields trigger) — always sent together so the
+        // trigger never partially recomposes it from a stale subset.
+        first_name:                firstName.trim() || null,
+        last_name:                 lastName.trim() || null,
+        middle_name:               middleName.trim() || null,
+        suffix:                    suffix.trim() || null,
+        sex,
         email:                    email.trim() || null,
         mobile_number:            mobileNumber.trim() || null,
-        home_address:             homeAddress.trim() || null,
+        // home_address is likewise derived from these three.
+        house_no:                 houseNo.trim() || null,
+        street:                   street.trim() || null,
+        city:                     city.trim() || null,
+        employment_status:        employmentStatus,
+        occupation:               occupation.trim() || null,
         birth_date:               birthDateIso,
         household_members:        members as any,
         id_type:                  idType || null,
@@ -1009,7 +1170,7 @@ export default function ProfileScreen() {
                   />
                 ) : (
                   <ThemedText style={styles.avatarInitials}>
-                    {getInitials((fullName || session.user.email?.split('@')[0]) ?? '?')}
+                    {getInitials((liveFullName || session.user.email?.split('@')[0]) ?? '?')}
                   </ThemedText>
                 )}
 
@@ -1030,7 +1191,7 @@ export default function ProfileScreen() {
           </Pressable>
 
           {/* ③ Name + badge */}
-          <ThemedText style={styles.nameText}>{fullName || '—'}</ThemedText>
+          <ThemedText style={styles.nameText}>{liveFullName || '—'}</ThemedText>
           {isVerified && <VerifiedBadge />}
         </View>
 
@@ -1038,33 +1199,63 @@ export default function ProfileScreen() {
         <SectionCard>
           <ThemedText style={styles.sectionTitle}>Personal Information</ThemedText>
 
-          <FieldRow
-            label="Full Name"
-            value={fullName}
-            placeholder="Enter full name"
-            onEdit={() => setEditModal({ label: 'Full Name', key: 'fullName' })}
-          />
+          <InlineFieldInput label="First Name" value={firstName} placeholder="Enter first name" onChangeText={setFirstName} />
+          <Divider />
+          <InlineFieldInput label="Last Name" value={lastName} placeholder="Enter last name" onChangeText={setLastName} />
+          <Divider />
+          <InlineFieldInput label="Middle Name" value={middleName} placeholder="Optional" onChangeText={setMiddleName} />
+          <Divider />
+          <InlineFieldInput label="Suffix" value={suffix} placeholder="Optional — e.g. Jr., III" onChangeText={setSuffix} />
           <Divider />
           <FieldRow
-            label="Email"
-            value={email}
-            placeholder="Enter email address"
-            onEdit={() => setEditModal({ label: 'Email', key: 'email' })}
+            label="Sex"
+            value={sex ? SEX_LABELS[sex] : ''}
+            placeholder="Select sex"
+            onEdit={() => setSexModal(true)}
           />
           <Divider />
-          <FieldRow
-            label="Address"
-            value={homeAddress}
-            placeholder="Enter home address"
-            onEdit={() => setEditModal({ label: 'Home Address', key: 'homeAddress', multiline: true })}
-          />
+          <InlineFieldInput label="Email" value={email} placeholder="Enter email address" onChangeText={setEmail} keyboardType="email-address" />
           <Divider />
-          <FieldRow
+          <InlineFieldInput label="House No." value={houseNo} placeholder="Enter house/unit number" onChangeText={setHouseNo} />
+          <Divider />
+          <InlineFieldInput label="Street" value={street} placeholder="Enter street" onChangeText={setStreet} />
+          <Divider />
+          <InlineFieldInput label="City" value={city} placeholder="Enter city/municipality" onChangeText={setCity} />
+          <Divider />
+          {/* Read-only — this is profiles.barangay_id, assigned automatically at
+              registration (AGENTS.md §0), not a free-text address component. */}
+          <View style={fieldStyles.row}>
+            <View style={fieldStyles.body}>
+              <ThemedText style={fieldStyles.label}>Barangay</ThemedText>
+              <ThemedText style={fieldStyles.value}>{profile?.barangays?.name ?? '—'}</ThemedText>
+            </View>
+          </View>
+          <Divider />
+          <InlineFieldInput
             label="Mobile Number"
             value={mobileNumber}
             placeholder="e.g. +63 917 123 4567"
-            onEdit={() => setEditModal({ label: 'Mobile Number', key: 'mobileNumber' })}
+            onChangeText={setMobile}
+            keyboardType="phone-pad"
           />
+          <Divider />
+          <FieldRow
+            label="Employment Status"
+            value={employmentStatus ? EMPLOYMENT_STATUS_LABELS[employmentStatus] : ''}
+            placeholder="Select employment status"
+            onEdit={() => setEmploymentModal(true)}
+          />
+          {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
+            <>
+              <Divider />
+              <FieldRow
+                label="Occupation"
+                value={occupation}
+                placeholder="Optional"
+                onEdit={() => setEditModal({ label: 'Occupation', key: 'occupation' })}
+              />
+            </>
+          ) : null}
           <Divider />
           <FieldRow
             label="Birthday"
@@ -1196,7 +1387,6 @@ export default function ProfileScreen() {
         label={editModal?.label ?? ''}
         value={currentEditValue()}
         multiline={editModal?.multiline}
-        keyboardType={editModal?.key === 'email' ? 'email-address' : editModal?.key === 'mobileNumber' ? 'phone-pad' : 'default'}
         onClose={() => setEditModal(null)}
         onSave={applyEditSave}
       />
@@ -1234,6 +1424,29 @@ export default function ProfileScreen() {
         current={idType}
         onClose={() => setIdTypeModal(false)}
         onSelect={(t) => setIdType(t)}
+      />
+
+      <ChoiceListModal
+        visible={sexModal}
+        title="Select Sex"
+        options={SEXES}
+        labels={SEX_LABELS}
+        current={sex}
+        onClose={() => setSexModal(false)}
+        onSelect={(v) => setSex(v)}
+      />
+
+      <ChoiceListModal
+        visible={employmentModal}
+        title="Select Employment Status"
+        options={EMPLOYMENT_STATUSES}
+        labels={EMPLOYMENT_STATUS_LABELS}
+        current={employmentStatus}
+        onClose={() => setEmploymentModal(false)}
+        onSelect={(v) => {
+          setEmploymentStatus(v);
+          if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(v)) setOccupation('');
+        }}
       />
     </View>
     </SafeAreaView>

@@ -7,7 +7,7 @@ import { TABS, type Tab } from './types';
 
 export type IncidentRow = Tables<'incidents'> & {
   incident_categories: Pick<Tables<'incident_categories'>, 'name' | 'color' | 'icon'> | null;
-  profiles: Pick<Tables<'profiles'>, 'full_name' | 'mobile_number' | 'home_address'> | null;
+  profiles: Pick<Tables<'profiles'>, 'full_name' | 'email' | 'mobile_number' | 'home_address'> | null;
 };
 
 function matchesTab(incident: IncidentRow, tab: Tab): boolean {
@@ -53,7 +53,9 @@ export default async function IncidentReportsPage({
   // zero rows.
   let query = supabase
     .from('incidents')
-    .select('*, incident_categories(name, color, icon), profiles!incidents_reporter_id_fkey(full_name, mobile_number, home_address)')
+    .select(
+      '*, incident_categories(name, color, icon), profiles!incidents_reporter_id_fkey(full_name, email, mobile_number, home_address)',
+    )
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
 
@@ -98,7 +100,8 @@ export default async function IncidentReportsPage({
         r.title.toLowerCase().includes(needle) ||
         (r.description ?? '').toLowerCase().includes(needle) ||
         (r.incident_categories?.name ?? '').toLowerCase().includes(needle) ||
-        (r.profiles?.full_name ?? '').toLowerCase().includes(needle),
+        (r.profiles?.full_name ?? '').toLowerCase().includes(needle) ||
+        (r.profiles?.email ?? '').toLowerCase().includes(needle),
     );
   }
 

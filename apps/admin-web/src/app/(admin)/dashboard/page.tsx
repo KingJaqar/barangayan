@@ -7,7 +7,7 @@ import {
   getSlaFlag,
   type Tables,
 } from '@barangayan/shared';
-import { AlertTriangle, ArrowUpRight, Clock, TrendingUp, Truck, Users, Wallet } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, Clock, PackageCheck, TrendingUp, Users, Wallet } from 'lucide-react';
 
 import { DataTable } from '@/components/admin/data-table';
 import { StatusPill } from '@/components/admin/status-pill';
@@ -167,9 +167,9 @@ async function KpiCards() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [{ count: pendingCount }, { count: deliveryCount }, { count: residentCount }, { data: todayPayments }] = await Promise.all([
+  const [{ count: pendingCount }, { count: pickupCount }, { count: residentCount }, { data: todayPayments }] = await Promise.all([
     supabase.from('service_requests').select('id', { count: 'exact', head: true }).in('status', ['submitted', 'in_progress']),
-    supabase.from('service_requests').select('id', { count: 'exact', head: true }).eq('status', 'out_for_delivery'),
+    supabase.from('service_requests').select('id', { count: 'exact', head: true }).eq('status', 'ready_for_pickup'),
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'resident'),
     supabase.from('payments').select('amount_centavos').eq('status', 'paid').gte('paid_at', today.toISOString()),
   ]);
@@ -179,7 +179,7 @@ async function KpiCards() {
   return (
     <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
       <KpiCard label="Pending Requests" value={pendingCount ?? 0} href="/requests?tab=active" icon={Clock} accent="amber" />
-      <KpiCard label="Out for Delivery" value={deliveryCount ?? 0} href="/requests?tab=delivery" icon={Truck} accent="blue" />
+      <KpiCard label="Ready for Pickup" value={pickupCount ?? 0} href="/requests?tab=pickup" icon={PackageCheck} accent="blue" />
       <KpiCard label="Today's Collections" value={formatCentavosAsPHP(todayTotal)} href="/transactions?tab=paid" icon={Wallet} accent="emerald" />
       <KpiCard label="Registered Residents" value={residentCount ?? 0} href="/residents" icon={Users} accent="slate" />
     </div>
@@ -235,7 +235,7 @@ async function RecentTransactions() {
       emptyLabel="No transactions yet."
       columns={[
         { header: 'Reference', render: (p) => `#${p.service_requests?.reference_number ?? '—'}` },
-        { header: 'Method', render: (p) => (p.method === 'qrph' ? 'QR Ph' : 'Cash') },
+        { header: 'Method', render: (p) => (p.method === 'qrph' ? 'QR PH' : 'Pickup') },
         { header: 'Amount', render: (p) => formatCentavosAsPHP(p.amount_centavos) },
         { header: 'Status', render: (p) => <StatusPill status={p.status} /> },
       ]}
@@ -312,7 +312,7 @@ async function NeedsAttention() {
     supabase
       .from('service_requests')
       .select('id, reference_number, created_at, document_types(processing_target_hours)')
-      .in('status', ['submitted', 'in_progress', 'out_for_delivery'])
+      .in('status', ['submitted', 'in_progress', 'ready_for_pickup'])
       .order('created_at', { ascending: true }),
     supabase
       .from('payments')

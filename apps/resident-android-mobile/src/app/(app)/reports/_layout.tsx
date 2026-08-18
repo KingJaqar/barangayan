@@ -8,15 +8,8 @@ export default function ReportsLayout() {
       {/* index.tsx builds its own segmented-control header — same fix as Settings. */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
 
-      {/* Submit new incident — native header with back arrow */}
-      <Stack.Screen
-        name="new"
-        options={{
-          title: 'Report an Incident',
-          headerTintColor: Colors.light.primary,
-          headerBackTitle: 'Back',
-        }}
-      />
+      {/* Submit new incident — builds its own header (Profile-screen style), same fix as index. */}
+      <Stack.Screen name="new" options={{ headerShown: false }} />
 
       {/* Incident detail / tracking */}
       <Stack.Screen

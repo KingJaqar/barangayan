@@ -29,8 +29,8 @@ export interface EditableDataTableColumn<T> {
   render: (row: T) => ReactNode;
   className?: string;
   /** A plain config applies to every row; a function lets the edit control itself vary
-   * per row (e.g. Transactions' Collected By/Source is a select of admins for cash rows
-   * but a free-text PayMongo source id for QR Ph rows) — return undefined to make that
+   * per row (e.g. Transactions' Collected By/Source is a select of admins for pickup rows
+   * but a free-text PayMongo source id for QR PH rows) — return undefined to make that
    * row's cell non-editable. */
   edit?: EditableCellConfig<T> | ((row: T) => EditableCellConfig<T> | undefined);
   /** Only used when `resizableColumns` is on: pins this column's starting width (px)

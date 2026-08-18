@@ -41,7 +41,7 @@ interface RequestStatusConfig {
   solid: boolean;
 }
 
-type Filter = 'all' | 'active' | 'delivery' | 'history';
+type Filter = 'all' | 'active' | 'pickup' | 'history';
 type ActiveSubFilter = 'all' | 'pending_payment' | 'paid' | 'processing';
 
 // Filter chips match the design file (All/Active/Ready/History); our status enum maps
@@ -49,7 +49,7 @@ type ActiveSubFilter = 'all' | 'pending_payment' | 'paid' | 'processing';
 function matchesFilter(status: string, filter: Filter): boolean {
   if (filter === 'all') return true;
   if (filter === 'active') return status === 'submitted' || status === 'in_progress';
-  if (filter === 'delivery') return status === 'out_for_delivery';
+  if (filter === 'pickup') return status === 'ready_for_pickup';
   return status === 'completed' || status === 'cancelled';
 }
 
@@ -117,7 +117,7 @@ export function RequestsList() {
       pending_payment: { icon: 'time-outline', color: theme.textSecondary, solid: false },
       paid: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: false },
       processing: { icon: 'sync-outline', color: STATUS_BLUE, solid: false },
-      out_for_delivery: { icon: 'car-outline', color: STATUS_GREEN, solid: false },
+      ready_for_pickup: { icon: 'storefront-outline', color: STATUS_GREEN, solid: false },
       completed: { icon: 'checkmark-circle-outline', color: STATUS_GREEN, solid: true },
       cancelled: { icon: 'close-circle-outline', color: theme.accentRed, solid: false },
     };
@@ -147,7 +147,7 @@ export function RequestsList() {
         segments={[
           { key: 'all', label: 'All' },
           { key: 'active', label: 'Active' },
-          { key: 'delivery', label: 'Delivery' },
+          { key: 'pickup', label: 'Pickup' },
           { key: 'history', label: 'History' },
         ]}
         activeKey={filter}
@@ -237,8 +237,8 @@ export function RequestsList() {
                           }>
                           {request.status === 'completed'
                             ? '100%'
-                            : request.status === 'out_for_delivery'
-                              ? 'On its way'
+                            : request.status === 'ready_for_pickup'
+                              ? 'Ready for pickup'
                               : estimateLabel(
                                 request.created_at,
                                 request.document_types?.processing_target_hours ?? 24,

@@ -23,7 +23,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
   }
 
   const history = (request.status_history as unknown as StatusHistoryEntry[]) ?? [];
-  const canCancel = !['out_for_delivery', 'completed', 'cancelled'].includes(request.status) && request.payment_status !== 'paid';
+  const canCancel = !['ready_for_pickup', 'completed', 'cancelled'].includes(request.status) && request.payment_status !== 'paid';
 
   return (
     <div className="mx-auto max-w-2xl">

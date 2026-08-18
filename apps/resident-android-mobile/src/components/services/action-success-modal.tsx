@@ -1,5 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
@@ -12,6 +14,9 @@ import { useTheme } from '@/hooks/use-theme';
  * over title/message so it can be reused for any "you just did X, here's confirmation"
  * moment instead of a plain Alert.alert(), which reads as an OS-level dialog rather
  * than something that belongs to the app.
+ *
+ * The card springs/fades in on mount (Reanimated) purely for polish — dismissal stays
+ * manual via the "OK" button, which is what actually clears the caller's local state.
  */
 export function ActionSuccessModal({
   visible,
@@ -25,11 +30,28 @@ export function ActionSuccessModal({
   onConfirm: () => void;
 }) {
   const theme = useTheme();
+  const scale = useSharedValue(0.85);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      scale.value = withSpring(1, { damping: 14, stiffness: 180 });
+      opacity.value = withTiming(1, { duration: 180 });
+    } else {
+      scale.value = 0.85;
+      opacity.value = 0;
+    }
+  }, [visible, scale, opacity]);
+
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.backdrop}>
-        <View style={[styles.card, { backgroundColor: theme.backgroundElement }]}>
+        <Animated.View style={[styles.card, { backgroundColor: theme.backgroundElement }, cardAnimatedStyle]}>
           <View style={[styles.checkOuter, { backgroundColor: `${theme.primary}26` }]}>
             <View style={[styles.checkInner, { backgroundColor: theme.primary }]}>
               <Ionicons name="checkmark" size={32} color={theme.onPrimary} />
@@ -44,7 +66,7 @@ export function ActionSuccessModal({
           <View style={styles.buttonRow}>
             <PrimaryButton label="OK" onPress={onConfirm} />
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -65,6 +87,11 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     alignItems: 'center',
     gap: Spacing.one,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 5,
   },
   checkOuter: {
     width: 72,

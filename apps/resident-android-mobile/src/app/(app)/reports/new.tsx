@@ -26,13 +26,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors, Spacing } from '@/constants/theme';
+import { Colors, Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useIncidentCategories } from '@/hooks/use-incident-categories';
 import { useProfile } from '@/hooks/use-profile';
@@ -161,6 +161,7 @@ export default function NewIncidentScreen() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const barangayId = profile?.barangay_id ?? null;
   const { categories, isLoading: catsLoading } = useIncidentCategories(barangayId);
@@ -335,7 +336,26 @@ export default function NewIncidentScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
+
+      {/* ── Header ────────────────────────────────────────────────────────── */}
+      <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+        <Pressable
+          onPress={() => router.back()}
+          style={styles.backBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={Spacing.two}>
+          <Ionicons name="chevron-back" size={26} color="#fff" />
+        </Pressable>
+        <View style={styles.headerContent}>
+          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+            Report an Incident
+          </ThemedText>
+        </View>
+      </View>
+
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* ── Category ── */}
@@ -493,11 +513,35 @@ export default function NewIncidentScreen() {
           onPress={handleSubmit}
         />
       </ThemedView>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  root: { flex: 1 },
+
+  /* Header */
+  header: {
+    paddingBottom: Spacing.three,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  headerContent: {
+    height: 25,
+    justifyContent: 'center',
+  },
+  backBtn: {
+    position: 'absolute',
+    left: Spacing.two,
+    bottom: Spacing.two,
+    width: 44, height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
