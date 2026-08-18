@@ -4,26 +4,12 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
-import { emergencyQrContentSchema, qrStepItemSchema } from '@barangayan/shared';
-import type { QrStepItem } from '@barangayan/shared';
+import { emergencyQrContentSchema } from '@barangayan/shared';
+import type { EmergencyQrContent, Json, QrStepItem, Tables } from '@barangayan/shared';
 import { useFieldArray } from 'react-hook-form';
-import type { Json } from '@barangayan/shared';
 
-type QrInstruction = {
-  id: string;
-  barangay_id: string;
-  section: 'why_scan' | 'how_it_works';
-  title: string;
-  body: string;
-  content: { step: number; title: string; desc: string }[];
-  icon: string;
-  icon_color: string;
-  icon_bg: string;
-  is_active: boolean;
-  sort_order: number;
-};
+type QrInstructionRow = Tables<'emergency_qr_content'>;
 
 const PRESET_ICONS = [
   'qr-code-outline',
@@ -56,10 +42,11 @@ function toStepArray(content: Json | undefined): QrStepItem[] {
   if (Array.isArray(content)) {
     return content.map((item, idx) => {
       if (typeof item === 'object' && item !== null && 'step' in item && 'title' in item && 'desc' in item) {
+        const step = item as { step?: unknown; title?: unknown; desc?: unknown };
         return {
-          step: (item as any).step ?? idx + 1,
-          title: String((item as any).title ?? ''),
-          desc: String((item as any).desc ?? ''),
+          step: typeof step.step === 'number' ? step.step : idx + 1,
+          title: String(step.title ?? ''),
+          desc: String(step.desc ?? ''),
         };
       }
       return { step: idx + 1, title: '', desc: '' };
@@ -77,11 +64,10 @@ export function QrInstructionsModal({
 }: {
   section: string;
   barangayId: string;
-  existing: QrInstruction | undefined;
+  existing: QrInstructionRow | undefined;
   onClose: () => void;
-  onSaved: (record: QrInstruction) => void;
+  onSaved: (record: QrInstructionRow) => void;
 }) {
-  const router = useRouter();
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -116,19 +102,20 @@ export function QrInstructionsModal({
     return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  async function handleSubmit(data: any) {
+  async function handleSubmit(data: EmergencyQrContent) {
     setSubmitting(true);
     setServerError(null);
 
     const payload = {
       ...data,
-      content: data.content.map((step: any, idx: number) => ({ ...step, step: idx + 1 })),
+      // Renumber the steps so they always match their final on-screen order.
+      content: data.content.map((step: QrStepItem, idx) => ({ ...step, step: idx + 1 })) as unknown as Json,
     };
 
     const supabase = createSupabaseBrowserClient();
     const { data: result, error } = await supabase
       .from('emergency_qr_content')
-      .upsert(payload as any, { onConflict: 'barangay_id,section' })
+      .upsert(payload, { onConflict: 'barangay_id,section' })
       .select('*')
       .single();
 
@@ -141,9 +128,10 @@ export function QrInstructionsModal({
     }
 
     toast.showSuccess(existing ? 'Content updated.' : 'Content created.');
-    onSaved(result as unknown as QrInstruction);
+    onSaved(result as QrInstructionRow);
   }
 
+  const errors = form.formState.errors;
   const iconColor = form.watch('icon_color') as string;
   const iconBg = form.watch('icon_bg') as string;
 
@@ -166,9 +154,7 @@ export function QrInstructionsModal({
           <label className="text-sm">
             <span className="mb-1 block font-medium">Title</span>
             <input {...form.register('title')} className={inputClass} />
-            {(form.formState.errors as any).title && (
-              <span className="text-xs text-red-600">{(form.formState.errors as any).title.message}</span>
-            )}
+            {errors.title && <span className="text-xs text-red-600">{errors.title.message}</span>}
           </label>
 
           <label className="text-sm">
@@ -188,20 +174,16 @@ export function QrInstructionsModal({
                       placeholder="Step title"
                       className={inputClass}
                     />
-                    {(form.formState.errors as any).content?.[idx]?.title && (
-                      <span className="text-xs text-red-600">
-                        {(form.formState.errors as any).content[idx]?.title?.message}
-                      </span>
+                    {errors.content?.[idx]?.title && (
+                      <span className="text-xs text-red-600">{errors.content[idx]?.title?.message}</span>
                     )}
                     <input
                       {...form.register(`content.${idx}.desc` as const)}
                       placeholder="Step description"
                       className={inputClass}
                     />
-                    {(form.formState.errors as any).content?.[idx]?.desc && (
-                      <span className="text-xs text-red-600">
-                        {(form.formState.errors as any).content[idx]?.desc?.message}
-                      </span>
+                    {errors.content?.[idx]?.desc && (
+                      <span className="text-xs text-red-600">{errors.content[idx]?.desc?.message}</span>
                     )}
                   </div>
                   <div className="flex flex-col gap-1">

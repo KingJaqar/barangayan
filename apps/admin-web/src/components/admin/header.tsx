@@ -107,11 +107,13 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
 
   // Debounced search.
   useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      return;
-    }
     const timeout = setTimeout(async () => {
+      // Clearing happens on the same debounce tick as searching, so an emptied box drops
+      // its stale results without setState running synchronously in the effect body.
+      if (!query.trim()) {
+        setResults([]);
+        return;
+      }
       const { createSupabaseBrowserClient } = await import('@/lib/supabase/client');
       const supabase = createSupabaseBrowserClient();
       const needle = `%${query}%`;

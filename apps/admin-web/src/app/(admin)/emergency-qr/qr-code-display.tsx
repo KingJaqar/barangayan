@@ -12,11 +12,9 @@ type EvacuationCenter = Tables<'evacuation_centers'>;
 export function QrCodeDisplay({
   center,
   payload,
-  barangayId,
 }: {
   center: EvacuationCenter;
   payload: Json;
-  barangayId: string;
 }) {
   const router = useRouter();
   const toast = useToast();
@@ -48,7 +46,9 @@ export function QrCodeDisplay({
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase
       .from('evacuation_center_qr_codes')
-      .upsert({ evacuation_center_id: center.id, qr_payload: payload, barangay_id: barangayId } as any, {
+      // No barangay_id column here — the row is scoped to a barangay through its
+      // evacuation center (see migration 0050).
+      .upsert({ evacuation_center_id: center.id, qr_payload: payload }, {
         onConflict: 'evacuation_center_id',
       });
     if (error) {

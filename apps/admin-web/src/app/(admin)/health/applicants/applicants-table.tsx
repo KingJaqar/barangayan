@@ -199,17 +199,24 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
   // Unique per mount — see drive-table.tsx's channelName comment for why.
   const [channelName] = useState(() => `admin-drive-registrations-${Math.random().toString(36).slice(2)}`);
 
-  useEffect(() => {
+  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
+  // navigation from elsewhere). Adjusting state during render is React's recommended way to
+  // do this — an effect would render the stale value first, then immediately render again.
+  const [prevQ, setPrevQ] = useState(q);
+  if (prevQ !== q) {
+    setPrevQ(q);
     setSearchText(q);
-  }, [q]);
+  }
 
   // Keep the latest tab/type around for the debounced search effect below, without making
   // that effect re-fire (and re-push a redundant URL) whenever tab/type change on their
   // own — those already navigate immediately through their own handlers.
   const tabRef = useRef(tab);
-  tabRef.current = tab;
   const typeRef = useRef(type);
-  typeRef.current = type;
+  useEffect(() => {
+    tabRef.current = tab;
+    typeRef.current = type;
+  }, [tab, type]);
 
   function navigate(next: { tab?: string; type?: string; q?: string }) {
     const nextQ = next.q ?? q;

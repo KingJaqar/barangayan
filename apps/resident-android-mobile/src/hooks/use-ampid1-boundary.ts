@@ -1,12 +1,11 @@
 import type { Polygon } from 'geojson';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const BOUNDARY_ASSET = require('@/assets/geojson/ampid1-boundary.json') as {
   type: string;
-  features: Array<{
+  features: {
     type: string;
     geometry: { type: string; coordinates: number[][][] };
-  }>;
+  }[];
 };
 
 export function useAmpid1Boundary(): Polygon | null {

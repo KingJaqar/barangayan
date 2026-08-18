@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toast';
+import type { Tables } from '@barangayan/shared';
 import { QrInstructionsTab } from './qr-instructions-tab';
 import { QrCodesTab } from './qr-codes-tab';
 
@@ -14,14 +14,13 @@ export function ClientWrapper({
   initialCenters,
   barangayId,
 }: {
-  initialContent: any[];
-  initialCenters: any[];
+  initialContent: Tables<'emergency_qr_content'>[];
+  initialCenters: Tables<'evacuation_centers'>[];
   barangayId: string;
 }) {
   const [tab, setTab] = useState<Tab>('instructions');
   const [isLive, setIsLive] = useState(false);
   const router = useRouter();
-  const toast = useToast();
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
@@ -78,7 +77,7 @@ export function ClientWrapper({
       {tab === 'instructions' ? (
         <QrInstructionsTab initialContent={initialContent} barangayId={barangayId} />
       ) : (
-        <QrCodesTab initialCenters={initialCenters} barangayId={barangayId} />
+        <QrCodesTab initialCenters={initialCenters} />
       )}
     </div>
   );

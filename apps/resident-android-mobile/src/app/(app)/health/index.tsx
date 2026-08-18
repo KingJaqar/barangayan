@@ -56,7 +56,6 @@ import { useTheme } from '@/hooks/use-theme';
 // after its useTheme() call, so the resident's chosen accent (Settings > App Theme)
 // actually shows up here — see the shadow comment at each component for the "why".
 const PRIMARY_GREEN_FALLBACK = Colors.light.primary;
-const PRIMARY_GREEN = PRIMARY_GREEN_FALLBACK;
 const PROGRESS_GREEN = '#22C55E';
 
 const MONTH_NAMES = [
@@ -1443,8 +1442,6 @@ function RegistrationDetailSheet({
   const drive = registration.drive;
   const cfg   = drive ? DRIVE_TYPE_CONFIG[drive.type] ?? DRIVE_TYPE_CONFIG.others : null;
 
-  // Which step in the cycle is current?
-  const currentStepIdx = STATUS_CYCLE.findIndex((s) => s.key === registration.status);
   // If cancelled, only show steps up-to-and-including cancelled (remove attended)
   const isCancelled = registration.status === 'cancelled';
   const visibleSteps = isCancelled

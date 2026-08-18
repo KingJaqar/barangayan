@@ -49,17 +49,24 @@ export function StaffTable({
   const [addOpen, setAddOpen] = useState(false);
   const [searchText, setSearchText] = useState(q);
 
-  useEffect(() => {
+  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
+  // navigation from elsewhere). Adjusting state during render is React's recommended way to
+  // do this — an effect would render the stale value first, then immediately render again.
+  const [prevQ, setPrevQ] = useState(q);
+  if (prevQ !== q) {
+    setPrevQ(q);
     setSearchText(q);
-  }, [q]);
+  }
 
   // Keep the latest tab/role around for the debounced search effect below, without making
   // that effect re-fire (and re-push a redundant URL) whenever tab/role change on their
   // own — those already navigate immediately through their own handlers.
   const tabRef = useRef(tab);
-  tabRef.current = tab;
   const roleRef = useRef(role);
-  roleRef.current = role;
+  useEffect(() => {
+    tabRef.current = tab;
+    roleRef.current = role;
+  }, [tab, role]);
 
   function navigate(next: { tab?: string; role?: string; q?: string }) {
     const nextQ = next.q ?? q;

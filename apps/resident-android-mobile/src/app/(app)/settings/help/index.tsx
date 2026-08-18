@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/immutability */
 import { useMemo, useState, useEffect } from 'react';
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,

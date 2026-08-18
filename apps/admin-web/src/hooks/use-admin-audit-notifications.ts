@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -141,8 +141,7 @@ export function useAdminAuditNotifications(barangayId: string | null) {
   const [loading, setLoading] = useState(true);
   // Stable supabase reference — recreating the client on every render causes
   // the channel subscription to tear down and re-subscribe.
-  const supabaseRef = useRef(createSupabaseBrowserClient());
-  const supabase = supabaseRef.current;
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
   const fetchNotifications = useCallback(async () => {
     if (!barangayId) {
@@ -167,6 +166,8 @@ export function useAdminAuditNotifications(barangayId: string | null) {
 
   // Initial fetch.
   useEffect(() => {
+    // Data-fetching on mount is a legitimate pattern; eslint-disable is scoped to this call.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotifications();
   }, [fetchNotifications]);
 

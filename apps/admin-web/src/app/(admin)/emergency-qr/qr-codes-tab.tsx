@@ -9,13 +9,7 @@ import type { Json, Tables } from '@barangayan/shared';
 
 type EvacuationCenter = Tables<'evacuation_centers'>;
 
-export function QrCodesTab({
-  initialCenters,
-  barangayId,
-}: {
-  initialCenters: EvacuationCenter[];
-  barangayId: string;
-}) {
+export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCenter[] }) {
   const [selectedCenterId, setSelectedCenterId] = useState<string>(initialCenters[0]?.id ?? '');
   const router = useRouter();
   const toast = useToast();
@@ -48,7 +42,9 @@ export function QrCodesTab({
       };
       const { error } = await supabase
         .from('evacuation_center_qr_codes')
-        .upsert({ evacuation_center_id: center.id, qr_payload: p as Json, barangay_id: barangayId } as any, {
+        // No barangay_id column here — the row is scoped to a barangay through its
+        // evacuation center (see migration 0050).
+        .upsert({ evacuation_center_id: center.id, qr_payload: p as Json }, {
           onConflict: 'evacuation_center_id',
         });
       if (error) {
@@ -84,7 +80,7 @@ export function QrCodesTab({
       </div>
 
       {selectedCenter && payload && (
-        <QrCodeDisplay center={selectedCenter} payload={payload} barangayId={barangayId} />
+        <QrCodeDisplay center={selectedCenter} payload={payload} />
       )}
 
       {initialCenters.length === 0 && (

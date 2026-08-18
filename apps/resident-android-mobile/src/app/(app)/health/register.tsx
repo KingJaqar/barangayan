@@ -48,7 +48,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ProgressBar } from '@/components/progress-bar';
 import { ThemedText } from '@/components/themed-text';
-import { Colors, Fonts, Spacing } from '@/constants/theme';
+import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -57,13 +57,11 @@ import { supabase } from '@/lib/supabase';
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 
-// #0F6E5B brand-green fallback for the module-level `s`/`ps`/`cbS` StyleSheets, which are
-// built once at import time and can't read the per-account accent color (Settings > App
-// Theme). Every component below shadows this with `const PRIMARY_GREEN = theme.primary;`
-// right after its useTheme() call, and moves any style that needs the live color out of
-// the static StyleSheet into an inline override at the usage site.
-const PRIMARY_GREEN_FALLBACK = Colors.light.primary; // #0F6E5B
-const PRIMARY_GREEN  = PRIMARY_GREEN_FALLBACK;
+// Live-accent note: the module-level `s`/`ps`/`cbS` StyleSheets are built once at import
+// time and can't read the per-account accent color (Settings > App Theme). Every component
+// below declares `const PRIMARY_GREEN = theme.primary;` right after its useTheme() call,
+// and moves any style that needs the live color out of the static StyleSheet into an
+// inline override at the usage site.
 const PROGRESS_GREEN = '#22C55E';
 const PAGE_BG        = '#F2F4F7';
 const CARD_BG        = '#FFFFFF';
@@ -170,7 +168,7 @@ function CheckboxRow({
   onToggle: () => void;
 }) {
   const theme = useTheme();
-  // Shadows the module-level fallback — see the shadow comment near PRIMARY_GREEN_FALLBACK.
+  // Shadows the module-level fallback — see the live-accent note at the top of this file.
   const PRIMARY_GREEN = theme.primary;
 
   return (
@@ -292,7 +290,7 @@ type ApplicantSelection =
 
 export default function ApplicantRegistrationScreen() {
   const theme = useTheme();
-  // Shadows the module-level fallback — see the shadow comment near PRIMARY_GREEN_FALLBACK.
+  // Shadows the module-level fallback — see the live-accent note at the top of this file.
   const PRIMARY_GREEN = theme.primary;
   const insets = useSafeAreaInsets();
   const { driveId } = useLocalSearchParams<{ driveId: string }>();
@@ -393,9 +391,6 @@ export default function ApplicantRegistrationScreen() {
   const profileAge = selection.type === 'self' ? computeAge(profile?.birth_date) : null;
   const effectiveAge: number | null =
     profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
-
-  // The "initials" variable is kept for backward compat with helpers that use it.
-  const initials = selectedInitials;
 
   // Map dose-history tab to prior_dose_date sentinel
   function priorDoseDate(): string | null {
@@ -838,7 +833,7 @@ function ApplicantPickerSheet({
   onClose: () => void;
 }) {
   const theme = useTheme();
-  // Shadows the module-level fallback — see the shadow comment near PRIMARY_GREEN_FALLBACK.
+  // Shadows the module-level fallback — see the live-accent note at the top of this file.
   const PRIMARY_GREEN = theme.primary;
   const isResidentSelected = selection.type === 'self';
 
@@ -979,7 +974,7 @@ const ps = StyleSheet.create({
     marginBottom: 4,
   },
   // rowSelected/avatarCircle background applied inline at each usage site with the live
-  // accent — see the shadow comment near PRIMARY_GREEN_FALLBACK.
+  // accent — see the live-accent note at the top of this file.
   avatarCircle: {
     width: 44,
     height: 44,
@@ -1042,7 +1037,7 @@ const ps = StyleSheet.create({
 
 function ScreenHeader({ onBack }: { onBack: () => void }) {
   const theme = useTheme();
-  // Shadows the module-level fallback — see the shadow comment near PRIMARY_GREEN_FALLBACK.
+  // Shadows the module-level fallback — see the live-accent note at the top of this file.
   const PRIMARY_GREEN = theme.primary;
   const insets = useSafeAreaInsets();
 
@@ -1185,7 +1180,7 @@ const s = StyleSheet.create({
     paddingVertical: Spacing.two + 4,
   },
   // appNumLabel/appNumValue color applied inline with the live accent — see the shadow
-  // comment near PRIMARY_GREEN_FALLBACK.
+  // note at the top of this file.
   appNumLabel: {
     fontSize: 12,
     fontWeight: '600',

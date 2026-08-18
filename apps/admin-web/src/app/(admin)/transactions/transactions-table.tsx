@@ -62,12 +62,10 @@ interface MatchedRequest {
 const LOOKUP_DEBOUNCE_MS = 350;
 
 function AddTransactionForm({
-  barangayId,
   referenceOptions,
   admins,
   onClose,
 }: {
-  barangayId: string;
   referenceOptions: string[];
   admins: AdminOption[];
   onClose: () => void;
@@ -334,17 +332,24 @@ export function TransactionsTable({
   const [addOpen, setAddOpen] = useState(false);
   const [searchText, setSearchText] = useState(q);
 
-  useEffect(() => {
+  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
+  // navigation from elsewhere). Adjusting state during render is React's recommended way to
+  // do this — an effect would render the stale value first, then immediately render again.
+  const [prevQ, setPrevQ] = useState(q);
+  if (prevQ !== q) {
+    setPrevQ(q);
     setSearchText(q);
-  }, [q]);
+  }
 
   // Keep the latest tab/method around for the debounced search effect below, without making
   // that effect re-fire (and re-push a redundant URL) whenever tab/method change on their
   // own — those already navigate immediately through their own handlers.
   const tabRef = useRef(tab);
-  tabRef.current = tab;
   const methodRef = useRef(method);
-  methodRef.current = method;
+  useEffect(() => {
+    tabRef.current = tab;
+    methodRef.current = method;
+  }, [tab, method]);
 
   function navigate(next: { tab?: string; method?: string; q?: string }) {
     const nextQ = next.q ?? q;
@@ -705,7 +710,7 @@ export function TransactionsTable({
       </div>
 
       {addOpen && (
-        <AddTransactionForm barangayId={barangayId} referenceOptions={referenceOptions} admins={admins} onClose={() => setAddOpen(false)} />
+        <AddTransactionForm referenceOptions={referenceOptions} admins={admins} onClose={() => setAddOpen(false)} />
       )}
 
       {/* Section 6: table display — columns are user-resizable (drag the divider in each

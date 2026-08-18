@@ -1,4 +1,4 @@
-import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
+import { DRIVE_TYPE_CONFIG, type Tables } from '@barangayan/shared';
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 

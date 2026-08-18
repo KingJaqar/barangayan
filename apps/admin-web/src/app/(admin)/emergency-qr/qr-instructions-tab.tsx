@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
@@ -9,20 +9,6 @@ import { MobilePreviewCard } from './mobile-preview-card';
 import type { Tables } from '@barangayan/shared';
 
 type DbEmergencyQrContent = Tables<'emergency_qr_content'>;
-
-type QrInstruction = {
-  id: string;
-  barangay_id: string;
-  section: 'why_scan' | 'how_it_works';
-  title: string;
-  body: string;
-  content: { step: number; title: string; desc: string }[];
-  icon: string;
-  icon_color: string;
-  icon_bg: string;
-  is_active: boolean;
-  sort_order: number;
-};
 
 const SECTION_META: Record<string, { label: string; icon: string }> = {
   why_scan: { label: 'Why Scan', icon: 'qr-code-outline' },
@@ -39,11 +25,16 @@ export function QrInstructionsTab({
   const router = useRouter();
   const toast = useToast();
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [content, setContent] = useState<any[]>(initialContent as any);
+  const [content, setContent] = useState<DbEmergencyQrContent[]>(initialContent);
 
-  useEffect(() => {
-    setContent(initialContent as any);
-  }, [initialContent]);
+  // Re-sync with the server's rows whenever a refresh delivers new ones. Adjusting state
+  // during render is React's recommended way to do this — an effect would render the stale
+  // rows first, then immediately render again.
+  const [prevInitialContent, setPrevInitialContent] = useState(initialContent);
+  if (prevInitialContent !== initialContent) {
+    setPrevInitialContent(initialContent);
+    setContent(initialContent);
+  }
 
   const whyScan = content.find((c) => c.section === 'why_scan');
   const howItWorks = content.find((c) => c.section === 'how_it_works');

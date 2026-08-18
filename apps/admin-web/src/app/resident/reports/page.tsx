@@ -23,7 +23,7 @@ export default async function ResidentReportsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">My Reports</h1>
-          <p className="text-sm text-zinc-500">Incidents and hazards you've reported to the barangay.</p>
+          <p className="text-sm text-zinc-500">Incidents and hazards you&apos;ve reported to the barangay.</p>
         </div>
         <Link
           href="/resident/reports/new"
@@ -59,7 +59,7 @@ export default async function ResidentReportsPage() {
         </div>
       ) : (
         <div className="rounded-xl border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">
-          <p className="text-sm text-zinc-500">You haven't reported any incidents yet.</p>
+          <p className="text-sm text-zinc-500">You haven&apos;t reported any incidents yet.</p>
           <Link href="/resident/reports/new" className="mt-3 inline-block text-sm font-semibold text-[var(--accent)] hover:underline">
             Report your first incident
           </Link>

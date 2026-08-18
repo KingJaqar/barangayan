@@ -1,8 +1,8 @@
 'use client';
 
-import { formatDate } from '@barangayan/shared';
+import { formatDate, type Database } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { StatusPill } from '@/components/admin/status-pill';
@@ -14,7 +14,7 @@ import { TABS, type Tab } from './types';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type HouseholdMember = { id: string; name: string; relation: string; role: string };
+type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
 
 type ServiceRequest = {
   id: string;
@@ -145,7 +145,7 @@ function ResidentDetailModal({
   onClose: () => void;
   onIdStatusChange?: (id: string, status: 'pending' | 'verified' | null) => void;
 }) {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const router = useRouter();
   const toast = useToast();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
@@ -153,14 +153,19 @@ function ResidentDetailModal({
   const [idStatus, setIdStatus] = useState(resident?.id_verification_status ?? null);
   const [idStatusLoading, setIdStatusLoading] = useState(false);
 
-  useEffect(() => {
-    if (!resident) {
-      setRequests(null);
-      setIdUrls([]);
-      return;
-    }
+  // Reset the panel's per-resident state the moment a different resident (or none) is
+  // selected, so the previous resident's requests/photos never flash in the new panel.
+  // Adjusting state during render is React's recommended way to do this.
+  const [prevResidentId, setPrevResidentId] = useState(resident?.id ?? null);
+  if (prevResidentId !== (resident?.id ?? null)) {
+    setPrevResidentId(resident?.id ?? null);
+    setRequests(null);
+    setIdUrls([]);
+    setIdStatus(resident?.id_verification_status ?? null);
+  }
 
-    setIdStatus(resident.id_verification_status ?? null);
+  useEffect(() => {
+    if (!resident) return;
 
     // Service request history
     supabase
@@ -174,29 +179,29 @@ function ResidentDetailModal({
     // Resolve short-lived signed URLs for ID photos — id-documents is a
     // private bucket (government ID photos); getPublicUrl() would silently
     // return a broken URL, and a public bucket would rely on obscurity alone.
+    // The render-time reset above already cleared idUrls, so there is nothing to do when
+    // this resident has no ID photos on file.
     const paths = resident.id_photo_urls ?? [];
-    if (paths.length === 0) {
-      setIdUrls([]);
-    } else {
-      supabase.storage
-        .from('id-documents')
-        .createSignedUrls(paths, 60 * 10) // 10 minutes
-        .then(({ data, error }) => {
-          if (error || !data) {
-            setIdUrls([]);
-            return;
-          }
-          setIdUrls(data.map((d) => d.signedUrl).filter((u): u is string => !!u));
-        });
-    }
-  }, [resident]);
+    if (paths.length === 0) return;
+
+    supabase.storage
+      .from('id-documents')
+      .createSignedUrls(paths, 60 * 10) // 10 minutes
+      .then(({ data, error }) => {
+        if (error || !data) {
+          setIdUrls([]);
+          return;
+        }
+        setIdUrls(data.map((d) => d.signedUrl).filter((u): u is string => !!u));
+      });
+  }, [resident, supabase]);
 
   async function handleIdVerifAction(nextStatus: 'pending' | 'verified' | null) {
     if (!resident) return;
     setIdStatusLoading(true);
     const { error } = await supabase
       .from('profiles')
-      .update({ id_verification_status: nextStatus } as any)
+      .update({ id_verification_status: nextStatus })
       .eq('id', resident.id);
     setIdStatusLoading(false);
     if (error) {
@@ -591,6 +596,9 @@ const COLUMN_HEADERS = [
   'Actions',
 ] as const;
 
+// The last column (Actions) is deliberately excluded — see the measuring effect below.
+const PINNED_HEADERS = COLUMN_HEADERS.slice(0, -1);
+
 // Same 2px zinc-300/600 dividers the shared EditableDataTable uses under `thickBorders`,
 // so this hand-rolled table matches the rest of the admin panel.
 const BORDER_CLS = 'border-zinc-300 dark:border-zinc-600';
@@ -618,18 +626,25 @@ export function ResidentDirectory({
   const [addOpen, setAddOpen] = useState(false);
   const [searchText, setSearchText] = useState(q);
 
-  useEffect(() => {
+  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
+  // navigation from elsewhere). Adjusting state during render is React's recommended way to
+  // do this — an effect would render the stale value first, then immediately render again.
+  const [prevQ, setPrevQ] = useState(q);
+  if (prevQ !== q) {
+    setPrevQ(q);
     setSearchText(q);
-  }, [q]);
+  }
 
   // Keep the latest tab/verification around for the debounced search effect below,
   // without making that effect re-fire (and re-push a redundant URL) whenever tab/
   // verification change on their own — those already navigate immediately through
   // their own handlers.
   const tabRef = useRef(tab);
-  tabRef.current = tab;
   const verificationRef = useRef(verification);
-  verificationRef.current = verification;
+  useEffect(() => {
+    tabRef.current = tab;
+    verificationRef.current = verification;
+  }, [tab, verification]);
 
   function navigate(next: { tab?: string; q?: string; verification?: string }) {
     const nextQ = next.q ?? q;
@@ -706,13 +721,12 @@ export function ResidentDirectory({
   // last column instead of the row lines running edge to edge across the card.
   const thRefs = useRef<Record<string, HTMLTableCellElement | null>>({});
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
-  const pinnedHeaders = COLUMN_HEADERS.slice(0, -1);
 
   useLayoutEffect(() => {
     setColWidths((prev) => {
       let changed = false;
       const next = { ...prev };
-      for (const header of pinnedHeaders) {
+      for (const header of PINNED_HEADERS) {
         if (next[header] === undefined) {
           const width = thRefs.current[header]?.getBoundingClientRect().width;
           if (width) {
@@ -743,12 +757,12 @@ export function ResidentDirectory({
     window.addEventListener('mouseup', onUp);
   }
 
-  const columnsMeasured = pinnedHeaders.every((header) => colWidths[header] !== undefined);
+  const columnsMeasured = PINNED_HEADERS.every((header) => colWidths[header] !== undefined);
 
-  async function updateField(id: string, patch: Record<string, unknown>) {
+  async function updateField(id: string, patch: ProfileUpdate) {
     const { error } = await supabase
       .from('profiles')
-      .update(patch as any)
+      .update(patch)
       .eq('id', id);
     if (error) {
       toast.showError(`Failed to update: ${error.message}`);
@@ -760,7 +774,7 @@ export function ResidentDirectory({
   async function archive(resident: ResidentRow) {
     const { error } = await supabase
       .from('profiles')
-      .update({ deleted_at: new Date().toISOString() } as any)
+      .update({ deleted_at: new Date().toISOString() })
       .eq('id', resident.id);
     if (error) {
       toast.showError(`Failed to archive: ${error.message}`);
@@ -1032,7 +1046,7 @@ export function ResidentDirectory({
 
       {/* Detail modal */}
       {selected && (
-        <ResidentDetailModal resident={selected} onClose={() => setSelected(null)} onIdStatusChange={(_id, _status) => router.refresh()} />
+        <ResidentDetailModal resident={selected} onClose={() => setSelected(null)} onIdStatusChange={() => router.refresh()} />
       )}
     </div>
   );

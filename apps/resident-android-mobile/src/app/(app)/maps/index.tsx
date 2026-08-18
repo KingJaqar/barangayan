@@ -64,9 +64,6 @@ const cardRows = [[DRRM_CARDS[0], DRRM_CARDS[1], DRRM_CARDS[2]]];
 /** Vertical distance (px) the user must drag before release snaps to opposite state. */
 const COLLAPSE_THRESHOLD = 60;
 
-/** Height of the always-visible handle + title zone (px). */
-const PEEK_HEIGHT = 72;
-
 export default function MapsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
