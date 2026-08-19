@@ -200,11 +200,12 @@ function FieldRow({
   placeholder: string;
   onEdit: () => void;
 }) {
+  const theme = useTheme();
   return (
     <Pressable style={fieldStyles.row} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`}>
       <View style={fieldStyles.body}>
-        <ThemedText style={fieldStyles.label}>{label}</ThemedText>
-        <ThemedText style={[fieldStyles.value, !value && fieldStyles.placeholder]}>
+        <ThemedText themeColor="textSecondary" style={fieldStyles.label}>{label}</ThemedText>
+        <ThemedText style={[fieldStyles.value, !value && { color: theme.textSecondary }]}>
           {value || placeholder}
         </ThemedText>
       </View>
@@ -221,13 +222,11 @@ const fieldStyles = StyleSheet.create({
     gap: Spacing.three,
   },
   body: { flex: 1, gap: 2 },
-  label: { fontSize: 12, color: '#60646C', fontWeight: '500' },
-  value: { fontSize: 16, color: '#111111' },
-  placeholder: { color: '#B0B4BA' },
+  label: { fontSize: 12, fontWeight: '500' },
+  value: { fontSize: 16 },
   inlineRow: { paddingVertical: Spacing.two, gap: 4 },
   inlineInput: {
     fontSize: 16,
-    color: '#111111',
     paddingVertical: 4,
   },
 });
@@ -252,15 +251,16 @@ function InlineFieldInput({
   onChangeText: (val: string) => void;
   keyboardType?: 'default' | 'phone-pad' | 'email-address';
 }) {
+  const theme = useTheme();
   return (
     <View style={fieldStyles.inlineRow}>
-      <ThemedText style={fieldStyles.label}>{label}</ThemedText>
+      <ThemedText themeColor="textSecondary" style={fieldStyles.label}>{label}</ThemedText>
       <TextInput
-        style={fieldStyles.inlineInput}
+        style={[fieldStyles.inlineInput, { color: theme.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#B0B4BA"
+        placeholderTextColor={theme.textSecondary}
         keyboardType={keyboardType ?? 'default'}
         autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
         returnKeyType="done"
@@ -277,18 +277,19 @@ function MemberRow({
   member: HouseholdMember;
   onPress: () => void;
 }) {
+  const theme = useTheme();
   return (
     <Pressable style={memberStyles.row} onPress={onPress} accessibilityRole="button">
-      <View style={memberStyles.avatar}>
-        <ThemedText style={memberStyles.initials}>{getInitials(member.name)}</ThemedText>
+      <View style={[memberStyles.avatar, { backgroundColor: theme.backgroundSelected }]}>
+        <ThemedText themeColor="textSecondary" style={memberStyles.initials}>{getInitials(member.name)}</ThemedText>
       </View>
       <View style={memberStyles.info}>
         <ThemedText style={memberStyles.name}>{member.name}</ThemedText>
-        <ThemedText style={memberStyles.sub}>
+        <ThemedText themeColor="textSecondary" style={memberStyles.sub}>
           {member.relation} · {member.role}
         </ThemedText>
       </View>
-      <Ionicons name="chevron-forward" size={18} color="#B0B4BA" />
+      <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
     </Pressable>
   );
 }
@@ -304,19 +305,19 @@ const memberStyles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E8E8EC',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  initials: { fontSize: 14, fontWeight: '700', color: '#60646C' },
+  initials: { fontSize: 14, fontWeight: '700' },
   info: { flex: 1, gap: 2 },
-  name: { fontSize: 14, fontWeight: '600', color: '#111111' },
-  sub: { fontSize: 12, color: '#60646C' },
+  name: { fontSize: 14, fontWeight: '600' },
+  sub: { fontSize: 12 },
 });
 
 /** Section card wrapper */
 function SectionCard({ children }: { children: React.ReactNode }) {
-  return <View style={cardStyles.card}>{children}</View>;
+  const theme = useTheme();
+  return <View style={[cardStyles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>{children}</View>;
 }
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
@@ -365,10 +366,8 @@ const toastStyles = StyleSheet.create({
 
 const cardStyles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.08)',
     paddingHorizontal: Spacing.three,
     paddingVertical: 4,
     gap: 0,
@@ -376,7 +375,8 @@ const cardStyles = StyleSheet.create({
 });
 
 function Divider() {
-  return <View style={{ height: 1, backgroundColor: '#E8E8EC', marginLeft: 0 }} />;
+  const theme = useTheme();
+  return <View style={{ height: 1, backgroundColor: theme.backgroundSelected, marginLeft: 0 }} />;
 }
 
 // ─── Edit Field Modal ─────────────────────────────────────────────────────────
@@ -398,6 +398,7 @@ function EditFieldModal({
   onClose: () => void;
   onSave: (val: string) => void;
 }) {
+  const theme = useTheme();
   const [text, setText] = useState(value);
   const inputRef = useRef<TextInput>(null);
 
@@ -412,15 +413,19 @@ function EditFieldModal({
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={editModalStyles.backdrop} onPress={onClose} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={editModalStyles.kav} pointerEvents="box-none">
-        <View style={editModalStyles.sheet}>
+        <View style={[editModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
           {/* Handle */}
-          <View style={editModalStyles.handle} />
+          <View style={[editModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
 
           <ThemedText style={editModalStyles.title}>Edit {label}</ThemedText>
 
           <TextInput
             ref={inputRef}
-            style={[editModalStyles.input, multiline && editModalStyles.inputMulti]}
+            style={[
+              editModalStyles.input,
+              { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text },
+              multiline && editModalStyles.inputMulti,
+            ]}
             value={text}
             onChangeText={setText}
             multiline={multiline}
@@ -428,12 +433,12 @@ function EditFieldModal({
             autoCapitalize={keyboardType === 'email-address' ? 'none' : 'sentences'}
             returnKeyType={multiline ? 'default' : 'done'}
             placeholder={label}
-            placeholderTextColor="#B0B4BA"
+            placeholderTextColor={theme.textSecondary}
           />
 
           <View style={editModalStyles.actions}>
-            <Pressable style={editModalStyles.cancelBtn} onPress={onClose}>
-              <ThemedText style={{ fontWeight: '600', color: '#60646C' }}>Cancel</ThemedText>
+            <Pressable style={[editModalStyles.cancelBtn, { backgroundColor: theme.backgroundSelected }]} onPress={onClose}>
+              <ThemedText style={{ fontWeight: '600', color: theme.textSecondary }}>Cancel</ThemedText>
             </Pressable>
             <Pressable
               style={editModalStyles.saveBtn}
@@ -451,7 +456,6 @@ const editModalStyles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.45)' },
   kav: { flex: 1, justifyContent: 'flex-end' },
   sheet: {
-    backgroundColor: '#fff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: Spacing.three,
@@ -463,19 +467,15 @@ const editModalStyles = StyleSheet.create({
     width: 38,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E0E1E6',
     marginBottom: Spacing.one,
   },
-  title: { fontSize: 16, fontWeight: '700', color: '#111111' },
+  title: { fontSize: 16, fontWeight: '700' },
   input: {
     borderWidth: 1.5,
-    borderColor: '#E0E1E6',
     borderRadius: 12,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two + 4,
     fontSize: 16,
-    color: '#111111',
-    backgroundColor: '#F6F6F6',
   },
   inputMulti: { minHeight: 100, textAlignVertical: 'top' },
   actions: { flexDirection: 'row', gap: Spacing.two },
@@ -484,7 +484,6 @@ const editModalStyles = StyleSheet.create({
     borderRadius: 24,
     paddingVertical: 13,
     alignItems: 'center',
-    backgroundColor: '#F0F0F3',
   },
   saveBtn: {
     flex: 2,
@@ -510,6 +509,7 @@ function MemberModal({
   onSave: (m: HouseholdMember) => void;
   onDelete?: (id: string) => void;
 }) {
+  const theme = useTheme();
   const [name, setName]         = useState('');
   const [relation, setRelation] = useState<string>(RELATIONS[0]);
   const [role, setRole]         = useState<string>(ROLES[0]);
@@ -527,24 +527,24 @@ function MemberModal({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={mModalStyles.backdrop} onPress={onClose} />
-      <View style={mModalStyles.sheet}>
-        <View style={mModalStyles.handle} />
+      <View style={[mModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
+        <View style={[mModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={mModalStyles.title}>{isEdit ? 'Edit Member' : 'Add Household Member'}</ThemedText>
 
-        <ThemedText style={mModalStyles.label}>Full Name</ThemedText>
+        <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Full Name</ThemedText>
         <TextInput
-          style={mModalStyles.input}
+          style={[mModalStyles.input, { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text }]}
           value={name}
           onChangeText={setName}
           placeholder="e.g. Juan Santos"
-          placeholderTextColor="#B0B4BA"
+          placeholderTextColor={theme.textSecondary}
           returnKeyType="done"
         />
 
-        <ThemedText style={mModalStyles.label}>Relation</ThemedText>
+        <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Relation</ThemedText>
         <OptionRow options={RELATIONS} value={relation} onChange={setRelation} />
 
-        <ThemedText style={[mModalStyles.label, { marginTop: Spacing.two }]}>Role</ThemedText>
+        <ThemedText themeColor="textSecondary" style={[mModalStyles.label, { marginTop: Spacing.two }]}>Role</ThemedText>
         <OptionRow options={ROLES} value={role} onChange={setRole} />
 
         <View style={mModalStyles.actions}>
@@ -573,7 +573,6 @@ const mModalStyles = StyleSheet.create({
   sheet: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
-    backgroundColor: '#fff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: Spacing.three,
@@ -584,30 +583,24 @@ const mModalStyles = StyleSheet.create({
     alignSelf: 'center',
     width: 38, height: 4,
     borderRadius: 2,
-    backgroundColor: '#E0E1E6',
     marginBottom: Spacing.one,
   },
-  title: { fontSize: 16, fontWeight: '700', color: '#111111' },
-  label: { fontSize: 12, fontWeight: '600', color: '#60646C', marginBottom: -4 },
+  title: { fontSize: 16, fontWeight: '700' },
+  label: { fontSize: 12, fontWeight: '600', marginBottom: -4 },
   input: {
     borderWidth: 1.5,
-    borderColor: '#E0E1E6',
     borderRadius: 12,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two + 2,
     fontSize: 15,
-    color: '#111111',
-    backgroundColor: '#F6F6F6',
   },
   chip: {
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    backgroundColor: '#F0F0F3',
     borderWidth: 1,
-    borderColor: '#E0E1E6',
   },
-  chipText: { fontSize: 13, fontWeight: '600', color: '#60646C' },
+  chipText: { fontSize: 13, fontWeight: '600' },
   actions: { flexDirection: 'row', gap: Spacing.two, marginTop: Spacing.two },
   deleteBtn: {
     flex: 1,
@@ -627,6 +620,7 @@ const mModalStyles = StyleSheet.create({
 });
 
 function OptionRow({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) {
+  const theme = useTheme();
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: Spacing.two, flexDirection: 'row' }}>
       {options.map((opt) => (
@@ -635,9 +629,10 @@ function OptionRow({ options, value, onChange }: { options: readonly string[]; v
           onPress={() => onChange(opt)}
           style={[
             mModalStyles.chip,
-            value === opt && { backgroundColor: PRIMARY_GREEN },
+            { backgroundColor: theme.backgroundSelected, borderColor: theme.backgroundSelected },
+            value === opt && { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN },
           ]}>
-          <ThemedText style={[mModalStyles.chipText, value === opt && { color: '#fff' }]}>{opt}</ThemedText>
+          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: '#fff' }]}>{opt}</ThemedText>
         </Pressable>
       ))}
     </ScrollView>
@@ -657,18 +652,19 @@ function IdTypeModal({
   onClose: () => void;
   onSelect: (t: string) => void;
 }) {
+  const theme = useTheme();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={idModalStyles.backdrop} onPress={onClose} />
-      <View style={idModalStyles.sheet}>
-        <View style={idModalStyles.handle} />
+      <View style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
+        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={idModalStyles.title}>Select ID Type</ThemedText>
         <ScrollView showsVerticalScrollIndicator={false}>
           {ID_TYPES.map((t) => (
             <Pressable
               key={t}
               onPress={() => { onSelect(t); onClose(); }}
-              style={idModalStyles.optionRow}>
+              style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
               <ThemedText style={[idModalStyles.optionText, current === t && { color: PRIMARY_GREEN, fontWeight: '700' }]}>{t}</ThemedText>
               {current === t && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
             </Pressable>
@@ -685,7 +681,6 @@ const idModalStyles = StyleSheet.create({
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
     maxHeight: '70%',
-    backgroundColor: '#fff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: Spacing.three,
@@ -695,19 +690,17 @@ const idModalStyles = StyleSheet.create({
     alignSelf: 'center',
     width: 38, height: 4,
     borderRadius: 2,
-    backgroundColor: '#E0E1E6',
     marginBottom: Spacing.two,
   },
-  title: { fontSize: 16, fontWeight: '700', color: '#111111', marginBottom: Spacing.two },
+  title: { fontSize: 16, fontWeight: '700', marginBottom: Spacing.two },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F3',
   },
-  optionText: { fontSize: 15, color: '#111111' },
+  optionText: { fontSize: 15 },
 });
 
 // ─── Choice List Modal (Sex / Employment Status) ──────────────────────────────
@@ -732,18 +725,19 @@ function ChoiceListModal<T extends string>({
   onClose: () => void;
   onSelect: (value: T) => void;
 }) {
+  const theme = useTheme();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={idModalStyles.backdrop} onPress={onClose} />
-      <View style={idModalStyles.sheet}>
-        <View style={idModalStyles.handle} />
+      <View style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
+        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={idModalStyles.title}>{title}</ThemedText>
         <ScrollView showsVerticalScrollIndicator={false}>
           {options.map((opt) => (
             <Pressable
               key={opt}
               onPress={() => { onSelect(opt); onClose(); }}
-              style={idModalStyles.optionRow}>
+              style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
               <ThemedText style={[idModalStyles.optionText, current === opt && { color: PRIMARY_GREEN, fontWeight: '700' }]}>
                 {labels[opt]}
               </ThemedText>
@@ -1113,7 +1107,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
 
       {/* ── ① Header ──────────────────────────────────────────────────────── */}
       <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
@@ -1278,7 +1272,7 @@ export default function ProfileScreen() {
           </View>
 
           {members.length === 0 ? (
-            <ThemedText style={styles.emptyHousehold}>No household members added yet.</ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.emptyHousehold}>No household members added yet.</ThemedText>
           ) : (
             members.map((m, idx) => (
               <View key={m.id}>
@@ -1314,8 +1308,8 @@ export default function ProfileScreen() {
             accessibilityRole="button"
             accessibilityLabel="Select ID type">
             <View style={[fieldStyles.body, { flexDirection: 'row', alignItems: 'center', gap: Spacing.two }]}>
-              <Ionicons name="card-outline" size={22} color="#111111" />
-              <ThemedText style={[fieldStyles.value, !idType && fieldStyles.placeholder]}>
+              <Ionicons name="card-outline" size={22} color={theme.text} />
+              <ThemedText style={[fieldStyles.value, !idType && { color: theme.textSecondary }]}>
                 {idType ?? 'Select ID Type'}
               </ThemedText>
             </View>
@@ -1325,7 +1319,7 @@ export default function ProfileScreen() {
           {/* ID photo preview — full-width, 16:10 aspect, no scroll if single photo */}
           {idPhotoPublicUrls.length > 0 && (
             idPhotoPublicUrls.length === 1 ? (
-              <View style={styles.idPhotoWrap}>
+              <View style={[styles.idPhotoWrap, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected }]}>
                 <Image
                   source={{ uri: idPhotoPublicUrls[0] }}
                   style={styles.idPhoto}
@@ -1336,7 +1330,7 @@ export default function ProfileScreen() {
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.idPhotoScroll}>
                 {idPhotoPublicUrls.map((url, i) => (
-                  <View key={i} style={[styles.idPhotoWrap, { width: 220, marginRight: Spacing.two }]}>
+                  <View key={i} style={[styles.idPhotoWrap, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected, width: 220, marginRight: Spacing.two }]}>
                     <Image source={{ uri: url }} style={styles.idPhoto} contentFit="cover" transition={200} />
                   </View>
                 ))}
@@ -1346,14 +1340,14 @@ export default function ProfileScreen() {
 
           {/* Re-upload button */}
           <Pressable
-            style={styles.reuploadBtn}
+            style={[styles.reuploadBtn, { borderColor: theme.backgroundSelected }]}
             onPress={handleIdUpload}
             disabled={idUploading}
             accessibilityRole="button">
             {idUploading
               ? <ActivityIndicator size="small" color={PRIMARY_GREEN} />
               : <>
-                  <Ionicons name="cloud-upload-outline" size={16} color="#111111" />
+                  <Ionicons name="cloud-upload-outline" size={16} color={theme.text} />
                   <ThemedText style={styles.reuploadText}>
                     {hasIdPhoto ? 'Re-upload Document' : 'Upload ID Document'}
                   </ThemedText>
@@ -1365,13 +1359,13 @@ export default function ProfileScreen() {
       </ScrollView>
 
       {/* ── ⑦ Fixed Save button ──────────────────────────────────────────── */}
-      <View style={[styles.saveBar, { paddingBottom: insets.bottom + Spacing.three }]}>
+      <View style={[styles.saveBar, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected, paddingBottom: insets.bottom + Spacing.three }]}>
         <Pressable
           onPress={handleSave}
           disabled={!isDirty || saving}
           accessibilityRole="button"
           accessibilityLabel="Save changes"
-          style={[styles.saveBtn, (!isDirty || saving) && styles.saveBtnDisabled]}>
+          style={[styles.saveBtn, (!isDirty || saving) && { backgroundColor: theme.backgroundSelected }]}>
           {saving
             ? <ActivityIndicator size="small" color="#fff" />
             : <ThemedText style={styles.saveBtnText}>Save Changes</ThemedText>}
@@ -1482,7 +1476,7 @@ const idStatusStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  root: { flex: 1 },
 
   /* Header */
   header: {
@@ -1558,13 +1552,13 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     borderColor: '#fff',
   },
-  nameText: { fontSize: 22, fontWeight: '700', color: '#111111', textAlign: 'center' },
+  nameText: { fontSize: 22, fontWeight: '700', textAlign: 'center' },
 
   /* Content */
   content: { paddingHorizontal: Spacing.three, gap: Spacing.three },
 
   /* Section headers */
-  sectionTitle: { fontSize: 14, fontWeight: '700', color: '#111111', marginBottom: Spacing.one },
+  sectionTitle: { fontSize: 14, fontWeight: '700', marginBottom: Spacing.one },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1574,7 +1568,7 @@ const styles = StyleSheet.create({
   addLink: { fontSize: 13, fontWeight: '600', color: PRIMARY_GREEN },
 
   /* Household empty */
-  emptyHousehold: { fontSize: 14, color: '#B0B4BA', paddingVertical: Spacing.three, textAlign: 'center' },
+  emptyHousehold: { fontSize: 14, paddingVertical: Spacing.three, textAlign: 'center' },
 
   /* ID photo — full-width frame with 16:10 aspect ratio */
   idPhotoScroll: { marginTop: Spacing.two },
@@ -1585,8 +1579,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: Spacing.two,
     borderWidth: 1,
-    borderColor: '#E0E1E6',
-    backgroundColor: '#F0F0F3',
   },
   idPhoto: { width: '100%', height: '100%' },
 
@@ -1597,21 +1589,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.two,
     borderWidth: 1,
-    borderColor: '#C0C0C8',
     borderRadius: 24,
     paddingVertical: 13,
     marginTop: Spacing.two,
     marginBottom: Spacing.one,
   },
-  reuploadText: { fontSize: 14, fontWeight: '600', color: '#111111' },
+  reuploadText: { fontSize: 14, fontWeight: '600' },
 
   /* Fixed save bar */
   saveBar: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
-    backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#E8E8EC',
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.three,
   },
@@ -1621,9 +1610,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: PRIMARY_GREEN,
-  },
-  saveBtnDisabled: {
-    backgroundColor: '#B0B4BA',
   },
   saveBtnText: { fontSize: 16, fontWeight: '700', color: '#fff' },
 });

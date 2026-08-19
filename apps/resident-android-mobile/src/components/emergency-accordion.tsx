@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Spacing } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
 
 export interface AccordionItem {
   title: string;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export function EmergencyAccordion({ items }: Props) {
+  const theme = useTheme();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   function handleToggle(index: number) {
@@ -25,11 +27,16 @@ export function EmergencyAccordion({ items }: Props) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <View key={index} style={[styles.item, index < items.length - 1 && styles.itemBorder]}>
+          <View
+            key={index}
+            style={[
+              styles.item,
+              index < items.length - 1 && [styles.itemBorder, { borderBottomColor: theme.backgroundSelected }],
+            ]}>
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ expanded: isOpen }}
@@ -48,7 +55,7 @@ export function EmergencyAccordion({ items }: Props) {
                 <Ionicons
                   name="chevron-down"
                   size={18}
-                  color="#60646C"
+                  color={theme.textSecondary}
                   style={[styles.chevron, isOpen && styles.chevronOpen]}
                 />
               </View>
@@ -58,8 +65,8 @@ export function EmergencyAccordion({ items }: Props) {
               <View style={styles.contentWrapper}>
                 {item.content.map((step, stepIndex) => (
                   <View key={stepIndex} style={styles.stepRow}>
-                    <View style={styles.bullet} />
-                    <ThemedText type="small" style={styles.stepText}>
+                    <View style={[styles.bullet, { backgroundColor: theme.textSecondary }]} />
+                    <ThemedText type="small" themeColor="textSecondary" style={styles.stepText}>
                       {step}
                     </ThemedText>
                   </View>
@@ -76,9 +83,7 @@ export function EmergencyAccordion({ items }: Props) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     overflow: 'hidden',
   },
   item: {
@@ -87,7 +92,6 @@ const styles = StyleSheet.create({
   },
   itemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F3',
   },
   itemHeader: {
     flexDirection: 'row',
@@ -132,14 +136,12 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#60646C',
     marginTop: 6,
     marginLeft: 3,
   },
   stepText: {
     flex: 1,
     fontSize: 13,
-    color: '#60646C',
     lineHeight: 19,
   },
 });

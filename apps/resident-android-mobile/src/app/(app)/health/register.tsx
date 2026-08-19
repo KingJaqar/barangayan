@@ -63,12 +63,6 @@ import { supabase } from '@/lib/supabase';
 // and moves any style that needs the live color out of the static StyleSheet into an
 // inline override at the usage site.
 const PROGRESS_GREEN = '#22C55E';
-const PAGE_BG        = '#F2F4F7';
-const CARD_BG        = '#FFFFFF';
-const LIGHT_GREEN_BG = '#EAF4F0';
-const LIGHT_GREEN_BD = '#B2D8CC';
-const MUTED          = '#60646C';
-const BORDER_COLOR   = '#E5E7EB';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -138,14 +132,14 @@ type DoseOption = (typeof DOSE_OPTIONS)[number];
 
 // ─── Subcomponents ───────────────────────────────────────────────────────────
 
-/** White card with shadow. */
+/** Themed card with shadow. */
 function Card({ children, style }: { children: React.ReactNode; style?: object }) {
-  return <View style={[cardS.card, style]}>{children}</View>;
+  const theme = useTheme();
+  return <View style={[cardS.card, { backgroundColor: theme.backgroundElement }, style]}>{children}</View>;
 }
 
 const cardS = StyleSheet.create({
   card: {
-    backgroundColor: CARD_BG,
     borderRadius: 14,
     padding: Spacing.three,
     shadowColor: '#000',
@@ -176,6 +170,7 @@ function CheckboxRow({
       <View
         style={[
           cbS.box,
+          { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundElement },
           checked && { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN },
         ]}>
         {checked && <Ionicons name="checkmark" size={13} color="#fff" />}
@@ -197,10 +192,8 @@ const cbS = StyleSheet.create({
     height: 22,
     borderRadius: 5,
     borderWidth: 1.5,
-    borderColor: BORDER_COLOR,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: CARD_BG,
   },
   label: {
     fontSize: 14,
@@ -217,19 +210,20 @@ function DoseHistoryTabs({
   active: DoseOption;
   onSelect: (d: DoseOption) => void;
 }) {
+  const theme = useTheme();
   return (
-    <View style={dhS.container}>
+    <View style={[dhS.container, { backgroundColor: theme.backgroundSelected }]}>
       {DOSE_OPTIONS.map((opt) => {
         const isActive = active === opt;
         return (
           <Pressable
             key={opt}
             onPress={() => onSelect(opt)}
-            style={[dhS.tab, isActive && dhS.tabActive]}>
+            style={[dhS.tab, isActive && [dhS.tabActive, { backgroundColor: theme.backgroundElement }]]}>
             <ThemedText
               style={[
                 dhS.tabLabel,
-                isActive ? dhS.tabLabelActive : { color: MUTED },
+                isActive ? { fontWeight: '700', color: theme.text } : { color: theme.textSecondary },
               ]}>
               {opt}
             </ThemedText>
@@ -243,7 +237,6 @@ function DoseHistoryTabs({
 const dhS = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#F0F0F3',
     borderRadius: 10,
     padding: 3,
     gap: 2,
@@ -255,7 +248,6 @@ const dhS = StyleSheet.create({
     alignItems: 'center',
   },
   tabActive: {
-    backgroundColor: CARD_BG,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
@@ -265,10 +257,6 @@ const dhS = StyleSheet.create({
   tabLabel: {
     fontSize: 14,
     lineHeight: 18,
-  },
-  tabLabelActive: {
-    fontWeight: '700',
-    color: '#000',
   },
 });
 
@@ -495,7 +483,7 @@ export default function ApplicantRegistrationScreen() {
 
   if (loadingDrive) {
     return (
-      <View style={[s.root, { backgroundColor: PAGE_BG }]}>
+      <View style={[s.root, { backgroundColor: theme.background }]}>
         <ScreenHeader onBack={() => router.back()} />
         <View style={s.centerBox}>
           <ActivityIndicator size="large" color={PRIMARY_GREEN} />
@@ -512,7 +500,7 @@ export default function ApplicantRegistrationScreen() {
 
   if (result) {
     return (
-      <View style={[s.root, { backgroundColor: PAGE_BG }]}>
+      <View style={[s.root, { backgroundColor: theme.background }]}>
         <ScreenHeader onBack={() => router.back()} />
         <Animated.ScrollView
           contentContainerStyle={[s.successBox, { paddingBottom: insets.bottom + 40 }]}
@@ -523,12 +511,12 @@ export default function ApplicantRegistrationScreen() {
           </View>
 
           <ThemedText style={[s.successTitle, { color: PRIMARY_GREEN }]}>Registration Confirmed!</ThemedText>
-          <ThemedText style={s.successSub}>
+          <ThemedText themeColor="textSecondary" style={s.successSub}>
             You're all set for the {drive.title}.
           </ThemedText>
 
           {/* Applicant number card */}
-          <View style={s.successNumCard}>
+          <View style={[s.successNumCard, { backgroundColor: `${PRIMARY_GREEN}14`, borderColor: `${PRIMARY_GREEN}40` }]}>
             <ThemedText style={[s.successNumLabel, { color: PRIMARY_GREEN }]}>Your Applicant Number</ThemedText>
             <ThemedText style={[s.successNum, { color: PRIMARY_GREEN }]}>
               {fmtConfirmedNumber(result.applicant_number)}
@@ -538,12 +526,12 @@ export default function ApplicantRegistrationScreen() {
           {/* Priority score */}
           <View style={s.successMeta}>
             <Ionicons name="star" size={16} color={PRIMARY_GREEN} />
-            <ThemedText style={s.successMetaText}>
+            <ThemedText themeColor="textSecondary" style={s.successMetaText}>
               Priority score: <ThemedText style={{ fontWeight: '700' }}>{result.priority_score} pts</ThemedText>
             </ThemedText>
           </View>
 
-          <ThemedText style={s.successNote}>
+          <ThemedText themeColor="textSecondary" style={s.successNote}>
             Please arrive on time at {drive.location} on {fmtShortDate(drive.drive_date)} between{' '}
             {fmt12h(drive.time_start)} – {fmt12h(drive.time_end)}.
           </ThemedText>
@@ -563,7 +551,7 @@ export default function ApplicantRegistrationScreen() {
   // ─────────────────────────────────────────────────────────────────────────
 
   return (
-    <View style={[s.root, { backgroundColor: PAGE_BG }]}>
+    <View style={[s.root, { backgroundColor: theme.background }]}>
       {/* ── Fixed green header ──────────────────────────────────────────────── */}
       <ScreenHeader onBack={() => router.back()} />
 
@@ -590,7 +578,7 @@ export default function ApplicantRegistrationScreen() {
           </View>
 
           {/* Date · time · location */}
-          <ThemedText style={s.metaText}>
+          <ThemedText themeColor="textSecondary" style={s.metaText}>
             {fmtShortDate(drive.drive_date)}
             {' · '}
             {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
@@ -601,7 +589,7 @@ export default function ApplicantRegistrationScreen() {
           {/* Stock row + progress bar */}
           <View style={s.stockRow}>
             <ThemedText style={s.stockLabel}>{drive.stock_label}</ThemedText>
-            <ThemedText style={s.stockValue}>
+            <ThemedText themeColor="textSecondary" style={s.stockValue}>
               {drive.stock_remaining} / {drive.stock_total} {drive.stock_unit}
             </ThemedText>
           </View>
@@ -609,14 +597,14 @@ export default function ApplicantRegistrationScreen() {
         </Card>
 
         {/* ── 2. Applicant number preview ───────────────────────────────────── */}
-        <View style={[s.appNumCard, s.sectionGap]}>
+        <View style={[s.appNumCard, s.sectionGap, { backgroundColor: `${PRIMARY_GREEN}14`, borderColor: `${PRIMARY_GREEN}40` }]}>
           <ThemedText style={[s.appNumLabel, { color: PRIMARY_GREEN }]}>Your Applicant Number</ThemedText>
           <ThemedText style={[s.appNumValue, { color: PRIMARY_GREEN }]}>{previewApplicantNumber(drive)}</ThemedText>
         </View>
 
         {/* ── 3. Registering for ───────────────────────────────────────────── */}
         <View style={s.sectionGap}>
-          <ThemedText style={s.sectionCaption}>REGISTERING FOR</ThemedText>
+          <ThemedText themeColor="textSecondary" style={s.sectionCaption}>REGISTERING FOR</ThemedText>
 
           {/* Profile selector — tap to open household picker */}
           <Pressable onPress={() => setPickerVisible(true)}>
@@ -638,7 +626,7 @@ export default function ApplicantRegistrationScreen() {
                 {selection.type === 'member' && (
                   <ThemedText style={[s.selectionTag, { color: PRIMARY_GREEN, backgroundColor: PRIMARY_GREEN + '1A' }]}>{selection.member.relation}</ThemedText>
                 )}
-                <Ionicons name="chevron-down" size={18} color={MUTED} />
+                <Ionicons name="chevron-down" size={18} color={theme.textSecondary} />
               </View>
             </Card>
           </Pressable>
@@ -647,14 +635,14 @@ export default function ApplicantRegistrationScreen() {
           <Card style={{ marginTop: 8 }}>
             {/* Name */}
             <ProfileRow label="Name" value={selectedName} />
-            <View style={s.divider} />
+            <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
 
             {selection.type === 'member' && (
               <>
                 <ProfileRow label="Relation" value={selection.member.relation} />
-                <View style={s.divider} />
+                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
                 <ProfileRow label="Role" value={selection.member.role} />
-                <View style={s.divider} />
+                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
               </>
             )}
 
@@ -664,11 +652,11 @@ export default function ApplicantRegistrationScreen() {
               <ProfileRow label="Age" value={String(profileAge)} />
             ) : (
               <View style={s.profileRow}>
-                <ThemedText style={s.profileRowLabel}>Age</ThemedText>
+                <ThemedText themeColor="textSecondary" style={s.profileRowLabel}>Age</ThemedText>
                 <TextInput
-                  style={s.ageInput}
+                  style={[s.ageInput, { color: theme.text }]}
                   placeholder="Enter age"
-                  placeholderTextColor={MUTED}
+                  placeholderTextColor={theme.textSecondary}
                   keyboardType="number-pad"
                   value={ageOverride}
                   onChangeText={setAgeOverride}
@@ -681,7 +669,7 @@ export default function ApplicantRegistrationScreen() {
             {/* Address — only shown for the resident (members share the household address) */}
             {selection.type === 'self' && (
               <>
-                <View style={s.divider} />
+                <View style={[s.divider, { backgroundColor: theme.backgroundSelected }]} />
                 <ProfileRow label="Address" value={profile?.home_address ?? '—'} />
               </>
             )}
@@ -717,9 +705,9 @@ export default function ApplicantRegistrationScreen() {
               <Switch
                 value={isPwd}
                 onValueChange={setIsPwd}
-                trackColor={{ false: '#E0E1E6', true: PRIMARY_GREEN + '60' }}
-                thumbColor={isPwd ? PRIMARY_GREEN : '#9CA3AF'}
-                ios_backgroundColor="#E0E1E6"
+                trackColor={{ false: theme.backgroundSelected, true: PRIMARY_GREEN + '60' }}
+                thumbColor={isPwd ? PRIMARY_GREEN : theme.textSecondary}
+                ios_backgroundColor={theme.backgroundSelected}
               />
             </View>
           </Card>
@@ -749,11 +737,11 @@ export default function ApplicantRegistrationScreen() {
         </View>
 
         {/* ── 5. Privacy consent ───────────────────────────────────────────── */}
-        <Card style={[s.sectionGap, s.privacyCard]}>
+        <Card style={[s.sectionGap, s.privacyCard, { borderColor: theme.backgroundSelected }]}>
           {/* Shield + notice text */}
           <View style={s.privacyNoticeRow}>
-            <Ionicons name="shield-checkmark-outline" size={20} color={MUTED} style={{ marginTop: 1 }} />
-            <ThemedText style={s.privacyNoticeText}>
+            <Ionicons name="shield-checkmark-outline" size={20} color={theme.textSecondary} style={{ marginTop: 1 }} />
+            <ThemedText themeColor="textSecondary" style={s.privacyNoticeText}>
               This information is used only to determine allocation priority for this drive and is handled under the Barangay's Data Privacy Policy.
             </ThemedText>
           </View>
@@ -773,9 +761,9 @@ export default function ApplicantRegistrationScreen() {
 
         {/* Inline error */}
         {submitError && (
-          <View style={[s.sectionGap, s.errorBox]}>
-            <Ionicons name="alert-circle-outline" size={16} color="#EF4444" />
-            <ThemedText style={s.errorText}>{submitError}</ThemedText>
+          <View style={[s.sectionGap, s.errorBox, { backgroundColor: `${theme.accentRed}1A`, borderColor: `${theme.accentRed}40` }]}>
+            <Ionicons name="alert-circle-outline" size={16} color={theme.accentRed} />
+            <ThemedText style={[s.errorText, { color: theme.accentRed }]}>{submitError}</ThemedText>
           </View>
         )}
       </ScrollView>
@@ -784,6 +772,7 @@ export default function ApplicantRegistrationScreen() {
       <View
         style={[
           s.submitWrap,
+          { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected },
           { paddingBottom: insets.bottom > 0 ? insets.bottom : Spacing.three },
         ]}>
         <Pressable
@@ -847,9 +836,9 @@ function ApplicantPickerSheet({
       {/* Tap-outside backdrop */}
       <Pressable style={ps.backdrop} onPress={onClose} />
 
-      <View style={ps.sheet}>
+      <View style={[ps.sheet, { backgroundColor: theme.backgroundElement }]}>
         {/* Handle */}
-        <View style={ps.handle} />
+        <View style={[ps.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={ps.title}>Registering for</ThemedText>
 
         {/* ── Resident (self) row ────────────────────────────────────────── */}
@@ -872,7 +861,7 @@ function ApplicantPickerSheet({
           </View>
           <View style={ps.rowInfo}>
             <ThemedText style={ps.rowName}>{residentName}</ThemedText>
-            <ThemedText style={ps.rowSub}>Myself (Resident)</ThemedText>
+            <ThemedText themeColor="textSecondary" style={ps.rowSub}>Myself (Resident)</ThemedText>
           </View>
           {isResidentSelected && (
             <Ionicons name="checkmark-circle" size={22} color={PRIMARY_GREEN} />
@@ -882,8 +871,8 @@ function ApplicantPickerSheet({
         {/* ── Household members ──────────────────────────────────────────── */}
         {householdMembers.length === 0 ? (
           <View style={ps.emptyBox}>
-            <Ionicons name="people-outline" size={28} color="#C0C4CC" />
-            <ThemedText style={ps.emptyText}>
+            <Ionicons name="people-outline" size={28} color={theme.textSecondary} />
+            <ThemedText themeColor="textSecondary" style={ps.emptyText}>
               No household members added yet.{'\n'}Go to Profile → Household Information to add them.
             </ThemedText>
             <Pressable
@@ -912,7 +901,7 @@ function ApplicantPickerSheet({
                   </View>
                   <View style={ps.rowInfo}>
                     <ThemedText style={ps.rowName}>{m.name}</ThemedText>
-                    <ThemedText style={ps.rowSub}>
+                    <ThemedText themeColor="textSecondary" style={ps.rowSub}>
                       {m.relation} · {m.role}
                     </ThemedText>
                   </View>
@@ -939,7 +928,6 @@ const ps = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: CARD_BG,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingHorizontal: Spacing.three,
@@ -952,13 +940,11 @@ const ps = StyleSheet.create({
     width: 38,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E0E1E6',
     marginBottom: Spacing.two,
   },
   title: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#111111',
     marginBottom: Spacing.two + 4,
   },
   memberList: {
@@ -1002,11 +988,9 @@ const ps = StyleSheet.create({
   rowName: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#111111',
   },
   rowSub: {
     fontSize: 13,
-    color: MUTED,
   },
   emptyBox: {
     alignItems: 'center',
@@ -1015,7 +999,6 @@ const ps = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: MUTED,
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -1065,7 +1048,7 @@ function ScreenHeader({ onBack }: { onBack: () => void }) {
 function ProfileRow({ label, value }: { label: string; value: string }) {
   return (
     <View style={s.profileRow}>
-      <ThemedText style={s.profileRowLabel}>{label}</ThemedText>
+      <ThemedText themeColor="textSecondary" style={s.profileRowLabel}>{label}</ThemedText>
       <ThemedText style={s.profileRowValue} numberOfLines={2}>
         {value}
       </ThemedText>
@@ -1078,7 +1061,6 @@ function ProfileRow({ label, value }: { label: string; value: string }) {
 const s = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: PAGE_BG,
   },
 
   // ── Header ─────────────────────────────────────────────────────────────────
@@ -1150,7 +1132,6 @@ const s = StyleSheet.create({
   metaText: {
     fontSize: 13,
     lineHeight: 18,
-    color: MUTED,
     marginBottom: 10,
   },
   stockRow: {
@@ -1167,14 +1148,11 @@ const s = StyleSheet.create({
   stockValue: {
     fontSize: 14,
     lineHeight: 20,
-    color: MUTED,
   },
 
   // ── Applicant number card ──────────────────────────────────────────────────
   appNumCard: {
-    backgroundColor: LIGHT_GREEN_BG,
     borderWidth: 1,
-    borderColor: LIGHT_GREEN_BD,
     borderRadius: 14,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two + 4,
@@ -1198,7 +1176,6 @@ const s = StyleSheet.create({
   sectionCaption: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#9CA3AF',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     marginBottom: 8,
@@ -1254,7 +1231,6 @@ const s = StyleSheet.create({
   },
   profileRowLabel: {
     fontSize: 14,
-    color: MUTED,
     lineHeight: 20,
   },
   profileRowValue: {
@@ -1269,14 +1245,12 @@ const s = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 20,
-    color: '#000',
     textAlign: 'right',
     minWidth: 60,
     padding: 0,
   },
   divider: {
     height: 1,
-    backgroundColor: BORDER_COLOR,
   },
   editLink: {
     alignSelf: 'flex-end',
@@ -1323,9 +1297,7 @@ const s = StyleSheet.create({
 
   // ── Privacy card ───────────────────────────────────────────────────────────
   privacyCard: {
-    backgroundColor: '#F9FAFB',
     borderWidth: 1,
-    borderColor: BORDER_COLOR,
     gap: Spacing.two,
   },
   privacyNoticeRow: {
@@ -1336,7 +1308,6 @@ const s = StyleSheet.create({
   privacyNoticeText: {
     fontSize: 13,
     lineHeight: 19,
-    color: MUTED,
     flex: 1,
   },
   consentRow: {
@@ -1355,15 +1326,12 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 8,
-    backgroundColor: '#FEF2F2',
     borderRadius: 10,
     padding: Spacing.two + 4,
     borderWidth: 1,
-    borderColor: '#FECACA',
   },
   errorText: {
     fontSize: 13,
-    color: '#EF4444',
     flex: 1,
     lineHeight: 18,
   },
@@ -1376,9 +1344,7 @@ const s = StyleSheet.create({
     right: 0,
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.two,
-    backgroundColor: PAGE_BG,
     borderTopWidth: 1,
-    borderTopColor: BORDER_COLOR,
   },
   submitBtn: {
     borderRadius: 30,
@@ -1412,14 +1378,11 @@ const s = StyleSheet.create({
   },
   successSub: {
     fontSize: 15,
-    color: MUTED,
     textAlign: 'center',
     lineHeight: 22,
   },
   successNumCard: {
-    backgroundColor: LIGHT_GREEN_BG,
     borderWidth: 1,
-    borderColor: LIGHT_GREEN_BD,
     borderRadius: 14,
     paddingHorizontal: Spacing.four,
     paddingVertical: Spacing.three,
@@ -1447,12 +1410,10 @@ const s = StyleSheet.create({
   },
   successMetaText: {
     fontSize: 14,
-    color: MUTED,
     lineHeight: 20,
   },
   successNote: {
     fontSize: 13,
-    color: MUTED,
     textAlign: 'center',
     lineHeight: 20,
   },

@@ -45,7 +45,7 @@ export function CenterDetailCard({
   const walkingDisplay = walkingTimeMins > 0 ? `${walkingTimeMins} min` : '--';
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: `${theme.background}D9`, borderColor: theme.backgroundSelected }]}>
       <View style={styles.headerRow}>
         <View style={styles.titleColumn}>
           <ThemedText type="smallBold" style={[styles.name, { color: theme.text }]} numberOfLines={1}>
@@ -93,10 +93,8 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.06)',
     padding: 12,
     gap: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
   },
   headerRow: {
     flexDirection: 'row',

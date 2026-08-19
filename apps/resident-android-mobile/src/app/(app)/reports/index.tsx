@@ -22,9 +22,9 @@ type ReportsSegment = 'incident-reports' | 'active' | 'resolved' | 'announcement
 const ACTIVE_STATUSES: ('open' | 'in_progress')[] = ['open', 'in_progress'];
 
 /** Single bulk "Mark all as read" action, right-aligned inline alongside the segment's
- * heading (Resolved Reports) or its filter chips (Announcements) — see the section2Row /
- * filtersRow layouts below. Active Reports gets none: it's a live status count, not an
- * unread notification count, so there's nothing to acknowledge. */
+ * heading (Resolved Reports, or "What's New" for Announcements) — see the section2Row
+ * layout below. Active Reports gets none: it's a live status count, not an unread
+ * notification count, so there's nothing to acknowledge. */
 function MarkAllReadButton({ label, onPress }: { label: string; onPress: () => void }) {
   const theme = useTheme();
   return (
@@ -36,7 +36,7 @@ function MarkAllReadButton({ label, onPress }: { label: string; onPress: () => v
         { backgroundColor: `${theme.primary}14`, borderColor: `${theme.primary}33` },
         pressed && markReadStyles.pressed,
       ]}>
-      <Ionicons name="checkmark-done-outline" size={15} color={theme.primary} />
+      <Ionicons name="checkmark-done-outline" size={13} color={theme.primary} />
       <ThemedText type="small" style={[markReadStyles.label, { color: theme.primary }]}>
         {label}
       </ThemedText>
@@ -48,11 +48,11 @@ const markReadStyles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 7,
+    borderRadius: 16,
+    paddingHorizontal: Spacing.two + 2,
+    paddingVertical: 5,
   },
   pressed: {
     opacity: 0.65,
@@ -60,7 +60,7 @@ const markReadStyles = StyleSheet.create({
   },
   label: {
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: 12,
   },
 });
 
@@ -188,10 +188,10 @@ export default function ReportsScreen() {
         />
       </View>
 
-      {/* Section 2 — Heading. Resolved Reports gets its "Mark all as read" action inline on
-          the right, same row as the heading text on the left. Active Reports is a live
-          status count (open + in_progress), not an unread notification count, so it has no
-          button; the bell/badge for it never clears. */}
+      {/* Section 2 — Heading. Resolved Reports and Announcements ("What's New") get their
+          "Mark all as read" action inline on the right, same row as the heading text on the
+          left. Active Reports is a live status count (open + in_progress), not an unread
+          notification count, so it has no button; the bell/badge for it never clears. */}
       <View style={styles.section2}>
         <View style={styles.section2Row}>
           {/* `key={segment}` remounts on every switch so the heading crossfades in rather
@@ -203,21 +203,14 @@ export default function ReportsScreen() {
           {segment === 'resolved' && (
             <MarkAllReadButton label="Mark all as read" onPress={markResolvedRead} />
           )}
+          {segment === 'announcements' && (
+            <MarkAllReadButton label="Mark all as read" onPress={markAnnouncementsRead} />
+          )}
         </View>
       </View>
 
-      {/* Section 3 — Category filter controls. Announcements gets its "Mark all as read"
-          action inline on the right, same row as the filter chips. */}
-      <View style={styles.section3}>
-        {segment === 'announcements' ? (
-          <View style={styles.filtersRow}>
-            <View style={styles.filtersScroll}>{renderFilters()}</View>
-            <MarkAllReadButton label="Mark all as read" onPress={markAnnouncementsRead} />
-          </View>
-        ) : (
-          renderFilters()
-        )}
-      </View>
+      {/* Section 3 — Category filter controls. */}
+      <View style={styles.section3}>{renderFilters()}</View>
 
       {/* Section 4 — Content panel. Deliberately a plain (non-animated) View: nesting this
           in a Reanimated `entering` transition around a FlatList whose own rows each run
@@ -319,26 +312,16 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.two,
   },
   announcementHeading: {
-    fontSize: 23,
+    fontSize: 21,
     fontWeight: '700',
     letterSpacing: -0.2,
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.two,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.one + 2,
   },
 
   // ── Section 3 — Filters ────────────────────────────────────────────────
   section3: {},
-  // Row: filter chips on the left (scrollable, flex:1), "Mark all as read"
-  // (Announcements only) pinned to the right of the same row.
-  filtersRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: Spacing.three,
-  },
-  filtersScroll: {
-    flex: 1,
-  },
 
   // ── Section 4 — Content panel (flex:1 so the feed inside it can scroll
   // within the remaining vertical space) ─────────────────────────────────

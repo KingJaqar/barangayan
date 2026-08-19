@@ -39,32 +39,27 @@ export function AnnouncementCard({ announcement }: { announcement: Announcement 
       <View style={[styles.accentBar, { backgroundColor: color }]} />
 
       <View style={styles.content}>
-        {/* Icon + category pill row */}
+        {/* Single meta row: icon + category label on the left, timestamp pinned right —
+            replaces the old icon-chip/pill/footer three-row layout to save vertical space. */}
         <View style={styles.metaRow}>
-          <View style={[styles.iconChip, { backgroundColor: `${color}1A` }]}>
-            <Ionicons name={icon as any} size={15} color={color} />
-          </View>
-          <View style={[styles.pill, { backgroundColor: `${color}1A` }]}>
-            <ThemedText type="small" style={[styles.pillText, { color }]}>
+          <View style={styles.category}>
+            <Ionicons name={icon as any} size={12} color={color} />
+            <ThemedText type="small" style={[styles.categoryLabel, { color }]}>
               {label}
             </ThemedText>
           </View>
-        </View>
-
-        <ThemedText type="default" numberOfLines={2} style={styles.title}>
-          {announcement.title}
-        </ThemedText>
-
-        <ThemedText themeColor="textSecondary" numberOfLines={3} style={styles.body}>
-          {announcement.body}
-        </ThemedText>
-
-        <View style={styles.footerRow}>
-          <Ionicons name="time-outline" size={11} color={theme.textSecondary} />
           <ThemedText type="small" themeColor="textSecondary" style={styles.timestamp}>
             {timeAgo(announcement.published_at)}
           </ThemedText>
         </View>
+
+        <ThemedText type="default" numberOfLines={1} style={styles.title}>
+          {announcement.title}
+        </ThemedText>
+
+        <ThemedText themeColor="textSecondary" numberOfLines={2} style={styles.body}>
+          {announcement.body}
+        </ThemedText>
       </View>
     </ThemedView>
   );
@@ -72,66 +67,58 @@ export function AnnouncementCard({ announcement }: { announcement: Announcement 
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Spacing.three,
+    borderRadius: Spacing.two,
     borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
     flexDirection: 'row',
     shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 1 },
     elevation: 1,
   },
   accentBar: {
-    width: 4,
+    width: 3,
   },
   content: {
     flex: 1,
-    padding: Spacing.three,
-    gap: 6,
+    paddingHorizontal: Spacing.two + 4,
+    paddingVertical: Spacing.two,
+    gap: 3,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: Spacing.two,
-    marginBottom: 2,
+    marginBottom: 1,
   },
-  iconChip: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+  category: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 4,
+    flexShrink: 1,
   },
-  pill: {
-    borderRadius: Spacing.four,
-    paddingHorizontal: Spacing.two,
-    paddingVertical: 3,
-  },
-  pillText: {
+  categoryLabel: {
     fontWeight: '700',
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: 10.5,
+    lineHeight: 14,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
   title: {
     fontWeight: '700',
-    fontSize: 15,
-    lineHeight: 21,
-    letterSpacing: -0.2,
+    fontSize: 14,
+    lineHeight: 19,
+    letterSpacing: -0.1,
   },
   body: {
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  footerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    marginTop: 2,
+    fontSize: 12.5,
+    lineHeight: 17,
   },
   timestamp: {
-    fontSize: 11.5,
+    fontSize: 10.5,
+    lineHeight: 14,
+    flexShrink: 0,
   },
 });

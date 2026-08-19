@@ -3,6 +3,7 @@ import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Spacing } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
+import { useTheme } from '@/hooks/use-theme';
 
 export interface HotlineNumber {
   label: string;
@@ -18,6 +19,7 @@ export interface HotlineRowProps {
 }
 
 export function HotlineRow({ name, numbers, icon, iconColor, iconBg }: HotlineRowProps) {
+  const theme = useTheme();
   const primaryNumber = numbers[0]?.number ?? '';
 
   function handleCall() {
@@ -27,7 +29,7 @@ export function HotlineRow({ name, numbers, icon, iconColor, iconBg }: HotlineRo
   }
 
   return (
-    <View style={[styles.row, styles.rowBorder]}>
+    <View style={[styles.row, styles.rowBorder, { borderBottomColor: theme.backgroundSelected }]}>
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
         <Ionicons name={icon as any} size={20} color={iconColor} />
       </View>
@@ -35,7 +37,7 @@ export function HotlineRow({ name, numbers, icon, iconColor, iconBg }: HotlineRo
         <ThemedText type="smallBold" style={styles.nameText}>
           {name}
         </ThemedText>
-        <ThemedText type="small" style={styles.numberText}>
+        <ThemedText type="small" themeColor="textSecondary" style={styles.numberText}>
           {numbers.map((n) => n.label).join(' / ')}
         </ThemedText>
       </View>
@@ -62,7 +64,6 @@ const styles = StyleSheet.create({
   },
   rowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F3',
   },
   iconCircle: {
     width: 40,
@@ -79,11 +80,9 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000000',
   },
   numberText: {
     fontSize: 13,
-    color: '#60646C',
   },
   callButton: {
     width: 40,

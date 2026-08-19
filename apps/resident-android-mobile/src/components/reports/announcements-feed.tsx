@@ -37,10 +37,10 @@ function SkeletonCard() {
     <ThemedView type="backgroundElement" style={[skeletonStyles.card, { borderColor: theme.backgroundSelected }]}>
       <View style={[skeletonStyles.bar, { backgroundColor: theme.backgroundSelected }]} />
       <View style={skeletonStyles.body}>
-        <Shimmer style={[skeletonStyles.line, { width: '40%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '85%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '70%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '30%', height: 10 }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '35%', height: 9 }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '80%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '92%', height: 10 }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '60%', height: 10 }]} />
       </View>
     </ThemedView>
   );
@@ -48,24 +48,25 @@ function SkeletonCard() {
 
 const skeletonStyles = StyleSheet.create({
   card: {
-    borderRadius: Spacing.three,
+    borderRadius: Spacing.two,
     borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
     flexDirection: 'row',
-    height: 128,
+    height: 84,
   },
   bar: {
-    width: 4,
+    width: 3,
   },
   body: {
     flex: 1,
-    padding: Spacing.three,
-    gap: Spacing.two,
+    paddingHorizontal: Spacing.two + 4,
+    paddingVertical: Spacing.two,
+    gap: 6,
     justifyContent: 'center',
   },
   line: {
-    height: 12,
-    borderRadius: 6,
+    height: 11,
+    borderRadius: 5,
   },
 });
 
@@ -190,10 +191,10 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: Spacing.three,
     paddingBottom: Spacing.four,
-    paddingTop: Spacing.two,
+    paddingTop: Spacing.one,
   },
   separator: {
-    height: Spacing.two,
+    height: Spacing.two - 2,
   },
   empty: {
     textAlign: 'center',

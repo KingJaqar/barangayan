@@ -400,7 +400,7 @@ function DriveCalendar({
   const rows = Array.from({ length: 6 }, (_, i) => cells.slice(i * 7, i * 7 + 7));
 
   return (
-    <View style={[calStyles.container, { borderColor: PRIMARY_GREEN }]}>
+    <View style={[calStyles.container, { borderColor: PRIMARY_GREEN, backgroundColor: theme.backgroundElement }]}>
       {/* Month/year picker dialog */}
       <MonthYearPicker
         visible={pickerVisible}
@@ -510,7 +510,6 @@ const calStyles = StyleSheet.create({
     marginHorizontal: Spacing.three,
     marginBottom: Spacing.two,
     overflow: 'hidden',
-    backgroundColor: '#ffffff',
     paddingHorizontal: Spacing.two,
     paddingTop: Spacing.one,
     paddingBottom: Spacing.one,

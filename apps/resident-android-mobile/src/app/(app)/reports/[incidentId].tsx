@@ -13,6 +13,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Pressable,
@@ -22,6 +23,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { MapView, type FocusPosition } from '@/components/map-view';
 import { FadeInView } from '@/components/reports/fade-in-view';
 import { FeedbackModal, type FeedbackKind } from '@/components/reports/feedback-modal';
 import { PhotoViewerModal } from '@/components/reports/photo-viewer-modal';
@@ -33,6 +35,7 @@ import { incidentStatusMeta } from '@/constants/incident-status';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import type { MyIncidentRow } from '@/hooks/use-my-incidents';
+import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { confirmAction } from '@/lib/dialog';
 import { supabase } from '@/lib/supabase';
@@ -286,6 +289,139 @@ const timelineStyles = StyleSheet.create({
   stepLine: { width: 2, flex: 1, minHeight: Spacing.four },
   stepBody: { flex: 1, gap: Spacing.half, paddingBottom: Spacing.two },
   stoppedNote: { marginTop: Spacing.one },
+});
+
+// ─── Location card ───────────────────────────────────────────────────────────
+
+/** Recenter zoom — close enough to read individual streets/buildings around the pin,
+ *  well inside the tile layer's maxZoom (19). What the reset button flies back to. */
+const RECENTER_ZOOM = 18;
+
+/**
+ * Shows exactly what the resident pinned when they reported this incident: a small,
+ * freely pannable/zoomable map centered on `location`, the reverse-geocoded/resident-
+ * corrected `address`, and any `specific_area_details` they added. Mirrors the admin
+ * web detail modal's Location section (incident-detail-modal.tsx) so both sides show
+ * the same info.
+ *
+ * The map has no picker — it's a plain `MapView` with a single marker and no `picker`
+ * prop. A floating reset button flies back to a tight zoom on the pin (via `focusPosition`)
+ * since free panning means the resident can scroll the marker out of view entirely.
+ */
+function LocationCard({ incident }: { incident: IncidentDetail }) {
+  const theme = useTheme();
+  const { profile } = useProfile();
+  const [focusPosition, setFocusPosition] = useState<FocusPosition | undefined>(undefined);
+
+  const loc = incident.location as { lat?: unknown; lng?: unknown } | null;
+  const hasLocation = loc !== null && typeof loc === 'object' && typeof loc.lat === 'number' && typeof loc.lng === 'number';
+  const hasAddress = !!incident.address;
+  const hasDetails = !!incident.specific_area_details;
+
+  if (!hasLocation && !hasAddress && !hasDetails) return null;
+
+  const category = incident.incident_categories;
+  const markerKind = incident.category_id ?? 'incident';
+  const boundary = (profile?.barangays?.boundary as Polygon | MultiPolygon | null) ?? null;
+
+  // A fresh object every press (even with unchanged lat/lng/zoom) so MapView's
+  // `focusPosition` effect — which only fires on reference change — always re-triggers,
+  // flying back to the pin however far the resident panned or zoomed away from it.
+  function handleRecenter() {
+    if (!hasLocation) return;
+    setFocusPosition({ lat: loc!.lat as number, lng: loc!.lng as number, zoom: RECENTER_ZOOM });
+  }
+
+  return (
+    <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+      <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+        Location
+      </ThemedText>
+
+      {hasLocation && (
+        <View style={[locationStyles.mapWrap, { backgroundColor: theme.backgroundSelected }]}>
+          <MapView
+            markers={[
+              {
+                id: incident.id,
+                position: { lat: loc!.lat as number, lng: loc!.lng as number },
+                kind: markerKind,
+                label: incident.title,
+              },
+            ]}
+            kindColors={category ? { [markerKind]: category.color } : undefined}
+            boundary={boundary}
+            focusPosition={focusPosition}
+            style={StyleSheet.absoluteFill}
+          />
+          <Pressable
+            onPress={handleRecenter}
+            accessibilityRole="button"
+            accessibilityLabel="Recenter map on pinned location"
+            hitSlop={Spacing.one}
+            style={({ pressed }) => [locationStyles.recenterBtn, pressed && locationStyles.recenterBtnPressed]}>
+            <Ionicons name="locate-outline" size={19} color={theme.primary} />
+          </Pressable>
+        </View>
+      )}
+
+      {hasAddress && (
+        <InfoRow icon="location-outline">
+          <ThemedText type="small" themeColor="textSecondary" style={locationStyles.flexText}>
+            {incident.address}
+          </ThemedText>
+        </InfoRow>
+      )}
+
+      {hasLocation && (
+        <ThemedText type="small" themeColor="textSecondary" style={locationStyles.coords}>
+          {(loc!.lat as number).toFixed(5)}, {(loc!.lng as number).toFixed(5)}
+        </ThemedText>
+      )}
+
+      {hasDetails && (
+        <InfoRow icon="information-circle-outline">
+          <ThemedText type="small" themeColor="textSecondary" style={[locationStyles.flexText, locationStyles.detailsText]}>
+            “{incident.specific_area_details}”
+          </ThemedText>
+        </InfoRow>
+      )}
+    </ThemedView>
+  );
+}
+
+const locationStyles = StyleSheet.create({
+  mapWrap: {
+    width: '100%',
+    // 180 * 1.5 — 50% larger so the pinned location and surrounding streets read more
+    // clearly. Pairs with map-view.tsx's `nestedScrollEnabled` fix so panning around
+    // this bigger map, nested inside the screen's outer ScrollView, stays smooth.
+    height: 270,
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+  recenterBtn: {
+    position: 'absolute',
+    right: Spacing.two,
+    bottom: Spacing.two,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  recenterBtnPressed: {
+    opacity: 0.75,
+  },
+  flexText: { flex: 1 },
+  detailsText: { fontStyle: 'italic' },
+  coords: { marginLeft: 34 },
 });
 
 // ─── Main screen ─────────────────────────────────────────────────────────────
@@ -556,6 +692,11 @@ export default function IncidentDetailScreen() {
         </ThemedView>
         </View>
 
+        {/* ── Location (map, address, specific area details) ── */}
+        <View>
+          <LocationCard incident={incident} />
+        </View>
+
         {/* ── Meta ── */}
         <View>
         <ThemedView type="backgroundElement" style={[styles.card, { borderColor: theme.backgroundSelected, gap: Spacing.three }]}>
@@ -580,18 +721,6 @@ export default function IncidentDetailScreen() {
                 : `${incident.confirmation_count} resident${incident.confirmation_count !== 1 ? 's' : ''} confirmed this report`}
             </ThemedText>
           </InfoRow>
-
-          {(() => {
-            const loc = incident.location as { lat?: number; lng?: number } | null;
-            if (!loc?.lat || !loc?.lng) return null;
-            return (
-              <InfoRow icon="location-outline">
-                <ThemedText type="small" themeColor="textSecondary">
-                  {loc.lat.toFixed(5)}, {loc.lng.toFixed(5)}
-                </ThemedText>
-              </InfoRow>
-            );
-          })()}
         </ThemedView>
         </View>
 

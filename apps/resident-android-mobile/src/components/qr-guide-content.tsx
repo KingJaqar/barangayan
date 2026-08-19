@@ -94,10 +94,13 @@ export function QrGuideContent() {
                   <Ionicons name={whyScan.icon as any} size={28} color={whyScan.icon_color || theme.primary} />
                 </View>
                 <View style={styles.whyTextContainer}>
-                  <ThemedText type="smallBold" style={styles.whyTitle}>
+                  {/* whyCard's background is a fixed light pastel from the DB (icon_bg),
+                      not theme-linked — its text must stay fixed dark too, or it goes
+                      invisible against the light card in dark mode. */}
+                  <ThemedText type="smallBold" style={[styles.whyTitle, { color: '#1F2937' }]}>
                     {whyScan.title}
                   </ThemedText>
-                  <ThemedText themeColor="textSecondary" style={styles.whyBody}>
+                  <ThemedText style={[styles.whyBody, { color: '#4B5563' }]}>
                     {whyScan.body}
                   </ThemedText>
                 </View>
@@ -248,22 +251,18 @@ const styles = StyleSheet.create({
   whyTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#000000',
   },
   whyBody: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#60646C',
   },
   howTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#000000',
   },
   howBody: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#60646C',
     marginBottom: Spacing.three,
   },
   stepsContainer: {
@@ -314,12 +313,10 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000000',
   },
   stepBody: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#60646C',
   },
   buttonRow: {
     flexDirection: 'row',

@@ -75,7 +75,7 @@ export function FamilyContent() {
       <View style={[styles.qrCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
         <View style={styles.qrCardHeader}>
           <View style={styles.qrCardHeaderLeft}>
-            <View style={[styles.qrIconWrap, { backgroundColor: '#E6F2EF' }]}>
+            <View style={[styles.qrIconWrap, { backgroundColor: `${Colors.light.primary}22` }]}>
               <Ionicons name="qr-code-outline" size={22} color={Colors.light.primary} />
             </View>
             <ThemedText type="smallBold" style={styles.qrLabel}>
@@ -93,7 +93,7 @@ export function FamilyContent() {
         </View>
 
         <View style={styles.qrImageContainer}>
-          <View style={[styles.qrImageFrame, { backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }]}>
+          <View style={[styles.qrImageFrame, { backgroundColor: '#FFFFFF', borderColor: theme.backgroundSelected }]}>
             {qrUrl && session?.access_token ? (
               <Image
                 source={{ uri: qrUrl, headers: { Authorization: `Bearer ${session.access_token}` } }}
@@ -156,8 +156,8 @@ export function FamilyContent() {
                 index < members.length - 1 && styles.memberCardSeparator,
               ]}>
               <View style={styles.memberLeft}>
-                <View style={styles.avatarCircle}>
-                  <ThemedText style={styles.avatarInitials}>{getInitials(member.name)}</ThemedText>
+                <View style={[styles.avatarCircle, { backgroundColor: theme.backgroundSelected }]}>
+                  <ThemedText themeColor="textSecondary" style={styles.avatarInitials}>{getInitials(member.name)}</ThemedText>
                 </View>
                 <View style={styles.memberInfo}>
                   <ThemedText type="smallBold" style={[styles.memberName, { color: theme.text }]}>
@@ -299,7 +299,6 @@ const styles = StyleSheet.create({
   qrLabel: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000000',
   },
   showCodeButton: {
     flexDirection: 'row',
@@ -362,7 +361,6 @@ const styles = StyleSheet.create({
   membersTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#000000',
   },
   membersCount: {
     fontSize: 14,
@@ -418,14 +416,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#E8E8EC',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarInitials: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#60646C',
   },
   memberInfo: {
     gap: 2,
@@ -433,7 +429,6 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000000',
   },
   memberRelation: {
     fontSize: 13,

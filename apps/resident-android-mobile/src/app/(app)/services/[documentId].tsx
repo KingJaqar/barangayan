@@ -24,8 +24,9 @@ type DocumentType = Tables<'document_types'>;
  * nothing reflows once the document loads. Rendered only while `doc === undefined` —
  * same early-return slot `PlaceholderPanel` used to occupy. */
 function DocumentDetailSkeleton() {
+  const theme = useTheme();
   return (
-    <View style={styles.skeletonContainer}>
+    <View style={[styles.skeletonContainer, { backgroundColor: theme.background }]}>
       <SkeletonBlock width="100%" height={180} borderRadius={Spacing.three} />
       <View style={styles.skeletonTitleRow}>
         <SkeletonBlock width="70%" height={30} />
@@ -65,7 +66,7 @@ export default function DocumentDetailScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
             onPress={() => router.back()}
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  root: { flex: 1 },
 
   /* Header */
   header: {
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   },
   hairline: {
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.06)',
+    borderColor: 'rgba(128,128,128,0.25)',
   },
   cardShadowWrap: {
     // Card has overflow:'hidden' internally, which would clip a shadow applied directly
@@ -308,7 +309,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.four,
     gap: Spacing.two,
-    backgroundColor: '#F6F6F6',
   },
   skeletonTitleRow: {
     flexDirection: 'row',

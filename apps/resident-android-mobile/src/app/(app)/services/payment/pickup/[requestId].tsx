@@ -22,8 +22,9 @@ type ServiceRequest = Tables<'service_requests'> & {
  * Rendered only while `request === undefined` — same early-return slot `PlaceholderPanel`
  * used to occupy. */
 function PickupSkeleton() {
+  const theme = useTheme();
   return (
-    <View style={styles.skeletonContainer}>
+    <View style={[styles.skeletonContainer, { backgroundColor: theme.background }]}>
       <SkeletonBlock width="60%" height={26} />
       <SkeletonBlock width="40%" height={16} style={styles.skeletonGapSm} />
       <SkeletonBlock width="100%" height={200} borderRadius={Spacing.three} style={styles.skeletonGap} />
@@ -94,7 +95,7 @@ export default function PickupConfirmationScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
             onPress={() => router.back()}
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  root: { flex: 1 },
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   },
   hairline: {
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.06)',
+    borderColor: 'rgba(128,128,128,0.25)',
   },
   sectionLabel: {
     textTransform: 'uppercase',
@@ -231,7 +232,6 @@ const styles = StyleSheet.create({
   skeletonContainer: {
     flex: 1,
     padding: Spacing.four,
-    backgroundColor: '#F6F6F6',
   },
   skeletonGap: {
     marginTop: Spacing.four,

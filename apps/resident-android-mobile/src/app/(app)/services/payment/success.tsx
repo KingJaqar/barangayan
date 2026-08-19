@@ -47,7 +47,7 @@ export default function PaymentSuccessScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={[styles.root, { backgroundColor: '#F6F6F6' }]}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
             onPress={() => router.back()}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  root: { flex: 1 },
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',

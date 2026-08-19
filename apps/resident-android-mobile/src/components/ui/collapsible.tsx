@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     paddingVertical: Spacing.two,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
+    borderBottomColor: 'rgba(128,128,128,0.25)',
   },
   pressedHeading: {
     opacity: 0.7,

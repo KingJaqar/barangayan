@@ -44,7 +44,8 @@ export function HorizontalCenterPicker({
           onPress={onShowAll}
           style={[
             styles.chip,
-            selectedId === null && { backgroundColor: theme.primary },
+            { borderColor: theme.backgroundSelected },
+            selectedId === null && { backgroundColor: theme.primary, borderColor: theme.primary },
           ]}>
           <ThemedText
             type="small"
@@ -64,7 +65,8 @@ export function HorizontalCenterPicker({
               onPress={() => handleSelect(item.id)}
               style={[
                 styles.chip,
-                isSelected && { backgroundColor: theme.primary },
+                { borderColor: theme.backgroundSelected },
+                isSelected && { backgroundColor: theme.primary, borderColor: theme.primary },
               ]}>
               <ThemedText
                 type="small"
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     backgroundColor: 'transparent',
     minWidth: 120,
     alignItems: 'center',

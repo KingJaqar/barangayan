@@ -532,6 +532,13 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       onMessage={handleMessage}
       originWhitelist={['*']}
       scrollEnabled={false}
+      // Lets Leaflet's own pan/pinch-zoom gestures inside the WebView win the touch
+      // responder over an ancestor ScrollView (e.g. the incident detail screen's Location
+      // card) instead of the outer list "stealing" the drag as a page-scroll — without
+      // this, dragging the map on Android feels stuck/jumpy whenever MapView is nested
+      // inside a scrollable parent. No effect when there's no scrollable ancestor (the
+      // Maps tab, the full-screen location picker).
+      nestedScrollEnabled
       javaScriptEnabled
       domStorageEnabled
       androidHardwareAccelerationDisabled={false}

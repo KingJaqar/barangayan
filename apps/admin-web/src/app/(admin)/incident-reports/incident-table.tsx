@@ -42,6 +42,18 @@ function currentDateTimeLocal() {
   return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
 }
 
+/** Parses the Coordinates column's inline-edit input, "lat, lng" (e.g. "14.68040, 121.11974"),
+ * into a `location` jsonb value. Returns null on anything that isn't two valid, in-range numbers. */
+function parseCoordinates(raw: string): { lat: number; lng: number } | null {
+  const parts = raw.split(',').map((s) => s.trim());
+  if (parts.length !== 2) return null;
+  const lat = Number(parts[0]);
+  const lng = Number(parts[1]);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+  return { lat, lng };
+}
+
 function AddIncidentForm({
   categories,
   residents,
@@ -368,6 +380,67 @@ export function IncidentTable({
         options: [{ value: '', label: 'Anonymous / Walk-in' }, ...residents.map((res) => ({ value: res.id, label: res.full_name }))],
         getValue: (r) => r.reporter_id ?? '',
         onSave: (r, value) => updateField(r, { reporter_id: String(value) || null }),
+      },
+    },
+    {
+      header: 'Coordinates',
+      initialWidth: 150,
+      render: (r) => {
+        const loc = r.location as { lat?: unknown; lng?: unknown } | null;
+        const hasLocation = loc !== null && typeof loc === 'object' && typeof loc.lat === 'number' && typeof loc.lng === 'number';
+        return hasLocation ? (
+          <span className="whitespace-nowrap text-xs text-zinc-500 dark:text-zinc-400">
+            {(loc!.lat as number).toFixed(5)}, {(loc!.lng as number).toFixed(5)}
+          </span>
+        ) : (
+          <span className="text-zinc-400">—</span>
+        );
+      },
+      edit: {
+        type: 'text',
+        getValue: (r) => {
+          const loc = r.location as { lat?: unknown; lng?: unknown } | null;
+          return loc !== null && typeof loc === 'object' && typeof loc.lat === 'number' && typeof loc.lng === 'number'
+            ? `${loc.lat}, ${loc.lng}`
+            : '';
+        },
+        onSave: (r, value) => {
+          const parsed = parseCoordinates(String(value));
+          if (!parsed) {
+            return Promise.resolve({ error: 'Enter coordinates as "lat, lng" (e.g. 14.68040, 121.11974), both in valid range.' });
+          }
+          return updateField(r, { location: parsed });
+        },
+      },
+    },
+    {
+      header: 'Address',
+      className: 'max-w-xs',
+      render: (r) =>
+        r.address ? (
+          <span className="line-clamp-2 text-xs">{r.address}</span>
+        ) : (
+          <span className="text-zinc-400">—</span>
+        ),
+      edit: {
+        type: 'text',
+        getValue: (r) => r.address ?? '',
+        onSave: (r, value) => updateField(r, { address: String(value).trim() || null }),
+      },
+    },
+    {
+      header: 'Specific Area Details',
+      className: 'max-w-xs',
+      render: (r) =>
+        r.specific_area_details ? (
+          <span className="line-clamp-2 text-xs italic text-zinc-500 dark:text-zinc-400">{r.specific_area_details}</span>
+        ) : (
+          <span className="text-zinc-400">—</span>
+        ),
+      edit: {
+        type: 'text',
+        getValue: (r) => r.specific_area_details ?? '',
+        onSave: (r, value) => updateField(r, { specific_area_details: String(value).trim() || null }),
       },
     },
     {

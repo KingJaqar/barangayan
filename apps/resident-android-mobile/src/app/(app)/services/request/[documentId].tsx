@@ -44,8 +44,9 @@ function Chip({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: st
 /** Shimmer stand-in for the loading state, shaped like the form below it. Rendered only
  * while `doc === undefined` — same early-return slot `PlaceholderPanel` used to occupy. */
 function RequestFormSkeleton() {
+  const theme = useTheme();
   return (
-    <View style={styles.skeletonContainer}>
+    <View style={[styles.skeletonContainer, { backgroundColor: theme.background }]}>
       <SkeletonBlock width="100%" height={96} borderRadius={Spacing.three} />
       <SkeletonBlock width="100%" height={80} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
       <SkeletonBlock width="100%" height={64} borderRadius={Spacing.three} style={styles.skeletonBlockGap} />
@@ -167,7 +168,7 @@ export default function RequestFormScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View style={styles.root}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
             onPress={() => router.back()}
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  root: { flex: 1, backgroundColor: '#F6F6F6' },
+  root: { flex: 1 },
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
   },
   hairline: {
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.06)',
+    borderColor: 'rgba(128,128,128,0.25)',
   },
   sectionLabel: {
     textTransform: 'uppercase',
@@ -406,7 +407,6 @@ const styles = StyleSheet.create({
   skeletonContainer: {
     flex: 1,
     padding: Spacing.four,
-    backgroundColor: '#F6F6F6',
   },
   skeletonBlockGap: {
     marginTop: Spacing.three,

@@ -382,7 +382,7 @@ function HubContent({
         </ThemedText>
       </View>
 
-      <View style={styles.sectionCard}>
+      <View style={[styles.sectionCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
         <View style={styles.sectionCardHeader}>
           <ThemedText type="smallBold" style={styles.sectionCardTitle}>
             Disaster Preparedness Guidelines
@@ -412,7 +412,7 @@ function HubContent({
         </View>
       </View>
 
-      <View style={styles.sectionCard}>
+      <View style={[styles.sectionCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
         <View style={styles.sectionCardHeader}>
           <ThemedText type="smallBold" style={styles.sectionCardTitle}>
             Emergency Hotlines
@@ -666,24 +666,24 @@ function CentersContent({
               onMarkerTap={handleMarkerTap}
             />
 
-            <View style={styles.mapSearchBar}>
-              <Ionicons name="search-outline" size={18} color="#9CA3AF" style={styles.mapSearchIcon} />
+            <View style={[styles.mapSearchBar, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+              <Ionicons name="search-outline" size={18} color={theme.textSecondary} style={styles.mapSearchIcon} />
               <TextInput
-                style={styles.mapSearchInput}
+                style={[styles.mapSearchInput, { color: theme.text }]}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 placeholder="Search evacuation centers..."
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={theme.textSecondary}
               />
               {searchQuery.length > 0 && (
                 <Pressable onPress={() => setSearchQuery('')} hitSlop={8}>
-                  <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+                  <Ionicons name="close-circle" size={18} color={theme.textSecondary} />
                 </Pressable>
               )}
             </View>
 
             <Pressable
-              style={styles.mapResetFab}
+              style={[styles.mapResetFab, { backgroundColor: theme.backgroundElement }]}
               onPress={handleResetMap}
               accessibilityLabel="Reset map to Ampid I">
               <Ionicons name="map" size={18} color={theme.primary} />
@@ -691,7 +691,7 @@ function CentersContent({
             </Pressable>
 
             <Pressable
-              style={styles.mapYouFab}
+              style={[styles.mapYouFab, { backgroundColor: theme.backgroundElement }]}
               onPress={handleLocateMe}
               accessibilityLabel="Center map on your location"
               disabled={locating}>
@@ -704,8 +704,8 @@ function CentersContent({
             </Pressable>
 
             {isLoading && (
-              <View style={styles.mapOverlayCenter} pointerEvents="none">
-                <View style={styles.mapSkeletonCard}>
+              <View style={[styles.mapOverlayCenter, { backgroundColor: `${theme.background}99` }]} pointerEvents="none">
+                <View style={[styles.mapSkeletonCard, { backgroundColor: theme.backgroundElement }]}>
                   <ShimmerSkeleton theme={theme} width={100} height={100} borderRadius={50} />
                   <ShimmerSkeleton theme={theme} width={120} height={14} style={{ marginTop: 16 }} />
                   <ShimmerSkeleton theme={theme} width={90} height={12} style={{ marginTop: 8 }} />
@@ -726,10 +726,10 @@ function CentersContent({
             )}
 
             {!isLoading && !error && filteredCenters.length === 0 && (
-              <View style={styles.mapOverlayCenter} pointerEvents="none">
-                <View style={styles.mapEmptyCard}>
-                  <Ionicons name="home-outline" size={28} color="#9CA3AF" />
-                  <ThemedText style={styles.mapEmptyText}>
+              <View style={[styles.mapOverlayCenter, { backgroundColor: `${theme.background}99` }]} pointerEvents="none">
+                <View style={[styles.mapEmptyCard, { backgroundColor: theme.backgroundElement }]}>
+                  <Ionicons name="home-outline" size={28} color={theme.textSecondary} />
+                  <ThemedText themeColor="textSecondary" style={styles.mapEmptyText}>
                     {searchQuery.trim().length > 0 ? 'No matching centers found' : 'No evacuation centers found'}
                   </ThemedText>
                 </View>
@@ -738,7 +738,7 @@ function CentersContent({
 
           </View>
 
-          <View style={styles.mapControlsContainer}>
+          <View style={[styles.mapControlsContainer, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
             <Collapsible title="Evacuation Centers" defaultOpen>
               {selectedCenter ? (
                 <Animated.View style={cardAnimatedStyle}>
@@ -780,7 +780,7 @@ function CentersContent({
               {isLoading ? (
                 <View style={styles.skeletonList}>
                   {[0, 1, 2].map((i) => (
-                    <View key={i} style={styles.skeletonCard}>
+                    <View key={i} style={[styles.skeletonCard, { backgroundColor: theme.backgroundElement }]}>
                       <ShimmerSkeleton theme={theme} width="70%" height={16} />
                       <ShimmerSkeleton theme={theme} width="50%" height={12} style={{ marginTop: 6 }} />
                       <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
@@ -835,6 +835,7 @@ function AlertsContent({
   const [monthInput, setMonthInput] = useState('');
   const [dayInput, setDayInput] = useState('');
   const [yearInput, setYearInput] = useState('');
+  const [showCustomFilter, setShowCustomFilter] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ field: string; message: string; visible: boolean }>({
     field: '',
@@ -944,41 +945,44 @@ function AlertsContent({
 
   const formatAlertDateTime = (dateString: string) => {
     const date = new Date(dateString);
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const month = months[date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
 
     let hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
 
-    return {
-      date: `${month} ${day}, ${year}`,
-      time: `${hours}:${minutes}:${seconds} ${ampm}`,
-    };
+    return `${month} ${day}, ${year} · ${hours}:${minutes} ${ampm}`;
   };
+
+  const activeCustomFilterCount = [monthInput, dayInput, yearInput].filter((v) => v.trim().length > 0).length;
 
   return (
     <View style={styles.alertsContent}>
       <View style={styles.alertSectionHeader}>
-        <ThemedText style={styles.alertSectionHeaderText}>Emergency Alerts / Notifications</ThemedText>
+        <View style={[styles.alertHeaderIcon, { backgroundColor: theme.accentRed }]}>
+          <Ionicons name="warning" size={14} color="#FFFFFF" />
+        </View>
+        <ThemedText type="smallBold" style={styles.alertSectionHeaderText}>
+          Emergency Alerts
+        </ThemedText>
+        {!isLoading && (
+          <View style={[styles.alertCountPill, { backgroundColor: theme.backgroundSelected }]}>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.alertCountPillText}>
+              {filteredAlerts.length}
+            </ThemedText>
+          </View>
+        )}
       </View>
 
       <View style={styles.alertFilterContainer}>
         {isLoading ? (
           <View style={styles.skeletonFilter}>
-            <ShimmerSkeleton theme={theme} width="100%" height={36} borderRadius={18} />
-            <View style={{ gap: 12, marginTop: 12 }}>
-              <ShimmerSkeleton theme={theme} width="100%" height={44} borderRadius={10} />
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <ShimmerSkeleton theme={theme} width="33%" height={44} borderRadius={10} />
-                <ShimmerSkeleton theme={theme} width="33%" height={44} borderRadius={10} />
-                <ShimmerSkeleton theme={theme} width="33%" height={44} borderRadius={10} />
-              </View>
-            </View>
+            <ShimmerSkeleton theme={theme} width="100%" height={32} borderRadius={16} />
+            <ShimmerSkeleton theme={theme} width="45%" height={18} style={{ marginTop: 10 }} />
           </View>
         ) : (
           <>
@@ -994,15 +998,44 @@ function AlertsContent({
               onChange={(key) => setFilterMode(key as FilterMode)}
               activeColor="accentRed"
             />
-            <View style={styles.alertFilterCard}>
+
+            <Pressable
+              onPress={() => setShowCustomFilter((prev) => !prev)}
+              style={styles.customFilterToggle}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: showCustomFilter }}
+              accessibilityLabel="Filter by specific date"
+              hitSlop={Spacing.one}>
+              <Ionicons name="calendar-outline" size={14} color={theme.textSecondary} />
+              <ThemedText type="small" themeColor="textSecondary" style={styles.customFilterToggleText}>
+                Filter by specific date
+              </ThemedText>
+              {activeCustomFilterCount > 0 && (
+                <View style={[styles.alertCountPill, { backgroundColor: theme.accentRed }]}>
+                  <ThemedText type="small" style={[styles.alertCountPillText, { color: '#FFFFFF' }]}>
+                    {activeCustomFilterCount}
+                  </ThemedText>
+                </View>
+              )}
+              <Ionicons
+                name="chevron-down"
+                size={16}
+                color={theme.textSecondary}
+                style={showCustomFilter && styles.customFilterChevronOpen}
+              />
+            </Pressable>
+
+            {showCustomFilter && (
+            <View style={[styles.alertFilterCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
               <View style={styles.alertFilterRow}>
                 <View style={styles.alertFilterInputWrapper}>
-                  <ThemedText type="small" style={styles.alertFilterLabel}>Month</ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary" style={styles.alertFilterLabel}>Month</ThemedText>
                   <View style={styles.alertInputContainer}>
-                    <Ionicons name="calendar-outline" size={16} color={focusedField === 'month' ? theme.primary : '#94A3B8'} style={styles.alertFilterIcon} />
+                    <Ionicons name="calendar-outline" size={16} color={focusedField === 'month' ? theme.primary : theme.textSecondary} style={styles.alertFilterIcon} />
                     <TextInput
                       style={[
                         styles.alertFilterInput,
+                        { backgroundColor: theme.background, borderColor: theme.backgroundSelected, color: theme.text },
                         focusedField === 'month' && { borderColor: theme.primary, shadowColor: theme.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
                       ]}
                       value={monthInput}
@@ -1014,7 +1047,7 @@ function AlertsContent({
                         }
                       }}
                       placeholder="e.g. January"
-                      placeholderTextColor="#94A3B8"
+                      placeholderTextColor={theme.textSecondary}
                       onFocus={() => setFocusedField('month')}
                       onBlur={() => setFocusedField(null)}
                       accessibilityLabel="Filter by Month"
@@ -1034,12 +1067,13 @@ function AlertsContent({
                   </View>
                 </View>
                 <View style={styles.alertFilterInputWrapper}>
-                  <ThemedText type="small" style={styles.alertFilterLabel}>Day</ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary" style={styles.alertFilterLabel}>Day</ThemedText>
                   <View style={styles.alertInputContainer}>
-                    <Ionicons name="today-outline" size={16} color={focusedField === 'day' ? theme.primary : '#94A3B8'} style={styles.alertFilterIcon} />
+                    <Ionicons name="today-outline" size={16} color={focusedField === 'day' ? theme.primary : theme.textSecondary} style={styles.alertFilterIcon} />
                     <TextInput
                       style={[
                         styles.alertFilterInput,
+                        { backgroundColor: theme.background, borderColor: theme.backgroundSelected, color: theme.text },
                         focusedField === 'day' && { borderColor: theme.primary, shadowColor: theme.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
                       ]}
                       value={dayInput}
@@ -1051,7 +1085,7 @@ function AlertsContent({
                         }
                       }}
                       placeholder="e.g. 15"
-                      placeholderTextColor="#94A3B8"
+                      placeholderTextColor={theme.textSecondary}
                       keyboardType="numeric"
                       onFocus={() => setFocusedField('day')}
                       onBlur={() => setFocusedField(null)}
@@ -1072,12 +1106,13 @@ function AlertsContent({
                   </View>
                 </View>
                 <View style={styles.alertFilterInputWrapper}>
-                  <ThemedText type="small" style={styles.alertFilterLabel}>Year</ThemedText>
+                  <ThemedText type="small" themeColor="textSecondary" style={styles.alertFilterLabel}>Year</ThemedText>
                   <View style={styles.alertInputContainer}>
-                    <Ionicons name="time-outline" size={16} color={focusedField === 'year' ? theme.primary : '#94A3B8'} style={styles.alertFilterIcon} />
+                    <Ionicons name="time-outline" size={16} color={focusedField === 'year' ? theme.primary : theme.textSecondary} style={styles.alertFilterIcon} />
                     <TextInput
                       style={[
                         styles.alertFilterInput,
+                        { backgroundColor: theme.background, borderColor: theme.backgroundSelected, color: theme.text },
                         focusedField === 'year' && { borderColor: theme.primary, shadowColor: theme.primary, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 2 },
                       ]}
                       value={yearInput}
@@ -1089,7 +1124,7 @@ function AlertsContent({
                         }
                       }}
                       placeholder="e.g. 2026"
-                      placeholderTextColor="#94A3B8"
+                      placeholderTextColor={theme.textSecondary}
                       keyboardType="numeric"
                       onFocus={() => setFocusedField('year')}
                       onBlur={() => setFocusedField(null)}
@@ -1111,19 +1146,26 @@ function AlertsContent({
                 </View>
               </View>
             </View>
+            )}
           </>
         )}
       </View>
 
+      {!isLoading && !error && alerts.length > 0 && (
+        <ThemedText type="small" themeColor="textSecondary" style={styles.alertsSummaryText}>
+          Showing {filteredAlerts.length} of {alerts.length} {alerts.length === 1 ? 'alert' : 'alerts'}
+        </ThemedText>
+      )}
+
       {isLoading ? (
         <View style={styles.skeletonAlerts}>
           {[0, 1, 2].map((i) => (
-            <View key={i} style={styles.skeletonAlertCard}>
-              <ShimmerSkeleton theme={theme} width={44} height={44} borderRadius={22} />
-              <View style={{ flex: 1, marginLeft: 12 }}>
-                <ShimmerSkeleton theme={theme} width="90%" height={16} />
-                <ShimmerSkeleton theme={theme} width="70%" height={12} style={{ marginTop: 6 }} />
-                <ShimmerSkeleton theme={theme} width="50%" height={12} style={{ marginTop: 4 }} />
+            <View key={i} style={[styles.skeletonAlertCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+              <ShimmerSkeleton theme={theme} width={36} height={36} borderRadius={18} />
+              <View style={{ flex: 1, marginLeft: 10 }}>
+                <ShimmerSkeleton theme={theme} width="90%" height={14} />
+                <ShimmerSkeleton theme={theme} width="70%" height={11} style={{ marginTop: 6 }} />
+                <ShimmerSkeleton theme={theme} width="50%" height={11} style={{ marginTop: 4 }} />
               </View>
             </View>
           ))}
@@ -1144,50 +1186,41 @@ function AlertsContent({
           <ThemedText themeColor="textSecondary">No emergency alerts match your filter.</ThemedText>
         </View>
       ) : (
-        filteredAlerts.map((alert) => {
-          const { date, time } = formatAlertDateTime(alert.published_at);
-          return (
-            <View
-              key={alert.id}
-              style={[
-                styles.alertCard,
-                {
-                  backgroundColor: '#FEE2E2',
-                  borderColor: '#FECACA',
-                },
-              ]}>
-              <View style={[styles.alertIconCircle, { backgroundColor: '#EF4444' }]}>
-                <Ionicons name="alert-circle" size={24} color="#FFFFFF" />
-              </View>
-
-              <View style={styles.alertBody}>
-                <View style={styles.alertTopRow}>
-                  <View style={[styles.alertBadge, { backgroundColor: '#EF4444' }]}>
-                    <ThemedText style={[styles.alertBadgeText, { color: '#FFFFFF' }]}>
-                      EMERGENCY
-                    </ThemedText>
-                  </View>
-                  <View style={styles.alertTimestampContainer}>
-                    <ThemedText type="small" themeColor="textSecondary" style={styles.alertTimestamp}>
-                      {date}
-                    </ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary" style={styles.alertTimestamp}>
-                      {time}
-                    </ThemedText>
-                  </View>
+        filteredAlerts.map((alert) => (
+          <View
+            key={alert.id}
+            style={[
+              styles.alertCard,
+              {
+                backgroundColor: '#FEE2E2',
+                borderColor: '#FECACA',
+              },
+            ]}>
+            <View style={styles.alertTopRow}>
+              <View style={styles.alertTopRowLeft}>
+                <View style={[styles.alertIconCircle, { backgroundColor: '#EF4444' }]}>
+                  <Ionicons name="alert-circle" size={16} color="#FFFFFF" />
                 </View>
-
-                <ThemedText type="smallBold" style={styles.alertTitle}>
-                  {alert.title}
-                </ThemedText>
-
-                <ThemedText type="small" themeColor="textSecondary" style={styles.alertDescription}>
-                  {alert.body}
-                </ThemedText>
+                <View style={[styles.alertBadge, { backgroundColor: '#EF4444' }]}>
+                  <ThemedText style={[styles.alertBadgeText, { color: '#FFFFFF' }]}>
+                    EMERGENCY
+                  </ThemedText>
+                </View>
               </View>
+              <ThemedText type="small" style={styles.alertTimestamp}>
+                {formatAlertDateTime(alert.published_at)}
+              </ThemedText>
             </View>
-          );
-        })
+
+            <ThemedText type="smallBold" style={styles.alertTitle}>
+              {alert.title}
+            </ThemedText>
+
+            <ThemedText type="small" style={styles.alertDescription}>
+              {alert.body}
+            </ThemedText>
+          </View>
+        ))
       )}
     </View>
   );
@@ -1275,9 +1308,7 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     overflow: 'hidden',
     ...Platform.select({
       ios: {
@@ -1300,7 +1331,6 @@ const styles = StyleSheet.create({
   sectionCardTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000000',
     flex: 1,
   },
   offlineBadge: {
@@ -1366,9 +1396,8 @@ const styles = StyleSheet.create({
     gap: 6,
     padding: Spacing.four,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: 'rgba(128,128,128,0.25)',
   },
   centersMapContainer: {
     flex: 1,
@@ -1390,9 +1419,7 @@ const styles = StyleSheet.create({
     right: 16,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
@@ -1413,7 +1440,6 @@ const styles = StyleSheet.create({
   mapSearchInput: {
     flex: 1,
     fontSize: 14,
-    color: '#111827',
     paddingVertical: 0,
   },
   mapResetFab: {
@@ -1423,7 +1449,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     paddingHorizontal: 14,
-    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -1445,7 +1470,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     paddingHorizontal: 14,
-    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -1462,9 +1486,7 @@ const styles = StyleSheet.create({
   },
   mapControlsContainer: {
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
     paddingHorizontal: 12,
     paddingTop: 4,
     paddingBottom: 12,
@@ -1492,10 +1514,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.6)',
   },
   mapSkeletonCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
@@ -1537,7 +1557,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   mapEmptyCard: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     paddingHorizontal: 20,
     paddingVertical: 18,
@@ -1547,7 +1566,6 @@ const styles = StyleSheet.create({
   mapEmptyText: {
     fontSize: 13,
     textAlign: 'center',
-    color: '#6B7280',
   },
   centersToolbar: {
     flexDirection: 'row',
@@ -1577,33 +1595,42 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.three,
   },
   alertsContent: {
-    gap: Spacing.three,
+    gap: Spacing.two,
   },
   alertFilterContainer: {
-    gap: Spacing.three,
+    gap: Spacing.two,
   },
   skeletonFilter: {
-    gap: 12,
+    gap: 4,
   },
   skeletonAlerts: {
-    gap: Spacing.three,
+    gap: Spacing.two,
   },
   skeletonAlertCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    padding: Spacing.four,
-    borderRadius: 16,
+    padding: Spacing.three,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
-    gap: Spacing.three,
+    gap: Spacing.two,
+  },
+  customFilterToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+    alignSelf: 'flex-start',
+    paddingVertical: Spacing.one,
+  },
+  customFilterToggleText: {
+    fontSize: 13,
+  },
+  customFilterChevronOpen: {
+    transform: [{ rotate: '180deg' }],
   },
   alertFilterCard: {
-    backgroundColor: '#F8FAFC',
-    borderRadius: 16,
-    padding: Spacing.three,
+    borderRadius: 14,
+    padding: Spacing.two,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -1619,12 +1646,11 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   alertFilterLabel: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '600',
-    color: '#64748B',
-    letterSpacing: 0.8,
+    letterSpacing: 0.6,
     textTransform: 'uppercase',
-    marginBottom: Spacing.half,
+    marginBottom: 4,
   },
   alertFilterInputWrapper: {
     flex: 1,
@@ -1636,25 +1662,22 @@ const styles = StyleSheet.create({
   },
   alertFilterInput: {
     flex: 1,
-    height: 44,
-    backgroundColor: '#FFFFFF',
+    height: 38,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 10,
-    paddingHorizontal: 36,
-    paddingVertical: Spacing.two,
-    fontSize: 14,
-    color: '#0F172A',
+    borderRadius: 9,
+    paddingHorizontal: 32,
+    paddingVertical: Spacing.one,
+    fontSize: 13,
   },
   alertFilterIcon: {
     position: 'absolute',
     left: Spacing.two,
-    top: 14,
+    top: 11,
     zIndex: 1,
   },
   alertTooltip: {
     position: 'absolute',
-    top: -36,
+    top: -34,
     left: 0,
     right: 0,
     backgroundColor: '#FEF2F2',
@@ -1680,69 +1703,89 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
   },
-  alertTimestampContainer: {
-    alignItems: 'flex-end',
-  },
   alertSectionHeader: {
-    backgroundColor: '#8B0000',
-    paddingVertical: Spacing.three,
-    borderRadius: 12,
-  },
-  alertSectionHeaderText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  alertCard: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    padding: Spacing.four,
-    borderRadius: 16,
-    borderWidth: 1,
-    gap: Spacing.three,
+    alignItems: 'center',
+    gap: Spacing.two,
   },
-  alertIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  alertHeaderIcon: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 2,
   },
-  alertBody: {
+  alertSectionHeaderText: {
     flex: 1,
+    fontSize: 15,
+  },
+  alertCountPill: {
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  alertCountPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 14,
+  },
+  alertsSummaryText: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  alertCard: {
+    padding: Spacing.three,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 4,
+  },
+  alertIconCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   alertTopRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: Spacing.one,
+    rowGap: 4,
+  },
+  alertTopRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
   },
   alertBadge: {
     paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.one,
+    paddingVertical: 2,
     borderRadius: 6,
   },
   alertBadgeText: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.5,
   },
   alertTimestamp: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 11,
+    lineHeight: 15,
+    color: '#7F1D1D',
   },
   alertTitle: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '700',
     color: '#000000',
-    marginTop: Spacing.two,
   },
   alertDescription: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 18,
     color: '#374151',
-    marginTop: Spacing.two,
   },
   alertLinkPressable: {
     marginTop: Spacing.three,
