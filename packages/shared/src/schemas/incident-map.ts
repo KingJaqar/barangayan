@@ -18,6 +18,7 @@ export interface MapIncidentMarker {
   status: string;
   categoryColor?: string;
   categoryName?: string;
+  address?: string | null;
 }
 
 export interface MapEvacuationMarker {

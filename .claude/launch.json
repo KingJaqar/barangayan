@@ -2,33 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "barangayan-mobile",
+      "name": "resident-mobile-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile"],
-      "port": 8081
-    },
-    {
-      "//": "Second Expo web instance on a distinct port, so a preview can run alongside an existing `expo start --web` already holding 8081. Expo ignores the PORT env var and prompts interactively when its port is taken, so the port must be passed explicitly here.",
-      "name": "barangayan-mobile-8090",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile", "--", "--port", "8090"],
-      "port": 8090,
-      "autoPort": false
-    },
-    {
-      "name": "barangayan-web",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/web"],
-      "port": 3000,
-      "autoPort": true
-    },
-    {
-      "//": "Third Expo web instance — 8090 was already held by another chat's session.",
-      "name": "barangayan-mobile-8091",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile", "--", "--port", "8091"],
-      "port": 8091,
-      "autoPort": false
+      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile", "--", "--port", "8082"],
+      "port": 8082
     }
   ]
 }

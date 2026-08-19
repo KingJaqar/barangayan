@@ -24,6 +24,8 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(incident.title);
   const [description, setDescription] = useState(incident.description ?? '');
+  const [address, setAddress] = useState(incident.address ?? '');
+  const [specificAreaDetails, setSpecificAreaDetails] = useState(incident.specific_area_details ?? '');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -43,7 +45,12 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase
       .from('incidents')
-      .update({ title: title.trim(), description: description.trim() || null })
+      .update({
+        title: title.trim(),
+        description: description.trim() || null,
+        address: address.trim() || null,
+        specific_area_details: specificAreaDetails.trim() || null,
+      })
       .eq('id', incident.id);
     setSaving(false);
     if (error) {
@@ -154,6 +161,8 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
                   onClick={() => {
                     setTitle(incident.title);
                     setDescription(incident.description ?? '');
+                    setAddress(incident.address ?? '');
+                    setSpecificAreaDetails(incident.specific_area_details ?? '');
                     setEditing(true);
                   }}
                   className="text-xs font-semibold text-[var(--accent)] hover:underline">
@@ -174,6 +183,20 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Description"
+                />
+                <input
+                  className={inputClass}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  maxLength={300}
+                  placeholder="Address"
+                />
+                <input
+                  className={inputClass}
+                  value={specificAreaDetails}
+                  onChange={(e) => setSpecificAreaDetails(e.target.value)}
+                  maxLength={300}
+                  placeholder="Specific area details (e.g. near the blue gate)"
                 />
                 <div className="flex gap-2">
                   <button
@@ -222,19 +245,29 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
           </div>
 
           {/* Location */}
-          {hasLocation && (
+          {(hasLocation || incident.address || incident.specific_area_details) && !editing && (
             <div className="mb-4">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Location</p>
-              <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                {loc!.lat!.toFixed(5)}, {loc!.lng!.toFixed(5)}
-              </p>
-              <a
-                href={mapsUrl!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-[var(--accent)] hover:underline">
-                Open in Google Maps ↗
-              </a>
+              {incident.address && <p className="text-sm text-zinc-700 dark:text-zinc-300">{incident.address}</p>}
+              {hasLocation && (
+                <p className="text-xs text-zinc-500">
+                  {loc!.lat!.toFixed(5)}, {loc!.lng!.toFixed(5)}
+                </p>
+              )}
+              {incident.specific_area_details && (
+                <p className="mt-1 text-sm italic text-zinc-600 dark:text-zinc-400">
+                  &ldquo;{incident.specific_area_details}&rdquo;
+                </p>
+              )}
+              {hasLocation && (
+                <a
+                  href={mapsUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-[var(--accent)] hover:underline">
+                  Open in Google Maps ↗
+                </a>
+              )}
             </div>
           )}
 

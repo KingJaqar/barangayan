@@ -57,6 +57,8 @@ function AddIncidentForm({
   const toast = useToast();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [address, setAddress] = useState('');
+  const [specificAreaDetails, setSpecificAreaDetails] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [reporterId, setReporterId] = useState('');
   const [status, setStatus] = useState<keyof typeof INCIDENT_STATUS>('open');
@@ -75,11 +77,14 @@ function AddIncidentForm({
       barangay_id: barangayId,
       title: title.trim(),
       description: description.trim() || null,
+      address: address.trim() || null,
+      specific_area_details: specificAreaDetails.trim() || null,
       category_id: categoryId || null,
       reporter_id: reporterId || null,
       status,
       created_at: new Date(submittedAt).toISOString(),
-      // Walk-in/phoned-in reports have no resident-supplied coordinates yet.
+      // Walk-in/phoned-in reports have no map pin — address/specific area details are
+      // whatever the resident described verbally, entered by the admin above.
       location: {},
     });
     setSubmitting(false);
@@ -90,6 +95,8 @@ function AddIncidentForm({
     toast.showSuccess('Incident report created.');
     setTitle('');
     setDescription('');
+    setAddress('');
+    setSpecificAreaDetails('');
     setCategoryId('');
     setReporterId('');
     setStatus('open');
@@ -113,6 +120,26 @@ function AddIncidentForm({
       <label className="text-sm sm:col-span-3">
         <span className="mb-1 block font-medium">Description</span>
         <input className={inputClass} value={description} onChange={(e) => setDescription(e.target.value)} />
+      </label>
+      <label className="text-sm sm:col-span-3">
+        <span className="mb-1 block font-medium">Address</span>
+        <input
+          className={inputClass}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          maxLength={300}
+          placeholder="Where the resident described the incident"
+        />
+      </label>
+      <label className="text-sm sm:col-span-3">
+        <span className="mb-1 block font-medium">Specific Area Details</span>
+        <input
+          className={inputClass}
+          value={specificAreaDetails}
+          onChange={(e) => setSpecificAreaDetails(e.target.value)}
+          maxLength={300}
+          placeholder="e.g. near the blue gate, 2nd house from the corner"
+        />
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
@@ -290,6 +317,11 @@ export function IncidentTable({
         <div>
           <p className="font-semibold leading-snug">{r.title}</p>
           {r.description && <p className="mt-0.5 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400">{r.description}</p>}
+          {r.address && (
+            <p className="mt-0.5 line-clamp-1 text-xs text-zinc-400" title={r.address}>
+              📍 {r.address}
+            </p>
+          )}
           {(r.photo_urls ?? []).length > 0 && (
             <span className="mt-1 inline-flex items-center gap-1 text-xs text-zinc-400">
               📷 {r.photo_urls.length} photo{r.photo_urls.length !== 1 ? 's' : ''}

@@ -24,13 +24,24 @@ export type MapBridgeInboundMessage =
   /** Fits the map to show all current markers regardless of any previously set boundary. */
   | { type: 'FIT_ALL' }
   | { type: 'DRAW_ROUTE'; payload: { points: LatLng[] } }
-  | { type: 'CLEAR_ROUTE' };
+  | { type: 'CLEAR_ROUTE' }
+  /**
+   * Toggles the location-picker pin (Incident Reports "pin your location" flow — see
+   * location-picker-modal.tsx). When `enabled`, a tap anywhere on the map (or a drag of
+   * the existing pin) places/moves a draggable marker at that spot and reports it back
+   * via PICKER_MOVED. `position` sets/moves the marker without user interaction (e.g. the
+   * initial GPS fix, or RN snapping the pin back after a rejected out-of-boundary move).
+   * `position: null` removes the marker entirely.
+   */
+  | { type: 'SET_PICKER'; payload: { enabled: boolean; position: LatLng | null } };
 
 /** Messages sent FROM the WebView's Leaflet page BACK to React Native. */
 export type MapBridgeOutboundMessage =
   | { type: 'MAP_READY' }
   | { type: 'MARKER_TAPPED'; payload: { markerId: string } }
-  | { type: 'MAP_MOVED'; payload: { center: LatLng; zoom: number } };
+  | { type: 'MAP_MOVED'; payload: { center: LatLng; zoom: number } }
+  /** The picker pin was placed (tap) or moved (drag) — see SET_PICKER above. */
+  | { type: 'PICKER_MOVED'; payload: LatLng };
 
 export interface MapMarker {
   id: string;

@@ -36,6 +36,7 @@ export * from './lib/supabase-client';
 export * from './lib/haversine';
 export * from './lib/point-in-polygon';
 export * from './lib/osrm';
+export * from './lib/geocode';
 export * from './lib/format';
 export * from './lib/request-status';
 export * from './lib/service-tracking';

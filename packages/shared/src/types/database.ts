@@ -930,6 +930,7 @@ export type Database = {
       }
       incidents: {
         Row: {
+          address: string | null
           barangay_id: string
           category_id: string | null
           confirmation_count: number
@@ -941,12 +942,14 @@ export type Database = {
           photo_urls: string[]
           reporter_id: string | null
           resolved_read_at: string | null
+          specific_area_details: string | null
           status: string
           title: string
           updated_at: string
           zone_id: string | null
         }
         Insert: {
+          address?: string | null
           barangay_id: string
           category_id?: string | null
           confirmation_count?: number
@@ -958,12 +961,14 @@ export type Database = {
           photo_urls?: string[]
           reporter_id?: string | null
           resolved_read_at?: string | null
+          specific_area_details?: string | null
           status?: string
           title: string
           updated_at?: string
           zone_id?: string | null
         }
         Update: {
+          address?: string | null
           barangay_id?: string
           category_id?: string | null
           confirmation_count?: number
@@ -975,6 +980,7 @@ export type Database = {
           photo_urls?: string[]
           reporter_id?: string | null
           resolved_read_at?: string | null
+          specific_area_details?: string | null
           status?: string
           title?: string
           updated_at?: string

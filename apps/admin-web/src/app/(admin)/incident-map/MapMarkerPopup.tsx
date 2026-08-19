@@ -28,6 +28,7 @@ export function IncidentPopupContent({ marker }: IncidentPopupContentProps) {
           {marker.categoryName}
         </span>
       )}
+      {marker.address && <p className="ml-7 text-xs text-slate-500 dark:text-slate-400">{marker.address}</p>}
       <div className="ml-7">
         <IncidentStatusPill status={marker.status} />
       </div>

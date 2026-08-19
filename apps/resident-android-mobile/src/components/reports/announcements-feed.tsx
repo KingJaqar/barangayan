@@ -1,9 +1,11 @@
+import { Ionicons } from '@expo/vector-icons';
 import { ANNOUNCEMENT_CATEGORIES, ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
 import { useState, type ReactNode } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { type FilterChip } from '@/components/filter-chips';
 import { AnnouncementCard } from '@/components/reports/announcement-card';
+import { Shimmer } from '@/components/reports/shimmer';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
@@ -30,14 +32,15 @@ type AnnouncementsFeedProps = {
 // ---------------------------------------------------------------------------
 
 function SkeletonCard() {
+  const theme = useTheme();
   return (
-    <ThemedView type="backgroundElement" style={skeletonStyles.card}>
-      <View style={skeletonStyles.bar} />
+    <ThemedView type="backgroundElement" style={[skeletonStyles.card, { borderColor: theme.backgroundSelected }]}>
+      <View style={[skeletonStyles.bar, { backgroundColor: theme.backgroundSelected }]} />
       <View style={skeletonStyles.body}>
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '40%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '85%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '70%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '30%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '40%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '85%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '70%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '30%', height: 10 }]} />
       </View>
     </ThemedView>
   );
@@ -46,13 +49,13 @@ function SkeletonCard() {
 const skeletonStyles = StyleSheet.create({
   card: {
     borderRadius: Spacing.three,
+    borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
     flexDirection: 'row',
-    height: 120,
+    height: 128,
   },
   bar: {
     width: 4,
-    backgroundColor: '#E0E1E6',
   },
   body: {
     flex: 1,
@@ -63,6 +66,49 @@ const skeletonStyles = StyleSheet.create({
   line: {
     height: 12,
     borderRadius: 6,
+  },
+});
+
+// ---------------------------------------------------------------------------
+// Empty state
+// ---------------------------------------------------------------------------
+
+// Plain View, not Animated — as `ListEmptyComponent` it's managed by the same FlatList
+// render path where a Reanimated `entering` transition got stuck invisible in testing
+// (see IncidentCard's note in my-incidents-feed.tsx).
+function EmptyState({ label }: { label: string }) {
+  const theme = useTheme();
+  return (
+    <View style={emptyStyles.container}>
+      <View style={[emptyStyles.iconWrap, { backgroundColor: theme.backgroundElement }]}>
+        <Ionicons name="megaphone-outline" size={34} color={theme.textSecondary} />
+      </View>
+      <ThemedText themeColor="textSecondary" style={emptyStyles.text}>
+        {label}
+      </ThemedText>
+    </View>
+  );
+}
+
+const emptyStyles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 56,
+    paddingHorizontal: Spacing.five,
+    gap: Spacing.three,
+  },
+  iconWrap: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
   },
 });
 
@@ -124,9 +170,7 @@ export function AnnouncementsFeed({
             contentContainerStyle={styles.list}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
-              <ThemedText themeColor="textSecondary" style={styles.empty}>
-                {categoryFilter === 'emergency' ? 'No active emergency alerts.' : emptyLabel}
-              </ThemedText>
+              <EmptyState label={categoryFilter === 'emergency' ? 'No active emergency alerts.' : emptyLabel} />
             }
           />
         )}

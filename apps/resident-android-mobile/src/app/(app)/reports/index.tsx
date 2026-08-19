@@ -6,6 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { FilterChips } from '@/components/filter-chips';
 import { AnnouncementsFeed, FilterKey, useAnnouncementChips } from '@/components/reports/announcements-feed';
+import { FadeInView } from '@/components/reports/fade-in-view';
 import { MyIncidentsFeed, StatusFilterKey, useStatusChips } from '@/components/reports/my-incidents-feed';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
@@ -20,17 +21,22 @@ type ReportsSegment = 'incident-reports' | 'active' | 'resolved' | 'announcement
 // literal every render would re-fetch on every render instead of once.
 const ACTIVE_STATUSES: ('open' | 'in_progress')[] = ['open', 'in_progress'];
 
-/** Single bulk "Mark all as read" action — sits above the Resolved Reports / Announcements
- * lists. Active Reports gets none: it's a live status count, not an unread notification
- * count, so there's nothing to acknowledge. */
+/** Single bulk "Mark all as read" action, right-aligned inline alongside the segment's
+ * heading (Resolved Reports) or its filter chips (Announcements) — see the section2Row /
+ * filtersRow layouts below. Active Reports gets none: it's a live status count, not an
+ * unread notification count, so there's nothing to acknowledge. */
 function MarkAllReadButton({ label, onPress }: { label: string; onPress: () => void }) {
   const theme = useTheme();
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => [markReadStyles.button, pressed && markReadStyles.pressed]}>
-      <Ionicons name="checkmark-done-outline" size={16} color={theme.primary} />
+      style={({ pressed }) => [
+        markReadStyles.button,
+        { backgroundColor: `${theme.primary}14`, borderColor: `${theme.primary}33` },
+        pressed && markReadStyles.pressed,
+      ]}>
+      <Ionicons name="checkmark-done-outline" size={15} color={theme.primary} />
       <ThemedText type="small" style={[markReadStyles.label, { color: theme.primary }]}>
         {label}
       </ThemedText>
@@ -42,16 +48,19 @@ const markReadStyles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-end',
-    gap: Spacing.one,
+    gap: 6,
+    borderWidth: 1,
+    borderRadius: 20,
     paddingHorizontal: Spacing.three,
-    paddingBottom: Spacing.two,
+    paddingVertical: 7,
   },
   pressed: {
-    opacity: 0.6,
+    opacity: 0.65,
+    transform: [{ scale: 0.98 }],
   },
   label: {
-    fontWeight: '600',
+    fontWeight: '700',
+    fontSize: 13,
   },
 });
 
@@ -179,60 +188,78 @@ export default function ReportsScreen() {
         />
       </View>
 
-      {/* Section 2 — Heading */}
-      <View style={styles.section2}>
-        {renderHeading()}
-      </View>
-
-      {/* Section 3 — Category filter controls */}
-      <View style={styles.section3}>
-        {renderFilters()}
-      </View>
-
-      {/* Section 3b — Bulk "Mark all as read" action. Only Resolved Reports and
-          Announcements have a mark-as-read concept — Active Reports is a live status
-          count (open + in_progress), not an unread notification count, so it has no
+      {/* Section 2 — Heading. Resolved Reports gets its "Mark all as read" action inline on
+          the right, same row as the heading text on the left. Active Reports is a live
+          status count (open + in_progress), not an unread notification count, so it has no
           button; the bell/badge for it never clears. */}
-      {segment === 'resolved' && (
-        <MarkAllReadButton label="Mark all as read" onPress={markResolvedRead} />
-      )}
-      {segment === 'announcements' && (
-        <MarkAllReadButton label="Mark all as read" onPress={markAnnouncementsRead} />
-      )}
+      <View style={styles.section2}>
+        <View style={styles.section2Row}>
+          {/* `key={segment}` remounts on every switch so the heading crossfades in rather
+              than snapping — same shared-value idiom as FadeInView elsewhere, never
+              Reanimated's `entering` prop (see fade-in-view.tsx). */}
+          <FadeInView key={segment} duration={160} rise={4}>
+            {renderHeading()}
+          </FadeInView>
+          {segment === 'resolved' && (
+            <MarkAllReadButton label="Mark all as read" onPress={markResolvedRead} />
+          )}
+        </View>
+      </View>
 
-      {/* Section 4 — Content panels */}
+      {/* Section 3 — Category filter controls. Announcements gets its "Mark all as read"
+          action inline on the right, same row as the filter chips. */}
+      <View style={styles.section3}>
+        {segment === 'announcements' ? (
+          <View style={styles.filtersRow}>
+            <View style={styles.filtersScroll}>{renderFilters()}</View>
+            <MarkAllReadButton label="Mark all as read" onPress={markAnnouncementsRead} />
+          </View>
+        ) : (
+          renderFilters()
+        )}
+      </View>
 
-      {/* All of the resident's own reports (any status) */}
-      {segment === 'incident-reports' && (
-        <MyIncidentsFeed
-          activeFilter={incidentFilter}
-          onFilterChange={setIncidentFilter}
-          emptyLabel="You have not submitted any incident reports yet."
-        />
-      )}
+      {/* Section 4 — Content panel. Deliberately a plain (non-animated) View: nesting this
+          in a Reanimated `entering` transition around a FlatList whose own rows each run
+          their own `entering` (IncidentCard/AnnouncementCard) produced a stuck-invisible
+          panel on web (nested entering transitions never resolved). The heading above
+          already gives a cross-fade cue on segment switch; the rows' own stagger-in is
+          enough motion for the panel itself. */}
+      <View style={styles.panel}>
+        {/* Content panels */}
 
-      {/* Active = open + in_progress — matches the Reports-tab badge's active-reports
-          count exactly, so the number above the bell icon never disagrees with this list. */}
-      {segment === 'active' && (
-        <MyIncidentsFeed
-          status={ACTIVE_STATUSES}
-          emptyLabel="No active incident reports."
-        />
-      )}
+        {/* All of the resident's own reports (any status) */}
+        {segment === 'incident-reports' && (
+          <MyIncidentsFeed
+            activeFilter={incidentFilter}
+            onFilterChange={setIncidentFilter}
+            emptyLabel="You have not submitted any incident reports yet."
+          />
+        )}
 
-      {segment === 'resolved' && (
-        <MyIncidentsFeed
-          status="resolved"
-          emptyLabel="No resolved incident reports yet."
-        />
-      )}
+        {/* Active = open + in_progress — matches the Reports-tab badge's active-reports
+            count exactly, so the number above the bell icon never disagrees with this list. */}
+        {segment === 'active' && (
+          <MyIncidentsFeed
+            status={ACTIVE_STATUSES}
+            emptyLabel="No active incident reports."
+          />
+        )}
 
-      {segment === 'announcements' && (
-        <AnnouncementsFeed
-          activeFilter={announcementFilter}
-          onFilterChange={setAnnouncementFilter}
-        />
-      )}
+        {segment === 'resolved' && (
+          <MyIncidentsFeed
+            status="resolved"
+            emptyLabel="No resolved incident reports yet."
+          />
+        )}
+
+        {segment === 'announcements' && (
+          <AnnouncementsFeed
+            activeFilter={announcementFilter}
+            onFilterChange={setAnnouncementFilter}
+          />
+        )}
+      </View>
       </View>
     </SafeAreaView>
   );
@@ -264,23 +291,37 @@ const styles = StyleSheet.create({
   // ── Section 1 — Segmented control ──────────────────────────────────────
   section1: {
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.two,
+    paddingTop: Spacing.three,
     paddingBottom: Spacing.two,
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
   },
 
   // ── Section 2 — Heading ────────────────────────────────────────────────
   section2: {},
+  // Row: heading text on the left, "Mark all as read" (Resolved Reports only) pinned
+  // to the right of the same row.
+  section2Row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: Spacing.three,
+  },
   incidentHeading: {
     fontSize: 20,
     fontWeight: '700',
-    lineHeight: 28,
+    lineHeight: 27,
+    letterSpacing: -0.3,
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.three,
     paddingBottom: Spacing.two,
   },
   announcementHeading: {
-    fontSize: 22,
+    fontSize: 23,
     fontWeight: '700',
+    letterSpacing: -0.2,
     paddingHorizontal: Spacing.three,
     paddingTop: Spacing.four,
     paddingBottom: Spacing.two,
@@ -288,6 +329,20 @@ const styles = StyleSheet.create({
 
   // ── Section 3 — Filters ────────────────────────────────────────────────
   section3: {},
+  // Row: filter chips on the left (scrollable, flex:1), "Mark all as read"
+  // (Announcements only) pinned to the right of the same row.
+  filtersRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: Spacing.three,
+  },
+  filtersScroll: {
+    flex: 1,
+  },
 
-  // ── Section 4 — List panels are flex:1 inside their feed components ────
+  // ── Section 4 — Content panel (flex:1 so the feed inside it can scroll
+  // within the remaining vertical space) ─────────────────────────────────
+  panel: {
+    flex: 1,
+  },
 });

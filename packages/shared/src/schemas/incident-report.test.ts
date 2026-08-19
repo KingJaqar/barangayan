@@ -47,6 +47,30 @@ describe('incidentReportSchema', () => {
     const result = incidentReportSchema.safeParse({ ...valid, location: { lat: 0, lng: 181 } });
     expect(result.success).toBe(false);
   });
+
+  it('allows omitting address and specificAreaDetails (optional)', () => {
+    const result = incidentReportSchema.safeParse(valid);
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts address and specificAreaDetails when provided', () => {
+    const result = incidentReportSchema.safeParse({
+      ...valid,
+      address: '123 Rizal St., Barangay Ampid I, San Mateo, Rizal',
+      specificAreaDetails: 'Near the blue gate, 2nd house from the corner',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an address over 300 characters', () => {
+    const result = incidentReportSchema.safeParse({ ...valid, address: 'a'.repeat(301) });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects specificAreaDetails over 300 characters', () => {
+    const result = incidentReportSchema.safeParse({ ...valid, specificAreaDetails: 'a'.repeat(301) });
+    expect(result.success).toBe(false);
+  });
 });
 
 describe('incidentConfirmationSchema', () => {

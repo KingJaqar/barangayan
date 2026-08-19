@@ -6,7 +6,7 @@ import { MapPin } from 'lucide-react';
 
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { incidentReportSchema, type Tables } from '@barangayan/shared';
+import { incidentReportSchema, reverseGeocode, type Tables } from '@barangayan/shared';
 
 type CategoryOption = Pick<Tables<'incident_categories'>, 'id' | 'name' | 'color' | 'is_trash_related'>;
 type ZoneOption = Pick<Tables<'waste_zones'>, 'id' | 'name'>;
@@ -20,6 +20,12 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
+  // Auto-filled by reverse geocoding once a location is captured — the resident can
+  // correct it by typing before submitting (same "correct the auto-filled data" flow
+  // as the mobile app's map picker).
+  const [address, setAddress] = useState('');
+  const [addressLoading, setAddressLoading] = useState(false);
+  const [specificAreaDetails, setSpecificAreaDetails] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,8 +38,15 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
     setError(null);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setLocation(point);
         setLocating(false);
+        setAddressLoading(true);
+        reverseGeocode(point)
+          .then((result) => {
+            if (result) setAddress(result);
+          })
+          .finally(() => setAddressLoading(false));
       },
       () => {
         setError('Could not get your location. Please allow location access and try again.');
@@ -53,6 +66,8 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
       description: description || undefined,
       photoUrls: [],
       location: location ?? { lat: 0, lng: 0 },
+      address: address || undefined,
+      specificAreaDetails: specificAreaDetails || undefined,
     });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? 'Please fill in all required fields.');
@@ -80,6 +95,8 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
       description: parsed.data.description ?? null,
       photo_urls: [],
       location: parsed.data.location,
+      address: parsed.data.address ?? null,
+      specific_area_details: parsed.data.specificAreaDetails ?? null,
       status: 'open',
     });
 
@@ -177,7 +194,27 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
             {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
           </p>
         )}
+        {location && (
+          <input
+            className="mt-2 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            maxLength={300}
+            placeholder={addressLoading ? 'Detecting address…' : 'Address (auto-detected — type to correct)'}
+          />
+        )}
       </div>
+
+      <label className="text-sm">
+        <span className="mb-1 block font-medium">Specific Area Details</span>
+        <input
+          value={specificAreaDetails}
+          onChange={(e) => setSpecificAreaDetails(e.target.value)}
+          maxLength={300}
+          placeholder="e.g. near the blue gate, 2nd house from the corner"
+          className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
+        />
+      </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

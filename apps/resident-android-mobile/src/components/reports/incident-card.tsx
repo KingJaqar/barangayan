@@ -15,6 +15,7 @@ function IncidentStatusBadge({ status }: { status: string }) {
   const cfg = incidentStatusMeta(status);
   return (
     <View style={[badgeStyles.pill, { backgroundColor: cfg.bg }]}>
+      <Ionicons name={cfg.icon as keyof typeof Ionicons.glyphMap} size={11} color={cfg.fg} />
       <ThemedText style={[badgeStyles.label, { color: cfg.fg }]}>
         {cfg.label}
       </ThemedText>
@@ -24,15 +25,19 @@ function IncidentStatusBadge({ status }: { status: string }) {
 
 const badgeStyles = StyleSheet.create({
   pill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     borderRadius: 20,
     paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingVertical: 4,
     alignSelf: 'flex-start',
   },
   label: {
-    fontSize: 12,
-    fontWeight: '600',
-    lineHeight: 18,
+    fontSize: 11,
+    fontWeight: '700',
+    lineHeight: 15,
+    letterSpacing: 0.1,
   },
 });
 
@@ -50,7 +55,7 @@ function CategoryIconBadge({
     <View style={iconStyles.circle}>
       <Ionicons
         name={icon as keyof typeof Ionicons.glyphMap}
-        size={14}
+        size={13}
         color={color}
       />
     </View>
@@ -62,15 +67,15 @@ const iconStyles = StyleSheet.create({
     position: 'absolute',
     bottom: -6,
     left: -6,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
     // subtle lift so it reads above the card surface
     shadowColor: '#000',
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.14,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
@@ -89,6 +94,11 @@ function formatDate(iso: string): string {
 
 // ─── Card ────────────────────────────────────────────────────────────────────
 
+// Note: deliberately no per-row `entering` (Reanimated) animation here — nesting one
+// inside a FlatList row got stuck permanently invisible in testing (the entering
+// transition's pre-animation `visibility: hidden` state never resolved once the row
+// was virtualized/recycled). The skeleton shimmer already carries the loading-in
+// motion; rows just appear once data resolves.
 export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
   const theme = useTheme();
 
@@ -109,81 +119,94 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
         })
       }
       accessibilityRole="button"
-      accessibilityLabel={`View details for ${incident.title}`}>
-    <ThemedView type="background" style={styles.card}>
-      {/* ── Thumbnail ── */}
-      <View style={styles.thumbWrap}>
-        {firstPhoto ? (
-          <Image
-            source={{ uri: firstPhoto }}
-            style={styles.thumb}
-            resizeMode="cover"
-          />
-        ) : (
-          <View style={[styles.thumb, styles.thumbPlaceholder]} />
-        )}
-        <CategoryIconBadge icon={catIcon} color={catColor} />
-      </View>
-
-      {/* ── Content ── */}
-      <View style={styles.content}>
-        {/* Title row — title left, badge right */}
-        <View style={styles.titleRow}>
-          <ThemedText
-            type="default"
-            numberOfLines={1}
-            style={styles.title}>
-            {incident.title}
-          </ThemedText>
-          <IncidentStatusBadge status={incident.status} />
-        </View>
-
-        {/* Description */}
-        {!!incident.description && (
-          <ThemedText
-            themeColor="textSecondary"
-            numberOfLines={2}
-            style={styles.description}>
-            {incident.description}
-          </ThemedText>
-        )}
-
-        {/* Date + confirmation count */}
-        <View style={styles.dateRow}>
-          <Ionicons name="calendar-outline" size={12} color={theme.textSecondary} />
-          <ThemedText themeColor="textSecondary" style={styles.date}>
-            {formatDate(incident.created_at)}
-          </ThemedText>
-          {incident.confirmation_count > 0 && (
-            <>
-              <Ionicons name="people-outline" size={12} color={theme.textSecondary} style={{ marginLeft: Spacing.two }} />
-              <ThemedText themeColor="textSecondary" style={styles.date}>
-                {incident.confirmation_count}
-              </ThemedText>
-            </>
+      accessibilityLabel={`View details for ${incident.title}`}
+      style={({ pressed }) => [pressed && styles.pressed]}>
+      <ThemedView
+        type="background"
+        style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+        {/* ── Thumbnail ── */}
+        <View style={styles.thumbWrap}>
+          {firstPhoto ? (
+            <Image
+              source={{ uri: firstPhoto }}
+              style={styles.thumb}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={[styles.thumb, styles.thumbPlaceholder, { backgroundColor: theme.backgroundElement }]}>
+              <Ionicons name="image-outline" size={22} color={theme.textSecondary} />
+            </View>
           )}
+          <CategoryIconBadge icon={catIcon} color={catColor} />
         </View>
-      </View>
-    </ThemedView>
+
+        {/* ── Content ── */}
+        <View style={styles.content}>
+          {/* Title row — title left, badge right */}
+          <View style={styles.titleRow}>
+            <ThemedText
+              type="default"
+              numberOfLines={1}
+              style={styles.title}>
+              {incident.title}
+            </ThemedText>
+            <IncidentStatusBadge status={incident.status} />
+          </View>
+
+          {/* Description */}
+          {!!incident.description && (
+            <ThemedText
+              themeColor="textSecondary"
+              numberOfLines={2}
+              style={styles.description}>
+              {incident.description}
+            </ThemedText>
+          )}
+
+          {/* Date + confirmation count */}
+          <View style={styles.dateRow}>
+            <Ionicons name="calendar-outline" size={12} color={theme.textSecondary} />
+            <ThemedText themeColor="textSecondary" style={styles.date}>
+              {formatDate(incident.created_at)}
+            </ThemedText>
+            {incident.confirmation_count > 0 && (
+              <>
+                <View style={[styles.dot, { backgroundColor: theme.textSecondary }]} />
+                <Ionicons name="people-outline" size={12} color={theme.textSecondary} />
+                <ThemedText themeColor="textSecondary" style={styles.date}>
+                  {incident.confirmation_count}
+                </ThemedText>
+              </>
+            )}
+          </View>
+        </View>
+
+        <Ionicons name="chevron-forward" size={16} color={theme.backgroundSelected} style={styles.chevron} />
+      </ThemedView>
     </Pressable>
   );
 }
 
-const THUMB_SIZE = 82;
+const THUMB_SIZE = 80;
 
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    borderRadius: 16,
-    padding: 14,
-    gap: 14,
-    // card elevation
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    // card elevation — soft, layered
     shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
     elevation: 2,
+  },
+  pressed: {
+    opacity: 0.94,
+    transform: [{ scale: 0.99 }],
   },
   thumbWrap: {
     position: 'relative',
@@ -195,14 +218,16 @@ const styles = StyleSheet.create({
   thumb: {
     width: THUMB_SIZE,
     height: THUMB_SIZE,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   thumbPlaceholder: {
-    backgroundColor: '#CECECE',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     gap: Spacing.one,
+    paddingRight: Spacing.one,
   },
   titleRow: {
     flexDirection: 'row',
@@ -214,20 +239,31 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: '700',
-    lineHeight: 22,
+    lineHeight: 21,
+    letterSpacing: -0.2,
   },
   description: {
     fontSize: 13,
-    lineHeight: 19,
+    lineHeight: 18,
   },
   dateRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.one,
+    gap: 5,
     marginTop: Spacing.one,
   },
+  dot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    opacity: 0.6,
+  },
   date: {
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 11.5,
+    lineHeight: 16,
+  },
+  chevron: {
+    alignSelf: 'center',
+    marginLeft: -Spacing.one,
   },
 });

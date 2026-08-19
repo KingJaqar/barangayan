@@ -55,9 +55,12 @@ export function SegmentedControl<Key extends string>({
 
   useEffect(() => {
     if (segmentWidth > 0) {
+      // Critically damped — settles on the target segment with zero overshoot/bounce.
       translateX.value = withSpring(activeIndex * (segmentWidth + Spacing.half), {
-        damping: 18,
-        stiffness: 150,
+        damping: 26,
+        stiffness: 220,
+        mass: 0.8,
+        overshootClamping: true,
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

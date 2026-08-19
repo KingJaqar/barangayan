@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -18,12 +18,12 @@ import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import {
-  type PickedImage,
   displayName,
   imageExtension,
   isWithinSizeLimit,
   pickImageAsset,
   readImageBytes,
+  type PickedImage,
 } from '@/lib/image-upload';
 import { supabase } from '@/lib/supabase';
 
@@ -183,103 +183,101 @@ export default function RequestFormScreen() {
             </ThemedText>
           </View>
         </View>
-      <ScrollView contentContainerStyle={styles.content}>
-        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
-          <ThemedText type="small" style={{ color: theme.primary }}>
-            Purpose of Request
-          </ThemedText>
-          <TextField
-            placeholder="e.g. Employment requirement"
-            value={notes}
-            onChangeText={setNotes}
-            multiline
-          />
-          <ThemedText type="small" themeColor="textSecondary">
-            e.g., Employment, Bank Requirements
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
-          <View style={styles.rowBetween}>
-            <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
-              Resident Details
+        <ScrollView contentContainerStyle={styles.content}>
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+            <ThemedText type="small" style={{ color: theme.primary }}>
+              Purpose of Request
             </ThemedText>
-            <ThemedText type="link" onPress={() => router.push('/settings/profile')}>
-              Edit in Profile
+            <TextField
+              placeholder="e.g. Employment requirement"
+              value={notes}
+              onChangeText={setNotes}
+              multiline
+            />
+
+          </ThemedView>
+
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+            <View style={styles.rowBetween}>
+              <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
+                Resident Details
+              </ThemedText>
+              <ThemedText type="link" onPress={() => router.push('/settings/profile')}>
+                Edit in Profile
+              </ThemedText>
+            </View>
+            <View style={styles.chipRow}>
+              <Chip icon="person-outline" label={profile?.full_name ?? '—'} />
+              <Chip icon="call-outline" label={profile?.mobile_number ?? 'No mobile number on file'} />
+            </View>
+          </ThemedView>
+
+          <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline]}>
+            <Ionicons name="storefront-outline" size={18} color={theme.primary} />
+            <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
+              You&apos;ll pick up this document in person at the Barangay Hall once it&apos;s ready.
             </ThemedText>
-          </View>
-          <View style={styles.chipRow}>
-            <Chip icon="person-outline" label={profile?.full_name ?? '—'} />
-            <Chip icon="call-outline" label={profile?.mobile_number ?? 'No mobile number on file'} />
-          </View>
-        </ThemedView>
+          </ThemedView>
 
-        <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline]}>
-          <Ionicons name="storefront-outline" size={18} color={theme.primary} />
-          <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
-            You&apos;ll pick up this document in person at the Barangay Hall once it&apos;s ready.
-          </ThemedText>
-        </ThemedView>
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+            <ThemedText type="small">Valid ID Upload</ThemedText>
+            <ThemedText type="small" themeColor="textSecondary">
+              Please upload a clear copy of a government-issued ID.
+            </ThemedText>
 
-        <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
-          <ThemedText type="small">Valid ID Upload</ThemedText>
-          <ThemedText type="small" themeColor="textSecondary">
-            Please upload a clear copy of a government-issued ID.
-          </ThemedText>
-
-          {pickedIdImage ? (
-            <AnimatedAppear style={styles.idPreview}>
-              <ThemedText type="smallBold">Uploaded ID preview</ThemedText>
-              <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
-              <View style={styles.idPreviewFooter}>
-                <ThemedText type="small" themeColor="textSecondary" numberOfLines={1} style={styles.fileName}>
-                  {displayName(pickedIdImage)}
-                </ThemedText>
-              </View>
-              <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />
-            </AnimatedAppear>
-          ) : (
-            <AnimatedAppear>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Upload a valid ID image"
-                onPress={handlePickFile}
-                style={({ pressed }) => [pressed && styles.dropZonePressed]}>
-                <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
-                  <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
-                  <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
-                  <ThemedText type="small" themeColor="textSecondary">
-                    JPG or PNG up to 5MB
+            {pickedIdImage ? (
+              <AnimatedAppear style={styles.idPreview}>
+                <ThemedText type="smallBold">Uploaded ID preview</ThemedText>
+                <Image source={{ uri: pickedIdImage.uri }} style={styles.idPreviewImage} contentFit="contain" />
+                <View style={styles.idPreviewFooter}>
+                  <ThemedText type="small" themeColor="textSecondary" numberOfLines={1} style={styles.fileName}>
+                    {displayName(pickedIdImage)}
                   </ThemedText>
                 </View>
-              </Pressable>
-            </AnimatedAppear>
-          )}
-          {idUploadError ? (
-            <AnimatedAppear>
-              <ThemedText type="small" themeColor="accentRed">
-                {idUploadError}
-              </ThemedText>
-            </AnimatedAppear>
+                <PrimaryButton label="Upload Again" variant="secondary" onPress={handlePickFile} />
+              </AnimatedAppear>
+            ) : (
+              <AnimatedAppear>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Upload a valid ID image"
+                  onPress={handlePickFile}
+                  style={({ pressed }) => [pressed && styles.dropZonePressed]}>
+                  <View style={[styles.dropZone, { borderColor: theme.backgroundSelected }]}>
+                    <Ionicons name="cloud-upload-outline" size={32} color={theme.textSecondary} />
+                    <ThemedText type="smallBold">Tap to upload your ID image</ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary">
+                      JPG or PNG up to 5MB
+                    </ThemedText>
+                  </View>
+                </Pressable>
+              </AnimatedAppear>
+            )}
+            {idUploadError ? (
+              <AnimatedAppear>
+                <ThemedText type="small" themeColor="accentRed">
+                  {idUploadError}
+                </ThemedText>
+              </AnimatedAppear>
+            ) : null}
+          </ThemedView>
+
+          {error ? (
+            <ThemedText type="small" themeColor="accentRed">
+              {error}
+            </ThemedText>
           ) : null}
-        </ThemedView>
+        </ScrollView>
 
-        {error ? (
-          <ThemedText type="small" themeColor="accentRed">
-            {error}
-          </ThemedText>
-        ) : null}
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <View style={styles.feeRow}>
-          <ThemedText type="small">Processing Fee</ThemedText>
-          <ThemedText type="smallBold">
-            {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
-          </ThemedText>
+        <View style={styles.footer}>
+          <View style={styles.feeRow}>
+            <ThemedText type="small">Processing Fee</ThemedText>
+            <ThemedText type="smallBold">
+              {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
+            </ThemedText>
+          </View>
+          <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
         </View>
-        <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
-      </View>
       </View>
     </SafeAreaView>
   );

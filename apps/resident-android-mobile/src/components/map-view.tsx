@@ -13,6 +13,7 @@
  */
 
 import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapMarker } from '@barangayan/shared';
+import { isPointInPolygon } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
@@ -84,6 +85,12 @@ const LEAFLET_HTML = `
     var markerLayer = L.layerGroup();
     var boundaryLayer = L.layerGroup();
     var routeLayer = L.layerGroup();
+    var pickerLayer = L.layerGroup();
+    // The draggable pin placed by SET_PICKER / a picker-mode tap — Incident Reports'
+    // "pin your location" flow (location-picker-modal.tsx). Null when no pin is shown.
+    var pickerMarker = null;
+    // Whether a plain map tap should place/move the picker pin (SET_PICKER payload.enabled).
+    var pickerEnabled = false;
     // kind → hex color, populated from SET_MARKERS payload categories
     var kindColors = {};
     // Once a boundary is set, marker updates stop re-fitting the map — the boundary
@@ -138,6 +145,42 @@ const LEAFLET_HTML = `
       });
     }
 
+    /** Creates or moves the picker pin, wiring its drag handler, and reports the position
+     *  back to RN. Shared by the SET_PICKER handler and the map's own click listener below. */
+    function placePickerMarker(latlng, report) {
+      if (pickerMarker) {
+        pickerMarker.setLatLng(latlng);
+      } else {
+        pickerMarker = L.marker(latlng, { icon: makePickerIcon(), draggable: true });
+        pickerMarker.on('dragend', function () {
+          var ll = pickerMarker.getLatLng();
+          postToRN({ type: 'PICKER_MOVED', payload: { lat: ll.lat, lng: ll.lng } });
+        });
+        pickerLayer.addLayer(pickerMarker);
+      }
+      if (report) {
+        var pos = pickerMarker.getLatLng();
+        postToRN({ type: 'PICKER_MOVED', payload: { lat: pos.lat, lng: pos.lng } });
+      }
+    }
+
+    /** Distinct pin (blue, larger) for the Incident Reports location picker — visually
+     *  different from category markers and the red "You" pin so it reads as "draggable,
+     *  editable" rather than "a report on the map". */
+    function makePickerIcon() {
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 44" width="30" height="44">'
+        + '<path d="M15 0C6.7 0 0 6.7 0 15c0 11.25 15 29 15 29S30 26.25 30 15C30 6.7 23.3 0 15 0z" fill="#1D4ED8"/>'
+        + '<circle cx="15" cy="15" r="6.5" fill="white"/>'
+        + '<circle cx="15" cy="15" r="3" fill="#1D4ED8"/>'
+        + '</svg>';
+      return L.icon({
+        iconUrl: 'data:image/svg+xml;base64,' + btoa(svg),
+        iconSize: [30, 44],
+        iconAnchor: [15, 44],
+        popupAnchor: [0, -44],
+      });
+    }
+
     // ── Initialise map ───────────────────────────────────────────────────────
     window.addEventListener('load', function () {
       map = L.map('map', {
@@ -152,12 +195,19 @@ const LEAFLET_HTML = `
       markerLayer.addTo(map);
       boundaryLayer.addTo(map);
       routeLayer.addTo(map);
+      pickerLayer.addTo(map);
 
       postToRN({ type: 'MAP_READY' });
 
       map.on('moveend', function () {
         var c = map.getCenter();
         postToRN({ type: 'MAP_MOVED', payload: { center: { lat: c.lat, lng: c.lng }, zoom: map.getZoom() } });
+      });
+
+      // Picker mode: a plain tap places/moves the pin (SET_PICKER payload.enabled).
+      map.on('click', function (e) {
+        if (!pickerEnabled) return;
+        placePickerMarker(e.latlng, true);
       });
     });
 
@@ -278,6 +328,18 @@ const LEAFLET_HTML = `
           routeLayer.clearLayers();
           break;
         }
+        case 'SET_PICKER': {
+          if (!map || !msg.payload) break;
+          pickerEnabled = !!msg.payload.enabled;
+          var pickerPos = msg.payload.position;
+          if (pickerPos) {
+            placePickerMarker([pickerPos.lat, pickerPos.lng], false);
+          } else if (pickerMarker) {
+            pickerLayer.removeLayer(pickerMarker);
+            pickerMarker = null;
+          }
+          break;
+        }
       }
     }
   </script>
@@ -307,6 +369,19 @@ export interface MapViewProps {
   boundary?: Polygon | MultiPolygon | null;
   /** Changing this value forces the map to re-fit to the current boundary. */
   boundaryRefitKey?: number;
+  /**
+   * Incident Reports' "pin your location" mode (location-picker-modal.tsx). When
+   * `enabled`, tapping the map or dragging the pin moves it; `position` places/moves
+   * the pin programmatically (initial GPS fix, or snapping back a rejected out-of-
+   * boundary move). Every accepted move is validated against `boundary` (when set)
+   * before `onPickerMoved` fires — moves outside it are rejected and the pin is
+   * snapped back to its last accepted position instead.
+   */
+  picker?: { enabled: boolean; position: LatLng | null };
+  /** Fires with the pin's new position once it passes the `boundary` check (if any). */
+  onPickerMoved?: (position: LatLng) => void;
+  /** Fires when a tap/drag landed outside `boundary` and was rejected. */
+  onPickerRejected?: (attemptedPosition: LatLng) => void;
   onMarkerTap?: (markerId: string) => void;
   onMapReady?: () => void;
   style?: ViewStyle;
@@ -314,9 +389,13 @@ export interface MapViewProps {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, onMarkerTap, onMapReady, style }, ref) => {
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, onPickerMoved, onPickerRejected, onMarkerTap, onMapReady, style }, ref) => {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
+  // Last picker position that passed the boundary check — what an out-of-boundary
+  // tap/drag snaps back to. Seeded from `picker.position` so the very first fix
+  // (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
+  const lastAcceptedPickerPosRef = useRef<LatLng | null>(picker?.position ?? null);
 
   function sendMessage(msg: MapBridgeInboundMessage) {
     if (!webViewRef.current || !isReadyRef.current) return;
@@ -372,6 +451,18 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
     sendMessage({ type: 'SET_BOUNDARY', payload: { geometry: boundary ?? null } });
   }, [boundary, boundaryRefitKey]);
 
+  // Toggle picker mode / move the pin whenever the prop changes. A position supplied
+  // this way (as opposed to a user tap/drag) is trusted as-is — it's what
+  // lastAcceptedPickerPosRef snaps back to on a rejected move.
+  useEffect(() => {
+    if (picker?.position) lastAcceptedPickerPosRef.current = picker.position;
+    if (!isReadyRef.current || !picker) return;
+    sendMessage({ type: 'SET_PICKER', payload: { enabled: picker.enabled, position: picker.position } });
+    // Depending on the primitive fields (not `picker` itself) avoids re-sending on every
+    // render when a caller passes an inline object literal, e.g. `picker={{ enabled, position }}`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [picker?.enabled, picker?.position]);
+
   // Incoming messages from the WebView.
   function handleMessage(event: { nativeEvent: { data: string } }) {
     let msg: MapBridgeOutboundMessage;
@@ -396,6 +487,9 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
         if (center) {
           sendMessage({ type: 'SET_CENTER', payload: center });
         }
+        if (picker) {
+          sendMessage({ type: 'SET_PICKER', payload: { enabled: picker.enabled, position: picker.position } });
+        }
         break;
       }
       case 'MARKER_TAPPED': {
@@ -403,6 +497,18 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
         break;
       }
       case 'MAP_MOVED': {
+        break;
+      }
+      case 'PICKER_MOVED': {
+        const pos = msg.payload;
+        if (boundary && !isPointInPolygon(pos, boundary)) {
+          // Reject: snap the pin back to the last position that was inside the boundary.
+          onPickerRejected?.(pos);
+          sendMessage({ type: 'SET_PICKER', payload: { enabled: true, position: lastAcceptedPickerPosRef.current } });
+        } else {
+          lastAcceptedPickerPosRef.current = pos;
+          onPickerMoved?.(pos);
+        }
         break;
       }
     }

@@ -13,10 +13,11 @@
  *      appears immediately (Realtime subscription on useMyIncidents fires).
  */
 import { Ionicons } from '@expo/vector-icons';
-import { incidentReportSchema } from '@barangayan/shared';
+import { incidentReportSchema, reverseGeocode } from '@barangayan/shared';
 import { Image } from 'expo-image';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -28,6 +29,9 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { FadeInView } from '@/components/reports/fade-in-view';
+import { FeedbackModal } from '@/components/reports/feedback-modal';
+import { LocationPickerModal } from '@/components/reports/location-picker-modal';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
@@ -76,7 +80,12 @@ function PhotoThumb({
   return (
     <View style={photoStyles.wrap}>
       <Image source={{ uri }} style={photoStyles.img} contentFit="cover" />
-      <Pressable style={photoStyles.remove} onPress={onRemove} accessibilityLabel="Remove photo">
+      <Pressable
+        style={({ pressed }) => [photoStyles.remove, pressed && photoStyles.removePressed]}
+        onPress={onRemove}
+        accessibilityRole="button"
+        accessibilityLabel="Remove photo"
+        hitSlop={Spacing.one}>
         <Ionicons name="close-circle" size={20} color="#fff" />
       </Pressable>
     </View>
@@ -84,14 +93,27 @@ function PhotoThumb({
 }
 
 const photoStyles = StyleSheet.create({
-  wrap: { position: 'relative', width: 80, height: 80 },
-  img:  { width: 80, height: 80, borderRadius: 10 },
+  wrap: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  img:  { width: 80, height: 80, borderRadius: 12 },
   remove: {
     position: 'absolute',
     top: -6,
     right: -6,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: 'rgba(15,23,42,0.65)',
     borderRadius: 10,
+  },
+  removePressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.92 }],
   },
 });
 
@@ -117,11 +139,14 @@ function CategoryPicker({
           <Pressable
             key={cat.id}
             onPress={() => onSelect(cat.id)}
-            style={[
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            style={({ pressed }) => [
               catStyles.chip,
               active
                 ? { backgroundColor: cat.color }
                 : { borderWidth: 1.5, borderColor: cat.color },
+              pressed && catStyles.chipPressed,
             ]}>
             {cat.icon ? (
               <Ionicons
@@ -132,7 +157,7 @@ function CategoryPicker({
             ) : null}
             <ThemedText
               type="small"
-              style={{ color: active ? '#fff' : cat.color, fontWeight: '600' }}>
+              style={{ color: active ? '#fff' : cat.color, fontWeight: '700' }}>
               {cat.name}
             </ThemedText>
           </Pressable>
@@ -150,7 +175,11 @@ const catStyles = StyleSheet.create({
     gap: Spacing.one,
     borderRadius: 20,
     paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingVertical: 8,
+  },
+  chipPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.97 }],
   },
 });
 
@@ -166,6 +195,9 @@ export default function NewIncidentScreen() {
   const barangayId = profile?.barangay_id ?? null;
   const { categories, isLoading: catsLoading } = useIncidentCategories(barangayId);
   const { zones } = useWasteZones(barangayId);
+  // The resident's barangay boundary — passed to the location picker so residents can
+  // only pin a spot inside it (mirrors the Maps tab / registration geofencing pattern).
+  const boundary = (profile?.barangays?.boundary as Polygon | MultiPolygon | null) ?? null;
 
   // Form state
   const [title, setTitle] = useState('');
@@ -175,8 +207,14 @@ export default function NewIncidentScreen() {
   const [photos, setPhotos] = useState<PickedImage[]>([]);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLabel, setLocationLabel] = useState('Detecting location…');
+  // Reverse-geocoded (or resident-corrected, via the picker) address for `location`.
+  const [address, setAddress] = useState('');
+  const [addressLoading, setAddressLoading] = useState(false);
+  const [specificAreaDetails, setSpecificAreaDetails] = useState('');
+  const [pickerVisible, setPickerVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   // ── Location: try GPS first, fall back to barangay centroid ──────────────
   const locationResolved = useRef(false);
@@ -223,6 +261,25 @@ export default function NewIncidentScreen() {
     setLocationLabel(`Using ${profile.barangays.name ?? 'barangay'} centre (GPS unavailable)`);
     locationResolved.current = true;
   }, [profile]);
+
+  // Auto-fetch a human-readable address for whatever location is currently set, as long
+  // as one isn't already known — the location picker supplies its own address directly
+  // (possibly resident-corrected), so this only fires for the initial GPS/centroid fix
+  // and retries if that fetch failed (address stays '').
+  useEffect(() => {
+    if (!location || address) return;
+    let cancelled = false;
+    setAddressLoading(true);
+    reverseGeocode(location).then((result) => {
+      if (cancelled) return;
+      setAddressLoading(false);
+      if (result) setAddress(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   // ── Photo picker ──────────────────────────────────────────────────────────
   async function handlePickPhoto() {
@@ -276,6 +333,8 @@ export default function NewIncidentScreen() {
       description: description || undefined,
       photoUrls: [],         // photos aren't URLs yet — validated count separately
       location: location ?? { lat: 0, lng: 0 },
+      address: address || undefined,
+      specificAreaDetails: specificAreaDetails || undefined,
     });
 
     if (!parsed.success) {
@@ -316,6 +375,8 @@ export default function NewIncidentScreen() {
       description:  description.trim() || null,
       photo_urls:   photoUrls,
       location:     location,
+      address:      address.trim() || null,
+      specific_area_details: specificAreaDetails.trim() || null,
       status:       'open',
     });
 
@@ -331,7 +392,15 @@ export default function NewIncidentScreen() {
       return;
     }
 
-    // Success — go back to the Reports index; Realtime will update the list.
+    // Success — surface the centered confirmation; navigation happens once it's
+    // dismissed (see handleSuccessDismiss). Realtime will update the list.
+    setSubmitted(true);
+  }
+
+  /** Fires once the success pop-up is dismissed (auto or manual) — returns the resident
+   * to the Reports index, same destination `handleSubmit` used to navigate to directly. */
+  function handleSuccessDismiss() {
+    setSubmitted(false);
     router.replace('/(app)/reports');
   }
 
@@ -359,8 +428,9 @@ export default function NewIncidentScreen() {
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* ── Category ── */}
-        <ThemedView type="backgroundElement" style={styles.section}>
-          <ThemedText type="smallBold" style={{ color: theme.primary }}>
+        <View>
+        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
+          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
             Category *
           </ThemedText>
           {catsLoading ? (
@@ -373,11 +443,13 @@ export default function NewIncidentScreen() {
             />
           )}
         </ThemedView>
+        </View>
 
         {/* ── Zone (trash/dumping reports only) ── */}
         {categories.find((c) => c.id === categoryId)?.is_trash_related && zones.length > 0 && (
-          <ThemedView type="backgroundElement" style={styles.section}>
-            <ThemedText type="smallBold" style={{ color: theme.primary }}>
+          <FadeInView>
+          <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
+            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
               Collection Zone
             </ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
@@ -390,13 +462,16 @@ export default function NewIncidentScreen() {
                   <Pressable
                     key={zone.id}
                     onPress={() => setZoneId(active ? null : zone.id)}
-                    style={[
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    style={({ pressed }) => [
                       catStyles.chip,
                       active
                         ? { backgroundColor: theme.primary }
                         : { borderWidth: 1.5, borderColor: theme.primary },
+                      pressed && catStyles.chipPressed,
                     ]}>
-                    <ThemedText type="small" style={{ color: active ? theme.onPrimary : theme.primary, fontWeight: '600' }}>
+                    <ThemedText type="small" style={{ color: active ? theme.onPrimary : theme.primary, fontWeight: '700' }}>
                       {zone.name}
                     </ThemedText>
                   </Pressable>
@@ -404,11 +479,13 @@ export default function NewIncidentScreen() {
               })}
             </ScrollView>
           </ThemedView>
+          </FadeInView>
         )}
 
         {/* ── Title ── */}
-        <ThemedView type="backgroundElement" style={styles.section}>
-          <ThemedText type="smallBold" style={{ color: theme.primary }}>
+        <View>
+        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
+          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
             Title *
           </ThemedText>
           <TextField
@@ -417,14 +494,16 @@ export default function NewIncidentScreen() {
             onChangeText={setTitle}
             maxLength={100}
           />
-          <ThemedText type="small" themeColor="textSecondary">
+          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
             {title.length}/100
           </ThemedText>
         </ThemedView>
+        </View>
 
         {/* ── Description ── */}
-        <ThemedView type="backgroundElement" style={styles.section}>
-          <ThemedText type="smallBold" style={{ color: theme.primary }}>
+        <View>
+        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
+          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
             Description
           </ThemedText>
           <TextField
@@ -434,15 +513,17 @@ export default function NewIncidentScreen() {
             multiline
             maxLength={1000}
           />
-          <ThemedText type="small" themeColor="textSecondary">
+          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
             {description.length}/1000
           </ThemedText>
         </ThemedView>
+        </View>
 
         {/* ── Photos ── */}
-        <ThemedView type="backgroundElement" style={styles.section}>
+        <View>
+        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
           <View style={styles.row}>
-            <ThemedText type="smallBold" style={{ color: theme.primary }}>
+            <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
               Photos
             </ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
@@ -464,9 +545,14 @@ export default function NewIncidentScreen() {
             {photos.length < 5 && (
               <Pressable
                 onPress={handlePickPhoto}
-                style={[styles.addPhoto, { borderColor: theme.backgroundSelected }]}
-                accessibilityLabel="Add photo">
-                <Ionicons name="camera-outline" size={24} color={theme.textSecondary} />
+                accessibilityRole="button"
+                accessibilityLabel="Add photo"
+                style={({ pressed }) => [
+                  styles.addPhoto,
+                  { borderColor: theme.backgroundSelected },
+                  pressed && styles.addPhotoPressed,
+                ]}>
+                <Ionicons name="camera-outline" size={22} color={theme.textSecondary} />
                 <ThemedText type="small" themeColor="textSecondary">
                   Add photo
                 </ThemedText>
@@ -474,45 +560,115 @@ export default function NewIncidentScreen() {
             )}
           </View>
         </ThemedView>
+        </View>
 
         {/* ── Location ── */}
-        <ThemedView type="backgroundElement" style={styles.section}>
-          <ThemedText type="smallBold" style={{ color: theme.primary }}>
-            Location
-          </ThemedText>
-          <View style={styles.locationRow}>
-            <Ionicons
-              name={location ? 'location-outline' : 'location-sharp'}
-              size={16}
-              color={location ? theme.primary : theme.textSecondary}
-            />
-            <ThemedText type="small" themeColor={location ? undefined : 'textSecondary'}>
-              {locationLabel}
+        <View>
+        <Pressable
+          onPress={() => setPickerVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Pin exact location on map">
+          {({ pressed }) => (
+          <ThemedView
+            type="backgroundElement"
+            style={[styles.section, { borderColor: theme.backgroundSelected }, pressed && styles.sectionPressed]}>
+            <View style={styles.row}>
+              <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
+                Location
+              </ThemedText>
+              <View style={styles.locationEditHint}>
+                {addressLoading && <ActivityIndicator size="small" color={theme.primary} />}
+                <Ionicons name="create-outline" size={16} color={theme.primary} />
+              </View>
+            </View>
+            <View style={styles.locationRow}>
+              <View style={[styles.locationIconWrap, { backgroundColor: location ? `${theme.primary}1A` : theme.backgroundSelected }]}>
+                <Ionicons
+                  name={location ? 'location-outline' : 'location-sharp'}
+                  size={15}
+                  color={location ? theme.primary : theme.textSecondary}
+                />
+              </View>
+              <ThemedText type="small" themeColor={location ? undefined : 'textSecondary'} style={styles.locationText}>
+                {address || locationLabel}
+              </ThemedText>
+            </View>
+            {location ? (
+              <ThemedText type="small" themeColor="textSecondary" style={styles.coords}>
+                {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+              </ThemedText>
+            ) : null}
+            <ThemedText type="small" themeColor="textSecondary" style={styles.coords}>
+              Tap to pin the exact location on the map
             </ThemedText>
-          </View>
-          {location ? (
-            <ThemedText type="small" themeColor="textSecondary">
-              {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
-            </ThemedText>
-          ) : null}
-        </ThemedView>
+          </ThemedView>
+          )}
+        </Pressable>
+        </View>
 
-        {/* ── Error ── */}
-        {error ? (
-          <ThemedText type="small" style={{ color: theme.accentRed }}>
-            {error}
+        {/* ── Specific Area Details ── */}
+        <View>
+        <ThemedView type="backgroundElement" style={[styles.section, { borderColor: theme.backgroundSelected }]}>
+          <ThemedText type="small" style={[styles.sectionLabel, { color: theme.primary }]}>
+            Specific Area Details
           </ThemedText>
-        ) : null}
+          <ThemedText type="small" themeColor="textSecondary">
+            Add precise details to help find the spot (e.g. near the blue gate, 2nd house from the corner).
+          </ThemedText>
+          <TextField
+            placeholder="e.g. Near the sari-sari store, blue gate"
+            value={specificAreaDetails}
+            onChangeText={setSpecificAreaDetails}
+            maxLength={300}
+          />
+          <ThemedText type="small" themeColor="textSecondary" style={styles.counter}>
+            {specificAreaDetails.length}/300
+          </ThemedText>
+        </ThemedView>
+        </View>
       </ScrollView>
 
+      <LocationPickerModal
+        visible={pickerVisible}
+        initialPosition={location}
+        initialAddress={address || null}
+        boundary={boundary}
+        barangayName={profile?.barangays?.name}
+        onCancel={() => setPickerVisible(false)}
+        onConfirm={({ position, address: pickedAddress }) => {
+          setLocation(position);
+          setAddress(pickedAddress ?? '');
+          setLocationLabel('Pinned on map');
+          setPickerVisible(false);
+        }}
+      />
+
       {/* ── Footer CTA ── */}
-      <ThemedView style={styles.footer}>
+      <ThemedView style={[styles.footer, { borderTopColor: theme.backgroundSelected }]}>
         <PrimaryButton
           label={submitting ? 'Submitting…' : 'Submit Report'}
           loading={submitting}
           onPress={handleSubmit}
         />
       </ThemedView>
+
+      {/* ── Centered feedback pop-ups ── */}
+      <FeedbackModal
+        visible={submitted}
+        kind="success"
+        title="Report submitted"
+        message="Your incident report has been sent to the barangay."
+        onDismiss={handleSuccessDismiss}
+        autoDismissMs={1600}
+      />
+      <FeedbackModal
+        visible={!!error}
+        kind="error"
+        title="Couldn't submit report"
+        message={error ?? undefined}
+        onDismiss={() => setError(null)}
+        autoDismissMs={2800}
+      />
       </View>
     </SafeAreaView>
   );
@@ -549,8 +705,25 @@ const styles = StyleSheet.create({
   },
   section: {
     padding: Spacing.three,
-    borderRadius: Spacing.three,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
     gap: Spacing.two,
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 1,
+  },
+  sectionLabel: {
+    fontWeight: '700',
+    fontSize: 12,
+    lineHeight: 16,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+  },
+  counter: {
+    alignSelf: 'flex-end',
+    fontSize: 11.5,
   },
   row: {
     flexDirection: 'row',
@@ -566,17 +739,43 @@ const styles = StyleSheet.create({
   addPhoto: {
     width: 80,
     height: 80,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1.5,
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.one,
   },
+  addPhotoPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.97 }],
+  },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: Spacing.two,
+  },
+  locationIconWrap: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationText: {
+    flex: 1,
+  },
+  sectionPressed: {
+    opacity: 0.85,
+  },
+  locationEditHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: Spacing.one,
+  },
+  coords: {
+    marginLeft: 36,
+    fontSize: 12,
   },
   footer: {
     padding: Spacing.four,

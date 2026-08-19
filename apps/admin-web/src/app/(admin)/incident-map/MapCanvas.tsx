@@ -95,6 +95,7 @@ export function MapCanvas({
           status: inc.status,
           categoryColor: category?.color,
           categoryName: category?.name,
+          address: inc.address,
         };
       });
   }, [incidents, categories]);

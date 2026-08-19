@@ -15,6 +15,10 @@ export const incidentReportSchema = z.object({
     lat: z.number().min(-90).max(90),
     lng: z.number().min(-180).max(180),
   }),
+  /** Reverse-geocoded (or resident-corrected) human-readable address for `location`. */
+  address: z.string().max(300, 'Address must be 300 characters or fewer').optional(),
+  /** Free-text detail pinpointing the report beyond the pin/address, e.g. "blue gate, 2nd house". */
+  specificAreaDetails: z.string().max(300, 'Specific area details must be 300 characters or fewer').optional(),
 });
 
 export type IncidentReportInput = z.infer<typeof incidentReportSchema>;

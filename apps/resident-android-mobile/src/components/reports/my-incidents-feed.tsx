@@ -5,6 +5,7 @@ import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { type FilterChip } from '@/components/filter-chips';
 import { IncidentCard } from '@/components/reports/incident-card';
+import { Shimmer } from '@/components/reports/shimmer';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import {
@@ -19,14 +20,15 @@ import { useTheme } from '@/hooks/use-theme';
 // ─── Skeleton ────────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
+  const theme = useTheme();
   return (
-    <ThemedView type="background" style={skeletonStyles.card}>
-      <ThemedView type="backgroundSelected" style={skeletonStyles.thumb} />
+    <ThemedView type="background" style={[skeletonStyles.card, { borderColor: theme.backgroundSelected }]}>
+      <Shimmer style={skeletonStyles.thumb} />
       <View style={skeletonStyles.lines}>
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '55%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '90%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '75%' }]} />
-        <ThemedView type="backgroundSelected" style={[skeletonStyles.line, { width: '35%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '55%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '90%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '75%' }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '35%', height: 10 }]} />
       </View>
     </ThemedView>
   );
@@ -35,19 +37,20 @@ function SkeletonCard() {
 const skeletonStyles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    borderRadius: 16,
-    padding: 14,
-    gap: 14,
+    borderRadius: 18,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: Spacing.three,
+    gap: Spacing.three,
     shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
   thumb: {
-    width: 82,
-    height: 82,
-    borderRadius: 10,
+    width: 80,
+    height: 80,
+    borderRadius: 12,
   },
   lines: {
     flex: 1,
@@ -62,11 +65,16 @@ const skeletonStyles = StyleSheet.create({
 
 // ─── Empty state ─────────────────────────────────────────────────────────────
 
+// Plain View, not Animated — as `ListEmptyComponent` it's managed by the same FlatList
+// render path where a Reanimated `entering` transition got stuck invisible in testing
+// (see IncidentCard's note).
 function EmptyState({ label }: { label: string }) {
   const theme = useTheme();
   return (
     <View style={emptyStyles.container}>
-      <Ionicons name="document-text-outline" size={48} color={theme.textSecondary} />
+      <View style={[emptyStyles.iconWrap, { backgroundColor: theme.backgroundElement }]}>
+        <Ionicons name="document-text-outline" size={36} color={theme.textSecondary} />
+      </View>
       <ThemedText themeColor="textSecondary" style={emptyStyles.text}>
         {label}
       </ThemedText>
@@ -78,11 +86,20 @@ const emptyStyles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 60,
+    paddingTop: 56,
+    paddingHorizontal: Spacing.five,
     gap: Spacing.three,
+  },
+  iconWrap: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     fontSize: 14,
+    lineHeight: 20,
     textAlign: 'center',
   },
 });
@@ -92,21 +109,25 @@ const emptyStyles = StyleSheet.create({
 function ReportFab() {
   const theme = useTheme();
   return (
-    <Pressable
-      style={({ pressed }) => [fabStyles.fab, { backgroundColor: theme.primary }, pressed && fabStyles.fabPressed]}
-      onPress={() => router.push('/(app)/reports/new')}
-      accessibilityRole="button"
-      accessibilityLabel="Submit new incident report">
-      <Ionicons name="add" size={30} color="#FFFFFF" />
-    </Pressable>
+    <View style={fabStyles.wrap}>
+      <Pressable
+        style={({ pressed }) => [fabStyles.fab, { backgroundColor: theme.primary }, pressed && fabStyles.fabPressed]}
+        onPress={() => router.push('/(app)/reports/new')}
+        accessibilityRole="button"
+        accessibilityLabel="Submit new incident report">
+        <Ionicons name="add" size={28} color="#FFFFFF" />
+      </Pressable>
+    </View>
   );
 }
 
 const fabStyles = StyleSheet.create({
-  fab: {
+  wrap: {
     position: 'absolute',
     bottom: 28,
     right: 20,
+  },
+  fab: {
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -114,14 +135,14 @@ const fabStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.22,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.24,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 5 },
     elevation: 6,
   },
   fabPressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.96 }],
+    opacity: 0.88,
+    transform: [{ scale: 0.94 }],
   },
 });
 
