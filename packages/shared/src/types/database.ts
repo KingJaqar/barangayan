@@ -50,9 +50,11 @@ export type Database = {
           history: string
           id: string
           is_active: boolean
+          logo_size: number
           logo_url: string | null
           mission: string
           sort_order: number
+          title: string
           updated_at: string
           vision: string
         }
@@ -66,9 +68,11 @@ export type Database = {
           history?: string
           id?: string
           is_active?: boolean
+          logo_size?: number
           logo_url?: string | null
           mission?: string
           sort_order?: number
+          title?: string
           updated_at?: string
           vision?: string
         }
@@ -82,9 +86,11 @@ export type Database = {
           history?: string
           id?: string
           is_active?: boolean
+          logo_size?: number
           logo_url?: string | null
           mission?: string
           sort_order?: number
+          title?: string
           updated_at?: string
           vision?: string
         }
@@ -189,6 +195,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           deleted_at: string | null
+          detailed_description: string | null
           id: string
           image_url: string | null
           published_at: string
@@ -201,6 +208,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
+          detailed_description?: string | null
           id?: string
           image_url?: string | null
           published_at?: string
@@ -213,6 +221,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           deleted_at?: string | null
+          detailed_description?: string | null
           id?: string
           image_url?: string | null
           published_at?: string
@@ -1662,9 +1671,11 @@ export type Database = {
           p_developers: Json
           p_history: string
           p_is_active?: boolean
+          p_logo_size?: number
           p_logo_url: string
           p_mission: string
           p_sort_order?: number
+          p_title?: string
           p_vision: string
         }
         Returns: string

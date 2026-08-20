@@ -58,4 +58,33 @@ describe('announcementSchema', () => {
     });
     expect(result.success).toBe(true);
   });
+
+  it('accepts a missing detailed_description', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a valid detailed_description', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      detailed_description: 'A much longer write-up with the full context residents need.',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a detailed_description over 5000 characters', () => {
+    const result = announcementSchema.safeParse({
+      title: 'Title',
+      body: 'Body',
+      category: 'general',
+      detailed_description: 'a'.repeat(5001),
+    });
+    expect(result.success).toBe(false);
+  });
 });

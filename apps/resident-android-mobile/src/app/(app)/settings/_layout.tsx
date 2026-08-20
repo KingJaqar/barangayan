@@ -6,12 +6,30 @@ export default function SettingsLayout() {
       {/* index.tsx builds its own colored header (matching the reference screenshot) —
           the native Stack header would otherwise show a stray "index" title above it. */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="profile" options={{ headerShown: false }} />
-      <Stack.Screen name="change-password" options={{ headerShown: false }} />
-      <Stack.Screen name="help" options={{ headerShown: false }} />
-      <Stack.Screen name="help/[articleId]" options={{ headerShown: false }} />
-      <Stack.Screen name="terms-privacy" options={{ headerShown: false }} />
-      <Stack.Screen name="about" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="profile"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="change-password"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="help"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="help/[articleId]"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="terms-privacy"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name="about"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
     </Stack>
   );
 }

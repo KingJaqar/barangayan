@@ -14,6 +14,11 @@
 // so staff can hand it to the resident — a refund is not "done" when this returns.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const PAYMONGO_SECRET_KEY = Deno.env.get('PAYMONGO_SECRET_KEY')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
@@ -22,13 +27,17 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const VALID_REASONS = ['duplicate', 'fraudulent', 'requested_by_customer', 'others'];
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401, headers: corsHeaders });
   }
 
   // Caller's own JWT — used only to resolve identity/role, never service_role, so this
@@ -41,7 +50,7 @@ Deno.serve(async (req: Request) => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
   }
 
   // profiles RLS ("residents can read their own profile") allows any authenticated user
@@ -53,7 +62,7 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (profileError || !profile || profile.role !== 'admin') {
-    return new Response(JSON.stringify({ error: 'Only admins can issue refunds' }), { status: 403 });
+    return new Response(JSON.stringify({ error: 'Only admins can issue refunds' }), { status: 403, headers: corsHeaders });
   }
 
   const body = await req.json();
@@ -61,7 +70,7 @@ Deno.serve(async (req: Request) => {
   const reason = VALID_REASONS.includes(body?.reason) ? body.reason : 'requested_by_customer';
 
   if (!paymentId) {
-    return new Response(JSON.stringify({ error: 'Missing paymentId' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'Missing paymentId' }), { status: 400, headers: corsHeaders });
   }
 
   const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -73,23 +82,24 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (paymentError || !payment || payment.barangay_id !== profile.barangay_id) {
-    return new Response(JSON.stringify({ error: 'Payment not found in your barangay' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Payment not found in your barangay' }), { status: 404, headers: corsHeaders });
   }
 
   if (payment.method !== 'qrph') {
     return new Response(
       JSON.stringify({ error: 'Only QR PH payments can be refunded through PayMongo' }),
-      { status: 422 },
+      { status: 422, headers: corsHeaders },
     );
   }
 
   if (payment.status !== 'paid') {
-    return new Response(JSON.stringify({ error: 'Only a paid payment can be refunded' }), { status: 422 });
+    return new Response(JSON.stringify({ error: 'Only a paid payment can be refunded' }), { status: 422, headers: corsHeaders });
   }
 
   if (payment.refund_status !== 'none') {
     return new Response(JSON.stringify({ error: 'This payment already has a refund on record' }), {
       status: 422,
+      headers: corsHeaders,
     });
   }
 
@@ -102,7 +112,7 @@ Deno.serve(async (req: Request) => {
         error:
           'No PayMongo payment id on record yet for this transaction — refunds are not possible until the payment.paid webhook event has been received. Try again shortly, or check the webhook configuration.',
       }),
-      { status: 422 },
+      { status: 422, headers: corsHeaders },
     );
   }
 
@@ -133,7 +143,7 @@ Deno.serve(async (req: Request) => {
       : '';
     return new Response(
       JSON.stringify({ error: detail || 'PayMongo rejected the refund' }),
-      { status: 502 },
+      { status: 502, headers: corsHeaders },
     );
   }
 
@@ -161,6 +171,6 @@ Deno.serve(async (req: Request) => {
 
   return new Response(
     JSON.stringify({ paymentId: payment.id, transferLink, status: initialStatus }),
-    { headers: { 'Content-Type': 'application/json' } },
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 });

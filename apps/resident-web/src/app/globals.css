@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --accent: #0f6e5b;
+  --accent-strong: color-mix(in srgb, var(--accent) 82%, black);
+  --accent-tint: color-mix(in srgb, var(--accent) 10%, white);
+  --accent-shadow: color-mix(in srgb, var(--accent) 16%, transparent);
+  --font-app: system-ui, Arial, Helvetica, sans-serif;
+
+  /* shadcn/Radix token bridge — shadcn's OWN "accent" token (--color-accent) is NOT
+   * this app's brand --accent. shadcn "primary" -> var(--accent); shadcn "accent" ->
+   * a separate --accent-ui, so a hover-state utility never gets silently recolored to
+   * the brand green when that's not what it means in shadcn's own vocabulary. */
+  --radius: 0.65rem;
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+  --primary: var(--accent);
+  --primary-foreground: #ffffff;
+  --secondary: color-mix(in srgb, var(--foreground) 6%, var(--background));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 5%, var(--background));
+  --muted-foreground: color-mix(in srgb, var(--foreground) 45%, var(--background));
+  --accent-ui: color-mix(in srgb, var(--foreground) 6%, var(--background));
+  --accent-ui-foreground: var(--foreground);
+  --border: color-mix(in srgb, var(--foreground) 10%, var(--background));
+  --input: color-mix(in srgb, var(--foreground) 14%, var(--background));
+  --ring: var(--accent);
+  --status-error: #93000a;
+  --status-warning: #c2410c;
+  --status-success: #166534;
+  --destructive: var(--status-error);
+  --destructive-foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent-ui);
+  --color-accent-foreground: var(--accent-ui-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-status-error: var(--status-error);
+  --color-status-warning: var(--status-warning);
+  --color-status-success: var(--status-success);
+  --color-brand: var(--accent);
+  --color-brand-strong: var(--accent-strong);
+  --color-brand-tint: var(--accent-tint);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-app);
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent-tint: color-mix(in srgb, var(--accent) 20%, black);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-app);
+}
+
+/* ─── Sidebar scrollbar — ultra-thin, nearly invisible until hovered (copied from
+   apps/admin-web/src/app/globals.css) ─── */
+aside::-webkit-scrollbar {
+  width: 3px;
+}
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
+aside::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.22);
+}
+.dark aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+aside {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+.dark aside {
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+/* ─── Main content scrollbar — clean 5px minimal bar ─── */
+main::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+main::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 9999px;
+}
+main::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
+}
+.dark main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+.dark main::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+main {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
+}
+.dark main {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+
+/* ─── Leaflet custom markers (Phase 4) ─── */
+.custom-map-marker {
+  background: transparent;
+  border: none;
+}
+
+/* ─── Leaflet popup polish ─── */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  padding: 4px !important;
+}
+.leaflet-popup-content {
+  margin: 8px 12px !important;
+  line-height: 1.5 !important;
+}
+.leaflet-popup-tip {
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+.dark .leaflet-popup-content-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #18181b !important;
+}
+.dark .leaflet-popup-content {
+  color: #e4e4e7 !important;
+}
+
+/* ─── Shimmer skeleton animation ─── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04) 25%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.dark .shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+}
+
+/* ─── Map container transitions ─── */
+.leaflet-container {
+  transition: opacity 0.3s ease-out;
+}
+
+/* ─── Leaflet zoom control placement ─── */
+.leaflet-top.leaflet-left {
+  left: auto;
+  right: 12px;
+}

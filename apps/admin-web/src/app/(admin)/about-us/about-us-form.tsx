@@ -62,6 +62,7 @@ export function AboutUsForm({
   const router = useRouter();
   const toast = useToast();
 
+  const [title, setTitle] = useState(initialAbout?.title ?? 'Barangayan');
   const [mission, setMission] = useState(initialAbout?.mission ?? '');
   const [vision, setVision] = useState(initialAbout?.vision ?? '');
   const [history, setHistory] = useState(initialAbout?.history ?? '');
@@ -69,6 +70,7 @@ export function AboutUsForm({
   const [contactPhone, setContactPhone] = useState(initialAbout?.contact_phone ?? '');
   const [address, setAddress] = useState(initialAbout?.address ?? '');
   const [logoUrl, setLogoUrl] = useState(initialAbout?.logo_url ?? '');
+  const [logoSize, setLogoSize] = useState(initialAbout?.logo_size ?? 64);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [isActive, setIsActive] = useState(initialAbout?.is_active ?? true);
@@ -221,7 +223,9 @@ export function AboutUsForm({
         p_contact_phone: parsed.data.contact_phone || '',
         p_address: parsed.data.address || '',
         p_logo_url: finalLogoUrl ?? '',
-        p_developers: JSON.stringify(developerPayload),
+        p_logo_size: logoSize,
+        p_title: title,
+        p_developers: developerPayload,
         p_is_active: parsed.data.is_active,
         p_sort_order: 0,
       });
@@ -292,8 +296,14 @@ export function AboutUsForm({
         <div className="prose prose-sm max-w-none rounded-xl border border-black/10 bg-white p-6 dark:prose-invert dark:border-white/10 dark:bg-zinc-900">
           {(logoPreview || logoUrl) && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoPreview ?? logoUrl} alt="Barangay logo" className="mb-4 h-20 w-20 rounded-full object-cover" />
+            <img
+                src={logoPreview ?? logoUrl}
+                alt="Barangay logo"
+                className="mb-2 rounded-full object-cover"
+                style={{ width: logoSize, height: logoSize }}
+              />
           )}
+          {title ? <h1 className="mb-4 text-2xl font-bold">{title}</h1> : null}
           <h2>Mission</h2>
           <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{mission}</ReactMarkdown>
           <h2>Vision</h2>
@@ -318,23 +328,53 @@ export function AboutUsForm({
         <>
           <section className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
             <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Barangay Profile</h2>
-            <div className="mb-4 flex items-center gap-4">
+            <div className="mb-4 flex items-start gap-4">
               {(logoPreview || logoUrl) && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoPreview ?? logoUrl} alt="Logo preview" className="h-16 w-16 rounded-full object-cover" />
-              )}
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">Logo</span>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/jpg,image/webp"
-                  onChange={(e) => handleLogoPick(e.target.files?.[0] ?? null)}
-                  className="text-sm"
+                <img
+                  src={logoPreview ?? logoUrl}
+                  alt="Logo preview"
+                  className="shrink-0 rounded-full object-cover"
+                  style={{ width: logoSize, height: logoSize }}
                 />
-              </label>
+              )}
+              <div className="flex flex-col gap-3">
+                <label className="text-sm">
+                  <span className="mb-1 block font-medium">Logo</span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={(e) => handleLogoPick(e.target.files?.[0] ?? null)}
+                    className="text-sm"
+                  />
+                </label>
+                <label className="text-sm">
+                  <span className="mb-1 block font-medium">
+                    Logo Size — <span className="font-normal text-zinc-500">{logoSize}px</span>
+                  </span>
+                  <input
+                    type="range"
+                    min={40}
+                    max={200}
+                    step={4}
+                    value={logoSize}
+                    onChange={(e) => setLogoSize(Number(e.target.value))}
+                    className="w-48"
+                  />
+                </label>
+              </div>
             </div>
 
             <div className="flex flex-col gap-4">
+              <label className="text-sm">
+                <span className="mb-1 block font-medium">Title</span>
+                <input
+                  className={inputClass}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Barangayan"
+                />
+              </label>
               <label className="text-sm">
                 <span className="mb-1 block font-medium">Mission (Markdown supported)</span>
                 <textarea className={inputClass} value={mission} onChange={(e) => setMission(e.target.value)} rows={3} />

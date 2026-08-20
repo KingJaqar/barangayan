@@ -22,13 +22,11 @@ import { useTheme } from '@/hooks/use-theme';
 function SkeletonCard() {
   const theme = useTheme();
   return (
-    <ThemedView type="background" style={[skeletonStyles.card, { borderColor: theme.backgroundSelected }]}>
-      <Shimmer style={skeletonStyles.thumb} />
+    <ThemedView type="backgroundElement" style={[skeletonStyles.card, { borderColor: theme.backgroundSelected }]}>
       <View style={skeletonStyles.lines}>
         <Shimmer style={[skeletonStyles.line, { width: '55%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '90%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '75%' }]} />
-        <Shimmer style={[skeletonStyles.line, { width: '35%', height: 10 }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '80%', height: 10 }]} />
+        <Shimmer style={[skeletonStyles.line, { width: '35%', height: 9 }]} />
       </View>
     </ThemedView>
   );
@@ -37,20 +35,14 @@ function SkeletonCard() {
 const skeletonStyles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    borderRadius: 18,
+    borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.three,
-    gap: Spacing.three,
+    padding: Spacing.two + 4,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
-  },
-  thumb: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
   lines: {
     flex: 1,
@@ -58,8 +50,8 @@ const skeletonStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   line: {
-    height: 12,
-    borderRadius: 6,
+    height: 11,
+    borderRadius: 5,
   },
 });
 
@@ -255,10 +247,10 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
+    paddingTop: Spacing.one,
     paddingBottom: 96, // clearance for FAB
   },
   separator: {
-    height: Spacing.two,
+    height: Spacing.two - 2,
   },
 });

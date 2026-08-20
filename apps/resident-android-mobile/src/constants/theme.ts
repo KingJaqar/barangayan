@@ -12,12 +12,14 @@ import { Platform } from 'react-native';
 // Design Reference Review) — #0F6E5B is the button/active-state green, #93000A is the
 // locked red accent for the Maps (Emergency & DRRM) section's active tab/toggle state.
 //
-// accentYellow/accentGreen back the Reports bottom-tab's "active reports" / "resolved
+// accentOrange/accentGreen back the Reports bottom-tab's "active reports" / "resolved
 // reports" live-count badges (white text on a dark fill, per the design brief) — picked
 // dark enough for white text to clear WCAG AA at the badges' small size, and deliberately
 // NOT theme.primary/ACCENT_COLORS, for the same reason status-badge.tsx's STATUS_GREEN
 // isn't theme.primary either: status semantics must stay fixed regardless of the user's
-// chosen App Theme accent color.
+// chosen App Theme accent color. accentOrange is also kept visually distinct from
+// accentRed (the announcements badge) — the two used to be easy to mistake for each
+// other at the badges' small size.
 export const Colors = {
   light: {
     text: '#000000',
@@ -28,7 +30,7 @@ export const Colors = {
     primary: '#0F6E5B',
     onPrimary: '#ffffff',
     accentRed: '#93000A',
-    accentYellow: '#92400E',
+    accentOrange: '#C2410C',
     accentGreen: '#166534',
   },
   dark: {
@@ -40,7 +42,7 @@ export const Colors = {
     primary: '#0F6E5B',
     onPrimary: '#ffffff',
     accentRed: '#93000A',
-    accentYellow: '#92400E',
+    accentOrange: '#C2410C',
     accentGreen: '#166534',
   },
 } as const;

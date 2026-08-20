@@ -84,7 +84,7 @@ export function TabButton({
           <Ionicons name={isFocused ? icon : `${icon}-outline`} size={18} color={color} />
           {showUnreadBadges && (
             <View style={styles.badgeRow} pointerEvents="none">
-              <CountBadge count={activeReportsCount} background={theme.accentYellow} />
+              <CountBadge count={activeReportsCount} background={theme.accentOrange} />
               <CountBadge count={resolvedUnreadCount} background={theme.accentGreen} />
               <CountBadge count={announcementsUnreadCount} background={theme.accentRed} />
             </View>

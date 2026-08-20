@@ -210,12 +210,30 @@ export default function AboutScreen() {
             </Animated.View>
           ) : (
             <View style={styles.sections}>
-              {/* ── Logo ── */}
-              {about.logo_url ? (
+              {/* ── Logo + Title ── */}
+              {(about.logo_url || about.title) ? (
                 <Animated.View entering={FadeIn.duration(400)} style={styles.logoWrap}>
-                  <View style={[styles.logoRing, { borderColor: theme.primary + '30' }]}>
-                    <Image source={{ uri: about.logo_url }} style={styles.logo} contentFit="cover" />
-                  </View>
+                  {about.logo_url ? (
+                    <View
+                      style={[
+                        styles.logoRing,
+                        {
+                          borderColor: theme.primary + '30',
+                          width: about.logo_size + 10,
+                          height: about.logo_size + 10,
+                          borderRadius: (about.logo_size + 10) / 2,
+                        },
+                      ]}>
+                      <Image
+                        source={{ uri: about.logo_url }}
+                        style={{ width: about.logo_size, height: about.logo_size, borderRadius: about.logo_size / 2 }}
+                        contentFit="cover"
+                      />
+                    </View>
+                  ) : null}
+                  {about.title ? (
+                    <ThemedText style={[styles.logoTitle, { color: theme.text }]}>{about.title}</ThemedText>
+                  ) : null}
                 </Animated.View>
               ) : null}
 
@@ -373,19 +391,18 @@ const styles = StyleSheet.create({
   logoWrap: {
     alignItems: 'center',
     paddingVertical: Spacing.three,
+    gap: Spacing.two,
   },
   logoRing: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
     borderWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  logoTitle: {
+    fontSize: 22,
+    fontFamily: Fonts.gideonRoman,
+    fontWeight: '700',
+    textAlign: 'center',
   },
 
   // ── Section card ────────────────────────────────────────────

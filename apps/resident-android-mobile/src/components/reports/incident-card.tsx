@@ -8,6 +8,7 @@ import { incidentStatusMeta } from '@/constants/incident-status';
 import { Spacing } from '@/constants/theme';
 import type { MyIncidentRow } from '@/hooks/use-my-incidents';
 import { useTheme } from '@/hooks/use-theme';
+import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
 // ─── Status badge ───────────────────────────────────────────────────────────
 
@@ -15,7 +16,7 @@ function IncidentStatusBadge({ status }: { status: string }) {
   const cfg = incidentStatusMeta(status);
   return (
     <View style={[badgeStyles.pill, { backgroundColor: cfg.bg }]}>
-      <Ionicons name={cfg.icon as keyof typeof Ionicons.glyphMap} size={11} color={cfg.fg} />
+      <Ionicons name={cfg.icon as keyof typeof Ionicons.glyphMap} size={10} color={cfg.fg} />
       <ThemedText style={[badgeStyles.label, { color: cfg.fg }]}>
         {cfg.label}
       </ThemedText>
@@ -27,58 +28,18 @@ const badgeStyles = StyleSheet.create({
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 3,
     borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     alignSelf: 'flex-start',
+    flexShrink: 0,
   },
   label: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
-    lineHeight: 15,
+    lineHeight: 13,
     letterSpacing: 0.1,
-  },
-});
-
-// ─── Category icon overlay ───────────────────────────────────────────────────
-
-/** White-circle icon badge pinned to the bottom-left of the thumbnail. */
-function CategoryIconBadge({
-  icon,
-  color,
-}: {
-  icon: string;
-  color: string;
-}) {
-  return (
-    <View style={iconStyles.circle}>
-      <Ionicons
-        name={icon as keyof typeof Ionicons.glyphMap}
-        size={13}
-        color={color}
-      />
-    </View>
-  );
-}
-
-const iconStyles = StyleSheet.create({
-  circle: {
-    position: 'absolute',
-    bottom: -6,
-    left: -6,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    // subtle lift so it reads above the card surface
-    shadowColor: '#000',
-    shadowOpacity: 0.14,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
   },
 });
 
@@ -94,21 +55,30 @@ function formatDate(iso: string): string {
 
 // ─── Card ────────────────────────────────────────────────────────────────────
 
+const THUMB_SIZE = 52;
+
 // Note: deliberately no per-row `entering` (Reanimated) animation here — nesting one
 // inside a FlatList row got stuck permanently invisible in testing (the entering
 // transition's pre-animation `visibility: hidden` state never resolved once the row
 // was virtualized/recycled). The skeleton shimmer already carries the loading-in
 // motion; rows just appear once data resolves.
+//
+// Compact, minimal card — a photo thumbnail is only reserved when one actually exists
+// (the old version always reserved an 80×80 placeholder box even for photo-less
+// reports, the majority of them); when there's no photo the category shows instead as a
+// small icon + label chip inline with the date, reclaiming that space for text.
 export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
   const theme = useTheme();
+  const { markIncidentRead, markIncidentUnread } = useUnreadCounts();
 
   const category = incident.incident_categories;
-  // Fallback icon/color when category join returns null (uncategorised incident)
-  const catIcon  = (category?.icon  ?? 'alert-circle-outline') as keyof typeof Ionicons.glyphMap;
+  const catIcon = (category?.icon ?? 'alert-circle-outline') as keyof typeof Ionicons.glyphMap;
   const catColor = category?.color ?? theme.primary;
+  const catLabel = category?.name;
 
-  // Use first photo if available, otherwise render the placeholder
   const firstPhoto = incident.photo_urls?.[0] ?? null;
+  const isResolved = incident.status === 'resolved';
+  const isUnread = isResolved && !incident.resolved_read_at;
 
   return (
     <Pressable
@@ -122,135 +92,159 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
       accessibilityLabel={`View details for ${incident.title}`}
       style={({ pressed }) => [pressed && styles.pressed]}>
       <ThemedView
-        type="background"
+        type="backgroundElement"
         style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-        {/* ── Thumbnail ── */}
-        <View style={styles.thumbWrap}>
-          {firstPhoto ? (
-            <Image
-              source={{ uri: firstPhoto }}
-              style={styles.thumb}
-              resizeMode="cover"
-            />
-          ) : (
-            <View style={[styles.thumb, styles.thumbPlaceholder, { backgroundColor: theme.backgroundElement }]}>
-              <Ionicons name="image-outline" size={22} color={theme.textSecondary} />
-            </View>
-          )}
-          <CategoryIconBadge icon={catIcon} color={catColor} />
-        </View>
+        {firstPhoto && (
+          <Image source={{ uri: firstPhoto }} style={styles.thumb} resizeMode="cover" />
+        )}
 
-        {/* ── Content ── */}
         <View style={styles.content}>
-          {/* Title row — title left, badge right */}
+          {/* Title row — title left, status badge right */}
           <View style={styles.titleRow}>
-            <ThemedText
-              type="default"
-              numberOfLines={1}
-              style={styles.title}>
+            <ThemedText type="default" numberOfLines={1} style={styles.title}>
               {incident.title}
             </ThemedText>
             <IncidentStatusBadge status={incident.status} />
           </View>
 
-          {/* Description */}
+          {/* Description — one line only; the detail screen has the full text. */}
           {!!incident.description && (
-            <ThemedText
-              themeColor="textSecondary"
-              numberOfLines={2}
-              style={styles.description}>
+            <ThemedText themeColor="textSecondary" numberOfLines={1} style={styles.description}>
               {incident.description}
             </ThemedText>
           )}
 
-          {/* Date + confirmation count */}
-          <View style={styles.dateRow}>
-            <Ionicons name="calendar-outline" size={12} color={theme.textSecondary} />
-            <ThemedText themeColor="textSecondary" style={styles.date}>
+          {/* Meta row — category (only when there's no thumbnail to show it on) •
+              date • confirmations, all on one compact line */}
+          <View style={styles.metaRow}>
+            {!firstPhoto && (
+              <>
+                <Ionicons name={catIcon} size={11} color={catColor} />
+                {!!catLabel && (
+                  <ThemedText numberOfLines={1} style={[styles.metaText, styles.categoryText, { color: catColor }]}>
+                    {catLabel}
+                  </ThemedText>
+                )}
+                <View style={[styles.dot, { backgroundColor: theme.textSecondary }]} />
+              </>
+            )}
+            <Ionicons name="calendar-outline" size={11} color={theme.textSecondary} />
+            <ThemedText themeColor="textSecondary" style={styles.metaText}>
               {formatDate(incident.created_at)}
             </ThemedText>
             {incident.confirmation_count > 0 && (
               <>
                 <View style={[styles.dot, { backgroundColor: theme.textSecondary }]} />
-                <Ionicons name="people-outline" size={12} color={theme.textSecondary} />
-                <ThemedText themeColor="textSecondary" style={styles.date}>
+                <Ionicons name="people-outline" size={11} color={theme.textSecondary} />
+                <ThemedText themeColor="textSecondary" style={styles.metaText}>
                   {incident.confirmation_count}
                 </ThemedText>
               </>
             )}
           </View>
+
+          {/* Resolved reports only: per-item mark-as-read / mark-as-unread icons. Both
+              stay tappable (idempotent updates) — the highlighted one just reflects this
+              resident's current read state for this report. */}
+          {isResolved && (
+            <View style={styles.iconActions}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Mark as read"
+                hitSlop={8}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  markIncidentRead(incident.id);
+                }}
+                style={[styles.iconBtn, !isUnread && { backgroundColor: `${theme.primary}1F` }]}>
+                <Ionicons
+                  name="mail-open-outline"
+                  size={13}
+                  color={!isUnread ? theme.primary : theme.textSecondary}
+                />
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Mark as unread"
+                hitSlop={8}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  markIncidentUnread(incident.id);
+                }}
+                style={[styles.iconBtn, isUnread && { backgroundColor: `${theme.accentRed}1F` }]}>
+                <Ionicons
+                  name="mail-unread-outline"
+                  size={13}
+                  color={isUnread ? theme.accentRed : theme.textSecondary}
+                />
+              </Pressable>
+            </View>
+          )}
         </View>
 
-        <Ionicons name="chevron-forward" size={16} color={theme.backgroundSelected} style={styles.chevron} />
+        <Ionicons name="chevron-forward" size={15} color={theme.backgroundSelected} style={styles.chevron} />
       </ThemedView>
     </Pressable>
   );
 }
 
-const THUMB_SIZE = 80;
-
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    borderRadius: 18,
+    alignItems: 'center',
+    borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.three,
-    gap: Spacing.three,
-    // card elevation — soft, layered
+    padding: Spacing.two + 4,
+    gap: Spacing.two + 2,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
   pressed: {
     opacity: 0.94,
     transform: [{ scale: 0.99 }],
   },
-  thumbWrap: {
-    position: 'relative',
-    width: THUMB_SIZE,
-    height: THUMB_SIZE,
-    // extra bottom margin so the icon badge has room to overflow
-    marginBottom: Spacing.two,
-  },
   thumb: {
     width: THUMB_SIZE,
     height: THUMB_SIZE,
-    borderRadius: 12,
-  },
-  thumbPlaceholder: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 10,
+    flexShrink: 0,
   },
   content: {
     flex: 1,
-    gap: Spacing.one,
-    paddingRight: Spacing.one,
+    gap: 4,
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: Spacing.two,
   },
   title: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
-    lineHeight: 21,
-    letterSpacing: -0.2,
+    lineHeight: 19,
+    letterSpacing: -0.1,
   },
   description: {
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: 12,
+    lineHeight: 16,
   },
-  dateRow: {
+  metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    marginTop: Spacing.one,
+    gap: 4,
+  },
+  categoryText: {
+    fontWeight: '700',
+    flexShrink: 1,
+  },
+  metaText: {
+    fontSize: 11,
+    lineHeight: 15,
   },
   dot: {
     width: 3,
@@ -258,12 +252,19 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
     opacity: 0.6,
   },
-  date: {
-    fontSize: 11.5,
-    lineHeight: 16,
+  iconActions: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: 2,
+  },
+  iconBtn: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chevron: {
-    alignSelf: 'center',
-    marginLeft: -Spacing.one,
+    flexShrink: 0,
   },
 });

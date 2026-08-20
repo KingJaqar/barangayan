@@ -136,7 +136,7 @@ function TabButton({
 
         {showUnreadBadges && (
           <View style={styles.badgeRow} pointerEvents="none">
-            <CountBadge count={activeReportsCount} background={theme.accentYellow} />
+            <CountBadge count={activeReportsCount} background={theme.accentOrange} />
             <CountBadge count={resolvedUnreadCount} background={theme.accentGreen} />
             <CountBadge count={announcementsUnreadCount} background={theme.accentRed} />
           </View>

@@ -1,0 +1,30 @@
+// Migrated from apps/admin-web/src/components/admin/status-pill.tsx — same color
+// scheme so a resident and an admin looking at the same request agree on what each
+// color means.
+const STATUS_STYLES: Record<string, { label: string; className: string }> = {
+  submitted: { label: 'Submitted', className: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200' },
+  in_progress: { label: 'Processing', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
+  ready_for_pickup: { label: 'Ready for Pickup', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
+  completed: { label: 'Completed', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },
+  cancelled: { label: 'Cancelled', className: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' },
+  pending: { label: 'Pending', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' },
+  paid: { label: 'Paid', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },
+  failed: { label: 'Failed', className: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' },
+  expired: { label: 'Expired', className: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200' },
+  waived: { label: 'Waived', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
+  refunded: { label: 'Refunded', className: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' },
+  open: { label: 'Open', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' },
+  resolved: { label: 'Resolved', className: 'bg-[var(--accent)]/15 text-[var(--accent)]' },
+};
+
+export function StatusPill({ status }: { status: string }) {
+  const config = STATUS_STYLES[status] ?? {
+    label: status,
+    className: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200',
+  };
+  return (
+    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${config.className}`}>
+      {config.label}
+    </span>
+  );
+}

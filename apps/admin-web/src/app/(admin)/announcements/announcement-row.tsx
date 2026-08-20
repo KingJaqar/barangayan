@@ -31,12 +31,14 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
 
   const [title, setTitle] = useState(announcement.title);
   const [body, setBody] = useState(announcement.body);
+  const [detailedDescription, setDetailedDescription] = useState(announcement.detailed_description ?? '');
   const [category, setCategory] = useState(announcement.category);
   const [imageUrl, setImageUrl] = useState(announcement.image_url ?? '');
 
   function startEdit() {
     setTitle(announcement.title);
     setBody(announcement.body);
+    setDetailedDescription(announcement.detailed_description ?? '');
     setCategory(announcement.category);
     setImageUrl(announcement.image_url ?? '');
     setError(null);
@@ -50,6 +52,7 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
     const result = announcementSchema.safeParse({
       title,
       body,
+      detailed_description: detailedDescription || undefined,
       category,
       image_url: imageUrl || undefined,
     });
@@ -66,6 +69,7 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       .update({
         title: result.data.title,
         body: result.data.body,
+        detailed_description: result.data.detailed_description || null,
         category: result.data.category,
         image_url: result.data.image_url || null,
       })
@@ -84,8 +88,18 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       entityId: announcement.id,
       entityLabel: result.data.title,
       changes: {
-        before: { title: announcement.title, body: announcement.body, category: announcement.category },
-        after:  { title: result.data.title,  body: result.data.body,  category: result.data.category },
+        before: {
+          title: announcement.title,
+          body: announcement.body,
+          detailed_description: announcement.detailed_description,
+          category: announcement.category,
+        },
+        after: {
+          title: result.data.title,
+          body: result.data.body,
+          detailed_description: result.data.detailed_description || null,
+          category: result.data.category,
+        },
       },
     }).catch(() => {});
 
@@ -159,6 +173,17 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
               onChange={(e) => setBody(e.target.value)}
               rows={2}
               required
+            />
+          </label>
+
+          <label className="col-span-4 text-sm">
+            <span className={labelClass}>Detailed Description (optional)</span>
+            <textarea
+              className={inputClass}
+              value={detailedDescription}
+              onChange={(e) => setDetailedDescription(e.target.value)}
+              rows={4}
+              placeholder="Full write-up shown when a resident taps the announcement for more detail…"
             />
           </label>
 

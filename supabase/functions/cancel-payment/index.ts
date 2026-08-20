@@ -8,19 +8,28 @@
 // since residents have no UPDATE policy on payments (migration 0007).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const PAYMONGO_SECRET_KEY = Deno.env.get('PAYMONGO_SECRET_KEY')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401, headers: corsHeaders });
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -31,12 +40,12 @@ Deno.serve(async (req: Request) => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
   }
 
   const { paymentId } = await req.json();
   if (!paymentId) {
-    return new Response(JSON.stringify({ error: 'paymentId is required' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'paymentId is required' }), { status: 400, headers: corsHeaders });
   }
 
   const { data: payment, error: paymentError } = await supabase
@@ -46,12 +55,12 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (paymentError || !payment) {
-    return new Response(JSON.stringify({ error: 'Payment not found' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Payment not found' }), { status: 404, headers: corsHeaders });
   }
 
   const serviceRequest = payment.service_request as unknown as { resident_id: string } | null;
   if (!serviceRequest || serviceRequest.resident_id !== user.id) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders });
   }
 
   // Already settled/terminal — nothing to cancel. Treat as a no-op success rather than
@@ -59,7 +68,7 @@ Deno.serve(async (req: Request) => {
   // real (paid) state on next screen refresh instead of a confusing failure.
   if (payment.status !== 'pending') {
     return new Response(JSON.stringify({ status: payment.status }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -88,7 +97,7 @@ Deno.serve(async (req: Request) => {
       if (status === 'succeeded') {
         return new Response(
           JSON.stringify({ error: 'This payment already went through — refresh to see it.' }),
-          { status: 409 },
+          { status: 409, headers: corsHeaders },
         );
       }
     }
@@ -102,10 +111,10 @@ Deno.serve(async (req: Request) => {
     .eq('status', 'pending');
 
   if (updateError) {
-    return new Response(JSON.stringify({ error: 'Failed to cancel payment' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Failed to cancel payment' }), { status: 500, headers: corsHeaders });
   }
 
   return new Response(JSON.stringify({ status: 'cancelled' }), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });

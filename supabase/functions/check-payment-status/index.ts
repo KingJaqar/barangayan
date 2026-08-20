@@ -12,6 +12,11 @@
 // never probe PayMongo state for an intent they don't already have a payments row for.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const PAYMONGO_SECRET_KEY = Deno.env.get('PAYMONGO_SECRET_KEY')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
@@ -35,13 +40,17 @@ function mapIntentStatus(intentStatus: string): 'pending' | 'paid' | 'expired' |
 }
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401, headers: corsHeaders });
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -52,12 +61,12 @@ Deno.serve(async (req: Request) => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
   }
 
   const { paymentId } = await req.json();
   if (!paymentId) {
-    return new Response(JSON.stringify({ error: 'paymentId is required' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'paymentId is required' }), { status: 400, headers: corsHeaders });
   }
 
   // RLS on payments (residents can read payments on their own requests) already scopes
@@ -70,18 +79,18 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (paymentError || !payment) {
-    return new Response(JSON.stringify({ error: 'Payment not found' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Payment not found' }), { status: 404, headers: corsHeaders });
   }
 
   const serviceRequest = payment.service_request as unknown as { resident_id: string } | null;
   if (!serviceRequest || serviceRequest.resident_id !== user.id) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders });
   }
 
   // Already settled by the webhook — no need to spend a PayMongo call confirming it.
   if (payment.status === 'paid' || payment.status === 'refunded') {
     return new Response(JSON.stringify({ status: 'paid' }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -90,12 +99,12 @@ Deno.serve(async (req: Request) => {
   // cancelled.
   if (payment.status === 'cancelled') {
     return new Response(JSON.stringify({ status: 'expired' }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
   if (!payment.paymongo_payment_intent_id) {
-    return new Response(JSON.stringify({ error: 'Payment has no PayMongo intent yet' }), { status: 422 });
+    return new Response(JSON.stringify({ error: 'Payment has no PayMongo intent yet' }), { status: 422, headers: corsHeaders });
   }
 
   const response = await fetch(
@@ -105,7 +114,7 @@ Deno.serve(async (req: Request) => {
 
   const intent = await response.json();
   if (!response.ok) {
-    return new Response(JSON.stringify({ error: intent }), { status: 502 });
+    return new Response(JSON.stringify({ error: intent }), { status: 502, headers: corsHeaders });
   }
 
   const status = mapIntentStatus(intent?.data?.attributes?.status ?? '');
@@ -130,6 +139,6 @@ Deno.serve(async (req: Request) => {
   }
 
   return new Response(JSON.stringify({ status }), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });

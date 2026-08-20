@@ -13,20 +13,36 @@ interface UnreadCountsValue {
   /** Announcements for the resident's barangay they haven't acknowledged yet. Also
    * drives the Home screen bell — same number, same source of truth. */
   announcementsUnreadCount: number;
+  /** Ids of announcements not yet marked read by this resident — lets a single
+   * AnnouncementCard check its own read state without a separate query. */
+  unreadAnnouncementIds: string[];
   /** Marks every currently-unread resolved incident as read (bulk, per the Resolved
    * Reports segment's single "Mark all as read" button). */
   markResolvedRead: () => Promise<void>;
+  /** Marks a single resolved incident read — the per-card "mark as read" icon. */
+  markIncidentRead: (incidentId: string) => Promise<void>;
+  /** Marks a single resolved incident unread again — the per-card "mark as unread" icon. */
+  markIncidentUnread: (incidentId: string) => Promise<void>;
   /** Marks every currently-unread announcement as read (bulk — shared by the
    * Announcements segment's button and, implicitly, the Home bell it clears). */
   markAnnouncementsRead: () => Promise<void>;
+  /** Marks a single announcement read — the per-card "mark as read" icon. */
+  markAnnouncementRead: (announcementId: string) => Promise<void>;
+  /** Marks a single announcement unread again — the per-card "mark as unread" icon. */
+  markAnnouncementUnread: (announcementId: string) => Promise<void>;
 }
 
 const UnreadCountsContext = createContext<UnreadCountsValue>({
   activeReportsCount: 0,
   resolvedUnreadCount: 0,
   announcementsUnreadCount: 0,
+  unreadAnnouncementIds: [],
   markResolvedRead: async () => {},
+  markIncidentRead: async () => {},
+  markIncidentUnread: async () => {},
   markAnnouncementsRead: async () => {},
+  markAnnouncementRead: async () => {},
+  markAnnouncementUnread: async () => {},
 });
 
 /**
@@ -134,6 +150,37 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
     refetchIncidentCounts();
   }, [userId, refetchIncidentCounts]);
 
+  // Single-item counterparts of markResolvedRead — the per-card "mark as read" / "mark
+  // as unread" icons on a resolved IncidentCard. `resolved_read_at` lives on the
+  // incident row itself (not a join table, since only the reporter ever sees their own
+  // report — see 0080's comment), so these are plain single-row updates; RLS scopes them
+  // to the caller's own resolved incidents (0085_resident_mark_resolved_incident_read.sql).
+  const markIncidentRead = useCallback(
+    async (incidentId: string) => {
+      if (!userId) return;
+      await supabase
+        .from('incidents')
+        .update({ resolved_read_at: new Date().toISOString() })
+        .eq('id', incidentId)
+        .eq('reporter_id', userId);
+      refetchIncidentCounts();
+    },
+    [userId, refetchIncidentCounts],
+  );
+
+  const markIncidentUnread = useCallback(
+    async (incidentId: string) => {
+      if (!userId) return;
+      await supabase
+        .from('incidents')
+        .update({ resolved_read_at: null })
+        .eq('id', incidentId)
+        .eq('reporter_id', userId);
+      refetchIncidentCounts();
+    },
+    [userId, refetchIncidentCounts],
+  );
+
   const markAnnouncementsRead = useCallback(async () => {
     if (!userId || unreadAnnouncementIds.length === 0) return;
     await supabase
@@ -145,14 +192,50 @@ export function UnreadCountsProvider({ children }: { children: ReactNode }) {
     refetchAnnouncementCounts();
   }, [userId, unreadAnnouncementIds, refetchAnnouncementCounts]);
 
+  // Single-item counterparts of the bulk actions above — the "mark as read" / "mark as
+  // unread" icons on each AnnouncementCard. Both just upsert/delete the one
+  // announcement_reads row for this resident + announcement; RLS already scopes writes
+  // to the caller's own resident_id (0080_reports_unread_counts.sql).
+  const markAnnouncementRead = useCallback(
+    async (announcementId: string) => {
+      if (!userId) return;
+      await supabase
+        .from('announcement_reads')
+        .upsert(
+          { resident_id: userId, announcement_id: announcementId },
+          { onConflict: 'resident_id,announcement_id' },
+        );
+      refetchAnnouncementCounts();
+    },
+    [userId, refetchAnnouncementCounts],
+  );
+
+  const markAnnouncementUnread = useCallback(
+    async (announcementId: string) => {
+      if (!userId) return;
+      await supabase
+        .from('announcement_reads')
+        .delete()
+        .eq('resident_id', userId)
+        .eq('announcement_id', announcementId);
+      refetchAnnouncementCounts();
+    },
+    [userId, refetchAnnouncementCounts],
+  );
+
   return (
     <UnreadCountsContext.Provider
       value={{
         activeReportsCount,
         resolvedUnreadCount,
         announcementsUnreadCount,
+        unreadAnnouncementIds,
         markResolvedRead,
+        markIncidentRead,
+        markIncidentUnread,
         markAnnouncementsRead,
+        markAnnouncementRead,
+        markAnnouncementUnread,
       }}>
       {children}
     </UnreadCountsContext.Provider>

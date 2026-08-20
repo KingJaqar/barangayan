@@ -1,16 +1,24 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ANNOUNCEMENT_CATEGORIES, ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
+import {
+  ANNOUNCEMENT_CATEGORIES,
+  ANNOUNCEMENT_CATEGORY_META,
+  type AnnouncementCategory,
+  type Tables,
+} from '@barangayan/shared';
 import { useState, type ReactNode } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import { type FilterChip } from '@/components/filter-chips';
 import { AnnouncementCard } from '@/components/reports/announcement-card';
+import { AnnouncementModal } from '@/components/reports/announcement-modal';
 import { Shimmer } from '@/components/reports/shimmer';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAnnouncements } from '@/hooks/use-announcements';
 import { useTheme } from '@/hooks/use-theme';
+
+type Announcement = Tables<'announcements'>;
 
 export type FilterKey = AnnouncementCategory | 'all';
 
@@ -144,6 +152,12 @@ export function AnnouncementsFeed({
   onFilterChange,
 }: AnnouncementsFeedProps) {
   const [internalActiveFilter] = useState<FilterKey>(categoryFilter ?? 'all');
+  // The announcement shown in the detail bottom sheet, and whether it's open. Kept as two
+  // separate pieces of state (rather than clearing `selected` to null on close) so the
+  // sheet's content stays rendered while the modal plays its slide-down close animation —
+  // clearing the data immediately would unmount the content mid-animation.
+  const [selected, setSelected] = useState<Announcement | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const activeFilter = controlledActiveFilter ?? internalActiveFilter;
 
@@ -167,7 +181,15 @@ export function AnnouncementsFeed({
           <FlatList
             data={items}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <AnnouncementCard announcement={item} />}
+            renderItem={({ item }) => (
+              <AnnouncementCard
+                announcement={item}
+                onPress={() => {
+                  setSelected(item);
+                  setModalVisible(true);
+                }}
+              />
+            )}
             contentContainerStyle={styles.list}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
@@ -176,6 +198,8 @@ export function AnnouncementsFeed({
           />
         )}
       </View>
+
+      <AnnouncementModal visible={modalVisible} announcement={selected} onClose={() => setModalVisible(false)} />
     </View>
   );
 }

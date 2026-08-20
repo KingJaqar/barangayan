@@ -2,16 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "resident-mobile-web",
+      "name": "resident-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile", "--", "--port", "8082"],
-      "port": 8082
-    },
-    {
-      "name": "admin-web",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/web"],
-      "port": 3000
+      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/resident-web"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

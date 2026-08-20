@@ -1,22 +1,31 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeIn, useSharedValue, useAnimatedStyle, withRepeat, withTiming } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { useRouter } from 'expo-router';
 
-import { Card } from '@/components/card';
+import { PrimaryButton } from '@/components/primary-button';
+import { Shimmer } from '@/components/reports/shimmer';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
-import { useFaqArticles } from '@/hooks/use-faq-articles';
+import { useFaqArticles, type FaqArticle } from '@/hooks/use-faq-articles';
 import { FAQ_CATEGORY_META, type FaqCategory } from '@barangayan/shared';
 
 type CategoryFilter = 'all' | 'general' | 'services' | 'emergency' | 'health' | 'billing' | 'account';
@@ -31,39 +40,156 @@ const CATEGORY_TABS: { key: CategoryFilter; label: string }[] = [
   { key: 'account', label: 'Account' },
 ];
 
-function ShimmerSkeleton({
-  theme,
-  height = 12,
-  width = '100%',
-  style,
-  borderRadius = 6,
-}: {
-  theme: ReturnType<typeof useTheme>;
-  height?: number;
-  width?: number | string;
-  style?: object;
-  borderRadius?: number;
-}) {
-  const shimmer = useSharedValue(0);
-  useEffect(() => {
-    shimmer.value = withRepeat(withTiming(1, { duration: 1000 }), -1, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+// One glyph per FAQ category, purely a visual anchor — FAQ_CATEGORY_META (shared) only
+// carries label/color, not an icon, so this stays local to the screen that needs it.
+const CATEGORY_ICONS: Record<FaqCategory, keyof typeof Ionicons.glyphMap> = {
+  general: 'information-circle-outline',
+  services: 'briefcase-outline',
+  emergency: 'alert-circle-outline',
+  health: 'medkit-outline',
+  billing: 'card-outline',
+  account: 'person-circle-outline',
+};
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: 0.3 + shimmer.value * 0.7,
-  }));
+// ─── Article card ────────────────────────────────────────────────────────────
+
+function FaqCard({ article, onPress }: { article: FaqArticle; onPress: () => void }) {
+  const theme = useTheme();
+  const category = article.category as FaqCategory;
+  const meta = FAQ_CATEGORY_META[category];
+  const icon = CATEGORY_ICONS[category] ?? 'help-circle-outline';
 
   return (
-    <Animated.View
-      style={[
-        { height, width: width as any, backgroundColor: theme.backgroundSelected, borderRadius },
-        animatedStyle,
-        style,
-      ]}
-    />
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Read article: ${article.question}`}
+      style={({ pressed }) => [pressed && styles.cardPressed]}>
+      <ThemedView type="backgroundElement" style={[styles.articleCard, { borderColor: theme.backgroundSelected }]}>
+        <View style={[styles.iconWrap, { backgroundColor: `${meta?.color}1A` }]}>
+          <Ionicons name={icon} size={19} color={meta?.color} />
+        </View>
+        <View style={styles.cardContent}>
+          <ThemedText style={[styles.categoryLabel, { color: meta?.color }]}>{meta?.label}</ThemedText>
+          <ThemedText type="smallBold" numberOfLines={1} style={styles.questionText}>
+            {article.question}
+          </ThemedText>
+          <ThemedText themeColor="textSecondary" numberOfLines={2} style={styles.answerPreview}>
+            {article.answer}
+          </ThemedText>
+        </View>
+        <Ionicons name="chevron-forward" size={16} color={theme.backgroundSelected} style={styles.chevron} />
+      </ThemedView>
+    </Pressable>
   );
 }
+
+// ─── Skeleton — mirrors FaqCard's own layout so the loading-in feels seamless ────
+
+function SkeletonCard() {
+  const theme = useTheme();
+  return (
+    <ThemedView type="backgroundElement" style={[styles.articleCard, { borderColor: theme.backgroundSelected }]}>
+      <Shimmer style={styles.iconWrap} />
+      <View style={[styles.cardContent, { gap: Spacing.two }]}>
+        <Shimmer style={styles.skeletonBadge} />
+        <Shimmer style={styles.skeletonTitle} />
+        <Shimmer style={styles.skeletonLine} />
+      </View>
+    </ThemedView>
+  );
+}
+
+// ─── Empty / error state card ───────────────────────────────────────────────
+
+function StateCard({
+  icon,
+  iconColor,
+  title,
+  subtitle,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  iconColor?: string;
+  title: string;
+  subtitle?: string;
+  children?: ReactNode;
+}) {
+  const theme = useTheme();
+  return (
+    <View style={styles.stateContainer}>
+      <View style={[styles.stateIconWrap, { backgroundColor: theme.backgroundElement }]}>
+        <Ionicons name={icon} size={30} color={iconColor ?? theme.textSecondary} />
+      </View>
+      <ThemedText type="smallBold" style={styles.stateTitle}>
+        {title}
+      </ThemedText>
+      {!!subtitle && (
+        <ThemedText themeColor="textSecondary" style={styles.stateSubtitle}>
+          {subtitle}
+        </ThemedText>
+      )}
+      {children}
+    </View>
+  );
+}
+
+// ─── Centered feedback pop-up for the Retry action ──────────────────────────
+//
+// Same visual language as ActionSuccessModal (spring/fade centered card over a dimmed
+// backdrop) but self-dismissing and generic over success/error, since a manual retry
+// can land either way. Stays mounted with `visible` toggled — same convention
+// ActionSuccessModal uses — so RN Modal's own fade animationType plays cleanly on close.
+function RetryToast({
+  visible,
+  kind,
+  message,
+}: {
+  visible: boolean;
+  kind: 'success' | 'error';
+  message: string;
+}) {
+  const theme = useTheme();
+  const scale = useSharedValue(0.85);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      scale.value = withSpring(1, { damping: 15, stiffness: 190 });
+      opacity.value = withTiming(1, { duration: 160 });
+    } else {
+      scale.value = 0.85;
+      opacity.value = 0;
+    }
+  }, [visible, scale, opacity]);
+
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  const isSuccess = kind === 'success';
+  const tint = isSuccess ? theme.primary : theme.accentRed;
+
+  return (
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
+      <View style={styles.toastBackdrop}>
+        <Animated.View style={[styles.toastCard, { backgroundColor: theme.backgroundElement }, cardAnimatedStyle]}>
+          <View style={[styles.toastIconOuter, { backgroundColor: `${tint}26` }]}>
+            <View style={[styles.toastIconInner, { backgroundColor: tint }]}>
+              <Ionicons name={isSuccess ? 'checkmark' : 'close'} size={20} color={theme.onPrimary} />
+            </View>
+          </View>
+          <ThemedText type="smallBold" style={styles.toastText}>
+            {message}
+          </ThemedText>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+// ─── Screen ──────────────────────────────────────────────────────────────────
 
 export default function HelpCenterScreen() {
   const router = useRouter();
@@ -75,10 +201,43 @@ export default function HelpCenterScreen() {
   const { articles, isLoading, error, refetch } = useFaqArticles(barangayId);
   const [category, setCategory] = useState<CategoryFilter>('all');
 
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastContent, setToastContent] = useState<{ kind: 'success' | 'error'; message: string }>({
+    kind: 'success',
+    message: '',
+  });
+
   const filtered = useMemo(() => {
     if (category === 'all') return articles;
     return articles.filter((a) => a.category === category);
   }, [articles, category]);
+
+  // Surfaces a centered confirmation once a manually-triggered retry settles — reacts to
+  // useFaqArticles' own isLoading/error state, no new fetch logic added here.
+  useEffect(() => {
+    if (isRetrying && !isLoading) {
+      setIsRetrying(false);
+      setToastContent(
+        error
+          ? { kind: 'error', message: 'Still unable to load. Please try again.' }
+          : { kind: 'success', message: 'Help articles refreshed.' },
+      );
+      setToastVisible(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (!toastVisible) return;
+    const timer = setTimeout(() => setToastVisible(false), 2400);
+    return () => clearTimeout(timer);
+  }, [toastVisible]);
+
+  function handleRetry() {
+    setIsRetrying(true);
+    refetch();
+  }
 
   function handlePress(articleId: string) {
     router.push({ pathname: '/settings/help/[articleId]', params: { articleId } });
@@ -103,71 +262,53 @@ export default function HelpCenterScreen() {
           </View>
         </View>
 
-        <ScrollView contentContainerStyle={styles.content}>
+        {/* Section 1: filter — pinned outside the ScrollView so it stays fixed in place
+            while section 2 (the article list) scrolls underneath it. */}
+        <View style={[styles.filterSection, { borderBottomColor: theme.backgroundSelected }]}>
           <SegmentedControl
             segments={CATEGORY_TABS}
             activeKey={category}
             onChange={(key) => setCategory(key)}
             activeColor="primary"
           />
+        </View>
 
+        {/* Section 2: articles */}
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.listContainer}>
             {isLoading ? (
-              <View style={styles.skeletonContainer}>
-                {[0, 1, 2, 3].map((i) => (
-                  <View key={i} style={styles.skeletonCard}>
-                    <ShimmerSkeleton theme={theme} width="60%" height={16} />
-                    <ShimmerSkeleton theme={theme} width="100%" height={12} style={{ marginTop: 8 }} />
-                    <ShimmerSkeleton theme={theme} width="85%" height={12} style={{ marginTop: 4 }} />
-                  </View>
-                ))}
-              </View>
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
             ) : error ? (
-              <View style={styles.errorContainer}>
-                <ThemedText themeColor="textSecondary">Unable to load help articles.</ThemedText>
-                <Pressable onPress={refetch} style={styles.retryButton}>
-                  <ThemedText style={{ color: '#FFFFFF', fontWeight: '600' }}>Retry</ThemedText>
-                </Pressable>
-              </View>
+              <StateCard
+                icon="cloud-offline-outline"
+                iconColor={theme.accentRed}
+                title="Unable to load help articles"
+                subtitle="Check your connection and try again.">
+                <View style={styles.retryBtnWrap}>
+                  <PrimaryButton label="Retry" onPress={handleRetry} loading={isRetrying} />
+                </View>
+              </StateCard>
             ) : filtered.length === 0 ? (
-              <View style={styles.emptyContainer}>
-                <ThemedText themeColor="textSecondary">
-                  {category === 'all' ? 'No articles available yet.' : 'No articles in this category.'}
-                </ThemedText>
-              </View>
+              <StateCard
+                icon="help-circle-outline"
+                title="Nothing here yet"
+                subtitle={category === 'all' ? 'No articles available yet.' : 'No articles in this category.'}
+              />
             ) : (
-              filtered.map((article, index) => {
-                const meta = FAQ_CATEGORY_META[article.category as FaqCategory];
-                return (
-                  <Animated.View key={article.id} entering={FadeIn.duration(300).delay(index * 40)}>
-                    <Pressable onPress={() => handlePress(article.id)}>
-                      <Card style={styles.articleCard}>
-                        <View style={styles.cardHeader}>
-                          <View style={[styles.categoryDot, { backgroundColor: meta?.color }]} />
-                          <View style={[styles.categoryBadge, { backgroundColor: `${meta?.color}1A` }]}>
-                            <ThemedText style={[styles.categoryBadgeText, { color: meta?.color }]}>
-                              {meta?.label}
-                            </ThemedText>
-                          </View>
-                        </View>
-                        <ThemedText type="smallBold" style={styles.questionText}>
-                          {article.question}
-                        </ThemedText>
-                        <ThemedText
-                          themeColor="textSecondary"
-                          style={styles.answerPreview}
-                          numberOfLines={2}>
-                          {article.answer}
-                        </ThemedText>
-                      </Card>
-                    </Pressable>
-                  </Animated.View>
-                );
-              })
+              filtered.map((article) => (
+                <FaqCard key={article.id} article={article} onPress={() => handlePress(article.id)} />
+              ))
             )}
           </View>
         </ScrollView>
       </View>
+
+      <RetryToast visible={toastVisible} kind={toastContent.kind} message={toastContent.message} />
     </SafeAreaView>
   );
 }
@@ -200,68 +341,154 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     lineHeight: 36,
   },
+  filterSection: {
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.two + 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
   content: {
     padding: Spacing.three,
-    gap: Spacing.three,
   },
   listContainer: {
-    gap: Spacing.three,
-  },
-  skeletonContainer: {
-    gap: Spacing.three,
-    paddingTop: Spacing.two,
-  },
-  skeletonCard: {
-    gap: 6,
-    padding: Spacing.four,
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  errorContainer: {
-    paddingVertical: Spacing.six,
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  retryButton: {
-    backgroundColor: '#0F6E5B',
-    borderRadius: 20,
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-  },
-  emptyContainer: {
-    paddingVertical: Spacing.six,
-    alignItems: 'center',
-  },
-  articleCard: {
     gap: Spacing.two,
   },
-  cardHeader: {
+
+  // Article card
+  articleCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: Spacing.two + 4,
+    gap: Spacing.two + 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
-  categoryDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  cardPressed: {
+    opacity: 0.94,
+    transform: [{ scale: 0.99 }],
   },
-  categoryBadge: {
-    borderRadius: 8,
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.half,
+  iconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
-  categoryBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
+  cardContent: {
+    flex: 1,
+    gap: 3,
+  },
+  categoryLabel: {
+    fontSize: 10.5,
+    fontWeight: '700',
+    lineHeight: 14,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
   },
   questionText: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 14.5,
+    lineHeight: 19,
+    letterSpacing: -0.1,
   },
   answerPreview: {
-    fontSize: 13,
+    fontSize: 12.5,
     lineHeight: 18,
+  },
+  chevron: {
+    flexShrink: 0,
+  },
+
+  // Skeleton
+  skeletonBadge: {
+    width: '28%',
+    height: 9,
+    borderRadius: 5,
+  },
+  skeletonTitle: {
+    width: '68%',
+    height: 13,
+    borderRadius: 6,
+  },
+  skeletonLine: {
+    width: '90%',
+    height: 11,
+    borderRadius: 5,
+  },
+
+  // Empty / error state
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 48,
+    paddingHorizontal: Spacing.five,
+    gap: Spacing.two,
+  },
+  stateIconWrap: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.one,
+  },
+  stateTitle: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  stateSubtitle: {
+    fontSize: 13,
+    lineHeight: 19,
+    textAlign: 'center',
+    marginTop: -Spacing.one,
+  },
+  retryBtnWrap: {
+    width: 160,
+    marginTop: Spacing.two,
+  },
+
+  // Centered retry feedback pop-up
+  toastBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15,23,42,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Spacing.four,
+  },
+  toastCard: {
+    minWidth: 220,
+    maxWidth: 300,
+    borderRadius: Spacing.three,
+    paddingVertical: Spacing.four,
+    paddingHorizontal: Spacing.four,
+    alignItems: 'center',
+    gap: Spacing.two,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 8,
+  },
+  toastIconOuter: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toastIconInner: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toastText: {
+    textAlign: 'center',
   },
 });

@@ -20,6 +20,11 @@
 // call here for Phase 1.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const PAYMONGO_WEBHOOK_SECRET = Deno.env.get('PAYMONGO_WEBHOOK_SECRET')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -50,19 +55,26 @@ async function verifySignature(payload: string, signatureHeader: string): Promis
 const ack = () =>
   new Response(JSON.stringify({ received: true }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   const rawBody = await req.text();
   const signatureHeader = req.headers.get('Paymongo-Signature');
 
   if (!signatureHeader || !(await verifySignature(rawBody, signatureHeader))) {
-    return new Response(JSON.stringify({ error: 'Invalid signature' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Invalid signature' }), {
+      status: 401,
+      headers: corsHeaders,
+    });
   }
 
   const event = JSON.parse(rawBody);

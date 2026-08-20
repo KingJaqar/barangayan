@@ -17,6 +17,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
   const toast = useToast();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [detailedDescription, setDetailedDescription] = useState('');
   const [category, setCategory] = useState<string>('general');
   const [imageUrl, setImageUrl] = useState('');
   const [publishedAt, setPublishedAt] = useState('');
@@ -30,6 +31,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
     const result = announcementSchema.safeParse({
       title,
       body,
+      detailed_description: detailedDescription || undefined,
       category,
       image_url: imageUrl || undefined,
       published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
@@ -46,6 +48,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
       barangay_id: barangayId,
       title: result.data.title,
       body: result.data.body,
+      detailed_description: result.data.detailed_description || null,
       category: result.data.category,
       image_url: result.data.image_url || null,
       published_at: result.data.published_at ?? new Date().toISOString(),
@@ -67,6 +70,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
 
     setTitle('');
     setBody('');
+    setDetailedDescription('');
     setCategory('general');
     setImageUrl('');
     setPublishedAt('');
@@ -115,8 +119,19 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={2}
-          placeholder="Announcement details visible to all residents…"
+          placeholder="Short summary shown on the announcement card (2 sentences or so)…"
           required
+        />
+      </label>
+
+      <label className="col-span-4 text-sm">
+        <span className={labelClass}>Detailed Description (optional)</span>
+        <textarea
+          className={inputClass}
+          value={detailedDescription}
+          onChange={(e) => setDetailedDescription(e.target.value)}
+          rows={4}
+          placeholder="Full write-up shown when a resident taps the announcement for more detail…"
         />
       </label>
 

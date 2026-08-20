@@ -22,6 +22,11 @@
 // exist: a resident can pay before an admin has looked at the request.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
 const PAYMONGO_SECRET_KEY = Deno.env.get('PAYMONGO_SECRET_KEY')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
@@ -48,13 +53,20 @@ function paymongoErrorMessage(body: unknown, fallback: string): string {
 }
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 });
+    return new Response('Method not allowed', { status: 405, headers: corsHeaders });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Missing Authorization header' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
   // Caller's own JWT, not service_role — used only to resolve identity and to read the
@@ -67,12 +79,12 @@ Deno.serve(async (req: Request) => {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
   }
 
   const { requestId } = await req.json();
   if (!requestId) {
-    return new Response(JSON.stringify({ error: 'Missing requestId' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'Missing requestId' }), { status: 400, headers: corsHeaders });
   }
 
   // Fee and description are derived server-side — never accepted from the client.
@@ -94,17 +106,17 @@ Deno.serve(async (req: Request) => {
     console.error('service_requests lookup failed', requestError);
     return new Response(
       JSON.stringify({ error: 'Could not load this request. Please try again.' }),
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
   if (!request || request.resident_id !== user.id) {
-    return new Response(JSON.stringify({ error: 'Request not found or not yours' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Request not found or not yours' }), { status: 404, headers: corsHeaders });
   }
 
   // No admin-review gate: a resident can pay as soon as the request exists. Only block
   // terminal states where payment no longer makes sense.
   if (request.status === 'cancelled' || request.status === 'completed') {
-    return new Response(JSON.stringify({ error: 'Request is not ready for payment' }), { status: 422 });
+    return new Response(JSON.stringify({ error: 'Request is not ready for payment' }), { status: 422, headers: corsHeaders });
   }
 
   // service_role required: residents have no INSERT policy on payments (migration 0017).
@@ -136,13 +148,13 @@ Deno.serve(async (req: Request) => {
         documentFeeCentavos: resumable.document_fee_centavos,
         amountCentavos: resumable.amount_centavos,
       }),
-      { headers: { 'Content-Type': 'application/json' } },
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   }
 
   const documentType = request.document_type as unknown as { name: string; fee_centavos: number } | null;
   if (!documentType) {
-    return new Response(JSON.stringify({ error: 'Document type not found' }), { status: 404 });
+    return new Response(JSON.stringify({ error: 'Document type not found' }), { status: 404, headers: corsHeaders });
   }
 
   const documentFeeCentavos = documentType.fee_centavos;
@@ -152,7 +164,7 @@ Deno.serve(async (req: Request) => {
   if (amountCentavos < 100) {
     return new Response(
       JSON.stringify({ error: 'Amount is below the PayMongo minimum (PHP 1.00)' }),
-      { status: 422 },
+      { status: 422, headers: corsHeaders },
     );
   }
 
@@ -219,7 +231,7 @@ Deno.serve(async (req: Request) => {
   if (!intentResponse.ok) {
     return new Response(
       JSON.stringify({ error: paymongoErrorMessage(intent, 'PayMongo rejected the payment intent') }),
-      { status: 502 },
+      { status: 502, headers: corsHeaders },
     );
   }
 
@@ -228,6 +240,7 @@ Deno.serve(async (req: Request) => {
   if (!intentId || !clientKey) {
     return new Response(JSON.stringify({ error: 'PayMongo returned an unusable payment intent' }), {
       status: 502,
+      headers: corsHeaders,
     });
   }
 
@@ -244,7 +257,7 @@ Deno.serve(async (req: Request) => {
   if (!methodResponse.ok) {
     return new Response(
       JSON.stringify({ error: paymongoErrorMessage(method, 'PayMongo rejected the payment method') }),
-      { status: 502 },
+      { status: 502, headers: corsHeaders },
     );
   }
 
@@ -252,6 +265,7 @@ Deno.serve(async (req: Request) => {
   if (!methodId) {
     return new Response(JSON.stringify({ error: 'PayMongo returned an unusable payment method' }), {
       status: 502,
+      headers: corsHeaders,
     });
   }
 
@@ -268,7 +282,7 @@ Deno.serve(async (req: Request) => {
   if (!attachResponse.ok) {
     return new Response(
       JSON.stringify({ error: paymongoErrorMessage(attached, 'PayMongo could not generate the QR code') }),
-      { status: 502 },
+      { status: 502, headers: corsHeaders },
     );
   }
 
@@ -277,7 +291,7 @@ Deno.serve(async (req: Request) => {
   if (!qrImageUrl) {
     return new Response(
       JSON.stringify({ error: 'PayMongo did not return a QR code — QR PH may not be activated on this account' }),
-      { status: 502 },
+      { status: 502, headers: corsHeaders },
     );
   }
 
@@ -305,7 +319,7 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (insertError || !paymentRow) {
-    return new Response(JSON.stringify({ error: 'Failed to record payment' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Failed to record payment' }), { status: 500, headers: corsHeaders });
   }
 
   // paymentId (the payments row's own uuid) is what check-payment-status expects — it's
@@ -319,6 +333,6 @@ Deno.serve(async (req: Request) => {
       documentFeeCentavos,
       amountCentavos,
     }),
-    { headers: { 'Content-Type': 'application/json' } },
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 });
