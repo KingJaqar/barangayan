@@ -59,17 +59,22 @@ export function ContentForm({
     setSubmitting(true);
     try {
       const supabase = createSupabaseBrowserClient();
-      const { error: upsertError } = await supabase.from('site_content').upsert(
-        {
-          barangay_id: barangayId,
-          section: parsed.data.section,
-          title: parsed.data.title,
-          body: parsed.data.body,
-          is_active: parsed.data.is_active,
-          sort_order: parsed.data.sort_order,
-        },
-        { onConflict: 'barangay_id,section' },
-      );
+
+      // The site_content table uses a partial unique index (where deleted_at is null),
+      // which PostgreSQL's ON CONFLICT clause cannot target. Use UPDATE by id when the
+      // row already exists, and INSERT when it doesn't.
+      const payload = {
+        barangay_id: barangayId,
+        section: parsed.data.section,
+        title: parsed.data.title,
+        body: parsed.data.body,
+        is_active: parsed.data.is_active,
+        sort_order: parsed.data.sort_order,
+      };
+
+      const { error: upsertError } = initial?.id
+        ? await supabase.from('site_content').update(payload).eq('id', initial.id)
+        : await supabase.from('site_content').insert(payload);
 
       if (upsertError) {
         if (upsertError.code === '42501') {

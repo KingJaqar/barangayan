@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -15,7 +15,21 @@ import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-export function Collapsible({ children, title, defaultOpen = false }: PropsWithChildren & { title: string; defaultOpen?: boolean }) {
+export function Collapsible({
+  children,
+  title,
+  defaultOpen = false,
+  bare = false,
+}: PropsWithChildren & { title: string; defaultOpen?: boolean;
+  /**
+   * When true, skips Collapsible's own card surface (white header background +
+   * nested backgroundElement content box) and renders just the header/divider
+   * and flat children instead. Use this when a parent already provides the
+   * card chrome (background, border, radius) — otherwise the two nest into a
+   * "box inside a box inside a box" look.
+   */
+  bare?: boolean;
+}) {
   const theme = useTheme();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const rotation = useSharedValue(defaultOpen ? 1 : 0);
@@ -33,7 +47,7 @@ export function Collapsible({ children, title, defaultOpen = false }: PropsWithC
   }));
 
   return (
-    <ThemedView style={{ backgroundColor: theme.background }}>
+    <ThemedView style={{ backgroundColor: bare ? 'transparent' : theme.background }}>
       <Pressable
         style={({ pressed }) => [styles.heading, pressed && styles.pressedHeading]}
         onPress={toggle}>
@@ -45,9 +59,13 @@ export function Collapsible({ children, title, defaultOpen = false }: PropsWithC
 
       {isOpen && (
         <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(150)} layout={LinearTransition.duration(200)}>
-          <ThemedView type="backgroundElement" style={styles.content}>
-            {children}
-          </ThemedView>
+          {bare ? (
+            <View style={styles.bareContent}>{children}</View>
+          ) : (
+            <ThemedView type="backgroundElement" style={styles.content}>
+              {children}
+            </ThemedView>
+          )}
         </Animated.View>
       )}
     </ThemedView>
@@ -71,5 +89,9 @@ const styles = StyleSheet.create({
     marginTop: Spacing.three,
     borderRadius: Spacing.three,
     padding: Spacing.four,
+  },
+  bareContent: {
+    marginTop: Spacing.two,
+    gap: Spacing.three,
   },
 });

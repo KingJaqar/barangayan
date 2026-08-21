@@ -1,0 +1,429 @@
+erDiagram
+    AUTH_USERS ||--o{ PROFILES : "id"
+    BARANGAYS ||--o{ PROFILES : "barangay_id"
+    BARANGAYS ||--o{ DOCUMENT_TYPES : "barangay_id"
+    BARANGAYS ||--o{ SERVICE_REQUESTS : "barangay_id"
+    PROFILES ||--o{ SERVICE_REQUESTS : "resident_id"
+    DOCUMENT_TYPES ||--o{ SERVICE_REQUESTS : "document_type_id"
+    SERVICE_REQUESTS ||--o{ PAYMENTS : "service_request_id"
+    BARANGAYS ||--o{ PAYMENTS : "barangay_id"
+    PROFILES ||--o{ PAYMENTS : "collected_by_refunded_by"
+    BARANGAYS ||--o{ ANNOUNCEMENTS : "barangay_id"
+    PROFILES ||--o{ ANNOUNCEMENTS : "created_by"
+    PROFILES ||--o{ ANNOUNCEMENT_READS : "resident_id"
+    ANNOUNCEMENTS ||--o{ ANNOUNCEMENT_READS : "announcement_id"
+    BARANGAYS ||--o{ INCIDENT_CATEGORIES : "barangay_id"
+    BARANGAYS ||--o{ INCIDENTS : "barangay_id"
+    PROFILES ||--o{ INCIDENTS : "reporter_id"
+    INCIDENT_CATEGORIES ||--o{ INCIDENTS : "category_id"
+    WASTE_ZONES ||--o{ INCIDENTS : "zone_id"
+    INCIDENTS ||--o{ INCIDENT_CONFIRMATIONS : "incident_id"
+    PROFILES ||--o{ INCIDENT_CONFIRMATIONS : "user_id"
+    BARANGAYS ||--o{ EVACUATION_CENTERS : "barangay_id"
+    EVACUATION_CENTERS ||--o{ EVACUATION_CENTER_CHECKINS : "evacuation_center_id"
+    PROFILES ||--o{ EVACUATION_CENTER_CHECKINS : "user_id"
+    BARANGAYS ||--o{ EVACUATION_CENTER_CHECKINS : "barangay_id"
+    EVACUATION_CENTERS ||--o{ EVACUATION_CENTER_QR_CODES : "evacuation_center_id"
+    BARANGAYS ||--o{ MEDICAL_DRIVES : "barangay_id"
+    MEDICAL_DRIVES ||--o{ DRIVE_REGISTRATIONS : "drive_id"
+    AUTH_USERS ||--o{ DRIVE_REGISTRATIONS : "user_id"
+    PROFILES ||--o{ HOUSEHOLD_MEMBERS : "profile_id"
+    EVACUATION_CENTERS ||--o{ HOUSEHOLD_MEMBERS : "checked_in_center_id"
+    BARANGAYS ||--o{ EMERGENCY_INFORMATION : "barangay_id"
+    PROFILES ||--o{ EMERGENCY_INFORMATION : "created_by"
+    BARANGAYS ||--o{ EMERGENCY_QR_CONTENT : "barangay_id"
+    BARANGAYS ||--o{ WASTE_ZONES : "barangay_id"
+    BARANGAYS ||--o{ WASTE_COLLECTION_SCHEDULES : "barangay_id"
+    WASTE_ZONES ||--o{ WASTE_COLLECTION_SCHEDULES : "zone_id"
+    BARANGAYS ||--o{ FAQ_ARTICLES : "barangay_id"
+    PROFILES ||--o{ BARANGAY_OFFICIALS : "profile_id"
+    BARANGAYS ||--o{ BARANGAY_OFFICIALS : "barangay_id"
+    BARANGAYS ||--o{ ADMIN_AUDIT_LOG : "barangay_id"
+    AUTH_USERS ||--o{ ADMIN_AUDIT_LOG : "admin_id"
+    BARANGAYS ||--o{ SITE_CONTENT : "barangay_id"
+    BARANGAYS ||--o{ ABOUT_US : "barangay_id"
+    ABOUT_US ||--o{ DEVELOPER_PROFILES : "about_us_id"
+    BARANGAYS ||--o{ DEVELOPER_PROFILES : "barangay_id"
+    AUTH_USERS ||--o{ PUSH_TOKENS : "user_id"
+    AUTH_USERS {
+        uuid id PK
+        text email
+    }
+    BARANGAYS {
+        uuid id PK
+        text name
+        jsonb boundary
+        jsonb config
+        integer shipping_fee_centavos
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    PROFILES {
+        uuid id PK
+        uuid barangay_id FK
+        text role
+        text full_name
+        text first_name
+        text last_name
+        text middle_name
+        text suffix
+        text mobile_number
+        text home_address
+        text house_no
+        text street
+        text city
+        text sex
+        text employment_status
+        text occupation
+        date birth_date
+        text email
+        text email_verification_status
+        timestamptz email_verification_requested_at
+        timestamptz email_verified_at
+        text avatar_url
+        jsonb household_members
+        text_array id_photo_urls
+        text id_type
+        text id_verification_status
+        boolean location_verified
+        jsonb registration_location
+        text theme_preference
+        text accent_color
+        text_array custom_accent_colors
+        text font_preference
+        boolean push_notifications_enabled
+        timestamptz last_data_export_at
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    DOCUMENT_TYPES {
+        uuid id PK
+        uuid barangay_id FK
+        text name
+        text description
+        integer fee_centavos
+        integer processing_target_hours
+        text_array requirements
+        boolean is_active
+        timestamptz deleted_at
+        timestamptz created_at
+    }
+    SERVICE_REQUESTS {
+        uuid id PK
+        uuid barangay_id FK
+        uuid resident_id FK
+        uuid document_type_id FK
+        text reference_number
+        text requester_notes
+        text status
+        text payment_status
+        text payment_method
+        jsonb status_history
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    PAYMENTS {
+        uuid id PK
+        uuid service_request_id FK
+        uuid barangay_id FK
+        text method
+        integer amount_centavos
+        integer document_fee_centavos
+        integer shipping_fee_centavos
+        text status
+        text paymongo_source_id
+        text paymongo_payment_id
+        text paymongo_payment_intent_id
+        text qr_image_url
+        timestamptz expires_at
+        timestamptz paid_at
+        text refund_status
+        integer refund_amount_centavos
+        text refund_reason
+        text refund_transfer_link
+        timestamptz refunded_at
+        uuid refunded_by FK
+        uuid collected_by FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    ANNOUNCEMENTS {
+        uuid id PK
+        uuid barangay_id FK
+        text title
+        text body
+        text detailed_description
+        text category
+        text image_url
+        timestamptz published_at
+        uuid created_by FK
+        timestamptz created_at
+    }
+    ANNOUNCEMENT_READS {
+        uuid resident_id PK,FK
+        uuid announcement_id PK,FK
+        timestamptz read_at
+    }
+    INCIDENT_CATEGORIES {
+        uuid id PK
+        uuid barangay_id FK
+        text name
+        text color
+        text icon
+        boolean is_trash_related
+        timestamptz created_at
+    }
+    INCIDENTS {
+        uuid id PK
+        uuid barangay_id FK
+        uuid reporter_id FK
+        uuid category_id FK
+        uuid zone_id FK
+        text title
+        text description
+        jsonb location
+        text address
+        text specific_area_details
+        text_array photo_urls
+        text status
+        integer confirmation_count
+        timestamptz resolved_read_at
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    INCIDENT_CONFIRMATIONS {
+        uuid incident_id PK,FK
+        uuid user_id PK,FK
+        timestamptz created_at
+    }
+    EVACUATION_CENTERS {
+        uuid id PK
+        uuid barangay_id FK
+        text name
+        text address
+        jsonb position
+        integer capacity
+        integer current_occupancy
+        boolean is_active
+        boolean verified
+        text contact_number
+        text_array facilities
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    EVACUATION_CENTER_CHECKINS {
+        uuid id PK
+        uuid evacuation_center_id FK
+        uuid user_id FK
+        uuid barangay_id FK
+        timestamptz checked_in_at
+        timestamptz created_at
+    }
+    EVACUATION_CENTER_QR_CODES {
+        uuid id PK
+        uuid evacuation_center_id FK
+        jsonb qr_payload
+        text qr_image_url
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    MEDICAL_DRIVES {
+        uuid id PK
+        uuid barangay_id FK
+        text title
+        enum type
+        date drive_date
+        time time_start
+        time time_end
+        text location
+        text eligible_criteria
+        text stock_label
+        text stock_unit
+        integer stock_total
+        integer stock_remaining
+        boolean is_active
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    DRIVE_REGISTRATIONS {
+        uuid id PK
+        uuid drive_id FK
+        uuid user_id FK
+        text applicant_number
+        integer age
+        boolean is_pwd
+        text_array comorbidities
+        date prior_dose_date
+        numeric priority_score
+        enum status
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    HOUSEHOLD_MEMBERS {
+        uuid id PK
+        uuid profile_id FK
+        text name
+        text relation
+        text role
+        text avatar_url
+        boolean is_checked_in
+        timestamptz checked_in_at
+        uuid checked_in_center_id FK
+        text checked_in_center_name
+        integer sort_order
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    EMERGENCY_INFORMATION {
+        uuid id PK
+        uuid barangay_id FK
+        text category
+        text title
+        text body
+        jsonb content
+        text icon
+        text icon_color
+        text icon_bg
+        integer sort_order
+        boolean is_active
+        timestamptz published_at
+        uuid created_by FK
+        timestamptz deleted_at
+        timestamptz created_at
+    }
+    EMERGENCY_QR_CONTENT {
+        uuid id PK
+        uuid barangay_id FK
+        text section
+        text title
+        text body
+        jsonb content
+        text icon
+        text icon_color
+        text icon_bg
+        boolean is_active
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    WASTE_ZONES {
+        uuid id PK
+        uuid barangay_id FK
+        text name
+        text description
+        boolean is_active
+        integer sort_order
+        numeric trash_score
+        timestamptz trash_score_updated_at
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    WASTE_COLLECTION_SCHEDULES {
+        uuid id PK
+        uuid barangay_id FK
+        uuid zone_id FK
+        text waste_type
+        integer day_of_week
+        time start_time
+        time end_time
+        text notes
+        boolean is_active
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    FAQ_ARTICLES {
+        uuid id PK
+        uuid barangay_id FK
+        text question
+        text answer
+        text category
+        boolean is_active
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    BARANGAY_OFFICIALS {
+        uuid id PK
+        uuid profile_id FK
+        uuid barangay_id FK
+        text official_role
+        boolean is_active
+        date date_hired
+        text notes
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    ADMIN_AUDIT_LOG {
+        uuid id PK
+        uuid barangay_id FK
+        uuid admin_id FK
+        text action
+        text entity_type
+        uuid entity_id
+        text entity_label
+        jsonb changes
+        jsonb metadata
+        boolean is_read
+        timestamptz created_at
+    }
+    SITE_CONTENT {
+        uuid id PK
+        uuid barangay_id FK
+        text section
+        text title
+        text body
+        boolean is_active
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    ABOUT_US {
+        uuid id PK
+        uuid barangay_id FK
+        text mission
+        text vision
+        text history
+        text contact_email
+        text contact_phone
+        text address
+        text logo_url
+        boolean is_active
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    DEVELOPER_PROFILES {
+        uuid id PK
+        uuid about_us_id FK
+        uuid barangay_id FK
+        text name
+        text role
+        text bio
+        text photo_url
+        integer sort_order
+        timestamptz deleted_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    PUSH_TOKENS {
+        uuid id PK
+        uuid user_id FK
+        text expo_push_token
+        text device_type
+        timestamptz last_used_at
+        timestamptz created_at
+    }

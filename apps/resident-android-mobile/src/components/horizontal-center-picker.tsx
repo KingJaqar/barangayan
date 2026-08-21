@@ -1,12 +1,15 @@
 import { useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { LayoutChangeEvent, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export interface CenterPickerItem {
   id: string;
   name: string;
+  /** Walking distance in km from the resident's current position, when known. */
+  distanceKm?: number;
 }
 
 export interface HorizontalCenterPickerProps {
@@ -14,6 +17,10 @@ export interface HorizontalCenterPickerProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onShowAll: () => void;
+}
+
+function formatDistance(km: number): string {
+  return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(1)}km`;
 }
 
 export function HorizontalCenterPicker({
@@ -24,85 +31,111 @@ export function HorizontalCenterPicker({
 }: HorizontalCenterPickerProps) {
   const theme = useTheme();
   const scrollRef = useRef<ScrollView>(null);
+  // Chips are variable-width text pills, so remember each one's measured x offset
+  // (rather than assuming a fixed card width) to scroll the right one into view.
+  const offsetsRef = useRef<Record<string, number>>({});
+  const isAllSelected = selectedId === null;
 
   const handleSelect = (id: string) => {
     onSelect(id);
-    const index = items.findIndex((item) => item.id === id);
-    if (index >= 0 && scrollRef.current) {
-      scrollRef.current.scrollTo({ x: index * 140, animated: true });
+    const x = offsetsRef.current[id];
+    if (x !== undefined && scrollRef.current) {
+      scrollRef.current.scrollTo({ x: Math.max(0, x - 12), animated: true });
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}>
-        <Pressable
-          onPress={onShowAll}
-          style={[
-            styles.chip,
-            { borderColor: theme.backgroundSelected },
-            selectedId === null && { backgroundColor: theme.primary, borderColor: theme.primary },
-          ]}>
-          <ThemedText
-            type="small"
-            style={[
-              styles.chipText,
-              selectedId === null ? { color: theme.onPrimary } : { color: theme.text },
-            ]}>
-            Show All Centers
-          </ThemedText>
-        </Pressable>
+  const registerOffset = (id: string) => (e: LayoutChangeEvent) => {
+    offsetsRef.current[id] = e.nativeEvent.layout.x;
+  };
 
-        {items.map((item) => {
-          const isSelected = selectedId === item.id;
-          return (
-            <Pressable
-              key={item.id}
-              onPress={() => handleSelect(item.id)}
-              style={[
-                styles.chip,
-                { borderColor: theme.backgroundSelected },
-                isSelected && { backgroundColor: theme.primary, borderColor: theme.primary },
-              ]}>
+  return (
+    <ScrollView
+      ref={scrollRef}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}>
+      <Pressable
+        onPress={onShowAll}
+        style={[
+          styles.chip,
+          {
+            backgroundColor: isAllSelected ? theme.primary : 'transparent',
+            borderColor: isAllSelected ? theme.primary : theme.backgroundSelected,
+          },
+        ]}>
+        <ThemedText
+          type="smallBold"
+          style={{ color: isAllSelected ? theme.onPrimary : theme.text }}>
+          All
+        </ThemedText>
+      </Pressable>
+
+      {items.map((item) => {
+        const isSelected = selectedId === item.id;
+        return (
+          <Pressable
+            key={item.id}
+            onLayout={registerOffset(item.id)}
+            onPress={() => handleSelect(item.id)}
+            style={[
+              styles.chip,
+              styles.centerChip,
+              {
+                backgroundColor: isSelected ? theme.primary : 'transparent',
+                borderColor: isSelected ? theme.primary : theme.backgroundSelected,
+              },
+            ]}>
+            <ThemedText
+              type="smallBold"
+              numberOfLines={1}
+              style={[styles.chipName, { color: isSelected ? theme.onPrimary : theme.text }]}>
+              {item.name}
+            </ThemedText>
+            {item.distanceKm !== undefined ? (
               <ThemedText
                 type="small"
                 style={[
-                  styles.chipText,
-                  isSelected ? { color: theme.onPrimary } : { color: theme.text },
+                  styles.chipDistance,
+                  { color: isSelected ? 'rgba(255,255,255,0.8)' : theme.textSecondary },
                 ]}>
-                {item.name}
+                {formatDistance(item.distanceKm)}
               </ThemedText>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-    </View>
+            ) : null}
+          </Pressable>
+        );
+      })}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // Parent overlay handles spacing and background
-  },
   scrollContent: {
-    paddingHorizontal: 6,
-    gap: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 2,
+    paddingRight: 4,
   },
   chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 18,
+    height: 32,
+    borderRadius: 16,
     borderWidth: 1,
-    backgroundColor: 'transparent',
-    minWidth: 120,
+    paddingHorizontal: Spacing.three,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  chipText: {
+  centerChip: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  chipName: {
     fontSize: 13,
+    lineHeight: 16,
+    maxWidth: 140,
+  },
+  chipDistance: {
+    fontSize: 11,
+    lineHeight: 14,
     fontWeight: '600',
   },
 });

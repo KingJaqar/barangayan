@@ -2,14 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
 import { PrimaryButton } from '@/components/primary-button';
-import { AnimatedAppear } from '@/components/services/animated-appear';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing, Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -30,10 +29,55 @@ export default function PaymentSuccessScreen() {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const [downloadNotice, setDownloadNotice] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const amountCentavos = Number(amount ?? 0);
   const paidAt = new Date().toISOString();
+
+  async function handleDownloadReceipt() {
+    setIsDownloading(true);
+    try {
+      const [{ buildPaymentReceiptHtml }, Print, Sharing, FileSystem] = await Promise.all([
+        import('@/lib/payment-receipt-pdf'),
+        import('expo-print'),
+        import('expo-sharing'),
+        // Legacy filesystem API, not the new File/Paths one: in Expo Go, Paths.cache
+        // resolves to an experience-isolated directory that Expo Go's bundled Android
+        // FileProvider config doesn't recognize, so sharing a URI under it fails with
+        // "Not allowed to read file under given URL". FileSystem.cacheDirectory (legacy)
+        // is the one directory Expo Go's sharing has reliably supported for years.
+        import('expo-file-system/legacy'),
+      ]);
+
+      const html = buildPaymentReceiptHtml({
+        refNumber: refNumber ?? '—',
+        amountLabel: formatCentavosAsPHP(amountCentavos),
+        dateTimeLabel: formatDateTime(paidAt),
+        method: method ?? 'QR PH',
+        documentFeeLabel: documentFee ? formatCentavosAsPHP(Number(documentFee)) : undefined,
+        transactionRef: sourceId,
+      });
+      const { uri: printedUri } = await Print.printToFileAsync({ html });
+
+      // printToFileAsync is native Android code — it writes straight into the OS-level
+      // cache dir, bypassing expo-file-system entirely, so its output isn't under the
+      // scoped directory above either. Copying it there first gets the file into the one
+      // place Expo Go's FileProvider will actually let expo-sharing read from.
+      const fileUri = `${FileSystem.cacheDirectory}barangayan-receipt-${refNumber ?? 'receipt'}.pdf`;
+      await FileSystem.copyAsync({ from: printedUri, to: fileUri });
+
+      const canShare = await Sharing.isAvailableAsync();
+      if (canShare) {
+        await Sharing.shareAsync(fileUri, { mimeType: 'application/pdf', dialogTitle: 'Save receipt' });
+      } else {
+        Alert.alert('Receipt Ready', `Your receipt was saved to ${fileUri}`);
+      }
+    } catch (e: unknown) {
+      Alert.alert('Download Failed', e instanceof Error ? e.message : 'Could not download your receipt. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  }
 
   // One-shot celebratory pop on mount — purely additive, not tied to any conditional
   // prop, so it carries zero behavior risk.
@@ -107,13 +151,6 @@ export default function PaymentSuccessScreen() {
           </Card>
         </View>
 
-        {downloadNotice ? (
-          <AnimatedAppear>
-            <ThemedText type="small" themeColor="textSecondary" style={styles.centerText}>
-              Receipt download is coming soon.
-            </ThemedText>
-          </AnimatedAppear>
-        ) : null}
       </ScrollView>
 
       <View style={styles.footer}>
@@ -124,7 +161,8 @@ export default function PaymentSuccessScreen() {
         <PrimaryButton
           label="Download Receipt ↓"
           variant="secondary"
-          onPress={() => setDownloadNotice(true)}
+          loading={isDownloading}
+          onPress={handleDownloadReceipt}
         />
         <ThemedText
           type="link"
@@ -241,9 +279,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: Spacing.three,
-  },
-  centerText: {
-    textAlign: 'center',
   },
   footer: {
     padding: Spacing.four,

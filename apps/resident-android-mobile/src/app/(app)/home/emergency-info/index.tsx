@@ -501,6 +501,7 @@ function CentersContent({
   const pickerItems: CenterPickerItem[] = filteredCenters.map((c) => ({
     id: c.id,
     name: c.name,
+    distanceKm: c.distanceMeters !== undefined ? c.distanceMeters / 1000 : undefined,
   }));
 
   const evacuationMarkers: MapMarker[] = filteredCenters.map((center) => ({
@@ -738,8 +739,8 @@ function CentersContent({
 
           </View>
 
-          <View style={[styles.mapControlsContainer, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
-            <Collapsible title="Evacuation Centers" defaultOpen>
+          <View style={[styles.mapControlsContainer, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
+            <Collapsible title="Evacuation Centers" defaultOpen bare>
               {selectedCenter ? (
                 <Animated.View style={cardAnimatedStyle}>
                   <CenterDetailCard

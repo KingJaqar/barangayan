@@ -36,6 +36,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  Easing,
   Modal,
   Pressable,
   ScrollView,
@@ -803,6 +804,12 @@ export default function ApplicantRegistrationScreen() {
 // ─── ApplicantPickerSheet ─────────────────────────────────────────────────────
 // Bottom-sheet modal that lists the resident themselves + their household members
 // so the user can choose who they are registering for.
+//
+// Animation design:
+//   Open  — spring (damping 22, stiffness 220) for the sheet + 180 ms fade-in for
+//            the backdrop.  Gives a natural, elastic snap-into-place feel.
+//   Close — 260 ms ease-in-cubic slide-down + 200 ms backdrop fade, then the Modal
+//            is unmounted so there are no phantom touch targets left behind.
 
 function ApplicantPickerSheet({
   visible,
@@ -826,17 +833,86 @@ function ApplicantPickerSheet({
   const PRIMARY_GREEN = theme.primary;
   const isResidentSelected = selection.type === 'self';
 
+  // `modalVisible` lags behind the `visible` prop so the exit animation can
+  // finish before the Modal actually unmounts.
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Sheet slides from off-screen (large positive Y) up to 0.
+  // 700 is safely below any device viewport.
+  const translateY = useRef(new Animated.Value(700)).current;
+  const backdropOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      // Reset position before mounting so we always slide in from below.
+      translateY.setValue(700);
+      backdropOpacity.setValue(0);
+      setModalVisible(true);
+
+      Animated.parallel([
+        // Spring gives the sheet a natural, slightly elastic feel on the way up.
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+          damping: 22,
+          stiffness: 220,
+          mass: 0.9,
+        }),
+        Animated.timing(backdropOpacity, {
+          toValue: 1,
+          duration: 180,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // Animate out, then unmount the Modal.
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: 700,
+          duration: 260,
+          easing: Easing.bezier(0.4, 0, 1, 1), // ease-in cubic — feels intentional, not sluggish
+          useNativeDriver: true,
+        }),
+        Animated.timing(backdropOpacity, {
+          toValue: 0,
+          duration: 200,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(({ finished }) => {
+        if (finished) setModalVisible(false);
+      });
+    }
+  }, [visible, translateY, backdropOpacity]);
+
+  // Trigger the exit animation; the useEffect above handles the actual close.
+  function handleClose() {
+    onClose();
+  }
+
   return (
     <Modal
-      visible={visible}
+      visible={modalVisible}
       transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      animationType="none"
+      onRequestClose={handleClose}
       statusBarTranslucent>
-      {/* Tap-outside backdrop */}
-      <Pressable style={ps.backdrop} onPress={onClose} />
 
-      <View style={[ps.sheet, { backgroundColor: theme.backgroundElement }]}>
+      {/* ── Animated backdrop ─────────────────────────────────────────────── */}
+      <Animated.View
+        style={[StyleSheet.absoluteFill, ps.backdrop, { opacity: backdropOpacity }]}
+        pointerEvents="box-none">
+        <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
+      </Animated.View>
+
+      {/* ── Animated sheet ────────────────────────────────────────────────── */}
+      <Animated.View
+        style={[
+          ps.sheet,
+          { backgroundColor: theme.backgroundElement },
+          { transform: [{ translateY }] },
+        ]}>
         {/* Handle */}
         <View style={[ps.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={ps.title}>Registering for</ThemedText>
@@ -878,7 +954,7 @@ function ApplicantPickerSheet({
             <Pressable
               style={[ps.goToProfileBtn, { backgroundColor: PRIMARY_GREEN }]}
               onPress={() => {
-                onClose();
+                handleClose();
                 router.push('/(app)/settings/profile');
               }}>
               <ThemedText style={ps.goToProfileText}>Go to Profile</ThemedText>
@@ -913,14 +989,15 @@ function ApplicantPickerSheet({
             })}
           </ScrollView>
         )}
-      </View>
+      </Animated.View>
     </Modal>
   );
 }
 
 const ps = StyleSheet.create({
+  // Layout-only; the rgba background color is set inline so it can be driven by
+  // the Animated opacity value without conflicting with useNativeDriver.
   backdrop: {
-    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.45)',
   },
   sheet: {

@@ -2,6 +2,14 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Modal, Platform, Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
+import Animated, {
+  Easing as ReanimatedEasing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -24,6 +32,10 @@ interface QrShowModalProps {
   onClose: () => void;
 }
 
+// How far below the viewport the sheet starts / exits to.
+// 800 is safely off-screen on any phone.
+const SHEET_OFFSET = 800;
+
 export function QrShowModal({ visible, onClose }: QrShowModalProps) {
   const theme = useTheme();
   const { profile } = useProfile();
@@ -33,6 +45,53 @@ export function QrShowModal({ visible, onClose }: QrShowModalProps) {
   const [showCenterPicker, setShowCenterPicker] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const qrFrameRef = useRef<View>(null);
+
+  // ── Animation ──────────────────────────────────────────────────────────────
+  // Keep a local "modal open" flag so we can play the exit animation before
+  // handing control back to the parent.
+  const [localVisible, setLocalVisible] = useState(false);
+
+  const sheetY = useSharedValue(SHEET_OFFSET);
+  const backdropAlpha = useSharedValue(0);
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: sheetY.value }],
+  }));
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropAlpha.value,
+  }));
+
+  // Open: spring up, fade backdrop in.
+  useEffect(() => {
+    if (visible) {
+      setLocalVisible(true);
+      sheetY.value = SHEET_OFFSET; // ensure starting below screen
+      backdropAlpha.value = 0;
+      sheetY.value = withSpring(0, {
+        damping: 22,
+        stiffness: 200,
+        mass: 0.85,
+        overshootClamping: false,
+      });
+      backdropAlpha.value = withTiming(1, { duration: 260 });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+
+  // Dismiss: ease the sheet down, then signal the parent.
+  const handleClose = useCallback(() => {
+    sheetY.value = withTiming(SHEET_OFFSET, {
+      duration: 320,
+      easing: ReanimatedEasing.in(ReanimatedEasing.cubic),
+    }, (finished) => {
+      if (finished) runOnJS(setLocalVisible)(false);
+      // Delay onClose by one frame so the native modal can unmount cleanly.
+      if (finished) runOnJS(onClose)();
+    });
+    backdropAlpha.value = withTiming(0, { duration: 260 });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onClose]);
+  // ── End Animation ──────────────────────────────────────────────────────────
 
   const selectedCenter = centers.find((c) => c.id === selectedCenterId) ?? null;
 
@@ -120,15 +179,20 @@ export function QrShowModal({ visible, onClose }: QrShowModalProps) {
   }, []);
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={styles.overlay} onPress={onClose}>
+    <Modal visible={localVisible} transparent animationType="none" onRequestClose={handleClose}>
+      {/* Animated dim backdrop */}
+      <Animated.View style={[StyleSheet.absoluteFill, styles.overlayDim, backdropStyle]} pointerEvents="none" />
+
+      <Pressable style={styles.overlay} onPress={handleClose}>
+        {/* Animated sheet */}
+        <Animated.View style={sheetStyle}>
         <Pressable style={[styles.container, { backgroundColor: theme.background }]} onPress={() => { }}>
           <View style={styles.handle} />
           <View style={styles.header}>
             <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
               Show QR Code
             </ThemedText>
-            <Pressable onPress={onClose} hitSlop={Spacing.two}>
+            <Pressable onPress={handleClose} hitSlop={Spacing.two}>
               <Ionicons name="close" size={24} color={theme.textSecondary} />
             </Pressable>
           </View>
@@ -194,6 +258,7 @@ export function QrShowModal({ visible, onClose }: QrShowModalProps) {
             </ThemedText>
           </Pressable>
         </Pressable>
+        </Animated.View>
       </Pressable>
 
       <Modal visible={showCenterPicker} transparent animationType="fade" onRequestClose={() => setShowCenterPicker(false)}>
@@ -257,9 +322,12 @@ export function QrShowModal({ visible, onClose }: QrShowModalProps) {
 }
 
 const styles = StyleSheet.create({
+  overlayDim: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'transparent',
     justifyContent: 'flex-end',
   },
   container: {
