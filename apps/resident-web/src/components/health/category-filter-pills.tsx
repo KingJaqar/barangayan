@@ -25,7 +25,7 @@ export function CategoryFilterPills({ active, onSelect }: { active: DriveTypeFil
             style={
               isActive
                 ? { backgroundColor: color, color: '#fff' }
-                : { borderWidth: 1.5, borderStyle: 'solid', borderColor: color, color }
+                : { borderWidth: 1, borderStyle: 'solid', borderColor: `${color}55`, color, backgroundColor: `${color}0d` }
             }>
             {label}
           </button>

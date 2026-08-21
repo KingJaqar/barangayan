@@ -81,7 +81,7 @@ export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boo
           <select
             value={selectedCenterId ?? ''}
             onChange={(e) => setSelectedCenterId(e.target.value)}
-            className="h-11 rounded-lg border border-input bg-transparent px-3.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30">
+            className="h-11 rounded-lg border border-input bg-white px-3.5 text-sm text-black outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 dark:bg-zinc-900 dark:text-white [&>option]:bg-white [&>option]:text-black dark:[&>option]:bg-zinc-900 dark:[&>option]:text-white">
             {centers.length === 0 ? <option value="">No evacuation centers found</option> : null}
             {centers.map((c) => (
               <option key={c.id} value={c.id}>

@@ -15,45 +15,48 @@ function fmt12h(t: string): string {
   return `${h12}:${mStr ?? '00'} ${period}`;
 }
 
-/** Web port of mobile's DriveCard — one active/upcoming medical drive. */
+/** One active/upcoming medical drive — styled to match the reports IncidentCard's web
+ * card language (soft border, shadow-sm -> shadow-md on hover) instead of mobile's
+ * heavier rounded-2xl/border-only look. */
 export function DriveCard({ drive, isRegistered, onRegister }: { drive: MedicalDrive; isRegistered: boolean; onRegister: () => void }) {
   const cfg = driveTypeConfig(drive.type);
   const fraction = drive.stock_total > 0 ? drive.stock_remaining / drive.stock_total : 0;
   const isFull = drive.stock_remaining <= 0;
+  const stockColor = fraction <= 0.2 ? '#EF4444' : fraction <= 0.5 ? '#F59E0B' : '#22C55E';
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+    <div className="flex flex-col rounded-xl border border-black/8 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-white/8 dark:bg-zinc-900">
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-base font-bold leading-snug">{drive.title}</h3>
+        <h3 className="text-sm font-bold leading-snug">{drive.title}</h3>
         <span
-          className="shrink-0 rounded-lg px-2.5 py-1 text-xs font-bold"
-          style={{ backgroundColor: `${cfg.color}22`, color: cfg.color }}>
+          className="shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+          style={{ backgroundColor: `${cfg.color}1a`, color: cfg.color }}>
           {cfg.label}
         </span>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-semibold text-muted-foreground">
-        <CalendarDays size={13} className="text-primary" />
+      <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
+        <CalendarDays size={12} />
         <span>
           {fmtShortDate(drive.drive_date)} · {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}
         </span>
-        <span className="mx-1 h-1 w-1 rounded-full bg-primary/40" />
-        <MapPin size={13} className="text-primary" />
-        <span>{drive.location}</span>
+        <span className="mx-0.5 h-1 w-1 rounded-full bg-muted-foreground/40" />
+        <MapPin size={12} />
+        <span className="truncate">{drive.location}</span>
       </div>
 
-      <p className="mt-1 text-xs text-muted-foreground">{drive.eligible_criteria}</p>
+      <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{drive.eligible_criteria}</p>
 
       <div className="mt-3 flex items-center justify-between gap-3">
         <div className="flex flex-wrap items-baseline gap-1.5">
-          <span className="text-sm font-bold">{drive.stock_label}</span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs font-semibold text-foreground">{drive.stock_label}</span>
+          <span className="text-xs text-muted-foreground">
             <span className="font-bold text-foreground">{drive.stock_remaining}</span>/{drive.stock_total} {drive.stock_unit}
           </span>
         </div>
 
         {isRegistered ? (
-          <span className="flex shrink-0 items-center gap-1 rounded-lg bg-primary/15 px-2.5 py-1.5 text-xs font-bold text-primary">
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary">
             <CheckCircle2 size={13} /> Registered
           </span>
         ) : (
@@ -61,14 +64,14 @@ export function DriveCard({ drive, isRegistered, onRegister }: { drive: MedicalD
             type="button"
             onClick={onRegister}
             disabled={isFull}
-            className="shrink-0 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground">
+            className="shrink-0 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground">
             {isFull ? 'Full' : 'Register'}
           </button>
         )}
       </div>
 
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-        <div className="h-full rounded-full bg-[#22C55E] transition-all" style={{ width: `${Math.round(fraction * 100)}%` }} />
+        <div className="h-full rounded-full transition-all" style={{ width: `${Math.round(fraction * 100)}%`, backgroundColor: stockColor }} />
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ArrowLeft, MapPin, Calendar, RefreshCw, Users, Info, CheckCircle2, XCircle,
@@ -236,10 +235,15 @@ function WithdrawButton({ incidentId, onDone }: { incidentId: string; onDone: ()
   );
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────
+// ─── Shared body ─────────────────────────────────────────────────────────────
 
-export function IncidentDetail({ incident: initial }: { incident: IncidentDetailData }) {
-  const router = useRouter();
+/**
+ * Everything below the "Back to My Reports" link: photos, header, location, meta,
+ * status timeline and actions. Shared by the full detail page (`IncidentDetail` below)
+ * and `IncidentDrawer` (components/reports/incident-drawer.tsx), which renders this
+ * inside a right-side sliding panel instead of navigating to a new page.
+ */
+export function IncidentDetailBody({ incident: initial, onWithdrawn }: { incident: IncidentDetailData; onWithdrawn?: () => void }) {
   const [incident, setIncident] = useState(initial);
   const cancelledRef = useRef(false);
 
@@ -290,12 +294,6 @@ export function IncidentDetail({ incident: initial }: { incident: IncidentDetail
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Back link */}
-      <Link href="/reports" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft size={15} />
-        Back to My Reports
-      </Link>
-
       {/* Photos */}
       <PhotoCarousel urls={incident.photo_urls} />
 
@@ -375,7 +373,7 @@ export function IncidentDetail({ incident: initial }: { incident: IncidentDetail
 
       {/* Actions */}
       {canWithdraw && (
-        <WithdrawButton incidentId={incident.id} onDone={() => { refetch(); router.refresh(); }} />
+        <WithdrawButton incidentId={incident.id} onDone={() => { refetch(); onWithdrawn?.(); }} />
       )}
 
       {windowClosed && (
@@ -406,6 +404,24 @@ export function IncidentDetail({ incident: initial }: { incident: IncidentDetail
           <span className="text-sm text-muted-foreground">This report was closed as unresolved by the barangay.</span>
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Full-page wrapper ────────────────────────────────────────────────────────
+
+/** `/reports/[incidentId]` page content — kept intact for deep links, back/forward and
+ * refresh. The list's primary interaction is now IncidentDrawer (components/reports/
+ * incident-drawer.tsx), which renders IncidentDetailBody in a right-side panel instead. */
+export function IncidentDetail({ incident }: { incident: IncidentDetailData }) {
+  return (
+    <div className="flex flex-col gap-4">
+      <Link href="/reports" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft size={15} />
+        Back to My Reports
+      </Link>
+
+      <IncidentDetailBody incident={incident} />
     </div>
   );
 }

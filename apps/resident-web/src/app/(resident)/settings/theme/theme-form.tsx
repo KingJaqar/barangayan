@@ -12,11 +12,12 @@
  */
 
 import { ACCENT_COLORS, FONT_OPTIONS } from '@barangayan/shared';
-import { Check, Moon, Sun } from 'lucide-react';
+import { Check, Moon, Pipette, Plus, Sun, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { useAccentController, isValidHexColor, MAX_CUSTOM_COLORS } from '@/components/theme/accent-controller';
+import { isValidHexColor, MAX_CUSTOM_COLORS, useAccentController } from '@/components/theme/accent-controller';
+import { ColorPickerSwatch } from '@/components/theme/color-picker-popover';
 import { useFontController } from '@/components/theme/font-controller';
 import { useThemeController, type ResolvedTheme } from '@/components/theme/theme-controller';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -44,14 +45,18 @@ function ThemeSelector({ value, onChange }: { value: ResolvedTheme; onChange: (t
             key={key}
             type="button"
             onClick={() => onChange(key)}
-            className={`flex flex-col items-center gap-2 rounded-xl border p-4 text-sm font-medium transition-all ${
+            className={`relative flex flex-col items-center gap-2 rounded-xl border p-4 text-sm font-medium transition-all ${
               active
                 ? 'border-[var(--accent)] bg-[var(--accent-tint)] text-[var(--accent)]'
                 : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300'
             }`}>
+            {active ? (
+              <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--accent)] text-white">
+                <Check size={10} strokeWidth={3} />
+              </span>
+            ) : null}
             <Icon size={22} />
             {label}
-            {active ? <Check size={14} className="absolute" /> : null}
           </button>
         );
       })}
@@ -60,6 +65,47 @@ function ThemeSelector({ value, onChange }: { value: ResolvedTheme; onChange: (t
 }
 
 // ─── Accent swatch picker ─────────────────────────────────────────────────────
+
+/** Shared swatch button — ring-based selection state (instead of an overlaid
+ * checkmark) so it reads cleanly against any hue, light or dark. */
+function Swatch({
+  color,
+  active,
+  onSelect,
+  onRemove,
+}: {
+  color: string;
+  active: boolean;
+  onSelect: () => void;
+  onRemove?: () => void;
+}) {
+  return (
+    <div className="group/swatch relative">
+      <button
+        type="button"
+        onClick={onSelect}
+        title={color}
+        aria-label={`Use accent color ${color}`}
+        aria-pressed={active}
+        style={{ backgroundColor: color }}
+        className={`relative h-10 w-10 rounded-full ring-1 ring-inset ring-black/10 transition-all duration-150 ease-out hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:ring-white/15 dark:focus-visible:ring-offset-zinc-900 ${
+          active ? 'scale-110 ring-2 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900' : ''
+        }`}>
+        {active ? <Check size={16} strokeWidth={3} className="absolute inset-0 m-auto text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]" /> : null}
+      </button>
+      {onRemove ? (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          title={`Remove ${color}`}
+          aria-label={`Remove ${color}`}
+          className="absolute -right-1 -top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 opacity-0 shadow-sm transition-opacity group-hover/swatch:opacity-100 hover:!text-red-500 focus-visible:opacity-100 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+          <X size={10} strokeWidth={3} />
+        </button>
+      ) : null}
+    </div>
+  );
+}
 
 function AccentPicker({
   value,
@@ -74,92 +120,110 @@ function AccentPicker({
   onAddCustom: (c: string) => boolean;
   onRemoveCustom: (c: string) => void;
 }) {
-  const [hex, setHex] = useState('');
+  const [pickerColor, setPickerColor] = useState('#1a2b3c');
+  const [hexDraft, setHexDraft] = useState('#1a2b3c');
   const [hexError, setHexError] = useState('');
+  const atMax = customColors.length >= MAX_CUSTOM_COLORS;
+
+  function syncColor(next: string) {
+    setPickerColor(next);
+    setHexDraft(next);
+    setHexError('');
+  }
+
+  function handleHexDraftChange(raw: string) {
+    setHexDraft(raw);
+    setHexError('');
+    const normalized = raw.trim().startsWith('#') ? raw.trim() : `#${raw.trim()}`;
+    if (isValidHexColor(normalized)) setPickerColor(normalized);
+  }
 
   function handleAddCustom() {
-    const normalized = hex.trim().startsWith('#') ? hex.trim() : `#${hex.trim()}`;
+    const normalized = hexDraft.trim().startsWith('#') ? hexDraft.trim() : `#${hexDraft.trim()}`;
     if (!isValidHexColor(normalized)) {
       setHexError('Enter a valid 6-digit hex color (e.g. #1a2b3c).');
       return;
     }
     const added = onAddCustom(normalized);
     if (!added) {
-      if (customColors.length >= MAX_CUSTOM_COLORS) {
-        setHexError(`You can save up to ${MAX_CUSTOM_COLORS} custom colors. Remove one first.`);
-      } else {
-        setHexError('Color already saved.');
-      }
+      setHexError(atMax ? `You can save up to ${MAX_CUSTOM_COLORS} custom colors. Remove one first.` : 'Color already saved.');
       return;
     }
     onSelect(normalized);
-    setHex('');
     setHexError('');
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {/* Preset swatches */}
-      <div className="flex flex-wrap gap-2.5">
-        {ACCENT_COLORS.map((color) => (
-          <button
-            key={color}
-            type="button"
-            onClick={() => onSelect(color)}
-            title={color}
-            style={{ backgroundColor: color }}
-            className="relative h-9 w-9 rounded-full transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
-            {value.toLowerCase() === color.toLowerCase() ? (
-              <Check size={16} className="absolute inset-0 m-auto text-white drop-shadow" />
-            ) : null}
-          </button>
-        ))}
+      <div>
+        <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Presets</p>
+        <div className="flex flex-wrap gap-3">
+          {ACCENT_COLORS.map((color) => (
+            <Swatch key={color} color={color} active={value.toLowerCase() === color.toLowerCase()} onSelect={() => onSelect(color)} />
+          ))}
+        </div>
       </div>
 
       {/* Custom colors */}
-      {customColors.length > 0 ? (
-        <>
-          <p className="text-xs font-medium text-zinc-500">Custom colors</p>
-          <div className="flex flex-wrap gap-2.5">
+      <div>
+        <div className="mb-2.5 flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Your colors</p>
+          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium tabular-nums text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+            {customColors.length}/{MAX_CUSTOM_COLORS}
+          </span>
+        </div>
+        {customColors.length > 0 ? (
+          <div className="flex flex-wrap gap-3">
             {customColors.map((color) => (
-              <button
+              <Swatch
                 key={color}
-                type="button"
-                onClick={() => onSelect(color)}
-                onContextMenu={(e) => { e.preventDefault(); if (window.confirm(`Remove ${color}?`)) onRemoveCustom(color); }}
-                title={`${color} (right-click to remove)`}
-                style={{ backgroundColor: color }}
-                className="relative h-9 w-9 rounded-full transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
-                {value.toLowerCase() === color.toLowerCase() ? (
-                  <Check size={16} className="absolute inset-0 m-auto text-white drop-shadow" />
-                ) : null}
-              </button>
+                color={color}
+                active={value.toLowerCase() === color.toLowerCase()}
+                onSelect={() => onSelect(color)}
+                onRemove={() => onRemoveCustom(color)}
+              />
             ))}
           </div>
-        </>
-      ) : null}
-
-      {/* Add custom hex */}
-      <div className="flex items-start gap-2">
-        <div className="flex-1">
-          <div className="flex gap-2">
-            <input
-              value={hex}
-              onChange={(e) => { setHex(e.target.value); setHexError(''); }}
-              placeholder="#1a2b3c"
-              maxLength={7}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm font-mono outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="button"
-              onClick={handleAddCustom}
-              disabled={!hex.trim()}
-              className="shrink-0 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800">
-              Add
-            </button>
+        ) : (
+          <div className="flex items-center gap-2 rounded-xl border border-dashed border-zinc-200 px-3.5 py-3 text-xs text-zinc-400 dark:border-zinc-700 dark:text-zinc-500">
+            <Pipette size={14} className="shrink-0" />
+            Colors you save below will show up here.
           </div>
-          {hexError ? <p className="mt-1 text-xs text-red-500">{hexError}</p> : null}
+        )}
+      </div>
+
+      {/* Custom color picker */}
+      <div>
+        <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-zinc-50/60 p-3.5 dark:border-zinc-700 dark:bg-zinc-800/40 sm:flex-row sm:items-center">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <ColorPickerSwatch color={pickerColor} onChange={syncColor} size={44} />
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">New color</p>
+              <div className="mt-0.5 flex items-center">
+                <span className="font-mono text-sm text-zinc-400 dark:text-zinc-500">#</span>
+                <input
+                  value={hexDraft.replace(/^#/, '')}
+                  onChange={(e) => handleHexDraftChange(e.target.value)}
+                  spellCheck={false}
+                  maxLength={6}
+                  aria-label="Custom accent color hex code"
+                  className="w-20 min-w-0 bg-transparent font-mono text-sm font-semibold uppercase tracking-wide text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+                  placeholder="1A2B3C"
+                />
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddCustom}
+            disabled={atMax}
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40">
+            <Plus size={15} strokeWidth={2.5} />
+            Save color
+          </button>
         </div>
+        {hexError ? <p className="mt-1.5 text-xs text-red-500">{hexError}</p> : null}
       </div>
     </div>
   );
@@ -277,14 +341,65 @@ export function ThemeForm({
         />
       </div>
 
-      {/* Live preview */}
-      <div className="rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-tint)] p-4 lg:col-span-2">
-        <p className="mb-1 text-sm font-semibold text-[var(--accent)]">Preview</p>
-        <p className="text-base" style={{ fontFamily: FONT_OPTIONS.find((f) => f.id === fontId)?.stack }}>
-          The quick brown fox jumps over the lazy dog. — Barangayan
-        </p>
-        <p className="mt-2 text-xs text-zinc-500">Changes apply immediately. Preferences are saved to your account for cross-device sync.</p>
+      {/* Live preview — a small mock UI card so residents see their theme, accent, and
+          font working together the way they actually will in the app, instead of a flat
+          tinted box with a caption. */}
+      <LivePreview fontStack={FONT_OPTIONS.find((f) => f.id === fontId)?.stack} />
+    </div>
+  );
+}
+
+function LivePreview({ fontStack }: { fontStack: string | undefined }) {
+  return (
+    <div className="lg:col-span-2">
+      <div className="mb-2.5 flex items-center gap-1.5">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-75" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+        </span>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Preview</p>
       </div>
+
+      <div
+        aria-hidden="true"
+        className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm dark:border-white/10 dark:bg-zinc-900">
+        <div className="h-1.5 w-full bg-[linear-gradient(90deg,var(--accent),var(--accent-strong))]" />
+        <div className="p-5">
+          <div className="flex items-start gap-3">
+            <div
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-bold text-white shadow-sm"
+              style={{ backgroundColor: 'var(--accent)', fontFamily: fontStack }}>
+              B
+            </div>
+            <div className="min-w-0 flex-1 pt-0.5">
+              <p className="font-bold leading-tight" style={{ fontFamily: fontStack }}>
+                Barangayan
+              </p>
+              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">This is how text, buttons, and accents will look</p>
+            </div>
+            <span className="shrink-0 rounded-full bg-[var(--accent-tint)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent)]">New</span>
+          </div>
+
+          <p className="mt-3.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300" style={{ fontFamily: fontStack }}>
+            The quick brown fox jumps over the lazy dog.
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span
+              className="rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm"
+              style={{ backgroundColor: 'var(--accent)', fontFamily: fontStack }}>
+              Primary action
+            </span>
+            <span
+              className="rounded-full border px-4 py-2 text-sm font-semibold"
+              style={{ borderColor: 'var(--accent)', color: 'var(--accent)', fontFamily: fontStack }}>
+              Secondary
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-2 px-1 text-xs text-zinc-500 dark:text-zinc-400">Changes apply immediately and sync across your devices.</p>
     </div>
   );
 }

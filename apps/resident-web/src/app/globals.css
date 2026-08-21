@@ -145,6 +145,19 @@ main {
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
 }
 
+/* ─── Bottom tab bar — horizontally scrollable, scrollbar hidden (it reads as a
+   swipeable tab strip, not a scroll pane) ─── */
+.bottom-nav-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+}
+.bottom-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* ─── Leaflet custom markers (Phase 4) ─── */
 .custom-map-marker {
   background: transparent;

@@ -20,6 +20,17 @@ jobs:
         run: npm run typecheck --workspace=@barangayan/web
       - name: Build web
         run: npm run build --workspace=@barangayan/web
+      - name: Lint resident-web
+        run: npm run lint --workspace=@barangayan/resident-web
+      - name: Typecheck resident-web
+        run: npm run typecheck --workspace=@barangayan/resident-web
+      - name: Build resident-web
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_ADMIN_WEB_URL: ${{ secrets.NEXT_PUBLIC_ADMIN_WEB_URL || 'https://admin.example.com' }}
+          NEXT_PUBLIC_QRPH_SETTLEMENT_READY: 'false'
+        run: npm run build --workspace=@barangayan/resident-web
       - name: Typecheck mobile
         run: npx tsc --noEmit --project apps/resident-android-mobile/tsconfig.json
       - name: Test shared

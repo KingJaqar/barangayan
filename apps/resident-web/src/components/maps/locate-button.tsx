@@ -1,7 +1,7 @@
 'use client';
 
 import { LocateFixed } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { toast } from 'sonner';
 
@@ -14,6 +14,16 @@ export function LocateButton({ onLocated }: { onLocated: (position: { lat: numbe
   const map = useMap();
   const [isLocating, setIsLocating] = useState(false);
 
+  // `getCurrentPosition` can't be cancelled, and its callback can fire after the map has
+  // been unmounted (e.g. switching the Centers list/map toggle, toggling fullscreen, or
+  // navigating away while the fix is pending). Touching a removed Leaflet map — `map.flyTo`
+  // reads the deleted `_mapPane` — throws "Cannot read properties of undefined (reading
+  // '_leaflet_pos')", so bail out of the callbacks once we're gone.
+  const mountedRef = useRef(true);
+  useEffect(() => () => {
+    mountedRef.current = false;
+  }, []);
+
   function handleClick() {
     if (!('geolocation' in navigator)) {
       toast.error("This browser doesn't support location access.");
@@ -22,12 +32,14 @@ export function LocateButton({ onLocated }: { onLocated: (position: { lat: numbe
     setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (!mountedRef.current) return;
         const next = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         onLocated(next);
         map.flyTo([next.lat, next.lng], 17);
         setIsLocating(false);
       },
       () => {
+        if (!mountedRef.current) return;
         toast.error('Location access denied — enable it in your browser settings to use this.');
         setIsLocating(false);
       },

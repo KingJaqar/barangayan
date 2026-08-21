@@ -84,31 +84,31 @@ export function DriveCalendar({
   const rows = Array.from({ length: 6 }, (_, i) => cells.slice(i * 7, i * 7 + 7));
 
   return (
-    <div className="relative rounded-2xl border-[1.5px] border-primary bg-muted/40 px-3 py-2.5">
+    <div className="relative rounded-xl border border-black/8 bg-white px-4 py-4 shadow-sm dark:border-white/8 dark:bg-zinc-900">
       {/* Header */}
-      <div className="mb-1 flex items-center justify-between px-1">
+      <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
           onClick={openPicker}
-          className="flex items-center gap-1 text-[15px] font-bold text-primary"
+          className="flex items-center gap-1 text-[15px] font-bold tracking-tight"
           aria-label={`Open month and year picker, currently ${MONTH_NAMES[month - 1]} ${year}`}>
           {MONTH_NAMES[month - 1]} {year}
-          <ChevronDown size={14} className={`transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown size={14} className={`text-muted-foreground transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
         </button>
-        <div className="flex gap-1">
-          <button type="button" onClick={() => onMonthChange(-1)} aria-label="Previous month" className="rounded-full p-1.5 text-foreground hover:bg-primary/10">
-            <ChevronLeft size={17} />
+        <div className="flex gap-0.5">
+          <button type="button" onClick={() => onMonthChange(-1)} aria-label="Previous month" className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+            <ChevronLeft size={16} />
           </button>
-          <button type="button" onClick={() => onMonthChange(1)} aria-label="Next month" className="rounded-full p-1.5 text-foreground hover:bg-primary/10">
-            <ChevronRight size={17} />
+          <button type="button" onClick={() => onMonthChange(1)} aria-label="Next month" className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+            <ChevronRight size={16} />
           </button>
         </div>
       </div>
 
       {/* Day-of-week headers */}
-      <div className="mb-0.5 grid grid-cols-7">
+      <div className="mb-1 grid grid-cols-7">
         {DAY_LABELS.map((l, i) => (
-          <div key={i} className="py-0.5 text-center text-[13px] font-bold text-primary">
+          <div key={i} className="py-0.5 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             {l}
           </div>
         ))}
@@ -131,15 +131,15 @@ export function DriveCalendar({
                 aria-label={cell.date}
                 aria-current={isSelected ? 'date' : undefined}>
                 <span
-                  className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full ${isSelected ? 'bg-primary' : isToday ? 'border-2 border-primary' : ''}`}>
+                  className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full transition-colors ${isSelected ? 'bg-primary' : isToday ? 'border border-primary' : 'hover:bg-muted'}`}>
                   <span
-                    className={`text-[15px] font-bold ${!cell.inMonth ? 'text-muted-foreground opacity-40' : isSelected ? 'text-primary-foreground' : isToday ? 'text-primary' : 'text-foreground'}`}>
+                    className={`text-[13px] font-semibold ${!cell.inMonth ? 'text-muted-foreground opacity-40' : isSelected ? 'text-primary-foreground' : isToday ? 'text-primary' : 'text-foreground'}`}>
                     {cell.day}
                   </span>
                   {eventColors.length > 0 ? (
                     <span className="absolute bottom-[3px] flex items-center justify-center gap-[2px]">
                       {eventColors.slice(0, 3).map((color, idx) => (
-                        <span key={idx} className="h-[3px] w-[5px] rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.75)' : color }} />
+                        <span key={idx} className="h-[3px] w-[3px] rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.75)' : color }} />
                       ))}
                     </span>
                   ) : null}
@@ -152,7 +152,7 @@ export function DriveCalendar({
 
       {/* Month/year picker overlay */}
       {pickerOpen ? (
-        <div className="absolute inset-0 z-10 flex items-start justify-center rounded-2xl bg-card/98 p-3 backdrop-blur-sm">
+        <div className="absolute inset-0 z-10 flex items-start justify-center rounded-xl border border-black/8 bg-white/98 p-3 backdrop-blur-sm dark:border-white/8 dark:bg-zinc-900/98">
           <div className="w-full max-w-xs">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-bold">Select Month &amp; Year</p>

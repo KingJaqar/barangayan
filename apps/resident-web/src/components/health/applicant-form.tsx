@@ -53,12 +53,19 @@ export function ApplicantForm({
   residentBirthDate,
   residentAddress,
   householdMembers,
+  onDone,
 }: {
   drive: MedicalDrive;
   residentName: string;
   residentBirthDate: string | null;
   residentAddress: string | null;
   householdMembers: HouseholdMember[];
+  /** Called instead of navigating to /health/my-registrations when the resident taps
+   * "Done" on the confirmation screen — passed by RegisterDrawer so a successful
+   * registration just closes the drawer and leaves the Active Drives list underneath in
+   * place, instead of routing away from it. Standalone /health/register/[driveId] page
+   * usage omits this and keeps the original navigate-away behavior. */
+  onDone?: () => void;
 }) {
   const router = useRouter();
   const { registerForDrive } = useMedicalDrives({ typeFilter: 'all', userId: null });
@@ -139,7 +146,7 @@ export function ApplicantForm({
         <p className="text-xs text-muted-foreground">
           Please arrive on time at {drive.location} on {fmtShortDate(drive.drive_date)} between {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}.
         </p>
-        <Button size="lg" className="w-full" onClick={() => router.push('/health/my-registrations')}>
+        <Button size="lg" className="w-full" onClick={() => (onDone ? onDone() : router.push('/health/my-registrations'))}>
           Done
         </Button>
       </div>

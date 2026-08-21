@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { Calendar, CheckCircle2, MailOpen, MailX, ChevronRight } from 'lucide-react';
 
 import { incidentStatusMeta } from '@/constants/incident-status';
@@ -12,8 +11,9 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-/** Compact incident row — tapping opens `/reports/[incidentId]`. */
-export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
+/** Compact incident row — tapping opens the IncidentDrawer (right-side sliding panel)
+ * via `onSelect` instead of navigating away, so the reports list stays behind it. */
+export function IncidentCard({ incident, selected, onSelect }: { incident: MyIncidentRow; selected: boolean; onSelect: (id: string) => void }) {
   const { markIncidentRead, markIncidentUnread } = useUnreadCounts();
   const meta = incidentStatusMeta(incident.status);
 
@@ -24,9 +24,23 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
   const isUnread = isResolved && !incident.resolved_read_at;
 
   return (
-    <Link
-      href={`/reports/${incident.id}`}
-      className="group flex items-center gap-3 rounded-xl border border-black/8 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-white/8 dark:bg-zinc-900">
+    // A native <button> can't nest the mark-read/mark-unread buttons below, so this is a
+    // div with button semantics — same tradeoff as services/requests uses a real <button>
+    // because that card has no nested interactive children.
+    <div
+      role="button"
+      tabIndex={0}
+      aria-current={selected ? 'true' : undefined}
+      onClick={() => onSelect(incident.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(incident.id);
+        }
+      }}
+      className={`group flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-zinc-900 ${
+        selected ? 'border-[var(--accent)]' : 'border-black/8 dark:border-white/8'
+      }`}>
       {/* Thumbnail — only when the report has at least one photo */}
       {firstPhoto && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -77,6 +91,7 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
               aria-label="Mark as read"
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 void markIncidentRead(incident.id);
               }}
               className={`flex size-6 items-center justify-center rounded-full transition-colors ${!isUnread ? 'bg-[var(--accent)]/12 text-[var(--accent)]' : 'text-muted-foreground hover:bg-muted'}`}>
@@ -87,6 +102,7 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
               aria-label="Mark as unread"
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 void markIncidentUnread(incident.id);
               }}
               className={`flex size-6 items-center justify-center rounded-full transition-colors ${isUnread ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'text-muted-foreground hover:bg-muted'}`}>
@@ -97,6 +113,6 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
       </div>
 
       <ChevronRight size={15} className="flex-shrink-0 text-muted-foreground/40 transition-transform group-hover:translate-x-0.5" />
-    </Link>
+    </div>
   );
 }

@@ -7,7 +7,7 @@ import { HealthSegmentNav } from '@/components/health/health-segment-nav';
  */
 export default function HealthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-5xl">
       <HealthSegmentNav />
       {children}
     </div>
