@@ -2,24 +2,23 @@ import { FAQ_CATEGORY_META, type FaqCategory } from '@barangayan/shared';
 import { HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 
-import { requireUser } from '@/lib/auth/require-user';
+import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export const metadata = { title: 'Help Article' };
 
+/** Guest-accessible (getOptionalUser(), not requireUser()) — mirrors help/page.tsx.
+ * Guests have no barangay_id to scope by, so the query goes unscoped by id alone
+ * (faq_articles' anon read policy has no barangay filter either), same convention as
+ * use-faq-articles.ts. */
 export default async function HelpArticlePage({ params }: { params: Promise<{ articleId: string }> }) {
   const { articleId } = await params;
-  const { profile } = await requireUser();
+  const { profile } = await getOptionalUser();
 
   const supabase = await createSupabaseServerClient();
-  const { data: article } = await supabase
-    .from('faq_articles')
-    .select('*')
-    .eq('id', articleId)
-    .eq('barangay_id', profile.barangay_id)
-    .eq('is_active', true)
-    .is('deleted_at', null)
-    .maybeSingle();
+  let query = supabase.from('faq_articles').select('*').eq('id', articleId).eq('is_active', true).is('deleted_at', null);
+  if (profile) query = query.eq('barangay_id', profile.barangay_id);
+  const { data: article } = await query.maybeSingle();
 
   const category = article ? (article.category as FaqCategory) : null;
   const meta = category ? FAQ_CATEGORY_META[category] : null;

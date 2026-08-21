@@ -26,8 +26,18 @@ interface RequestRow {
   document_types: { name: string; processing_target_hours: number } | null;
 }
 
-export function RequestsList({ requests, emptyMessage }: { requests: RequestRow[]; emptyMessage: string }) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+export function RequestsList({
+  requests,
+  emptyMessage,
+  initialSelectedId = null,
+}: {
+  requests: RequestRow[];
+  emptyMessage: string;
+  /** Opens straight to this request's drawer on mount — set from the ?open= query param
+   * the document-request modal's post-payment buttons land here with. */
+  initialSelectedId?: string | null;
+}) {
+  const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
   const drawerOpen = selectedId !== null;
 
   if (requests.length === 0) {
@@ -54,9 +64,17 @@ export function RequestsList({ requests, emptyMessage }: { requests: RequestRow[
               type="button"
               onClick={() => setSelectedId(r.id)}
               aria-current={active ? 'true' : undefined}
-              className={`flex items-center justify-between gap-3 rounded-xl border bg-card p-3.5 text-left transition-colors ${
-                active ? 'border-primary' : 'border-border hover:border-primary/40'
+              // Stronger than a border tint alone — this card's content is what's showing
+              // in the drawer right now, so it needs to read as clearly "open", not just
+              // "selected", against the rest of the list.
+              className={`relative flex items-center justify-between gap-3 rounded-xl border-2 bg-card p-3.5 text-left transition-colors ${
+                active ? 'border-primary bg-primary/5 ring-2 ring-primary/15' : 'border-border hover:border-primary/40'
               }`}>
+              {active ? (
+                <span className="absolute -top-2 left-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground shadow-sm">
+                  Viewing
+                </span>
+              ) : null}
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold">{r.document_types?.name ?? 'Document Request'}</p>
                 <p className="text-xs text-muted-foreground">

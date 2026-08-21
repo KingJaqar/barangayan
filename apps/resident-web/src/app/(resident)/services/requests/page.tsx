@@ -29,10 +29,15 @@ function matchesTab(status: string, tab: TabKey): boolean {
  * tab keeps each filter state a shareable, back-button-friendly URL — the same
  * route-per-segment reasoning ServicesSegmentNav/EmergencySegmentNav already use one
  * level up.
+ *
+ * `open` is a third, unlisted query param: the document-request modal's post-payment
+ * buttons land here as `?open=<requestId>` instead of the standalone
+ * /services/requests/[requestId] route, so the resident sees this request's tracking
+ * drawer open over the full list rather than a bare detail page.
  */
-export default async function RequestsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+export default async function RequestsPage({ searchParams }: { searchParams: Promise<{ tab?: string; open?: string }> }) {
   const { user } = await requireUser();
-  const { tab: tabParam } = await searchParams;
+  const { tab: tabParam, open: openParam } = await searchParams;
   const activeTab: TabKey = TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : 'all';
 
   const supabase = await createSupabaseServerClient();
@@ -74,6 +79,7 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
       <RequestsList
         requests={filtered}
         emptyMessage={activeTab === 'all' ? "You haven't submitted any requests yet." : 'No requests in this category.'}
+        initialSelectedId={openParam ?? null}
       />
       {filtered.length === 0 ? (
         <Link href="/services/documents" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">

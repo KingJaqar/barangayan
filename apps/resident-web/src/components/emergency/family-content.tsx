@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { EmergencyAuthGate } from '@/components/emergency/emergency-auth-gate';
+import { AuthGate } from '@/components/shared/auth-gate';
 import { FamilyMemberDialog } from '@/components/emergency/family-member-dialog';
 import { HouseholdQrDialog } from '@/components/emergency/household-qr-dialog';
 import { useFamilyMembers, type HouseholdMember } from '@/hooks/use-family-members';
@@ -28,7 +28,7 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
 
   if (!profileId) {
     return (
-      <EmergencyAuthGate
+      <AuthGate
         title="Log In to Manage Your Household"
         description="Your family roster and QR check-in codes are tied to your account. Log in or create one to add family members."
         next="/emergency/family"

@@ -26,7 +26,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
  * list — full parity with mobile's index.tsx layout (Calendar -> Filter Drives ->
  * Selected Date -> drive cards for that day).
  */
-export function ActiveDrivesContent({ userId }: { userId: string }) {
+export function ActiveDrivesContent({ userId }: { userId: string | null }) {
   const today = localToday();
   const [selectedDate, setSelectedDate] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(() => {
@@ -143,6 +143,7 @@ export function ActiveDrivesContent({ userId }: { userId: string }) {
                   key={drive.id}
                   drive={drive}
                   isRegistered={registeredDriveIds.has(drive.id)}
+                  canRegister={userId !== null}
                   onRegister={() => setSelectedDriveId(drive.id)}
                 />
               ))}

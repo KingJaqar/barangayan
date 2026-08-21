@@ -73,7 +73,7 @@ function PolicySection({
   );
 }
 
-export function TermsPrivacyClient({ barangayId }: { barangayId: string }) {
+export function TermsPrivacyClient({ barangayId }: { barangayId: string | null }) {
   const { items, isLoading } = useSiteContent(barangayId);
 
   const terms = items.find((i) => i.section === 'terms_of_service');

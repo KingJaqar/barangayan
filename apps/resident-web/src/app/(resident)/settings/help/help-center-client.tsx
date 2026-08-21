@@ -69,7 +69,7 @@ function SkeletonCard() {
   );
 }
 
-export function HelpCenterClient({ barangayId }: { barangayId: string }) {
+export function HelpCenterClient({ barangayId }: { barangayId: string | null }) {
   const { articles, isLoading, error, refetch } = useFaqArticles(barangayId);
   const [category, setCategory] = useState<CategoryFilter>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);

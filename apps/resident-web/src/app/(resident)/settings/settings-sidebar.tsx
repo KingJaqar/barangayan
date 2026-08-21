@@ -8,6 +8,7 @@ import {
   HelpCircle,
   Info,
   KeyRound,
+  LogIn,
   LogOut,
   Palette,
   Trash2,
@@ -16,6 +17,8 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+
+import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 
 interface NavItem {
   href: string;
@@ -27,6 +30,11 @@ interface NavItem {
 interface NavGroup {
   title: string;
   items: NavItem[];
+  /** Account/Privacy & Data groups need a real session underneath (profile row,
+   * password, exportable data) — hidden entirely for guests, same "don't show a
+   * reachable-but-gated control" call ServicesSegmentNav makes for Requests/Logs.
+   * Preferences and About need nothing but public/local data, so guests keep both. */
+  guestAccessible: boolean;
 }
 
 // Grouped the same way the original mobile-style settings page grouped its sections
@@ -35,6 +43,7 @@ interface NavGroup {
 const NAV_GROUPS: NavGroup[] = [
   {
     title: 'Account',
+    guestAccessible: false,
     items: [
       { href: '/settings/profile', icon: User, label: 'Profile' },
       { href: '/settings/change-password', icon: KeyRound, label: 'Change Password' },
@@ -43,10 +52,12 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     title: 'Preferences',
+    guestAccessible: true,
     items: [{ href: '/settings/theme', icon: Palette, label: 'Theme & Appearance' }],
   },
   {
     title: 'Privacy & Data',
+    guestAccessible: false,
     items: [
       { href: '/settings/download-data', icon: Download, label: 'Download My Data' },
       { href: '/settings/delete-account', icon: Trash2, label: 'Delete My Account', destructive: true },
@@ -54,6 +65,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     title: 'About',
+    guestAccessible: true,
     items: [
       { href: '/settings/help', icon: HelpCircle, label: 'Help Center' },
       { href: '/settings/terms-privacy', icon: FileText, label: 'Terms & Privacy Policy' },
@@ -67,6 +79,9 @@ interface SettingsSidebarProps {
   logoutAction: () => void | Promise<void>;
   /** Drives the green-check/yellow-! badge on the Profile row (email_verification_status === 'verified'). */
   emailVerified: boolean;
+  /** Hides the Account/Privacy & Data groups and swaps the footer's "Log out" row for
+   * Log In / Sign Up links — there's no session to sign out of. */
+  isAuthenticated: boolean;
 }
 
 /**
@@ -82,15 +97,17 @@ interface SettingsSidebarProps {
  * independent scroll region. Below `lg` there's no room for a fixed 285px column,
  * so it collapses to an icon-only horizontal strip instead.
  */
-export function SettingsSidebar({ logoutAction, emailVerified }: SettingsSidebarProps) {
+export function SettingsSidebar({ logoutAction, emailVerified, isAuthenticated }: SettingsSidebarProps) {
   const pathname = usePathname();
+  const resetPreferences = useResetPreferencesOnLogout();
+  const visibleGroups = isAuthenticated ? NAV_GROUPS : NAV_GROUPS.filter((g) => g.guestAccessible);
 
   return (
     <aside aria-label="Settings" className="shrink-0 lg:w-[285px]">
       <div
         className="flex gap-1 overflow-x-auto rounded-2xl border border-[#e5e7eb] bg-white p-2 dark:border-zinc-800 dark:bg-zinc-950 lg:sticky lg:top-6 lg:flex-col lg:gap-[16px] lg:overflow-visible lg:p-[13px] lg:py-[26px]">
         <nav className="flex gap-1 lg:contents" aria-label="Settings">
-          {NAV_GROUPS.map((group) => (
+          {visibleGroups.map((group) => (
             <div key={group.title} className="contents lg:flex lg:flex-col lg:gap-[6px]">
               <p className="hidden px-[6px] text-[13px] font-medium leading-5 text-[#1d2635] lg:block dark:text-zinc-300">
                 {group.title}
@@ -118,14 +135,28 @@ export function SettingsSidebar({ logoutAction, emailVerified }: SettingsSidebar
         <div className="my-1 hidden h-px shrink-0 bg-[#e5e7eb] lg:block dark:bg-zinc-800" />
 
         <InfoRow icon={BookOpen} label="App Version" value="1.0.0" />
-        <form action={logoutAction} className="contents">
-          <button
-            type="submit"
-            className="flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl px-[13px] text-left text-[13px] font-bold text-[#df2d2d] transition-colors hover:bg-red-50 dark:hover:bg-red-950/30">
-            <LogOut className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
-            <span className="hidden lg:inline">Log out</span>
-          </button>
-        </form>
+        {isAuthenticated ? (
+          <form action={logoutAction} className="contents">
+            <button
+              type="submit"
+              // Clears theme/accent/font before the form's server action signs the
+              // resident out — see use-reset-preferences.ts's doc comment for why
+              // (otherwise guest mode inherits this resident's appearance). Runs
+              // synchronously on click, ahead of the form's own navigation.
+              onClick={() => resetPreferences()}
+              className="flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl px-[13px] text-left text-[13px] font-bold text-[#df2d2d] transition-colors hover:bg-red-50 dark:hover:bg-red-950/30">
+              <LogOut className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+              <span className="hidden lg:inline">Log out</span>
+            </button>
+          </form>
+        ) : (
+          <Link
+            href="/login"
+            className="flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl bg-[var(--accent)] px-[13px] text-[13px] font-bold text-white shadow-[0_1px_2px_var(--accent-shadow)] transition-opacity hover:opacity-90">
+            <LogIn className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+            <span className="hidden lg:inline">Log In</span>
+          </Link>
+        )}
       </div>
     </aside>
   );

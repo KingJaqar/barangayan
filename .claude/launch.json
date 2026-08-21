@@ -2,11 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "resident-web",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/resident-web"],
-      "port": 3000,
-      "autoPort": true
+      "name": "resident-android-mobile",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["expo", "start", "--web", "--port", "8082"],
+      "port": 8082
     }
   ]
 }

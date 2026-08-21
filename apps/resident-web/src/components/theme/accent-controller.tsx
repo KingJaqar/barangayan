@@ -46,6 +46,9 @@ interface AccentControllerValue {
    * invalid, already saved, or the list is already at MAX_CUSTOM_COLORS. */
   addCustomColor: (color: string) => boolean;
   removeCustomColor: (color: string) => void;
+  /** Forgets the saved accent + custom colors and reverts to DEFAULT_ACCENT — called on
+   * logout (see use-reset-preferences.ts), mirrors theme-controller.tsx's resetTheme(). */
+  resetAccent: () => void;
 }
 
 const AccentControllerContext = createContext<AccentControllerValue | null>(null);
@@ -167,9 +170,21 @@ export function AccentControllerProvider({ children }: { children: ReactNode }) 
     });
   }, []);
 
+  const resetAccent = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(CUSTOM_STORAGE_KEY);
+    } catch {
+      // Private browsing / storage disabled — nothing to remove.
+    }
+    setAccentState(DEFAULT_ACCENT);
+    setCustomColorsState([]);
+    applyAccentVar(DEFAULT_ACCENT);
+  }, []);
+
   return (
     <AccentControllerContext.Provider
-      value={{ accent, setAccent, customColors, setCustomColors, addCustomColor, removeCustomColor }}>
+      value={{ accent, setAccent, customColors, setCustomColors, addCustomColor, removeCustomColor, resetAccent }}>
       {children}
     </AccentControllerContext.Provider>
   );

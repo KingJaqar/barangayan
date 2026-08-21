@@ -16,11 +16,13 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 import { toEdgeFunctionError } from '@/lib/edge-function-error';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export function DeleteAccountForm({ email }: { email: string }) {
   const router = useRouter();
+  const resetPreferences = useResetPreferencesOnLogout();
   const [step, setStep] = useState<'confirm' | 'password'>('confirm');
   const [acknowledged, setAcknowledged] = useState(false);
   const [password, setPassword] = useState('');
@@ -58,6 +60,9 @@ export function DeleteAccountForm({ email }: { email: string }) {
       const { error: fnError } = await supabase.functions.invoke('delete-my-account');
       if (fnError) throw await toEdgeFunctionError(fnError);
 
+      // Clear theme/accent/font before signing out — see use-reset-preferences.ts's doc
+      // comment for why (otherwise guest mode inherits this now-deleted account's look).
+      resetPreferences();
       await supabase.auth.signOut();
       toast.success('Your account has been deleted.');
       router.push('/login');

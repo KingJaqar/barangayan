@@ -12,6 +12,9 @@ interface FontControllerValue {
    * Phase 7's theme-form.tsx additionally persists to profiles.font_preference for
    * cross-device sync. */
   setFontId: (id: string) => void;
+  /** Forgets the saved font and reverts to DEFAULT_FONT_ID — called on logout (see
+   * use-reset-preferences.ts), mirrors theme-controller.tsx's resetTheme(). */
+  resetFont: () => void;
 }
 
 const FontControllerContext = createContext<FontControllerValue | null>(null);
@@ -82,7 +85,17 @@ export function FontControllerProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <FontControllerContext.Provider value={{ fontId, setFontId }}>{children}</FontControllerContext.Provider>;
+  const resetFont = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Private browsing / storage disabled — nothing to remove.
+    }
+    setFontIdState(DEFAULT_FONT_ID);
+    applyFontVar(DEFAULT_FONT_ID);
+  }, []);
+
+  return <FontControllerContext.Provider value={{ fontId, setFontId, resetFont }}>{children}</FontControllerContext.Provider>;
 }
 
 export function useFontController(): FontControllerValue {

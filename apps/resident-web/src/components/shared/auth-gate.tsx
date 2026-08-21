@@ -4,12 +4,16 @@ import { LockKeyhole } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 /**
- * Inline "sign in required" empty-state for Scan/Family — shown in place of the real
- * content when a guest lands here, instead of requireUser() bouncing them straight to
- * /login. Keeps the guest on this route (nav + shell still visible) and lets them opt
- * into logging in rather than being force-navigated away.
+ * Inline "sign in required" empty-state for personal-only screens — shown in place of
+ * the real content when a guest lands here, instead of requireUser() bouncing them
+ * straight to /login. Keeps the guest on this route (nav + shell still visible) and
+ * lets them opt into logging in rather than being force-navigated away.
+ *
+ * Originally emergency-only (Scan/Family — see emergency/scan/page.tsx's doc comment)
+ * and generalized from there; now shared by every gated-but-informational screen
+ * (Health's My Registrations, Reports, Settings' account-only pages).
  */
-export function EmergencyAuthGate({ title, description, next }: { title: string; description: string; next: string }) {
+export function AuthGate({ title, description, next }: { title: string; description: string; next: string }) {
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-card px-6 py-14 text-center">
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">

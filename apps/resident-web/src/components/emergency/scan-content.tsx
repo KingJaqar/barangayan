@@ -4,7 +4,7 @@ import { CheckSquare, QrCode } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { EmergencyAuthGate } from '@/components/emergency/emergency-auth-gate';
+import { AuthGate } from '@/components/shared/auth-gate';
 import { QrScannerDialog } from '@/components/emergency/qr-scanner-dialog';
 import { QrShowDialog } from '@/components/emergency/qr-show-dialog';
 import { QrUploadFallback } from '@/components/emergency/qr-upload-fallback';
@@ -23,7 +23,7 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
 
   if (!userId || !barangayId) {
     return (
-      <EmergencyAuthGate
+      <AuthGate
         title="Log In to Use QR Check-In"
         description="QR check-in registers your presence at an evacuation center, so it needs a real account. Log in or create one to scan or show your QR code."
         next="/emergency/scan"

@@ -29,6 +29,12 @@ interface ThemeControllerValue {
    * without a flash of the wrong theme. Phase 7's theme-form.tsx additionally persists
    * to profiles.theme_preference for cross-device sync. */
   setTheme: (theme: ResolvedTheme) => void;
+  /** Forgets the saved choice and reverts to the OS/browser preference, as if this
+   * browser had never picked a theme — called on logout (see use-reset-preferences.ts)
+   * so a signed-out browser never keeps showing the *previous* resident's theme.
+   * localStorage is origin-wide, not per-account, so without this a guest session right
+   * after logout would otherwise inherit whatever the last resident chose. */
+  resetTheme: () => void;
 }
 
 const ThemeControllerContext = createContext<ThemeControllerValue | null>(null);
@@ -86,7 +92,18 @@ export function ThemeControllerProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <ThemeControllerContext.Provider value={{ theme, setTheme }}>{children}</ThemeControllerContext.Provider>;
+  const resetTheme = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Private browsing / storage disabled — nothing to remove.
+    }
+    const osTheme: ResolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    setThemeState(osTheme);
+    applyThemeClass(osTheme);
+  }, []);
+
+  return <ThemeControllerContext.Provider value={{ theme, setTheme, resetTheme }}>{children}</ThemeControllerContext.Provider>;
 }
 
 export function useThemeController(): ThemeControllerValue {

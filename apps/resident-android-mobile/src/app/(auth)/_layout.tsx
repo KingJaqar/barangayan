@@ -10,6 +10,10 @@ export default function AuthLayout() {
       <Stack.Screen name="value-prop" options={{ headerShown: false }} />
       <Stack.Screen name="personalization" options={{ headerShown: false }} />
       <Stack.Screen name="auth-choice" options={{ headerShown: false }} />
+      {/* login/register render their own AuthHeader (green bar + back chevron) —
+          the native Stack header would otherwise stack a second header above it. */}
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="register" options={{ headerShown: false }} />
     </Stack>
   );
 }

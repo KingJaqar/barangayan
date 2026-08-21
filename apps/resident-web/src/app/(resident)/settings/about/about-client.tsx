@@ -57,7 +57,7 @@ function SectionSkeleton() {
   );
 }
 
-export function AboutClient({ barangayId }: { barangayId: string }) {
+export function AboutClient({ barangayId }: { barangayId: string | null }) {
   const { about, developers, isLoading } = useAboutUs(barangayId);
 
   if (isLoading) {

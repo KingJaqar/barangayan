@@ -1,4 +1,5 @@
 import { CalendarDays, CheckCircle2, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 import { driveTypeConfig, type MedicalDrive } from '@/hooks/use-medical-drives';
 
@@ -17,8 +18,21 @@ function fmt12h(t: string): string {
 
 /** One active/upcoming medical drive — styled to match the reports IncidentCard's web
  * card language (soft border, shadow-sm -> shadow-md on hover) instead of mobile's
- * heavier rounded-2xl/border-only look. */
-export function DriveCard({ drive, isRegistered, onRegister }: { drive: MedicalDrive; isRegistered: boolean; onRegister: () => void }) {
+ * heavier rounded-2xl/border-only look. `canRegister` is false for guests — registering
+ * needs a real account (drive_registrations has no anon insert policy), so their CTA
+ * reads "Log In to Register" and links out instead of opening RegisterDrawer, same
+ * "Log In to Request" branch as the Documents catalog's DetailsStep. */
+export function DriveCard({
+  drive,
+  isRegistered,
+  canRegister,
+  onRegister,
+}: {
+  drive: MedicalDrive;
+  isRegistered: boolean;
+  canRegister: boolean;
+  onRegister: () => void;
+}) {
   const cfg = driveTypeConfig(drive.type);
   const fraction = drive.stock_total > 0 ? drive.stock_remaining / drive.stock_total : 0;
   const isFull = drive.stock_remaining <= 0;
@@ -59,6 +73,12 @@ export function DriveCard({ drive, isRegistered, onRegister }: { drive: MedicalD
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary">
             <CheckCircle2 size={13} /> Registered
           </span>
+        ) : !canRegister && !isFull ? (
+          <Link
+            href="/login?next=/health"
+            className="shrink-0 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90">
+            Log In to Register
+          </Link>
         ) : (
           <button
             type="button"

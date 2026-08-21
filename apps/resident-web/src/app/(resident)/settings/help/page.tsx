@@ -1,10 +1,13 @@
-import { requireUser } from '@/lib/auth/require-user';
+import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { HelpCenterClient } from './help-center-client';
 
 export const metadata = { title: 'Help Center' };
 
+/** Guest-accessible (getOptionalUser(), not requireUser()) — faq_articles has an anon
+ * read policy (see the migration granting guest read access on faq_articles), so a
+ * guest can browse the same FAQ a resident sees, no account needed. */
 export default async function HelpCenterPage() {
-  const { profile } = await requireUser();
+  const { profile } = await getOptionalUser();
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-5">
@@ -14,7 +17,7 @@ export default async function HelpCenterPage() {
           Answers to common questions about Barangayan and your barangay&apos;s services.
         </p>
       </div>
-      <HelpCenterClient barangayId={profile.barangay_id} />
+      <HelpCenterClient barangayId={profile?.barangay_id ?? null} />
     </div>
   );
 }

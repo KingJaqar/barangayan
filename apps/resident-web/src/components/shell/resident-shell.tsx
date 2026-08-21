@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 
 import { BottomTabBar } from '@/components/shell/bottom-tab-bar';
 import { TopNav } from '@/components/shell/top-nav';
+import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface ResidentShellProps {
@@ -28,8 +29,12 @@ interface ResidentShellProps {
  */
 export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthenticated, children }: ResidentShellProps) {
   const router = useRouter();
+  const resetPreferences = useResetPreferencesOnLogout();
 
   async function handleLogout() {
+    // Clear theme/accent/font before signing out — see use-reset-preferences.ts's doc
+    // comment for why (otherwise guest mode inherits this resident's appearance).
+    resetPreferences();
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
     router.replace('/login');

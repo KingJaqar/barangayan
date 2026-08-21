@@ -12,6 +12,11 @@ export type DeveloperProfile = Tables<'developer_profiles'>;
 /**
  * Web port of apps/resident-android-mobile/src/hooks/use-about-us.ts.
  * Fetches the barangay's About Us content and developer profiles.
+ *
+ * `barangayId` is null for guests — about_us/developer_profiles both have an anon read
+ * policy with no barangay filter (0059 migration's "guests read active about_us"/
+ * "...developer_profiles"), same convention as use-emergency-guidelines.ts: the query
+ * just goes unscoped rather than skipping entirely.
  */
 export function useAboutUs(barangayId: string | null): {
   about: AboutUs | null;
@@ -26,25 +31,14 @@ export function useAboutUs(barangayId: string | null): {
   const [error, setError] = useState<string | null>(null);
 
   const doFetch = useCallback(() => {
-    if (!barangayId) {
-      Promise.resolve().then(() => {
-        setAbout(null);
-        setDevelopers([]);
-        setIsLoading(false);
-      });
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     const supabase = createSupabaseBrowserClient();
-    supabase
-      .from('about_us')
-      .select('*')
-      .eq('barangay_id', barangayId)
-      .eq('is_active', true)
-      .is('deleted_at', null)
+    let query = supabase.from('about_us').select('*').eq('is_active', true).is('deleted_at', null);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+
+    query
       .maybeSingle()
       .then(async ({ data: aboutRow, error: aboutErr }) => {
         if (aboutErr) {

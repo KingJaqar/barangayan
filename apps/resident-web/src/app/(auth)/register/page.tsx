@@ -88,9 +88,7 @@ export default function RegisterPage() {
               priority
               className="h-20 w-20 object-contain lg:hidden"
             />
-            <Link href="/login" className="ml-auto text-sm text-muted-foreground">
-              Already have an account? <span className="font-medium text-primary hover:underline">Log in</span>
-            </Link>
+          
           </div>
 
           <RegisterForm />

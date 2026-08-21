@@ -56,7 +56,11 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
     }
   }
 
-  const selectedCenter = centers.find((c) => c.id === selectedCenterId) ?? null;
+  function handleShowAll() {
+    setSelectedCenterId(null);
+    setRoutePoints(null);
+    setRouteMeta(null);
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -96,31 +100,17 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
       ) : centers.length === 0 ? (
         <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">No evacuation centers found.</p>
       ) : view === 'map' ? (
-        <div className="flex flex-col gap-3">
-          <CentersMapClient
-            centers={centers}
-            userPosition={userPosition}
-            onUserPositionChange={setUserPosition}
-            selectedCenterId={selectedCenterId}
-            onSelectCenter={selectCenter}
-            routePoints={routePoints}
-            boundary={boundary}
-          />
-          {selectedCenter ? (
-            <div className="rounded-2xl border border-border bg-card p-3 text-sm">
-              <p className="font-semibold">{selectedCenter.name}</p>
-              {routeMeta ? (
-                <p className="text-xs text-muted-foreground">
-                  {(routeMeta.distanceMeters / 1000).toFixed(1)} km · ~{Math.round(routeMeta.durationSeconds / 60)} min walking (road route)
-                </p>
-              ) : userPosition ? (
-                <p className="text-xs text-muted-foreground">Fetching walking route…</p>
-              ) : (
-                <p className="text-xs text-muted-foreground">Enable location to see a walking route.</p>
-              )}
-            </div>
-          ) : null}
-        </div>
+        <CentersMapClient
+          centers={centers}
+          userPosition={userPosition}
+          onUserPositionChange={setUserPosition}
+          selectedCenterId={selectedCenterId}
+          onSelectCenter={selectCenter}
+          onShowAll={handleShowAll}
+          routePoints={routePoints}
+          routeMeta={routeMeta}
+          boundary={boundary}
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {centers.map((center) => (

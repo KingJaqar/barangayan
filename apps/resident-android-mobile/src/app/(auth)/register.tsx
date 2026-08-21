@@ -12,14 +12,14 @@ import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Polygon, MultiPolygon } from 'geojson';
 
+import { AuthHeader } from '@/components/auth-header';
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -40,6 +40,48 @@ function fmtDate(iso: string | null): string {
   if (!iso) return '';
   return isoToLocalDate(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
+
+/**
+ * Section card wrapper — same shape as Settings > Profile's SectionCard (rounded,
+ * bordered, backgroundElement fill) with an icon + title header, used to break the
+ * long registration form into scannable groups instead of one flat field list.
+ */
+function FormSection({
+  icon,
+  title,
+  children,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  children: React.ReactNode;
+}) {
+  const theme = useTheme();
+  return (
+    <View style={[sectionStyles.card, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+      <View style={sectionStyles.titleRow}>
+        <Ionicons name={icon} size={16} color={theme.primary} />
+        <ThemedText style={sectionStyles.title}>{title}</ThemedText>
+      </View>
+      <View style={sectionStyles.body}>{children}</View>
+    </View>
+  );
+}
+
+const sectionStyles = StyleSheet.create({
+  card: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: Spacing.three,
+    gap: Spacing.three,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  title: { fontSize: 14, fontWeight: '700' },
+  body: { gap: Spacing.three },
+});
 
 /**
  * Wrapping row of selectable chips for the Sex / Employment Status fields — neither
@@ -71,7 +113,7 @@ function ChoiceChips<T extends string>({
             style={[
               styles.chip,
               {
-                backgroundColor: isActive ? theme.primary : theme.backgroundElement,
+                backgroundColor: isActive ? theme.primary : theme.background,
                 borderColor: isActive ? theme.primary : theme.backgroundSelected,
               },
             ]}>
@@ -91,6 +133,7 @@ function ChoiceChips<T extends string>({
 export default function RegisterScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const { setRegistering } = useAuth();
 
   // Full Name split into structured parts (Register/Profile field-split) — see
@@ -310,189 +353,199 @@ export default function RegisterScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <Modal
-        transparent
-        visible={showSuccessModal}
-        animationType="fade"
-        statusBarTranslucent
-        onRequestClose={dismissSuccessModal}>
-        <View style={styles.successModalBackdrop}>
-          <ThemedView type="backgroundElement" style={styles.successModalCard}>
-            <View style={[styles.successIcon, { backgroundColor: `${theme.primary}20` }]}>
-              <Ionicons name="checkmark" size={30} color={theme.primary} />
-            </View>
-            <ThemedText type="title" style={styles.successModalTitle}>
-              Account Created Successfully
-            </ThemedText>
-            <ThemedText type="small" themeColor="textSecondary" style={styles.successModalMessage}>
-              Your account is ready. Log in to continue to Barangayan.
-            </ThemedText>
-            <View style={styles.successModalActions}>
-              <View style={styles.successModalActionButton}>
-                <PrimaryButton label="OK" variant="secondary" onPress={dismissSuccessModal} />
-              </View>
-              <View style={styles.successModalActionButton}>
-                <PrimaryButton label="Proceed to Login" onPress={goToLogin} />
-              </View>
-            </View>
-          </ThemedView>
-        </View>
-      </Modal>
-      <ScrollView contentContainerStyle={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Create Account
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">
-          Please fill in your details to get started.
-        </ThemedText>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
+      <View style={[styles.root, { backgroundColor: theme.background }]}>
+        <AuthHeader title="Create Account" onBack={() => router.replace('/(auth)/auth-choice')} />
 
-        <View style={styles.form}>
-          <View style={styles.fieldPairRow}>
-            <View style={styles.fieldPairItem}>
-              <TextField label="First Name" value={firstName} onChangeText={setFirstName} error={fieldErrors.firstName} />
-            </View>
-            <View style={styles.fieldPairItem}>
-              <TextField label="Last Name" value={lastName} onChangeText={setLastName} error={fieldErrors.lastName} />
-            </View>
-          </View>
-          <View style={styles.fieldPairRow}>
-            <View style={styles.fieldPairItem}>
-              <TextField label="Middle Name (optional)" value={middleName} onChangeText={setMiddleName} />
-            </View>
-            <View style={styles.fieldPairItem}>
-              <TextField label="Suffix (optional)" value={suffix} onChangeText={setSuffix} />
-            </View>
-          </View>
-
-          <View style={styles.choiceField}>
-            <ThemedText type="small">Sex</ThemedText>
-            <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
-            {fieldErrors.sex ? (
-              <ThemedText type="small" themeColor="accentRed">
-                {fieldErrors.sex}
+        <Modal
+          transparent
+          visible={showSuccessModal}
+          animationType="fade"
+          statusBarTranslucent
+          onRequestClose={dismissSuccessModal}>
+          <View style={styles.successModalBackdrop}>
+            <View style={[styles.successModalCard, { backgroundColor: theme.backgroundElement }]}>
+              <View style={[styles.successIcon, { backgroundColor: `${theme.primary}20` }]}>
+                <Ionicons name="checkmark" size={30} color={theme.primary} />
+              </View>
+              <ThemedText type="title" style={styles.successModalTitle}>
+                Account Created Successfully
               </ThemedText>
+              <ThemedText type="small" themeColor="textSecondary" style={styles.successModalMessage}>
+                Your account is ready. Log in to continue to Barangayan.
+              </ThemedText>
+              <View style={styles.successModalActions}>
+                <View style={styles.successModalActionButton}>
+                  <PrimaryButton label="OK" variant="secondary" onPress={dismissSuccessModal} />
+                </View>
+                <View style={styles.successModalActionButton}>
+                  <PrimaryButton label="Proceed to Login" onPress={goToLogin} />
+                </View>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.five }]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          <ThemedText style={styles.introTitle}>Let&apos;s get you set up</ThemedText>
+          <ThemedText themeColor="textSecondary" style={styles.introSubtitle}>
+            Fill in your details below to register with your local barangay.
+          </ThemedText>
+
+          <FormSection icon="person-outline" title="Personal Information">
+            <View style={styles.fieldPairRow}>
+              <View style={styles.fieldPairItem}>
+                <TextField label="First Name" value={firstName} onChangeText={setFirstName} error={fieldErrors.firstName} />
+              </View>
+              <View style={styles.fieldPairItem}>
+                <TextField label="Last Name" value={lastName} onChangeText={setLastName} error={fieldErrors.lastName} />
+              </View>
+            </View>
+            <View style={styles.fieldPairRow}>
+              <View style={styles.fieldPairItem}>
+                <TextField label="Middle Name (optional)" value={middleName} onChangeText={setMiddleName} />
+              </View>
+              <View style={styles.fieldPairItem}>
+                <TextField label="Suffix (optional)" value={suffix} onChangeText={setSuffix} />
+              </View>
+            </View>
+
+            <View style={styles.choiceField}>
+              <ThemedText type="small">Sex</ThemedText>
+              <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
+              {fieldErrors.sex ? (
+                <ThemedText type="small" themeColor="accentRed">
+                  {fieldErrors.sex}
+                </ThemedText>
+              ) : null}
+            </View>
+
+            <View style={styles.birthdayField}>
+              <ThemedText type="small">Birthday</ThemedText>
+              <Pressable
+                onPress={() => setShowBirthPicker(true)}
+                accessibilityRole="button"
+                accessibilityLabel="Select birthday"
+                style={[
+                  styles.birthdayInput,
+                  { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
+                ]}>
+                <ThemedText style={birthDateIso ? undefined : { color: theme.textSecondary }}>
+                  {birthDateIso ? fmtDate(birthDateIso) : 'Select your birthday'}
+                </ThemedText>
+                <Ionicons name="calendar-outline" size={18} color={theme.textSecondary} />
+              </Pressable>
+              {fieldErrors.birthDate ? (
+                <ThemedText type="small" themeColor="accentRed">
+                  {fieldErrors.birthDate}
+                </ThemedText>
+              ) : null}
+            </View>
+          </FormSection>
+
+          <FormSection icon="call-outline" title="Contact & Address">
+            <TextField
+              label="Mobile Number"
+              keyboardType="phone-pad"
+              value={mobileNumber}
+              onChangeText={setMobileNumber}
+            />
+            <TextField
+              label="Email Address"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              error={fieldErrors.email}
+            />
+
+            <View style={styles.fieldPairRow}>
+              <View style={[styles.fieldPairItem, { flex: 1 }]}>
+                <TextField label="House No." value={houseNo} onChangeText={setHouseNo} error={fieldErrors.houseNo} />
+              </View>
+              <View style={[styles.fieldPairItem, { flex: 2 }]}>
+                <TextField label="Street" value={street} onChangeText={setStreet} error={fieldErrors.street} />
+              </View>
+            </View>
+            <TextField label="City" value={city} onChangeText={setCity} error={fieldErrors.city} />
+
+            <View style={[styles.barangayRow, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
+              <ThemedText type="small" themeColor="textSecondary">Barangay</ThemedText>
+              <ThemedText type="smallBold">{barangay?.name ?? 'Loading…'}</ThemedText>
+            </View>
+          </FormSection>
+
+          <FormSection icon="briefcase-outline" title="Employment">
+            <View style={styles.choiceField}>
+              <ThemedText type="small">Employment Status</ThemedText>
+              <ChoiceChips
+                options={EMPLOYMENT_STATUSES}
+                labels={EMPLOYMENT_STATUS_LABELS}
+                active={employmentStatus}
+                onChange={(next) => {
+                  setEmploymentStatus(next);
+                  if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
+                }}
+              />
+              {fieldErrors.employmentStatus ? (
+                <ThemedText type="small" themeColor="accentRed">
+                  {fieldErrors.employmentStatus}
+                </ThemedText>
+              ) : null}
+            </View>
+
+            {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
+              <TextField label="Occupation (optional)" value={occupation} onChangeText={setOccupation} />
             ) : null}
-          </View>
+          </FormSection>
 
-          <TextField
-            label="Mobile Number"
-            keyboardType="phone-pad"
-            value={mobileNumber}
-            onChangeText={setMobileNumber}
-          />
-          <TextField
-            label="Email Address"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            error={fieldErrors.email}
-          />
-
-          <View style={styles.fieldPairRow}>
-            <View style={[styles.fieldPairItem, { flex: 1 }]}>
-              <TextField label="House No." value={houseNo} onChangeText={setHouseNo} error={fieldErrors.houseNo} />
-            </View>
-            <View style={[styles.fieldPairItem, { flex: 2 }]}>
-              <TextField label="Street" value={street} onChangeText={setStreet} error={fieldErrors.street} />
-            </View>
-          </View>
-          <TextField label="City" value={city} onChangeText={setCity} error={fieldErrors.city} />
-
-          <ThemedView type="backgroundElement" style={styles.barangayRow}>
-            <ThemedText type="small">Barangay</ThemedText>
-            <ThemedText type="smallBold">{barangay?.name ?? 'Loading…'}</ThemedText>
-          </ThemedView>
-
-          <View style={styles.choiceField}>
-            <ThemedText type="small">Employment Status</ThemedText>
-            <ChoiceChips
-              options={EMPLOYMENT_STATUSES}
-              labels={EMPLOYMENT_STATUS_LABELS}
-              active={employmentStatus}
-              onChange={(next) => {
-                setEmploymentStatus(next);
-                if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
+          <FormSection icon="lock-closed-outline" title="Account Security">
+            <TextField
+              label="Password"
+              secureTextEntry={!isPasswordVisible}
+              value={password}
+              onChangeText={setPassword}
+              error={fieldErrors.password}
+              passwordVisibility={{
+                visible: isPasswordVisible,
+                onToggle: () => setIsPasswordVisible((visible) => !visible),
               }}
             />
-            {fieldErrors.employmentStatus ? (
-              <ThemedText type="small" themeColor="accentRed">
-                {fieldErrors.employmentStatus}
-              </ThemedText>
+            <TextField
+              label="Confirm Password"
+              secureTextEntry={!isConfirmPasswordVisible}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              error={confirmPasswordError}
+              passwordVisibility={{
+                visible: isConfirmPasswordVisible,
+                onToggle: () => setIsConfirmPasswordVisible((visible) => !visible),
+              }}
+            />
+            {hasEnteredBothPasswords ? (
+              <View accessibilityLiveRegion="polite" style={styles.passwordMatchIndicator}>
+                <Ionicons
+                  name={passwordsMatch ? 'checkmark-circle-outline' : 'alert-circle-outline'}
+                  size={16}
+                  color={passwordsMatch ? theme.primary : theme.accentRed}
+                />
+                <ThemedText
+                  type="small"
+                  style={{ color: passwordsMatch ? theme.primary : theme.accentRed }}>
+                  {passwordsMatch ? 'Passwords match' : "Passwords don't match"}
+                </ThemedText>
+              </View>
             ) : null}
-          </View>
-
-          {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
-            <TextField label="Occupation (optional)" value={occupation} onChangeText={setOccupation} />
-          ) : null}
-
-          <View style={styles.birthdayField}>
-            <ThemedText type="small">Birthday</ThemedText>
-            <Pressable
-              onPress={() => setShowBirthPicker(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Select birthday"
-              style={[
-                styles.birthdayInput,
-                { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
-              ]}>
-              <ThemedText style={birthDateIso ? undefined : { color: theme.textSecondary }}>
-                {birthDateIso ? fmtDate(birthDateIso) : 'Select your birthday'}
-              </ThemedText>
-              <Ionicons name="calendar-outline" size={18} color={theme.textSecondary} />
-            </Pressable>
-            {fieldErrors.birthDate ? (
-              <ThemedText type="small" themeColor="accentRed">
-                {fieldErrors.birthDate}
-              </ThemedText>
-            ) : null}
-          </View>
-          <TextField
-            label="Password"
-            secureTextEntry={!isPasswordVisible}
-            value={password}
-            onChangeText={setPassword}
-            error={fieldErrors.password}
-            passwordVisibility={{
-              visible: isPasswordVisible,
-              onToggle: () => setIsPasswordVisible((visible) => !visible),
-            }}
-          />
-          <TextField
-            label="Confirm Password"
-            secureTextEntry={!isConfirmPasswordVisible}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            error={confirmPasswordError}
-            passwordVisibility={{
-              visible: isConfirmPasswordVisible,
-              onToggle: () => setIsConfirmPasswordVisible((visible) => !visible),
-            }}
-          />
-          {hasEnteredBothPasswords ? (
-            <View
-              accessibilityLiveRegion="polite"
-              style={styles.passwordMatchIndicator}>
-              <Ionicons
-                name={passwordsMatch ? 'checkmark-circle-outline' : 'alert-circle-outline'}
-                size={16}
-                color={passwordsMatch ? theme.primary : theme.accentRed}
-              />
-              <ThemedText
-                type="small"
-                style={{ color: passwordsMatch ? theme.primary : theme.accentRed }}>
-                {passwordsMatch ? 'Passwords match' : "Passwords don't match"}
-              </ThemedText>
-            </View>
-          ) : null}
+          </FormSection>
 
           {/* Real point-in-polygon geofencing (Module 3) against the barangay's boundary
               polygon — a soft, preliminary check per the project paper: it never blocks
               registration, it only flags the account for admin review when the device's
               reported location falls outside the boundary (see handleVerifyLocation). */}
-          <ThemedView type="backgroundElement" style={styles.locationBox}>
-            <ThemedText type="small">Location Verification</ThemedText>
+          <FormSection icon="location-outline" title="Location Verification">
             <ThemedText type="small" themeColor="textSecondary">
               This preliminary check ensures you reside within the serviced municipality.
             </ThemedText>
@@ -513,51 +566,52 @@ export default function RegisterScreen() {
                 Your device's location looks outside the barangay boundary. You can still register — the barangay may review this.
               </ThemedText>
             ) : null}
-          </ThemedView>
+          </FormSection>
 
           {error ? (
-            <ThemedText type="small" themeColor="accentRed">
+            <ThemedText type="small" themeColor="accentRed" style={styles.formError}>
               {error}
             </ThemedText>
           ) : null}
 
-          <PrimaryButton label="Create Account" loading={loading} onPress={handleSubmit} />
-          <PrimaryButton
-            label="Login"
-            variant="secondary"
-            onPress={() => router.push('/(auth)/login')}
-          />
-        </View>
-      </ScrollView>
+          <View style={styles.submitActions}>
+            <PrimaryButton label="Create Account" loading={loading} onPress={handleSubmit} />
+            <View style={styles.footerRow}>
+              <ThemedText themeColor="textSecondary" style={styles.footerText}>
+                Already have an account?{' '}
+              </ThemedText>
+              <ThemedText
+                onPress={() => router.push('/(auth)/login')}
+                style={[styles.footerText, { color: theme.primary, fontWeight: '700' }]}>
+                Log in
+              </ThemedText>
+            </View>
+          </View>
+        </ScrollView>
 
-      <BirthdayCalendarModal
-        visible={showBirthPicker}
-        value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
-        onClose={() => setShowBirthPicker(false)}
-        onSave={(date) => {
-          setBirthDateIso(dateToIso(date));
-          setShowBirthPicker(false);
-        }}
-      />
+        <BirthdayCalendarModal
+          visible={showBirthPicker}
+          value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
+          onClose={() => setShowBirthPicker(false)}
+          onSave={(date) => {
+            setBirthDateIso(dateToIso(date));
+            setShowBirthPicker(false);
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
+  safeArea: { flex: 1 },
+  root: { flex: 1 },
   content: {
     padding: Spacing.four,
-    gap: Spacing.two,
-  },
-  title: {
-    fontSize: 28,
-  },
-  form: {
     gap: Spacing.three,
-    marginTop: Spacing.three,
   },
+  introTitle: { fontSize: 22, fontWeight: '700' },
+  introSubtitle: { fontSize: 14, marginTop: -Spacing.two, marginBottom: Spacing.one, lineHeight: 20 },
   passwordMatchIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -612,12 +666,8 @@ const styles = StyleSheet.create({
   barangayRow: {
     padding: Spacing.three,
     borderRadius: Spacing.three,
+    borderWidth: 1,
     gap: Spacing.half,
-  },
-  locationBox: {
-    padding: Spacing.three,
-    borderRadius: Spacing.three,
-    gap: Spacing.two,
   },
   fieldPairRow: {
     flexDirection: 'row',
@@ -640,4 +690,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two,
   },
+  formError: { textAlign: 'center' },
+  submitActions: {
+    gap: Spacing.three,
+    marginTop: Spacing.one,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  footerText: { fontSize: 14 },
 });

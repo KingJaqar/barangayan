@@ -59,12 +59,17 @@ export function RegisterDrawer({
   driveId: string | null;
   open: boolean;
   onClose: () => void;
-  userId: string;
+  /** Always a real id in practice — guests never reach this drawer (DriveCard renders a
+   * "Log In to Register" link instead of triggering it, see drive-card.tsx). Typed
+   * nullable anyway since active-drives-content.tsx's own userId is `string | null` and
+   * this drawer is always mounted regardless of auth state; the effect below just no-ops
+   * without one. */
+  userId: string | null;
 }) {
   const [data, setData] = useState<RegisterDrawerData | null>(null);
 
   useEffect(() => {
-    if (!driveId) {
+    if (!driveId || !userId) {
       // Routed through a microtask (not a direct setState) — react-hooks/set-state-in-
       // effect flags any setState reachable synchronously from an effect body, same
       // workaround as incident-drawer.tsx's "no id" branch.

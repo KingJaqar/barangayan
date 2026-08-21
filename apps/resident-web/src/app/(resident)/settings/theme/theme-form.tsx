@@ -263,7 +263,9 @@ export function ThemeForm({
   savedAccent,
   savedFont,
 }: {
-  userId: string;
+  /** Null for guests — every control below still works (localStorage-backed), it's only
+   * persistToDb() that becomes a no-op without a profiles row to write to. */
+  userId: string | null;
   savedTheme: 'light' | 'dark' | null;
   savedAccent: string | null;
   savedFont: string | null;
@@ -291,6 +293,9 @@ export function ThemeForm({
   }, []);
 
   async function persistToDb(update: { theme_preference?: string; accent_color?: string; font_preference?: string }) {
+    // Guests have no profiles row to sync to — the local controllers above already
+    // applied the change; there's just no cross-device copy to write.
+    if (!userId) return;
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('profiles').update(update).eq('id', userId);
     if (error) toast.error(`Could not save preference: ${error.message}`);
@@ -344,12 +349,12 @@ export function ThemeForm({
       {/* Live preview — a small mock UI card so residents see their theme, accent, and
           font working together the way they actually will in the app, instead of a flat
           tinted box with a caption. */}
-      <LivePreview fontStack={FONT_OPTIONS.find((f) => f.id === fontId)?.stack} />
+      <LivePreview fontStack={FONT_OPTIONS.find((f) => f.id === fontId)?.stack} syncsAcrossDevices={userId !== null} />
     </div>
   );
 }
 
-function LivePreview({ fontStack }: { fontStack: string | undefined }) {
+function LivePreview({ fontStack, syncsAcrossDevices }: { fontStack: string | undefined; syncsAcrossDevices: boolean }) {
   return (
     <div className="lg:col-span-2">
       <div className="mb-2.5 flex items-center gap-1.5">
@@ -399,7 +404,9 @@ function LivePreview({ fontStack }: { fontStack: string | undefined }) {
         </div>
       </div>
 
-      <p className="mt-2 px-1 text-xs text-zinc-500 dark:text-zinc-400">Changes apply immediately and sync across your devices.</p>
+      <p className="mt-2 px-1 text-xs text-zinc-500 dark:text-zinc-400">
+        {syncsAcrossDevices ? 'Changes apply immediately and sync across your devices.' : 'Changes apply immediately on this device.'}
+      </p>
     </div>
   );
 }
