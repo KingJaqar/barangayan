@@ -1,6 +1,10 @@
 {
   "name": "barangayan",
   "private": true,
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.12.2": true
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
