@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
@@ -52,6 +53,14 @@ export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCente
         return;
       }
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'emergency_qr',
+      entityLabel: 'All evacuation center QR codes',
+      metadata: { centerCount: initialCenters.length },
+    }).catch(() => {});
+
     toast.showSuccess('QR codes regenerated for all centers.');
     router.refresh();
   }

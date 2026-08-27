@@ -4,6 +4,7 @@ import type { Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
@@ -124,21 +125,57 @@ export function HouseholdsTable({
   }, [channelName, router]);
 
   async function updateField(row: HouseholdMemberRow, patch: Partial<Tables<'household_members'>>) {
+    // Compare each patched field against the row's current value so a click-into/blur that
+    // didn't actually change anything doesn't produce a log entry — the DB update still runs.
+    const before: Record<string, unknown> = {};
+    const after: Record<string, unknown> = {};
+    let changed = false;
+    for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
+      const prevValue = (row as unknown as Record<string, unknown>)[key as string];
+      const nextValue = patch[key];
+      before[key as string] = prevValue;
+      after[key as string] = nextValue;
+      if (prevValue !== nextValue) changed = true;
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('household_members').update(patch).eq('id', row.id);
-    if (!error) router.refresh();
+    if (!error) {
+      router.refresh();
+      if (changed) {
+        logAdminAction({
+          action: 'update',
+          entityType: 'household',
+          entityId: row.id,
+          entityLabel: row.name,
+          changes: { before, after },
+        }).catch(() => {});
+      }
+    }
     return { error: error?.message ?? null };
   }
 
-  async function removeMember(row: HouseholdMemberRow) {
+  /** Shared hard-delete used by both the table row's inline action and the detail modal —
+   * kept as one function so the audit log call is only written once. */
+  async function removeMember(row: HouseholdMemberRow): Promise<boolean> {
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('household_members').delete().eq('id', row.id);
     if (error) {
       toast.showError(`Failed to remove member: ${error.message}`);
-      return;
+      return false;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'household',
+      entityId: row.id,
+      entityLabel: row.name,
+      metadata: { name: row.name, relation: row.relation, role: row.role },
+    }).catch(() => {});
+
     toast.showSuccess('Household member removed.');
     router.refresh();
+    return true;
   }
 
   const columns: EditableDataTableColumn<HouseholdMemberRow>[] = [
@@ -213,7 +250,9 @@ export function HouseholdsTable({
           <ConfirmButton
             label="🗑"
             confirmLabel="Remove this member?"
-            onConfirm={() => removeMember(r)}
+            onConfirm={async () => {
+              await removeMember(r);
+            }}
             title="Remove household member"
             className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
           />
@@ -312,7 +351,9 @@ export function HouseholdsTable({
         thickBorders
       />
 
-      {selected && <MemberDetailModal row={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <MemberDetailModal row={selected} onClose={() => setSelected(null)} onDelete={removeMember} />
+      )}
     </>
   );
 }
@@ -361,6 +402,20 @@ function AddMemberForm({ barangayId, onClose }: { barangayId: string; onClose: (
       toast.showError(`Failed to add member: ${rpcError.message}`);
       return;
     }
+
+    // The RPC doesn't return the new row's id, so entityId is omitted.
+    logAdminAction({
+      action: 'create',
+      entityType: 'household',
+      entityLabel: name.trim(),
+      metadata: {
+        name: name.trim(),
+        resident: residents.find((r) => r.id === profileId)?.full_name ?? null,
+        relation,
+        role,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Household member added.');
     setProfileId('');
     setName('');
@@ -430,23 +485,23 @@ function AddMemberForm({ barangayId, onClose }: { barangayId: string; onClose: (
   );
 }
 
-function MemberDetailModal({ row, onClose }: { row: HouseholdMemberRow; onClose: () => void }) {
-  const router = useRouter();
-  const toast = useToast();
+function MemberDetailModal({
+  row,
+  onClose,
+  onDelete,
+}: {
+  row: HouseholdMemberRow;
+  onClose: () => void;
+  /** Shared hard-delete lifted from the table so the audit log call is only written once. */
+  onDelete: (row: HouseholdMemberRow) => Promise<boolean>;
+}) {
   const [removing, setRemoving] = useState(false);
 
   async function handleDelete() {
     setRemoving(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('household_members').delete().eq('id', row.id);
+    const success = await onDelete(row);
     setRemoving(false);
-    if (error) {
-      toast.showError(`Failed to remove: ${error.message}`);
-      return;
-    }
-    toast.showSuccess('Household member removed.');
-    onClose();
-    router.refresh();
+    if (success) onClose();
   }
 
   return (

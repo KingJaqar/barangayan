@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
@@ -55,6 +56,16 @@ export function QrCodeDisplay({
       toast.showError(`Failed to save: ${error.message}`);
       return;
     }
+
+    // The QR row's own id isn't returned by this upsert; evacuationCenterId is metadata,
+    // not entityId — that field belongs to the evacuation center, not this QR row.
+    logAdminAction({
+      action: 'update',
+      entityType: 'emergency_qr',
+      entityLabel: center.name,
+      metadata: { evacuationCenterId: center.id },
+    }).catch(() => {});
+
     toast.showSuccess('QR code saved to database.');
     router.refresh();
   }

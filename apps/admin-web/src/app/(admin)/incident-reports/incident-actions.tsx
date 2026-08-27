@@ -3,12 +3,17 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface IncidentActionsProps {
   incidentId: string;
   status: string;
+  incidentTitle: string;
+  /** Threaded down purely so the "remove" audit log entry can show what was
+   * deleted, since the row itself disappears from the table after this runs. */
+  incidentDescription?: string | null;
   variant?: 'compact' | 'full';
 }
 
@@ -26,7 +31,7 @@ const NEXT_STEP: Record<string, { next: string; label: string; color: string } |
 const CAN_MARK_UNRESOLVED = new Set(['open', 'in_progress']);
 
 /** Admin-side status transition buttons for a single incident row/page. */
-export function IncidentActions({ incidentId, status, variant = 'full' }: IncidentActionsProps) {
+export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full' }: IncidentActionsProps) {
   const router = useRouter();
   const toast  = useToast();
   const [busy, setBusy] = useState(false);
@@ -51,6 +56,15 @@ export function IncidentActions({ incidentId, status, variant = 'full' }: Incide
       toast.showError(`Failed: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'incident',
+      entityId: incidentId,
+      entityLabel: incidentTitle,
+      changes: { before: { status }, after: { status: next } },
+    }).catch(() => {});
+
     toast.showSuccess(successLabel);
     router.refresh();
   }
@@ -65,6 +79,15 @@ export function IncidentActions({ incidentId, status, variant = 'full' }: Incide
       toast.showError(`Failed: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'incident',
+      entityId: incidentId,
+      entityLabel: incidentTitle,
+      metadata: { title: incidentTitle, description: incidentDescription ?? null, status },
+    }).catch(() => {});
+
     toast.showSuccess('Incident removed.');
     router.refresh();
   }

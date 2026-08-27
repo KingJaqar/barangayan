@@ -31,14 +31,25 @@ export default async function SettingsLayout({ children }: { children: ReactNode
   } = await supabase.auth.getUser();
 
   let emailVerified = false;
+  let locationVerified = false;
   if (user) {
-    const { data: profile } = await supabase.from('profiles').select('email_verification_status').eq('id', user.id).single();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('email_verification_status, verified_location')
+      .eq('id', user.id)
+      .single();
     emailVerified = profile?.email_verification_status === 'verified';
+    locationVerified = profile?.verified_location != null;
   }
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:flex-row">
-      <SettingsSidebar logoutAction={logoutAction} emailVerified={emailVerified} isAuthenticated={user !== null} />
+      <SettingsSidebar
+        logoutAction={logoutAction}
+        emailVerified={emailVerified}
+        locationVerified={locationVerified}
+        isAuthenticated={user !== null}
+      />
       <div className="min-w-0 flex-1">{children}</div>
     </div>
   );

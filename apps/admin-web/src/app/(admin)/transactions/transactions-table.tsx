@@ -4,6 +4,7 @@ import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/sh
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableCellConfig, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
@@ -166,22 +167,40 @@ function AddTransactionForm({
       resolvedCollectedBy = user?.id ?? null;
     }
 
-    const { error: insertError } = await supabase.from('payments').insert({
-      service_request_id: matchedRequest.id,
-      barangay_id: matchedRequest.barangayId,
-      method,
-      amount_centavos: Math.round(pesos * 100),
-      status,
-      paid_at: status === 'paid' ? new Date().toISOString() : null,
-      collected_by: resolvedCollectedBy,
-      paymongo_source_id: method === 'qrph' ? sourceId.trim() || null : null,
-    });
+    const { data: inserted, error: insertError } = await supabase
+      .from('payments')
+      .insert({
+        service_request_id: matchedRequest.id,
+        barangay_id: matchedRequest.barangayId,
+        method,
+        amount_centavos: Math.round(pesos * 100),
+        status,
+        paid_at: status === 'paid' ? new Date().toISOString() : null,
+        collected_by: resolvedCollectedBy,
+        paymongo_source_id: method === 'qrph' ? sourceId.trim() || null : null,
+      })
+      .select('id')
+      .single();
 
     setSubmitting(false);
     if (insertError) {
       toast.showError(`Failed to add transaction: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'payment',
+      entityId: inserted?.id,
+      entityLabel: `#${reference.trim().replace(/^#/, '')} — ${matchedRequest.residentName}`,
+      metadata: {
+        reference_number: reference.trim().replace(/^#/, ''),
+        resident: matchedRequest.residentName,
+        method,
+        amount_centavos: Math.round(pesos * 100),
+        status,
+      },
+    }).catch(() => {});
 
     toast.showSuccess('Transaction added.');
     resetForm();
@@ -384,9 +403,30 @@ export function TransactionsTable({
   });
 
   async function updateField(payment: Payment, patch: Partial<Tables<'payments'>>) {
+    // Skip the log (but still persist) if nothing in the patch actually differs from the
+    // row's current value — avoids a bell notification for a cell that's clicked into and
+    // blurred without an edit.
+    const before: Record<string, unknown> = {};
+    let changed = false;
+    for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
+      before[key] = payment[key];
+      if (payment[key] !== patch[key]) changed = true;
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('payments').update(patch).eq('id', payment.id);
-    if (!error) router.refresh();
+    if (!error) {
+      if (changed) {
+        logAdminAction({
+          action: patch.status ? 'status_change' : 'update',
+          entityType: 'payment',
+          entityId: payment.id,
+          entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
+          changes: { before, after: patch },
+        }).catch(() => {});
+      }
+      router.refresh();
+    }
     return { error: error?.message ?? null };
   }
 
@@ -396,19 +436,49 @@ export function TransactionsTable({
    * distinct from the Reference cell's edit which reassigns to a *different* request. */
   async function updateLinkedRequest(payment: Payment, patch: Partial<Tables<'service_requests'>>): Promise<{ error: string | null }> {
     if (!payment.service_request_id) return { error: 'This transaction has no linked request.' };
+
+    const before: Record<string, unknown> = {};
+    let changed = false;
+    for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
+      const currentValue =
+        key === 'resident_id'
+          ? payment.service_requests?.resident_id
+          : key === 'document_type_id'
+            ? payment.service_requests?.document_type_id
+            : undefined;
+      before[key] = currentValue;
+      if (currentValue !== patch[key]) changed = true;
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('service_requests').update(patch).eq('id', payment.service_request_id);
     if (error) return { error: error.message };
+
+    if (changed) {
+      logAdminAction({
+        action: 'update',
+        entityType: 'service_request',
+        entityId: payment.service_request_id,
+        entityLabel: payment.service_requests?.reference_number,
+        changes: { before, after: patch },
+      }).catch(() => {});
+    }
+
     router.refresh();
     return { error: null };
   }
 
   /** Reassigns a payment to a different service_request by looking up its reference
    * number, mirroring AddTransactionForm's own lookup — Resident/Document are derived
-   * (joined) columns, so this is what "editing" them actually means. */
+   * (joined) columns, so this is what "editing" them actually means. Persists and logs
+   * directly (rather than delegating to updateField) so the audit entry can carry the
+   * old + new reference numbers instead of updateField's generic before/after patch. */
   async function reassignReference(payment: Payment, referenceInput: string): Promise<{ error: string | null }> {
     const next = referenceInput.trim().replace(/^#/, '');
     if (!next) return { error: 'Reference number cannot be empty.' };
+
+    const previousReference = payment.service_requests?.reference_number ?? null;
+    if (next === previousReference) return { error: null };
 
     const supabase = createSupabaseBrowserClient();
     const { data: request, error: lookupError } = await supabase
@@ -421,7 +491,22 @@ export function TransactionsTable({
     if (lookupError) return { error: lookupError.message };
     if (!request) return { error: `Request "${next}" not found.` };
 
-    return updateField(payment, { service_request_id: request.id, barangay_id: request.barangay_id });
+    const { error } = await supabase
+      .from('payments')
+      .update({ service_request_id: request.id, barangay_id: request.barangay_id })
+      .eq('id', payment.id);
+    if (error) return { error: error.message };
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'payment',
+      entityId: payment.id,
+      entityLabel: `#${previousReference ?? '—'} → #${next}`,
+      metadata: { previousReference, newReference: next },
+    }).catch(() => {});
+
+    router.refresh();
+    return { error: null };
   }
 
   async function archive(payment: Payment) {
@@ -431,6 +516,15 @@ export function TransactionsTable({
       toast.showError(`Failed to archive transaction: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'payment',
+      entityId: payment.id,
+      entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
+      metadata: { reference_number: payment.service_requests?.reference_number ?? null, method: payment.method, amount_centavos: payment.amount_centavos, status: payment.status },
+    }).catch(() => {});
+
     toast.showSuccess('Transaction archived.');
     router.refresh();
   }
@@ -448,6 +542,16 @@ export function TransactionsTable({
       toast.showError(`Failed to submit refund: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'payment',
+      entityId: payment.id,
+      entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
+      changes: { before: { status: payment.status }, after: { status: 'refund_requested' } },
+      metadata: { reason: 'requested_by_customer' },
+    }).catch(() => {});
+
     toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
     router.refresh();
   }

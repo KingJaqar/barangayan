@@ -8,9 +8,10 @@
  *                        Saved immediately (independent of the Save Changes button).
  *  ③ Verified badge    — shows when email_verification_status = 'verified'
  *  ④ Personal Info     — First/Middle/Last/Suffix, Email, House No./Street/City, Mobile
- *                        Number are edited directly in the display form (plain
- *                        TextInput, no modal); Occupation still uses the tap-to-edit
- *                        bottom sheet, Sex/Employment Status/Birthday use their pickers.
+ *                        Number, and Occupation are edited directly in the display form
+ *                        (plain TextInput, no modal); Sex/Employment Status/Birthday use
+ *                        their pickers (Sex/Employment Status share the Reanimated-driven
+ *                        SlideSheetModal bottom sheet, also used by the ID Type picker).
  *  ⑤ Household         — JSONB member list; Add / edit / remove via bottom modal
  *  ⑥ Identification    — ID type picker + stored ID photo display + re-upload
  *  ⑦ Save Changes CTA  — fixed green pill at bottom
@@ -38,28 +39,40 @@
  */
 
 import {
+  EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
+  ID_TYPES,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  OTHER_ID_TYPE_PREFIX,
   SEXES,
+  idPhotoSide,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
@@ -81,26 +94,34 @@ import { supabase } from '@/lib/supabase';
 
 const PRIMARY_GREEN = Colors.light.primary; // #0F6E5B — always brand green
 
-const ID_TYPES = [
-  'PhilSys',
-  'Digital PhilSys',
-  "Driver's License",
-  'Passport',
-  'SSS ID',
-  "Voter's ID",
-  'PhilHealth ID',
-  'PRC ID',
-  'UMID',
-  'Postal ID',
-  'Senior Citizen ID',
-  'PWD ID',
-  'GSIS ID',
-  'TIN ID',
-  'Barangay ID',
-  'Other',
-] as const;
-
 const RELATIONS = ['Spouse', 'Child', 'Parent', 'Sibling', 'Grandparent', 'Grandchild', 'Other'] as const;
+
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Same rules/shape as Register's fieldStatus/validate* helpers (register.tsx) —
+// a red alert or green check appears below a field the moment its value becomes
+// invalid/valid, as-you-type. Empty required fields stay silent until a Save
+// Changes attempt populates fieldErrors below (the "required" message).
+function validateName(value: string): string | null {
+  return NAME_REGEX.test(value) ? null : 'Letters only — no numbers or symbols';
+}
+function validateMobileNumber(value: string): string | null {
+  return MOBILE_NUMBER_REGEX.test(value) ? null : 'Enter an 11-digit mobile number (e.g. 09171234567)';
+}
+function validateEmail(value: string): string | null {
+  return EMAIL_REGEX.test(value) ? null : 'Enter a valid email address';
+}
+
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) => string | null,
+  successMessage = ' ',
+): { error?: string; success?: string } {
+  if (!value) return submitError ? { error: submitError } : {};
+  const message = validate?.(value);
+  if (message) return { error: message };
+  return { success: successMessage };
+}
 
 const SEX_LABELS: Record<Sex, string> = { male: 'Male', female: 'Female' };
 
@@ -188,29 +209,76 @@ const badgeStyles = StyleSheet.create({
   },
 });
 
-/** A single field row: label / display value + edit pencil */
+/** Red asterisk suffix for required-field labels — matches Register's RequiredMark. */
+function RequiredMark() {
+  return (
+    <ThemedText type="small" themeColor="accentRed">
+      {' '}
+      *
+    </ThemedText>
+  );
+}
+
+/** Error (red alert) or success (green check) row shown below a field — shared by
+ * FieldRow and InlineFieldInput so both render the same treatment Register's
+ * Confirm Password field pioneered (see fieldStatus above). */
+function FieldStatusRow({ error, success }: { error?: string; success?: string }) {
+  const theme = useTheme();
+  if (error) {
+    return (
+      <View style={fieldStyles.statusRow}>
+        <Ionicons name="alert-circle-outline" size={13} color={theme.accentRed} />
+        <ThemedText type="small" themeColor="accentRed">{error}</ThemedText>
+      </View>
+    );
+  }
+  if (success) {
+    return (
+      <View style={fieldStyles.statusRow}>
+        <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} />
+        <ThemedText type="small" themeColor="accentGreen">{success}</ThemedText>
+      </View>
+    );
+  }
+  return null;
+}
+
+/** A single field row: label / display value + edit pencil — used for Sex / Employment
+ * Status / Date of Birth, which open a picker rather than edit inline. */
 function FieldRow({
   label,
   value,
   placeholder,
+  required,
+  error,
+  success,
   onEdit,
 }: {
   label: string;
   value: string;
   placeholder: string;
+  required?: boolean;
+  error?: string;
+  success?: string;
   onEdit: () => void;
 }) {
   const theme = useTheme();
   return (
-    <Pressable style={fieldStyles.row} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`}>
-      <View style={fieldStyles.body}>
-        <ThemedText themeColor="textSecondary" style={fieldStyles.label}>{label}</ThemedText>
-        <ThemedText style={[fieldStyles.value, !value && { color: theme.textSecondary }]}>
-          {value || placeholder}
-        </ThemedText>
-      </View>
-      <Ionicons name="create-outline" size={18} color={PRIMARY_GREEN} />
-    </Pressable>
+    <View style={fieldStyles.fieldWrapper}>
+      <Pressable style={fieldStyles.row} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`}>
+        <View style={fieldStyles.body}>
+          <ThemedText themeColor="textSecondary" style={fieldStyles.label}>
+            {label}
+            {required ? <RequiredMark /> : null}
+          </ThemedText>
+          <ThemedText style={[fieldStyles.value, !value && { color: theme.textSecondary }]}>
+            {value || placeholder}
+          </ThemedText>
+        </View>
+        <Ionicons name="create-outline" size={18} color={PRIMARY_GREEN} />
+      </Pressable>
+      <FieldStatusRow error={error} success={success} />
+    </View>
   );
 }
 
@@ -224,10 +292,16 @@ const fieldStyles = StyleSheet.create({
   body: { flex: 1, gap: 2 },
   label: { fontSize: 12, fontWeight: '500' },
   value: { fontSize: 16 },
+  fieldWrapper: { gap: 2 },
   inlineRow: { paddingVertical: Spacing.two, gap: 4 },
   inlineInput: {
     fontSize: 16,
     paddingVertical: 4,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });
 
@@ -242,19 +316,30 @@ function InlineFieldInput({
   label,
   value,
   placeholder,
+  required,
+  error,
+  success,
   onChangeText,
   keyboardType,
+  maxLength,
 }: {
   label: string;
   value: string;
   placeholder: string;
+  required?: boolean;
+  error?: string;
+  success?: string;
   onChangeText: (val: string) => void;
   keyboardType?: 'default' | 'phone-pad' | 'email-address';
+  maxLength?: number;
 }) {
   const theme = useTheme();
   return (
     <View style={fieldStyles.inlineRow}>
-      <ThemedText themeColor="textSecondary" style={fieldStyles.label}>{label}</ThemedText>
+      <ThemedText themeColor="textSecondary" style={fieldStyles.label}>
+        {label}
+        {required ? <RequiredMark /> : null}
+      </ThemedText>
       <TextInput
         style={[fieldStyles.inlineInput, { color: theme.text }]}
         value={value}
@@ -263,11 +348,80 @@ function InlineFieldInput({
         placeholderTextColor={theme.textSecondary}
         keyboardType={keyboardType ?? 'default'}
         autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
+        maxLength={maxLength}
         returnKeyType="done"
       />
+      <FieldStatusRow error={error} success={success} />
     </View>
   );
 }
+
+/** One upload slot for a single ID side (front/back) — exactly one photo each; tapping
+ * either the frame or the action label re-opens the picker, so a re-upload simply
+ * replaces the photo in place (handleIdUpload uses upsert:true against a fixed
+ * `id-front`/`id-back` path — see its doc comment). */
+function IdPhotoSlot({
+  label,
+  uri,
+  uploading,
+  onUpload,
+}: {
+  label: string;
+  uri: string | null;
+  uploading: boolean;
+  onUpload: () => void;
+}) {
+  const theme = useTheme();
+  return (
+    <View style={idPhotoSlotStyles.slot}>
+      <ThemedText themeColor="textSecondary" style={idPhotoSlotStyles.label}>{label}</ThemedText>
+      <Pressable
+        onPress={onUpload}
+        disabled={uploading}
+        style={[idPhotoSlotStyles.frame, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected }]}
+        accessibilityRole="button"
+        accessibilityLabel={`${uri ? 'Re-upload' : 'Upload'} ${label}`}>
+        {uri ? (
+          <Image source={{ uri }} style={idPhotoSlotStyles.image} contentFit="cover" transition={200} />
+        ) : (
+          <Ionicons name="cloud-upload-outline" size={22} color={theme.textSecondary} />
+        )}
+        {uploading && (
+          <View style={idPhotoSlotStyles.spinnerOverlay}>
+            <ActivityIndicator size="small" color="#fff" />
+          </View>
+        )}
+      </Pressable>
+      <Pressable onPress={onUpload} disabled={uploading} accessibilityRole="button" hitSlop={6}>
+        <ThemedText type="small" themeColor="primary" style={idPhotoSlotStyles.actionText}>
+          {uri ? 'Re-upload' : 'Upload'}
+        </ThemedText>
+      </Pressable>
+    </View>
+  );
+}
+
+const idPhotoSlotStyles = StyleSheet.create({
+  slot: { flex: 1, gap: 6, alignItems: 'center' },
+  label: { fontSize: 12, fontWeight: '600' },
+  frame: {
+    width: '100%',
+    aspectRatio: 4 / 3,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  image: { width: '100%', height: '100%' },
+  spinnerOverlay: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionText: { fontSize: 12, fontWeight: '700' },
+});
 
 /** Household member list item */
 function MemberRow({
@@ -379,120 +533,76 @@ function Divider() {
   return <View style={{ height: 1, backgroundColor: theme.backgroundSelected, marginLeft: 0 }} />;
 }
 
-// ─── Edit Field Modal ─────────────────────────────────────────────────────────
+// ─── Slide Sheet Modal ────────────────────────────────────────────────────────
+// Shared bottom-sheet shell for the Sex / Employment Status / ID Type pickers.
+// react-native's built-in `Modal animationType="slide"` is a fixed-duration,
+// non-interruptible platform animation (and on Android it visibly steps rather
+// than eases) — this instead drives the slide with Reanimated shared values so
+// the sheet springs up on open and eases down on close at 60fps, with the
+// backdrop cross-fading in step. `Modal`'s `visible` prop unmounts natively the
+// instant it flips to false, which would cut the close animation short, so this
+// keeps the native Modal mounted (`visible` always true while `mounted`) and
+// only actually unmounts once the slide-down animation has finished.
+//
+// Per the entering/exiting/layout web bug (see project memory), this uses only
+// shared-value-driven `useAnimatedStyle`, never Reanimated's `entering`/
+// `exiting`/`layout` props.
+const SHEET_OFFSCREEN = 700;
+const SHEET_OPEN_SPRING = { damping: 24, stiffness: 260, mass: 0.9, overshootClamping: true } as const;
+const SHEET_CLOSE_DURATION = 220;
 
-function EditFieldModal({
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+function SlideSheetModal({
   visible,
-  label,
-  value,
-  multiline,
-  keyboardType,
   onClose,
-  onSave,
+  maxHeight,
+  children,
 }: {
   visible: boolean;
-  label: string;
-  value: string;
-  multiline?: boolean;
-  keyboardType?: 'default' | 'email-address' | 'phone-pad';
   onClose: () => void;
-  onSave: (val: string) => void;
+  maxHeight?: number | `${number}%`;
+  children: React.ReactNode;
 }) {
   const theme = useTheme();
-  const [text, setText] = useState(value);
-  const inputRef = useRef<TextInput>(null);
+  const [mounted, setMounted] = useState(visible);
+  const translateY = useSharedValue(SHEET_OFFSCREEN);
+  const backdropOpacity = useSharedValue(0);
 
   useEffect(() => {
     if (visible) {
-      setText(value);
-      setTimeout(() => inputRef.current?.focus(), 150);
+      setMounted(true);
+      translateY.value = withSpring(0, SHEET_OPEN_SPRING);
+      backdropOpacity.value = withTiming(1, { duration: 220 });
+    } else if (mounted) {
+      translateY.value = withTiming(
+        SHEET_OFFSCREEN,
+        { duration: SHEET_CLOSE_DURATION, easing: Easing.in(Easing.cubic) },
+        (finished) => {
+          if (finished) runOnJS(setMounted)(false);
+        },
+      );
+      backdropOpacity.value = withTiming(0, { duration: SHEET_CLOSE_DURATION });
     }
-  }, [visible, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+
+  const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translateY.value }] }));
+  const backdropStyle = useAnimatedStyle(() => ({ opacity: backdropOpacity.value }));
+
+  if (!mounted) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={editModalStyles.backdrop} onPress={onClose} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={editModalStyles.kav} pointerEvents="box-none">
-        <View style={[editModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
-          {/* Handle */}
-          <View style={[editModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
-
-          <ThemedText style={editModalStyles.title}>Edit {label}</ThemedText>
-
-          <TextInput
-            ref={inputRef}
-            style={[
-              editModalStyles.input,
-              { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text },
-              multiline && editModalStyles.inputMulti,
-            ]}
-            value={text}
-            onChangeText={setText}
-            multiline={multiline}
-            keyboardType={keyboardType ?? 'default'}
-            autoCapitalize={keyboardType === 'email-address' ? 'none' : 'sentences'}
-            returnKeyType={multiline ? 'default' : 'done'}
-            placeholder={label}
-            placeholderTextColor={theme.textSecondary}
-          />
-
-          <View style={editModalStyles.actions}>
-            <Pressable style={[editModalStyles.cancelBtn, { backgroundColor: theme.backgroundSelected }]} onPress={onClose}>
-              <ThemedText style={{ fontWeight: '600', color: theme.textSecondary }}>Cancel</ThemedText>
-            </Pressable>
-            <Pressable
-              style={editModalStyles.saveBtn}
-              onPress={() => { onSave(text); onClose(); }}>
-              <ThemedText style={{ fontWeight: '700', color: '#fff' }}>Save</ThemedText>
-            </Pressable>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+    <Modal visible transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
+      <AnimatedPressable style={[idModalStyles.backdrop, backdropStyle]} onPress={onClose} />
+      <Animated.View
+        style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement, maxHeight }, sheetStyle]}>
+        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
+        {children}
+      </Animated.View>
     </Modal>
   );
 }
-
-const editModalStyles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.45)' },
-  kav: { flex: 1, justifyContent: 'flex-end' },
-  sheet: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: Spacing.three,
-    gap: Spacing.three,
-    paddingBottom: 36,
-  },
-  handle: {
-    alignSelf: 'center',
-    width: 38,
-    height: 4,
-    borderRadius: 2,
-    marginBottom: Spacing.one,
-  },
-  title: { fontSize: 16, fontWeight: '700' },
-  input: {
-    borderWidth: 1.5,
-    borderRadius: 12,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two + 4,
-    fontSize: 16,
-  },
-  inputMulti: { minHeight: 100, textAlignVertical: 'top' },
-  actions: { flexDirection: 'row', gap: Spacing.two },
-  cancelBtn: {
-    flex: 1,
-    borderRadius: 24,
-    paddingVertical: 13,
-    alignItems: 'center',
-  },
-  saveBtn: {
-    flex: 2,
-    borderRadius: 24,
-    paddingVertical: 13,
-    alignItems: 'center',
-    backgroundColor: PRIMARY_GREEN,
-  },
-});
 
 // ─── Household Member Modal ───────────────────────────────────────────────────
 
@@ -654,24 +764,23 @@ function IdTypeModal({
 }) {
   const theme = useTheme();
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={idModalStyles.backdrop} onPress={onClose} />
-      <View style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
-        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
-        <ThemedText style={idModalStyles.title}>Select ID Type</ThemedText>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {ID_TYPES.map((t) => (
-            <Pressable
-              key={t}
-              onPress={() => { onSelect(t); onClose(); }}
-              style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
-              <ThemedText style={[idModalStyles.optionText, current === t && { color: PRIMARY_GREEN, fontWeight: '700' }]}>{t}</ThemedText>
-              {current === t && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
-            </Pressable>
-          ))}
-        </ScrollView>
-      </View>
-    </Modal>
+    // Capped at 50% of the screen instead of the shared default (~70%) so it never
+    // covers the whole screen — ID_TYPES has 16 entries, so the list scrolls
+    // (ScrollView below) rather than growing the sheet past that cap.
+    <SlideSheetModal visible={visible} onClose={onClose} maxHeight="50%">
+      <ThemedText style={idModalStyles.title}>Select ID Type</ThemedText>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {ID_TYPES.map((t) => (
+          <Pressable
+            key={t}
+            onPress={() => { onSelect(t); onClose(); }}
+            style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
+            <ThemedText style={[idModalStyles.optionText, current === t && { color: PRIMARY_GREEN, fontWeight: '700' }]}>{t}</ThemedText>
+            {current === t && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
+          </Pressable>
+        ))}
+      </ScrollView>
+    </SlideSheetModal>
   );
 }
 
@@ -680,7 +789,8 @@ const idModalStyles = StyleSheet.create({
   sheet: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
-    maxHeight: '70%',
+    // No default cap here — callers that need one (e.g. IdTypeModal's 16-item list)
+    // pass `maxHeight` explicitly to SlideSheetModal, which layers it on top of this.
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: Spacing.three,
@@ -727,26 +837,22 @@ function ChoiceListModal<T extends string>({
 }) {
   const theme = useTheme();
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={idModalStyles.backdrop} onPress={onClose} />
-      <View style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
-        <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
-        <ThemedText style={idModalStyles.title}>{title}</ThemedText>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {options.map((opt) => (
-            <Pressable
-              key={opt}
-              onPress={() => { onSelect(opt); onClose(); }}
-              style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
-              <ThemedText style={[idModalStyles.optionText, current === opt && { color: PRIMARY_GREEN, fontWeight: '700' }]}>
-                {labels[opt]}
-              </ThemedText>
-              {current === opt && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
-            </Pressable>
-          ))}
-        </ScrollView>
-      </View>
-    </Modal>
+    <SlideSheetModal visible={visible} onClose={onClose}>
+      <ThemedText style={idModalStyles.title}>{title}</ThemedText>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {options.map((opt) => (
+          <Pressable
+            key={opt}
+            onPress={() => { onSelect(opt); onClose(); }}
+            style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
+            <ThemedText style={[idModalStyles.optionText, current === opt && { color: PRIMARY_GREEN, fontWeight: '700' }]}>
+              {labels[opt]}
+            </ThemedText>
+            {current === opt && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
+          </Pressable>
+        ))}
+      </ScrollView>
+    </SlideSheetModal>
   );
 }
 
@@ -798,65 +904,95 @@ export default function ProfileScreen() {
   const [avatarUploading, setAvatarUploading] = useState(false);
 
   // ── Identification ────────────────────────────────────────────────────────
-  const [idType, setIdType]                       = useState<string | null>(null);
-  const [idPhotoUrls, setIdPhotoUrls]             = useState<string[]>([]);
-  const [idUploading, setIdUploading]             = useState(false);
-  // Tracks whether the user uploaded a new ID photo in this session so that
-  // handleSave knows to (re-)set id_verification_status to 'pending'.
+  // idType is the raw picker selection — "Other" selects the free-text flow below.
+  // The value actually persisted to profiles.id_type is composed at save time (see
+  // composeIdType) as `Other: <otherIdType>` (OTHER_ID_TYPE_PREFIX, shared with
+  // resident-web's Profile form — see the id-verification convention in @barangayan/shared).
+  const [idType, setIdType]           = useState<string | null>(null);
+  const [otherIdType, setOtherIdType] = useState('');
+  // Exactly one photo per side — disambiguated by filename (idPhotoSide), not array
+  // position, so profiles.id_photo_urls always holds at most [frontPath, backPath].
+  const [idFrontPath, setIdFrontPath] = useState<string | null>(null);
+  const [idBackPath, setIdBackPath]   = useState<string | null>(null);
+  const [idUploadingFront, setIdUploadingFront] = useState(false);
+  const [idUploadingBack, setIdUploadingBack]   = useState(false);
+  // Tracks whether the user uploaded a new ID photo (either side) in this session so
+  // that handleSave knows to (re-)set id_verification_status to 'pending'.
   const [newIdUploaded, setNewIdUploaded]         = useState(false);
-  const [idVerificationStatus, setIdVerifStatus]  = useState<'pending' | 'verified' | null>(null);
+  const [idVerificationStatus, setIdVerifStatus]  =
+    useState<'pending' | 'verified' | 'verification_failed' | null>(null);
 
   // Tracks whether the user changed their email address this session so
   // handleSave knows to reset email_verification_status (an edited email
   // is no longer the one that was verified).
   const [emailVerificationStatus, setEmailVerifStatus] = useState<string | null>(null);
 
+  /** Composes the value actually written to profiles.id_type. */
+  function composeIdType(type: string | null, other: string): string | null {
+    if (!type) return null;
+    if (type === 'Other') return `${OTHER_ID_TYPE_PREFIX}${other.trim()}`;
+    return type;
+  }
+
   // ── Resolved signed URLs for ID photos ───────────────────────────────────
   // id-documents is a private bucket (government ID photos) — short-lived
   // signed URLs replace getPublicUrl() so a leaked/guessed path alone can't
   // serve the image.
-  const [idPhotoPublicUrls, setIdPhotoPublicUrls] = useState<string[]>([]);
+  const [idFrontSignedUrl, setIdFrontSignedUrl] = useState<string | null>(null);
+  const [idBackSignedUrl, setIdBackSignedUrl]   = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    if (idPhotoUrls.length === 0) {
-      setIdPhotoPublicUrls([]);
+    const paths = [idFrontPath, idBackPath].filter((p): p is string => !!p);
+    if (paths.length === 0) {
+      setIdFrontSignedUrl(null);
+      setIdBackSignedUrl(null);
       return;
     }
     supabase.storage
       .from('id-documents')
-      .createSignedUrls(idPhotoUrls, 60 * 10) // 10 minutes — just long enough to render
+      .createSignedUrls(paths, 60 * 10) // 10 minutes — just long enough to render
       .then(({ data, error }) => {
         if (cancelled) return;
         if (error || !data) {
-          setIdPhotoPublicUrls([]);
+          setIdFrontSignedUrl(null);
+          setIdBackSignedUrl(null);
           return;
         }
-        setIdPhotoPublicUrls(data.map((d) => d.signedUrl).filter((u): u is string => !!u));
+        const bySrcPath = new Map(paths.map((p, i) => [p, data[i]?.signedUrl ?? null]));
+        setIdFrontSignedUrl(idFrontPath ? (bySrcPath.get(idFrontPath) ?? null) : null);
+        setIdBackSignedUrl(idBackPath ? (bySrcPath.get(idBackPath) ?? null) : null);
       });
     return () => {
       cancelled = true;
     };
-  }, [idPhotoUrls]);
+  }, [idFrontPath, idBackPath]);
 
   // ── UI state ──────────────────────────────────────────────────────────────
   const [saving, setSaving]   = useState(false);
   const [toast, setToast]     = useState<{ message: string; type: ToastType } | null>(null);
+  // Populated by validateRequiredFields() on a Save Changes attempt — the "required"
+  // messages shown under empty required fields (fieldStatus below handles the
+  // as-you-type format errors on non-empty values on its own).
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   function showToast(message: string, type: ToastType = 'success') {
     setToast({ message, type });
     setTimeout(() => setToast(null), 2800);
   }
 
-  // Edit field modal — only for the fields NOT edited directly on the display form:
-  // Occupation. (First/Middle/Last/Suffix, Email, House No./Street/City, and Mobile
-  // Number are plain InlineFieldInput fields now; Birthday uses BirthdayCalendarModal
-  // below.)
-  const [editModal, setEditModal] = useState<{
-    label: string;
-    key: 'occupation';
-    multiline?: boolean;
-  } | null>(null);
+  /** Drops a stale save-attempt error for one field once the resident corrects it —
+   * used by the picker-driven fields (Sex / Employment Status / Date of Birth), which
+   * don't get the as-you-type re-validation InlineFieldInput's fieldStatus() gives text
+   * fields for free. */
+  function clearFieldError(key: string) {
+    setFieldErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
 
   // Household member modal
   const [memberModal, setMemberModal] = useState<{ member: HouseholdMember | null } | null>(null);
@@ -886,10 +1022,20 @@ export default function ProfileScreen() {
     setBirthDateIso(profile.birth_date ?? null);
     setAvatarUrl((profile as any).avatar_url ?? null);
     setEmailVerifStatus((profile as any).email_verification_status ?? null);
-    setIdType((profile as any).id_type ?? null);
-    setIdPhotoUrls((profile as any).id_photo_urls ?? []);
+    // "Other" ID type is encoded as `Other: <text>` (OTHER_ID_TYPE_PREFIX) — split it
+    // back into the picker selection + free-text box.
+    const rawIdType: string | null = (profile as any).id_type ?? null;
+    const isOtherId = !!rawIdType && rawIdType.startsWith(OTHER_ID_TYPE_PREFIX);
+    setIdType(isOtherId ? 'Other' : rawIdType);
+    setOtherIdType(isOtherId ? rawIdType!.slice(OTHER_ID_TYPE_PREFIX.length) : '');
+    // Front/back photos are disambiguated by filename, not array position — a legacy
+    // single unlabeled photo (from before the front/back split) is treated as front.
+    const rawIdPhotos: string[] = (profile as any).id_photo_urls ?? [];
+    setIdFrontPath(rawIdPhotos.find((p) => idPhotoSide(p) === 'front') ?? rawIdPhotos.find((p) => idPhotoSide(p) === null) ?? null);
+    setIdBackPath(rawIdPhotos.find((p) => idPhotoSide(p) === 'back') ?? null);
     setIdVerifStatus((profile as any).id_verification_status ?? null);
     setNewIdUploaded(false); // reset on every profile sync
+    setFieldErrors({}); // reset any stale save-attempt errors on a fresh profile sync
     // Parse JSONB members array
     const raw = (profile as any).household_members;
     if (Array.isArray(raw)) {
@@ -919,26 +1065,58 @@ export default function ProfileScreen() {
     const rawMembers = (profile as any).household_members;
     const profileMembersJson = JSON.stringify(Array.isArray(rawMembers) ? rawMembers : []);
     if (JSON.stringify(members) !== profileMembersJson) return true;
-    // ID type
-    if (idType !== ((profile as any).id_type ?? null)) return true;
+    // ID type (including the composed "Other: <text>" value)
+    if (composeIdType(idType, otherIdType) !== ((profile as any).id_type ?? null)) return true;
     // New ID photo uploaded this session
     if (newIdUploaded) return true;
     return false;
   }, [
     profile, firstName, lastName, middleName, suffix, sex, email, houseNo, street, city,
-    employmentStatus, occupation, mobileNumber, birthDateIso, members, idType, newIdUploaded,
+    employmentStatus, occupation, mobileNumber, birthDateIso, members, idType, otherIdType, newIdUploaded,
   ]);
 
-  // ── Edit-field helpers ────────────────────────────────────────────────────
-  function currentEditValue() {
-    if (!editModal) return '';
-    if (editModal.key === 'occupation') return occupation;
-    return '';
-  }
+  // ── Required-field / format validation ───────────────────────────────────
+  // Run on every Save Changes attempt (see handleSave) — populates fieldErrors so
+  // empty required fields show a red "required" message, matching Register's
+  // registerSchema-driven validation. Format checks (names/mobile/email) also run
+  // live as-you-type via fieldStatus() above; this additionally catches empty
+  // required fields and the ID-verification completeness rules.
+  function validateRequiredFields(): Record<string, string> {
+    const errors: Record<string, string> = {};
 
-  function applyEditSave(val: string) {
-    if (!editModal) return;
-    if (editModal.key === 'occupation') setOccupation(val);
+    if (!firstName.trim()) errors.firstName = 'First name is required';
+    else if (!NAME_REGEX.test(firstName)) errors.firstName = 'Letters only — no numbers or symbols';
+
+    if (!lastName.trim()) errors.lastName = 'Last name is required';
+    else if (!NAME_REGEX.test(lastName)) errors.lastName = 'Letters only — no numbers or symbols';
+
+    if (middleName.trim() && !NAME_REGEX.test(middleName)) errors.middleName = 'Letters only — no numbers or symbols';
+    if (suffix.trim() && !NAME_REGEX.test(suffix)) errors.suffix = 'Letters only — no numbers or symbols';
+
+    if (!sex) errors.sex = 'Select your sex';
+    if (!birthDateIso) errors.birthDate = 'Date of birth is required';
+
+    if (!mobileNumber.trim()) errors.mobileNumber = 'Mobile number is required';
+    else if (!MOBILE_NUMBER_REGEX.test(mobileNumber)) errors.mobileNumber = 'Enter an 11-digit mobile number (e.g. 09171234567)';
+
+    if (!email.trim()) errors.email = 'Email is required';
+    else if (!EMAIL_REGEX.test(email)) errors.email = 'Enter a valid email address';
+
+    if (!houseNo.trim()) errors.houseNo = 'House No. is required';
+    if (!street.trim()) errors.street = 'Street is required';
+    if (!city.trim()) errors.city = 'City is required';
+    if (!employmentStatus) errors.employmentStatus = 'Select employment status';
+
+    // ID verification — only enforced once the resident has started one (an ID
+    // type is optional overall; Identification isn't in the required-fields list).
+    if (idType === 'Other' && !otherIdType.trim()) {
+      errors.otherIdType = 'Please specify your exact ID type';
+    }
+    if (idType && (!idFrontPath || !idBackPath)) {
+      errors.idPhotos = 'Upload both the front and back photos of your ID';
+    }
+
+    return errors;
   }
 
   // ── Avatar upload ─────────────────────────────────────────────────────────
@@ -993,33 +1171,42 @@ export default function ProfileScreen() {
     }
   }
 
-  // ── ID photo upload ───────────────────────────────────────────────────────
-  async function handleIdUpload() {
+  // ── ID photo upload (front / back) ────────────────────────────────────────
+  // One canonical path per side — `id-front.<ext>` / `id-back.<ext>` (the
+  // idPhotoSide() convention shared with resident-web) — upsert:true overwrites the
+  // previous photo for that side in storage, so re-uploading replaces it in place
+  // instead of accumulating extra files, and the resident can re-upload either side
+  // independently without disturbing the other.
+  async function handleIdUpload(side: 'front' | 'back') {
     if (!session) return;
     const picked = await pickImageAsset();
     if (!picked) return;
 
-    setIdUploading(true);
+    const setUploading = side === 'front' ? setIdUploadingFront : setIdUploadingBack;
+    setUploading(true);
     try {
       const bytes = await readImageBytes(picked);
       const ext   = imageExtension(picked.mimeType);
-      // Single canonical path per resident (mirrors the avatar upload below) —
-      // upsert:true overwrites the previous ID photo in storage so re-uploading
-      // replaces it instead of accumulating extra files/entries. Previously this
-      // used a timestamped filename with upsert:false and appended to the list,
-      // so every re-upload left the old photo(s) in place.
-      const path  = `${session.user.id}/id.${ext}`;
+      const path  = `${session.user.id}/id-${side}.${ext}`;
       const { error: uploadErr } = await supabase.storage
         .from('id-documents')
         .upload(path, bytes, { contentType: picked.mimeType, upsert: true });
       if (uploadErr) throw uploadErr;
-      setIdPhotoUrls([path]);
-      // Any new ID upload must be re-verified by an admin, even if previously 'verified'.
+      if (side === 'front') setIdFrontPath(path);
+      else setIdBackPath(path);
+      // Any new ID upload must be re-verified by an admin, even if previously
+      // 'verified' or 'verification_failed'.
       setNewIdUploaded(true);
+      setFieldErrors((prev) => {
+        if (!prev.idPhotos) return prev;
+        const next = { ...prev };
+        delete next.idPhotos;
+        return next;
+      });
     } catch (e: unknown) {
-      Alert.alert('Upload Failed', e instanceof Error ? e.message : 'Could not upload ID photo.');
+      Alert.alert('Upload Failed', e instanceof Error ? e.message : `Could not upload the ${side} of your ID.`);
     } finally {
-      setIdUploading(false);
+      setUploading(false);
     }
   }
 
@@ -1027,23 +1214,28 @@ export default function ProfileScreen() {
   async function handleSave() {
     if (!session || !isDirty) return;
 
-    const trimmedEmail = email.trim();
-    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      showToast('Please enter a valid email address', 'error');
+    const errors = validateRequiredFields();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      showToast('Please fix the highlighted fields', 'error');
       return;
     }
+    setFieldErrors({});
 
     setSaving(true);
 
+    const nextIdType   = composeIdType(idType, otherIdType);
+    const nextIdPhotos = [idFrontPath, idBackPath].filter((p): p is string => !!p);
+
     // ── ID verification status logic ────────────────────────────────────────
     // • New ID photo uploaded this session → always reset to 'pending'
-    //   (forces admin re-review even if previously 'verified').
-    // • ID type set + photo present + no prior status → first-time: 'pending'.
-    // • Otherwise keep the existing status unchanged (don't overwrite 'verified').
-    let nextIdStatus: 'pending' | 'verified' | null = idVerificationStatus;
+    //   (forces admin re-review even if previously 'verified' or 'verification_failed').
+    // • ID type set + both photos present + no prior status → first-time: 'pending'.
+    // • Otherwise keep the existing status unchanged (don't overwrite verified/failed).
+    let nextIdStatus: 'pending' | 'verified' | 'verification_failed' | null = idVerificationStatus;
     if (newIdUploaded) {
       nextIdStatus = 'pending';
-    } else if (!idVerificationStatus && idType && idPhotoUrls.length > 0) {
+    } else if (!idVerificationStatus && nextIdType && nextIdPhotos.length === 2) {
       nextIdStatus = 'pending';
     }
 
@@ -1074,8 +1266,8 @@ export default function ProfileScreen() {
         occupation:               occupation.trim() || null,
         birth_date:               birthDateIso,
         household_members:        members as any,
-        id_type:                  idType || null,
-        id_photo_urls:            idPhotoUrls,
+        id_type:                  nextIdType,
+        id_photo_urls:            nextIdPhotos,
         id_verification_status:   nextIdStatus,
         email_verification_status: nextEmailStatus,
       } as any)
@@ -1103,7 +1295,6 @@ export default function ProfileScreen() {
   if (isLoading) return <PlaceholderPanel label="Loading profile…" />;
 
   const isVerified  = emailVerificationStatus === 'verified';
-  const hasIdPhoto  = idPhotoUrls.length > 0;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
@@ -1193,28 +1384,86 @@ export default function ProfileScreen() {
         <SectionCard>
           <ThemedText style={styles.sectionTitle}>Personal Information</ThemedText>
 
-          <InlineFieldInput label="First Name" value={firstName} placeholder="Enter first name" onChangeText={setFirstName} />
+          <InlineFieldInput
+            label="First Name"
+            required
+            value={firstName}
+            placeholder="Enter first name"
+            onChangeText={setFirstName}
+            {...fieldStatus(firstName, fieldErrors.firstName, validateName)}
+          />
           <Divider />
-          <InlineFieldInput label="Last Name" value={lastName} placeholder="Enter last name" onChangeText={setLastName} />
+          <InlineFieldInput
+            label="Last Name"
+            required
+            value={lastName}
+            placeholder="Enter last name"
+            onChangeText={setLastName}
+            {...fieldStatus(lastName, fieldErrors.lastName, validateName)}
+          />
           <Divider />
-          <InlineFieldInput label="Middle Name" value={middleName} placeholder="Optional" onChangeText={setMiddleName} />
+          <InlineFieldInput
+            label="Middle Name"
+            value={middleName}
+            placeholder="Optional"
+            onChangeText={setMiddleName}
+            {...fieldStatus(middleName, fieldErrors.middleName, validateName)}
+          />
           <Divider />
-          <InlineFieldInput label="Suffix" value={suffix} placeholder="Optional — e.g. Jr., III" onChangeText={setSuffix} />
+          <InlineFieldInput
+            label="Suffix"
+            value={suffix}
+            placeholder="Optional — e.g. Jr., III"
+            onChangeText={setSuffix}
+            {...fieldStatus(suffix, fieldErrors.suffix, validateName)}
+          />
           <Divider />
           <FieldRow
             label="Sex"
+            required
             value={sex ? SEX_LABELS[sex] : ''}
             placeholder="Select sex"
+            error={fieldErrors.sex}
+            success={sex ? ' ' : undefined}
             onEdit={() => setSexModal(true)}
           />
           <Divider />
-          <InlineFieldInput label="Email" value={email} placeholder="Enter email address" onChangeText={setEmail} keyboardType="email-address" />
+          <InlineFieldInput
+            label="Email"
+            required
+            value={email}
+            placeholder="Enter email address"
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            {...fieldStatus(email, fieldErrors.email, validateEmail)}
+          />
           <Divider />
-          <InlineFieldInput label="House No." value={houseNo} placeholder="Enter house/unit number" onChangeText={setHouseNo} />
+          <InlineFieldInput
+            label="House No."
+            required
+            value={houseNo}
+            placeholder="Enter house/unit number"
+            onChangeText={setHouseNo}
+            {...fieldStatus(houseNo, fieldErrors.houseNo)}
+          />
           <Divider />
-          <InlineFieldInput label="Street" value={street} placeholder="Enter street" onChangeText={setStreet} />
+          <InlineFieldInput
+            label="Street"
+            required
+            value={street}
+            placeholder="Enter street"
+            onChangeText={setStreet}
+            {...fieldStatus(street, fieldErrors.street)}
+          />
           <Divider />
-          <InlineFieldInput label="City" value={city} placeholder="Enter city/municipality" onChangeText={setCity} />
+          <InlineFieldInput
+            label="City"
+            required
+            value={city}
+            placeholder="Enter city/municipality"
+            onChangeText={setCity}
+            {...fieldStatus(city, fieldErrors.city)}
+          />
           <Divider />
           {/* Read-only — this is profiles.barangay_id, assigned automatically at
               registration (AGENTS.md §0), not a free-text address component. */}
@@ -1227,34 +1476,38 @@ export default function ProfileScreen() {
           <Divider />
           <InlineFieldInput
             label="Mobile Number"
+            required
             value={mobileNumber}
-            placeholder="e.g. +63 917 123 4567"
+            placeholder="09171234567"
             onChangeText={setMobile}
             keyboardType="phone-pad"
+            maxLength={11}
+            {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}
           />
           <Divider />
           <FieldRow
             label="Employment Status"
+            required
             value={employmentStatus ? EMPLOYMENT_STATUS_LABELS[employmentStatus] : ''}
             placeholder="Select employment status"
+            error={fieldErrors.employmentStatus}
+            success={employmentStatus ? ' ' : undefined}
             onEdit={() => setEmploymentModal(true)}
           />
           {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
             <>
               <Divider />
-              <FieldRow
-                label="Occupation"
-                value={occupation}
-                placeholder="Optional"
-                onEdit={() => setEditModal({ label: 'Occupation', key: 'occupation' })}
-              />
+              <InlineFieldInput label="Occupation" value={occupation} placeholder="Optional" onChangeText={setOccupation} />
             </>
           ) : null}
           <Divider />
           <FieldRow
-            label="Birthday"
+            label="Date of Birth"
+            required
             value={fmtDate(birthDateIso)}
-            placeholder="Select your birthday"
+            placeholder="Select your date of birth"
+            error={fieldErrors.birthDate}
+            success={birthDateIso ? ' ' : undefined}
             onEdit={() => setShowBirthPicker(true)}
           />
         </SectionCard>
@@ -1299,6 +1552,12 @@ export default function ProfileScreen() {
                 <ThemedText style={idStatusStyles.pendingText}>Pending Verification</ThemedText>
               </View>
             )}
+            {idVerificationStatus === 'verification_failed' && (
+              <View style={idStatusStyles.failed}>
+                <Ionicons name="close-circle" size={13} color="#93000A" />
+                <ThemedText style={idStatusStyles.failedText}>Verification Failed, Try Again</ThemedText>
+              </View>
+            )}
           </View>
 
           {/* ID Type */}
@@ -1316,44 +1575,40 @@ export default function ProfileScreen() {
             <Ionicons name="create-outline" size={18} color={PRIMARY_GREEN} />
           </Pressable>
 
-          {/* ID photo preview — full-width, 16:10 aspect, no scroll if single photo */}
-          {idPhotoPublicUrls.length > 0 && (
-            idPhotoPublicUrls.length === 1 ? (
-              <View style={[styles.idPhotoWrap, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected }]}>
-                <Image
-                  source={{ uri: idPhotoPublicUrls[0] }}
-                  style={styles.idPhoto}
-                  contentFit="cover"
-                  transition={200}
-                />
-              </View>
-            ) : (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.idPhotoScroll}>
-                {idPhotoPublicUrls.map((url, i) => (
-                  <View key={i} style={[styles.idPhotoWrap, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected, width: 220, marginRight: Spacing.two }]}>
-                    <Image source={{ uri: url }} style={styles.idPhoto} contentFit="cover" transition={200} />
-                  </View>
-                ))}
-              </ScrollView>
-            )
+          {/* "Other" ID type — require the resident to specify the exact ID name;
+              saved as `Other: <text>` (composeIdType) into the same id_type column. */}
+          {idType === 'Other' && (
+            <InlineFieldInput
+              label="Specify ID Type"
+              required
+              value={otherIdType}
+              placeholder="e.g. Barangay Certification"
+              onChangeText={(v) => {
+                setOtherIdType(v);
+                if (v.trim()) clearFieldError('otherIdType');
+              }}
+              error={fieldErrors.otherIdType}
+              success={otherIdType.trim() ? ' ' : undefined}
+            />
           )}
 
-          {/* Re-upload button */}
-          <Pressable
-            style={[styles.reuploadBtn, { borderColor: theme.backgroundSelected }]}
-            onPress={handleIdUpload}
-            disabled={idUploading}
-            accessibilityRole="button">
-            {idUploading
-              ? <ActivityIndicator size="small" color={PRIMARY_GREEN} />
-              : <>
-                  <Ionicons name="cloud-upload-outline" size={16} color={theme.text} />
-                  <ThemedText style={styles.reuploadText}>
-                    {hasIdPhoto ? 'Re-upload Document' : 'Upload ID Document'}
-                  </ThemedText>
-                </>
-            }
-          </Pressable>
+          {/* Front / back photos — exactly one upload per side, re-uploadable independently. */}
+          <ThemedText themeColor="textSecondary" style={[fieldStyles.label, styles.idPhotosLabel]}>ID Photos</ThemedText>
+          <View style={styles.idPhotoRow}>
+            <IdPhotoSlot
+              label="Front Side"
+              uri={idFrontSignedUrl}
+              uploading={idUploadingFront}
+              onUpload={() => handleIdUpload('front')}
+            />
+            <IdPhotoSlot
+              label="Back Side"
+              uri={idBackSignedUrl}
+              uploading={idUploadingBack}
+              onUpload={() => handleIdUpload('back')}
+            />
+          </View>
+          <FieldStatusRow error={fieldErrors.idPhotos} />
         </SectionCard>
 
       </ScrollView>
@@ -1376,15 +1631,6 @@ export default function ProfileScreen() {
       {toast && <Toast message={toast.message} type={toast.type} />}
 
       {/* ── Modals ────────────────────────────────────────────────────────── */}
-      <EditFieldModal
-        visible={!!editModal}
-        label={editModal?.label ?? ''}
-        value={currentEditValue()}
-        multiline={editModal?.multiline}
-        onClose={() => setEditModal(null)}
-        onSave={applyEditSave}
-      />
-
       <BirthdayCalendarModal
         visible={showBirthPicker}
         value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
@@ -1392,6 +1638,7 @@ export default function ProfileScreen() {
         onSave={(date) => {
           setBirthDateIso(dateToIso(date));
           setShowBirthPicker(false);
+          clearFieldError('birthDate');
         }}
       />
 
@@ -1417,7 +1664,10 @@ export default function ProfileScreen() {
         visible={idTypeModal}
         current={idType}
         onClose={() => setIdTypeModal(false)}
-        onSelect={(t) => setIdType(t)}
+        onSelect={(t) => {
+          setIdType(t);
+          if (t !== 'Other') setOtherIdType('');
+        }}
       />
 
       <ChoiceListModal
@@ -1427,7 +1677,10 @@ export default function ProfileScreen() {
         labels={SEX_LABELS}
         current={sex}
         onClose={() => setSexModal(false)}
-        onSelect={(v) => setSex(v)}
+        onSelect={(v) => {
+          setSex(v);
+          clearFieldError('sex');
+        }}
       />
 
       <ChoiceListModal
@@ -1440,6 +1693,7 @@ export default function ProfileScreen() {
         onSelect={(v) => {
           setEmploymentStatus(v);
           if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(v)) setOccupation('');
+          clearFieldError('employmentStatus');
         }}
       />
     </View>
@@ -1470,6 +1724,16 @@ const idStatusStyles = StyleSheet.create({
     paddingVertical: 3,
   },
   pendingText: { fontSize: 11, fontWeight: '600', color: '#B45309' },
+  failed: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#93000A1E',
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  failedText: { fontSize: 11, fontWeight: '600', color: '#93000A' },
 });
 
 // ─── Screen styles ─────────────────────────────────────────────────────────────
@@ -1570,31 +1834,14 @@ const styles = StyleSheet.create({
   /* Household empty */
   emptyHousehold: { fontSize: 14, paddingVertical: Spacing.three, textAlign: 'center' },
 
-  /* ID photo — full-width frame with 16:10 aspect ratio */
-  idPhotoScroll: { marginTop: Spacing.two },
-  idPhotoWrap: {
-    width: '100%',
-    aspectRatio: 16 / 10,
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginTop: Spacing.two,
-    borderWidth: 1,
-  },
-  idPhoto: { width: '100%', height: '100%' },
-
-  /* Re-upload */
-  reuploadBtn: {
+  /* ID photos — front/back side-by-side slots */
+  idPhotosLabel: { marginTop: Spacing.two, marginBottom: 2 },
+  idPhotoRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing.two,
-    borderWidth: 1,
-    borderRadius: 24,
-    paddingVertical: 13,
-    marginTop: Spacing.two,
+    gap: Spacing.three,
+    marginTop: Spacing.one,
     marginBottom: Spacing.one,
   },
-  reuploadText: { fontSize: 14, fontWeight: '600' },
 
   /* Fixed save bar */
   saveBar: {

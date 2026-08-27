@@ -4,6 +4,7 @@ import { documentTypeSchema, formatCentavosAsPHP, formatProcessingTime, type Tab
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -47,15 +48,25 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
   async function toggleActive() {
     setToggling(true);
     const supabase = createSupabaseBrowserClient();
+    const nextIsActive = !documentType.is_active;
     const { error: toggleError } = await supabase
       .from('document_types')
-      .update({ is_active: !documentType.is_active })
+      .update({ is_active: nextIsActive })
       .eq('id', documentType.id);
     setToggling(false);
     if (toggleError) {
       toast.showError(`Failed to ${documentType.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'document_type',
+      entityId: documentType.id,
+      entityLabel: documentType.name,
+      changes: { before: { is_active: documentType.is_active }, after: { is_active: nextIsActive } },
+    }).catch(() => {});
+
     router.refresh();
   }
 
@@ -69,6 +80,21 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'document_type',
+      entityId: documentType.id,
+      entityLabel: documentType.name,
+      metadata: {
+        name: documentType.name,
+        description: documentType.description,
+        fee_centavos: documentType.fee_centavos,
+        processing_target_hours: documentType.processing_target_hours,
+        requirements: documentType.requirements,
+      },
+    }).catch(() => {});
+
     toast.showSuccess(`"${documentType.name}" archived.`);
     router.refresh();
   }
@@ -98,7 +124,7 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
+    const { data: updatedDocType, error: updateError } = await supabase
       .from('document_types')
       .update({
         name: result.data.name,
@@ -107,7 +133,9 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
         processing_target_hours: result.data.processingTargetHours,
         requirements: result.data.requirements,
       })
-      .eq('id', documentType.id);
+      .eq('id', documentType.id)
+      .select('id, name')
+      .single();
     setSubmitting(false);
 
     if (updateError) {
@@ -115,6 +143,29 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
       toast.showError(`Failed to save changes: ${updateError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'document_type',
+      entityId: documentType.id,
+      entityLabel: updatedDocType?.name ?? result.data.name,
+      changes: {
+        before: {
+          name: documentType.name,
+          description: documentType.description,
+          fee_centavos: documentType.fee_centavos,
+          processing_target_hours: documentType.processing_target_hours,
+          requirements: documentType.requirements,
+        },
+        after: {
+          name: result.data.name,
+          description: result.data.description ?? null,
+          fee_centavos: result.data.feeCentavos,
+          processing_target_hours: result.data.processingTargetHours,
+          requirements: result.data.requirements,
+        },
+      },
+    }).catch(() => {});
 
     toast.showSuccess(`"${result.data.name}" updated.`);
     setIsEditing(false);

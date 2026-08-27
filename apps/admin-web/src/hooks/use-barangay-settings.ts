@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -23,6 +24,23 @@ export type BarangaySettingsState = {
 };
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
+
+/** Readable names for the top-level BarangaySettings sections, used to build a dynamic
+ * entityLabel for the settings audit log entry (e.g. "Updated Contact Info, Feature Flags"). */
+const SETTINGS_SECTION_LABELS: Record<keyof BarangaySettings, string> = {
+  contact: 'Contact Info',
+  operatingHours: 'Operating Hours',
+  features: 'Feature Flags',
+  adminAuditLogPreferences: 'Audit Log Preferences',
+};
+
+function buildSettingsChangeLabel(before: BarangaySettings, after: BarangaySettings): string {
+  const changedSections = (Object.keys(SETTINGS_SECTION_LABELS) as (keyof BarangaySettings)[]).filter(
+    (key) => JSON.stringify(before[key]) !== JSON.stringify(after[key]),
+  );
+  if (!changedSections.length) return 'Barangay Settings';
+  return `Updated ${changedSections.map((key) => SETTINGS_SECTION_LABELS[key]).join(', ')}`;
+}
 
 const DEFAULT_SETTINGS: BarangaySettings = {
   contact: { email: '', phone: '', address: '' },
@@ -109,9 +127,10 @@ export function useBarangaySettings(barangayId: string | null) {
 
   async function updateSettings(next: Partial<BarangaySettings>) {
     if (!barangayId || !state.settings) return;
+    const previousSettings = state.settings;
     setState((s) => ({ ...s, saving: true, error: null }));
     const supabase = createSupabaseBrowserClient();
-    const merged = { ...state.settings, ...next };
+    const merged = { ...previousSettings, ...next };
     const validation = barangaySettingsSchema.safeParse(merged);
     if (!validation.success) {
       const message = validation.error.issues[0]?.message ?? 'Invalid settings';
@@ -132,6 +151,16 @@ export function useBarangaySettings(barangayId: string | null) {
       toast.showError(`Failed to save settings: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'settings',
+      entityLabel: buildSettingsChangeLabel(previousSettings, validation.data),
+      changes: {
+        before: previousSettings as unknown as Record<string, unknown>,
+        after: validation.data as unknown as Record<string, unknown>,
+      },
+    }).catch(() => {});
 
     setState((s) => ({ ...s, settings: validation.data }));
     toast.showSuccess('Settings saved.');

@@ -30,13 +30,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-import { NOTIFICATION_CATEGORY_LABELS, useAdminAuditNotifications } from '@/hooks/use-admin-audit-notifications';
+import { useAdminAuditNotifications } from '@/hooks/use-admin-audit-notifications';
+import { MODULE_META, MODULE_ORDER, type ModuleKey } from '@/lib/audit-notifications';
+import { THEMED_SCROLLBAR_CLASS } from '@/lib/scrollbar';
 
-import type { AdminAuditLogCategory } from '@barangayan/shared';
+import { NotificationsDrawer } from './notifications-drawer';
+import { ScrollableChipRow } from './scrollable-chip-row';
 
-type NotificationFilter = 'all' | 'unread' | keyof AdminAuditLogCategory;
+type NotificationFilter = 'all' | 'unread' | ModuleKey;
 
-const ICON_STROKE = { strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
+const ICON_STROKE = { strokeWidth: 2.5, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
 
 const SECTION_LABELS: Record<string, { icon: LucideIcon; label: string }> = {
   '/dashboard': { icon: LayoutDashboard, label: 'Dashboard' },
@@ -82,11 +85,17 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifFilter, setNotifFilter] = useState<NotificationFilter>('all');
+  // Split in two so the drawer can play its exit animation before actually
+  // leaving the DOM: `drawerOpen` is the target visual state (flip false to
+  // start the close animation), `drawerMounted` stays true until the drawer
+  // itself reports the exit transition finished.
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerMounted, setDrawerMounted] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  const { notifications, unreadCount, loading: notifLoading, markAsRead, markAllAsRead } =
+  const { notifications, unreadCount, loading: notifLoading, markAsRead, markAllAsRead, refetch: refetchNotifications } =
     useAdminAuditNotifications(barangayId);
 
   const section = Object.entries(SECTION_LABELS).find(([href]) => pathname?.startsWith(href))?.[1];
@@ -151,15 +160,17 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
   // Badge label — cap at 99+.
   const badgeLabel = unreadCount > 99 ? '99+' : String(unreadCount);
 
-  // Category chips only for categories actually present in the current page of
-  // notifications — avoids a wall of empty filters on a quiet barangay.
-  const presentCategories = Array.from(new Set(notifications.map((n) => n.category)));
-
   const filteredNotifications = notifications.filter((n) => {
     if (notifFilter === 'all') return true;
     if (notifFilter === 'unread') return !n.is_read;
-    return n.category === notifFilter;
+    return n.module === notifFilter;
   });
+
+  function openDrawer() {
+    setShowNotifications(false);
+    setDrawerMounted(true);
+    setDrawerOpen(true);
+  }
 
   return (
     <header className="flex items-center gap-4 border-b border-black/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-zinc-950">
@@ -228,44 +239,54 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
         </button>
 
         {showNotifications ? (
-          <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900">
+          <div className="absolute right-0 z-20 mt-2 w-[26rem] rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900">
             {/* Header */}
             <div className="border-b border-black/10 px-4 py-3 dark:border-white/10">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <span className="text-sm font-semibold">Notifications</span>
-                {unreadCount > 0 ? (
+                <div className="flex items-center gap-3">
+                  {unreadCount > 0 ? (
+                    <button
+                      onClick={markAllAsRead}
+                      className="flex items-center gap-1 text-xs text-[var(--accent)] hover:underline"
+                    >
+                      <Check className="size-3" />
+                      Mark all as read
+                    </button>
+                  ) : null}
                   <button
-                    onClick={markAllAsRead}
-                    className="flex items-center gap-1 text-xs text-[var(--accent)] hover:underline"
+                    onClick={openDrawer}
+                    className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-[var(--accent)] dark:text-zinc-400"
                   >
-                    <Check className="size-3" />
-                    Mark all as read
+                    More
                   </button>
-                ) : null}
+                </div>
               </div>
               <p className="mt-0.5 text-[11px] leading-snug text-zinc-400">
                 Shared with every admin in {barangayName} — actions from any admin account appear here.
               </p>
             </div>
 
-            {/* Filter chips */}
-            <div className="flex items-center gap-1.5 overflow-x-auto border-b border-black/10 px-3 py-2 dark:border-white/10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <FilterChip active={notifFilter === 'all'} onClick={() => setNotifFilter('all')}>
-                All
-              </FilterChip>
-              <FilterChip active={notifFilter === 'unread'} onClick={() => setNotifFilter('unread')}>
-                Unread
-              </FilterChip>
-              {presentCategories.map((cat) => (
-                <FilterChip key={cat} active={notifFilter === cat} onClick={() => setNotifFilter(cat)}>
-                  {NOTIFICATION_CATEGORY_LABELS[cat]}
+            {/* Filter chips — every module, always shown, horizontally scrollable */}
+            <div className="border-b border-black/10 px-2 py-2 dark:border-white/10">
+              <ScrollableChipRow className="px-1" edgeFromClassName="from-white dark:from-zinc-900">
+                <FilterChip active={notifFilter === 'all'} onClick={() => setNotifFilter('all')}>
+                  All
                 </FilterChip>
-              ))}
+                <FilterChip active={notifFilter === 'unread'} onClick={() => setNotifFilter('unread')}>
+                  Unread
+                </FilterChip>
+                {MODULE_ORDER.map((key) => (
+                  <FilterChip key={key} active={notifFilter === key} onClick={() => setNotifFilter(key)}>
+                    {MODULE_META[key].icon} {MODULE_META[key].label}
+                  </FilterChip>
+                ))}
+              </ScrollableChipRow>
             </div>
 
             {/* List — themed thin scrollbar + edge fade so the cut-off blends into the card */}
             <div
-              className="max-h-96 overflow-y-auto [scrollbar-color:theme(colors.zinc.300)_transparent] [scrollbar-width:thin] dark:[scrollbar-color:theme(colors.zinc.700)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-300 [&::-webkit-scrollbar-thumb:hover]:bg-zinc-400 [&::-webkit-scrollbar-track]:bg-transparent dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700 dark:[&::-webkit-scrollbar-thumb:hover]:bg-zinc-600"
+              className={`max-h-[32rem] overflow-y-auto ${THEMED_SCROLLBAR_CLASS}`}
               style={{
                 maskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent)',
                 WebkitMaskImage:
@@ -301,6 +322,17 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
               )}
             </div>
           </div>
+        ) : null}
+
+        {drawerMounted ? (
+          <NotificationsDrawer
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            onClosed={() => setDrawerMounted(false)}
+            barangayId={barangayId}
+            barangayName={barangayName}
+            onSynced={refetchNotifications}
+          />
         ) : null}
       </div>
 

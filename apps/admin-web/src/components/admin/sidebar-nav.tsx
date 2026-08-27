@@ -102,7 +102,7 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
         className={`flex min-w-0 flex-1 items-center gap-[13px] rounded-xl text-[13px] font-semibold transition-colors ${
           isThemePage ? 'text-[var(--accent)]' : 'text-[#151b2b] dark:text-zinc-100'
         }`}>
-        <Sun className="size-5 shrink-0 text-[#778191]" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+        <Sun className="size-5 shrink-0 text-[#778191]" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
         {!collapsed ? <span>Theme</span> : null}
       </Link>
       {!collapsed ? (
@@ -126,14 +126,14 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
           {/* Sun always on left — highlighted in light mode */}
           <Sun
             className="relative z-10 size-4 text-[#374151] transition-colors dark:text-[#a0aab8]"
-            strokeWidth={1.75}
+            strokeWidth={2.5}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           {/* Moon always on right — highlighted in dark mode */}
           <Moon
             className="relative z-10 size-4 text-[#a0aab8] transition-colors dark:text-zinc-200"
-            strokeWidth={1.75}
+            strokeWidth={2.5}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -175,7 +175,7 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
                     }`}>
                     <Icon
                       className="size-5 shrink-0"
-                      strokeWidth={1.75}
+                      strokeWidth={2.5}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
@@ -195,7 +195,7 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
           className="flex h-[49px] items-center gap-[13px] rounded-2xl px-[13px] text-left text-[13px] font-bold text-[#df2d2d] transition-colors hover:bg-red-50 dark:hover:bg-red-950/30">
           <LogOut
             className="size-5 shrink-0"
-            strokeWidth={1.75}
+            strokeWidth={2.5}
             strokeLinecap="round"
             strokeLinejoin="round"
           />

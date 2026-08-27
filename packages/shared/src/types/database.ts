@@ -1231,6 +1231,7 @@ export type Database = {
           middle_name: string | null
           mobile_number: string | null
           occupation: string | null
+          location_verified_at: string | null
           push_notifications_enabled: boolean
           registration_location: Json | null
           role: string
@@ -1239,6 +1240,8 @@ export type Database = {
           suffix: string | null
           theme_preference: string
           updated_at: string
+          verified_location: Json | null
+          verified_location_address: string | null
         }
         Insert: {
           accent_color?: string
@@ -1266,6 +1269,7 @@ export type Database = {
           id_verification_status?: string | null
           last_name?: string | null
           location_verified?: boolean | null
+          location_verified_at?: string | null
           middle_name?: string | null
           mobile_number?: string | null
           occupation?: string | null
@@ -1277,6 +1281,8 @@ export type Database = {
           suffix?: string | null
           theme_preference?: string
           updated_at?: string
+          verified_location?: Json | null
+          verified_location_address?: string | null
         }
         Update: {
           accent_color?: string
@@ -1304,6 +1310,7 @@ export type Database = {
           id_verification_status?: string | null
           last_name?: string | null
           location_verified?: boolean | null
+          location_verified_at?: string | null
           middle_name?: string | null
           mobile_number?: string | null
           occupation?: string | null
@@ -1315,6 +1322,8 @@ export type Database = {
           suffix?: string | null
           theme_preference?: string
           updated_at?: string
+          verified_location?: Json | null
+          verified_location_address?: string | null
         }
         Relationships: [
           {

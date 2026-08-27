@@ -15,6 +15,10 @@ export default function SettingsLayout() {
         options={{ headerShown: false, animation: 'slide_from_right' }}
       />
       <Stack.Screen
+        name="location-verification"
+        options={{ headerShown: false, animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
         name="help"
         options={{ headerShown: false, animation: 'slide_from_right' }}
       />

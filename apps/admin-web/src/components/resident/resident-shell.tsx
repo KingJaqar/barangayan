@@ -69,7 +69,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, children 
                     ? 'bg-[var(--accent)]/15 text-[var(--accent)]'
                     : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}>
-                <Icon size={16} strokeWidth={1.75} />
+                <Icon size={16} strokeWidth={2.5} />
                 {label}
               </Link>
             );
@@ -91,7 +91,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, children 
             onClick={handleLogout}
             title="Log out"
             className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30">
-            <LogOut size={16} strokeWidth={1.75} />
+            <LogOut size={16} strokeWidth={2.5} />
           </button>
         </div>
       </header>
@@ -107,7 +107,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, children 
               className={`flex flex-col items-center gap-0.5 px-2 text-[11px] font-medium ${
                 active ? 'text-[var(--accent)]' : 'text-zinc-500'
               }`}>
-              <Icon size={18} strokeWidth={1.75} />
+              <Icon size={18} strokeWidth={2.5} />
               {label}
             </Link>
           );

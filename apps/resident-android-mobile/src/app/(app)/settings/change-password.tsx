@@ -1,4 +1,4 @@
-import { changePasswordSchema } from '@barangayan/shared';
+import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,31 @@ import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
+
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Mirrors the Register screen's as-you-type treatment (register.tsx's fieldStatus/
+// validatePassword) — a red alert or green check appears below New Password the
+// moment its value becomes invalid/valid, instead of waiting for Update Password
+// to be pressed. Empty fields stay silent until a submit attempt populates
+// fieldErrors (the "required" message).
+function validateNewPassword(value: string): string | null {
+  if (value.length < 8) return 'Password must be at least 8 characters';
+  return PASSWORD_COMPLEXITY_REGEX.test(value)
+    ? null
+    : 'Add an uppercase letter, a number, and a special character';
+}
+
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) => string | null,
+  successMessage = ' ',
+): { error?: string; success?: string } {
+  if (!value) return submitError ? { error: submitError } : {};
+  const message = validate?.(value);
+  if (message) return { error: message };
+  return { success: successMessage };
+}
 
 /** Centered, auto-dismissing confirmation used after the password update succeeds. */
 function ResultPopup({
@@ -80,6 +105,15 @@ export default function ChangePasswordScreen() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const hasEnteredBothPasswords = newPassword.length > 0 && confirmPassword.length > 0;
+  const passwordsMatch = hasEnteredBothPasswords && newPassword === confirmPassword;
+  // The status row below is the single place that reports a mismatch in real time —
+  // same treatment as Register's Confirm Password field. Keep any other Confirm
+  // Password validation message, but avoid duplicating the schema's mismatch message
+  // directly under the field after submission.
+  const confirmPasswordError =
+    fieldErrors.confirmPassword === "Passwords don't match" ? undefined : fieldErrors.confirmPassword;
 
   async function handleUpdate() {
     setError(null);
@@ -173,7 +207,8 @@ export default function ChangePasswordScreen() {
                   <Ionicons name="shield-checkmark-outline" size={20} color={theme.primary} />
                 </View>
                 <ThemedText themeColor="textSecondary" style={styles.intro}>
-                  Enter your current password, then choose a new one (at least 8 characters).
+                  Enter your current password, then choose a new one — at least 8 characters,
+                  with an uppercase letter, a number, and a special character.
                 </ThemedText>
               </View>
 
@@ -184,6 +219,7 @@ export default function ChangePasswordScreen() {
                 ]}>
                 <TextField
                   label="Current Password"
+                  required
                   value={currentPassword}
                   onChangeText={setCurrentPassword}
                   error={fieldErrors.currentPassword}
@@ -194,22 +230,36 @@ export default function ChangePasswordScreen() {
                 <View style={[styles.divider, { backgroundColor: theme.backgroundSelected }]} />
                 <TextField
                   label="New Password"
+                  required
                   value={newPassword}
                   onChangeText={setNewPassword}
-                  error={fieldErrors.newPassword}
                   autoCapitalize="none"
                   autoComplete="new-password"
+                  {...fieldStatus(newPassword, fieldErrors.newPassword, validateNewPassword, 'Password strength: good')}
                   passwordVisibility={{ visible: showNew, onToggle: () => setShowNew((v) => !v) }}
                 />
                 <TextField
                   label="Confirm New Password"
+                  required
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  error={fieldErrors.confirmPassword}
+                  error={confirmPasswordError}
                   autoCapitalize="none"
                   autoComplete="new-password"
                   passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((v) => !v) }}
                 />
+                {hasEnteredBothPasswords ? (
+                  <View accessibilityLiveRegion="polite" style={styles.passwordMatchIndicator}>
+                    <Ionicons
+                      name={passwordsMatch ? 'checkmark-circle-outline' : 'alert-circle-outline'}
+                      size={16}
+                      color={passwordsMatch ? theme.accentGreen : theme.accentRed}
+                    />
+                    <ThemedText type="small" style={{ color: passwordsMatch ? theme.accentGreen : theme.accentRed }}>
+                      {passwordsMatch ? 'Passwords match' : "Passwords don't match"}
+                    </ThemedText>
+                  </View>
+                ) : null}
               </View>
 
               {error ? (
@@ -293,6 +343,11 @@ const styles = StyleSheet.create({
   divider: {
     height: StyleSheet.hairlineWidth,
     marginVertical: Spacing.half,
+  },
+  passwordMatchIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
   },
   errorBanner: {
     flexDirection: 'row',

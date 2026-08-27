@@ -4,6 +4,7 @@ import { formatDateTime } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -57,23 +58,41 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
     }
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
-      .from('medical_drives')
-      .update({
-        title: title.trim(),
-        location: location.trim() || 'Barangay Health Center',
-        time_start: timeStart,
-        time_end: timeEnd,
-        eligible_criteria: eligibleCriteria.trim(),
-        stock_label: stockLabel.trim() || 'Remaining Slots',
-        stock_unit: stockUnit.trim() || 'slots',
-      })
-      .eq('id', drive.id);
+    const newValues = {
+      title: title.trim(),
+      location: location.trim() || 'Barangay Health Center',
+      time_start: timeStart,
+      time_end: timeEnd,
+      eligible_criteria: eligibleCriteria.trim(),
+      stock_label: stockLabel.trim() || 'Remaining Slots',
+      stock_unit: stockUnit.trim() || 'slots',
+    };
+    const { error } = await supabase.from('medical_drives').update(newValues).eq('id', drive.id);
     setSaving(false);
     if (error) {
       toast.showError(`Failed to save: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'medical_drive',
+      entityId: drive.id,
+      entityLabel: newValues.title,
+      changes: {
+        before: {
+          title: drive.title,
+          location: drive.location,
+          time_start: drive.time_start,
+          time_end: drive.time_end,
+          eligible_criteria: drive.eligible_criteria,
+          stock_label: drive.stock_label,
+          stock_unit: drive.stock_unit,
+        },
+        after: newValues,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Drive details updated.');
     setEditing(false);
     router.refresh();

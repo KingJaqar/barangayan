@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { StatusPill } from '@/components/admin/status-pill';
 import { useToast } from '@/components/ui/toast';
@@ -9,6 +10,9 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface PaymentRefundActionProps {
   paymentId: string;
+  /** Threaded down purely so the audit log entry this action writes has a meaningful
+   * `entityLabel` — this component otherwise only deals in ids. */
+  referenceNumber: string;
   method: string;
   status: string;
   refundStatus: string;
@@ -22,6 +26,7 @@ interface PaymentRefundActionProps {
  * page can offer the same action without duplicating the confirm/toast/refresh wiring. */
 export function PaymentRefundAction({
   paymentId,
+  referenceNumber,
   method,
   status,
   refundStatus,
@@ -39,6 +44,16 @@ export function PaymentRefundAction({
       toast.showError(`Failed to submit refund: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'payment',
+      entityId: paymentId,
+      entityLabel: referenceNumber,
+      changes: { before: { status }, after: { status: 'refund_requested' } },
+      metadata: { reason: 'requested_by_customer' },
+    }).catch(() => {});
+
     toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
     router.refresh();
   }

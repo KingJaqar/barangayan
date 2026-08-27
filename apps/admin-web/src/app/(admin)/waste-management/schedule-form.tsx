@@ -4,6 +4,7 @@ import { wasteScheduleSchema, WASTE_TYPES, WASTE_TYPE_CONFIG, DAY_NAMES, type Ta
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -46,16 +47,20 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('waste_collection_schedules').insert({
-      barangay_id: barangayId,
-      zone_id: result.data.zoneId,
-      waste_type: result.data.wasteType,
-      day_of_week: result.data.dayOfWeek,
-      start_time: result.data.startTime,
-      end_time: result.data.endTime,
-      notes: result.data.notes,
-      is_active: true,
-    });
+    const { data, error: insertError } = await supabase
+      .from('waste_collection_schedules')
+      .insert({
+        barangay_id: barangayId,
+        zone_id: result.data.zoneId,
+        waste_type: result.data.wasteType,
+        day_of_week: result.data.dayOfWeek,
+        start_time: result.data.startTime,
+        end_time: result.data.endTime,
+        notes: result.data.notes,
+        is_active: true,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
 
     if (insertError) {
@@ -63,6 +68,22 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
       toast.showError(`Failed to add schedule: ${insertError.message}`);
       return;
     }
+
+    const zoneName = zones.find((z) => z.id === result.data.zoneId)?.name ?? 'Unknown zone';
+    logAdminAction({
+      action: 'create',
+      entityType: 'waste_schedule',
+      entityId: data?.id,
+      entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
+      metadata: {
+        zone: zoneName,
+        waste_type: result.data.wasteType,
+        day_of_week: DAY_NAMES[result.data.dayOfWeek] ?? result.data.dayOfWeek,
+        start_time: result.data.startTime,
+        end_time: result.data.endTime,
+        notes: result.data.notes ?? null,
+      },
+    }).catch(() => {});
 
     setZoneId('');
     setWasteType(WASTE_TYPES[0]);

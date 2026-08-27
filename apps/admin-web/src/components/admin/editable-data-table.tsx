@@ -1,13 +1,18 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 
+import { TableScrollArea } from '@/components/admin/table-scroll-area';
 import { useToast } from '@/components/ui/toast';
 
 // Floor for the last (filler) column under `resizableColumns` — enough room for a small
 // action button or short status label, so it can't be squeezed to invisible by the other
 // columns' pinned/`initialWidth` widths adding up to more than the table's available space.
-const LAST_COLUMN_MIN_WIDTH = 80;
+const LAST_COLUMN_MIN_WIDTH = 88;
+
+// Auto-measured (and pinned `initialWidth`) columns get this much extra breathing room over
+// their tightest-fit natural size, so field values aren't crammed against the column edge.
+const COLUMN_WIDTH_PADDING = 1.1;
 
 export interface EditableSelectOption {
   value: string;
@@ -118,7 +123,7 @@ export function EditableDataTable<T>({
         if (next[col.header] === undefined) {
           const width = col.initialWidth ?? thRefs.current[col.header]?.getBoundingClientRect().width;
           if (width) {
-            next[col.header] = Math.round(width);
+            next[col.header] = Math.round(width * COLUMN_WIDTH_PADDING);
             changed = true;
           }
         }
@@ -147,53 +152,6 @@ export function EditableDataTable<T>({
   }
 
   const columnsMeasured = resizableColumns && pinnedColumns.every((col) => colWidths[col.header] !== undefined);
-
-  // A second, top-of-table scrollbar mirroring the real one below, for wide tables where the
-  // bottom scrollbar sits below the fold — dragging either one scrolls both in lockstep.
-  const topScrollRef = useRef<HTMLDivElement>(null);
-  const bottomScrollRef = useRef<HTMLDivElement>(null);
-  const [tableWidth, setTableWidth] = useState(0);
-  const syncingFrom = useRef<'top' | 'bottom' | null>(null);
-
-  useLayoutEffect(() => {
-    const bottomEl = bottomScrollRef.current;
-    const table = bottomEl?.firstElementChild as HTMLElement | undefined;
-    if (!bottomEl || !table) return;
-
-    const updateWidth = () => setTableWidth(table.scrollWidth);
-    updateWidth();
-
-    const observer = new ResizeObserver(updateWidth);
-    observer.observe(table);
-    return () => observer.disconnect();
-  }, [rows, columns]);
-
-  useEffect(() => {
-    function handleWindowResize() {
-      const table = bottomScrollRef.current?.firstElementChild as HTMLElement | undefined;
-      if (table) setTableWidth(table.scrollWidth);
-    }
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
-
-  function handleTopScroll() {
-    if (syncingFrom.current === 'bottom') return;
-    syncingFrom.current = 'top';
-    if (bottomScrollRef.current && topScrollRef.current) {
-      bottomScrollRef.current.scrollLeft = topScrollRef.current.scrollLeft;
-    }
-    syncingFrom.current = null;
-  }
-
-  function handleBottomScroll() {
-    if (syncingFrom.current === 'top') return;
-    syncingFrom.current = 'bottom';
-    if (bottomScrollRef.current && topScrollRef.current) {
-      topScrollRef.current.scrollLeft = bottomScrollRef.current.scrollLeft;
-    }
-    syncingFrom.current = null;
-  }
 
   function startEdit(row: T, col: EditableDataTableColumn<T>) {
     const edit = resolveEdit(col, row);
@@ -236,156 +194,151 @@ export function EditableDataTable<T>({
   }
 
   return (
-    <div>
-      <div ref={topScrollRef} onScroll={handleTopScroll} className="overflow-x-auto overflow-y-hidden" style={{ height: 16 }}>
-        <div style={{ width: tableWidth, height: 1 }} />
-      </div>
-      <div
-        ref={bottomScrollRef}
-        onScroll={handleBottomScroll}
-        className="overflow-x-auto rounded-xl border border-black/10 dark:border-white/10"
+    <TableScrollArea>
+      <table
+        // w-full only kicks in once the pinned columns are measured and the table is on
+        // fixed layout — applying it during the brief unmeasured auto-layout pass would
+        // stretch the very widths startColumnResize is trying to capture as "natural".
+        className={`text-left text-sm ${!resizableColumns ? 'w-full min-w-max' : columnsMeasured ? 'w-full' : ''}`}
+        style={columnsMeasured ? { tableLayout: 'fixed' } : undefined}
       >
-        <table
-          // w-full only kicks in once the pinned columns are measured and the table is on
-          // fixed layout — applying it during the brief unmeasured auto-layout pass would
-          // stretch the very widths startColumnResize is trying to capture as "natural".
-          className={`text-left text-sm ${!resizableColumns ? 'w-full min-w-max' : columnsMeasured ? 'w-full' : ''}`}
-          style={columnsMeasured ? { tableLayout: 'fixed' } : undefined}
+        {resizableColumns && (
+          <colgroup>
+            {columns.map((col) => (
+              <col key={col.header} style={colWidths[col.header] ? { width: colWidths[col.header] } : undefined} />
+            ))}
+          </colgroup>
+        )}
+        <thead
+          className={`${
+            thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/10 dark:border-white/10'
+          } bg-zinc-50 dark:bg-zinc-800/60`}
         >
-          {resizableColumns && (
-            <colgroup>
-              {columns.map((col) => (
-                <col key={col.header} style={colWidths[col.header] ? { width: colWidths[col.header] } : undefined} />
-              ))}
-            </colgroup>
-          )}
-          <thead
-            className={`${
-              thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/10 dark:border-white/10'
-            } bg-zinc-100 dark:bg-zinc-900`}
-          >
+          <tr>
+            {columns.map((col, colIndex) => (
+              <th
+                key={col.header}
+                ref={(el) => {
+                  thRefs.current[col.header] = el;
+                }}
+                // The last (filler) column gets a floor so it can never be squeezed to
+                // invisible by the other columns' pinned/initial widths adding up to more
+                // than the table's available space.
+                style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
+                className={`relative px-5 py-3.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 ${
+                  thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
+                }`}
+              >
+                <span className="block truncate" title={col.header}>
+                  {col.header}
+                </span>
+                {resizableColumns && (
+                  <div
+                    onMouseDown={(e) => startColumnResize(e, col.header)}
+                    title="Drag to resize"
+                    className="absolute inset-y-0 right-0 w-1.5 cursor-col-resize select-none hover:bg-[var(--accent)]/40 active:bg-[var(--accent)]"
+                  />
+                )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.length === 0 ? (
             <tr>
-              {columns.map((col, colIndex) => (
-                <th
-                  key={col.header}
-                  ref={(el) => {
-                    thRefs.current[col.header] = el;
-                  }}
-                  // The last (filler) column gets a floor so it can never be squeezed to
-                  // invisible by the other columns' pinned/initial widths adding up to more
-                  // than the table's available space.
-                  style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
-                  className={`relative px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300 ${
-                    thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
-                  }`}
-                >
-                  <span className="block truncate">{col.header}</span>
-                  {resizableColumns && (
-                    <div
-                      onMouseDown={(e) => startColumnResize(e, col.header)}
-                      title="Drag to resize"
-                      className="absolute inset-y-0 right-0 w-1.5 cursor-col-resize select-none hover:bg-[var(--accent)]/40 active:bg-[var(--accent)]"
-                    />
-                  )}
-                </th>
-              ))}
+              <td colSpan={columns.length} className="px-5 py-8 text-center text-zinc-500">
+                {emptyLabel}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 ? (
-              <tr>
-                <td colSpan={columns.length} className="px-4 py-8 text-center text-zinc-500">
-                  {emptyLabel}
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => (
-                <tr
-                  key={rowKey(row)}
-                  className={`${
-                    thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/5 dark:border-white/5'
-                  } last:border-0 ${onRowClick ? 'hover:bg-zinc-50 dark:hover:bg-zinc-900/50' : ''}`}
-                >
-                  {columns.map((col, colIndex) => {
-                    const isEditing = editing?.row === rowKey(row) && editing?.col === col.header;
-                    const edit = resolveEdit(col, row);
-                    const editable = !!edit && (!edit.canEdit || edit.canEdit(row));
+          ) : (
+            rows.map((row, rowIndex) => (
+              <tr
+                key={rowKey(row)}
+                className={`${
+                  thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/5 dark:border-white/5'
+                } last:border-0 ${rowIndex % 2 === 1 ? 'bg-zinc-50/60 dark:bg-zinc-900/20' : ''} ${
+                  onRowClick ? 'hover:bg-zinc-100 dark:hover:bg-zinc-900/50' : ''
+                }`}
+              >
+                {columns.map((col, colIndex) => {
+                  const isEditing = editing?.row === rowKey(row) && editing?.col === col.header;
+                  const edit = resolveEdit(col, row);
+                  const editable = !!edit && (!edit.canEdit || edit.canEdit(row));
 
-                    return (
-                      <td
-                        key={col.header}
-                        style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
-                        className={`px-4 py-3 ${resizableColumns ? 'overflow-hidden' : ''} ${
-                          thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
-                        } ${col.className ?? ''} ${editable && !isEditing ? 'cursor-text hover:bg-[var(--accent)]/5' : ''} ${
-                          onRowClick && !editable ? 'cursor-pointer' : ''
-                        }`}
-                        onClick={(e) => {
-                          if (editable) {
-                            e.stopPropagation();
-                            startEdit(row, col);
-                          } else if (onRowClick) {
-                            onRowClick(row);
-                          }
-                        }}
-                      >
-                        {isEditing && edit ? (
-                          edit.type === 'select' ? (
-                            <select
-                              autoFocus
-                              value={draft}
-                              disabled={saving}
-                              onChange={(e) => setDraft(e.target.value)}
-                              onBlur={() => commitEdit(row, col)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') commitEdit(row, col);
-                                if (e.key === 'Escape') cancelEdit();
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
-                            >
-                              {edit.options?.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </option>
-                              ))}
-                            </select>
-                          ) : (
-                            <input
-                              autoFocus
-                              type={
-                                edit.type === 'number'
-                                  ? 'number'
-                                  : edit.type === 'datetime'
-                                    ? 'datetime-local'
-                                    : edit.type === 'date'
-                                      ? 'date'
-                                      : 'text'
-                              }
-                              value={draft}
-                              disabled={saving}
-                              onChange={(e) => setDraft(e.target.value)}
-                              onBlur={() => commitEdit(row, col)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') commitEdit(row, col);
-                                if (e.key === 'Escape') cancelEdit();
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
-                            />
-                          )
+                  return (
+                    <td
+                      key={col.header}
+                      style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
+                      className={`px-5 py-3.5 ${resizableColumns ? 'overflow-hidden' : ''} ${
+                        thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
+                      } ${col.className ?? ''} ${editable && !isEditing ? 'cursor-text hover:bg-[var(--accent)]/5' : ''} ${
+                        onRowClick && !editable ? 'cursor-pointer' : ''
+                      }`}
+                      onClick={(e) => {
+                        if (editable) {
+                          e.stopPropagation();
+                          startEdit(row, col);
+                        } else if (onRowClick) {
+                          onRowClick(row);
+                        }
+                      }}
+                    >
+                      {isEditing && edit ? (
+                        edit.type === 'select' ? (
+                          <select
+                            autoFocus
+                            value={draft}
+                            disabled={saving}
+                            onChange={(e) => setDraft(e.target.value)}
+                            onBlur={() => commitEdit(row, col)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') commitEdit(row, col);
+                              if (e.key === 'Escape') cancelEdit();
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
+                          >
+                            {edit.options?.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
                         ) : (
-                          col.render(row)
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                          <input
+                            autoFocus
+                            type={
+                              edit.type === 'number'
+                                ? 'number'
+                                : edit.type === 'datetime'
+                                  ? 'datetime-local'
+                                  : edit.type === 'date'
+                                    ? 'date'
+                                    : 'text'
+                            }
+                            value={draft}
+                            disabled={saving}
+                            onChange={(e) => setDraft(e.target.value)}
+                            onBlur={() => commitEdit(row, col)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') commitEdit(row, col);
+                              if (e.key === 'Escape') cancelEdit();
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
+                          />
+                        )
+                      ) : (
+                        col.render(row)
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </TableScrollArea>
   );
 }

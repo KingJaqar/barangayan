@@ -10,6 +10,7 @@ import {
   KeyRound,
   LogIn,
   LogOut,
+  MapPin,
   Palette,
   Trash2,
   User,
@@ -46,6 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
     guestAccessible: false,
     items: [
       { href: '/settings/profile', icon: User, label: 'Profile' },
+      { href: '/settings/location-verification', icon: MapPin, label: 'Location Verification' },
       { href: '/settings/change-password', icon: KeyRound, label: 'Change Password' },
       { href: '/settings/notifications', icon: Bell, label: 'Notifications' },
     ],
@@ -79,6 +81,8 @@ interface SettingsSidebarProps {
   logoutAction: () => void | Promise<void>;
   /** Drives the green-check/yellow-! badge on the Profile row (email_verification_status === 'verified'). */
   emailVerified: boolean;
+  /** Drives the same badge on the Location Verification row (profiles.verified_location is set). */
+  locationVerified: boolean;
   /** Hides the Account/Privacy & Data groups and swaps the footer's "Log out" row for
    * Log In / Sign Up links — there's no session to sign out of. */
   isAuthenticated: boolean;
@@ -97,7 +101,7 @@ interface SettingsSidebarProps {
  * independent scroll region. Below `lg` there's no room for a fixed 285px column,
  * so it collapses to an icon-only horizontal strip instead.
  */
-export function SettingsSidebar({ logoutAction, emailVerified, isAuthenticated }: SettingsSidebarProps) {
+export function SettingsSidebar({ logoutAction, emailVerified, locationVerified, isAuthenticated }: SettingsSidebarProps) {
   const pathname = usePathname();
   const resetPreferences = useResetPreferencesOnLogout();
   const visibleGroups = isAuthenticated ? NAV_GROUPS : NAV_GROUPS.filter((g) => g.guestAccessible);
@@ -123,7 +127,17 @@ export function SettingsSidebar({ logoutAction, emailVerified, isAuthenticated }
                       label={item.label}
                       active={!!active}
                       destructive={item.destructive}
-                      badge={item.href === '/settings/profile' ? (emailVerified ? 'verified' : 'unverified') : undefined}
+                      badge={
+                        item.href === '/settings/profile'
+                          ? emailVerified
+                            ? 'verified'
+                            : 'unverified'
+                          : item.href === '/settings/location-verification'
+                            ? locationVerified
+                              ? 'verified'
+                              : 'unverified'
+                            : undefined
+                      }
                     />
                   );
                 })}
@@ -195,7 +209,7 @@ function NavRow({
         <Icon className="size-5" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
         {badge ? (
           <span
-            title={badge === 'verified' ? 'Email verified' : 'Email not verified'}
+            title={badge === 'verified' ? 'Verified' : 'Not verified'}
             className={`absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-black leading-none text-white ring-2 ring-white dark:ring-zinc-900 ${
               badge === 'verified' ? 'bg-green-500' : 'bg-amber-400'
             }`}>

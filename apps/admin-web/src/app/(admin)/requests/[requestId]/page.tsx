@@ -76,6 +76,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       <div className="mb-6 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
         <RequestStatusActions
           requestId={request.id}
+          referenceNumber={request.reference_number}
           status={request.status}
           paymentStatus={request.payment_status}
           paymentMethod={request.payment_method}
@@ -115,6 +116,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
             <div className="mt-3">
               <PaymentRefundAction
                 paymentId={payment.id}
+                referenceNumber={request.reference_number}
                 method={payment.method}
                 status={payment.status}
                 refundStatus={payment.refund_status}

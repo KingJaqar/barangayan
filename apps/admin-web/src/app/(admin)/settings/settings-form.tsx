@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useBarangaySettings } from '@/hooks/use-barangay-settings';
+import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/lib/audit-notifications';
 
 import {
   barangaySettingsSchema,
@@ -26,18 +27,6 @@ const DAY_LABELS: Record<string, string> = {
   saturday: 'Saturday',
   sunday: 'Sunday',
 };
-
-const AUDIT_CATEGORY_LABELS: { key: keyof AdminAuditLogCategory; label: string }[] = [
-  { key: 'service_requests', label: 'Service Requests' },
-  { key: 'announcements', label: 'Announcements' },
-  { key: 'incidents', label: 'Incident Reports' },
-  { key: 'residents', label: 'Residents' },
-  { key: 'waste_management', label: 'Waste Management' },
-  { key: 'health', label: 'Health Drives' },
-  { key: 'evacuation_centers', label: 'Evacuation Centers' },
-  { key: 'staff', label: 'Staff' },
-  { key: 'system', label: 'System (login / logout)' },
-];
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -283,7 +272,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
         {/* Per-category checkboxes — disabled when master is off */}
         <fieldset disabled={!features.enableAdminAuditLog} className="space-y-2 disabled:opacity-50">
           <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Categories</legend>
-          {AUDIT_CATEGORY_LABELS.map(({ key, label }) => (
+          {CATEGORY_ORDER.map((key) => (
             <label key={key} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -291,7 +280,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
                 onChange={() => handleCategoryToggle(key)}
                 className="h-4 w-4 rounded border-zinc-300"
               />
-              <span>{label}</span>
+              <span>{CATEGORY_LABELS[key]}</span>
             </label>
           ))}
 

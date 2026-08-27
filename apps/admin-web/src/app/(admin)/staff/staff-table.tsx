@@ -4,6 +4,7 @@ import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, type OfficialRole, type Tables } 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
@@ -98,16 +99,52 @@ export function StaffTable({
   const sortedRows = [...rows].sort((a, b) => a.profile.full_name.localeCompare(b.profile.full_name) * (nameOrder === 'asc' ? 1 : -1));
 
   async function updateProfile(row: OfficialWithProfile, patch: Partial<Tables<'profiles'>>) {
+    const profileRecord = row.profile as unknown as Record<string, unknown>;
+    const patchRecord = patch as Record<string, unknown>;
+    const isNoop = Object.keys(patch).every((key) => profileRecord[key] === patchRecord[key]);
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('profiles').update(patch).eq('id', row.profile.id);
-    if (!error) router.refresh();
+    if (!error) {
+      if (!isNoop) {
+        logAdminAction({
+          action: 'update',
+          entityType: 'staff',
+          entityId: row.profile.id,
+          entityLabel: row.profile.full_name,
+          changes: {
+            before: Object.fromEntries(Object.keys(patch).map((key) => [key, profileRecord[key]])),
+            after: patch,
+          },
+        }).catch(() => {});
+      }
+      router.refresh();
+    }
     return { error: error?.message ?? null };
   }
 
   async function updateOfficial(row: OfficialWithProfile, patch: Partial<Tables<'barangay_officials'>>) {
+    const rowRecord = row as unknown as Record<string, unknown>;
+    const patchRecord = patch as Record<string, unknown>;
+    const isNoop = Object.keys(patch).every((key) => rowRecord[key] === patchRecord[key]);
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('barangay_officials').update(patch).eq('id', row.id);
-    if (!error) router.refresh();
+    if (!error) {
+      if (!isNoop) {
+        logAdminAction({
+          action: 'update',
+          entityType: 'staff',
+          entityId: row.id,
+          entityLabel: row.profile.full_name,
+          changes: {
+            before: Object.fromEntries(Object.keys(patch).map((key) => [key, rowRecord[key]])),
+            after: patch,
+          },
+        }).catch(() => {});
+      }
+      router.refresh();
+    }
     return { error: error?.message ?? null };
   }
 
@@ -121,6 +158,13 @@ export function StaffTable({
       toast.showError(`Failed to remove: ${error.message}`);
       return;
     }
+    logAdminAction({
+      action: 'delete',
+      entityType: 'staff',
+      entityId: row.id,
+      entityLabel: row.profile.full_name,
+      metadata: { full_name: row.profile.full_name, email: row.profile.email, official_role: row.official_role },
+    }).catch(() => {});
     toast.showSuccess('Staff account removed.');
     router.refresh();
   }

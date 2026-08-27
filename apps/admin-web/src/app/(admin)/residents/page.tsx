@@ -1,3 +1,5 @@
+import type { IdVerificationStatus } from '@barangayan/shared';
+
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { ResidentDirectory } from './resident-directory';
@@ -38,12 +40,17 @@ export type ResidentRow = {
   household_members: Array<{ id: string; name: string; relation: string; role: string }>;
   id_photo_urls: string[];
   id_type: string | null;
-  id_verification_status: 'pending' | 'verified' | null;
+  id_verification_status: IdVerificationStatus | null;
   created_at: string;
   /** Point-in-polygon geofencing result at signup (migration 0075). NULL = check
    *  couldn't run (no boundary/permission denied); FALSE = device location was
    *  outside the barangay boundary — soft flag only, never blocked registration. */
   location_verified: boolean | null;
+  /** Resident-initiated pin from Settings > Location Verification (mobile,
+   *  migrations 0090/0091) — { lat, lng } once set, distinct from the signup-time
+   *  location_verified/registration_location flag above. */
+  verified_location: { lat: number; lng: number } | null;
+  verified_location_address: string | null;
 };
 
 function StatCard({ label, value, sub }: { label: string; value: number | string; sub?: string }) {
@@ -73,7 +80,7 @@ export default async function ResidentsPage({
       'id, full_name, first_name, last_name, middle_name, suffix, sex, avatar_url, email, ' +
         'mobile_number, home_address, house_no, street, city, employment_status, occupation, ' +
         'birth_date, email_verification_status, household_members, id_photo_urls, id_type, ' +
-        'id_verification_status, created_at, location_verified',
+        'id_verification_status, created_at, location_verified, verified_location, verified_location_address',
     )
     .eq('role', 'resident')
     .is('deleted_at', null)
@@ -91,6 +98,7 @@ export default async function ResidentsPage({
     withoutId: allRows.filter((r) => !r.id_photo_urls?.length).length,
     idPending: allRows.filter((r) => r.id_verification_status === 'pending').length,
     idVerified: allRows.filter((r) => r.id_verification_status === 'verified').length,
+    idFailed: allRows.filter((r) => r.id_verification_status === 'verification_failed').length,
     householdMembers: allRows.reduce((sum, r) => sum + (r.household_members?.length ?? 0), 0),
   };
 
@@ -140,6 +148,7 @@ export default async function ResidentsPage({
         <StatCard label="Without ID" value={counts.withoutId} />
         <StatCard label="ID Pending" value={counts.idPending} sub="needs review" />
         <StatCard label="ID Verified" value={counts.idVerified} sub="admin confirmed" />
+        <StatCard label="ID Failed" value={counts.idFailed} sub="try again" />
         <StatCard label="Household" value={counts.householdMembers} sub="total members" />
       </div>
 

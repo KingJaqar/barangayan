@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -42,7 +43,7 @@ export function TrashIncidentTable({
   const toast = useToast();
   const [updating, setUpdating] = useState<string | null>(null);
 
-  async function updateStatus(id: string, status: string) {
+  async function updateStatus(id: string, previousStatus: string, status: string, title: string) {
     setUpdating(id);
     const supabase = createSupabaseBrowserClient();
     // Route through the guarded FSM RPC (same one incident-actions.tsx uses)
@@ -58,11 +59,21 @@ export function TrashIncidentTable({
       toast.showError(`Failed to update: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'incident',
+      entityId: id,
+      entityLabel: title,
+      changes: { before: { status: previousStatus }, after: { status } },
+      metadata: { source: 'waste_management' },
+    }).catch(() => {});
+
     toast.showSuccess('Status updated.');
     router.refresh();
   }
 
-  async function archive(id: string) {
+  async function archive(id: string, title: string, description: string | null) {
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase
       .from('incidents')
@@ -72,6 +83,15 @@ export function TrashIncidentTable({
       toast.showError(`Failed to archive: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'incident',
+      entityId: id,
+      entityLabel: title,
+      metadata: { source: 'waste_management', title, description },
+    }).catch(() => {});
+
     toast.showSuccess('Report archived.');
     router.refresh();
   }
@@ -119,7 +139,7 @@ export function TrashIncidentTable({
             <div className="flex shrink-0 items-center gap-2">
               {r.status === 'open' && (
                 <button
-                  onClick={() => updateStatus(r.id, 'in_progress')}
+                  onClick={() => updateStatus(r.id, r.status, 'in_progress', r.title)}
                   disabled={updating === r.id}
                   className="rounded-full bg-[var(--accent)]/15 px-4 py-1.5 text-xs font-semibold text-[var(--accent)] disabled:opacity-50">
                   {updating === r.id ? '…' : 'Start'}
@@ -127,7 +147,7 @@ export function TrashIncidentTable({
               )}
               {r.status === 'in_progress' && (
                 <button
-                  onClick={() => updateStatus(r.id, 'resolved')}
+                  onClick={() => updateStatus(r.id, r.status, 'resolved', r.title)}
                   disabled={updating === r.id}
                   className="rounded-full bg-[var(--accent)]/15 px-4 py-1.5 text-xs font-semibold text-[var(--accent)] disabled:opacity-50">
                   {updating === r.id ? '…' : 'Resolve'}
@@ -136,7 +156,7 @@ export function TrashIncidentTable({
               <ConfirmButton
                 label="Archive"
                 confirmLabel="Archive report?"
-                onConfirm={() => archive(r.id)}
+                onConfirm={() => archive(r.id, r.title, r.description)}
                 title="Archive Report"
                 className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
               />

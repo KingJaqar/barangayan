@@ -4,6 +4,7 @@ import { formatDateTime, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
@@ -85,25 +86,45 @@ function AddIncidentForm({
     }
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('incidents').insert({
-      barangay_id: barangayId,
-      title: title.trim(),
-      description: description.trim() || null,
-      address: address.trim() || null,
-      specific_area_details: specificAreaDetails.trim() || null,
-      category_id: categoryId || null,
-      reporter_id: reporterId || null,
-      status,
-      created_at: new Date(submittedAt).toISOString(),
-      // Walk-in/phoned-in reports have no map pin — address/specific area details are
-      // whatever the resident described verbally, entered by the admin above.
-      location: {},
-    });
+    const { data, error } = await supabase
+      .from('incidents')
+      .insert({
+        barangay_id: barangayId,
+        title: title.trim(),
+        description: description.trim() || null,
+        address: address.trim() || null,
+        specific_area_details: specificAreaDetails.trim() || null,
+        category_id: categoryId || null,
+        reporter_id: reporterId || null,
+        status,
+        created_at: new Date(submittedAt).toISOString(),
+        // Walk-in/phoned-in reports have no map pin — address/specific area details are
+        // whatever the resident described verbally, entered by the admin above.
+        location: {},
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
     if (error) {
       toast.showError(`Failed to create incident: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'incident',
+      entityId: data?.id,
+      entityLabel: title.trim(),
+      metadata: {
+        title: title.trim(),
+        description: description.trim() || null,
+        address: address.trim() || null,
+        category: categories.find((c) => c.id === categoryId)?.name ?? null,
+        reporter: residents.find((r) => r.id === reporterId)?.full_name ?? 'Anonymous / Walk-in',
+        status,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Incident report created.');
     setTitle('');
     setDescription('');
@@ -304,9 +325,34 @@ export function IncidentTable({
   }, [router, channelName]);
 
   async function updateField(incident: IncidentRow, patch: Partial<Tables<'incidents'>>) {
+    // Skip the log (but still write the update) when nothing actually changed — avoids a
+    // notification for a cell that's clicked into and blurred without editing.
+    const changedKeys = Object.keys(patch).filter((key) => {
+      const current = (incident as unknown as Record<string, unknown>)[key];
+      const next = (patch as Record<string, unknown>)[key];
+      return JSON.stringify(current) !== JSON.stringify(next);
+    });
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('incidents').update(patch).eq('id', incident.id);
-    if (!error) router.refresh();
+    if (!error) {
+      if (changedKeys.length > 0) {
+        const before: Record<string, unknown> = {};
+        const after: Record<string, unknown> = {};
+        for (const key of changedKeys) {
+          before[key] = (incident as unknown as Record<string, unknown>)[key];
+          after[key] = (patch as Record<string, unknown>)[key];
+        }
+        logAdminAction({
+          action: patch.status ? 'status_change' : 'update',
+          entityType: 'incident',
+          entityId: incident.id,
+          entityLabel: incident.title,
+          changes: { before, after },
+        }).catch(() => {});
+      }
+      router.refresh();
+    }
     return { error: error?.message ?? null };
   }
 
@@ -317,6 +363,15 @@ export function IncidentTable({
       toast.showError(`Failed to remove incident: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'incident',
+      entityId: incident.id,
+      entityLabel: incident.title,
+      metadata: { title: incident.title, description: incident.description, address: incident.address, status: incident.status },
+    }).catch(() => {});
+
     toast.showSuccess('Incident removed.');
     router.refresh();
   }
@@ -496,7 +551,7 @@ export function IncidentTable({
           <button onClick={() => setSelected(r)} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
             View
           </button>
-          <IncidentActions incidentId={r.id} status={r.status} variant="compact" />
+          <IncidentActions incidentId={r.id} status={r.status} incidentTitle={r.title} incidentDescription={r.description} variant="compact" />
           <ConfirmButton
             label="🗑"
             confirmLabel="Remove?"

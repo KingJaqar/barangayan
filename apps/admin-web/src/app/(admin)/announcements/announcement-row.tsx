@@ -124,6 +124,7 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
       entityType: 'announcement',
       entityId: announcement.id,
       entityLabel: announcement.title,
+      metadata: { title: announcement.title, body: announcement.body, category: announcement.category },
     }).catch(() => {});
 
     toast.showSuccess(`Announcement archived.`);

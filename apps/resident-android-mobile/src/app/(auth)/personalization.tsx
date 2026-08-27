@@ -1,7 +1,3 @@
-/* eslint-disable react-hooks/immutability -- Reanimated shared-value mutation in
-   press-feedback handlers (see AnimatedCenterCard in home/emergency-info/index.tsx for
-   the same sanctioned pattern) is not the "mutating immutable render output" case this
-   rule targets. */
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';

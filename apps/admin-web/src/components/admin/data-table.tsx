@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import { TableScrollArea } from '@/components/admin/table-scroll-area';
+
 export interface DataTableColumn<T> {
   header: string;
   render: (row: T) => ReactNode;
@@ -15,16 +17,24 @@ interface DataTableProps<T> {
 }
 
 /** Shared table shell — sorting is intentionally not built in for this pass (see the
- * plan's Part C6 scope note); consumers pre-sort/filter rows before passing them in. */
+ * plan's Part C6 scope note); consumers pre-sort/filter rows before passing them in. Columns
+ * are plain auto-layout (no drag-resize), so `w-full` alone already spreads them across the
+ * card with no dead space; `TableScrollArea` covers the case where content still overflows on
+ * narrow viewports. */
 export function DataTable<T>({ columns, rows, rowKey, emptyLabel = 'Nothing here yet.', onRowClick }: DataTableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-black/10 dark:border-white/10">
+    <TableScrollArea>
       <table className="w-full min-w-max text-left text-sm">
-        <thead className="border-b border-black/10 bg-zinc-100 dark:border-white/10 dark:bg-zinc-900">
+        <thead className="border-b-2 border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800/60">
           <tr>
             {columns.map((col) => (
-              <th key={col.header} className="px-4 py-3 font-semibold text-zinc-600 dark:text-zinc-300">
-                {col.header}
+              <th
+                key={col.header}
+                className="px-5 py-3.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
+              >
+                <span className="block truncate" title={col.header}>
+                  {col.header}
+                </span>
               </th>
             ))}
           </tr>
@@ -32,20 +42,20 @@ export function DataTable<T>({ columns, rows, rowKey, emptyLabel = 'Nothing here
         <tbody>
           {rows.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-zinc-500">
+              <td colSpan={columns.length} className="px-5 py-8 text-center text-zinc-500">
                 {emptyLabel}
               </td>
             </tr>
           ) : (
-            rows.map((row) => (
+            rows.map((row, i) => (
               <tr
                 key={rowKey(row)}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 className={`border-b border-black/5 last:border-0 dark:border-white/5 ${
-                  onRowClick ? 'cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900/50' : ''
-                }`}>
+                  i % 2 === 1 ? 'bg-zinc-50/60 dark:bg-zinc-900/20' : ''
+                } ${onRowClick ? 'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900/50' : ''}`}>
                 {columns.map((col) => (
-                  <td key={col.header} className={`px-4 py-3 ${col.className ?? ''}`}>
+                  <td key={col.header} className={`px-5 py-3.5 ${col.className ?? ''}`}>
                     {col.render(row)}
                   </td>
                 ))}
@@ -54,6 +64,6 @@ export function DataTable<T>({ columns, rows, rowKey, emptyLabel = 'Nothing here
           )}
         </tbody>
       </table>
-    </div>
+    </TableScrollArea>
   );
 }

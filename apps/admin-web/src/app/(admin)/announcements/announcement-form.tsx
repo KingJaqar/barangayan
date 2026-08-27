@@ -65,7 +65,13 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
       action: 'create',
       entityType: 'announcement',
       entityLabel: result.data.title,
-      metadata: { category: result.data.category },
+      metadata: {
+        title: result.data.title,
+        body: result.data.body,
+        detailed_description: result.data.detailed_description ?? null,
+        category: result.data.category,
+        published_at: result.data.published_at ?? null,
+      },
     }).catch(() => {});
 
     setTitle('');

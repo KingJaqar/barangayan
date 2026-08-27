@@ -7,6 +7,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { ThemeControllerProvider, THEME_INIT_SCRIPT } from "@/components/ui/theme-controller";
 import { AccentControllerProvider, ACCENT_INIT_SCRIPT } from "@/components/ui/accent-controller";
 import { FontControllerProvider, FONT_INIT_SCRIPT } from "@/components/ui/font-controller";
+import { IconControllerProvider } from "@/components/ui/icon-controller";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,7 +49,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeControllerProvider>
           <AccentControllerProvider>
             <FontControllerProvider>
-              <ToastProvider>{children}</ToastProvider>
+              <IconControllerProvider>
+                <ToastProvider>{children}</ToastProvider>
+              </IconControllerProvider>
             </FontControllerProvider>
           </AccentControllerProvider>
         </ThemeControllerProvider>

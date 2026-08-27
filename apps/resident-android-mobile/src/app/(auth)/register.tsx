@@ -1,19 +1,23 @@
 import {
+  EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
   isPointInPolygon,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  PASSWORD_COMPLEXITY_REGEX,
   registerSchema,
   SEXES,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
+import { useRouter } from 'expo-router';
+import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { Polygon, MultiPolygon } from 'geojson';
 
 import { AuthHeader } from '@/components/auth-header';
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
@@ -39,6 +43,56 @@ const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
 function fmtDate(iso: string | null): string {
   if (!iso) return '';
   return isoToLocalDate(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+/** Red asterisk suffix for required-field labels that don't render through TextField
+ * (Sex / Date of Birth / Employment Status use their own chip/pressable labels). */
+function RequiredMark() {
+  return (
+    <ThemedText type="small" themeColor="accentRed">
+      {' '}
+      *
+    </ThemedText>
+  );
+}
+
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a
+// field shows a red alert or a green check the moment its value becomes
+// invalid/valid — the same treatment the Confirm Password field already gave
+// the password-match check, generalized to every text field. Empty fields stay
+// silent until a submit attempt populates fieldErrors (the "required" message).
+function validateName(value: string): string | null {
+  return NAME_REGEX.test(value) ? null : 'Letters only — no numbers or symbols';
+}
+function validateMobileNumber(value: string): string | null {
+  return MOBILE_NUMBER_REGEX.test(value) ? null : 'Enter an 11-digit mobile number (e.g. 09171234567)';
+}
+function validateEmail(value: string): string | null {
+  return EMAIL_REGEX.test(value) ? null : 'Enter a valid email address';
+}
+function validatePassword(value: string): string | null {
+  if (value.length < 8) return 'Password must be at least 8 characters';
+  return PASSWORD_COMPLEXITY_REGEX.test(value)
+    ? null
+    : 'Add an uppercase letter, a number, and a special character';
+}
+
+/**
+ * Resolves a TextField's error/success pair for one field:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) => string | null,
+  successMessage = ' ',
+): { error?: string; success?: string } {
+  if (!value) return submitError ? { error: submitError } : {};
+  const message = validate?.(value);
+  if (message) return { error: message };
+  return { success: successMessage };
 }
 
 /**
@@ -398,23 +452,48 @@ export default function RegisterScreen() {
           <FormSection icon="person-outline" title="Personal Information">
             <View style={styles.fieldPairRow}>
               <View style={styles.fieldPairItem}>
-                <TextField label="First Name" value={firstName} onChangeText={setFirstName} error={fieldErrors.firstName} />
+                <TextField
+                  label="First Name"
+                  required
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  {...fieldStatus(firstName, fieldErrors.firstName, validateName)}
+                />
               </View>
               <View style={styles.fieldPairItem}>
-                <TextField label="Last Name" value={lastName} onChangeText={setLastName} error={fieldErrors.lastName} />
+                <TextField
+                  label="Last Name"
+                  required
+                  value={lastName}
+                  onChangeText={setLastName}
+                  {...fieldStatus(lastName, fieldErrors.lastName, validateName)}
+                />
               </View>
             </View>
             <View style={styles.fieldPairRow}>
               <View style={styles.fieldPairItem}>
-                <TextField label="Middle Name (optional)" value={middleName} onChangeText={setMiddleName} />
+                <TextField
+                  label="Middle Name (optional)"
+                  value={middleName}
+                  onChangeText={setMiddleName}
+                  {...fieldStatus(middleName, fieldErrors.middleName, validateName)}
+                />
               </View>
               <View style={styles.fieldPairItem}>
-                <TextField label="Suffix (optional)" value={suffix} onChangeText={setSuffix} />
+                <TextField
+                  label="Suffix (optional)"
+                  value={suffix}
+                  onChangeText={setSuffix}
+                  {...fieldStatus(suffix, fieldErrors.suffix, validateName)}
+                />
               </View>
             </View>
 
             <View style={styles.choiceField}>
-              <ThemedText type="small">Sex</ThemedText>
+              <ThemedText type="small">
+                Sex
+                <RequiredMark />
+              </ThemedText>
               <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
               {fieldErrors.sex ? (
                 <ThemedText type="small" themeColor="accentRed">
@@ -424,17 +503,20 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.birthdayField}>
-              <ThemedText type="small">Birthday</ThemedText>
+              <ThemedText type="small">
+                Date of Birth
+                <RequiredMark />
+              </ThemedText>
               <Pressable
                 onPress={() => setShowBirthPicker(true)}
                 accessibilityRole="button"
-                accessibilityLabel="Select birthday"
+                accessibilityLabel="Select date of birth"
                 style={[
                   styles.birthdayInput,
                   { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
                 ]}>
                 <ThemedText style={birthDateIso ? undefined : { color: theme.textSecondary }}>
-                  {birthDateIso ? fmtDate(birthDateIso) : 'Select your birthday'}
+                  {birthDateIso ? fmtDate(birthDateIso) : 'Select your date of birth'}
                 </ThemedText>
                 <Ionicons name="calendar-outline" size={18} color={theme.textSecondary} />
               </Pressable>
@@ -442,6 +524,13 @@ export default function RegisterScreen() {
                 <ThemedText type="small" themeColor="accentRed">
                   {fieldErrors.birthDate}
                 </ThemedText>
+              ) : birthDateIso ? (
+                <View style={styles.inlineStatusRow}>
+                  <Ionicons name="checkmark-circle-outline" size={14} color={theme.accentGreen} />
+                  <ThemedText type="small" themeColor="accentGreen">
+                    
+                  </ThemedText>
+                </View>
               ) : null}
             </View>
           </FormSection>
@@ -449,28 +538,51 @@ export default function RegisterScreen() {
           <FormSection icon="call-outline" title="Contact & Address">
             <TextField
               label="Mobile Number"
+              required
               keyboardType="phone-pad"
+              maxLength={11}
+              placeholder="09171234567"
               value={mobileNumber}
               onChangeText={setMobileNumber}
+              {...fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber)}
             />
             <TextField
               label="Email Address"
+              required
               autoCapitalize="none"
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
-              error={fieldErrors.email}
+              {...fieldStatus(email, fieldErrors.email, validateEmail)}
             />
 
             <View style={styles.fieldPairRow}>
               <View style={[styles.fieldPairItem, { flex: 1 }]}>
-                <TextField label="House No." value={houseNo} onChangeText={setHouseNo} error={fieldErrors.houseNo} />
+                <TextField
+                  label="House No."
+                  required
+                  value={houseNo}
+                  onChangeText={setHouseNo}
+                  {...fieldStatus(houseNo, fieldErrors.houseNo)}
+                />
               </View>
               <View style={[styles.fieldPairItem, { flex: 2 }]}>
-                <TextField label="Street" value={street} onChangeText={setStreet} error={fieldErrors.street} />
+                <TextField
+                  label="Street"
+                  required
+                  value={street}
+                  onChangeText={setStreet}
+                  {...fieldStatus(street, fieldErrors.street)}
+                />
               </View>
             </View>
-            <TextField label="City" value={city} onChangeText={setCity} error={fieldErrors.city} />
+            <TextField
+              label="City"
+              required
+              value={city}
+              onChangeText={setCity}
+              {...fieldStatus(city, fieldErrors.city)}
+            />
 
             <View style={[styles.barangayRow, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
               <ThemedText type="small" themeColor="textSecondary">Barangay</ThemedText>
@@ -480,7 +592,10 @@ export default function RegisterScreen() {
 
           <FormSection icon="briefcase-outline" title="Employment">
             <View style={styles.choiceField}>
-              <ThemedText type="small">Employment Status</ThemedText>
+              <ThemedText type="small">
+                Employment Status
+                <RequiredMark />
+              </ThemedText>
               <ChoiceChips
                 options={EMPLOYMENT_STATUSES}
                 labels={EMPLOYMENT_STATUS_LABELS}
@@ -505,15 +620,19 @@ export default function RegisterScreen() {
           <FormSection icon="lock-closed-outline" title="Account Security">
             <TextField
               label="Password"
+              required
               secureTextEntry={!isPasswordVisible}
               value={password}
               onChangeText={setPassword}
-              error={fieldErrors.password}
+              {...fieldStatus(password, fieldErrors.password, validatePassword, 'Password strength: good')}
               passwordVisibility={{
                 visible: isPasswordVisible,
                 onToggle: () => setIsPasswordVisible((visible) => !visible),
               }}
             />
+            <ThemedText type="small" themeColor="textSecondary">
+              Use 8+ characters with at least one uppercase letter, one number, and one special character.
+            </ThemedText>
             <TextField
               label="Confirm Password"
               secureTextEntry={!isConfirmPasswordVisible}
@@ -613,6 +732,11 @@ const styles = StyleSheet.create({
   introTitle: { fontSize: 22, fontWeight: '700' },
   introSubtitle: { fontSize: 14, marginTop: -Spacing.two, marginBottom: Spacing.one, lineHeight: 20 },
   passwordMatchIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  inlineStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,

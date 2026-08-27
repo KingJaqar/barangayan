@@ -11,7 +11,7 @@ function QuickLinkCard({ href, icon: Icon, label, description }: { href: string;
       href={href}
       className="flex flex-col gap-2 rounded-xl border border-black/10 bg-white p-5 transition-colors hover:border-[var(--accent)]/40 dark:border-white/10 dark:bg-zinc-900">
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)]/15 text-[var(--accent)]">
-        <Icon size={20} strokeWidth={1.75} />
+        <Icon size={20} strokeWidth={2.5} />
       </div>
       <p className="font-semibold">{label}</p>
       <p className="text-sm text-zinc-500">{description}</p>

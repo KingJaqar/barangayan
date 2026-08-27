@@ -29,7 +29,19 @@ export async function reverseGeocode(point: LatLng): Promise<string | null> {
   try {
     const res = await fetch(url, {
       signal: controller.signal,
-      headers: { Accept: 'application/json' },
+      headers: {
+        Accept: 'application/json',
+        // Nominatim's usage policy explicitly rejects "stock User-Agents as set by
+        // http libraries" (https://operations.osmfoundation.org/policies/nominatim/)
+        // — without this, every request from the mobile app comes through as a bare
+        // "okhttp/x.x" (React Native/Android's default networking stack) and gets a
+        // silent 403 "Access denied", which reverseGeocode then turns into a null
+        // result — i.e. the address field never fills in, with no visible error.
+        // Browsers ignore a custom User-Agent set via fetch (forbidden header name)
+        // and fall back to their own — harmless there since real browser UAs +
+        // Referer already satisfy Nominatim's policy.
+        'User-Agent': 'Barangayan/1.0 (Barangay Ampid I resident app; https://barangayan.app)',
+      },
     });
     if (!res.ok) return null;
 

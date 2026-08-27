@@ -132,7 +132,7 @@ export function BirthdayCalendarModal({
       <View style={bcStyles.overlay} pointerEvents="box-none">
         <View style={[bcStyles.card, { backgroundColor: theme.background }]}>
           <View style={bcStyles.cardHeader}>
-            <ThemedText type="smallBold" style={bcStyles.cardTitle}>Select Birthday</ThemedText>
+            <ThemedText type="smallBold" style={bcStyles.cardTitle}>Select Date of Birth</ThemedText>
             <Pressable onPress={onClose} hitSlop={10} accessibilityRole="button" accessibilityLabel="Close">
               <Ionicons name="close" size={20} color={theme.textSecondary} />
             </Pressable>

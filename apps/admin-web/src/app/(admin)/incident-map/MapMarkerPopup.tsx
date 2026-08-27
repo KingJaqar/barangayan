@@ -72,7 +72,7 @@ export function EvacuationPopupContent({ marker }: EvacuationPopupContentProps) 
       </div>
       {marker.capacity !== null && marker.capacity !== undefined && (
         <div className="ml-7 flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
-          <User className="h-3 w-3" strokeWidth={2} />
+          <User className="h-3 w-3" strokeWidth={2.5} />
           <span>
             {marker.currentOccupancy ?? 0} / {marker.capacity} occupied
           </span>

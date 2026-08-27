@@ -12,7 +12,7 @@ export function MapSearchBar({ value, onChange, placeholder = 'Search incidentsâ
   return (
     <div className="absolute top-4 left-4 right-4 z-[1000] md:left-auto md:right-auto md:w-80">
       <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-white/95 px-3.5 py-2.5 shadow-lg shadow-black/5 backdrop-blur-sm transition-all duration-200 focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/10 dark:border-white/10 dark:bg-zinc-900/95 dark:focus-within:ring-[var(--accent)]/20">
-        <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={2} />
+        <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={2.5} />
         <input
           type="search"
           value={value}

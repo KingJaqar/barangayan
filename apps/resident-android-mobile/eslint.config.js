@@ -24,6 +24,14 @@ module.exports = defineConfig([
       // evaluated during render. The canonical React Native Animated pattern requires
       // this; there is no alternative that avoids touching .current in JSX.
       "react-hooks/refs": "off",
+
+      // Mutating `.value` on a Reanimated useSharedValue() is the canonical Reanimated
+      // API, not an unsafe render-time mutation. The rule can recognize SharedValues via
+      // its enableCustomTypeDefinitionForReanimated option, but that only self-enables
+      // when it detects the Reanimated Babel plugin in the active compile pipeline —
+      // which never happens under plain ESLint (no Babel transform pass runs here), so
+      // it fires unconditionally on every `.value` assignment.
+      "react-hooks/immutability": "off",
     },
   },
 ]);

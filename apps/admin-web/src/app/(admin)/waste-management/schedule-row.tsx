@@ -4,6 +4,7 @@ import { wasteScheduleSchema, WASTE_TYPES, WASTE_TYPE_CONFIG, DAY_NAMES, type Ta
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -47,6 +48,15 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
       toast.showError(`Failed to ${schedule.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'waste_schedule',
+      entityId: schedule.id,
+      entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
+      changes: { before: { is_active: schedule.is_active }, after: { is_active: !schedule.is_active } },
+    }).catch(() => {});
+
     toast.showSuccess(`Schedule ${schedule.is_active ? 'deactivated' : 'activated'}.`);
     router.refresh();
   }
@@ -61,6 +71,21 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'waste_schedule',
+      entityId: schedule.id,
+      entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
+      metadata: {
+        zone: zoneName,
+        waste_type: schedule.waste_type,
+        day_of_week: DAY_NAMES[schedule.day_of_week] ?? schedule.day_of_week,
+        start_time: schedule.start_time,
+        end_time: schedule.end_time,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Schedule archived.');
     router.refresh();
   }
@@ -103,6 +128,29 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
       toast.showError(`Failed to save changes: ${updateError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'waste_schedule',
+      entityId: schedule.id,
+      entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
+      changes: {
+        before: {
+          waste_type: schedule.waste_type,
+          day_of_week: schedule.day_of_week,
+          start_time: schedule.start_time,
+          end_time: schedule.end_time,
+          notes: schedule.notes,
+        },
+        after: {
+          waste_type: result.data.wasteType,
+          day_of_week: result.data.dayOfWeek,
+          start_time: result.data.startTime,
+          end_time: result.data.endTime,
+          notes: result.data.notes,
+        },
+      },
+    }).catch(() => {});
 
     toast.showSuccess('Schedule updated.');
     setIsEditing(false);

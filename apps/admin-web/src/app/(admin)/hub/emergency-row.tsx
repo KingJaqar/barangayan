@@ -4,6 +4,7 @@ import { type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -67,6 +68,15 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'emergency_information',
+      entityId: item.id,
+      entityLabel: item.title,
+      metadata: { title: item.title, body: item.body, category: item.category },
+    }).catch(() => {});
+
     toast.showSuccess('Emergency information archived.');
     router.refresh();
   }

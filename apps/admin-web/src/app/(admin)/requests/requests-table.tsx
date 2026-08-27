@@ -5,6 +5,7 @@ import { formatDateTime, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { RequestStatusActions } from '@/components/admin/request-status-actions';
@@ -59,21 +60,40 @@ function AddRequestForm({
     }
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('service_requests').insert({
-      resident_id: residentId,
-      document_type_id: documentTypeId,
-      barangay_id: barangayId,
-      ...(referenceNumber.trim() ? { reference_number: referenceNumber.trim().replace(/^#/, '') } : {}),
-      status,
-      payment_status: paymentStatus,
-      created_at: new Date(submittedAt).toISOString(),
-      requester_notes: notes || null,
-    });
+    const { data: inserted, error } = await supabase
+      .from('service_requests')
+      .insert({
+        resident_id: residentId,
+        document_type_id: documentTypeId,
+        barangay_id: barangayId,
+        ...(referenceNumber.trim() ? { reference_number: referenceNumber.trim().replace(/^#/, '') } : {}),
+        status,
+        payment_status: paymentStatus,
+        created_at: new Date(submittedAt).toISOString(),
+        requester_notes: notes || null,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
     if (error) {
       toast.showError(`Failed to create request: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'service_request',
+      entityId: inserted?.id,
+      entityLabel: referenceNumber.trim() || residents.find((r) => r.id === residentId)?.full_name || 'Service Request',
+      metadata: {
+        resident: residents.find((r) => r.id === residentId)?.full_name ?? null,
+        document_type: documentTypes.find((d) => d.id === documentTypeId)?.name ?? null,
+        status,
+        payment_status: paymentStatus,
+        notes: notes || null,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Request created.');
     setReferenceNumber('');
     setResidentId('');
@@ -254,9 +274,30 @@ export function RequestsTable({
   );
 
   async function updateField(request: ServiceRequest, patch: Partial<Tables<'service_requests'>>) {
+    // Skip the log (but still persist) if nothing in the patch actually differs from the
+    // row's current value — avoids a bell notification for a cell that's clicked into and
+    // blurred without an edit.
+    const before: Record<string, unknown> = {};
+    let changed = false;
+    for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
+      before[key] = request[key];
+      if (request[key] !== patch[key]) changed = true;
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('service_requests').update(patch).eq('id', request.id);
-    if (!error) router.refresh();
+    if (!error) {
+      if (changed) {
+        logAdminAction({
+          action: patch.status || patch.payment_status ? 'status_change' : 'update',
+          entityType: 'service_request',
+          entityId: request.id,
+          entityLabel: request.reference_number,
+          changes: { before, after: patch },
+        }).catch(() => {});
+      }
+      router.refresh();
+    }
     return { error: error?.message ?? null };
   }
 
@@ -267,6 +308,15 @@ export function RequestsTable({
       toast.showError(`Failed to archive request: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'service_request',
+      entityId: request.id,
+      entityLabel: request.reference_number,
+      metadata: { reference_number: request.reference_number, status: request.status, payment_status: request.payment_status },
+    }).catch(() => {});
+
     toast.showSuccess(`Request #${request.reference_number} archived.`);
     router.refresh();
   }
@@ -368,6 +418,7 @@ export function RequestsTable({
           </Link>
           <RequestStatusActions
             requestId={r.id}
+            referenceNumber={r.reference_number}
             status={r.status}
             paymentStatus={r.payment_status}
             paymentMethod={r.payment_method}

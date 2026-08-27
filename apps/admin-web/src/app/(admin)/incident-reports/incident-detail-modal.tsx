@@ -4,6 +4,7 @@ import { formatDateTime } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -57,6 +58,28 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
       toast.showError(`Failed to save: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'incident',
+      entityId: incident.id,
+      entityLabel: title.trim(),
+      changes: {
+        before: {
+          title: incident.title,
+          description: incident.description,
+          address: incident.address,
+          specific_area_details: incident.specific_area_details,
+        },
+        after: {
+          title: title.trim(),
+          description: description.trim() || null,
+          address: address.trim() || null,
+          specific_area_details: specificAreaDetails.trim() || null,
+        },
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Incident details updated.');
     setEditing(false);
     router.refresh();
@@ -288,7 +311,7 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
 
         {/* Footer actions */}
         <div className="border-t border-black/10 px-6 py-4 dark:border-white/10">
-          <IncidentActions incidentId={incident.id} status={incident.status} variant="full" />
+          <IncidentActions incidentId={incident.id} status={incident.status} incidentTitle={incident.title} incidentDescription={incident.description} variant="full" />
         </div>
       </div>
     </div>

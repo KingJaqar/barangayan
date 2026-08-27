@@ -4,6 +4,7 @@ import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared'
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
@@ -100,6 +101,24 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
       toast.showError(`Failed to register: ${error.message}`);
       return;
     }
+
+    // admin_register_for_drive doesn't return the new row's id, so entityId is omitted.
+    const residentName = residents.find((r) => r.id === residentId)?.full_name;
+    const driveTitle = drives.find((d) => d.id === driveId)?.title;
+    logAdminAction({
+      action: 'create',
+      entityType: 'drive_registration',
+      entityLabel: residentName ?? driveTitle ?? 'Drive registration',
+      metadata: {
+        resident: residentName ?? null,
+        drive: driveTitle ?? null,
+        age,
+        is_pwd: isPwd === 'true',
+        comorbidities: comorbsArray,
+        prior_dose_date: priorDoseDate || null,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Registration created.');
     setDriveId('');
     setResidentId('');
@@ -262,9 +281,36 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
   }, [channelName, router]);
 
   async function updateField(row: ApplicantRow, patch: Partial<Tables<'drive_registrations'>>) {
+    // Skip logging (but still write) when nothing actually changed — e.g. a cell
+    // clicked into and blurred without editing.
+    const patchKeys = Object.keys(patch) as (keyof typeof patch)[];
+    const changed = patchKeys.some((key) => patch[key] !== row[key]);
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('drive_registrations').update(patch).eq('id', row.id);
-    if (!error) router.refresh();
+    if (!error) {
+      router.refresh();
+      if (changed) {
+        const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'status';
+        const before = Object.fromEntries(patchKeys.map((key) => [key, row[key]]));
+        logAdminAction({
+          action: isStatusChange ? 'status_change' : 'update',
+          entityType: 'drive_registration',
+          entityId: row.id,
+          entityLabel: row.applicant_number,
+          changes: { before, after: patch },
+          metadata: {
+            applicant_number: row.applicant_number,
+            drive: row.medical_drives?.title ?? null,
+            resident: row.profiles?.full_name ?? null,
+            age: row.age,
+            is_pwd: row.is_pwd,
+            priority_score: row.priority_score,
+            registered_at: row.created_at,
+          },
+        }).catch(() => {});
+      }
+    }
     return { error: error?.message ?? null };
   }
 
@@ -275,6 +321,24 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
       toast.showError(`Failed to cancel: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'drive_registration',
+      entityId: row.id,
+      entityLabel: row.applicant_number,
+      changes: { before: { status: row.status }, after: { status: 'cancelled' } },
+      metadata: {
+        applicant_number: row.applicant_number,
+        drive: row.medical_drives?.title ?? null,
+        resident: row.profiles?.full_name ?? null,
+        age: row.age,
+        is_pwd: row.is_pwd,
+        priority_score: row.priority_score,
+        registered_at: row.created_at,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Registration cancelled.');
     router.refresh();
   }

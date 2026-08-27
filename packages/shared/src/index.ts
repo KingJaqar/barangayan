@@ -25,6 +25,7 @@ export * from './schemas/about-us';
 export * from './constants/announcement-categories';
 export * from './constants/document-catalog-shape';
 export * from './constants/drive-types';
+export * from './constants/id-verification';
 export * from './constants/incident-categories';
 export * from './constants/official-roles';
 export * from './constants/priority-weights';

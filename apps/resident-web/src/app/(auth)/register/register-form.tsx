@@ -1,9 +1,13 @@
 'use client';
 
 import {
+  EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
   isPointInPolygon,
+  MOBILE_NUMBER_REGEX,
+  NAME_REGEX,
+  PASSWORD_COMPLEXITY_REGEX,
   registerSchema,
   SEXES,
   type EmploymentStatus,
@@ -31,6 +35,71 @@ const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
   self_employed: 'Self-Employed',
   retired: 'Retired',
 };
+
+/** Red asterisk suffix for required-field labels — purely visual, mirrors the mobile
+ * Register screen's RequiredMark. Validation itself is still driven by registerSchema. */
+function RequiredMark() {
+  return <span className="text-destructive"> *</span>;
+}
+
+// ─── Live per-field validation ────────────────────────────────────────────────
+// Runs the same rules as registerSchema (packages/shared), as-you-type, so a field
+// shows a red alert or a green check the moment its value becomes invalid/valid —
+// the same treatment the Confirm Password field already gave the password-match
+// check, generalized to every field. Mirrors apps/resident-android-mobile's
+// register.tsx validators exactly so the two apps never drift apart.
+function validateName(value: string): string | null {
+  return NAME_REGEX.test(value) ? null : 'Letters only — no numbers or symbols';
+}
+function validateMobileNumber(value: string): string | null {
+  return MOBILE_NUMBER_REGEX.test(value) ? null : 'Enter an 11-digit mobile number (e.g. 09171234567)';
+}
+function validateEmail(value: string): string | null {
+  return EMAIL_REGEX.test(value) ? null : 'Enter a valid email address';
+}
+function validatePassword(value: string): string | null {
+  if (value.length < 8) return 'Password must be at least 8 characters';
+  return PASSWORD_COMPLEXITY_REGEX.test(value) ? null : 'Add an uppercase letter, a number, and a special character';
+}
+
+/**
+ * Resolves a field's error/success pair:
+ *  - empty value  → whatever the last submit attempt reported (or nothing yet)
+ *  - non-empty    → live format check, so feedback appears as the resident types
+ */
+function fieldStatus(
+  value: string,
+  submitError: string | undefined,
+  validate?: (value: string) => string | null,
+  successMessage = ' ',
+): { error?: string; success?: string } {
+  if (!value) return submitError ? { error: submitError } : {};
+  const message = validate?.(value);
+  if (message) return { error: message };
+  return { success: successMessage };
+}
+
+/** Red-alert / green-check row rendered below a field, mirroring the "Passwords
+ * match" / "Passwords don't match" treatment generalized to every field. */
+function FieldStatus({ error, success }: { error?: string; success?: string }) {
+  if (error) {
+    return (
+      <p className="flex items-center gap-1 text-xs text-destructive">
+        <AlertCircle size={12} />
+        {error}
+      </p>
+    );
+  }
+  if (success) {
+    return (
+      <p className="flex items-center gap-1 text-xs text-primary">
+        <CheckCircle2 size={12} />
+        {success}
+      </p>
+    );
+  }
+  return null;
+}
 
 function ChoiceChips<T extends string>({
   options,
@@ -81,8 +150,10 @@ function SectionHeading({ icon: Icon, title }: { icon: LucideIcon; title: string
  * structured field set (registerSchema in @barangayan/shared), same profile-fields-as-
  * signup-metadata pattern (handle_new_user trigger creates profiles atomically), same
  * soft point-in-polygon geofence check (never blocks registration — see
- * handleVerifyLocation). Uses the browser Geolocation API in place of expo-location,
- * and a native <input type="date"> in place of the mobile calendar modal.
+ * handleVerifyLocation), and the same live-validation / required-mark / green-check
+ * treatment as mobile's TextField (see fieldStatus/FieldStatus/RequiredMark above).
+ * Uses the browser Geolocation API in place of expo-location, and a native
+ * <input type="date"> in place of the mobile calendar modal.
  *
  * Fields are grouped into labeled sections (Personal / Address / Employment /
  * Security / Location) with tighter grids and gaps than a flat field list would use —
@@ -127,6 +198,19 @@ export function RegisterForm() {
   const hasEnteredBothPasswords = password.length > 0 && confirmPassword.length > 0;
   const passwordsMatch = hasEnteredBothPasswords && password === confirmPassword;
   const confirmPasswordError = fieldErrors.confirmPassword === "Passwords don't match" ? undefined : fieldErrors.confirmPassword;
+
+  // Live status for every field with a format check — computed once per render so the
+  // input's aria-invalid and the FieldStatus row below it never disagree.
+  const firstNameStatus = fieldStatus(firstName, fieldErrors.firstName, validateName);
+  const lastNameStatus = fieldStatus(lastName, fieldErrors.lastName, validateName);
+  const middleNameStatus = fieldStatus(middleName, fieldErrors.middleName, validateName);
+  const suffixStatus = fieldStatus(suffix, fieldErrors.suffix, validateName);
+  const emailStatus = fieldStatus(email, fieldErrors.email, validateEmail);
+  const mobileNumberStatus = fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber);
+  const houseNoStatus = fieldStatus(houseNo, fieldErrors.houseNo);
+  const streetStatus = fieldStatus(street, fieldErrors.street);
+  const cityStatus = fieldStatus(city, fieldErrors.city);
+  const passwordStatus = fieldStatus(password, fieldErrors.password, validatePassword, 'Password strength: good');
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
@@ -303,53 +387,108 @@ export function RegisterForm() {
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-              {fieldErrors.firstName ? <p className="text-xs text-destructive">{fieldErrors.firstName}</p> : null}
+              <Label htmlFor="firstName">
+                First Name
+                <RequiredMark />
+              </Label>
+              <Input
+                id="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                aria-invalid={!!firstNameStatus.error}
+              />
+              <FieldStatus {...firstNameStatus} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-              {fieldErrors.lastName ? <p className="text-xs text-destructive">{fieldErrors.lastName}</p> : null}
+              <Label htmlFor="lastName">
+                Last Name
+                <RequiredMark />
+              </Label>
+              <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} aria-invalid={!!lastNameStatus.error} />
+              <FieldStatus {...lastNameStatus} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="middleName">Middle Name</Label>
-              <Input id="middleName" placeholder="Optional" value={middleName} onChange={(e) => setMiddleName(e.target.value)} />
+              <Input
+                id="middleName"
+                placeholder="Optional"
+                value={middleName}
+                onChange={(e) => setMiddleName(e.target.value)}
+                aria-invalid={!!middleNameStatus.error}
+              />
+              <FieldStatus {...middleNameStatus} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="suffix">Suffix</Label>
-              <Input id="suffix" placeholder="Optional" value={suffix} onChange={(e) => setSuffix(e.target.value)} />
+              <Input
+                id="suffix"
+                placeholder="Optional"
+                value={suffix}
+                onChange={(e) => setSuffix(e.target.value)}
+                aria-invalid={!!suffixStatus.error}
+              />
+              <FieldStatus {...suffixStatus} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label>Sex</Label>
+              <Label>
+                Sex
+                <RequiredMark />
+              </Label>
               <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
-              {fieldErrors.sex ? <p className="text-xs text-destructive">{fieldErrors.sex}</p> : null}
+              {fieldErrors.sex ? <FieldStatus error={fieldErrors.sex} /> : sex ? <FieldStatus success=" " /> : null}
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="birthDate">Birthday</Label>
+              <Label htmlFor="birthDate">
+                Date of Birth
+                <RequiredMark />
+              </Label>
               <Input
                 id="birthDate"
                 type="date"
                 max={new Date().toISOString().slice(0, 10)}
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
+                aria-invalid={!!fieldErrors.birthDate}
               />
-              {fieldErrors.birthDate ? <p className="text-xs text-destructive">{fieldErrors.birthDate}</p> : null}
+              {fieldErrors.birthDate ? <FieldStatus error={fieldErrors.birthDate} /> : birthDate ? <FieldStatus success=" " /> : null}
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              {fieldErrors.email ? <p className="text-xs text-destructive">{fieldErrors.email}</p> : null}
+              <Label htmlFor="email">
+                Email Address
+                <RequiredMark />
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                aria-invalid={!!emailStatus.error}
+              />
+              <FieldStatus {...emailStatus} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="mobileNumber">Mobile Number</Label>
-              <Input id="mobileNumber" type="tel" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
+              <Label htmlFor="mobileNumber">
+                Mobile Number
+                <RequiredMark />
+              </Label>
+              <Input
+                id="mobileNumber"
+                type="tel"
+                inputMode="numeric"
+                maxLength={11}
+                placeholder="09171234567"
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                aria-invalid={!!mobileNumberStatus.error}
+              />
+              <FieldStatus {...mobileNumberStatus} />
             </div>
           </div>
         </div>
@@ -360,22 +499,31 @@ export function RegisterForm() {
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1 flex flex-col gap-1.5">
-              <Label htmlFor="houseNo">House No.</Label>
-              <Input id="houseNo" value={houseNo} onChange={(e) => setHouseNo(e.target.value)} />
-              {fieldErrors.houseNo ? <p className="text-xs text-destructive">{fieldErrors.houseNo}</p> : null}
+              <Label htmlFor="houseNo">
+                House No.
+                <RequiredMark />
+              </Label>
+              <Input id="houseNo" value={houseNo} onChange={(e) => setHouseNo(e.target.value)} aria-invalid={!!houseNoStatus.error} />
+              <FieldStatus {...houseNoStatus} />
             </div>
             <div className="col-span-2 flex flex-col gap-1.5">
-              <Label htmlFor="street">Street</Label>
-              <Input id="street" value={street} onChange={(e) => setStreet(e.target.value)} />
-              {fieldErrors.street ? <p className="text-xs text-destructive">{fieldErrors.street}</p> : null}
+              <Label htmlFor="street">
+                Street
+                <RequiredMark />
+              </Label>
+              <Input id="street" value={street} onChange={(e) => setStreet(e.target.value)} aria-invalid={!!streetStatus.error} />
+              <FieldStatus {...streetStatus} />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="city">City</Label>
-              <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} />
-              {fieldErrors.city ? <p className="text-xs text-destructive">{fieldErrors.city}</p> : null}
+              <Label htmlFor="city">
+                City
+                <RequiredMark />
+              </Label>
+              <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} aria-invalid={!!cityStatus.error} />
+              <FieldStatus {...cityStatus} />
             </div>
             <div className="flex flex-col justify-end gap-1.5">
               <div className="flex h-11 items-center justify-between rounded-lg border border-border bg-card px-3.5">
@@ -391,7 +539,10 @@ export function RegisterForm() {
           <SectionHeading icon={Briefcase} title="Employment" />
 
           <div className="flex flex-col gap-1.5">
-            <Label>Employment Status</Label>
+            <Label>
+              Employment Status
+              <RequiredMark />
+            </Label>
             <ChoiceChips
               options={EMPLOYMENT_STATUSES}
               labels={EMPLOYMENT_STATUS_LABELS}
@@ -401,7 +552,11 @@ export function RegisterForm() {
                 if (!EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
               }}
             />
-            {fieldErrors.employmentStatus ? <p className="text-xs text-destructive">{fieldErrors.employmentStatus}</p> : null}
+            {fieldErrors.employmentStatus ? (
+              <FieldStatus error={fieldErrors.employmentStatus} />
+            ) : employmentStatus ? (
+              <FieldStatus success=" " />
+            ) : null}
           </div>
 
           {employmentStatus && EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(employmentStatus) ? (
@@ -418,9 +573,21 @@ export function RegisterForm() {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="password">Password</Label>
-              <PasswordInput id="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-              {fieldErrors.password ? <p className="text-xs text-destructive">{fieldErrors.password}</p> : null}
+              <Label htmlFor="password">
+                Password
+                <RequiredMark />
+              </Label>
+              <PasswordInput
+                id="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                aria-invalid={!!passwordStatus.error}
+              />
+              <p className="text-xs text-muted-foreground">
+                Use 8+ characters with at least one uppercase letter, one number, and one special character.
+              </p>
+              <FieldStatus {...passwordStatus} />
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -430,6 +597,7 @@ export function RegisterForm() {
                 autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                aria-invalid={!!confirmPasswordError || (hasEnteredBothPasswords && !passwordsMatch)}
               />
               {confirmPasswordError ? <p className="text-xs text-destructive">{confirmPasswordError}</p> : null}
               {hasEnteredBothPasswords ? (
@@ -444,11 +612,13 @@ export function RegisterForm() {
 
         {/* Soft, preliminary point-in-polygon geofence check against the barangay's
             boundary — never blocks registration, only flags the account for admin
-            review when the browser's reported location falls outside the boundary. */}
+            review when the browser's reported location falls outside the boundary.
+            Fully functional (real Geolocation + point-in-polygon check) but optional:
+            the resident can submit the form whether or not they ever tap this button. */}
         <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3.5">
           <div className="flex items-center gap-2">
             <ShieldCheck size={15} className="text-primary" />
-            <p className="text-sm font-medium">Location Verification</p>
+            <p className="text-sm font-medium">Location Verification (Optional)</p>
           </div>
           <p className="text-xs text-muted-foreground">This preliminary check ensures you reside within the serviced municipality.</p>
           <Button type="button" variant="secondary" size="sm" disabled={locationChecking} onClick={handleVerifyLocation} className="w-fit">

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import type { Database } from '@barangayan/shared';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { staffInviteSchema } from '@barangayan/shared';
@@ -89,19 +90,37 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: profileError.message }, { status: 400 });
   }
 
-  const { error: officialError } = await serviceRoleClient.from('barangay_officials').upsert(
-    {
-      profile_id: invited.user.id,
-      barangay_id: profile.barangay_id,
-      official_role,
-    },
-    { onConflict: 'profile_id' },
-  );
+  const { data: official, error: officialError } = await serviceRoleClient
+    .from('barangay_officials')
+    .upsert(
+      {
+        profile_id: invited.user.id,
+        barangay_id: profile.barangay_id,
+        official_role,
+      },
+      { onConflict: 'profile_id' },
+    )
+    .select('id')
+    .single();
 
   if (officialError) {
     await serviceRoleClient.auth.admin.deleteUser(invited.user.id);
     return NextResponse.json({ error: officialError.message }, { status: 400 });
   }
+
+  logAdminAction({
+    action: 'create',
+    entityType: 'staff',
+    entityId: official?.id,
+    entityLabel: full_name,
+    metadata: {
+      full_name,
+      email,
+      official_role,
+      mobile_number: mobile_number || null,
+      home_address: home_address || null,
+    },
+  }).catch(() => {});
 
   return NextResponse.json({ id: invited.user.id });
 }

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -243,6 +244,17 @@ export function AboutUsForm({
         setError(rpcError.message);
         return;
       }
+
+      logAdminAction({
+        action: initialAbout ? 'update' : 'create',
+        entityType: 'about_us',
+        entityId: initialAbout?.id,
+        entityLabel: title || 'Barangayan',
+        changes: {
+          before: (initialAbout ?? {}) as unknown as Record<string, unknown>,
+          after: parsed.data as unknown as Record<string, unknown>,
+        },
+      }).catch(() => {});
 
       // 4. DB succeeded — now it's safe to delete replaced old assets.
       if (logoFile && initialAbout?.logo_url) {

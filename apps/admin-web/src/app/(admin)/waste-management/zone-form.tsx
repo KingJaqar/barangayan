@@ -4,6 +4,7 @@ import { wasteZoneSchema } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -36,12 +37,16 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('waste_zones').insert({
-      barangay_id: barangayId,
-      name: result.data.name,
-      description: result.data.description,
-      is_active: true,
-    });
+    const { data, error: insertError } = await supabase
+      .from('waste_zones')
+      .insert({
+        barangay_id: barangayId,
+        name: result.data.name,
+        description: result.data.description,
+        is_active: true,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
 
     if (insertError) {
@@ -49,6 +54,14 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
       toast.showError(`Failed to add zone: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'waste_zone',
+      entityId: data?.id,
+      entityLabel: result.data.name,
+      metadata: { name: result.data.name, description: result.data.description ?? null },
+    }).catch(() => {});
 
     setName('');
     setDescription('');

@@ -9,6 +9,13 @@ import { useTheme } from '@/hooks/use-theme';
 export interface TextFieldProps extends TextInputProps {
   label?: string;
   error?: string;
+  /** Shown (green check + message) below the field once its value passes
+   * validation — mirrors the Register screen's existing "Passwords match"
+   * indicator, generalized to every field. Ignored while `error` is set. */
+  success?: string;
+  /** Renders a red asterisk after the label — purely visual, does not affect
+   * validation (that's still driven by the schema / live field checks). */
+  required?: boolean;
   /** Enables an in-field control for revealing or masking password text. */
   passwordVisibility?: {
     visible: boolean;
@@ -16,7 +23,16 @@ export interface TextFieldProps extends TextInputProps {
   };
 }
 
-export function TextField({ label, error, style, passwordVisibility, secureTextEntry, ...inputProps }: TextFieldProps) {
+export function TextField({
+  label,
+  error,
+  success,
+  required,
+  style,
+  passwordVisibility,
+  secureTextEntry,
+  ...inputProps
+}: TextFieldProps) {
   const theme = useTheme();
   const inputRef = useRef<TextInput>(null);
 
@@ -28,7 +44,17 @@ export function TextField({ label, error, style, passwordVisibility, secureTextE
 
   return (
     <View style={styles.container}>
-      {label ? <ThemedText type="small">{label}</ThemedText> : null}
+      {label ? (
+        <View style={styles.labelRow}>
+          <ThemedText type="small">{label}</ThemedText>
+          {required ? (
+            <ThemedText type="small" themeColor="accentRed">
+              {' '}
+              *
+            </ThemedText>
+          ) : null}
+        </View>
+      ) : null}
       <TextInput
         ref={inputRef}
         placeholderTextColor={theme.textSecondary}
@@ -57,9 +83,19 @@ export function TextField({ label, error, style, passwordVisibility, secureTextE
         </Pressable>
       ) : null}
       {error ? (
-        <ThemedText type="small" themeColor="accentRed">
-          {error}
-        </ThemedText>
+        <View style={styles.statusRow}>
+          <Ionicons name="alert-circle-outline" size={14} color={theme.accentRed} />
+          <ThemedText type="small" themeColor="accentRed">
+            {error}
+          </ThemedText>
+        </View>
+      ) : success ? (
+        <View style={styles.statusRow}>
+          <Ionicons name="checkmark-circle-outline" size={14} color={theme.accentGreen} />
+          <ThemedText type="small" themeColor="accentGreen">
+            {success}
+          </ThemedText>
+        </View>
       ) : null}
     </View>
   );
@@ -67,6 +103,15 @@ export function TextField({ label, error, style, passwordVisibility, secureTextE
 
 const styles = StyleSheet.create({
   container: {
+    gap: Spacing.one,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: Spacing.one,
   },
   input: {

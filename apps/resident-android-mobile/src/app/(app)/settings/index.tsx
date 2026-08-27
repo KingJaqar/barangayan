@@ -247,6 +247,21 @@ export default function SettingsScreen() {
                   </ThemedText>
                 </View>
               </View>
+              <Divider />
+              <Link href="/settings/location-verification" asChild>
+                <Pressable style={styles.row}>
+                  <SettingsIcon name="location" />
+                  <View style={styles.rowText}>
+                    <ThemedText>Location Verification</ThemedText>
+                    <ThemedText type="small" themeColor="textSecondary">
+                      {(profile as any)?.verified_location
+                        ? 'Your location is verified ✓'
+                        : 'Pin your exact location'}
+                    </ThemedText>
+                  </View>
+                  <Chevron />
+                </Pressable>
+              </Link>
             </Card>
           </Section>
         ) : null}

@@ -3,6 +3,7 @@
 import { formatDateTime } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -61,6 +62,31 @@ export function ApplicantDetailModal({
       toast.showError(`Failed to save: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: patch.status && patch.status !== row.status ? 'status_change' : 'update',
+      entityType: 'drive_registration',
+      entityId: row.id,
+      entityLabel: row.applicant_number,
+      changes: {
+        before: {
+          age: row.age,
+          is_pwd: row.is_pwd,
+          comorbidities: row.comorbidities,
+          prior_dose_date: row.prior_dose_date,
+          status: row.status,
+        },
+        after: patch,
+      },
+      metadata: {
+        applicant_number: row.applicant_number,
+        drive: row.medical_drives?.title ?? null,
+        resident: row.profiles?.full_name ?? null,
+        priority_score: row.priority_score,
+        registered_at: row.created_at,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Registration updated.');
     setEditing(false);
     onSave({ ...row, ...patch });

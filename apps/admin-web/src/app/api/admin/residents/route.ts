@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import type { Database } from '@barangayan/shared';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 /**
@@ -80,6 +81,14 @@ export async function POST(request: Request) {
     await serviceRoleClient.auth.admin.deleteUser(invited.user.id);
     return NextResponse.json({ error: profileError.message }, { status: 400 });
   }
+
+  logAdminAction({
+    action: 'create',
+    entityType: 'resident',
+    entityId: invited.user.id,
+    entityLabel: fullName,
+    metadata: { full_name: fullName, email, mobile_number: mobileNumber, home_address: homeAddress },
+  }).catch(() => {});
 
   return NextResponse.json({ id: invited.user.id });
 }

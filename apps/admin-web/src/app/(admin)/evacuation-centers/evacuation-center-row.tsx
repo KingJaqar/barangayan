@@ -4,6 +4,7 @@ import { evacuationCenterSchema, EVACUATION_CENTER_FACILITIES, type EvacuationCe
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -152,6 +153,37 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
       return;
     }
 
+    logAdminAction({
+      action: 'update',
+      entityType: 'evacuation_center',
+      entityId: center.id,
+      entityLabel: result.data.name,
+      changes: {
+        before: {
+          name: center.name,
+          address: center.address,
+          position: center.position,
+          capacity: center.capacity,
+          current_occupancy: center.current_occupancy,
+          is_active: center.is_active,
+          contact_number: center.contact_number,
+          facilities: center.facilities,
+          verified: center.verified,
+        },
+        after: {
+          name: result.data.name,
+          address: result.data.address || null,
+          position: { lat: result.data.lat, lng: result.data.lng },
+          capacity: result.data.capacity,
+          current_occupancy: result.data.current_occupancy,
+          is_active: result.data.is_active,
+          contact_number: result.data.contact_number || null,
+          facilities: result.data.facilities,
+          verified: result.data.verified,
+        },
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Center updated.');
     setIsEditing(false);
     router.refresh();
@@ -167,6 +199,15 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'evacuation_center',
+      entityId: center.id,
+      entityLabel: center.name,
+      metadata: { name: center.name, address: center.address, capacity: center.capacity },
+    }).catch(() => {});
+
     toast.showSuccess('Center archived.');
     router.refresh();
   }

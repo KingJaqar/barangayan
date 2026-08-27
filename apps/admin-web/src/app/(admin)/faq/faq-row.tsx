@@ -4,6 +4,7 @@ import { faqArticleSchema, FAQ_CATEGORY_META, type Tables } from '@barangayan/sh
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -75,6 +76,29 @@ export function FaqRow({ article }: { article: FaqArticle }) {
       return;
     }
 
+    logAdminAction({
+      action: 'update',
+      entityType: 'faq_article',
+      entityId: article.id,
+      entityLabel: parsed.data.question,
+      changes: {
+        before: {
+          question: article.question,
+          answer: article.answer,
+          category: article.category,
+          sort_order: article.sort_order,
+          is_active: article.is_active,
+        },
+        after: {
+          question: parsed.data.question,
+          answer: parsed.data.answer,
+          category: parsed.data.category,
+          sort_order: parsed.data.sort_order,
+          is_active: parsed.data.is_active,
+        },
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Article updated.');
     setIsEditing(false);
     router.refresh();
@@ -90,6 +114,15 @@ export function FaqRow({ article }: { article: FaqArticle }) {
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'faq_article',
+      entityId: article.id,
+      entityLabel: article.question,
+      metadata: { question: article.question, answer: article.answer, category: article.category },
+    }).catch(() => {});
+
     toast.showSuccess('Article archived.');
     router.refresh();
   }
@@ -104,6 +137,15 @@ export function FaqRow({ article }: { article: FaqArticle }) {
       toast.showError(`Failed to restore: ${unarchiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'faq_article',
+      entityId: article.id,
+      entityLabel: article.question,
+      metadata: { restored: true },
+    }).catch(() => {});
+
     toast.showSuccess('Article restored.');
     router.refresh();
   }
@@ -118,6 +160,15 @@ export function FaqRow({ article }: { article: FaqArticle }) {
       toast.showError(`Failed to delete: ${deleteError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'faq_article',
+      entityId: article.id,
+      entityLabel: article.question,
+      metadata: { hard: true, question: article.question, answer: article.answer, category: article.category },
+    }).catch(() => {});
+
     toast.showSuccess('Article permanently deleted.');
     router.refresh();
   }

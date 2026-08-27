@@ -4,6 +4,7 @@ import { wasteZoneSchema, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -42,6 +43,15 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
       toast.showError(`Failed to ${zone.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'waste_zone',
+      entityId: zone.id,
+      entityLabel: zone.name,
+      changes: { before: { is_active: zone.is_active }, after: { is_active: !zone.is_active } },
+    }).catch(() => {});
+
     toast.showSuccess(`Zone ${zone.is_active ? 'deactivated' : 'activated'}.`);
     router.refresh();
   }
@@ -56,6 +66,15 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
       toast.showError(`Failed to archive: ${archiveError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'waste_zone',
+      entityId: zone.id,
+      entityLabel: zone.name,
+      metadata: { name: zone.name, description: zone.description },
+    }).catch(() => {});
+
     toast.showSuccess(`"${zone.name}" archived.`);
     router.refresh();
   }
@@ -91,6 +110,17 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
       toast.showError(`Failed to save changes: ${updateError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'waste_zone',
+      entityId: zone.id,
+      entityLabel: result.data.name,
+      changes: {
+        before: { name: zone.name, description: zone.description },
+        after: { name: result.data.name, description: result.data.description },
+      },
+    }).catch(() => {});
 
     toast.showSuccess(`"${result.data.name}" updated.`);
     setIsEditing(false);

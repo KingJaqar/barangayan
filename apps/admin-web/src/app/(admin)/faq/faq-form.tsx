@@ -4,6 +4,7 @@ import { faqArticleSchema, FAQ_CATEGORIES, FAQ_CATEGORY_META } from '@barangayan
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -40,14 +41,18 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('faq_articles').insert({
-      barangay_id: barangayId,
-      question: parsed.data.question,
-      answer: parsed.data.answer,
-      category: parsed.data.category,
-      sort_order: parsed.data.sort_order,
-      is_active: parsed.data.is_active,
-    });
+    const { data: insertedArticle, error: insertError } = await supabase
+      .from('faq_articles')
+      .insert({
+        barangay_id: barangayId,
+        question: parsed.data.question,
+        answer: parsed.data.answer,
+        category: parsed.data.category,
+        sort_order: parsed.data.sort_order,
+        is_active: parsed.data.is_active,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
 
     if (insertError) {
@@ -55,6 +60,20 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
       toast.showError(`Failed to create article: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'faq_article',
+      entityId: insertedArticle?.id,
+      entityLabel: parsed.data.question,
+      metadata: {
+        question: parsed.data.question,
+        answer: parsed.data.answer,
+        category: parsed.data.category,
+        sort_order: parsed.data.sort_order,
+        is_active: parsed.data.is_active,
+      },
+    }).catch(() => {});
 
     setQuestion('');
     setAnswer('');

@@ -4,6 +4,7 @@ import { emergencyInformationSchema, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -102,25 +103,70 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
     };
 
     if (isEditing && item) {
-      const { error: updateError } = await supabase
+      const { data: updatedItem, error: updateError } = await supabase
         .from('emergency_information')
         .update(payload)
-        .eq('id', item.id);
+        .eq('id', item.id)
+        .select('id, title')
+        .single();
       if (updateError) {
         setError(updateError.message);
         toast.showError(`Failed to update: ${updateError.message}`);
         setSubmitting(false);
         return;
       }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'emergency_information',
+        entityId: item.id,
+        entityLabel: updatedItem?.title ?? result.data.title,
+        changes: {
+          before: {
+            title: item.title,
+            body: item.body,
+            category: item.category,
+            content: item.content,
+            is_active: item.is_active,
+          },
+          after: {
+            title: result.data.title,
+            body: result.data.body,
+            category: result.data.category,
+            content: result.data.content,
+            is_active: result.data.is_active,
+          },
+        },
+      }).catch(() => {});
+
       toast.showSuccess('Emergency information updated.');
     } else {
-      const { error: insertError } = await supabase.from('emergency_information').insert(payload);
+      const { data: insertedItem, error: insertError } = await supabase
+        .from('emergency_information')
+        .insert(payload)
+        .select('id, title')
+        .single();
       if (insertError) {
         setError(insertError.message);
         toast.showError(`Failed to create: ${insertError.message}`);
         setSubmitting(false);
         return;
       }
+
+      logAdminAction({
+        action: 'create',
+        entityType: 'emergency_information',
+        entityId: insertedItem?.id,
+        entityLabel: insertedItem?.title ?? result.data.title,
+        metadata: {
+          title: result.data.title,
+          body: result.data.body,
+          category: result.data.category,
+          content: result.data.content,
+          is_active: result.data.is_active,
+        },
+      }).catch(() => {});
+
       toast.showSuccess('Emergency information published.');
     }
 

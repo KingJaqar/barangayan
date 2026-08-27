@@ -4,6 +4,7 @@ import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared'
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
@@ -72,26 +73,48 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
     }
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('medical_drives').insert({
-      barangay_id: barangayId,
-      title: title.trim(),
-      type,
-      drive_date: driveDate,
-      time_start: timeStart,
-      time_end: timeEnd,
-      location: location.trim() || 'Barangay Health Center',
-      eligible_criteria: eligibleCriteria.trim(),
-      stock_label: stockLabel.trim() || 'Remaining Slots',
-      stock_unit: stockUnit.trim() || 'slots',
-      stock_total: Math.trunc(stockTotal),
-      stock_remaining: Math.trunc(stockTotal),
-      is_active: true,
-    });
+    const { data, error } = await supabase
+      .from('medical_drives')
+      .insert({
+        barangay_id: barangayId,
+        title: title.trim(),
+        type,
+        drive_date: driveDate,
+        time_start: timeStart,
+        time_end: timeEnd,
+        location: location.trim() || 'Barangay Health Center',
+        eligible_criteria: eligibleCriteria.trim(),
+        stock_label: stockLabel.trim() || 'Remaining Slots',
+        stock_unit: stockUnit.trim() || 'slots',
+        stock_total: Math.trunc(stockTotal),
+        stock_remaining: Math.trunc(stockTotal),
+        is_active: true,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
     if (error) {
       toast.showError(`Failed to create drive: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'medical_drive',
+      entityId: data?.id,
+      entityLabel: title.trim(),
+      metadata: {
+        title: title.trim(),
+        type,
+        drive_date: driveDate,
+        time_start: timeStart,
+        time_end: timeEnd,
+        location: location.trim() || 'Barangay Health Center',
+        eligible_criteria: eligibleCriteria.trim(),
+        stock_total: Math.trunc(stockTotal),
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Medical drive created.');
     setTitle('');
     setType('vaccination');
@@ -275,9 +298,27 @@ export function DriveTable({
   }, [router, channelName]);
 
   async function updateField(drive: DriveRow, patch: Partial<Tables<'medical_drives'>>) {
+    // Skip logging (but still write) when nothing actually changed — e.g. a cell
+    // clicked into and blurred without editing.
+    const patchKeys = Object.keys(patch) as (keyof typeof patch)[];
+    const changed = patchKeys.some((key) => patch[key] !== drive[key]);
+
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.from('medical_drives').update(patch).eq('id', drive.id);
-    if (!error) router.refresh();
+    if (!error) {
+      router.refresh();
+      if (changed) {
+        const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'is_active';
+        const before = Object.fromEntries(patchKeys.map((key) => [key, drive[key]]));
+        logAdminAction({
+          action: isStatusChange ? 'status_change' : 'update',
+          entityType: 'medical_drive',
+          entityId: drive.id,
+          entityLabel: drive.title,
+          changes: { before, after: patch },
+        }).catch(() => {});
+      }
+    }
     return { error: error?.message ?? null };
   }
 
@@ -290,6 +331,20 @@ export function DriveTable({
       toast.showError(`Failed to remove drive: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'delete',
+      entityType: 'medical_drive',
+      entityId: drive.id,
+      entityLabel: drive.title,
+      metadata: {
+        title: drive.title,
+        type: drive.type,
+        drive_date: drive.drive_date,
+        location: drive.location,
+      },
+    }).catch(() => {});
+
     toast.showSuccess('Drive removed.');
     router.refresh();
   }

@@ -3,12 +3,16 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { markPaymentCollected as markPaymentCollectedRequest } from '@/lib/payments';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface RequestStatusActionsProps {
   requestId: string;
+  /** Threaded down purely so the audit log entries these actions write have a
+   * meaningful `entityLabel` — this component otherwise only deals in ids. */
+  referenceNumber: string;
   status: string;
   paymentStatus: string;
   paymentMethod: string | null;
@@ -20,7 +24,14 @@ interface RequestStatusActionsProps {
 /** The buttons that drive the request FSM the 0002 migration deferred to "admin/backend
  * concern" — Active -> Processing -> Ready, Cancel (with a required note via the
  * cancel_service_request RPC), and Ready -> Payment Collected for Pay at Pickup. */
-export function RequestStatusActions({ requestId, status, paymentStatus, paymentMethod, variant = 'full' }: RequestStatusActionsProps) {
+export function RequestStatusActions({
+  requestId,
+  referenceNumber,
+  status,
+  paymentStatus,
+  paymentMethod,
+  variant = 'full',
+}: RequestStatusActionsProps) {
   const router = useRouter();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
@@ -43,6 +54,15 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       toast.showError(`Failed to update status: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'service_request',
+      entityId: requestId,
+      entityLabel: referenceNumber,
+      changes: { before: { status }, after: { status: 'in_progress' } },
+    }).catch(() => {});
+
     router.refresh();
   }
 
@@ -55,6 +75,15 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       toast.showError(`Failed to complete request: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'service_request',
+      entityId: requestId,
+      entityLabel: referenceNumber,
+      changes: { before: { status }, after: { status: 'completed' } },
+    }).catch(() => {});
+
     toast.showSuccess('Request marked as completed.');
     router.refresh();
   }
@@ -68,6 +97,15 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       toast.showError(`Failed to mark request ready for pickup: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'service_request',
+      entityId: requestId,
+      entityLabel: referenceNumber,
+      changes: { before: { status }, after: { status: 'ready_for_pickup' } },
+    }).catch(() => {});
+
     toast.showSuccess('Request marked ready for pickup.');
     router.refresh();
   }
@@ -82,6 +120,16 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
       toast.showError(`Failed to cancel request: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'service_request',
+      entityId: requestId,
+      entityLabel: referenceNumber,
+      changes: { before: { status }, after: { status: 'cancelled' } },
+      metadata: { cancelNote: cancelNote.trim() },
+    }).catch(() => {});
+
     setShowCancelForm(false);
     setCancelNote('');
     toast.showSuccess('Request cancelled.');
@@ -91,12 +139,30 @@ export function RequestStatusActions({ requestId, status, paymentStatus, payment
   async function markPaymentCollected() {
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await markPaymentCollectedRequest(supabase, requestId);
+    const { error, paymentId, wasCreate } = await markPaymentCollectedRequest(supabase, requestId);
     setBusy(false);
     if (error) {
       toast.showError(`Failed to mark payment collected: ${error}`);
       return;
     }
+
+    logAdminAction({
+      action: 'status_change',
+      entityType: 'service_request',
+      entityId: requestId,
+      entityLabel: referenceNumber,
+      changes: { before: { payment_status: paymentStatus }, after: { payment_status: 'paid' } },
+    }).catch(() => {});
+
+    logAdminAction({
+      action: wasCreate ? 'create' : 'status_change',
+      entityType: 'payment',
+      entityId: paymentId ?? undefined,
+      entityLabel: referenceNumber,
+      changes: wasCreate ? undefined : { before: { status: paymentStatus }, after: { status: 'paid' } },
+      metadata: { method: paymentMethod, reference_number: referenceNumber },
+    }).catch(() => {});
+
     toast.showSuccess('Payment marked as collected.');
     router.refresh();
   }

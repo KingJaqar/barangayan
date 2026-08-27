@@ -89,7 +89,14 @@ export function ContentForm({
       await logAdminAction({
         action: initial ? 'update' : 'create',
         entityType: 'site_content',
+        entityId: initial?.id,
         entityLabel: SITE_CONTENT_SECTION_META[section].label,
+        changes: {
+          before: initial
+            ? { title: initial.title, body: initial.body, is_active: initial.is_active }
+            : {},
+          after: { title: parsed.data.title, body: parsed.data.body, is_active: parsed.data.is_active },
+        },
       });
 
       toast.showSuccess('Saved successfully.');

@@ -3,9 +3,21 @@
   "configurations": [
     {
       "name": "resident-android-mobile",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web", "--port", "8082"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "web", "--workspace=@barangayan/mobile", "--", "--port", "8082"],
       "port": 8082
+    },
+    {
+      "name": "resident-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/resident-web", "--", "--port", "3100"],
+      "port": 3100
+    },
+    {
+      "name": "admin-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace=@barangayan/web", "--", "--port", "3200"],
+      "port": 3200
     }
   ]
 }

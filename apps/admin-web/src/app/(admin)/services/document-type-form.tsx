@@ -4,6 +4,7 @@ import { documentTypeSchema } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -43,15 +44,19 @@ export function DocumentTypeForm({ barangayId }: { barangayId: string }) {
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('document_types').insert({
-      barangay_id: barangayId,
-      name: result.data.name,
-      description: result.data.description ?? null,
-      fee_centavos: result.data.feeCentavos,
-      processing_target_hours: result.data.processingTargetHours,
-      requirements: result.data.requirements,
-      is_active: true,
-    });
+    const { data: insertedDocType, error: insertError } = await supabase
+      .from('document_types')
+      .insert({
+        barangay_id: barangayId,
+        name: result.data.name,
+        description: result.data.description ?? null,
+        fee_centavos: result.data.feeCentavos,
+        processing_target_hours: result.data.processingTargetHours,
+        requirements: result.data.requirements,
+        is_active: true,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
 
     if (insertError) {
@@ -59,6 +64,20 @@ export function DocumentTypeForm({ barangayId }: { barangayId: string }) {
       toast.showError(`Failed to add document type: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'document_type',
+      entityId: insertedDocType?.id,
+      entityLabel: result.data.name,
+      metadata: {
+        name: result.data.name,
+        description: result.data.description ?? null,
+        fee_centavos: result.data.feeCentavos,
+        processing_target_hours: result.data.processingTargetHours,
+        requirements: result.data.requirements,
+      },
+    }).catch(() => {});
 
     setName('');
     setDescription('');

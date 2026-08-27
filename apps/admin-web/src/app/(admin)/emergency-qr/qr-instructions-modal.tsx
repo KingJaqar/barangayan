@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/toast';
 import { emergencyQrContentSchema } from '@barangayan/shared';
@@ -126,6 +127,22 @@ export function QrInstructionsModal({
       toast.showError(`Failed to save: ${error.message}`);
       return;
     }
+
+    logAdminAction({
+      action: existing ? 'update' : 'create',
+      entityType: 'emergency_qr',
+      entityId: result.id,
+      entityLabel: data.title || (section === 'why_scan' ? 'Why Scan' : 'How It Works'),
+      changes: existing
+        ? {
+            before: { title: existing.title, body: existing.body, content: existing.content, is_active: existing.is_active },
+            after: { title: data.title, body: data.body, content: payload.content, is_active: data.is_active },
+          }
+        : undefined,
+      metadata: !existing
+        ? { title: data.title, body: data.body, content: payload.content, is_active: data.is_active }
+        : undefined,
+    }).catch(() => {});
 
     toast.showSuccess(existing ? 'Content updated.' : 'Content created.');
     onSaved(result as QrInstructionRow);

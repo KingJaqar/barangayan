@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { LayoutChangeEvent, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { LayoutChangeEvent, Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';

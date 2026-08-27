@@ -4,6 +4,7 @@ import { evacuationCenterSchema, EVACUATION_CENTER_FACILITIES, type EvacuationCe
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -60,18 +61,22 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
 
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('evacuation_centers').insert({
-      barangay_id: barangayId,
-      name: result.data.name,
-      address: result.data.address || null,
-      position: { lat: result.data.lat, lng: result.data.lng },
-      capacity: result.data.capacity,
-      current_occupancy: result.data.current_occupancy,
-      is_active: result.data.is_active,
-      contact_number: result.data.contact_number || null,
-      facilities: result.data.facilities,
-      verified: result.data.verified,
-    });
+    const { data: insertedCenter, error: insertError } = await supabase
+      .from('evacuation_centers')
+      .insert({
+        barangay_id: barangayId,
+        name: result.data.name,
+        address: result.data.address || null,
+        position: { lat: result.data.lat, lng: result.data.lng },
+        capacity: result.data.capacity,
+        current_occupancy: result.data.current_occupancy,
+        is_active: result.data.is_active,
+        contact_number: result.data.contact_number || null,
+        facilities: result.data.facilities,
+        verified: result.data.verified,
+      })
+      .select('id')
+      .single();
     setSubmitting(false);
 
     if (insertError) {
@@ -79,6 +84,21 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
       toast.showError(`Failed to create center: ${insertError.message}`);
       return;
     }
+
+    logAdminAction({
+      action: 'create',
+      entityType: 'evacuation_center',
+      entityId: insertedCenter?.id,
+      entityLabel: result.data.name,
+      metadata: {
+        name: result.data.name,
+        address: result.data.address || null,
+        position: { lat: result.data.lat, lng: result.data.lng },
+        capacity: result.data.capacity,
+        contact_number: result.data.contact_number || null,
+        facilities: result.data.facilities,
+      },
+    }).catch(() => {});
 
     setName('');
     setAddress('');
