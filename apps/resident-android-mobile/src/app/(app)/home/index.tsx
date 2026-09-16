@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import type { Tables } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Fragment, useEffect, useState } from 'react';
@@ -148,14 +148,7 @@ export default function HomeScreen() {
         {/* Nonblocking deferred-verification notice — shown only to logged-in residents
             whose status is not yet verified. Never blocks any action. Once SMTP is
             available this becomes an active "Verify Email" entry point. */}
-        {session && profile && profile.email_verification_status !== 'verified' ? (
-          <ThemedView type="backgroundElement" style={styles.verificationBanner}>
-            <Ionicons name="mail-outline" size={16} color={theme.textSecondary} />
-            <ThemedText type="small" themeColor="textSecondary" style={styles.verificationText}>
-              Email verification is not yet available. You can manage this in Settings.
-            </ThemedText>
-          </ThemedView>
-        ) : null}
+        
 
         <View style={styles.quickActionsRow}>
           {QUICK_ACTIONS.map((action) => (
