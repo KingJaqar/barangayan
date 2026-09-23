@@ -1,7 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { ApplicantsTable } from './applicants-table';
-import { TABS, type Tab } from './types';
+import { TABS, type RegistrationStatus, type Tab } from './types';
 
 export type ApplicantRow = {
   id: string;
@@ -13,7 +13,7 @@ export type ApplicantRow = {
   comorbidities: string[];
   prior_dose_date: string | null;
   priority_score: number;
-  status: 'pending' | 'confirmed' | 'attended' | 'cancelled';
+  status: RegistrationStatus;
   created_at: string;
   updated_at: string;
   medical_drives: { id: string; title: string; type: string; drive_date: string; location: string } | null;

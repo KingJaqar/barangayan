@@ -1,6 +1,7 @@
 'use client';
 
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
+import { Ban, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -13,14 +14,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { formatDriveDate } from '../drive-table';
 import { ApplicantDetailModal } from './applicant-detail-modal';
 import type { ApplicantRow } from './page';
-import { TABS, type Tab } from './types';
-
-const STATUS_OPTIONS = [
-  { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'attended', label: 'Attended' },
-  { value: 'cancelled', label: 'Cancelled' },
-];
+import { REGISTRATION_STATUS_OPTIONS, TABS, registrationStatusLabel, type Tab } from './types';
 
 export function StatusPill({ status }: { status: string }) {
   const styles: Record<string, string> = {
@@ -29,7 +23,7 @@ export function StatusPill({ status }: { status: string }) {
     attended: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
     cancelled: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
   };
-  const label = status.charAt(0).toUpperCase() + status.slice(1);
+  const label = registrationStatusLabel(status);
   return (
     <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${styles[status] ?? styles.pending}`}>
       {label}
@@ -37,8 +31,12 @@ export function StatusPill({ status }: { status: string }) {
   );
 }
 
-function formatDateTimeShort(iso: string): string {
-  return new Intl.DateTimeFormat('en-PH', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
+function formatDateTimeShort(iso: string): { date: string; time: string } {
+  const date = new Date(iso);
+  return {
+    date: new Intl.DateTimeFormat('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }).format(date),
+    time: new Intl.DateTimeFormat('en-PH', { hour: 'numeric', minute: '2-digit' }).format(date),
+  };
 }
 
 type DriveOption = { id: string; title: string; drive_date: string };
@@ -281,51 +279,66 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
   }, [channelName, router]);
 
   async function updateField(row: ApplicantRow, patch: Partial<Tables<'drive_registrations'>>) {
-    // Skip logging (but still write) when nothing actually changed — e.g. a cell
-    // clicked into and blurred without editing.
+    // Avoid a database write when a cell was opened and committed unchanged.
     const patchKeys = Object.keys(patch) as (keyof typeof patch)[];
     const changed = patchKeys.some((key) => patch[key] !== row[key]);
+    if (!changed) return { error: null };
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('drive_registrations').update(patch).eq('id', row.id);
-    if (!error) {
-      router.refresh();
-      if (changed) {
-        const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'status';
-        const before = Object.fromEntries(patchKeys.map((key) => [key, row[key]]));
-        logAdminAction({
-          action: isStatusChange ? 'status_change' : 'update',
-          entityType: 'drive_registration',
-          entityId: row.id,
-          entityLabel: row.applicant_number,
-          changes: { before, after: patch },
-          metadata: {
-            applicant_number: row.applicant_number,
-            drive: row.medical_drives?.title ?? null,
-            resident: row.profiles?.full_name ?? null,
-            age: row.age,
-            is_pwd: row.is_pwd,
-            priority_score: row.priority_score,
-            registered_at: row.created_at,
-          },
-        }).catch(() => {});
-      }
+    const { data: updated, error } = await supabase
+      .from('drive_registrations')
+      .update(patch)
+      .eq('id', row.id)
+      .select('id, age, is_pwd, comorbidities, prior_dose_date, status, updated_at')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) {
+      return { error: 'No registration was updated. Check that you still have access to this barangay.' };
     }
-    return { error: error?.message ?? null };
+
+    const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'status';
+    const before = Object.fromEntries(patchKeys.map((key) => [key, row[key]]));
+    await logAdminAction({
+      action: isStatusChange ? 'status_change' : 'update',
+      entityType: 'drive_registration',
+      entityId: updated.id,
+      entityLabel: row.applicant_number,
+      changes: { before, after: patch },
+      metadata: {
+        applicant_number: row.applicant_number,
+        drive: row.medical_drives?.title ?? null,
+        resident: row.profiles?.full_name ?? null,
+        age: updated.age,
+        is_pwd: updated.is_pwd,
+        priority_score: row.priority_score,
+        registered_at: row.created_at,
+      },
+    }).catch(() => {});
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   async function cancelRegistration(row: ApplicantRow) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('drive_registrations').update({ status: 'cancelled' }).eq('id', row.id);
+    const { data: updated, error } = await supabase
+      .from('drive_registrations')
+      .update({ status: 'cancelled' })
+      .eq('id', row.id)
+      .select('id, status')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to cancel: ${error.message}`);
+      return;
+    }
+    if (!updated) {
+      toast.showError('Failed to cancel: no registration was updated. Check that you still have access to this barangay.');
       return;
     }
 
     logAdminAction({
       action: 'status_change',
       entityType: 'drive_registration',
-      entityId: row.id,
+      entityId: updated.id,
       entityLabel: row.applicant_number,
       changes: { before: { status: row.status }, after: { status: 'cancelled' } },
       metadata: {
@@ -346,11 +359,16 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
   const columns: EditableDataTableColumn<ApplicantRow>[] = [
     {
       header: 'Applicant #',
-      render: (r) => <span className="font-mono text-xs">{r.applicant_number}</span>,
+      initialWidth: 124,
+      minWidth: 116,
+      wrap: 'nowrap',
+      render: (r) => <span className="font-mono text-xs font-medium tabular-nums">{r.applicant_number}</span>,
     },
     {
       header: 'Drive',
-      className: 'max-w-xs',
+      initialWidth: 230,
+      minWidth: 190,
+      wrap: 'break-word',
       render: (r) => (
         <div>
           <p className="font-semibold leading-snug">{r.medical_drives?.title ?? '—'}</p>
@@ -364,10 +382,16 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     },
     {
       header: 'Resident',
-      render: (r) => r.profiles?.full_name ?? '—',
+      initialWidth: 188,
+      minWidth: 160,
+      wrap: 'break-word',
+      render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
     },
     {
       header: 'Age',
+      initialWidth: 70,
+      minWidth: 66,
+      wrap: 'nowrap',
       render: (r) => r.age,
       edit: {
         type: 'number',
@@ -383,6 +407,9 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     },
     {
       header: 'PWD',
+      initialWidth: 72,
+      minWidth: 68,
+      wrap: 'nowrap',
       render: (r) => (r.is_pwd ? 'Yes' : 'No'),
       edit: {
         type: 'select',
@@ -396,6 +423,9 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     },
     {
       header: 'Priority Score',
+      initialWidth: 112,
+      minWidth: 104,
+      wrap: 'nowrap',
       render: (r) => (
         <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
           {r.priority_score}
@@ -404,31 +434,60 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     },
     {
       header: 'Status',
+      initialWidth: 140,
+      minWidth: 132,
+      wrap: 'nowrap',
       render: (r) => <StatusPill status={r.status} />,
       edit: {
         type: 'select',
-        options: STATUS_OPTIONS,
+        options: [...REGISTRATION_STATUS_OPTIONS],
         getValue: (r) => r.status,
         onSave: (r, value) => updateField(r, { status: String(value) as ApplicantRow['status'] }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Registered At',
-      render: (r) => formatDateTimeShort(r.created_at),
+      initialWidth: 142,
+      minWidth: 132,
+      wrap: 'nowrap',
+      render: (r) => {
+        const registeredAt = formatDateTimeShort(r.created_at);
+        return (
+          <span className="block text-xs leading-tight tabular-nums text-zinc-600 dark:text-zinc-300">
+            <span className="block font-medium">{registeredAt.date}</span>
+            <span className="mt-0.5 block text-zinc-500 dark:text-zinc-400">{registeredAt.time}</span>
+          </span>
+        );
+      },
     },
     {
       header: 'Actions',
+      minWidth: 180,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (r) => (
-        <div className="flex flex-wrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button onClick={() => setSelected(r)} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
-            View
+        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => setSelected(r)}
+            title="View registration details"
+            aria-label={`View registration ${r.applicant_number}`}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+          >
+            <Eye aria-hidden="true" className="h-4 w-4" />
           </button>
           <ConfirmButton
-            label="🚫"
+            label={
+              <>
+                <Ban aria-hidden="true" className="h-4 w-4" />
+                <span className="sr-only">Cancel registration {r.applicant_number}</span>
+              </>
+            }
             confirmLabel="Cancel?"
             onConfirm={() => cancelRegistration(r)}
             title="Cancel registration"
-            className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         </div>
       ),
@@ -522,7 +581,9 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
         columns={columns}
         onRowClick={setSelected}
         resizableColumns
-        thickBorders
+        density="compact"
+        tableMinWidth={1320}
+        cellOverflow="hidden"
       />
 
       {selected && <ApplicantDetailModal row={selected} onClose={() => setSelected(null)} onSave={(updated) => setSelected(updated)} />}

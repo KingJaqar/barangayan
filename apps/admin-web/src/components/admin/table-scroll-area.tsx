@@ -21,13 +21,29 @@ export function TableScrollArea({ children }: { children: ReactNode }) {
     const table = bottomEl?.firstElementChild as HTMLElement | undefined;
     if (!bottomEl || !table) return;
 
-    const updateWidth = () => setTableWidth(table.scrollWidth);
+    let frame = 0;
+    const updateWidth = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setTableWidth(Math.max(table.scrollWidth, bottomEl.scrollWidth)));
+    };
     updateWidth();
 
     const observer = new ResizeObserver(updateWidth);
     observer.observe(table);
-    return () => observer.disconnect();
-  }, [children]);
+    observer.observe(bottomEl);
+
+    // Column resizing changes <col> styles, while refreshed data changes descendants.
+    // Observe both so the mirrored track stays exact even when the table's outer box does
+    // not emit a distinct resize notification in a browser.
+    const mutationObserver = new MutationObserver(updateWidth);
+    mutationObserver.observe(table, { attributes: true, childList: true, subtree: true, characterData: true });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     function handleWindowResize() {

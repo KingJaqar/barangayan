@@ -1,7 +1,8 @@
 'use client';
 
 import { formatDateTime } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
@@ -10,8 +11,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { formatDriveDate } from '../drive-table';
 import { StatusPill } from './applicants-table';
 import type { ApplicantRow } from './page';
-
-const STATUS_OPTIONS = ['pending', 'confirmed', 'attended', 'cancelled'] as const;
+import { REGISTRATION_STATUS_OPTIONS } from './types';
 
 /** Full-detail modal for an applicant registration — mirrors drive-detail-modal.tsx.
  * `applicant_number` and `priority_score` are server-computed by register_for_drive
@@ -25,6 +25,7 @@ export function ApplicantDetailModal({
   onClose: () => void;
   onSave: (updated: ApplicantRow) => void;
 }) {
+  const router = useRouter();
   const toast = useToast();
   const [editing, setEditing] = useState(false);
   const [age, setAge] = useState(row.age);
@@ -33,6 +34,7 @@ export function ApplicantDetailModal({
   const [priorDoseDate, setPriorDoseDate] = useState(row.prior_dose_date ?? '');
   const [status, setStatus] = useState(row.status);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -43,6 +45,12 @@ export function ApplicantDetailModal({
   }, [onClose]);
 
   async function saveDetails() {
+    if (savingRef.current) return;
+    if (!Number.isFinite(age) || age < 0 || age > 130) {
+      toast.showError('Enter an age between 0 and 130.');
+      return;
+    }
+    savingRef.current = true;
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
     const comorbsArray = comorbidities
@@ -56,17 +64,36 @@ export function ApplicantDetailModal({
       prior_dose_date: priorDoseDate || null,
       status,
     };
-    const { error } = await supabase.from('drive_registrations').update(patch).eq('id', row.id);
+    let result;
+    try {
+      result = await supabase
+        .from('drive_registrations')
+        .update(patch)
+        .eq('id', row.id)
+        .select('id, age, is_pwd, comorbidities, prior_dose_date, status, updated_at')
+        .maybeSingle();
+    } catch (cause) {
+      savingRef.current = false;
+      setSaving(false);
+      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'the update could not be completed.'}`);
+      return;
+    }
+    savingRef.current = false;
     setSaving(false);
+    const { data: updated, error } = result;
     if (error) {
       toast.showError(`Failed to save: ${error.message}`);
+      return;
+    }
+    if (!updated) {
+      toast.showError('Failed to save: no registration was updated. Check that you still have access to this barangay.');
       return;
     }
 
     logAdminAction({
       action: patch.status && patch.status !== row.status ? 'status_change' : 'update',
       entityType: 'drive_registration',
-      entityId: row.id,
+      entityId: updated.id,
       entityLabel: row.applicant_number,
       changes: {
         before: {
@@ -89,7 +116,8 @@ export function ApplicantDetailModal({
 
     toast.showSuccess('Registration updated.');
     setEditing(false);
-    onSave({ ...row, ...patch });
+    onSave({ ...row, ...updated });
+    router.refresh();
   }
 
   const inputClass =
@@ -229,9 +257,9 @@ export function ApplicantDetailModal({
                   <label className="text-sm">
                     <span className="mb-1 block font-medium">Status</span>
                     <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as ApplicantRow['status'])}>
-                      {STATUS_OPTIONS.map((s) => (
-                        <option key={s} value={s}>
-                          {s.charAt(0).toUpperCase() + s.slice(1)}
+                      {REGISTRATION_STATUS_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
                         </option>
                       ))}
                     </select>

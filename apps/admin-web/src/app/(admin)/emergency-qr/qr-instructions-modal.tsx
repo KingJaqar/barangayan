@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/toast';
 import { emergencyQrContentSchema } from '@barangayan/shared';
 import type { EmergencyQrContent, Json, QrStepItem, Tables } from '@barangayan/shared';
-import { useFieldArray } from 'react-hook-form';
 
 type QrInstructionRow = Tables<'emergency_qr_content'>;
 
@@ -149,8 +148,8 @@ export function QrInstructionsModal({
   }
 
   const errors = form.formState.errors;
-  const iconColor = form.watch('icon_color') as string;
-  const iconBg = form.watch('icon_bg') as string;
+  const iconColor = useWatch({ control: form.control, name: 'icon_color' }) as string;
+  const iconBg = useWatch({ control: form.control, name: 'icon_bg' }) as string;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">

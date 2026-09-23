@@ -25,6 +25,8 @@ export interface EditableCellConfig<T> {
   getValue: (row: T) => string | number;
   /** Return { error: null } on success, { error: <message> } on failure — never throw. */
   onSave: (row: T, value: string | number) => Promise<{ error: string | null }>;
+  /** Commit a select as soon as its value changes instead of waiting for blur. */
+  commitOnChange?: boolean;
   /** Optional guard evaluated before entering edit mode, e.g. lock amount once paid. */
   canEdit?: (row: T) => boolean;
 }
@@ -44,6 +46,12 @@ export interface EditableDataTableColumn<T> {
    * still drag it afterward like any other column. Ignored on the last column, which is
    * always the flexible filler regardless of this value. */
   initialWidth?: number;
+  /** Floor used both for the initial measurement and while drag-resizing. */
+  minWidth?: number;
+  /** Opt-in text wrapping policy. Omitted preserves the table's existing behavior. */
+  wrap?: 'normal' | 'nowrap' | 'break-word';
+  /** Override the table-level cell overflow behavior for this column. */
+  overflow?: 'hidden' | 'visible';
 }
 
 function resolveEdit<T>(col: EditableDataTableColumn<T>, row: T): EditableCellConfig<T> | undefined {
@@ -78,6 +86,12 @@ interface EditableDataTableProps<T> {
   /** Bumps the header/row divider lines from 1px to 2px. Off by default — opt in per table
    * (e.g. Requests, whose row content is dense enough to want a stronger separator). */
   thickBorders?: boolean;
+  /** Reduces cell padding without changing the default density used by other tables. */
+  density?: 'default' | 'compact';
+  /** Deliberate table floor; narrower containers scroll instead of squeezing columns. */
+  tableMinWidth?: number;
+  /** Controls clipping for resizable cells. Defaults to the existing hidden behavior. */
+  cellOverflow?: 'hidden' | 'visible';
 }
 
 /** Same shell/markup as the read-only DataTable, plus click-to-edit cells: clicking a
@@ -92,11 +106,15 @@ export function EditableDataTable<T>({
   onRowClick,
   resizableColumns = false,
   thickBorders = false,
+  density = 'default',
+  tableMinWidth,
+  cellOverflow = 'hidden',
 }: EditableDataTableProps<T>) {
   const toast = useToast();
   const [editing, setEditing] = useState<{ row: string; col: string } | null>(null);
   const [draft, setDraft] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
 
   // ── Resizable columns (opt-in) ────────────────────────────────────────────
   // Each header's width starts at its natural auto-layout size (measured right after
@@ -121,9 +139,11 @@ export function EditableDataTable<T>({
       const next = { ...prev };
       for (const col of pinnedColumns) {
         if (next[col.header] === undefined) {
-          const width = col.initialWidth ?? thRefs.current[col.header]?.getBoundingClientRect().width;
+          const measuredWidth = col.initialWidth ?? thRefs.current[col.header]?.getBoundingClientRect().width;
+          const paddedWidth = measuredWidth ? Math.round(measuredWidth * COLUMN_WIDTH_PADDING) : undefined;
+          const width = paddedWidth && col.minWidth !== undefined ? Math.max(col.minWidth, paddedWidth) : paddedWidth;
           if (width) {
-            next[col.header] = Math.round(width * COLUMN_WIDTH_PADDING);
+            next[col.header] = width;
             changed = true;
           }
         }
@@ -137,10 +157,12 @@ export function EditableDataTable<T>({
     e.preventDefault();
     e.stopPropagation();
     const startX = e.clientX;
-    const startWidth = colWidths[header] ?? thRefs.current[header]?.getBoundingClientRect().width ?? 120;
+    const column = columns.find((col) => col.header === header);
+    const minWidth = column?.minWidth ?? 60;
+    const startWidth = colWidths[header] ?? thRefs.current[header]?.getBoundingClientRect().width ?? Math.max(120, minWidth);
 
     function onMove(ev: MouseEvent) {
-      const next = Math.max(60, Math.round(startWidth + (ev.clientX - startX)));
+      const next = Math.max(minWidth, Math.round(startWidth + (ev.clientX - startX)));
       setColWidths((prev) => ({ ...prev, [header]: next }));
     }
     function onUp() {
@@ -152,8 +174,11 @@ export function EditableDataTable<T>({
   }
 
   const columnsMeasured = resizableColumns && pinnedColumns.every((col) => colWidths[col.header] !== undefined);
+  const headerPadding = density === 'compact' ? 'px-3 py-2.5' : 'px-5 py-3.5';
+  const cellPadding = density === 'compact' ? 'px-3 py-2.5' : 'px-5 py-3.5';
 
   function startEdit(row: T, col: EditableDataTableColumn<T>) {
+    if (savingRef.current) return;
     const edit = resolveEdit(col, row);
     if (!edit || (edit.canEdit && !edit.canEdit(row))) return;
     setEditing({ row: rowKey(row), col: col.header });
@@ -166,11 +191,11 @@ export function EditableDataTable<T>({
     setDraft('');
   }
 
-  async function commitEdit(row: T, col: EditableDataTableColumn<T>) {
+  async function commitEdit(row: T, col: EditableDataTableColumn<T>, draftOverride?: string) {
     const edit = resolveEdit(col, row);
-    if (!edit || saving) return;
+    if (!edit || savingRef.current) return;
 
-    let value: string | number = draft;
+    let value: string | number = draftOverride ?? draft;
     if (edit.type === 'number') {
       value = Number(draft);
     } else if (edit.type === 'datetime') {
@@ -182,11 +207,20 @@ export function EditableDataTable<T>({
       value = iso;
     }
 
+    savingRef.current = true;
     setSaving(true);
-    const { error } = await edit.onSave(row, value);
-    setSaving(false);
+    let error: string | null;
+    try {
+      ({ error } = await edit.onSave(row, value));
+    } catch (cause) {
+      error = cause instanceof Error ? cause.message : 'The update could not be completed.';
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
     if (error) {
       toast.showError(`Update failed: ${error}`);
+      cancelEdit();
       return;
     }
     setEditing(null);
@@ -200,12 +234,21 @@ export function EditableDataTable<T>({
         // fixed layout — applying it during the brief unmeasured auto-layout pass would
         // stretch the very widths startColumnResize is trying to capture as "natural".
         className={`text-left text-sm ${!resizableColumns ? 'w-full min-w-max' : columnsMeasured ? 'w-full' : ''}`}
-        style={columnsMeasured ? { tableLayout: 'fixed' } : undefined}
+        style={{
+          ...(columnsMeasured ? { tableLayout: 'fixed' as const } : {}),
+          ...(tableMinWidth ? { minWidth: tableMinWidth } : {}),
+        }}
       >
         {resizableColumns && (
           <colgroup>
             {columns.map((col) => (
-              <col key={col.header} style={colWidths[col.header] ? { width: colWidths[col.header] } : undefined} />
+              <col
+                key={col.header}
+                style={{
+                  ...(colWidths[col.header] ? { width: colWidths[col.header] } : {}),
+                  ...(col.minWidth ? { minWidth: col.minWidth } : {}),
+                }}
+              />
             ))}
           </colgroup>
         )}
@@ -224,8 +267,8 @@ export function EditableDataTable<T>({
                 // The last (filler) column gets a floor so it can never be squeezed to
                 // invisible by the other columns' pinned/initial widths adding up to more
                 // than the table's available space.
-                style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
-                className={`relative px-5 py-3.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 ${
+                style={{ minWidth: Math.max(col.minWidth ?? 0, resizableColumns && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0) || undefined }}
+                className={`relative ${headerPadding} text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 ${
                   thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
                 }`}
               >
@@ -268,8 +311,18 @@ export function EditableDataTable<T>({
                   return (
                     <td
                       key={col.header}
-                      style={resizableColumns && colIndex === columns.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
-                      className={`px-5 py-3.5 ${resizableColumns ? 'overflow-hidden' : ''} ${
+                      style={{ minWidth: Math.max(col.minWidth ?? 0, resizableColumns && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0) || undefined }}
+                      className={`${cellPadding} ${
+                        (col.overflow ?? (resizableColumns ? cellOverflow : 'visible')) === 'hidden' ? 'overflow-hidden' : 'overflow-visible'
+                      } ${
+                        col.wrap === 'nowrap'
+                          ? 'whitespace-nowrap'
+                          : col.wrap === 'break-word'
+                            ? 'whitespace-normal break-words'
+                            : col.wrap === 'normal'
+                              ? 'whitespace-normal'
+                              : ''
+                      } ${
                         thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
                       } ${col.className ?? ''} ${editable && !isEditing ? 'cursor-text hover:bg-[var(--accent)]/5' : ''} ${
                         onRowClick && !editable ? 'cursor-pointer' : ''
@@ -285,25 +338,35 @@ export function EditableDataTable<T>({
                     >
                       {isEditing && edit ? (
                         edit.type === 'select' ? (
-                          <select
-                            autoFocus
-                            value={draft}
-                            disabled={saving}
-                            onChange={(e) => setDraft(e.target.value)}
-                            onBlur={() => commitEdit(row, col)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') commitEdit(row, col);
-                              if (e.key === 'Escape') cancelEdit();
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
-                          >
-                            {edit.options?.map((opt) => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="space-y-1">
+                            <select
+                              autoFocus
+                              value={draft}
+                              disabled={saving}
+                              aria-busy={saving}
+                              onChange={(e) => {
+                                const nextDraft = e.target.value;
+                                setDraft(nextDraft);
+                                if (edit.commitOnChange) void commitEdit(row, col, nextDraft);
+                              }}
+                              onBlur={() => {
+                                if (!edit.commitOnChange) void commitEdit(row, col);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !edit.commitOnChange) void commitEdit(row, col);
+                                if (e.key === 'Escape' && !savingRef.current) cancelEdit();
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none disabled:cursor-wait disabled:opacity-70 dark:bg-zinc-800"
+                            >
+                              {edit.options?.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </option>
+                              ))}
+                            </select>
+                            {saving && <span className="block text-xs text-zinc-500">Saving…</span>}
+                          </div>
                         ) : (
                           <input
                             autoFocus

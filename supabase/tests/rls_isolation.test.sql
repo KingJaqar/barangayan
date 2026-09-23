@@ -12,9 +12,11 @@
 --   6. admin_register_for_drive (BUG-07 fix, migration 0072): a resident cannot call it;
 --      Admin A can register Resident A (own barangay); Admin A cannot register Resident B
 --      (barangay B).
+--   7. drive_registrations UPDATE (migration 0092): Admin A can update only Barangay A;
+--      residents cannot confirm/attend, but can still cancel their own pending row.
 begin;
 
-select plan(11);
+select plan(17);
 
 -- ============================================================================
 -- Fixtures — two barangays, two residents, two admins, one document type and one
@@ -59,9 +61,23 @@ update public.announcements set deleted_at = now() where id = 'e0000000-0000-000
 
 insert into public.medical_drives (
   id, barangay_id, title, type, drive_date, time_start, time_end, eligible_criteria, stock_total, stock_remaining
+) values
+  (
+    'f0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001',
+    'RLS Test Drive A', 'vaccination', current_date, '08:00', '12:00', 'All residents', 10, 10
+  ),
+  (
+    'f0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000002',
+    'RLS Test Drive B', 'vaccination', current_date, '08:00', '12:00', 'All residents', 10, 10
+  );
+
+insert into public.drive_registrations (
+  id, drive_id, user_id, applicant_number, age, is_pwd, comorbidities, priority_score, status
 ) values (
-  'f0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001',
-  'RLS Test Drive A', 'vaccination', current_date, '08:00', '12:00', 'All residents', 10, 10
+  'f1000000-0000-0000-0000-000000000002',
+  'f0000000-0000-0000-0000-000000000002',
+  'b0000000-0000-0000-0000-00000000000b',
+  'VAC-RLS-B-0001', 30, false, '{}'::text[], 0, 'pending'
 );
 
 -- ============================================================================
@@ -191,6 +207,85 @@ select throws_ok(
 );
 
 reset role;
+
+-- ============================================================================
+-- drive_registrations UPDATE policy (migration 0092)
+-- ============================================================================
+
+-- Admin A may update the row attached to Barangay A's drive.
+set local role authenticated;
+set local request.jwt.claim.sub = 'b0000000-0000-0000-0000-00000000000c';
+
+select results_eq(
+  $$ update public.drive_registrations
+       set status = 'confirmed'
+       where drive_id = 'f0000000-0000-0000-0000-000000000001'
+       returning status $$,
+  $$ values ('confirmed'::public.drive_registration_status) $$,
+  'Admin A can update a Barangay A drive registration'
+);
+
+select is_empty(
+  $$ update public.drive_registrations
+       set status = 'confirmed'
+       where id = 'f1000000-0000-0000-0000-000000000002'
+       returning id $$,
+  'Admin A cannot update a Barangay B drive registration'
+);
+
+reset role;
+
+-- A resident cannot use the admin policy to mark their own registration attended.
+set local role authenticated;
+set local request.jwt.claim.sub = 'b0000000-0000-0000-0000-00000000000a';
+
+select is_empty(
+  $$ update public.drive_registrations
+       set status = 'attended'
+       where drive_id = 'f0000000-0000-0000-0000-000000000001'
+       returning id $$,
+  'Resident A cannot mark their confirmed registration attended'
+);
+
+reset role;
+
+-- Resident B cannot confirm their pending row, but the original resident
+-- pending-to-cancel policy must continue to work.
+set local role authenticated;
+set local request.jwt.claim.sub = 'b0000000-0000-0000-0000-00000000000b';
+
+select is_empty(
+  $$ update public.drive_registrations
+       set status = 'confirmed'
+       where id = 'f1000000-0000-0000-0000-000000000002'
+       returning id $$,
+  'Resident B cannot confirm their pending registration'
+);
+
+select results_eq(
+  $$ update public.drive_registrations
+       set status = 'cancelled'
+       where id = 'f1000000-0000-0000-0000-000000000002'
+       returning status $$,
+  $$ values ('cancelled'::public.drive_registration_status) $$,
+  'Resident B can cancel their own pending registration'
+);
+
+reset role;
+
+select results_eq(
+  $$ select drive_id, status
+       from public.drive_registrations
+       where drive_id in (
+         'f0000000-0000-0000-0000-000000000001',
+         'f0000000-0000-0000-0000-000000000002'
+       )
+       order by drive_id $$,
+  $$ values
+       ('f0000000-0000-0000-0000-000000000001'::uuid, 'confirmed'::public.drive_registration_status),
+       ('f0000000-0000-0000-0000-000000000002'::uuid, 'cancelled'::public.drive_registration_status) $$,
+  'Only the authorized admin update and resident cancellation persisted'
+);
 
 select * from finish();
 

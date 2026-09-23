@@ -42,11 +42,14 @@ export function useMountTransition(active: boolean, onExited?: () => void) {
   const rafRef = useRef<number | null>(null);
   const exitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exitedRef = useRef(false);
-  // Kept fresh every render so the timeout fallback (scheduled from an
-  // effect, potentially several renders ago) always calls the latest
-  // `onExited` rather than one captured from a stale closure.
+  // Kept fresh after callback changes so the timeout fallback (scheduled
+  // potentially several renders ago) calls the latest `onExited` rather
+  // than one captured from a stale closure.
   const onExitedRef = useRef(onExited);
-  onExitedRef.current = onExited;
+
+  useEffect(() => {
+    onExitedRef.current = onExited;
+  }, [onExited]);
 
   function finishExit() {
     if (exitedRef.current) return;
@@ -76,7 +79,6 @@ export function useMountTransition(active: boolean, onExited?: () => void) {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       if (exitTimeoutRef.current !== null) clearTimeout(exitTimeoutRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active]);
 
   function onTransitionEnd(event: { propertyName: string; target?: unknown; currentTarget?: unknown }) {
