@@ -1,5 +1,6 @@
 'use client';
 
+import { BanknoteArrowDown, Ban, Check, PackageCheck, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -40,8 +41,16 @@ export function RequestStatusActions({
 
   const btnClass =
     variant === 'compact'
-      ? 'rounded-full px-3 py-1 text-xs font-semibold disabled:opacity-50'
+      ? 'inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold transition-colors disabled:cursor-wait disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
       : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
+
+  function actionLabel(label: string, icon: React.ReactNode) {
+    return variant === 'compact' ? <>{icon}<span className="sr-only">{label}</span></> : label;
+  }
+
+  function actionTitle(label: string) {
+    return variant === 'compact' ? label : undefined;
+  }
 
   async function beginProcessing() {
     setBusy(true);
@@ -55,10 +64,20 @@ export function RequestStatusActions({
       return;
     }
 
+    const { data: updated, error: readError } = await supabase
+      .from('service_requests')
+      .select('id, status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (readError || !updated || updated.status !== 'in_progress') {
+      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'service_request',
-      entityId: requestId,
+      entityId: updated.id,
       entityLabel: referenceNumber,
       changes: { before: { status }, after: { status: 'in_progress' } },
     }).catch(() => {});
@@ -76,10 +95,20 @@ export function RequestStatusActions({
       return;
     }
 
+    const { data: updated, error: readError } = await supabase
+      .from('service_requests')
+      .select('id, status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (readError || !updated || updated.status !== 'completed') {
+      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'service_request',
-      entityId: requestId,
+      entityId: updated.id,
       entityLabel: referenceNumber,
       changes: { before: { status }, after: { status: 'completed' } },
     }).catch(() => {});
@@ -98,10 +127,20 @@ export function RequestStatusActions({
       return;
     }
 
+    const { data: updated, error: readError } = await supabase
+      .from('service_requests')
+      .select('id, status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (readError || !updated || updated.status !== 'ready_for_pickup') {
+      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'service_request',
-      entityId: requestId,
+      entityId: updated.id,
       entityLabel: referenceNumber,
       changes: { before: { status }, after: { status: 'ready_for_pickup' } },
     }).catch(() => {});
@@ -121,10 +160,20 @@ export function RequestStatusActions({
       return;
     }
 
+    const { data: updated, error: readError } = await supabase
+      .from('service_requests')
+      .select('id, status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (readError || !updated || updated.status !== 'cancelled') {
+      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'service_request',
-      entityId: requestId,
+      entityId: updated.id,
       entityLabel: referenceNumber,
       changes: { before: { status }, after: { status: 'cancelled' } },
       metadata: { cancelNote: cancelNote.trim() },
@@ -146,10 +195,20 @@ export function RequestStatusActions({
       return;
     }
 
+    const { data: updated, error: readError } = await supabase
+      .from('service_requests')
+      .select('id, payment_status')
+      .eq('id', requestId)
+      .maybeSingle();
+    if (readError || !updated || updated.payment_status !== 'paid') {
+      toast.showError(readError?.message ?? 'The payment status could not be confirmed.');
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'service_request',
-      entityId: requestId,
+      entityId: updated.id,
       entityLabel: referenceNumber,
       changes: { before: { payment_status: paymentStatus }, after: { payment_status: 'paid' } },
     }).catch(() => {});
@@ -170,8 +229,13 @@ export function RequestStatusActions({
   if (status === 'cancelled' || status === 'completed') {
     if (status === 'completed' && paymentStatus !== 'paid' && paymentMethod === 'pickup') {
       return (
-        <button onClick={markPaymentCollected} disabled={busy} className={`${btnClass} bg-[var(--accent)] text-white`}>
-          Mark Payment Collected
+        <button
+          onClick={markPaymentCollected}
+          disabled={busy}
+          title={actionTitle('Mark payment collected')}
+          aria-label={variant === 'compact' ? `Mark payment collected for request ${referenceNumber}` : undefined}
+          className={`${btnClass} bg-[var(--accent)] text-white`}>
+          {actionLabel('Mark Payment Collected', <BanknoteArrowDown aria-hidden="true" className="h-4 w-4" />)}
         </button>
       );
     }
@@ -181,20 +245,35 @@ export function RequestStatusActions({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {status === 'submitted' ? (
-        <button onClick={beginProcessing} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
-          Move to Processing
+        <button
+          onClick={beginProcessing}
+          disabled={busy}
+          title={actionTitle('Move to processing')}
+          aria-label={variant === 'compact' ? `Move request ${referenceNumber} to processing` : undefined}
+          className={`${btnClass} bg-blue-600 text-white`}>
+          {actionLabel('Move to Processing', <Play aria-hidden="true" className="h-4 w-4" />)}
         </button>
       ) : null}
 
       {status === 'in_progress' ? (
-        <button onClick={markReadyForPickup} disabled={busy} className={`${btnClass} bg-blue-600 text-white`}>
-          Mark Ready for Pickup
+        <button
+          onClick={markReadyForPickup}
+          disabled={busy}
+          title={actionTitle('Mark ready for pickup')}
+          aria-label={variant === 'compact' ? `Mark request ${referenceNumber} ready for pickup` : undefined}
+          className={`${btnClass} bg-blue-600 text-white`}>
+          {actionLabel('Mark Ready for Pickup', <PackageCheck aria-hidden="true" className="h-4 w-4" />)}
         </button>
       ) : null}
 
       {status === 'ready_for_pickup' ? (
-        <button onClick={completeRequest} disabled={busy} className={`${btnClass} bg-[var(--accent)] text-white`}>
-          Mark as Completed
+        <button
+          onClick={completeRequest}
+          disabled={busy}
+          title={actionTitle('Mark as completed')}
+          aria-label={variant === 'compact' ? `Mark request ${referenceNumber} as completed` : undefined}
+          className={`${btnClass} bg-[var(--accent)] text-white`}>
+          {actionLabel('Mark as Completed', <Check aria-hidden="true" className="h-4 w-4" />)}
         </button>
       ) : null}
 
@@ -202,8 +281,10 @@ export function RequestStatusActions({
         <button
           onClick={() => setShowCancelForm(true)}
           disabled={busy}
+          title={actionTitle('Cancel request')}
+          aria-label={variant === 'compact' ? `Cancel request ${referenceNumber}` : undefined}
           className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-          Cancel
+          {actionLabel('Cancel', <Ban aria-hidden="true" className="h-4 w-4" />)}
         </button>
       ) : (
         <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { formatDateTime, type Tables } from '@barangayan/shared';
+import { Archive, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -274,9 +275,7 @@ export function RequestsTable({
   );
 
   async function updateField(request: ServiceRequest, patch: Partial<Tables<'service_requests'>>) {
-    // Skip the log (but still persist) if nothing in the patch actually differs from the
-    // row's current value — avoids a bell notification for a cell that's clicked into and
-    // blurred without an edit.
+    // Avoid both a duplicate submission and an audit entry when a cell is committed unchanged.
     const before: Record<string, unknown> = {};
     let changed = false;
     for (const key of Object.keys(patch) as (keyof typeof patch)[]) {
@@ -284,37 +283,52 @@ export function RequestsTable({
       if (request[key] !== patch[key]) changed = true;
     }
 
+    if (!changed) return { error: null };
+
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('service_requests').update(patch).eq('id', request.id);
-    if (!error) {
-      if (changed) {
-        logAdminAction({
-          action: patch.status || patch.payment_status ? 'status_change' : 'update',
-          entityType: 'service_request',
-          entityId: request.id,
-          entityLabel: request.reference_number,
-          changes: { before, after: patch },
-        }).catch(() => {});
-      }
-      router.refresh();
-    }
-    return { error: error?.message ?? null };
+    const { data: updated, error } = await supabase
+      .from('service_requests')
+      .update(patch)
+      .eq('id', request.id)
+      .select('id, reference_number, status, payment_status, resident_id, document_type_id, created_at, requester_notes')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No request was updated. Check that you still have access to this barangay.' };
+
+    logAdminAction({
+      action: patch.status || patch.payment_status ? 'status_change' : 'update',
+      entityType: 'service_request',
+      entityId: updated.id,
+      entityLabel: updated.reference_number,
+      changes: { before, after: patch },
+    }).catch(() => {});
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   async function archive(request: ServiceRequest) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('service_requests').update({ deleted_at: new Date().toISOString() }).eq('id', request.id);
+    const { data: updated, error } = await supabase
+      .from('service_requests')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', request.id)
+      .select('id, reference_number, status, payment_status')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to archive request: ${error.message}`);
+      return;
+    }
+    if (!updated) {
+      toast.showError('Failed to archive request: no request was updated. Check that you still have access to this barangay.');
       return;
     }
 
     logAdminAction({
       action: 'delete',
       entityType: 'service_request',
-      entityId: request.id,
-      entityLabel: request.reference_number,
-      metadata: { reference_number: request.reference_number, status: request.status, payment_status: request.payment_status },
+      entityId: updated.id,
+      entityLabel: updated.reference_number,
+      metadata: { reference_number: updated.reference_number, status: updated.status, payment_status: updated.payment_status },
     }).catch(() => {});
 
     toast.showSuccess(`Request #${request.reference_number} archived.`);
@@ -327,7 +341,10 @@ export function RequestsTable({
       // (the anchor's default navigation fires on click regardless of the edit handler).
       // Navigation moved to the "View" link in Actions instead.
       header: 'Reference',
-      render: (r) => <span className="font-medium">#{r.reference_number}</span>,
+      initialWidth: 128,
+      minWidth: 118,
+      wrap: 'nowrap',
+      render: (r) => <span className="font-mono text-xs font-medium tabular-nums">#{r.reference_number}</span>,
       edit: {
         type: 'text',
         getValue: (r) => r.reference_number,
@@ -340,26 +357,37 @@ export function RequestsTable({
     },
     {
       header: 'Resident',
-      render: (r) => r.profiles?.full_name ?? '—',
+      initialWidth: 190,
+      minWidth: 158,
+      wrap: 'break-word',
+      render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
       edit: {
         type: 'select',
         options: residents.map((res) => ({ value: res.id, label: res.full_name })),
         getValue: (r) => r.resident_id,
         onSave: (r, value) => updateField(r, { resident_id: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Document',
-      render: (r) => r.document_types?.name ?? '—',
+      initialWidth: 188,
+      minWidth: 156,
+      wrap: 'break-word',
+      render: (r) => <span className="font-medium leading-snug">{r.document_types?.name ?? '—'}</span>,
       edit: {
         type: 'select',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (r) => r.document_type_id,
         onSave: (r, value) => updateField(r, { document_type_id: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Status',
+      initialWidth: 148,
+      minWidth: 136,
+      wrap: 'nowrap',
       render: (r) => <StatusPill status={r.status} />,
       edit: {
         type: 'select',
@@ -375,10 +403,14 @@ export function RequestsTable({
         // on any status-changing UPDATE, so this stays consistent with that audit trail.
         getValue: (r) => r.status,
         onSave: (r, value) => updateField(r, { status: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Payment',
+      initialWidth: 116,
+      minWidth: 106,
+      wrap: 'nowrap',
       render: (r) => <StatusPill status={r.payment_status} />,
       edit: {
         type: 'select',
@@ -389,11 +421,15 @@ export function RequestsTable({
         ],
         getValue: (r) => r.payment_status,
         onSave: (r, value) => updateField(r, { payment_status: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Submitted',
-      render: (r) => formatDateTime(r.created_at),
+      initialWidth: 164,
+      minWidth: 150,
+      wrap: 'nowrap',
+      render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTime(r.created_at)}</span>,
       edit: {
         type: 'datetime',
         getValue: (r) => r.created_at,
@@ -402,7 +438,10 @@ export function RequestsTable({
     },
     {
       header: 'Notes',
-      render: (r) => r.requester_notes ?? '—',
+      initialWidth: 240,
+      minWidth: 190,
+      wrap: 'break-word',
+      render: (r) => <span className="leading-snug text-zinc-600 dark:text-zinc-300">{r.requester_notes ?? '—'}</span>,
       edit: {
         type: 'text',
         getValue: (r) => r.requester_notes ?? '',
@@ -411,10 +450,19 @@ export function RequestsTable({
     },
     {
       header: 'Actions',
+      initialWidth: 208,
+      minWidth: 188,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (r) => (
-        <div className="flex items-center gap-1">
-          <Link href={`/requests/${r.id}`} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
-            View
+        <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
+          <Link
+            href={`/requests/${r.id}`}
+            title="View request details"
+            aria-label={`View request ${r.reference_number}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+          >
+            <Eye aria-hidden="true" className="h-4 w-4" />
           </Link>
           <RequestStatusActions
             requestId={r.id}
@@ -425,11 +473,12 @@ export function RequestsTable({
             variant="compact"
           />
           <ConfirmButton
-            label="🗑"
+            label={<Archive aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Archive?"
             onConfirm={() => archive(r)}
-            title="Archive"
-            className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+            title="Archive request"
+            ariaLabel={`Archive request ${r.reference_number}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         </div>
       ),
@@ -517,16 +566,16 @@ export function RequestsTable({
         <AddRequestForm residents={residents} documentTypes={documentTypes} barangayId={barangayId} onClose={() => setAddOpen(false)} />
       )}
 
-      {/* Section 6: table display — columns are user-resizable (drag the divider in each
-          header cell), and row/header divider lines are a step thicker than the shared
-          table default. */}
+      {/* Compact, resizable shared table. Its explicit floor keeps every column readable
+          and lets narrow layouts scroll instead of crushing the actions or status pills. */}
       <EditableDataTable
         rows={sortedRequests}
         rowKey={(r) => r.id}
         emptyLabel="No requests in this view."
         columns={columns}
         resizableColumns
-        thickBorders
+        density="compact"
+        tableMinWidth={1360}
       />
     </>
   );

@@ -9,13 +9,14 @@ import {
   type IdVerificationStatus,
   type Sex,
 } from '@barangayan/shared';
+import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
+import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
-import { TableScrollArea } from '@/components/admin/table-scroll-area';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -478,138 +479,6 @@ function ResidentDetailModal({
   );
 }
 
-// ─── Inline-edit cell ──────────────────────────────────────────────────────────
-
-function EditableCell({
-  value,
-  onSave,
-  display,
-  placeholder,
-}: {
-  value: string;
-  onSave: (val: string) => Promise<void>;
-  /** Optional formatted display label shown in read mode (edit mode always shows raw value). */
-  display?: string;
-  placeholder?: string;
-}) {
-  const [editing, setEditing] = useState(false);
-  const [text, setText] = useState(value);
-  const [saving, setSaving] = useState(false);
-
-  async function commit() {
-    if (text.trim() === value) {
-      setEditing(false);
-      return;
-    }
-    setSaving(true);
-    await onSave(text.trim());
-    setSaving(false);
-    setEditing(false);
-  }
-
-  if (editing) {
-    return (
-      <div className="flex items-center gap-1">
-        <input
-          autoFocus
-          className="w-full rounded border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          value={text}
-          placeholder={placeholder}
-          onChange={(e) => setText(e.target.value)}
-          onBlur={commit}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') commit();
-            if (e.key === 'Escape') setEditing(false);
-          }}
-          disabled={saving}
-        />
-        {saving && <span className="text-xs text-zinc-400">…</span>}
-      </div>
-    );
-  }
-
-  const label = display ?? value;
-  return (
-    <button
-      onClick={() => {
-        setText(value);
-        setEditing(true);
-      }}
-      className="group flex w-full items-center justify-between text-left text-sm hover:text-[var(--accent)]"
-      title="Click to edit"
-    >
-      <span>{label || <span className="text-zinc-400">—</span>}</span>
-      <span className="ml-1 hidden text-zinc-300 group-hover:inline">✎</span>
-    </button>
-  );
-}
-
-// ─── Editable Select Cell ──────────────────────────────────────────────────────
-
-/** Inline-editable cell backed by a <select> dropdown. */
-function EditableSelectCell({
-  value,
-  options,
-  onSave,
-  renderDisplay,
-}: {
-  value: string;
-  options: { label: string; value: string }[];
-  onSave: (val: string) => Promise<void>;
-  renderDisplay?: (val: string) => React.ReactNode;
-}) {
-  const [editing, setEditing] = useState(false);
-  const [current, setCurrent] = useState(value);
-  const [saving, setSaving] = useState(false);
-
-  async function commit(val: string) {
-    if (val === value) {
-      setEditing(false);
-      return;
-    }
-    setSaving(true);
-    await onSave(val);
-    setSaving(false);
-    setEditing(false);
-  }
-
-  if (editing) {
-    return (
-      <div className="flex items-center gap-1">
-        <select
-          autoFocus
-          className="w-full rounded border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          value={current}
-          onChange={(e) => setCurrent(e.target.value)}
-          onBlur={() => commit(current)}
-          disabled={saving}
-        >
-          {options.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        {saving && <span className="text-xs text-zinc-400">…</span>}
-      </div>
-    );
-  }
-
-  return (
-    <button
-      onClick={() => {
-        setCurrent(value);
-        setEditing(true);
-      }}
-      className="group flex w-full items-center justify-between text-left text-sm hover:text-[var(--accent)]"
-      title="Click to edit"
-    >
-      <span>{renderDisplay ? renderDisplay(value) : value || <span className="text-zinc-400">—</span>}</span>
-      <span className="ml-1 hidden text-zinc-300 group-hover:inline">✎</span>
-    </button>
-  );
-}
-
 // ID type options (mirrors mobile app list)
 const ID_TYPE_OPTIONS = [
   { label: '—', value: '' },
@@ -659,43 +528,6 @@ const EMPLOYMENT_STATUS_OPTIONS = [
   { label: '—', value: '' },
   ...EMPLOYMENT_STATUSES.map((s) => ({ label: EMPLOYMENT_STATUS_LABELS[s], value: s })),
 ];
-
-// Drives the <colgroup> and the per-column resize handles below. Order must match the
-// <th>/<td> order in the table markup.
-const COLUMN_HEADERS = [
-  'First Name',
-  'Last Name',
-  'Middle Name',
-  'Suffix',
-  'Sex',
-  'Email',
-  'Mobile',
-  'House No.',
-  'Street',
-  'City',
-  'Birthday',
-  'Employment Status',
-  'Occupation',
-  'ID Type',
-  'ID Status',
-  'Household',
-  'Email Verif.',
-  'Location Verified',
-  'Joined',
-  'Actions',
-] as const;
-
-// The last column (Actions) is deliberately excluded — see the measuring effect below.
-const PINNED_HEADERS = COLUMN_HEADERS.slice(0, -1);
-
-// Floor for the unpinned Actions column, matching the shared EditableDataTable's
-// LAST_COLUMN_MIN_WIDTH — keeps the archive button from being squeezed to invisible.
-const LAST_COLUMN_MIN_WIDTH = 88;
-
-// Same 2px zinc-300/600 dividers the shared EditableDataTable uses under `thickBorders`,
-// so this hand-rolled table matches the rest of the admin panel.
-const BORDER_CLS = 'border-zinc-300 dark:border-zinc-600';
-const CELL_DIVIDER_CLS = `border-r-2 ${BORDER_CLS}`;
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
@@ -768,104 +600,91 @@ export function ResidentDirectory({
 
   const sortedResidents = [...residents].sort((a, b) => a.full_name.localeCompare(b.full_name) * (nameOrder === 'asc' ? 1 : -1));
 
-  // Resizable columns — same approach as components/admin/editable-data-table.tsx: each
-  // header starts at its natural auto-layout width (measured before paint, so no flash),
-  // then gets pinned via <colgroup> once the table switches to table-layout: fixed.
-  //
-  // The last column (Actions) is deliberately left out of the auto-measure pass so it acts
-  // as a flexible filler soaking up any leftover width — otherwise, once every column has a
-  // pinned pixel width, table-layout: fixed leaves a dead strip of empty space after the
-  // last column instead of the row lines running edge to edge across the card.
-  const thRefs = useRef<Record<string, HTMLTableCellElement | null>>({});
-  const [colWidths, setColWidths] = useState<Record<string, number>>({});
-
-  useLayoutEffect(() => {
-    setColWidths((prev) => {
-      let changed = false;
-      const next = { ...prev };
-      for (const header of PINNED_HEADERS) {
-        if (next[header] === undefined) {
-          const width = thRefs.current[header]?.getBoundingClientRect().width;
-          if (width) {
-            // +10% over the tightest-fit natural width, matching the shared
-            // EditableDataTable's COLUMN_WIDTH_PADDING — so field values get breathing room
-            // instead of hugging the column edge.
-            next[header] = Math.round(width * 1.1);
-            changed = true;
-          }
-        }
-      }
-      return changed ? next : prev;
-    });
-  }, []);
-
-  function startColumnResize(e: React.MouseEvent, header: string) {
-    e.preventDefault();
-    e.stopPropagation();
-    const startX = e.clientX;
-    const startWidth = colWidths[header] ?? thRefs.current[header]?.getBoundingClientRect().width ?? 120;
-
-    function onMove(ev: MouseEvent) {
-      const next = Math.max(60, Math.round(startWidth + (ev.clientX - startX)));
-      setColWidths((prev) => ({ ...prev, [header]: next }));
-    }
-    function onUp() {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-    }
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  }
-
-  const columnsMeasured = PINNED_HEADERS.every((header) => colWidths[header] !== undefined);
-
   async function updateField(r: ResidentRow, patch: ProfileUpdate) {
     const rRecord = r as unknown as Record<string, unknown>;
     const patchRecord = patch as Record<string, unknown>;
     const isNoop = Object.keys(patch).every((key) => rRecord[key] === patchRecord[key]);
 
-    const { error } = await supabase
+    if (isNoop) return { error: null };
+
+    const { data: updated, error } = await supabase
       .from('profiles')
       .update(patch)
-      .eq('id', r.id);
+      .eq('id', r.id)
+      .select('id, full_name')
+      .maybeSingle();
     if (error) {
-      toast.showError(`Failed to update: ${error.message}`);
-      return;
+      return { error: error.message };
     }
-    if (!isNoop) {
-      logAdminAction({
-        action: patch.id_verification_status !== undefined ? 'status_change' : 'update',
-        entityType: 'resident',
-        entityId: r.id,
-        entityLabel: r.full_name,
-        changes: {
-          before: Object.fromEntries(Object.keys(patch).map((key) => [key, rRecord[key]])),
-          after: patch,
-        },
-      }).catch(() => {});
+    if (!updated) {
+      return { error: 'No resident was updated. Check that you still have access to this barangay.' };
     }
+    logAdminAction({
+      action: patch.id_verification_status !== undefined ? 'status_change' : 'update',
+      entityType: 'resident',
+      entityId: updated.id,
+      entityLabel: updated.full_name,
+      changes: {
+        before: Object.fromEntries(Object.keys(patch).map((key) => [key, rRecord[key]])),
+        after: patch,
+      },
+    }).catch(() => {});
     router.refresh();
+    return { error: null, row: updated };
   }
 
   async function archive(resident: ResidentRow) {
-    const { error } = await supabase
+    const { data: updated, error } = await supabase
       .from('profiles')
       .update({ deleted_at: new Date().toISOString() })
-      .eq('id', resident.id);
+      .eq('id', resident.id)
+      .select('id, full_name')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to archive: ${error.message}`);
+      return;
+    }
+    if (!updated) {
+      toast.showError('Failed to archive: no resident was updated. Check that you still have access to this barangay.');
       return;
     }
     logAdminAction({
       action: 'delete',
       entityType: 'resident',
-      entityId: resident.id,
-      entityLabel: resident.full_name,
+      entityId: updated.id,
+      entityLabel: updated.full_name,
       metadata: { full_name: resident.full_name, email: resident.email, mobile_number: resident.mobile_number },
     }).catch(() => {});
-    toast.showSuccess(`${resident.full_name} archived.`);
+    toast.showSuccess(`${updated.full_name} archived.`);
     router.refresh();
   }
+
+  const columns: EditableDataTableColumn<ResidentRow>[] = [
+    {
+      header: 'First Name', initialWidth: 180, minWidth: 150, wrap: 'break-word',
+      render: (r) => <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white">{r.full_name.charAt(0).toUpperCase()}</span><span className="font-medium">{r.first_name ?? '—'}</span></div>,
+      edit: { type: 'text', getValue: (r) => r.first_name ?? '', onSave: (r, value) => updateField(r, { first_name: String(value).trim() || null }) },
+    },
+    { header: 'Last Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.last_name ?? '—', edit: { type: 'text', getValue: (r) => r.last_name ?? '', onSave: (r, value) => updateField(r, { last_name: String(value).trim() || null }) } },
+    { header: 'Middle Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.middle_name ?? '—', edit: { type: 'text', getValue: (r) => r.middle_name ?? '', onSave: (r, value) => updateField(r, { middle_name: String(value).trim() || null }) } },
+    { header: 'Suffix', initialWidth: 90, minWidth: 78, wrap: 'nowrap', render: (r) => r.suffix ?? '—', edit: { type: 'text', getValue: (r) => r.suffix ?? '', onSave: (r, value) => updateField(r, { suffix: String(value).trim() || null }) } },
+    { header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
+    { header: 'Email', initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
+    { header: 'Mobile', initialWidth: 142, minWidth: 124, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{r.mobile_number ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.mobile_number ?? '', onSave: (r, value) => updateField(r, { mobile_number: String(value).trim() || null }) } },
+    { header: 'House No.', initialWidth: 110, minWidth: 92, wrap: 'nowrap', render: (r) => r.house_no ?? '—', edit: { type: 'text', getValue: (r) => r.house_no ?? '', onSave: (r, value) => updateField(r, { house_no: String(value).trim() || null }) } },
+    { header: 'Street', initialWidth: 180, minWidth: 140, wrap: 'break-word', render: (r) => r.street ?? '—', edit: { type: 'text', getValue: (r) => r.street ?? '', onSave: (r, value) => updateField(r, { street: String(value).trim() || null }) } },
+    { header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—', edit: { type: 'text', getValue: (r) => r.city ?? '', onSave: (r, value) => updateField(r, { city: String(value).trim() || null }) } },
+    { header: 'Birthday', initialWidth: 130, minWidth: 118, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{fmtDate(r.birth_date)}</span>, edit: { type: 'date', getValue: (r) => r.birth_date ?? '', onSave: (r, value) => updateField(r, { birth_date: String(value) || null }) } },
+    { header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
+    { header: 'Occupation', initialWidth: 170, minWidth: 135, wrap: 'break-word', render: (r) => r.occupation ?? '—', edit: { type: 'text', getValue: (r) => r.occupation ?? '', onSave: (r, value) => updateField(r, { occupation: String(value).trim() || null }) } },
+    { header: 'ID Type', initialWidth: 150, minWidth: 120, wrap: 'nowrap', render: (r) => r.id_type ?? '—', edit: { type: 'select', options: ID_TYPE_OPTIONS, getValue: (r) => r.id_type ?? '', onSave: (r, value) => updateField(r, { id_type: String(value) || null }), commitOnChange: true } },
+    { header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor(r.id_verification_status)}`}>{idVerifLabel(r.id_verification_status)}</span>, edit: { type: 'select', options: ID_STATUS_OPTIONS, getValue: (r) => r.id_verification_status ?? '', onSave: (r, value) => updateField(r, { id_verification_status: String(value) || null }), commitOnChange: true } },
+    { header: 'Household', initialWidth: 100, minWidth: 88, wrap: 'nowrap', render: (r) => <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold tabular-nums text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{r.household_members?.length ?? 0}</span> },
+    { header: 'Email Verif.', initialWidth: 135, minWidth: 116, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>{r.email_verification_status}</span> },
+    { header: 'Location Verified', initialWidth: 230, minWidth: 175, wrap: 'break-word', render: (r) => r.verified_location ? <span className="text-green-700 dark:text-green-400">{r.verified_location_address ?? 'Verified (no address on file)'}</span> : <span className="text-zinc-400">Not verified</span> },
+    { header: 'Joined', initialWidth: 128, minWidth: 116, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-500">{formatDate(r.created_at)}</span> },
+    { header: 'Actions', initialWidth: 96, minWidth: 88, wrap: 'nowrap', overflow: 'visible', render: (r) => <div onClick={(e) => e.stopPropagation()}><ConfirmButton label={<Trash2 aria-hidden="true" className="h-4 w-4" />} ariaLabel={`Archive ${r.full_name}`} confirmLabel="Archive?" onConfirm={() => archive(r)} title={`Archive ${r.full_name}`} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900" /></div> },
+  ];
 
   return (
     <div className="flex flex-col gap-4">
@@ -944,7 +763,7 @@ export function ResidentDirectory({
 
       {addOpen && <AddResidentForm onCreated={() => router.refresh()} onClose={() => setAddOpen(false)} />}
 
-      {/* Section 6: table display */}
+      {/* Legacy table markup kept here temporarily while this change is reviewed.
       <TableScrollArea>
         <table
           // w-full only kicks in once the pinned columns are measured and the table is
@@ -973,7 +792,7 @@ export function ResidentDirectory({
                     colIndex < COLUMN_HEADERS.length - 1 ? CELL_DIVIDER_CLS : ''
                   }`}
                 >
-                  {/* The trailing Actions column is deliberately unlabelled. */}
+                  {/* The trailing Actions column is deliberately unlabelled. * /}
                   <span className="block truncate" title={header === 'Actions' ? undefined : header}>
                     {header === 'Actions' ? '' : header}
                   </span>
@@ -1002,7 +821,7 @@ export function ResidentDirectory({
                 }`}
                 onClick={() => setSelected(r)}
               >
-                  {/* First Name — inline editable, with small avatar thumbnail */}
+                  {/* First Name — inline editable, with small avatar thumbnail * /}
                   <td className={`overflow-hidden px-5 py-3.5 font-medium ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-2.5">
                       {r.avatar_url ? (
@@ -1025,12 +844,12 @@ export function ResidentDirectory({
                     </div>
                   </td>
 
-                  {/* Last Name */}
+                  {/* Last Name * /}
                   <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <EditableCell value={r.last_name ?? ''} onSave={(val) => updateField(r,{ last_name: val || null })} />
                   </td>
 
-                  {/* Middle Name */}
+                  {/* Middle Name * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1038,7 +857,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.middle_name ?? ''} onSave={(val) => updateField(r,{ middle_name: val || null })} />
                   </td>
 
-                  {/* Suffix */}
+                  {/* Suffix * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1046,7 +865,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.suffix ?? ''} onSave={(val) => updateField(r,{ suffix: val || null })} />
                   </td>
 
-                  {/* Sex */}
+                  {/* Sex * /}
                   <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <EditableSelectCell
                       value={r.sex ?? ''}
@@ -1056,7 +875,7 @@ export function ResidentDirectory({
                     />
                   </td>
 
-                  {/* Email */}
+                  {/* Email * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1064,7 +883,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.email ?? ''} onSave={(val) => updateField(r,{ email: val || null })} />
                   </td>
 
-                  {/* Mobile */}
+                  {/* Mobile * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1072,7 +891,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.mobile_number ?? ''} onSave={(val) => updateField(r,{ mobile_number: val || null })} />
                   </td>
 
-                  {/* House No. */}
+                  {/* House No. * /}
                   <td
                     className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1080,7 +899,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.house_no ?? ''} onSave={(val) => updateField(r,{ house_no: val || null })} />
                   </td>
 
-                  {/* Street */}
+                  {/* Street * /}
                   <td
                     className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1088,7 +907,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.street ?? ''} onSave={(val) => updateField(r,{ street: val || null })} />
                   </td>
 
-                  {/* City */}
+                  {/* City * /}
                   <td
                     className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1096,7 +915,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.city ?? ''} onSave={(val) => updateField(r,{ city: val || null })} />
                   </td>
 
-                  {/* Birthday */}
+                  {/* Birthday * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1109,7 +928,7 @@ export function ResidentDirectory({
                     />
                   </td>
 
-                  {/* Employment Status */}
+                  {/* Employment Status * /}
                   <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <EditableSelectCell
                       value={r.employment_status ?? ''}
@@ -1121,7 +940,7 @@ export function ResidentDirectory({
                     />
                   </td>
 
-                  {/* Occupation */}
+                  {/* Occupation * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1129,7 +948,7 @@ export function ResidentDirectory({
                     <EditableCell value={r.occupation ?? ''} onSave={(val) => updateField(r,{ occupation: val || null })} />
                   </td>
 
-                  {/* ID Type */}
+                  {/* ID Type * /}
                   <td
                     className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
                     onClick={(e) => e.stopPropagation()}
@@ -1141,7 +960,7 @@ export function ResidentDirectory({
                     />
                   </td>
 
-                  {/* ID Verification status */}
+                  {/* ID Verification status * /}
                   <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
                     <EditableSelectCell
                       value={r.id_verification_status ?? ''}
@@ -1157,14 +976,14 @@ export function ResidentDirectory({
                     />
                   </td>
 
-                  {/* Household count */}
+                  {/* Household count * /}
                   <td className={`overflow-hidden px-5 py-3.5 text-center ${CELL_DIVIDER_CLS}`}>
                     <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                       {r.household_members?.length ?? 0}
                     </span>
                   </td>
 
-                  {/* Email verification status */}
+                  {/* Email verification status * /}
                   <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`}>
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>
                       {r.email_verification_status}
@@ -1174,7 +993,7 @@ export function ResidentDirectory({
                   {/* Location Verified — resident-initiated pin from Settings > Location
                       Verification (mobile), migrations 0090/0091. Distinct from the
                       "⚠ Location Outside Boundary" flag above, which is the one-time
-                      signup-time GPS check (0075/0078). */}
+                      signup-time GPS check (0075/0078). * /}
                   <td className={`overflow-hidden truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`} title={r.verified_location_address ?? undefined}>
                     {r.verified_location ? (
                       <span className="inline-flex items-center gap-1">
@@ -1186,10 +1005,10 @@ export function ResidentDirectory({
                     )}
                   </td>
 
-                  {/* Joined date */}
+                  {/* Joined date * /}
                   <td className={`overflow-hidden px-5 py-3.5 text-zinc-500 ${CELL_DIVIDER_CLS}`}>{formatDate(r.created_at)}</td>
 
-                  {/* Archive action */}
+                  {/* Archive action * /}
                   <td
                     className="overflow-hidden px-5 py-3.5"
                     style={{ minWidth: LAST_COLUMN_MIN_WIDTH }}
@@ -1207,7 +1026,18 @@ export function ResidentDirectory({
               ))}
             </tbody>
         </table>
-      </TableScrollArea>
+      </TableScrollArea> */}
+      <EditableDataTable
+        columns={columns}
+        rows={sortedResidents}
+        rowKey={(resident) => resident.id}
+        emptyLabel="No residents found."
+        onRowClick={setSelected}
+        resizableColumns
+        density="compact"
+        tableMinWidth={2840}
+        cellOverflow="hidden"
+      />
 
       {/* Detail modal */}
       {selected && (

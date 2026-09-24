@@ -83,6 +83,8 @@ interface EditableDataTableProps<T> {
    * cell content varies a lot in length (e.g. Incident Reports' title/description column).
    * Off by default — opt in per table. */
   resizableColumns?: boolean;
+  /** Pins the final column's initial width instead of using it as a flexible filler. */
+  pinLastColumn?: boolean;
   /** Bumps the header/row divider lines from 1px to 2px. Off by default — opt in per table
    * (e.g. Requests, whose row content is dense enough to want a stronger separator). */
   thickBorders?: boolean;
@@ -105,6 +107,7 @@ export function EditableDataTable<T>({
   emptyLabel = 'Nothing here yet.',
   onRowClick,
   resizableColumns = false,
+  pinLastColumn = false,
   thickBorders = false,
   density = 'default',
   tableMinWidth,
@@ -123,14 +126,12 @@ export function EditableDataTable<T>({
   // just that column — the table's total width (and the scrollbars above/below it) grows
   // or shrinks accordingly, it isn't redistributed across the other columns.
   //
-  // The last column is deliberately left unpinned by the auto-measure pass below (its
-  // <col> below never gets a `width` unless the user explicitly drags it) so it acts as a
-  // flexible filler that soaks up any leftover width — otherwise, on a table whose columns
-  // sum to less than the card's full width, table-layout: fixed would leave a dead strip of
-  // empty space after the last column instead of the row lines running edge to edge.
+  // By default, the last column stays unpinned and acts as a flexible filler so row lines
+  // reach the card edge. Tables that need a deliberate final-column width can opt into
+  // `pinLastColumn` without changing other resizable tables.
   const thRefs = useRef<Record<string, HTMLTableCellElement | null>>({});
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
-  const pinnedColumns = resizableColumns ? columns.slice(0, -1) : [];
+  const pinnedColumns = resizableColumns ? (pinLastColumn ? columns : columns.slice(0, -1)) : [];
 
   useLayoutEffect(() => {
     if (!resizableColumns) return;
@@ -267,7 +268,13 @@ export function EditableDataTable<T>({
                 // The last (filler) column gets a floor so it can never be squeezed to
                 // invisible by the other columns' pinned/initial widths adding up to more
                 // than the table's available space.
-                style={{ minWidth: Math.max(col.minWidth ?? 0, resizableColumns && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0) || undefined }}
+                style={{
+                  minWidth:
+                    Math.max(
+                      col.minWidth ?? 0,
+                      resizableColumns && !pinLastColumn && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0,
+                    ) || undefined,
+                }}
                 className={`relative ${headerPadding} text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 ${
                   thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
                 }`}
@@ -311,7 +318,13 @@ export function EditableDataTable<T>({
                   return (
                     <td
                       key={col.header}
-                      style={{ minWidth: Math.max(col.minWidth ?? 0, resizableColumns && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0) || undefined }}
+                      style={{
+                        minWidth:
+                          Math.max(
+                            col.minWidth ?? 0,
+                            resizableColumns && !pinLastColumn && colIndex === columns.length - 1 ? LAST_COLUMN_MIN_WIDTH : 0,
+                          ) || undefined,
+                      }}
                       className={`${cellPadding} ${
                         (col.overflow ?? (resizableColumns ? cellOverflow : 'visible')) === 'hidden' ? 'overflow-hidden' : 'overflow-visible'
                       } ${

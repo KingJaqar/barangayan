@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDateTime, type Tables } from '@barangayan/shared';
+import { Eye, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -102,7 +103,7 @@ function AddIncidentForm({
         // whatever the resident described verbally, entered by the admin above.
         location: {},
       })
-      .select('id')
+      .select('*')
       .single();
     setSubmitting(false);
     if (error) {
@@ -334,40 +335,55 @@ export function IncidentTable({
     });
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('incidents').update(patch).eq('id', incident.id);
-    if (!error) {
-      if (changedKeys.length > 0) {
-        const before: Record<string, unknown> = {};
-        const after: Record<string, unknown> = {};
-        for (const key of changedKeys) {
-          before[key] = (incident as unknown as Record<string, unknown>)[key];
-          after[key] = (patch as Record<string, unknown>)[key];
-        }
-        logAdminAction({
-          action: patch.status ? 'status_change' : 'update',
-          entityType: 'incident',
-          entityId: incident.id,
-          entityLabel: incident.title,
-          changes: { before, after },
-        }).catch(() => {});
-      }
-      router.refresh();
+    if (changedKeys.length === 0) return { error: null };
+
+    const { data: updated, error } = await supabase
+      .from('incidents')
+      .update(patch)
+      .eq('id', incident.id)
+      .select('*')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No incident was updated. Check that you still have access to this barangay.' };
+
+    const before: Record<string, unknown> = {};
+    const after: Record<string, unknown> = {};
+    for (const key of changedKeys) {
+      before[key] = (incident as unknown as Record<string, unknown>)[key];
+      after[key] = (patch as Record<string, unknown>)[key];
     }
-    return { error: error?.message ?? null };
+    logAdminAction({
+      action: patch.status ? 'status_change' : 'update',
+      entityType: 'incident',
+      entityId: updated.id,
+      entityLabel: updated.title,
+      changes: { before, after },
+    }).catch(() => {});
+    router.refresh();
+    return { error: null };
   }
 
   async function removeIncident(incident: IncidentRow) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('soft_delete_incident', { p_incident_id: incident.id });
+    const { data: updated, error } = await supabase
+      .from('incidents')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', incident.id)
+      .select('id, deleted_at')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to remove incident: ${error.message}`);
+      return;
+    }
+    if (!updated?.deleted_at) {
+      toast.showError('Failed to remove incident: no incident was updated. Check that you still have access to this barangay.');
       return;
     }
 
     logAdminAction({
       action: 'delete',
       entityType: 'incident',
-      entityId: incident.id,
+      entityId: updated.id,
       entityLabel: incident.title,
       metadata: { title: incident.title, description: incident.description, address: incident.address, status: incident.status },
     }).catch(() => {});
@@ -379,7 +395,10 @@ export function IncidentTable({
   const columns: EditableDataTableColumn<IncidentRow>[] = [
     {
       header: 'Incident',
-      className: 'max-w-xs',
+      initialWidth: 280,
+      minWidth: 230,
+      wrap: 'break-word',
+      className: 'max-w-sm',
       render: (r) => (
         <div>
           <p className="font-semibold leading-snug">{r.title}</p>
@@ -401,6 +420,9 @@ export function IncidentTable({
     },
     {
       header: 'Category',
+      initialWidth: 160,
+      minWidth: 130,
+      wrap: 'nowrap',
       render: (r) =>
         r.incident_categories ? (
           <span
@@ -417,10 +439,14 @@ export function IncidentTable({
         options: [{ value: '', label: 'Uncategorized' }, ...categories.map((c) => ({ value: c.id, label: c.name }))],
         getValue: (r) => r.category_id ?? '',
         onSave: (r, value) => updateField(r, { category_id: String(value) || null }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Reporter',
+      initialWidth: 210,
+      minWidth: 180,
+      wrap: 'break-word',
       render: (r) =>
         r.profiles ? (
           <div>
@@ -435,16 +461,19 @@ export function IncidentTable({
         options: [{ value: '', label: 'Anonymous / Walk-in' }, ...residents.map((res) => ({ value: res.id, label: res.full_name }))],
         getValue: (r) => r.reporter_id ?? '',
         onSave: (r, value) => updateField(r, { reporter_id: String(value) || null }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Coordinates',
-      initialWidth: 150,
+      initialWidth: 160,
+      minWidth: 150,
+      wrap: 'nowrap',
       render: (r) => {
         const loc = r.location as { lat?: unknown; lng?: unknown } | null;
         const hasLocation = loc !== null && typeof loc === 'object' && typeof loc.lat === 'number' && typeof loc.lng === 'number';
         return hasLocation ? (
-          <span className="whitespace-nowrap text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="whitespace-nowrap text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
             {(loc!.lat as number).toFixed(5)}, {(loc!.lng as number).toFixed(5)}
           </span>
         ) : (
@@ -470,7 +499,10 @@ export function IncidentTable({
     },
     {
       header: 'Address',
-      className: 'max-w-xs',
+      initialWidth: 220,
+      minWidth: 180,
+      wrap: 'break-word',
+      className: 'max-w-sm',
       render: (r) =>
         r.address ? (
           <span className="line-clamp-2 text-xs">{r.address}</span>
@@ -485,7 +517,10 @@ export function IncidentTable({
     },
     {
       header: 'Specific Area Details',
-      className: 'max-w-xs',
+      initialWidth: 230,
+      minWidth: 180,
+      wrap: 'break-word',
+      className: 'max-w-sm',
       render: (r) =>
         r.specific_area_details ? (
           <span className="line-clamp-2 text-xs italic text-zinc-500 dark:text-zinc-400">{r.specific_area_details}</span>
@@ -500,10 +535,13 @@ export function IncidentTable({
     },
     {
       header: 'Confirmed',
+      initialWidth: 112,
+      minWidth: 100,
+      wrap: 'nowrap',
       render: (r) => (
         <span
           className={[
-            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold',
+            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums',
             r.confirmation_count > 0 ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800',
           ].join(' ')}
         >
@@ -522,6 +560,9 @@ export function IncidentTable({
     },
     {
       header: 'Status',
+      initialWidth: 140,
+      minWidth: 130,
+      wrap: 'nowrap',
       render: (r) => <IncidentStatusPill status={r.status} />,
       edit: {
         type: 'select',
@@ -530,11 +571,15 @@ export function IncidentTable({
         // the Actions column (which go through update_incident_status for guardrails).
         getValue: (r) => r.status,
         onSave: (r, value) => updateField(r, { status: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Submitted',
-      render: (r) => formatDateTime(r.created_at),
+      initialWidth: 170,
+      minWidth: 160,
+      wrap: 'nowrap',
+      render: (r) => <span className="tabular-nums">{formatDateTime(r.created_at)}</span>,
       edit: {
         type: 'datetime',
         getValue: (r) => r.created_at,
@@ -543,21 +588,32 @@ export function IncidentTable({
     },
     {
       header: 'Actions',
+      initialWidth: 370,
+      minWidth: 340,
+      wrap: 'nowrap',
+      overflow: 'visible',
       // Stop propagation so the surrounding EditableDataTable's onRowClick (which opens the
       // detail modal for the non-editable Incident/Actions cells) doesn't also fire and
       // reopen the modal underneath these buttons.
       render: (r) => (
-        <div className="flex flex-wrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button onClick={() => setSelected(r)} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
-            View
+        <div className="flex flex-nowrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => setSelected(r)}
+            title="View incident details"
+            aria-label={`View incident: ${r.title}`}
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+          >
+            <Eye aria-hidden="true" className="h-4 w-4" />
           </button>
           <IncidentActions incidentId={r.id} status={r.status} incidentTitle={r.title} incidentDescription={r.description} variant="compact" />
           <ConfirmButton
-            label="🗑"
+            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Remove?"
             onConfirm={() => removeIncident(r)}
-            title="Remove"
-            className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+            title="Remove incident"
+            ariaLabel={`Remove incident: ${r.title}`}
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         </div>
       ),
@@ -654,7 +710,10 @@ export function IncidentTable({
         columns={columns}
         onRowClick={setSelected}
         resizableColumns
-        thickBorders
+        pinLastColumn
+        density="compact"
+        tableMinWidth={1710}
+        cellOverflow="hidden"
       />
 
       {selected && <IncidentDetailModal incident={selected} onClose={() => setSelected(null)} />}

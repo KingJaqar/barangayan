@@ -51,9 +51,22 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       p_incident_id: incidentId,
       p_status: next,
     });
-    setBusy(false);
     if (error) {
+      setBusy(false);
       toast.showError(`Failed: ${error.message}`);
+      return;
+    }
+
+    // The RPC returns void, so confirm the persisted row before logging or reporting
+    // success. It also catches a zero-row result if access changed during the request.
+    const { data: updated, error: readError } = await supabase
+      .from('incidents')
+      .select('id, status')
+      .eq('id', incidentId)
+      .maybeSingle();
+    setBusy(false);
+    if (readError || !updated || updated.status !== next) {
+      toast.showError(`Failed: ${readError?.message ?? 'The incident status was not updated.'}`);
       return;
     }
 
@@ -72,18 +85,27 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
   async function softDelete() {
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('soft_delete_incident', { p_incident_id: incidentId });
+    const { data: updated, error } = await supabase
+      .from('incidents')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', incidentId)
+      .select('id, deleted_at')
+      .maybeSingle();
     setBusy(false);
     setShowDeleteConfirm(false);
     if (error) {
       toast.showError(`Failed: ${error.message}`);
       return;
     }
+    if (!updated?.deleted_at) {
+      toast.showError('Failed: no incident was removed. Check that you still have access to this barangay.');
+      return;
+    }
 
     logAdminAction({
       action: 'delete',
       entityType: 'incident',
-      entityId: incidentId,
+      entityId: updated.id,
       entityLabel: incidentTitle,
       metadata: { title: incidentTitle, description: incidentDescription ?? null, status },
     }).catch(() => {});

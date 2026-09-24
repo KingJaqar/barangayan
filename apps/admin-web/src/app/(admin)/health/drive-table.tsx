@@ -1,6 +1,7 @@
 'use client';
 
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
+import { Eye, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -90,11 +91,13 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
         stock_remaining: Math.trunc(stockTotal),
         is_active: true,
       })
-      .select('id')
+      .select(
+        'id, title, type, drive_date, time_start, time_end, location, eligible_criteria, stock_label, stock_unit, stock_total, stock_remaining, is_active',
+      )
       .single();
     setSubmitting(false);
-    if (error) {
-      toast.showError(`Failed to create drive: ${error.message}`);
+    if (error || !data) {
+      toast.showError(`Failed to create drive: ${error?.message ?? 'The created drive could not be confirmed.'}`);
       return;
     }
 
@@ -303,32 +306,47 @@ export function DriveTable({
     const patchKeys = Object.keys(patch) as (keyof typeof patch)[];
     const changed = patchKeys.some((key) => patch[key] !== drive[key]);
 
+    if (!changed) return { error: null };
+
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('medical_drives').update(patch).eq('id', drive.id);
-    if (!error) {
-      router.refresh();
-      if (changed) {
-        const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'is_active';
-        const before = Object.fromEntries(patchKeys.map((key) => [key, drive[key]]));
-        logAdminAction({
-          action: isStatusChange ? 'status_change' : 'update',
-          entityType: 'medical_drive',
-          entityId: drive.id,
-          entityLabel: drive.title,
-          changes: { before, after: patch },
-        }).catch(() => {});
-      }
-    }
-    return { error: error?.message ?? null };
+    const { data: updated, error } = await supabase
+      .from('medical_drives')
+      .update(patch)
+      .eq('id', drive.id)
+      .select('id, type, drive_date, stock_remaining, is_active')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No medical drive was updated. Check that you still have access to this barangay.' };
+
+    router.refresh();
+    const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'is_active';
+    const before = Object.fromEntries(patchKeys.map((key) => [key, drive[key]]));
+    logAdminAction({
+      action: isStatusChange ? 'status_change' : 'update',
+      entityType: 'medical_drive',
+      entityId: updated.id,
+      entityLabel: drive.title,
+      changes: { before, after: patch },
+    }).catch(() => {});
+    return { error: null };
   }
 
   async function removeDrive(drive: DriveRow) {
     const supabase = createSupabaseBrowserClient();
     // No soft_delete RPC exists for medical_drives (unlike incidents) — the 0036 admin
     // update policy covers a plain soft-delete via deleted_at directly.
-    const { error } = await supabase.from('medical_drives').update({ deleted_at: new Date().toISOString() }).eq('id', drive.id);
+    const { data: removed, error } = await supabase
+      .from('medical_drives')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', drive.id)
+      .select('id')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to remove drive: ${error.message}`);
+      return;
+    }
+    if (!removed) {
+      toast.showError('Failed to remove drive: no medical drive was updated. Check that you still have access to this barangay.');
       return;
     }
 
@@ -352,11 +370,14 @@ export function DriveTable({
   const columns: EditableDataTableColumn<DriveRow>[] = [
     {
       header: 'Drive',
-      className: 'max-w-xs',
+      initialWidth: 270,
+      minWidth: 220,
+      wrap: 'break-word',
+      className: 'leading-snug',
       render: (r) => (
         <div>
           <p className="font-semibold leading-snug">{r.title}</p>
-          <p className="mt-0.5 line-clamp-1 text-xs text-zinc-500 dark:text-zinc-400">{r.location}</p>
+          <p className="mt-0.5 text-xs leading-snug text-zinc-500 dark:text-zinc-400">{r.location}</p>
         </div>
       ),
       // Long-form fields (title, location, time, eligibility, stock label/unit) are
@@ -364,16 +385,23 @@ export function DriveTable({
     },
     {
       header: 'Category',
+      initialWidth: 150,
+      minWidth: 136,
+      wrap: 'nowrap',
       render: (r) => <DriveTypeBadge type={r.type} />,
       edit: {
         type: 'select',
         options: DRIVE_TYPES.map((t) => ({ value: t, label: DRIVE_TYPE_CONFIG[t].label })),
         getValue: (r) => r.type,
         onSave: (r, value) => updateField(r, { type: value as (typeof DRIVE_TYPES)[number] }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Date',
+      initialWidth: 142,
+      minWidth: 132,
+      wrap: 'nowrap',
       render: (r) => formatDriveDate(r.drive_date),
       edit: {
         type: 'date',
@@ -383,10 +411,13 @@ export function DriveTable({
     },
     {
       header: 'Stock',
+      initialWidth: 160,
+      minWidth: 144,
+      wrap: 'nowrap',
       render: (r) => (
         <span
           className={[
-            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold',
+            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums',
             r.stock_remaining > 0 ? 'bg-[var(--accent)]/15 text-[var(--accent)]' : 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
           ].join(' ')}
         >
@@ -407,14 +438,20 @@ export function DriveTable({
     },
     {
       header: 'Registrations',
+      initialWidth: 138,
+      minWidth: 126,
+      wrap: 'nowrap',
       render: (r) => (
         <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-          👥 {r.registration_count}
+          <span aria-hidden="true">👥 </span><span className="tabular-nums">{r.registration_count}</span>
         </span>
       ),
     },
     {
       header: 'Active',
+      initialWidth: 118,
+      minWidth: 108,
+      wrap: 'nowrap',
       render: (r) =>
         r.is_active ? (
           <span className="inline-flex items-center rounded-full bg-[var(--accent)]/15 px-2.5 py-1 text-xs font-semibold text-[var(--accent)]">
@@ -433,23 +470,35 @@ export function DriveTable({
         ],
         getValue: (r) => String(r.is_active),
         onSave: (r, value) => updateField(r, { is_active: value === 'true' }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Actions',
+      initialWidth: 112,
+      minWidth: 104,
+      wrap: 'nowrap',
+      overflow: 'visible',
       // Stop propagation so the surrounding EditableDataTable's onRowClick doesn't
       // also fire and reopen the modal underneath these buttons.
       render: (r) => (
-        <div className="flex flex-wrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button onClick={() => setSelected(r)} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
-            View
+        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => setSelected(r)}
+            title={`View ${r.title}`}
+            aria-label={`View ${r.title}`}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+          >
+            <Eye aria-hidden="true" className="h-4 w-4" />
           </button>
           <ConfirmButton
-            label="🗑"
+            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Remove?"
             onConfirm={() => removeDrive(r)}
-            title="Remove"
-            className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+            title={`Remove ${r.title}`}
+            ariaLabel={`Remove ${r.title}`}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         </div>
       ),
@@ -544,7 +593,10 @@ export function DriveTable({
         columns={columns}
         onRowClick={setSelected}
         resizableColumns
-        thickBorders
+        pinLastColumn
+        density="compact"
+        tableMinWidth={900}
+        cellOverflow="hidden"
       />
 
       {selected && <DriveDetailModal drive={selected} onClose={() => setSelected(null)} />}

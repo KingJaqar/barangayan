@@ -9,6 +9,8 @@ interface ConfirmButtonProps {
   confirmLabel?: string;
   onConfirm: () => Promise<void> | void;
   title?: string;
+  /** Required for icon-only triggers so assistive technology can identify the action. */
+  ariaLabel?: string;
   className?: string;
   /** Prevent the button from entering confirm mode (e.g. prerequisite not met). */
   disabled?: boolean;
@@ -19,7 +21,7 @@ interface ConfirmButtonProps {
  * plus they can't be themed to match the rest of the admin panel. First click reveals a
  * compact "Confirm / Cancel" pair inline, mirroring the existing Cancel-note pattern in
  * RequestStatusActions. */
-export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, title, className, disabled }: ConfirmButtonProps) {
+export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, title, ariaLabel, className, disabled }: ConfirmButtonProps) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -55,6 +57,7 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
         if (!disabled) setConfirming(true);
       }}
       title={title}
+      aria-label={ariaLabel}
       className={className}>
       {label}
     </button>

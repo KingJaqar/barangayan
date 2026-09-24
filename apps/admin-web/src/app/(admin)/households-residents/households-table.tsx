@@ -1,6 +1,7 @@
 'use client';
 
 import type { Tables } from '@barangayan/shared';
+import { Eye, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -125,8 +126,7 @@ export function HouseholdsTable({
   }, [channelName, router]);
 
   async function updateField(row: HouseholdMemberRow, patch: Partial<Tables<'household_members'>>) {
-    // Compare each patched field against the row's current value so a click-into/blur that
-    // didn't actually change anything doesn't produce a log entry — the DB update still runs.
+    // Avoid a database write when an editable cell is committed without a change.
     const before: Record<string, unknown> = {};
     const after: Record<string, unknown> = {};
     let changed = false;
@@ -137,40 +137,56 @@ export function HouseholdsTable({
       after[key as string] = nextValue;
       if (prevValue !== nextValue) changed = true;
     }
+    if (!changed) return { error: null, row };
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('household_members').update(patch).eq('id', row.id);
-    if (!error) {
-      router.refresh();
-      if (changed) {
-        logAdminAction({
-          action: 'update',
-          entityType: 'household',
-          entityId: row.id,
-          entityLabel: row.name,
-          changes: { before, after },
-        }).catch(() => {});
-      }
+    const { data: updated, error } = await supabase
+      .from('household_members')
+      .update(patch)
+      .eq('id', row.id)
+      .select('id, profile_id, name, relation, role, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, created_at')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) {
+      return { error: 'No household member was updated. Check that you still have access to this barangay.' };
     }
-    return { error: error?.message ?? null };
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'household',
+      entityId: updated.id,
+      entityLabel: row.name,
+      changes: { before, after },
+    }).catch(() => {});
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   /** Shared hard-delete used by both the table row's inline action and the detail modal —
    * kept as one function so the audit log call is only written once. */
   async function removeMember(row: HouseholdMemberRow): Promise<boolean> {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('household_members').delete().eq('id', row.id);
+    const { data: deleted, error } = await supabase
+      .from('household_members')
+      .delete()
+      .eq('id', row.id)
+      .select('id, name, relation, role')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to remove member: ${error.message}`);
+      return false;
+    }
+    if (!deleted) {
+      toast.showError('Failed to remove member: no household member was deleted. Check that you still have access to this barangay.');
       return false;
     }
 
     logAdminAction({
       action: 'delete',
       entityType: 'household',
-      entityId: row.id,
-      entityLabel: row.name,
-      metadata: { name: row.name, relation: row.relation, role: row.role },
+      entityId: deleted.id,
+      entityLabel: deleted.name,
+      metadata: { name: deleted.name, relation: deleted.relation, role: deleted.role },
     }).catch(() => {});
 
     toast.showSuccess('Household member removed.');
@@ -181,7 +197,10 @@ export function HouseholdsTable({
   const columns: EditableDataTableColumn<HouseholdMemberRow>[] = [
     {
       header: 'Name',
-      render: (r) => <span className="font-medium">{r.name}</span>,
+      initialWidth: 210,
+      minWidth: 170,
+      wrap: 'break-word',
+      render: (r) => <span className="font-medium leading-snug">{r.name}</span>,
       edit: {
         type: 'text',
         getValue: (r) => r.name,
@@ -190,31 +209,55 @@ export function HouseholdsTable({
     },
     {
       header: 'Resident (Head)',
-      render: (r) => r.profiles?.full_name ?? '—',
+      initialWidth: 220,
+      minWidth: 180,
+      wrap: 'break-word',
+      render: (r) => <span className="leading-snug">{r.profiles?.full_name ?? '—'}</span>,
     },
     {
       header: 'Relation',
+      initialWidth: 130,
+      minWidth: 112,
+      wrap: 'nowrap',
       render: (r) => r.relation,
       edit: {
         type: 'select',
         options: RELATION_OPTIONS,
         getValue: (r) => r.relation,
         onSave: (r, value) => updateField(r, { relation: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Role',
+      initialWidth: 104,
+      minWidth: 92,
+      wrap: 'nowrap',
       render: (r) => r.role,
       edit: {
         type: 'select',
         options: ROLE_OPTIONS,
         getValue: (r) => r.role,
         onSave: (r, value) => updateField(r, { role: String(value) }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Checked In',
-      render: (r) => (r.is_checked_in ? 'Yes' : 'No'),
+      initialWidth: 118,
+      minWidth: 104,
+      wrap: 'nowrap',
+      render: (r) => (
+        <span
+          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
+            r.is_checked_in
+              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+              : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'
+          }`}
+        >
+          {r.is_checked_in ? 'Yes' : 'No'}
+        </span>
+      ),
       edit: {
         type: 'select',
         options: CHECKED_IN_OPTIONS,
@@ -230,31 +273,48 @@ export function HouseholdsTable({
           }
           return updateField(r, patch);
         },
+        commitOnChange: true,
       },
     },
     {
       header: 'Checked-In Center',
-      render: (r) => r.checked_in_center_name ?? '—',
+      initialWidth: 210,
+      minWidth: 170,
+      wrap: 'break-word',
+      render: (r) => <span className="leading-snug">{r.checked_in_center_name ?? '—'}</span>,
     },
     {
       header: 'Added',
-      render: (r) => formatDateTimeShort(r.created_at),
+      initialWidth: 176,
+      minWidth: 156,
+      wrap: 'nowrap',
+      render: (r) => <span className="whitespace-nowrap text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTimeShort(r.created_at)}</span>,
     },
     {
       header: 'Actions',
+      minWidth: 112,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (r) => (
-        <div className="flex flex-wrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button onClick={() => setSelected(r)} className="rounded-full px-2 py-1 text-xs font-medium text-[var(--accent)] hover:underline">
-            View
+        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => setSelected(r)}
+            title={`View household member ${r.name}`}
+            aria-label={`View household member ${r.name}`}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+          >
+            <Eye aria-hidden="true" className="h-4 w-4" />
           </button>
           <ConfirmButton
-            label="🗑"
+            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Remove this member?"
             onConfirm={async () => {
               await removeMember(r);
             }}
             title="Remove household member"
-            className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+            ariaLabel={`Remove household member ${r.name}`}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         </div>
       ),
@@ -348,7 +408,9 @@ export function HouseholdsTable({
         columns={columns}
         onRowClick={setSelected}
         resizableColumns
-        thickBorders
+        density="compact"
+        tableMinWidth={1280}
+        cellOverflow="hidden"
       />
 
       {selected && (
@@ -390,23 +452,43 @@ function AddMemberForm({ barangayId, onClose }: { barangayId: string; onClose: (
     setSubmitting(true);
     const supabase = createSupabaseBrowserClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error: rpcError } = await (supabase as any).rpc('admin_add_household_member', {
+    const { data: memberId, error: rpcError } = await (supabase as any).rpc('admin_add_household_member', {
       p_profile_id: profileId,
       p_name: name.trim(),
       p_relation: relation,
       p_role: role,
     });
-    setSubmitting(false);
     if (rpcError) {
+      setSubmitting(false);
       setError(rpcError.message);
       toast.showError(`Failed to add member: ${rpcError.message}`);
       return;
     }
+    if (typeof memberId !== 'string' || !memberId) {
+      setSubmitting(false);
+      const message = 'The member was not returned after creation. Refresh the page before trying again.';
+      setError(message);
+      toast.showError(`Failed to add member: ${message}`);
+      return;
+    }
 
-    // The RPC doesn't return the new row's id, so entityId is omitted.
+    const { data: createdMember, error: fetchError } = await supabase
+      .from('household_members')
+      .select('id, profile_id, name, relation, role, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, created_at')
+      .eq('id', memberId)
+      .maybeSingle();
+    setSubmitting(false);
+    if (fetchError || !createdMember) {
+      const message = fetchError?.message ?? 'The created member could not be loaded. Refresh the page before trying again.';
+      setError(message);
+      toast.showError(`Failed to add member: ${message}`);
+      return;
+    }
+
     logAdminAction({
       action: 'create',
       entityType: 'household',
+      entityId: createdMember.id,
       entityLabel: name.trim(),
       metadata: {
         name: name.trim(),

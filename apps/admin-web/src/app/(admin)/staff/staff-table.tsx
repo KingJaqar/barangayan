@@ -1,6 +1,7 @@
 'use client';
 
 import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, type OfficialRole, type Tables } from '@barangayan/shared';
+import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -104,23 +105,29 @@ export function StaffTable({
     const isNoop = Object.keys(patch).every((key) => profileRecord[key] === patchRecord[key]);
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('profiles').update(patch).eq('id', row.profile.id);
-    if (!error) {
-      if (!isNoop) {
-        logAdminAction({
-          action: 'update',
-          entityType: 'staff',
-          entityId: row.profile.id,
-          entityLabel: row.profile.full_name,
-          changes: {
-            before: Object.fromEntries(Object.keys(patch).map((key) => [key, profileRecord[key]])),
-            after: patch,
-          },
-        }).catch(() => {});
-      }
-      router.refresh();
+    const { data: updated, error } = await supabase
+      .from('profiles')
+      .update(patch)
+      .eq('id', row.profile.id)
+      .select('id, full_name, email, mobile_number, home_address')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No staff profile was updated. Check that you still have access to this account.' };
+
+    if (!isNoop) {
+      logAdminAction({
+        action: 'update',
+        entityType: 'staff',
+        entityId: updated.id,
+        entityLabel: updated.full_name,
+        changes: {
+          before: Object.fromEntries(Object.keys(patch).map((key) => [key, profileRecord[key]])),
+          after: patch,
+        },
+      }).catch(() => {});
     }
-    return { error: error?.message ?? null };
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   async function updateOfficial(row: OfficialWithProfile, patch: Partial<Tables<'barangay_officials'>>) {
@@ -129,33 +136,45 @@ export function StaffTable({
     const isNoop = Object.keys(patch).every((key) => rowRecord[key] === patchRecord[key]);
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('barangay_officials').update(patch).eq('id', row.id);
-    if (!error) {
-      if (!isNoop) {
-        logAdminAction({
-          action: 'update',
-          entityType: 'staff',
-          entityId: row.id,
-          entityLabel: row.profile.full_name,
-          changes: {
-            before: Object.fromEntries(Object.keys(patch).map((key) => [key, rowRecord[key]])),
-            after: patch,
-          },
-        }).catch(() => {});
-      }
-      router.refresh();
+    const { data: updated, error } = await supabase
+      .from('barangay_officials')
+      .update(patch)
+      .eq('id', row.id)
+      .select('id, official_role, date_hired, is_active, deleted_at')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No staff record was updated. Check that you still have access to this account.' };
+
+    if (!isNoop) {
+      logAdminAction({
+        action: 'update',
+        entityType: 'staff',
+        entityId: updated.id,
+        entityLabel: row.profile.full_name,
+        changes: {
+          before: Object.fromEntries(Object.keys(patch).map((key) => [key, rowRecord[key]])),
+          after: patch,
+        },
+      }).catch(() => {});
     }
-    return { error: error?.message ?? null };
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   async function removeStaff(row: OfficialWithProfile) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('barangay_officials')
       .update({ deleted_at: new Date().toISOString(), is_active: false })
-      .eq('id', row.id);
+      .eq('id', row.id)
+      .select('id, deleted_at, is_active')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to remove: ${error.message}`);
+      return;
+    }
+    if (!data) {
+      toast.showError('Failed to remove: no staff record was updated. Check that you still have access to this account.');
       return;
     }
     logAdminAction({
@@ -176,6 +195,9 @@ export function StaffTable({
   const columns: EditableDataTableColumn<OfficialWithProfile>[] = [
     {
       header: 'Name',
+      initialWidth: 190,
+      minWidth: 160,
+      wrap: 'break-word',
       render: (r) => <span className="font-medium">{r.profile.full_name}</span>,
       edit: {
         type: 'text',
@@ -196,22 +218,31 @@ export function StaffTable({
       // Health Worker" the moment one shows up — pin it a bit wider than that instead.
       // Kept modest (not the full longest-label width) so Email/Mobile/Actions still have
       // comfortable room too; still user-resizable afterward.
-      initialWidth: 150,
+      initialWidth: 188,
+      minWidth: 170,
+      wrap: 'nowrap',
       edit: {
         type: 'select',
         options: OFFICIAL_ROLES.map((role) => ({ value: role, label: OFFICIAL_ROLE_LABELS[role] })),
         getValue: (r) => r.official_role,
         canEdit: notSelf,
         onSave: (r, value) => updateOfficial(r, { official_role: String(value) as OfficialRole }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Email',
-      render: (r) => r.profile.email ?? '—',
+      initialWidth: 245,
+      minWidth: 190,
+      wrap: 'break-word',
+      render: (r) => <span className="break-all text-zinc-700 dark:text-zinc-200">{r.profile.email ?? '—'}</span>,
     },
     {
       header: 'Mobile',
-      render: (r) => r.profile.mobile_number ?? '—',
+      initialWidth: 142,
+      minWidth: 120,
+      wrap: 'nowrap',
+      render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-300">{r.profile.mobile_number ?? '—'}</span>,
       edit: {
         type: 'text',
         getValue: (r) => r.profile.mobile_number ?? '',
@@ -221,11 +252,13 @@ export function StaffTable({
     },
     {
       header: 'Address',
-      render: (r) => r.profile.home_address ?? '—',
+      render: (r) => <span className="text-zinc-600 dark:text-zinc-300">{r.profile.home_address ?? '—'}</span>,
       // Same reasoning as Role above — addresses run long, so give this column more room
       // than its header text alone would claim, without hogging so much that Actions gets
       // squeezed out on narrower viewports.
       initialWidth: 190,
+      minWidth: 160,
+      wrap: 'break-word',
       edit: {
         type: 'text',
         getValue: (r) => r.profile.home_address ?? '',
@@ -235,21 +268,29 @@ export function StaffTable({
     },
     {
       header: 'Hired',
-      render: (r) => formatDateShort(r.date_hired),
+      initialWidth: 122,
+      minWidth: 108,
+      wrap: 'nowrap',
+      render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateShort(r.date_hired)}</span>,
     },
     {
       header: 'Actions',
+      initialWidth: 136,
+      minWidth: 128,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (r) =>
         r.profile.id === currentUserId ? (
           <span className="text-xs text-zinc-400">current user</span>
         ) : (
           <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
             <ConfirmButton
-              label="🗑"
+              label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
               confirmLabel="Remove?"
               onConfirm={() => removeStaff(r)}
               title="Remove staff account"
-              className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+              ariaLabel={`Remove staff account for ${r.profile.full_name}`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
             />
           </div>
         ),
@@ -343,7 +384,9 @@ export function StaffTable({
         emptyLabel="No staff accounts yet — invite one above."
         columns={columns}
         resizableColumns
-        thickBorders
+        pinLastColumn
+        density="compact"
+        tableMinWidth={1215}
       />
     </>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
+import { RotateCcw, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -183,8 +184,8 @@ function AddTransactionForm({
       .single();
 
     setSubmitting(false);
-    if (insertError) {
-      toast.showError(`Failed to add transaction: ${insertError.message}`);
+    if (insertError || !inserted) {
+      toast.showError(`Failed to add transaction: ${insertError?.message ?? 'No transaction was created.'}`);
       return;
     }
 
@@ -413,28 +414,32 @@ export function TransactionsTable({
       if (payment[key] !== patch[key]) changed = true;
     }
 
+    if (!changed) return { error: null, row: payment };
+
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('payments').update(patch).eq('id', payment.id);
-    if (!error) {
-      if (changed) {
-        logAdminAction({
-          action: patch.status ? 'status_change' : 'update',
-          entityType: 'payment',
-          entityId: payment.id,
-          entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
-          changes: { before, after: patch },
-        }).catch(() => {});
-      }
-      router.refresh();
-    }
-    return { error: error?.message ?? null };
+    const { data: updated, error } = await supabase.from('payments').update(patch).eq('id', payment.id).select('*').maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No transaction was updated. Check that you still have access to this barangay.' };
+
+    logAdminAction({
+      action: patch.status ? 'status_change' : 'update',
+      entityType: 'payment',
+      entityId: updated.id,
+      entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
+      changes: { before, after: patch },
+    }).catch(() => {});
+    router.refresh();
+    return { error: null, row: updated };
   }
 
   /** Resident/Document aren't columns on payments — they're read off the linked
    * service_request via the join. "Editing" them means correcting that request's own
    * resident_id/document_type_id (the same request this payment already points to),
    * distinct from the Reference cell's edit which reassigns to a *different* request. */
-  async function updateLinkedRequest(payment: Payment, patch: Partial<Tables<'service_requests'>>): Promise<{ error: string | null }> {
+  async function updateLinkedRequest(
+    payment: Payment,
+    patch: Partial<Tables<'service_requests'>>,
+  ): Promise<{ error: string | null; row?: unknown }> {
     if (!payment.service_request_id) return { error: 'This transaction has no linked request.' };
 
     const before: Record<string, unknown> = {};
@@ -451,21 +456,27 @@ export function TransactionsTable({
     }
 
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('service_requests').update(patch).eq('id', payment.service_request_id);
-    if (error) return { error: error.message };
+    if (!changed) return { error: null, row: payment.service_requests };
 
-    if (changed) {
-      logAdminAction({
-        action: 'update',
-        entityType: 'service_request',
-        entityId: payment.service_request_id,
-        entityLabel: payment.service_requests?.reference_number,
-        changes: { before, after: patch },
-      }).catch(() => {});
-    }
+    const { data: updated, error } = await supabase
+      .from('service_requests')
+      .update(patch)
+      .eq('id', payment.service_request_id)
+      .select('id, resident_id, document_type_id')
+      .maybeSingle();
+    if (error) return { error: error.message };
+    if (!updated) return { error: 'No linked request was updated. Check that you still have access to this barangay.' };
+
+    logAdminAction({
+      action: 'update',
+      entityType: 'service_request',
+      entityId: updated.id,
+      entityLabel: payment.service_requests?.reference_number,
+      changes: { before, after: patch },
+    }).catch(() => {});
 
     router.refresh();
-    return { error: null };
+    return { error: null, row: updated };
   }
 
   /** Reassigns a payment to a different service_request by looking up its reference
@@ -473,7 +484,7 @@ export function TransactionsTable({
    * (joined) columns, so this is what "editing" them actually means. Persists and logs
    * directly (rather than delegating to updateField) so the audit entry can carry the
    * old + new reference numbers instead of updateField's generic before/after patch. */
-  async function reassignReference(payment: Payment, referenceInput: string): Promise<{ error: string | null }> {
+  async function reassignReference(payment: Payment, referenceInput: string): Promise<{ error: string | null; row?: unknown }> {
     const next = referenceInput.trim().replace(/^#/, '');
     if (!next) return { error: 'Reference number cannot be empty.' };
 
@@ -491,36 +502,48 @@ export function TransactionsTable({
     if (lookupError) return { error: lookupError.message };
     if (!request) return { error: `Request "${next}" not found.` };
 
-    const { error } = await supabase
+    const { data: updated, error } = await supabase
       .from('payments')
       .update({ service_request_id: request.id, barangay_id: request.barangay_id })
-      .eq('id', payment.id);
+      .eq('id', payment.id)
+      .select('id, service_request_id, barangay_id')
+      .maybeSingle();
     if (error) return { error: error.message };
+    if (!updated) return { error: 'No transaction was updated. Check that you still have access to this barangay.' };
 
     logAdminAction({
       action: 'update',
       entityType: 'payment',
-      entityId: payment.id,
+      entityId: updated.id,
       entityLabel: `#${previousReference ?? '—'} → #${next}`,
       metadata: { previousReference, newReference: next },
     }).catch(() => {});
 
     router.refresh();
-    return { error: null };
+    return { error: null, row: updated };
   }
 
   async function archive(payment: Payment) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('payments').update({ deleted_at: new Date().toISOString() }).eq('id', payment.id);
+    const { data: archived, error } = await supabase
+      .from('payments')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', payment.id)
+      .select('id, deleted_at')
+      .maybeSingle();
     if (error) {
       toast.showError(`Failed to archive transaction: ${error.message}`);
+      return;
+    }
+    if (!archived) {
+      toast.showError('Failed to archive transaction: no transaction was updated. Check that you still have access to this barangay.');
       return;
     }
 
     logAdminAction({
       action: 'delete',
       entityType: 'payment',
-      entityId: payment.id,
+      entityId: archived.id,
       entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
       metadata: { reference_number: payment.service_requests?.reference_number ?? null, method: payment.method, amount_centavos: payment.amount_centavos, status: payment.status },
     }).catch(() => {});
@@ -535,7 +558,7 @@ export function TransactionsTable({
   // function's refund.updated handler confirms it.
   async function refund(payment: Payment) {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.functions.invoke('refund-payment', {
+    const { data: refundResult, error } = await supabase.functions.invoke<{ paymentId: string; status: string }>('refund-payment', {
       body: { paymentId: payment.id, reason: 'requested_by_customer' },
     });
     if (error) {
@@ -543,10 +566,20 @@ export function TransactionsTable({
       return;
     }
 
+    const { data: updated, error: refreshError } = await supabase
+      .from('payments')
+      .select('id, refund_status, refund_amount_centavos, refund_reason, refund_transfer_link, refunded_by')
+      .eq('id', refundResult?.paymentId ?? payment.id)
+      .maybeSingle();
+    if (refreshError || !updated || (refundResult?.status && updated.refund_status !== refundResult.status)) {
+      toast.showError(`Refund was submitted but the changed transaction could not be confirmed: ${refreshError?.message ?? 'no transaction was returned'}`);
+      return;
+    }
+
     logAdminAction({
       action: 'status_change',
       entityType: 'payment',
-      entityId: payment.id,
+      entityId: updated.id,
       entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
       changes: { before: { status: payment.status }, after: { status: 'refund_requested' } },
       metadata: { reason: 'requested_by_customer' },
@@ -559,7 +592,10 @@ export function TransactionsTable({
   const columns: EditableDataTableColumn<Payment>[] = [
     {
       header: 'Date',
-      render: (p) => formatDateTime(p.created_at),
+      initialWidth: 148,
+      minWidth: 138,
+      wrap: 'nowrap',
+      render: (p) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTime(p.created_at)}</span>,
       edit: {
         type: 'datetime',
         getValue: (p) => p.created_at,
@@ -568,7 +604,10 @@ export function TransactionsTable({
     },
     {
       header: 'Reference',
-      render: (p) => `#${p.service_requests?.reference_number ?? '—'}`,
+      initialWidth: 160,
+      minWidth: 148,
+      wrap: 'nowrap',
+      render: (p) => <span className="font-mono text-xs font-medium tabular-nums">#{p.service_requests?.reference_number ?? '—'}</span>,
       edit: {
         type: 'text',
         getValue: (p) => p.service_requests?.reference_number ?? '',
@@ -577,6 +616,9 @@ export function TransactionsTable({
     },
     {
       header: 'Resident',
+      initialWidth: 190,
+      minWidth: 160,
+      wrap: 'break-word',
       render: (p) => p.service_requests?.profiles?.full_name ?? '—',
       edit: {
         type: 'select',
@@ -587,6 +629,9 @@ export function TransactionsTable({
     },
     {
       header: 'Document',
+      initialWidth: 190,
+      minWidth: 160,
+      wrap: 'break-word',
       render: (p) => p.service_requests?.document_types?.name ?? '—',
       edit: {
         type: 'select',
@@ -597,6 +642,9 @@ export function TransactionsTable({
     },
     {
       header: 'Method',
+      initialWidth: 126,
+      minWidth: 116,
+      wrap: 'nowrap',
       render: (p) => (p.method === 'qrph' ? 'QR PH' : 'Pay at Pickup'),
       edit: {
         type: 'select',
@@ -607,7 +655,10 @@ export function TransactionsTable({
     },
     {
       header: 'Amount',
-      render: (p) => formatCentavosAsPHP(p.amount_centavos),
+      initialWidth: 118,
+      minWidth: 108,
+      wrap: 'nowrap',
+      render: (p) => <span className="font-medium tabular-nums">{formatCentavosAsPHP(p.amount_centavos)}</span>,
       edit: {
         type: 'number',
         getValue: (p) => (p.amount_centavos / 100).toFixed(2),
@@ -623,6 +674,9 @@ export function TransactionsTable({
     },
     {
       header: 'Status',
+      initialWidth: 136,
+      minWidth: 128,
+      wrap: 'nowrap',
       render: (p) => <StatusPill status={p.status} />,
       edit: {
         type: 'select',
@@ -633,10 +687,14 @@ export function TransactionsTable({
             status: String(value),
             paid_at: value === 'paid' ? new Date().toISOString() : p.paid_at,
           }),
+        commitOnChange: true,
       },
     },
     {
       header: 'Collected By / Source',
+      initialWidth: 208,
+      minWidth: 180,
+      wrap: 'break-word',
       render: (p) => (p.method === 'pickup' ? (p.collector?.full_name ?? '—') : (p.paymongo_source_id ?? '—')),
       // Pickup rows need a select of admins (writes collected_by); QR PH rows need a free-text
       // PayMongo source id (writes paymongo_source_id) — genuinely different controls per row.
@@ -656,6 +714,10 @@ export function TransactionsTable({
     },
     {
       header: 'Refund',
+      initialWidth: 148,
+      minWidth: 132,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (p) => {
         // A QRPH refund isn't credited automatically — the resident has to open the
         // transfer link to claim it (valid ~3 days), so surface it wherever one exists.
@@ -692,35 +754,42 @@ export function TransactionsTable({
             <div className="flex items-center gap-2">
               <StatusPill status="failed" />
               <ConfirmButton
-                label="Retry"
+                label={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
                 confirmLabel="Refund?"
                 onConfirm={() => refund(p)}
                 title="Retry refund"
-                className="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300"
+                ariaLabel={`Retry refund for ${p.service_requests?.reference_number ?? 'transaction'}`}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-700 transition-colors hover:bg-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:bg-red-900/40 dark:text-red-300 dark:focus-visible:ring-offset-zinc-900"
               />
             </div>
           );
         }
         return (
           <ConfirmButton
-            label="Refund"
+            label={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Refund full amount?"
             onConfirm={() => refund(p)}
             title="Refund this payment"
-            className="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
+            ariaLabel={`Refund ${p.service_requests?.reference_number ?? 'transaction'}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:bg-red-900/30 dark:text-red-300 dark:focus-visible:ring-offset-zinc-900"
           />
         );
       },
     },
     {
-      header: '',
+      header: 'Actions',
+      initialWidth: 76,
+      minWidth: 72,
+      wrap: 'nowrap',
+      overflow: 'visible',
       render: (p) => (
         <ConfirmButton
-          label="🗑"
+          label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
           confirmLabel="Archive?"
           onConfirm={() => archive(p)}
-          title="Archive"
-          className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+          title="Archive transaction"
+          ariaLabel={`Archive ${p.service_requests?.reference_number ?? 'transaction'}`}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
         />
       ),
     },
@@ -815,7 +884,9 @@ export function TransactionsTable({
         emptyLabel="No transactions yet."
         columns={columns}
         resizableColumns
-        thickBorders
+        density="compact"
+        tableMinWidth={1650}
+        cellOverflow="hidden"
       />
     </>
   );
