@@ -20,10 +20,7 @@ export interface ResidentProfile {
  *   to where they were headed.
  * - Session but no profile row -> redirect to /login (shouldn't happen; handle_new_user
  *   creates the profile atomically with the auth.users row).
- * - profiles.role === 'admin' -> bounce to admin-web's own /dashboard via an ABSOLUTE
- *   cross-origin URL. This is deliberately not a relative redirect() — the admin
- *   session belongs on the other app entirely (see Phase 9's mirror-image bounce on the
- *   admin-web side).
+ * - Any authenticated role with a profile stays in resident-web.
  *
  * requireUser()/getOptionalUser() are UX guards, not the real security boundary — RLS on
  * every table is (see the plan's §7 Security Verification Track). Never treat a
@@ -50,10 +47,6 @@ export async function requireUser(): Promise<{ user: { id: string; email: string
 
   if (!profile) {
     redirect('/login');
-  }
-
-  if (profile.role === 'admin') {
-    redirect(`${process.env.NEXT_PUBLIC_ADMIN_WEB_URL}/dashboard`);
   }
 
   return {

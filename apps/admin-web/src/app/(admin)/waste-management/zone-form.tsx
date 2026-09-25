@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -97,9 +98,10 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
       <div className="col-span-4">
         <button
           type="submit"
+          aria-busy={submitting}
           disabled={submitting || !barangayId}
           className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-          {submitting ? 'Adding…' : 'Add Zone'}
+          <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Zone</LoadingButtonContent>
         </button>
       </div>
     </form>

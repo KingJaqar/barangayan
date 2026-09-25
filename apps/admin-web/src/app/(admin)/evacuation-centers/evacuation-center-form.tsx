@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -241,8 +242,9 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         <button
           type="submit"
           disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-          {submitting ? 'Creating…' : 'Create Center'}
+          className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Center</LoadingButtonContent>
         </button>
       </div>
     </form>

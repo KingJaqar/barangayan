@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useToast } from '@/components/ui/toast';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 const inputClass =
   'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -136,8 +137,8 @@ export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose
           type="submit"
           disabled={submitting || !barangayId}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Inviting…' : 'Invite Account'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Inviting…">Invite Account</LoadingButtonContent>
         </button>
         <button
           type="button"

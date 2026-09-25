@@ -10,9 +10,7 @@ import { getOptionalUser } from '@/lib/auth/get-optional-user';
  * break /home's guest-browsing requirement (§4's Route Contract Matrix: /home must use
  * getOptionalUser(), never requireUser()).
  *
- * An admin session is still bounced from here (getOptionalUser() redirects to
- * admin-web's /dashboard) — an admin should never see the resident shell at all, guest
- * or not.
+ * Authenticated users of every role stay in this resident shell.
  */
 export default async function ResidentLayout({ children }: { children: React.ReactNode }) {
   const { user, profile } = await getOptionalUser();

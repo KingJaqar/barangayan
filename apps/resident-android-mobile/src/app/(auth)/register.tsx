@@ -199,11 +199,9 @@ export default function RegisterScreen() {
   const [sex, setSex] = useState<Sex | null>(null);
   const [mobileNumber, setMobileNumber] = useState('');
   const [email, setEmail] = useState('');
-  // Home Address split into structured parts — "Barangay" isn't one of these; it's
-  // already barangay.name below (profiles.barangay_id, auto-assigned, AGENTS.md §0).
+  // Barangay is displayed from the auto-assigned profile relation below.
   const [houseNo, setHouseNo] = useState('');
   const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | null>(null);
   const [occupation, setOccupation] = useState('');
   const [birthDateIso, setBirthDateIso] = useState<string | null>(null);
@@ -295,7 +293,6 @@ export default function RegisterScreen() {
       email,
       houseNo,
       street,
-      city,
       employmentStatus: employmentStatus ?? undefined,
       occupation: occupation || undefined,
       birthDate: birthDateIso ?? undefined,
@@ -341,7 +338,6 @@ export default function RegisterScreen() {
             mobile_number: result.data.mobileNumber ?? null,
             house_no: result.data.houseNo,
             street: result.data.street,
-            city: result.data.city,
             employment_status: result.data.employmentStatus,
             occupation: result.data.occupation ?? null,
             birth_date: result.data.birthDate ?? null,
@@ -576,14 +572,6 @@ export default function RegisterScreen() {
                 />
               </View>
             </View>
-            <TextField
-              label="City"
-              required
-              value={city}
-              onChangeText={setCity}
-              {...fieldStatus(city, fieldErrors.city)}
-            />
-
             <View style={[styles.barangayRow, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
               <ThemedText type="small" themeColor="textSecondary">Barangay</ThemedText>
               <ThemedText type="smallBold">{barangay?.name ?? 'Loading…'}</ThemedText>

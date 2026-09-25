@@ -8,6 +8,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { markPaymentCollected as markPaymentCollectedRequest } from '@/lib/payments';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { Spinner } from '@/components/loading/spinner';
 
 interface RequestStatusActionsProps {
   requestId: string;
@@ -243,65 +244,74 @@ export function RequestStatusActions({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {status === 'submitted' ? (
-        <button
-          onClick={beginProcessing}
-          disabled={busy}
-          title={actionTitle('Move to processing')}
-          aria-label={variant === 'compact' ? `Move request ${referenceNumber} to processing` : undefined}
-          className={`${btnClass} bg-blue-600 text-white`}>
-          {actionLabel('Move to Processing', <Play aria-hidden="true" className="h-4 w-4" />)}
-        </button>
-      ) : null}
-
-      {status === 'in_progress' ? (
-        <button
-          onClick={markReadyForPickup}
-          disabled={busy}
-          title={actionTitle('Mark ready for pickup')}
-          aria-label={variant === 'compact' ? `Mark request ${referenceNumber} ready for pickup` : undefined}
-          className={`${btnClass} bg-blue-600 text-white`}>
-          {actionLabel('Mark Ready for Pickup', <PackageCheck aria-hidden="true" className="h-4 w-4" />)}
-        </button>
-      ) : null}
-
-      {status === 'ready_for_pickup' ? (
-        <button
-          onClick={completeRequest}
-          disabled={busy}
-          title={actionTitle('Mark as completed')}
-          aria-label={variant === 'compact' ? `Mark request ${referenceNumber} as completed` : undefined}
-          className={`${btnClass} bg-[var(--accent)] text-white`}>
-          {actionLabel('Mark as Completed', <Check aria-hidden="true" className="h-4 w-4" />)}
-        </button>
-      ) : null}
-
-      {!showCancelForm ? (
-        <button
-          onClick={() => setShowCancelForm(true)}
-          disabled={busy}
-          title={actionTitle('Cancel request')}
-          aria-label={variant === 'compact' ? `Cancel request ${referenceNumber}` : undefined}
-          className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-          {actionLabel('Cancel', <Ban aria-hidden="true" className="h-4 w-4" />)}
-        </button>
-      ) : (
-        <div className="flex items-center gap-2">
-          <input
-            value={cancelNote}
-            onChange={(e) => setCancelNote(e.target.value)}
-            placeholder="Reason for cancellation…"
-            className="rounded-lg border border-zinc-300 px-2 py-1 text-xs outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          />
-          <button onClick={handleCancel} disabled={busy || !cancelNote.trim()} className={`${btnClass} bg-red-600 text-white`}>
-            Confirm
+    <>
+      <div aria-busy={busy} className="flex flex-wrap items-center gap-2">
+        {status === 'submitted' ? (
+          <button
+            onClick={beginProcessing}
+            disabled={busy}
+            title={actionTitle('Move to processing')}
+            aria-label={variant === 'compact' ? `Move request ${referenceNumber} to processing` : undefined}
+            className={`${btnClass} bg-blue-600 text-white`}>
+            {actionLabel('Move to Processing', <Play aria-hidden="true" className="h-4 w-4" />)}
           </button>
-          <button onClick={() => setShowCancelForm(false)} className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
-            Back
+        ) : null}
+
+        {status === 'in_progress' ? (
+          <button
+            onClick={markReadyForPickup}
+            disabled={busy}
+            title={actionTitle('Mark ready for pickup')}
+            aria-label={variant === 'compact' ? `Mark request ${referenceNumber} ready for pickup` : undefined}
+            className={`${btnClass} bg-blue-600 text-white`}>
+            {actionLabel('Mark Ready for Pickup', <PackageCheck aria-hidden="true" className="h-4 w-4" />)}
           </button>
-        </div>
-      )}
-    </div>
+        ) : null}
+
+        {status === 'ready_for_pickup' ? (
+          <button
+            onClick={completeRequest}
+            disabled={busy}
+            title={actionTitle('Mark as completed')}
+            aria-label={variant === 'compact' ? `Mark request ${referenceNumber} as completed` : undefined}
+            className={`${btnClass} bg-[var(--accent)] text-white`}>
+            {actionLabel('Mark as Completed', <Check aria-hidden="true" className="h-4 w-4" />)}
+          </button>
+        ) : null}
+
+        {!showCancelForm ? (
+          <button
+            onClick={() => setShowCancelForm(true)}
+            disabled={busy}
+            title={actionTitle('Cancel request')}
+            aria-label={variant === 'compact' ? `Cancel request ${referenceNumber}` : undefined}
+            className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
+            {actionLabel('Cancel', <Ban aria-hidden="true" className="h-4 w-4" />)}
+          </button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <input
+              value={cancelNote}
+              onChange={(e) => setCancelNote(e.target.value)}
+              placeholder="Reason for cancellation…"
+              className="rounded-lg border border-zinc-300 px-2 py-1 text-xs outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
+            />
+            <button onClick={handleCancel} disabled={busy || !cancelNote.trim()} className={`${btnClass} bg-red-600 text-white`}>
+              Confirm
+            </button>
+            <button onClick={() => setShowCancelForm(false)} className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
+              Back
+            </button>
+          </div>
+        )}
+      </div>
+      <p
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+        className={`mt-2 items-center gap-2 text-xs text-zinc-500 ${busy ? 'inline-flex' : 'sr-only'}`}>
+        {busy ? <><Spinner size="compact" /> Updating request…</> : ''}
+      </p>
+    </>
   );
 }

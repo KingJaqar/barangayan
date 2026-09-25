@@ -163,6 +163,53 @@ main {
   background-size: 200% 100%;
 }
 
+/* Loading-only motion: leave the shared .shimmer rule and unrelated transitions alone. */
+@keyframes admin-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes admin-loading-indicator-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.admin-loading-spinner {
+  opacity: 0;
+  animation: admin-loading-spin 900ms linear 120ms infinite backwards,
+    admin-loading-indicator-in 140ms ease-out 120ms both;
+}
+
+.admin-link-pending-icon {
+  transition: opacity 140ms ease-out;
+}
+
+.admin-link-pending-icon-slot[data-pending='true'] .admin-link-pending-icon {
+  opacity: 0;
+  transition-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-loading-spinner,
+  .admin-loading-skeleton {
+    animation: none;
+  }
+
+  .admin-loading-spinner {
+    opacity: 1;
+  }
+
+  .admin-link-pending-icon-slot[data-pending='true'] .admin-link-pending-icon {
+    opacity: 0;
+    transition: none;
+  }
+}
+
 /* ─── Map container transitions ─── */
 .leaflet-container {
   transition: opacity 0.3s ease-out;

@@ -10,6 +10,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { DriveTypeBadge, formatDriveDate } from './drive-table';
 import type { DriveRow } from './page';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 /** "HH:MM:SS" (or "HH:MM") -> "8:00 AM" */
 function fmt12h(t: string): string {
@@ -225,8 +226,9 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
                   <button
                     onClick={saveDetails}
                     disabled={saving}
-                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
-                    {saving ? 'Saving…' : 'Save'}
+                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                    aria-busy={saving}>
+                    <LoadingButtonContent pending={saving} pendingLabel="Saving…">Save</LoadingButtonContent>
                   </button>
                   <button
                     onClick={() => setEditing(false)}

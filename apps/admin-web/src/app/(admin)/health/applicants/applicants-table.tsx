@@ -15,6 +15,7 @@ import { formatDriveDate } from '../drive-table';
 import { ApplicantDetailModal } from './applicant-detail-modal';
 import type { ApplicantRow } from './page';
 import { REGISTRATION_STATUS_OPTIONS, TABS, registrationStatusLabel, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 export function StatusPill({ status }: { status: string }) {
   const styles: Record<string, string> = {
@@ -195,8 +196,8 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
           type="submit"
           disabled={submitting || !driveId || !residentId}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Registering…' : 'Register'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Registering…">Register</LoadingButtonContent>
         </button>
         <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
           Cancel

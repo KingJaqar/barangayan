@@ -15,6 +15,8 @@ import { NotificationItem, type NotificationItemVariant } from './notification-i
 import { ScrollableChipRow } from './scrollable-chip-row';
 
 import type { AdminAuditAction } from '@barangayan/shared';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { Spinner } from '@/components/loading/spinner';
 
 interface NotificationsDrawerProps {
   /** Target open/closed state — drives the enter/exit slide+fade animation. */
@@ -396,7 +398,13 @@ export function NotificationsDrawer({ open, onClose, onClosed, barangayId, baran
           {error ? (
             <p className="px-6 py-6 text-center text-sm text-red-600">{error}</p>
           ) : loading ? (
-            <p className="px-6 py-10 text-center text-sm text-zinc-400">Loading…</p>
+            <p
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="flex items-center justify-center gap-2 px-6 py-10 text-center text-sm text-zinc-400">
+              <Spinner size="regular" /> Loading notifications…
+            </p>
           ) : notifications.length === 0 ? (
             <p className="px-6 py-10 text-center text-sm text-zinc-400">
               {hasActiveFilters(filters) ? 'No notifications match these filters.' : 'No notifications yet.'}
@@ -427,9 +435,12 @@ export function NotificationsDrawer({ open, onClose, onClosed, barangayId, baran
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
+                aria-busy={loadingMore}
                 className="rounded-full bg-zinc-100 px-5 py-2 text-sm font-semibold text-zinc-600 disabled:opacity-50 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                {loadingMore ? 'Loading…' : 'Load more'}
+                <LoadingButtonContent pending={loadingMore} pendingLabel="Loading…">
+                  Load more
+                </LoadingButtonContent>
               </button>
             </div>
           ) : null}

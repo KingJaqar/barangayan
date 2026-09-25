@@ -11,6 +11,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { IncidentActions } from './incident-actions';
 import { IncidentStatusPill } from './incident-table';
 import type { IncidentRow } from './page';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 /** Full-detail modal — photos, description, location, reporter contact, and the same
  * status/remove actions available from the table row. The header form is the "Incident
@@ -225,8 +226,9 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
                   <button
                     onClick={saveDetails}
                     disabled={saving}
-                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
-                    {saving ? 'Saving…' : 'Save'}
+                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                    aria-busy={saving}>
+                    <LoadingButtonContent pending={saving} pendingLabel="Saving…">Save</LoadingButtonContent>
                   </button>
                   <button
                     onClick={() => setEditing(false)}

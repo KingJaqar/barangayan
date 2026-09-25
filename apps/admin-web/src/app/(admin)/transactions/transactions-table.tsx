@@ -13,6 +13,8 @@ import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { TABS, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { Spinner } from '@/components/loading/spinner';
 
 // Tables<'payments'> already includes document_fee_centavos, paymongo_payment_id,
 // refund_status, refund_amount_centavos, refund_reason, refunded_at, refunded_by
@@ -242,13 +244,33 @@ function AddTransactionForm({
       </label>
 
       <label className="text-sm">
-        <span className="mb-1 block font-medium">Resident</span>
-        <input className={readOnlyClass} value={residentDisplay} readOnly placeholder="Auto-filled from reference" />
+        <span className="mb-1 block font-medium">
+          Resident
+          {lookupState === 'loading' ? (
+            <span role="status" aria-live="polite" aria-atomic="true" className="ml-2 inline-flex items-center align-middle">
+              <Spinner size="compact" />
+              <span className="sr-only">Looking up request</span>
+            </span>
+          ) : null}
+        </span>
+        <input
+          className={readOnlyClass}
+          value={residentDisplay}
+          readOnly
+          aria-busy={lookupState === 'loading'}
+          placeholder="Auto-filled from reference"
+        />
       </label>
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Document</span>
-        <input className={readOnlyClass} value={documentDisplay} readOnly placeholder="Auto-filled from reference" />
+        <input
+          className={readOnlyClass}
+          value={documentDisplay}
+          readOnly
+          aria-busy={lookupState === 'loading'}
+          placeholder="Auto-filled from reference"
+        />
       </label>
 
       <label className="text-sm">
@@ -307,8 +329,8 @@ function AddTransactionForm({
           type="submit"
           disabled={submitting}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Adding…' : 'Add Transaction'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Transaction</LoadingButtonContent>
         </button>
         <button
           type="button"

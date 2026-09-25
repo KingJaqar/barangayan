@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { useThemeController } from '@/components/ui/theme-controller';
+import { LinkPendingIndicator } from '@/components/navigation/link-pending-indicator';
 
 interface NavItem {
   href: string;
@@ -99,11 +100,22 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
       <Link
         href="/theme"
         title={collapsed ? 'Theme' : undefined}
+        aria-label={collapsed ? 'Theme' : undefined}
         className={`flex min-w-0 flex-1 items-center gap-[13px] rounded-xl text-[13px] font-semibold transition-colors ${
           isThemePage ? 'text-[var(--accent)]' : 'text-[#151b2b] dark:text-zinc-100'
         }`}>
-        <Sun className="size-5 shrink-0 text-[#778191]" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
-        {!collapsed ? <span>Theme</span> : null}
+        <LinkPendingIndicator
+          collapsed={collapsed}
+          label="Theme"
+          icon={
+            <Sun
+              className="size-5 shrink-0 text-[#778191]"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          }
+        />
       </Link>
       {!collapsed ? (
         // Appearance is driven entirely by CSS `dark:` variants rather than the `theme`
@@ -168,18 +180,24 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
                     key={item.href}
                     href={item.href}
                     title={collapsed ? item.label : undefined}
+                    aria-label={collapsed ? item.label : undefined}
                     className={`flex h-[49px] items-center gap-[13px] rounded-2xl px-[13px] text-[13px] font-bold transition-colors ${
                       isActive
                         ? 'bg-[var(--accent)] text-white shadow-[0_1px_2px_var(--accent-shadow)]'
                         : 'text-[#151b2b] hover:bg-[#f3f5f7] dark:text-zinc-100 dark:hover:bg-zinc-900'
                     }`}>
-                    <Icon
-                      className="size-5 shrink-0"
-                      strokeWidth={2.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                    <LinkPendingIndicator
+                      collapsed={collapsed}
+                      label={item.label}
+                      icon={
+                        <Icon
+                          className="size-5 shrink-0"
+                          strokeWidth={2.5}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      }
                     />
-                    {!collapsed ? <span className="truncate">{item.label}</span> : null}
                   </Link>
                 );
               })}

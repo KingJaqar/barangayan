@@ -15,6 +15,7 @@ import { IncidentActions } from './incident-actions';
 import { IncidentDetailModal } from './incident-detail-modal';
 import type { IncidentRow } from './page';
 import { TABS, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 interface CategoryOption {
   id: string;
@@ -216,8 +217,8 @@ function AddIncidentForm({
           type="submit"
           disabled={submitting || !title.trim()}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Creating…' : 'Create Incident'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Incident</LoadingButtonContent>
         </button>
         <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
           Cancel

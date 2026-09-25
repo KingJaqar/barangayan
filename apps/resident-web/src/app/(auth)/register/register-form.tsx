@@ -172,7 +172,6 @@ export function RegisterForm() {
   const [email, setEmail] = useState('');
   const [houseNo, setHouseNo] = useState('');
   const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | null>(null);
   const [occupation, setOccupation] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -209,7 +208,6 @@ export function RegisterForm() {
   const mobileNumberStatus = fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber);
   const houseNoStatus = fieldStatus(houseNo, fieldErrors.houseNo);
   const streetStatus = fieldStatus(street, fieldErrors.street);
-  const cityStatus = fieldStatus(city, fieldErrors.city);
   const passwordStatus = fieldStatus(password, fieldErrors.password, validatePassword, 'Password strength: good');
 
   useEffect(() => {
@@ -271,7 +269,6 @@ export function RegisterForm() {
       email,
       houseNo,
       street,
-      city,
       employmentStatus: employmentStatus ?? undefined,
       occupation: occupation || undefined,
       birthDate: birthDate || undefined,
@@ -311,7 +308,6 @@ export function RegisterForm() {
             mobile_number: result.data.mobileNumber ?? null,
             house_no: result.data.houseNo,
             street: result.data.street,
-            city: result.data.city,
             employment_status: result.data.employmentStatus,
             occupation: result.data.occupation ?? null,
             birth_date: result.data.birthDate ?? null,
@@ -516,21 +512,9 @@ export function RegisterForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="city">
-                City
-                <RequiredMark />
-              </Label>
-              <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} aria-invalid={!!cityStatus.error} />
-              <FieldStatus {...cityStatus} />
-            </div>
-            <div className="flex flex-col justify-end gap-1.5">
-              <div className="flex h-11 items-center justify-between rounded-lg border border-border bg-card px-3.5">
-                <span className="text-sm text-muted-foreground">Barangay</span>
-                <span className="text-sm font-semibold">{barangay?.name ?? 'Loading…'}</span>
-              </div>
-            </div>
+          <div className="flex h-11 items-center justify-between rounded-lg border border-border bg-card px-3.5">
+            <span className="text-sm text-muted-foreground">Barangay</span>
+            <span className="text-sm font-semibold">{barangay?.name ?? 'Loading…'}</span>
           </div>
         </div>
 

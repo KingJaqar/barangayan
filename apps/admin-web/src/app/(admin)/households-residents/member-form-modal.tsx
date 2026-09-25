@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { householdMemberSchema, HOUSEHOLD_MEMBER_RELATIONS, HOUSEHOLD_MEMBER_ROLES } from '@barangayan/shared';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 const inputCls =
   'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
@@ -116,8 +117,9 @@ export function MemberFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-              {submitting ? 'Saving…' : mode === 'add' ? 'Add Member' : 'Save Changes'}
+              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              aria-busy={submitting}>
+              <LoadingButtonContent pending={submitting} pendingLabel={mode === 'add' ? 'Adding…' : 'Saving…'}>{mode === 'add' ? 'Add Member' : 'Save Changes'}</LoadingButtonContent>
             </button>
             <button
               type="button"

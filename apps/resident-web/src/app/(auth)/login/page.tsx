@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
+import { getResidentLoginDestination } from '@/lib/auth/login-destination';
 import { hasCompletedOnboarding } from '@/lib/onboarding';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -21,16 +22,9 @@ const BRAND_HIGHLIGHTS = [
 ] as const;
 
 /**
- * Migrated + adapted from apps/admin-web/src/app/login/page.tsx — same shared sign-in
- * (same Supabase auth the mobile app and admin panel use), same profiles.role branch.
- * Real changes from the admin-web source: (1) the admin branch is now an ABSOLUTE
- * cross-origin `window.location.href`, not `router.replace()` — admin-web is a
- * different origin entirely; a client-side route replace can't reach it. (2) supports
- * a `?next=` param (set by lib/auth/require-user.ts's redirect) so a resident bounced
- * here from a gated page returns to where they were headed, not always /home. (3) a
- * resident's first-ever successful login goes to /onboarding instead of /home/`next`
- * — see lib/onboarding.ts. logAdminLogin() is intentionally not called here — that's
- * an admin-web-only audit action for the admin panel's own login surface.
+ * Uses shared Supabase authentication, but every role stays in resident-web.
+ * Supports a local `?next=` return path after login. The first successful login
+ * on this browser goes to /onboarding instead — see lib/onboarding.ts.
  *
  * Layout: a brand panel + form split on lg+ screens (fills the viewport instead of
  * floating a lone card in empty space), collapsing to a single compact card on
@@ -63,22 +57,7 @@ function LoginForm() {
       return;
     }
 
-    const { data: profile } = await supabase.from('profiles').select('role').eq('id', signInData.user.id).single();
-
-    if (profile?.role === 'admin') {
-      // Deliberate full navigation, not router.replace() — admin-web is a different
-      // origin entirely, so this is a real cross-origin redirect, not an internal
-      // Next.js route the no-location-assign-relative-destination rule is guarding.
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.href = `${process.env.NEXT_PUBLIC_ADMIN_WEB_URL}/dashboard`;
-      return;
-    }
-
-    const destination = !hasCompletedOnboarding(signInData.user.id)
-      ? '/onboarding'
-      : next && next.startsWith('/')
-        ? next
-        : '/home';
+    const destination = getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
     router.replace(destination);
     router.refresh();
   }

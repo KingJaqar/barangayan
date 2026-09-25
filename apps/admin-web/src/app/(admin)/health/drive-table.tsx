@@ -14,6 +14,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { DriveDetailModal } from './drive-detail-modal';
 import type { DriveRow } from './page';
 import { TABS, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 export function DriveTypeBadge({ type }: { type: string }) {
   const cfg = DRIVE_TYPE_CONFIG[type as keyof typeof DRIVE_TYPE_CONFIG];
@@ -199,8 +200,8 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
           type="submit"
           disabled={submitting || !title.trim()}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Creating…' : 'Create Drive'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Drive</LoadingButtonContent>
         </button>
         <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
           Cancel

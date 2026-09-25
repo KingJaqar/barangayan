@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
+import { LoadingStatus } from '@/components/loading/loading-status';
 import { useBarangaySettings } from '@/hooks/use-barangay-settings';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/lib/audit-notifications';
 
@@ -16,6 +17,8 @@ import {
   type DayHours,
   type OperatingHours,
 } from '@barangayan/shared';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { Spinner } from '@/components/loading/spinner';
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
 const DAY_LABELS: Record<string, string> = {
@@ -112,9 +115,15 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <span className="text-sm text-zinc-500">Loading settings…</span>
-      </div>
+      <>
+        <LoadingStatus message="Loading settings" />
+        <div aria-busy="true" className="flex items-center justify-center py-12">
+          <div aria-hidden="true" className="flex items-center gap-3">
+            <Spinner size="regular" />
+            <span className="text-sm text-zinc-500">Loading settings…</span>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -312,8 +321,11 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
         <button
           type="submit"
           disabled={saving}
+          aria-busy={saving}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-          {saving ? 'Saving…' : 'Save Settings'}
+          <LoadingButtonContent pending={saving} pendingLabel="Saving…">
+            Save Settings
+          </LoadingButtonContent>
         </button>
         <button
           type="button"

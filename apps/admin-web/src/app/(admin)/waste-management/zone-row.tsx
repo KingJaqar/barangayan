@@ -8,6 +8,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type WasteZone = Tables<'waste_zones'>;
 type WasteSchedule = Tables<'waste_collection_schedules'>;
@@ -144,8 +145,9 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
           {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
 
           <div className="col-span-4 flex items-center gap-2">
-            <button type="submit" disabled={submitting} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-              {submitting ? 'Saving…' : 'Save Changes'}
+            <button type="submit" disabled={submitting} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+            aria-busy={submitting}>
+              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
             </button>
             <button type="button" onClick={() => setIsEditing(false)} disabled={submitting} className="rounded-full bg-zinc-200 px-5 py-1.5 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
               Cancel

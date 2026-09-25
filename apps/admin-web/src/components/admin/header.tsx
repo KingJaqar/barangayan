@@ -36,6 +36,7 @@ import { THEMED_SCROLLBAR_CLASS } from '@/lib/scrollbar';
 
 import { NotificationsDrawer } from './notifications-drawer';
 import { ScrollableChipRow } from './scrollable-chip-row';
+import { Spinner } from '@/components/loading/spinner';
 
 type NotificationFilter = 'all' | 'unread' | ModuleKey;
 
@@ -294,7 +295,13 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
               }}
             >
               {notifLoading ? (
-                <p className="px-4 py-6 text-center text-sm text-zinc-400">Loading…</p>
+                <p
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="flex items-center justify-center gap-2 px-4 py-6 text-center text-sm text-zinc-400">
+                  <Spinner size="compact" /> Loading notifications…
+                </p>
               ) : filteredNotifications.length === 0 ? (
                 <p className="px-4 py-6 text-center text-sm text-zinc-400">
                   {notifications.length === 0 ? 'No notifications' : 'No notifications match this filter'}

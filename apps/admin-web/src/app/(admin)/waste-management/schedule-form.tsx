@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type WasteZone = Tables<'waste_zones'>;
 
@@ -143,8 +144,9 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
       {error ? <p className="col-span-5 text-sm text-red-600">{error}</p> : null}
 
       <div className="col-span-5">
-        <button type="submit" disabled={submitting || !barangayId} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-          {submitting ? 'Adding…' : 'Add Schedule'}
+        <button type="submit" disabled={submitting || !barangayId} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+        aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Schedule</LoadingButtonContent>
         </button>
       </div>
     </form>

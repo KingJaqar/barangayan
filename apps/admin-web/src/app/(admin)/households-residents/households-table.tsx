@@ -13,6 +13,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { HouseholdMemberRow } from './page';
 import { RELATION_OPTIONS as RELATION_FILTER_OPTIONS, TABS, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 const CHECKED_IN_OPTIONS = [
   { value: 'true', label: 'Yes' },
@@ -556,8 +557,8 @@ function AddMemberForm({ barangayId, onClose }: { barangayId: string; onClose: (
           type="submit"
           disabled={submitting || !profileId || !name.trim()}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Adding…' : 'Add Member'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Member</LoadingButtonContent>
         </button>
         <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
           Cancel

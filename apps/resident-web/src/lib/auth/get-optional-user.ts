@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation';
-
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { ResidentProfile } from '@/lib/auth/require-user';
 
@@ -8,8 +6,7 @@ import type { ResidentProfile } from '@/lib/auth/require-user';
  * both signed-out visitors and residents (currently just /home, per the plan's Route
  * Contract Matrix — a requireUser() mistake there would break guest browsing entirely).
  *
- * Still bounces an admin session to admin-web's /dashboard — an admin should never see
- * the resident home shell, guest or not.
+ * Authenticated users of every role use the resident home shell.
  */
 export async function getOptionalUser(): Promise<
   { user: { id: string; email: string | undefined }; profile: ResidentProfile } | { user: null; profile: null }
@@ -32,10 +29,6 @@ export async function getOptionalUser(): Promise<
 
   if (!profile) {
     return { user: null, profile: null };
-  }
-
-  if (profile.role === 'admin') {
-    redirect(`${process.env.NEXT_PUBLIC_ADMIN_WEB_URL}/dashboard`);
   }
 
   return {

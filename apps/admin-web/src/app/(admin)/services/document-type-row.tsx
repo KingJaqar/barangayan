@@ -8,6 +8,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type DocumentType = Tables<'document_types'>;
 
@@ -228,8 +229,9 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-              {submitting ? 'Saving…' : 'Save Changes'}
+              className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+              aria-busy={submitting}>
+              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
             </button>
             <button
               type="button"
@@ -266,12 +268,18 @@ export function DocumentTypeRow({ documentType }: { documentType: DocumentType }
           <button
             onClick={toggleActive}
             disabled={toggling}
+            aria-busy={toggling}
             className={`rounded-full px-3 py-1 text-xs font-semibold disabled:opacity-50 ${
               documentType.is_active
                 ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
                 : 'bg-[var(--accent)]/15 text-[var(--accent)]'
             }`}>
-            {documentType.is_active ? 'Deactivate' : 'Activate'}
+            <LoadingButtonContent
+              pending={toggling}
+              pendingLabel={documentType.is_active ? 'Deactivating…' : 'Activating…'}
+              spinnerSize="compact">
+              {documentType.is_active ? 'Deactivate' : 'Activate'}
+            </LoadingButtonContent>
           </button>
           <button
             onClick={startEdit}

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 
 import { TableScrollArea } from '@/components/admin/table-scroll-area';
 import { useToast } from '@/components/ui/toast';
+import { Spinner } from '@/components/loading/spinner';
 
 // Floor for the last (filler) column under `resizableColumns` — enough room for a small
 // action button or short status label, so it can't be squeezed to invisible by the other
@@ -378,7 +379,11 @@ export function EditableDataTable<T>({
                                 </option>
                               ))}
                             </select>
-                            {saving && <span className="block text-xs text-zinc-500">Saving…</span>}
+                            {saving && (
+                              <span role="status" aria-live="polite" aria-atomic="true" className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
+                                <Spinner size="compact" /> Saving…
+                              </span>
+                            )}
                           </div>
                         ) : (
                           <input

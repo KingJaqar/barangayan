@@ -9,6 +9,7 @@ import rehypeSanitize from 'rehype-sanitize';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type SiteContentRow = Tables<'site_content'>;
 type Section = 'terms_of_service' | 'privacy_policy';
@@ -165,8 +166,9 @@ export function ContentForm({
         <button
           type="submit"
           disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-          {submitting ? 'Saving…' : 'Save Changes'}
+          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
         </button>
       </div>
     </form>

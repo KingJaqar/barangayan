@@ -12,6 +12,7 @@ import { formatDriveDate } from '../drive-table';
 import { StatusPill } from './applicants-table';
 import type { ApplicantRow } from './page';
 import { REGISTRATION_STATUS_OPTIONS } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 /** Full-detail modal for an applicant registration — mirrors drive-detail-modal.tsx.
  * `applicant_number` and `priority_score` are server-computed by register_for_drive
@@ -277,8 +278,9 @@ export function ApplicantDetailModal({
                   <button
                     onClick={saveDetails}
                     disabled={saving}
-                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
-                    {saving ? 'Saving…' : 'Save'}
+                    className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                    aria-busy={saving}>
+                    <LoadingButtonContent pending={saving} pendingLabel="Saving…">Save</LoadingButtonContent>
                   </button>
                   <button
                     onClick={() => setEditing(false)}

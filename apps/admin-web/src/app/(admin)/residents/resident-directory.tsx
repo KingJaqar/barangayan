@@ -22,6 +22,8 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { ResidentRow } from './page';
 import { TABS, type Tab } from './types';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { Spinner } from '@/components/loading/spinner';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -136,8 +138,8 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
           type="submit"
           disabled={submitting || !email.trim() || !fullName.trim()}
           className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-        >
-          {submitting ? 'Sending invite…' : 'Send Invite'}
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Sending invite…">Send Invite</LoadingButtonContent>
         </button>
         <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
           Cancel
@@ -361,7 +363,7 @@ function ResidentDetailModal({
           {/* Admin: ID verification actions */}
           <section className="border-b border-black/10 p-6 dark:border-white/10">
             <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">ID Verification — Admin Action</h3>
-            <div className="flex flex-wrap items-center gap-3">
+            <div aria-busy={idStatusLoading} className="flex flex-wrap items-center gap-3">
               <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${idVerifColor(idStatus)}`}>
                 Current: {idVerifLabel(idStatus)}
               </span>
@@ -421,6 +423,11 @@ function ResidentDetailModal({
                 />
               )}
             </div>
+            {idStatusLoading ? (
+              <p aria-hidden="true" className="mt-2 inline-flex items-center gap-2 text-xs text-zinc-500">
+                <Spinner size="compact" /> Updating ID status…
+              </p>
+            ) : null}
             {!idUrls.length && (
               <p className="mt-2 text-xs text-zinc-400">No ID photo uploaded — cannot verify until the resident uploads one.</p>
             )}

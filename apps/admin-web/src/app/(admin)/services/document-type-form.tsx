@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 export function DocumentTypeForm({ barangayId }: { barangayId: string }) {
   const router = useRouter();
@@ -144,8 +145,9 @@ export function DocumentTypeForm({ barangayId }: { barangayId: string }) {
         <button
           type="submit"
           disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
-          {submitting ? 'Adding…' : 'Add Document Type'}
+          className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+          aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Document Type</LoadingButtonContent>
         </button>
       </div>
     </form>

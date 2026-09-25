@@ -8,6 +8,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type FaqArticle = Tables<'faq_articles'>;
 
@@ -232,8 +233,9 @@ export function FaqRow({ article }: { article: FaqArticle }) {
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-              {submitting ? 'Saving…' : 'Save Changes'}
+              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              aria-busy={submitting}>
+              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
             </button>
             <button
               type="button"

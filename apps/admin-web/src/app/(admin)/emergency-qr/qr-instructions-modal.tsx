@@ -8,6 +8,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/ui/toast';
 import { emergencyQrContentSchema } from '@barangayan/shared';
 import type { EmergencyQrContent, Json, QrStepItem, Tables } from '@barangayan/shared';
+import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 type QrInstructionRow = Tables<'emergency_qr_content'>;
 
@@ -288,8 +289,9 @@ export function QrInstructionsModal({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-              {submitting ? 'Saving…' : 'Save'}
+              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              aria-busy={submitting}>
+              <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save</LoadingButtonContent>
             </button>
             <button
               type="button"

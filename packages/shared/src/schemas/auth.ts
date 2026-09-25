@@ -53,13 +53,11 @@ export const registerSchema = z
       .string()
       .min(1, 'Email is required')
       .regex(EMAIL_REGEX, 'Enter a valid email address'),
-    // Home Address split into structured parts — "Barangay" is deliberately not one of
-    // these fields: it's already profiles.barangay_id (assigned automatically at
-    // registration, AGENTS.md §0), so the UI displays barangays.name read-only instead
-    // of collecting a second, potentially-inconsistent value.
+    // Home Address fields collected during registration. "Barangay" is deliberately
+    // not one of these fields: it's already profiles.barangay_id (assigned
+    // automatically at registration), so the UI displays barangays.name read-only.
     houseNo: z.string().min(1, 'House No. is required'),
     street: z.string().min(1, 'Street is required'),
-    city: z.string().min(1, 'City is required'),
     employmentStatus: z.enum(EMPLOYMENT_STATUSES, { errorMap: () => ({ message: 'Select employment status' }) }),
     // Always optional, per spec — the UI only *shows* this field for Employed/
     // Self-Employed (see EMPLOYMENT_STATUSES_WITH_OCCUPATION), but never requires it.

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { Spinner } from '@/components/loading/spinner';
 
 interface IncidentActionsProps {
   incidentId: string;
@@ -115,48 +116,57 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {step && (
-        <button
-          onClick={() => setStatus(step.next, `Incident marked as ${step.next.replace('_', ' ')}.`)}
-          disabled={busy}
-          className={`${btnClass} ${step.color}`}>
-          {step.label}
-        </button>
-      )}
-
-      {CAN_MARK_UNRESOLVED.has(status) && (
-        <button
-          onClick={() => setStatus('unresolved', 'Incident marked as unresolved.')}
-          disabled={busy}
-          className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-          Mark Unresolved
-        </button>
-      )}
-
-      {!showDeleteConfirm ? (
-        <button
-          onClick={() => setShowDeleteConfirm(true)}
-          disabled={busy}
-          className={`${btnClass} bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300`}>
-          Remove
-        </button>
-      ) : (
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-red-600 dark:text-red-400">Remove this incident?</span>
+    <>
+      <div aria-busy={busy} className="flex flex-wrap items-center gap-2">
+        {step && (
           <button
-            onClick={softDelete}
+            onClick={() => setStatus(step.next, `Incident marked as ${step.next.replace('_', ' ')}.`)}
             disabled={busy}
-            className={`${btnClass} bg-red-600 text-white`}>
-            Confirm
+            className={`${btnClass} ${step.color}`}>
+            {step.label}
           </button>
+        )}
+
+        {CAN_MARK_UNRESOLVED.has(status) && (
           <button
-            onClick={() => setShowDeleteConfirm(false)}
-            className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
-            Cancel
+            onClick={() => setStatus('unresolved', 'Incident marked as unresolved.')}
+            disabled={busy}
+            className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
+            Mark Unresolved
           </button>
-        </div>
-      )}
-    </div>
+        )}
+
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            disabled={busy}
+            className={`${btnClass} bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300`}>
+            Remove
+          </button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-red-600 dark:text-red-400">Remove this incident?</span>
+            <button
+              onClick={softDelete}
+              disabled={busy}
+              className={`${btnClass} bg-red-600 text-white`}>
+              Confirm
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+      <p
+        aria-live="polite"
+        aria-atomic="true"
+        role="status"
+        className={`mt-2 items-center gap-2 text-xs text-zinc-500 ${busy ? 'inline-flex' : 'sr-only'}`}>
+        {busy ? <><Spinner size="compact" /> Updating incident…</> : ''}
+      </p>
+    </>
   );
 }
