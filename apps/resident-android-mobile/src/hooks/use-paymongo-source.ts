@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
 
-export type PaymentStatus = 'idle' | 'loading' | 'pending' | 'paid' | 'expired' | 'cancelled' | 'error';
+export type PaymentStatus = 'idle' | 'loading' | 'pending' | 'paid' | 'already_paid' | 'expired' | 'cancelled' | 'error';
 
 export interface PaymongoSource {
   paymentId: string;
@@ -54,6 +54,14 @@ export function usePaymongoSource(requestId: string) {
       .invoke('create-payment-source', { body: { requestId } })
       .then(async ({ data, error }) => {
         if (cancelled) return;
+
+        // The server may find that this request was already settled before this
+        // screen was reopened. Keep it distinct from a payment settled on this visit
+        // so the UI can return to the request instead of creating a second receipt.
+        if (!error && data?.status === 'paid') {
+          setStatus('already_paid');
+          return;
+        }
 
         if (error) {
           // The Edge Function returns { error: "<reason>" } with a non-2xx status, which

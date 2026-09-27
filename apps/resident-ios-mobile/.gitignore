@@ -1,0 +1,7 @@
+ios/
+android/
+.expo/
+dist/
+coverage/
+.env
+.env.*.local

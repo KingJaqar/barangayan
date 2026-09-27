@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       - run: npm ci
       - name: Lint web
@@ -33,5 +33,13 @@ jobs:
         run: npm run build --workspace=@barangayan/resident-web
       - name: Typecheck mobile
         run: npx tsc --noEmit --project apps/resident-android-mobile/tsconfig.json
+      - name: Lint resident iOS
+        run: npm run lint --workspace=@barangayan/resident-ios
+      - name: Typecheck resident iOS
+        run: npm run typecheck --workspace=@barangayan/resident-ios
+      - name: Test resident iOS
+        run: npm test --workspace=@barangayan/resident-ios
+      - name: Export resident iOS bundle
+        run: npm run export:ios --workspace=@barangayan/resident-ios
       - name: Test shared
         run: npm test --workspace=@barangayan/shared --if-present

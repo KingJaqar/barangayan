@@ -1,0 +1,21 @@
+{
+  "id": "dde9ca08",
+  "baseDir": "C:\\Users\\User\\barangayan",
+  "name": "is aider free ?",
+  "archived": false,
+  "aiderTotalCost": 0,
+  "agentTotalCost": 0,
+  "mainModel": "",
+  "currentMode": "agent",
+  "weakModelLocked": false,
+  "parentId": null,
+  "workingMode": "local",
+  "agentProfileId": "default",
+  "createdAt": "2026-09-26T05:34:56.009Z",
+  "updatedAt": "2026-09-26T05:37:24.860Z",
+  "startedAt": "2026-09-26T05:37:24.082Z",
+  "state": "INTERRUPTED",
+  "provider": "ollama",
+  "model": "qwen2.5-coder:14",
+  "completedAt": "2026-09-26T05:34:57.264Z"
+}

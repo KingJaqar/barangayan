@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "contextMessages": [
+    {
+      "id": "3250ada4-4793-4ad1-a370-cf335f6e5d4b",
+      "role": "user",
+      "content": "is aider free ?",
+      "promptContext": {
+        "id": "3250ada4-4793-4ad1-a370-cf335f6e5d4b"
+      },
+      "timestamp": 1790400897254
+    },
+    {
+      "id": "1afc8eb6-8655-41fc-ab3a-142f031f97c0",
+      "role": "user",
+      "content": "hi",
+      "promptContext": {
+        "id": "1afc8eb6-8655-41fc-ab3a-142f031f97c0"
+      },
+      "timestamp": 1790401044812
+    }
+  ],
+  "contextFiles": []
+}

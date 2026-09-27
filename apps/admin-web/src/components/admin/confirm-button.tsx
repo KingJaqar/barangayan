@@ -29,7 +29,7 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
 
   if (confirming) {
     return (
-      <span className="inline-flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+      <span className="inline-flex max-w-full flex-wrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
         <button
           disabled={busy}
           aria-busy={busy}
@@ -39,15 +39,15 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
             setBusy(false);
             setConfirming(false);
           }}
-          className="rounded-full bg-red-600 px-2 py-1 text-xs font-semibold text-white disabled:opacity-50">
-          <LoadingButtonContent pending={busy} pendingLabel="Working…" spinnerSize="compact">
+          className="min-w-0 max-w-full rounded-full bg-red-600 px-2 py-1 text-xs font-semibold text-white disabled:opacity-50">
+          <LoadingButtonContent pending={busy} pendingLabel="Working…" spinnerSize="compact" wrapText>
             {confirmLabel}
           </LoadingButtonContent>
         </button>
         <button
           disabled={busy}
           onClick={() => setConfirming(false)}
-          className="rounded-full bg-zinc-200 px-2 py-1 text-xs font-semibold dark:bg-zinc-700">
+          className="shrink-0 rounded-full bg-zinc-200 px-2 py-1 text-xs font-semibold dark:bg-zinc-700">
           Cancel
         </button>
       </span>

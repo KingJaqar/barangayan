@@ -116,6 +116,12 @@ export default function QrPhPaymentScreen() {
     if (status === 'paid') setShowSuccessModal(true);
   }, [status]);
 
+  useEffect(() => {
+    if (status === 'already_paid') {
+      router.replace(`/services/requests/${requestId}`);
+    }
+  }, [status, requestId, router]);
+
   function handleConfirmSuccess() {
     if (!request) return;
     setShowSuccessModal(false);

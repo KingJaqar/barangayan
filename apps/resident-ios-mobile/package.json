@@ -1,0 +1,40 @@
+{
+  "name": "@barangayan/resident-ios",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "expo start --ios",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "export:ios": "expo export --platform ios",
+    "check:release": "node scripts/check-release.cjs"
+  },
+  "dependencies": {
+    "@barangayan/shared": "*",
+    "@expo/ui": "57.0.9",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@supabase/supabase-js": "2.112.1",
+    "expo": "57.0.10",
+    "expo-crypto": "~57.0.1",
+    "expo-router": "57.0.10",
+    "expo-secure-store": "~57.0.1",
+    "expo-splash-screen": "~57.0.5",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "eslint": "9.39.5",
+    "eslint-config-expo": "~57.0.1",
+    "typescript": "~6.0.3",
+    "vitest": "3.2.7"
+  }
+}

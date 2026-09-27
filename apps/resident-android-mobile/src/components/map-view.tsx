@@ -257,7 +257,13 @@ const LEAFLET_HTML = `
               [m.position.lat, m.position.lng],
               { icon: icon }
             );
-            if (m.label) marker.bindPopup(m.label);
+            if (m.label) {
+              // Leaflet treats string popup content as HTML. Incident titles are
+              // resident-controlled, so pass a text node container instead.
+              var popupContent = document.createElement('div');
+              popupContent.textContent = String(m.label);
+              marker.bindPopup(popupContent);
+            }
             marker.on('click', function () {
               postToRN({ type: 'MARKER_TAPPED', payload: { markerId: m.id } });
             });

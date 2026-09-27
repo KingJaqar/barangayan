@@ -73,7 +73,7 @@ function DashboardPageSkeleton() {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {Array.from({ length: 2 }, (_, index) => (
           <div key={index} aria-hidden="true" className="space-y-3">
             <Skeleton className="h-4 w-36" />
@@ -180,7 +180,7 @@ function DetailPageSkeleton() {
           {[0, 1, 2, 3].map((item) => <Skeleton key={item} className="h-9 w-28 rounded-full" />)}
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-2 gap-4">
         {[0, 1].map((item) => (
           <div key={item} aria-hidden="true" className="space-y-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
             <Skeleton className="h-4 w-24" />
