@@ -1,3 +1,4 @@
+import { ResidentActionGate } from '@/components/resident-action-gate';
 /**
  * Applicant Registration — Module 10.
  *
@@ -278,6 +279,10 @@ type ApplicantSelection =
 // ─── Main screen ─────────────────────────────────────────────────────────────
 
 export default function ApplicantRegistrationScreen() {
+  return <ResidentActionGate><ApplicantRegistrationScreenContent /></ResidentActionGate>;
+}
+
+function ApplicantRegistrationScreenContent() {
   const theme = useTheme();
   // Shadows the module-level fallback — see the live-accent note at the top of this file.
   const PRIMARY_GREEN = theme.primary;

@@ -1,0 +1,12 @@
+{
+  "exitCode": 0,
+  "grantsPassed": true,
+  "errorCount": 0,
+  "warnings": {
+    "auth_rls_initplan": 24,
+    "multiple_permissive_policies": 29,
+    "function_search_path_mutable": 8
+  },
+  "newTableFindings": [],
+  "checkedAt": "2026-10-01T12:47:00.082Z"
+}

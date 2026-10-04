@@ -20,7 +20,7 @@ export default async function DocumentsPage() {
 
   const { data: documentTypes } = await supabase
     .from('document_types')
-    .select('id, name, description, fee_centavos, processing_target_hours')
+    .select('*')
     .eq('is_active', true)
     .order('name');
 

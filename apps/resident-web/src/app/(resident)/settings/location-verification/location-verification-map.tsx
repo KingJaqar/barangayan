@@ -14,7 +14,7 @@ import { isPointInPolygon } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import L from 'leaflet';
 import { useEffect, useRef } from 'react';
-import { GeoJSON, MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { CircleMarker, GeoJSON, MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 
 const DEFAULT_ZOOM = 17;
 const DEFAULT_CENTER: LatLng = { lat: 14.680291, lng: 121.1187445 }; // Ampid I, San Mateo
@@ -34,11 +34,13 @@ const pickerIcon = L.divIcon({
  * so ViewSync doesn't also re-fly to a spot the map is already centered on. */
 function ClickHandler({
   boundary,
+  advisory,
   onMove,
   onRejected,
   skipNextFlyRef,
 }: {
-  boundary: Polygon | MultiPolygon;
+  boundary: Polygon | MultiPolygon | null;
+  advisory: boolean;
   onMove: (point: LatLng) => void;
   onRejected: () => void;
   skipNextFlyRef: React.MutableRefObject<boolean>;
@@ -46,7 +48,7 @@ function ClickHandler({
   useMapEvents({
     click(e) {
       const point = { lat: e.latlng.lat, lng: e.latlng.lng };
-      if (!isPointInPolygon(point, boundary)) {
+      if (!advisory && (!boundary || !isPointInPolygon(point, boundary))) {
         onRejected();
         return;
       }
@@ -83,34 +85,44 @@ function ViewSync({ position, skipNextFlyRef }: { position: LatLng | null; skipN
 
 /** Fits the map to the barangay boundary once on mount, unless a starting position was
  * already supplied (previous save / geolocation fix) — then it centers there instead. */
-function InitialView({ boundary, position }: { boundary: Polygon | MultiPolygon; position: LatLng | null }) {
+function InitialView({ boundary, position }: { boundary: Polygon | MultiPolygon | null; position: LatLng | null }) {
   const map = useMap();
   const fittedRef = useRef(false);
 
   useEffect(() => {
     if (fittedRef.current) return;
+    if (!position && !boundary) return;
     fittedRef.current = true;
 
     if (position) {
       map.setView([position.lat, position.lng], DEFAULT_ZOOM);
-    } else {
+    } else if (boundary) {
       map.fitBounds(L.geoJSON(boundary).getBounds().pad(0.1));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map]);
+  }, [map, boundary, position]);
 
   return null;
 }
 
 export interface LocationVerificationMapProps {
   position: LatLng | null;
-  boundary: Polygon | MultiPolygon;
+  boundary: Polygon | MultiPolygon | null;
+  advisory?: boolean;
+  gps?: LatLng | null;
+  onMapError?: () => void;
   onPositionChange: (point: LatLng) => void;
   onRejected: () => void;
 }
 
-export function LocationVerificationMap({ position, boundary, onPositionChange, onRejected }: LocationVerificationMapProps) {
+function FitBoundary({ boundary }: { boundary: Polygon | MultiPolygon | null }) {
+  const map = useMap();
+  return <button type="button" className="absolute right-16 top-3 z-[500] rounded bg-white px-3 py-2 text-black" disabled={!boundary} onClick={() => { if (boundary) map.fitBounds(L.geoJSON(boundary).getBounds().pad(0.1)); }}>Fit Boundary</button>;
+}
+
+export function LocationVerificationMap({ position, boundary, onPositionChange, onRejected, advisory = false, gps = null, onMapError }: LocationVerificationMapProps) {
   const skipNextFlyRef = useRef(false);
+  const gpsFlyRef = useRef(false);
 
   return (
     <MapContainer
@@ -122,13 +134,17 @@ export function LocationVerificationMap({ position, boundary, onPositionChange, 
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         maxZoom={19}
+        eventHandlers={{ tileerror: () => onMapError?.() }}
       />
 
       <InitialView boundary={boundary} position={position} />
       <ViewSync position={position} skipNextFlyRef={skipNextFlyRef} />
-      <ClickHandler boundary={boundary} onMove={onPositionChange} onRejected={onRejected} skipNextFlyRef={skipNextFlyRef} />
+      <ViewSync position={gps} skipNextFlyRef={gpsFlyRef} />
+      <ClickHandler boundary={boundary} advisory={advisory} onMove={onPositionChange} onRejected={onRejected} skipNextFlyRef={skipNextFlyRef} />
+      {advisory && <FitBoundary boundary={boundary} />}
 
-      <GeoJSON data={boundary} style={{ color: '#DC2626', weight: 2, opacity: 0.7, fillColor: '#DC2626', fillOpacity: 0.03 }} />
+      {boundary && <GeoJSON data={boundary} style={{ color: '#DC2626', weight: 2, opacity: 0.7, fillColor: '#DC2626', fillOpacity: 0.08 }} />}
+      {gps && <CircleMarker center={[gps.lat, gps.lng]} radius={7} pathOptions={{ color: '#2563eb', fillOpacity: 0.8 }}><Popup>GPS observation</Popup></CircleMarker>}
 
       {position ? (
         <Marker
@@ -140,7 +156,7 @@ export function LocationVerificationMap({ position, boundary, onPositionChange, 
               const marker = e.target as L.Marker;
               const latlng = marker.getLatLng();
               const point = { lat: latlng.lat, lng: latlng.lng };
-              if (!isPointInPolygon(point, boundary)) {
+              if (!advisory && (!boundary || !isPointInPolygon(point, boundary))) {
                 // Snap the pin back — the boundary is a hard constraint here (unlike the
                 // Incident Reports picker's visual-only line).
                 marker.setLatLng([position.lat, position.lng]);

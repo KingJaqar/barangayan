@@ -1,8 +1,14 @@
+import { safeResidentRedirect } from '@barangayan/shared';
+import { GoogleButton } from '@/components/google-button';
+import { RegistrationMap } from '@/components/registration-map';
 import {
   EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
-  isPointInPolygon,
+  profileCompletionSchema,
+  serviceFoundationOperations,
+  registrationLocality,
+  residentNamePrefill,
   MOBILE_NUMBER_REGEX,
   NAME_REGEX,
   PASSWORD_COMPLEXITY_REGEX,
@@ -12,10 +18,9 @@ import {
   type Sex,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -26,6 +31,7 @@ import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
@@ -184,11 +190,15 @@ function ChoiceChips<T extends string>({
   );
 }
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ completingProfile = false }: { completingProfile?: boolean }) {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { setRegistering } = useAuth();
+  const { setRegistering, refreshCompletion, logout } = useAuth();
+  const { refetch: refreshProfile } = useProfile();
+  const completionParams = useLocalSearchParams<{ completing?: string; next?: string }>();
+  const completing = completionParams.completing === "1" || completingProfile;
+  const submitting = useRef(false);
 
   // Full Name split into structured parts (Register/Profile field-split) — see
   // registerSchema in @barangayan/shared for the required/optional breakdown.
@@ -211,16 +221,10 @@ export default function RegisterScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-  // Looked up, never hardcoded (AGENTS.md §0) — auto-selects when there's exactly one
-  // barangay (true today); a real picker only matters once a second barangay exists.
-  const [barangay, setBarangay] = useState<{ id: string; name: string; boundary: Polygon | MultiPolygon | null } | null>(null);
-  const [locationAllowed, setLocationAllowed] = useState(false);
-  const [locationChecking, setLocationChecking] = useState(false);
-  // Point-in-polygon result, sent as signup metadata (0075) for admin review — a soft
-  // advisory flag only, per the project paper. `verified` stays null (not false) when
-  // the check couldn't run at all (no boundary configured / permission denied / GPS
-  // unavailable) so an inconclusive check is never mistaken for "outside the boundary."
-  const [locationResult, setLocationResult] = useState<{ verified: boolean | null; lat: number; lng: number } | null>(null);
+  const [barangay, setBarangay] = useState<{ id: string; name: string; city: string; province: string; boundary: Polygon | MultiPolygon | null } | null>(null);
+  const [localityError, setLocalityError] = useState<string | null>(null);
+  const [localityAttempt, setLocalityAttempt] = useState(0);
+  const [registrationLocation, setRegistrationLocation] = useState<{ gps: { lat: number; lng: number } | null; home: { lat: number; lng: number } | null }>({ gps: null, home: null });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -236,45 +240,31 @@ export default function RegisterScreen() {
     fieldErrors.confirmPassword === "Passwords don't match" ? undefined : fieldErrors.confirmPassword;
 
   useEffect(() => {
-    supabase
-      .from('barangays')
-      .select('id, name, boundary')
-      .limit(1)
-      .then(({ data }) => {
-        if (data && data[0]) {
-          setBarangay(data[0] as unknown as { id: string; name: string; boundary: Polygon | MultiPolygon | null });
-        }
-      });
-  }, []);
-
-  // Real point-in-polygon geofencing (Module 3), replacing the previous stand-in that
-  // just flipped local state. Soft check only — never blocks registration (see the
-  // locationResult state comment and 0075's column comments for why).
-  async function handleVerifyLocation() {
-    setLocationChecking(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        // Permission denied — allow registration to proceed unflagged (inconclusive,
-        // not "outside"); this mirrors the soft-check guardrail.
-        setLocationAllowed(true);
-        setLocationResult(null);
-        return;
+    let active = true;
+    const client = supabase;
+    void registrationLocality(client).then(data => {
+      if (active) { setBarangay({ ...data, boundary: data.boundary as Polygon | MultiPolygon | null }); setLocalityError(null); }
+    }).catch(cause => { if (active) setLocalityError(cause.message); });
+    if (completing) void client.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user || !active) return;
+      const { data: profile } = await client.from('profiles').select('*').eq('id', user.id).maybeSingle();
+      if (!active) return;
+      const names = residentNamePrefill(user.user_metadata, profile);
+      setFirstName(current => current || names.firstName);
+      setLastName(current => current || names.lastName);
+      setEmail(user.email ?? '');
+      if (profile) {
+        setMiddleName(profile.middle_name ?? ''); setSuffix(profile.suffix ?? '');
+        setHouseNo(profile.house_no ?? ''); setStreet(profile.street ?? ''); setMobileNumber(profile.mobile_number ?? '');
+        setSex(profile.sex as Sex | null); setEmploymentStatus(profile.employment_status as EmploymentStatus | null);
+        setOccupation(profile.occupation ?? ''); setBirthDateIso(profile.birth_date);
       }
-      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      const verified = barangay?.boundary ? isPointInPolygon(point, barangay.boundary) : null;
-      setLocationResult({ verified, lat: point.lat, lng: point.lng });
-      setLocationAllowed(true);
-    } catch {
-      setLocationAllowed(true);
-      setLocationResult(null);
-    } finally {
-      setLocationChecking(false);
-    }
-  }
+    }).catch(() => { if (active) setError('Unable to load your profile. Check your connection and retry.'); });
+    return () => { active = false; };
+  }, [completing, localityAttempt]);
 
   async function handleSubmit() {
+    if (submitting.current) return;
     setError(null);
     setFieldErrors({});
 
@@ -283,7 +273,7 @@ export default function RegisterScreen() {
       return;
     }
 
-    const result = registerSchema.safeParse({
+    const input = {
       firstName,
       lastName,
       middleName: middleName || undefined,
@@ -299,21 +289,27 @@ export default function RegisterScreen() {
       password,
       confirmPassword,
       barangayId: barangay.id,
-    });
+    };
+    const { email: ignoredEmail, password: ignoredPassword, confirmPassword: ignoredConfirm, barangayId: ignoredBarangay, ...profileInput } = input;
+    void ignoredEmail; void ignoredPassword; void ignoredConfirm; void ignoredBarangay;
+    const result = registerSchema.safeParse(input);
+    const profileResult = profileCompletionSchema.safeParse(profileInput);
+    const validation = completing ? profileResult : result;
 
-    if (!result.success) {
+    if (!validation.success) {
       const errors: Record<string, string> = {};
-      for (const issue of result.error.issues) {
+      for (const issue of validation.error.issues) {
         errors[String(issue.path[0])] = issue.message;
       }
       setFieldErrors(errors);
       return;
     }
 
+    submitting.current = true;
     setLoading(true);
     // Suppress Stack.Protected's auto-redirect into (app) for the duration of the signup —
     // see the isRegistering doc comment in use-auth.tsx for why this is needed.
-    setRegistering(true);
+    if (!completing) setRegistering(true);
 
     // Profile fields travel as signup metadata so the handle_new_user() database
     // trigger can create the profiles row atomically with the auth.users row —
@@ -325,6 +321,14 @@ export default function RegisterScreen() {
     // fields below.
     let signUpSucceeded = false;
     try {
+      if (completing) {
+        if (!profileResult.success) return;
+        const { error: completionError } = await serviceFoundationOperations(supabase).completeProfile({ ...profileResult.data, location: registrationLocation });
+        if (completionError) { setError(completionError.message); return; }
+        refreshProfile(); await refreshCompletion(); router.replace(safeResidentRedirect(completionParams.next ?? null) as Href);
+        return;
+      }
+      if (!result.success) return;
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: result.data.email,
         password: result.data.password,
@@ -343,9 +347,9 @@ export default function RegisterScreen() {
             birth_date: result.data.birthDate ?? null,
             barangay_id: barangay.id,
             // Soft geofencing flag (0075) — read by handle_new_user(), never blocks signup.
-            location_verified: locationResult?.verified ?? null,
-            registration_lat: locationResult?.lat ?? null,
-            registration_lng: locationResult?.lng ?? null,
+            registration_home: registrationLocation.home,
+            registration_gps: registrationLocation.gps,
+
           },
         },
       });
@@ -376,14 +380,17 @@ export default function RegisterScreen() {
         console.warn('Local sign-out after registration returned an error:', signOutError.message);
       }
       signUpSucceeded = true;
+    } catch {
+      setError("Could not save your account. Check your connection and retry.");
     } finally {
+      submitting.current = false;
       setLoading(false);
       // Session is signed back out (or was never established) by this point, so it's
       // safe to let Stack.Protected's normal guard logic resume.
-      setRegistering(false);
+      if (!completing) setRegistering(false);
       // Only show the success modal on the success path. Error paths set an error
       // message and stay on this screen so the resident can correct and retry.
-      if (signUpSucceeded) {
+      if (signUpSucceeded && result.success) {
         setSuccessfulRegistrationEmail(result.data.email);
         setShowSuccessModal(true);
       }
@@ -405,7 +412,7 @@ export default function RegisterScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <AuthHeader title="Create Account" onBack={() => router.replace('/(auth)/auth-choice')} />
+        <AuthHeader title={completing ? 'Complete Profile' : 'Create Account'} onBack={() => { if (completing) router.replace('/home'); else router.replace('/(auth)/auth-choice'); }} />
 
         <Modal
           transparent
@@ -544,6 +551,7 @@ export default function RegisterScreen() {
             />
             <TextField
               label="Email Address"
+              editable={!completing}
               required
               autoCapitalize="none"
               keyboardType="email-address"
@@ -578,6 +586,8 @@ export default function RegisterScreen() {
             </View>
           </FormSection>
 
+          <TextField label="City" value={barangay?.city ?? ''} editable={false} />
+          <TextField label="Province" value={barangay?.province ?? ''} editable={false} />
           <FormSection icon="briefcase-outline" title="Employment">
             <View style={styles.choiceField}>
               <ThemedText type="small">
@@ -605,7 +615,7 @@ export default function RegisterScreen() {
             ) : null}
           </FormSection>
 
-          <FormSection icon="lock-closed-outline" title="Account Security">
+          {!completing && <FormSection icon="lock-closed-outline" title="Account Security">
             <TextField
               label="Password"
               required
@@ -646,35 +656,12 @@ export default function RegisterScreen() {
                 </ThemedText>
               </View>
             ) : null}
-          </FormSection>
+          </FormSection>}
 
-          {/* Real point-in-polygon geofencing (Module 3) against the barangay's boundary
-              polygon — a soft, preliminary check per the project paper: it never blocks
-              registration, it only flags the account for admin review when the device's
-              reported location falls outside the boundary (see handleVerifyLocation). */}
-          <FormSection icon="location-outline" title="Location Verification">
-            <ThemedText type="small" themeColor="textSecondary">
-              This preliminary check ensures you reside within the serviced municipality.
-            </ThemedText>
-            <PrimaryButton
-              label={
-                locationChecking
-                  ? 'Checking…'
-                  : locationAllowed
-                    ? 'Location Access Allowed ✓'
-                    : 'Allow Location Access'
-              }
-              variant="secondary"
-              disabled={locationChecking}
-              onPress={handleVerifyLocation}
-            />
-            {locationResult?.verified === false ? (
-              <ThemedText type="small" themeColor="accentRed">
-                Your device's location looks outside the barangay boundary. You can still register — the barangay may review this.
-              </ThemedText>
-            ) : null}
-          </FormSection>
-
+          <RegistrationMap boundary={barangay?.boundary ?? null} onConfirm={setRegistrationLocation} />
+          {localityError && <><ThemedText themeColor="accentRed">{localityError}</ThemedText><PrimaryButton label="Retry locality" onPress={() => setLocalityAttempt(value => value + 1)} /></>}
+          {completing && <PrimaryButton label="Skip for now — browse information" variant="secondary" onPress={() => router.replace('/home')} />}
+          {!completing && <GoogleButton label="Sign up with Google" />}
           {error ? (
             <ThemedText type="small" themeColor="accentRed" style={styles.formError}>
               {error}
@@ -682,7 +669,8 @@ export default function RegisterScreen() {
           ) : null}
 
           <View style={styles.submitActions}>
-            <PrimaryButton label="Create Account" loading={loading} onPress={handleSubmit} />
+            {completing && <PrimaryButton label="Sign out" variant="secondary" onPress={() => { void logout(); }} />}
+            <PrimaryButton label={completing ? "Complete Profile" : "Create Account"} loading={loading} onPress={handleSubmit} />
             <View style={styles.footerRow}>
               <ThemedText themeColor="textSecondary" style={styles.footerText}>
                 Already have an account?{' '}

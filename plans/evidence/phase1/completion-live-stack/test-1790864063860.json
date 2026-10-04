@@ -1,0 +1,10 @@
+{
+  "command": "test",
+  "startedAt": "2026-10-01T14:13:43.391Z",
+  "finishedAt": "2026-10-01T14:14:23.861Z",
+  "exitCode": 1,
+  "passed": false,
+  "log": "completion-live-stack/test-1790864063860.log",
+  "appliedMigrations": [],
+  "assertions": 37
+}

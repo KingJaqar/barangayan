@@ -1,0 +1,40 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-03T15:26:26.239Z",
+      "finishedAt": "2026-10-03T15:26:32.520Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T15:26:32.609Z",
+      "finishedAt": "2026-10-03T15:27:08.981Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    },
+    {
+      "id": "admin-web-build",
+      "directory": "apps/admin-web",
+      "command": "npm run build",
+      "startedAt": "2026-10-03T15:27:09.069Z",
+      "finishedAt": "2026-10-03T15:27:40.931Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-build.log"
+    }
+  ]
+}

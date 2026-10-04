@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "providerMode": "stubbed PayMongo only; real local Auth/DB",
+  "assertions": [
+    "Pending assessment makes no provider call",
+    "Provider failure is visible and recoverable",
+    "Failed provider attempt leaves an auditable ledger entry",
+    "Any existing payment record freezes assessment",
+    "Outgoing provider charge uses confirmed request amount and PHP",
+    "Concurrent QR creation returns one charge or retryable reservation conflict",
+    "Retry resumes confirmed amount",
+    "Reopening QR resumes same ledger without another provider charge",
+    "One active provider payment with immutable amount",
+    "Mismatched provider amount cannot settle",
+    "Concurrent poll settlement is safe",
+    "Successful provider poll records exact payment",
+    "Payment settlement reaches request consumers",
+    "Signed webhook still enforces recorded amount",
+    "Duplicate signed payment webhooks are idempotent",
+    "Unsigned webhook denied",
+    "Already-paid retry never creates another charge"
+  ]
+}

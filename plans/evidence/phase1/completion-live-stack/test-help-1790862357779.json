@@ -1,0 +1,9 @@
+{
+  "command": "test-help",
+  "startedAt": "2026-10-01T13:45:57.046Z",
+  "finishedAt": "2026-10-01T13:45:57.780Z",
+  "exitCode": 0,
+  "passed": true,
+  "log": "completion-live-stack/test-help-1790862357779.log",
+  "appliedMigrations": []
+}

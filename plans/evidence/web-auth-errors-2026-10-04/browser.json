@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "assertions": [
+    "Expected missing-RPC error keeps public home SSR successful",
+    "Setup failure is surfaced without falsely claiming a save",
+    "Public browsing displays recoverable status",
+    "All before-interactive theme scripts remain registered",
+    "Saved theme, accent and font apply during rendering",
+    "Retry invokes actual SDK operation and recovers the profile view",
+    "Successful setup clears the pending notice",
+    "Profile completion still gates report submission",
+    "Completion preserves safe intended report destination",
+    "Recovered names prefill completion",
+    "No observed React script, hydration or browser runtime errors"
+  ],
+  "consoleErrors": []
+}

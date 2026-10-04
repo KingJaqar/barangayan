@@ -1,0 +1,24 @@
+# Phase 2 — Trusted ID evidence and locality
+
+Verdict: **complete**. Phase 2's gate is verified before starting Phase 3. No production changes or deployment.
+
+| Assigned requirement / gate | Implemented behavior | Evidence |
+|---|---|---|
+| Approval identifies reviewed evidence | Immutable front/back version publication on web and Android; administrator decisions bind to the displayed version, with actor/time/reason; direct status/type editing removed | 146 native database assertions, 71 actual HTTP assertions; browser approval screenshot and observed resident Verified ID state |
+| Replacement cannot retain approval | Replacing either side or changing only the type creates a new version and clears current approval; identical publication retries reuse the version; stale review fails | Real shared-helper/API type-only replacement and retries; browser replacement returns Pending Verification |
+| Valid legacy approvals preserved / inconsistencies flagged | Import owned, existing, complete image pairs; retain original paths and protect them; record legacy origin without inventing original reviewer/time; flag missing evidence for repair | Empty and representative migration rehearsals; historical approval/pending/repair assertions and seven-table reconciliation |
+| Approved objects protected | Restrictive authenticated update/delete policies protect both imported paths and new versions; private owner/same-tenant staff reads | SQL denial; actual Storage overwrite/delete attempts leave original bytes intact; same-tenant resident and foreign-tenant reads denied |
+| Province, fixed locality, safe backfill | Server defaults from locality configuration; read-only Ampid 1 / San Mateo / Rizal profile controls; direct locality and free-text bypass denial; legacy free text retained without guessing house/street | SQL and HTTP tests; browser readOnly properties and screenshot; other-tenant data unchanged in reconciliation |
+| Account-scoped caching | Versioned per-user Android keys; obsolete shared cache removed; logout/account changes clear cache and discard pending replies; web replies scoped to user; foreground/realtime refresh; stale/offline approval not trusted | Two account-generation tests (110 shared tests total), authenticated profile isolation/logout HTTP checks, actual Android nested profile query, final hook review |
+
+Evidence is under `plans/evidence/phase2/`: `database-rehearsal-4`, native `local/test-1790868161966.*`, latest `http-*/results.json`, `gate-checks`, and `android-repaired`. The final Android check corrects the required placeholder in the unchanged fallback input. Preserve earlier failing logs.
+
+Checks: **110 shared tests pass**; shared, resident web, admin web and Android typechecks pass; all three affected workspace linters pass; both web production builds and Android JavaScript export pass. Diff whitespace review passes. Advisors have **zero errors** and 60 existing warnings (24 RLS evaluation, 29 permissive policies, seven mutable search paths); the previously unconfigured compose function now has a fixed search path.
+
+Browser evidence: fixed locality, pending ID, version-bound administrator review, resident approval, and type-only replacement were exercised against synthetic local Auth/Storage/PostgREST. Screenshots are `profile-locality-pending.png`, `admin-evidence-review.png`, `profile-approved.png`, `profile-replaced-pending.png`. Browser error checks produced no errors.
+
+Consequential decisions: imported approvals explicitly lack historical reviewer/time; their original private objects are retained and locked. Client-staged immutable uploads are retained for safe retry and the existing account-deletion cleanup. Cached demographics may be shown offline, but cached approval cannot authorize a request. Unconfigured resident tenants retain editable city behavior in the principal web and Android profiles.
+
+Corrections verified: restricted baseline launch needed normal filesystem access; historical rehearsal needed the extensions search path and a top-level modifying CTE; the initial free-text guard blocked controlled account deletion, and was corrected without weakening direct-write denial. Reconciliation permits only documented foundation/locality/update-timestamp changes on the configured tenant. All other historical values, requests, payments, applicant numbers and scores remain unchanged.
+
+Original migration 0094, Claude settings, source PDF and main plan hashes remain unchanged. Prior Phase 1 changes remain present. At the Phase 2 gate, no Android device was connected. The subsequent Phase 4 acceptance run verified native profile evidence, missing/pending/failed/approved states, logout and a second account, and loaded-heading focus with TalkBack. See `Phase_4_Resident_Document_Journey_and_Payments.md` for those later native checks and the final Phase 2 regression suite.

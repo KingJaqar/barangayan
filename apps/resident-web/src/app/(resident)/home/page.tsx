@@ -95,7 +95,7 @@ export default async function ResidentHomePage() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Welcome back, {profile!.full_name.split(' ')[0]}</h1>
+        <h1 className="text-2xl font-bold">Welcome back, {profile?.full_name.split(' ')[0] || 'Resident'}</h1>
         <p className="text-sm text-muted-foreground">Request documents, report incidents, and track their status here.</p>
       </div>
 

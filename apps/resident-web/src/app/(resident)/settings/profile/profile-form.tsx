@@ -12,9 +12,8 @@
  *   - Do NOT include email_verification_status / email_verification_requested_at /
  *     email_verified_at in the UPDATE payload — guard_verification_fields trigger
  *     raises if those columns appear, failing the entire update.
- *   - Do NOT set id_verification_status = 'verified' — guard_id_verification_status
- *     raises. Residents may set 'pending' (re-uploading always resets to 'pending') or
- *     leave it untouched.
+ *   - Evidence and verification fields use the version publication/review RPCs.
+ *     Ordinary profile updates leave approval untouched.
  *   - full_name / home_address are DERIVED by the compose_profiles_display_fields
  *     trigger (0081) from the structured columns — never include them in the payload.
  */
@@ -26,6 +25,7 @@ import {
   MOBILE_NUMBER_REGEX,
   NAME_REGEX,
   SEXES,
+  publishIdEvidence,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
@@ -78,6 +78,7 @@ type ProfileFields = Pick<
   | 'house_no'
   | 'street'
   | 'city'
+  | 'province'
   | 'employment_status'
   | 'occupation'
   | 'id_verification_status'
@@ -529,6 +530,13 @@ function IdDocumentSection({
   const [uploadingFront, setUploadingFront] = useState(false);
   const [uploadingBack, setUploadingBack] = useState(false);
   const [saving, setSaving] = useState(false);
+  useEffect(() => {
+    if (window.location.hash === '#upload-valid-id') {
+      const heading = document.getElementById('upload-valid-id');
+      heading?.scrollIntoView({ block: 'start' }); heading?.focus({ preventScroll: true });
+    }
+  }, []);
+  const publication = useRef<{ signature: string; id: string } | null>(null);
   const [enlargedUrl, setEnlargedUrl] = useState<string | null>(null);
   const router = useRouter();
 
@@ -606,13 +614,10 @@ function IdDocumentSection({
     const setUploading = side === 'front' ? setUploadingFront : setUploadingBack;
     setUploading(true);
     const supabase = createSupabaseBrowserClient();
-    const path = `${profileId}/id-${side}.${imageExtension(file.type)}`;
-    // Fixed canonical path per side, upsert:true — re-uploading replaces this side's
-    // photo in place instead of accumulating extra files (mirrors mobile's single-
-    // canonical-path avatar/ID pattern). This only lands the file in Storage — it is
-    // staged locally (draft state) and not written to profiles.id_photo_urls until the
-    // resident clicks Save below, so it can still be undone via the "×" button.
-    const { error: upErr } = await supabase.storage.from('id-documents').upload(path, file, { upsert: true });
+    const path = `${profileId}/versions/${crypto.randomUUID()}/id-${side}.${imageExtension(file.type)}`;
+    // Stage a fresh immutable object. Publication binds both selected sides to a
+    // single version when Save is pressed; undo changes only the local selection.
+    const { error: upErr } = await supabase.storage.from('id-documents').upload(path, file, { upsert: false });
     if (upErr) {
       toast.error(`Upload failed: ${upErr.message}`);
       setUploading(false);
@@ -623,15 +628,12 @@ function IdDocumentSection({
     setUploading(false);
   }
 
-  /** Undoes a staged (not-yet-saved) upload for one side, reverting the draft back to
-   * whatever is actually persisted and best-effort deleting the orphaned Storage object.
-   * Never called for an already-saved photo — the slot only shows "×" while staged. */
+  /** Undo the local selection. Immutable files remain available for safe retries
+   * and the existing owner-scoped account-deletion cleanup. */
   async function handleRemoveStaged(side: 'front' | 'back') {
     const current = side === 'front' ? frontPath : backPath;
     const saved = side === 'front' ? savedFrontPath : savedBackPath;
     if (!current || current === saved) return;
-    const supabase = createSupabaseBrowserClient();
-    await supabase.storage.from('id-documents').remove([current]);
     if (side === 'front') setFrontPath(saved);
     else setBackPath(saved);
   }
@@ -653,20 +655,19 @@ function IdDocumentSection({
     if (saveDisabled || !frontPath || !backPath) return;
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
-    // Reset to 'pending' on any change (guard_id_verification_status trigger allows this
-    // but rejects 'verified' — see §7 write guards note above).
-    const { error } = await supabase
-      .from('profiles')
-      .update({ id_type: nextIdTypeValue, id_photo_urls: [frontPath, backPath], id_verification_status: 'pending' })
-      .eq('id', profileId);
-    setSaving(false);
-    if (error) {
-      toast.error(`Failed to save: ${error.message}`);
+    const signature = JSON.stringify([nextIdTypeValue, frontPath, backPath]);
+    if (publication.current?.signature !== signature) publication.current = { signature, id: crypto.randomUUID() };
+    try {
+      const result = await publishIdEvidence(supabase, { submissionId: publication.current.id, idType: nextIdTypeValue, frontPath, backPath });
+      setFrontPath(result.frontPath); setBackPath(result.backPath);
+      setSavedIdType(nextIdTypeValue); setSavedFrontPath(result.frontPath); setSavedBackPath(result.backPath);
+      publication.current = null;
+    } catch (error) {
+      toast.error(`Failed to save: ${error instanceof Error ? error.message : 'Please retry.'}`);
+      setSaving(false);
       return;
     }
-    setSavedIdType(nextIdTypeValue);
-    setSavedFrontPath(frontPath);
-    setSavedBackPath(backPath);
+    setSaving(false);
     toast.success('ID verification details saved. Your status has been reset to Pending Verification.');
     router.refresh();
   }
@@ -678,7 +679,7 @@ function IdDocumentSection({
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-tint)] text-[var(--accent)]">
             <IdCard size={15} />
           </span>
-          <h3 className="text-sm font-semibold">ID Verification</h3>
+          <h3 id="upload-valid-id" tabIndex={-1} className="scroll-mt-24 text-sm font-semibold">Upload Valid ID</h3>
         </div>
         <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusColor}`}>{statusLabel}</span>
       </div>
@@ -854,7 +855,7 @@ function HouseholdSection({ profileId }: { profileId: string }) {
 
 // ─── Main form ──────────────────────────────────────────────────────────────────
 
-export function ProfileForm({ profile, barangayName }: { profile: ProfileFields; barangayName: string }) {
+export function ProfileForm({ profile, barangayName, fixedLocality = false }: { profile: ProfileFields; barangayName: string; fixedLocality?: boolean }) {
   const router = useRouter();
 
   const [firstName, setFirstName] = useState(profile.first_name ?? '');
@@ -908,7 +909,6 @@ export function ProfileForm({ profile, barangayName }: { profile: ProfileFields;
   const emailStatus = fieldStatus(email, fieldErrors.email, validateEmail);
   const houseNoStatus = fieldStatus(houseNo, fieldErrors.houseNo);
   const streetStatus = fieldStatus(street, fieldErrors.street);
-  const cityStatus = fieldStatus(city, fieldErrors.city);
 
   /** Required-field / format validation, run on every Save Changes attempt. */
   function validateRequiredFields(): Record<string, string> {
@@ -970,7 +970,7 @@ export function ProfileForm({ profile, barangayName }: { profile: ProfileFields;
         email: email.trim() || null,
         house_no: houseNo.trim() || null,
         street: street.trim() || null,
-        city: city.trim() || null,
+        ...(!fixedLocality ? { city: city.trim() || null } : {}),
         employment_status: employmentStatus || null,
         occupation: occupation.trim() || null,
       })
@@ -1135,15 +1135,18 @@ export function ProfileForm({ profile, barangayName }: { profile: ProfileFields;
                 City
                 <RequiredMark />
               </span>
-              <input value={city} onChange={(e) => setCity(e.target.value)} className={inputCls} aria-invalid={!!cityStatus.error} />
-              <FieldStatus {...cityStatus} />
+              <input aria-label="City" value={city} readOnly={fixedLocality} onChange={event => setCity(event.target.value)} className={fixedLocality ? disabledCls : inputCls} />
             </label>
           </div>
 
           {/* Barangay is read-only — assigned at registration, not editable by the resident. */}
           <div className="text-sm">
             <span className={labelCls}>Barangay</span>
-            <input value={barangayName} disabled className={disabledCls} />
+            <input aria-label="Barangay" value={barangayName} readOnly className={disabledCls} />
+          </div>
+          <div className="text-sm">
+            <span className={labelCls}>Province</span>
+            <input aria-label="Province" value={profile.province ?? 'Not configured'} readOnly className={disabledCls} />
           </div>
 
           <hr className="border-black/[0.06] dark:border-white/[0.06]" />

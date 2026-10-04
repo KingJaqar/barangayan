@@ -11,6 +11,7 @@
 
 import { formatDateTime, getSlaFlag } from '@barangayan/shared';
 
+import { AgencySlaStatus } from '@/components/services/agency-sla-status';
 import { StatusPill } from '@/components/shared/status-pill';
 import { RequestDrawer } from './request-drawer';
 import { useState } from 'react';
@@ -23,6 +24,7 @@ interface RequestRow {
   status: string;
   payment_status: string;
   created_at: string;
+  timing_model: string;
   document_types: { name: string; processing_target_hours: number } | null;
 }
 
@@ -80,11 +82,12 @@ export function RequestsList({
                 <p className="text-xs text-muted-foreground">
                   {r.reference_number} · {formatDateTime(r.created_at)}
                 </p>
-                {flag !== 'on_track' && (
+                {r.timing_model !== 'agency_minutes_v1' ? <p className="text-xs text-muted-foreground">Previous timing model</p> : null}
+                {r.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={r.id} compact /> : flag !== 'on_track' ? (
                   <p className={`mt-0.5 text-xs font-medium ${flag === 'overdue' ? 'text-status-error' : 'text-status-warning'}`}>
                     {flag === 'overdue' ? 'Taking longer than usual' : 'Nearing expected completion time'}
                   </p>
-                )}
+                ) : null}
               </div>
               <div className="flex shrink-0 items-center gap-1.5">
                 <StatusPill status={r.payment_status} />

@@ -1,0 +1,13 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\components\services\resident-service-form.tsx
+  58:33  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts
+  94:42  warning  The ref value 'scope.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'scope.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 2 problems (0 errors, 2 warnings)
+

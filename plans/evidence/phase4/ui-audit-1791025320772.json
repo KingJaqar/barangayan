@@ -1,0 +1,195 @@
+{
+  "passed": true,
+  "checkedAt": "2026-10-03T11:02:00.518Z",
+  "journeys": [
+    {
+      "platform": "web",
+      "kind": "business",
+      "requestId": "4c92aa99-0337-4b49-8347-e65571ee3fe9",
+      "status": "completed",
+      "amountCentavos": 12500,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "others",
+      "purposeExplanation": "Additional business permit requirement",
+      "notes": null,
+      "details": {
+        "businessName": "Phase Four Browser Shop",
+        "establishmentAddress": "12 Main Street, Ampid 1",
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": [
+        {
+          "requirement": "dti",
+          "mime": "image/png",
+          "size": 68
+        }
+      ]
+    },
+    {
+      "platform": "web",
+      "kind": "indigency",
+      "requestId": "ebb5efea-d86d-4a15-bb00-4d6bbd2f54e9",
+      "status": "completed",
+      "amountCentavos": 10000,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "medical",
+      "purposeExplanation": null,
+      "notes": null,
+      "details": {
+        "isRenter": true,
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": [
+        {
+          "requirement": "hoa",
+          "mime": "image/png",
+          "size": 68
+        },
+        {
+          "requirement": "lessor",
+          "mime": "application/pdf",
+          "size": 351879
+        }
+      ]
+    },
+    {
+      "platform": "web",
+      "kind": "first_time_job_seeker",
+      "requestId": "f8882737-6b2b-4cc9-846d-987554ccd2a8",
+      "status": "completed",
+      "amountCentavos": 0,
+      "feeState": "waived",
+      "paymentStatus": "waived",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "others",
+      "purposeExplanation": "Pre-employment requirements for first job",
+      "notes": null,
+      "details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": []
+    },
+    {
+      "platform": "web",
+      "kind": "certified_true_copy",
+      "requestId": "1e3d98a8-ffee-4846-9320-281cc64ff01b",
+      "status": "completed",
+      "amountCentavos": 4000,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "legal",
+      "purposeExplanation": null,
+      "notes": null,
+      "details": {
+        "copies": 3,
+        "recordReference": "Web archive reference 2026-04",
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": []
+    },
+    {
+      "platform": "android",
+      "kind": "business",
+      "requestId": "131b0e41-8e14-4139-9f84-60de8f83df37",
+      "status": "completed",
+      "amountCentavos": 12500,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "others",
+      "purposeExplanation": "Android permit renewal for local shop",
+      "notes": null,
+      "details": {
+        "businessName": "Android Corner Store",
+        "establishmentAddress": "12 Main Street Ampid 1",
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": [
+        {
+          "requirement": "dti",
+          "mime": "image/png",
+          "size": 68
+        }
+      ]
+    },
+    {
+      "platform": "android",
+      "kind": "indigency",
+      "requestId": "5f34a903-f827-41fe-bb5b-1897f8919c1a",
+      "status": "completed",
+      "amountCentavos": 10000,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "medical",
+      "purposeExplanation": null,
+      "notes": null,
+      "details": {
+        "isRenter": true,
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": [
+        {
+          "requirement": "hoa",
+          "mime": "image/png",
+          "size": 68
+        },
+        {
+          "requirement": "lessor",
+          "mime": "application/pdf",
+          "size": 351879
+        }
+      ]
+    },
+    {
+      "platform": "android",
+      "kind": "first_time_job_seeker",
+      "requestId": "43c66c35-745d-46be-9c3a-64259e3d2771",
+      "status": "completed",
+      "amountCentavos": 0,
+      "feeState": "waived",
+      "paymentStatus": "waived",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "pre_employment",
+      "purposeExplanation": null,
+      "notes": null,
+      "details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": []
+    },
+    {
+      "platform": "android",
+      "kind": "certified_true_copy",
+      "requestId": "1dd1ebc5-aed8-4398-aa24-634d4363efaa",
+      "status": "completed",
+      "amountCentavos": 4000,
+      "feeState": "assessed",
+      "paymentStatus": "paid",
+      "approvedIdVersion": "fd806049-9834-4c1f-94c6-a6856068baa5",
+      "purpose": "legal",
+      "purposeExplanation": null,
+      "notes": null,
+      "details": {
+        "copies": 3,
+        "recordReference": "Android local record 2026-04",
+        "personalAppearanceAcknowledged": true
+      },
+      "attachments": []
+    }
+  ],
+  "assertions": [
+    "All eight actual UI journeys completed with exactly one paid ledger or a recorded waiver",
+    "CTC copies=3 and confirmed total pages=4 produce ₱40 on both platforms",
+    "Historical requests retain approved version 1 after version 3 publication/approval",
+    "Request submission reuses approved evidence without another ID upload",
+    "Every attached private object remains readable by its owner and below 5 MB"
+  ]
+}

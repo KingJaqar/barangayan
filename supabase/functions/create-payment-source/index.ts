@@ -12,14 +12,13 @@
 // The function name is kept for continuity with the deployed function + mobile caller.
 //
 // S0-2: the fee is never trusted from the client. The caller supplies only `requestId`;
-// the amount and description are derived server-side from document_types.fee_centavos,
-// joined through the service_request. The payments row is inserted with the service_role
+// V2 uses the confirmed request assessment. Legacy charges retain recorded ledger fees
+// or the original request fee snapshot; the catalog is the last compatibility fallback. The payments row is inserted with the service_role
 // key since residents have no INSERT policy on `payments` (migration 0017) — this
 // function is the only writer.
 //
-// Payment is intentionally allowed as soon as the request exists (any status except
-// 'cancelled'/'completed') — no admin review gate. See migration 0064 for why refunds
-// exist: a resident can pay before an admin has looked at the request.
+// V2 requests with pending assessments or waivers cannot create a charge.
+// Eligible legacy requests preserve their supported payment flow.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
@@ -106,7 +105,7 @@ Deno.serve(async (req: Request) => {
   const { data: request, error: requestError } = await supabase
     .from('service_requests')
     .select(
-      'id, barangay_id, resident_id, status, payment_status, payment_method, reference_number, document_type:document_types(name, fee_centavos)',
+      'id, barangay_id, resident_id, status, payment_status, payment_method, reference_number, contract_version, fee_assessment_state, assessed_amount_centavos, legacy_fee_centavos, document_type:document_types(name, fee_centavos)',
     )
     .eq('id', requestId)
     .single();
@@ -153,8 +152,11 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  // No admin-review gate: a resident can pay as soon as the request exists. Only block
-  // terminal states where payment no longer makes sense.
+  // V2 payments require a confirmed positive request amount. Never use a catalog placeholder.
+  if (request.contract_version === 2 && (request.fee_assessment_state !== 'assessed' || request.assessed_amount_centavos === null || request.assessed_amount_centavos <= 0)) {
+    return new Response(JSON.stringify({ error: request.fee_assessment_state === 'pending' ? 'Awaiting fee assessment' : 'No payment required' }), { status: 422, headers: corsHeaders });
+  }
+  // Terminal requests cannot start another payment.
   if (request.status === 'cancelled' || request.status === 'completed') {
     return new Response(JSON.stringify({ error: 'Request is not ready for payment' }), { status: 422, headers: corsHeaders });
   }
@@ -270,7 +272,9 @@ Deno.serve(async (req: Request) => {
     return new Response(JSON.stringify({ error: 'Document type not found' }), { status: 404, headers: corsHeaders });
   }
 
-  const documentFeeCentavos = documentType.fee_centavos;
+  const { data: priorLedger, error: ledgerError } = await supabaseAdmin.from('payments').select('document_fee_centavos, amount_centavos').eq('service_request_id', requestId).order('created_at').limit(1).maybeSingle();
+  if (ledgerError) return new Response(JSON.stringify({ error: 'Could not confirm the request amount. Retry.' }), { status: 500, headers: corsHeaders });
+  const documentFeeCentavos = request.contract_version === 2 ? request.assessed_amount_centavos! : priorLedger?.document_fee_centavos ?? priorLedger?.amount_centavos ?? request.legacy_fee_centavos ?? documentType.fee_centavos;
   const amountCentavos = documentFeeCentavos;
   const description = `${documentType.name} — ${request.reference_number}`;
 

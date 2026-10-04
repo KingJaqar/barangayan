@@ -25,6 +25,7 @@ interface Resident {
 interface DocumentTypeOption {
   id: string;
   name: string;
+  contract_version: number;
 }
 
 function currentDateTimeLocal() {
@@ -141,7 +142,7 @@ function AddRequestForm({
         <span className="mb-1 block font-medium">Document Type</span>
         <select className={inputClass} value={documentTypeId} onChange={(e) => setDocumentTypeId(e.target.value)} required>
           <option value="">Select a document type…</option>
-          {documentTypes.map((d) => (
+          {documentTypes.filter(d => d.contract_version === 1).map((d) => (
             <option key={d.id} value={d.id}>
               {d.name}
             </option>
@@ -347,6 +348,7 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <span className="font-mono text-xs font-medium tabular-nums">#{r.reference_number}</span>,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'text',
         getValue: (r) => r.reference_number,
         onSave: async (r, value) => {
@@ -363,6 +365,7 @@ export function RequestsTable({
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'select',
         options: residents.map((res) => ({ value: res.id, label: res.full_name })),
         getValue: (r) => r.resident_id,
@@ -377,6 +380,7 @@ export function RequestsTable({
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.document_types?.name ?? '—'}</span>,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'select',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (r) => r.document_type_id,
@@ -391,6 +395,7 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <StatusPill status={r.status} />,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'select',
         options: [
           { value: 'submitted', label: 'Submitted' },
@@ -414,6 +419,7 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <StatusPill status={r.payment_status} />,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'select',
         options: [
           { value: 'pending', label: 'Pending' },
@@ -432,6 +438,7 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTime(r.created_at)}</span>,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'datetime',
         getValue: (r) => r.created_at,
         onSave: (r, value) => updateField(r, { created_at: String(value) }),
@@ -444,6 +451,7 @@ export function RequestsTable({
       wrap: 'break-word',
       render: (r) => <span className="leading-snug text-zinc-600 dark:text-zinc-300">{r.requester_notes ?? '—'}</span>,
       edit: {
+        canEdit: r => r.contract_version === 1,
         type: 'text',
         getValue: (r) => r.requester_notes ?? '',
         onSave: (r, value) => updateField(r, { requester_notes: String(value) || null }),
@@ -465,14 +473,14 @@ export function RequestsTable({
           >
             <Eye aria-hidden="true" className="h-4 w-4" />
           </Link>
-          <RequestStatusActions
+          {r.contract_version === 2 ? <Link className="text-xs text-[var(--accent)] underline" href={`/requests/${r.id}`}>Review</Link> : <RequestStatusActions
             requestId={r.id}
             referenceNumber={r.reference_number}
             status={r.status}
             paymentStatus={r.payment_status}
             paymentMethod={r.payment_method}
             variant="compact"
-          />
+          />}
           <ConfirmButton
             label={<Archive aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Archive?"

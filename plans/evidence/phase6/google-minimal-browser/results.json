@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "assertions": [
+    "Prepare earlier Google account without a profile",
+    "Web session startup repairs missing Google profile",
+    "Home uses the saved Google account name",
+    "Direct report link still requires resident details",
+    "Completion retains the intended report route",
+    "Completion prefills persisted first and last names",
+    "Skip retains incomplete account browsing and reminder",
+    "Skip keeps the minimal row incomplete",
+    "Reload retains authenticated incomplete account",
+    "Reload does not duplicate profiles",
+    "Browser has no observed console/page errors"
+  ],
+  "consoleErrors": []
+}

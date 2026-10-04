@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan
+
+ ✓ supabase/functions/delete-my-account/storage-cleanup.test.ts (11 tests) 31ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  21:07:07
+   Duration  986ms (transform 113ms, setup 0ms, collect 119ms, tests 31ms, environment 0ms, prepare 225ms)
+

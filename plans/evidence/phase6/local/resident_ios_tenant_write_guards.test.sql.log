@@ -1,0 +1,21 @@
+BEGIN
+1..7
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 3
+SET
+SET
+ok 1 - Resident cannot register for another barangay medical drive
+ok 2 - Rejected medical registration preserves stock
+ok 3 - Resident can register for own barangay drive
+ok 4 - Resident cannot check into another barangay center
+ok 5 - Resident cannot check into an inactive center
+ok 6 - Resident can check into an active own-barangay center
+RESET
+SET
+SET
+ok 7 - Administrator cannot use the resident check-in path
+RESET
+ROLLBACK

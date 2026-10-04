@@ -1,0 +1,27 @@
+{
+  "database": "phase1_empty",
+  "finishedAt": "2026-10-01T14:21:34.227Z",
+  "results": [
+    {
+      "name": "foundations",
+      "file": "supabase/tests/service_foundations.test.sql",
+      "exitCode": 0,
+      "assertions": 111,
+      "passed": true
+    },
+    {
+      "name": "legacy-rls",
+      "file": "supabase/tests/rls_isolation.test.sql",
+      "exitCode": 0,
+      "assertions": 17,
+      "passed": true
+    },
+    {
+      "name": "tenant-write-guards",
+      "file": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "exitCode": 0,
+      "assertions": 7,
+      "passed": true
+    }
+  ]
+}

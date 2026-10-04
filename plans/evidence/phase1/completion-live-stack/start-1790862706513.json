@@ -1,0 +1,9 @@
+{
+  "command": "start",
+  "startedAt": "2026-10-01T13:46:11.458Z",
+  "finishedAt": "2026-10-01T13:51:46.514Z",
+  "exitCode": 130,
+  "passed": false,
+  "log": "completion-live-stack/start-1790862706513.log",
+  "appliedMigrations": []
+}

@@ -34,7 +34,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   const { data } = await supabase
     .from('payments')
     .select(
-      '*, service_requests(reference_number, resident_id, document_type_id, document_types(name), profiles(full_name)), collector:collected_by(full_name)',
+      '*, service_requests(reference_number, resident_id, document_type_id, document_types(name), profiles!service_requests_resident_id_fkey(full_name)), collector:collected_by(full_name)',
     )
     .is('deleted_at', null)
     .order('created_at', { ascending: false });

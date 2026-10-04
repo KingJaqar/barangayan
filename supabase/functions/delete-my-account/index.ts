@@ -2,7 +2,7 @@
 //
 // Flow:
 //   1. Verify the caller's own JWT (self-service only — no target-user param).
-//   2. Best-effort delete their Storage objects (avatar, ID photos).
+//   2. Best-effort delete their Storage objects (avatar, versioned IDs, attachments).
 //   3. Anonymize their profiles row via request_own_account_deletion() (see
 //      migration 0074 for why this isn't a hard DELETE).
 //   4. Ban the auth user from signing in again (service-role Admin API —
@@ -11,7 +11,8 @@
 //
 // See supabase/migrations/0074_account_deletion.sql for the full rationale.
 
-import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { createClient } from '@supabase/supabase-js';
+import { removeOwnedStorageObjects } from './storage-cleanup.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -62,25 +63,12 @@ Deno.serve(async (req: Request) => {
     // Best-effort Storage cleanup. Failures here must not block the account
     // deletion itself — an orphaned photo is a much smaller problem than a
     // resident who asked to be deleted and wasn't.
-    try {
-      const { data: avatarFiles } = await adminClient.storage.from('profile-photos').list(user.id);
-      if (avatarFiles?.length) {
-        await adminClient.storage
-          .from('profile-photos')
-          .remove(avatarFiles.map((f) => `${user.id}/${f.name}`));
+    for (const bucket of ['profile-photos', 'id-documents', 'request-attachments']) {
+      try {
+        await removeOwnedStorageObjects(adminClient.storage.from(bucket), user.id);
+      } catch {
+        // Keep the existing best-effort behavior; one bucket cannot block another.
       }
-    } catch {
-      // non-fatal
-    }
-    try {
-      const { data: idFiles } = await adminClient.storage.from('id-documents').list(user.id);
-      if (idFiles?.length) {
-        await adminClient.storage
-          .from('id-documents')
-          .remove(idFiles.map((f) => `${user.id}/${f.name}`));
-      }
-    } catch {
-      // non-fatal
     }
 
     // Anonymize the profile row under the caller's own session (RPC is

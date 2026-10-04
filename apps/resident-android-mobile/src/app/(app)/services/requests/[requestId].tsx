@@ -1,3 +1,5 @@
+import { AgencySlaStatus } from '@/components/services/agency-sla-status';
+import { submittedDetailLines, requestFee } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -31,6 +33,7 @@ function formatButtonCountdown(ms: number): string {
 }
 
 type ServiceRequest = Tables<'service_requests'> & {
+  payments?: {document_fee_centavos:number|null;amount_centavos:number;status:string}[];
   document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
 };
 
@@ -111,7 +114,7 @@ export default function RequestTrackingScreen() {
     function load() {
       supabase
         .from('service_requests')
-        .select('*, document_types(name, processing_target_hours, fee_centavos)')
+        .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
         .eq('id', requestId)
         .single()
         .then(({ data }) => {
@@ -273,7 +276,8 @@ export default function RequestTrackingScreen() {
   const fraction = isCancelled ? 0 : progressFraction(request.status, request.created_at, targetHours);
   const progressColor = request.status === 'completed' ? theme.primary : PROGRESS_AMBER;
 
-  const fee = request.document_types?.fee_centavos ?? 0;
+  const recordedPayment = request.payments?.find(payment => payment.status === 'paid') ?? request.payments?.[0];
+  const fee = requestFee(request, request.document_types?.fee_centavos ?? 0, recordedPayment?.document_fee_centavos ?? recordedPayment?.amount_centavos);
   const totalDue = fee;
   // payment_method is null until the resident reaches the payment selection screen
   // (Stage 4). Show a "Not yet selected" fallback for requests still in that gap.
@@ -297,7 +301,7 @@ export default function RequestTrackingScreen() {
   // only block once the request is in a terminal state.
   const canPayNow = request.status !== 'cancelled' && request.status !== 'completed';
   const showQrPayNow =
-    request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && totalDue >= 100 && PAYMENT_SETTLEMENT_READY;
+    request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && totalDue !== null && totalDue >= 100 && PAYMENT_SETTLEMENT_READY;
   // A pending QR row whose expires_at has already passed is functionally gone —
   // create-payment-source will self-heal it into a fresh QR on next open (see its resume
   // check) — so the button should read "Pay Now" again rather than "Continue Payment
@@ -337,7 +341,8 @@ export default function RequestTrackingScreen() {
           showsVerticalScrollIndicator={false}>
           <ThemedText themeColor="textSecondary">Ref #{request.reference_number}</ThemedText>
 
-          {!isCancelled ? (
+          {request.timing_model !== 'agency_minutes_v1' ? <ThemedText type="small">Previous timing model · original processing estimate retained</ThemedText> : null}
+          {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} /> : !isCancelled ? (
             <AnimatedAppear>
               <View style={styles.cardShadowWrap}>
                 <Card style={styles.progressCard}>
@@ -383,7 +388,7 @@ export default function RequestTrackingScreen() {
           <View style={styles.paymentAmountRow}>
             <ThemedText type="small" themeColor="textSecondary">Total Amount Due</ThemedText>
             <ThemedText type="smallBold">
-              {totalDue === 0 ? 'Free' : formatCentavosAsPHP(totalDue)}
+              {totalDue === null ? 'Awaiting fee assessment' : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
             </ThemedText>
           </View>
           {showQrPayNow || showCancelSlot ? (
@@ -508,10 +513,12 @@ export default function RequestTrackingScreen() {
           ) : null}
         </ThemedView>
 
+        {request.purpose_label ? <ThemedView type="backgroundElement" style={styles.section}><ThemedText type="smallBold">Purpose</ThemedText><ThemedText>{request.purpose_label}</ThemedText>{request.purpose_explanation ? <ThemedText>{request.purpose_explanation}</ThemedText> : null}{submittedDetailLines(request.supporting_details).map(([label,value])=><View key={label}><ThemedText type="smallBold">{label}</ThemedText><ThemedText>{value}</ThemedText></View>)}</ThemedView> : null}
+        {fee !== null && fee > 0 && !isPaid && !isRefunded && canPayNow ? <PrimaryButton label="Choose or continue payment" onPress={()=>router.push(`/services/payment/${requestId}`)}/> : null}
         {request.requester_notes ? (
           <AnimatedAppear>
             <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
-              <ThemedText type="smallBold">Purpose</ThemedText>
+              <ThemedText type="smallBold">Additional notes</ThemedText>
               <ThemedText type="small" themeColor="textSecondary">
                 {request.requester_notes}
               </ThemedText>

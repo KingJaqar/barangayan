@@ -1,0 +1,21 @@
+
+> @barangayan/resident-web@0.1.0 typecheck
+> tsc --noEmit
+
+.next/types/validator.ts(24,44): error TS2344: Type 'Route' does not satisfy the constraint 'LayoutRoutes'.
+  Type 'import("C:/Users/User/barangayan/apps/resident-web/.next/types/routes").LayoutRoutes' is not assignable to type 'import("C:/Users/User/barangayan/apps/resident-web/.next/dev/types/routes").LayoutRoutes'.
+    Type '"/maps"' is not assignable to type 'LayoutRoutes'.
+.next/types/validator.ts(24,75): error TS2344: Type 'Route' does not satisfy the constraint 'LayoutRoutes'.
+  Type 'import("C:/Users/User/barangayan/apps/resident-web/.next/types/routes").LayoutRoutes' is not assignable to type 'import("C:/Users/User/barangayan/apps/resident-web/.next/dev/types/routes").LayoutRoutes'.
+    Type '"/maps"' is not assignable to type 'LayoutRoutes'.
+.next/types/validator.ts(471,39): error TS2307: Cannot find module '../../src/app/(resident)/announcements/layout.js' or its corresponding type declarations.
+.next/types/validator.ts(507,39): error TS2307: Cannot find module '../../src/app/(resident)/maps/layout.js' or its corresponding type declarations.
+.next/types/validator.ts(516,39): error TS2307: Cannot find module '../../src/app/(resident)/reports/new/layout.js' or its corresponding type declarations.
+.next/types/validator.ts(534,39): error TS2307: Cannot find module '../../src/app/(resident)/services/payment/layout.js' or its corresponding type declarations.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\resident-web
+npm error workspace @barangayan/resident-web@0.1.0
+npm error location C:\Users\User\barangayan\apps\resident-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

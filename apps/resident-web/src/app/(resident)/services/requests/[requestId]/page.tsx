@@ -19,7 +19,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
 
   const { data: request } = await supabase
     .from('service_requests')
-    .select('*, document_types(name, processing_target_hours, fee_centavos)')
+    .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
     .eq('id', requestId)
     .eq('resident_id', user.id)
     .single();

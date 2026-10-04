@@ -1,0 +1,56 @@
+BEGIN
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+SELECT 1
+GRANT
+INSERT 0 1
+INSERT 0 1
+SET
+SET
+ok 1 - Create complete general charter
+ok 2 - Multiple general services can coexist
+ok 3 - Persisted charter: clientSteps
+ok 4 - Persisted charter: whoMayAvail
+ok 5 - Persisted charter: feesToBePaid
+ok 6 - Persisted charter: agencyActions
+ok 7 - Persisted charter: classification
+ok 8 - Persisted charter: officeDivision
+ok 9 - Persisted charter: processingTime
+ok 10 - Persisted charter: transactionType
+ok 11 - Persisted charter: personResponsible
+ok 12 - Persisted charter: checklistOfRequirements
+ok 13 - Persisted charter: whereToSecureRequirements
+ok 14 - SLA target distinct from procedure prose
+ok 15 - Confirmed charge distinct from published fees
+ok 16 - Incomplete charter rejected
+ok 17 - Blank classification rejected
+ok 18 - Incompatible supporting rule rejected
+ok 19 - Existing service workflow fixed
+ok 20 - Edit all charter fields
+ok 21 - Updated charter: clientSteps
+ok 22 - Updated charter: whoMayAvail
+ok 23 - Updated charter: feesToBePaid
+ok 24 - Updated charter: agencyActions
+ok 25 - Updated charter: classification
+ok 26 - Updated charter: officeDivision
+ok 27 - Updated charter: processingTime
+ok 28 - Updated charter: transactionType
+ok 29 - Updated charter: personResponsible
+ok 30 - Updated charter: checklistOfRequirements
+ok 31 - Updated charter: whereToSecureRequirements
+ok 32 - Updated name persists
+ok 33 - Updated purposes persist
+ok 34 - Legacy catalog gains charter without rewriting requests
+ok 35 - Unsnapshotted original fee preserved before edit
+ok 36 - Historical contract preserved
+ok 37 - Historical timing preserved
+ok 38 - Historical update timestamp preserved
+ok 39 - Recorded request fee remains immutable
+SET
+ok 40 - Residents cannot edit catalog
+SET
+ok 41 - Foreign tenant cannot read catalog
+RESET
+1..41
+ROLLBACK

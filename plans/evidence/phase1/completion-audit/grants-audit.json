@@ -1,0 +1,238 @@
+{
+  "new_tables": [
+    {
+      "rls": true,
+      "name": "barangay_localities",
+      "authenticated_delete": false,
+      "authenticated_insert": false,
+      "authenticated_update": false
+    },
+    {
+      "rls": true,
+      "name": "id_submissions",
+      "authenticated_delete": false,
+      "authenticated_insert": false,
+      "authenticated_update": false
+    },
+    {
+      "rls": true,
+      "name": "request_attachments",
+      "authenticated_delete": false,
+      "authenticated_insert": false,
+      "authenticated_update": false
+    },
+    {
+      "rls": true,
+      "name": "service_request_pauses",
+      "authenticated_delete": false,
+      "authenticated_insert": false,
+      "authenticated_update": false
+    }
+  ],
+  "public_wrappers": [
+    {
+      "name": "assess_service_request_fee",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "complete_resident_profile",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "publish_id_submission",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "review_id_submission",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "submit_service_request",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "transition_service_request_sla",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    }
+  ],
+  "private_functions": [
+    {
+      "name": "assert_actor",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "assess_service_request_fee",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "check_keys",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "check_object",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "complete_resident_profile",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "guard_catalog_contract",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "guard_payment_foundations",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "guard_profile_foundations",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "guard_request_foundations",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "optional_text",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "publish_id_submission",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "required_text",
+      "definer": false,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false
+    },
+    {
+      "name": "review_id_submission",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "submit_service_request",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    },
+    {
+      "name": "transition_service_request_sla",
+      "definer": true,
+      "settings": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true
+    }
+  ],
+  "attachments_bucket": {
+    "id": "request-attachments",
+    "name": "request-attachments",
+    "public": false,
+    "file_size_limit": 5242880,
+    "allowed_mime_types": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "application/pdf"
+    ]
+  },
+  "anon_private_schema_usage": false
+}

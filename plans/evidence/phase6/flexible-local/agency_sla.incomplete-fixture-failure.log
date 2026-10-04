@@ -1,0 +1,154 @@
+BEGIN
+INSERT 0 2
+INSERT 0 1
+INSERT 0 3
+
+ok 1 - Exactly four pilot services active
+ok 2 - Other tenant activity unchanged
+ok 3 - Other tenant fee unchanged
+ok 4 - Equivalent indigency identifier reused
+ok 5 - General-purpose clearance deactivated without deletion
+ok 6 - All four preserve Simple, G2C and fifteen minutes
+ok 7 - Missing CTC personnel remains explicitly unknown
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+not ok 8 - Certificate of Indigency submits pending assessment
+# Failed test 8: "Certificate of Indigency submits pending assessment"
+#     died: 42501: resident_profile_completion_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.require_complete_profile_for_submission() line 14 at RAISE
+#             SQL statement "insert into public.service_requests(id,barangay_id,resident_id,document_type_id,contract_version,idempotency_key,submission_payload,
+# #                 purpose_code,purpose_label,purpose_explanation,requester_notes,supporting_details,approved_id_submission_id,requirements_review_state,
+# #                 personal_appearance_required,pricing_mode_snapshot,fee_assessment_state,assessed_amount_centavos,fee_basis,fee_assessed_at,
+# #                 timing_model,target_minutes_snapshot,sla_state)
+# #               values(v_request,a.barangay_id,a.id,d.id,2,v_key,p_input,v_purpose->>'code',v_purpose->>'label',v_explanation,v_notes,v_details,s.id,'pending',
+# #                 coalesce((d.requirement_rules->>'personalAppearance')::boolean,false),d.pricing_mode,
+# #                 case when d.pricing_mode='fixed' then 'assessed' else 'pending' end,
+# #                 case when d.pricing_mode='fixed' then d.fee_centavos else null end,
+# #                 case when d.pricing_mode='fixed' then 'Configured fixed fee at submission' else null end,
+# #                 case when d.pricing_mode='fixed' then clock_timestamp() else null end,'agency_minutes_v1',d.processing_target_minutes,'pre_processing')"
+#             PL/pgSQL function barangayan_private.submit_service_request(jsonb) line 99 at SQL statement
+#             SQL function "submit_service_request" statement 1
+#             SQL statement "select public.submit_service_request('{"details": {"isRenter": false, "personalAppearanceAcknowledged": true}, "attachments": [], "purposeCode": "medical", "documentTypeId": "d5000000-0000-0000-0000-000000000001", "idempotencyKey": "a33224c8-6391-4110-b9fd-7d948b7c955c"}'::jsonb)"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 9 - First Time Job Seeker submits pending assessment
+# Failed test 9: "First Time Job Seeker submits pending assessment"
+#     died: 42501: resident_profile_completion_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.require_complete_profile_for_submission() line 14 at RAISE
+#             SQL statement "insert into public.service_requests(id,barangay_id,resident_id,document_type_id,contract_version,idempotency_key,submission_payload,
+# #                 purpose_code,purpose_label,purpose_explanation,requester_notes,supporting_details,approved_id_submission_id,requirements_review_state,
+# #                 personal_appearance_required,pricing_mode_snapshot,fee_assessment_state,assessed_amount_centavos,fee_basis,fee_assessed_at,
+# #                 timing_model,target_minutes_snapshot,sla_state)
+# #               values(v_request,a.barangay_id,a.id,d.id,2,v_key,p_input,v_purpose->>'code',v_purpose->>'label',v_explanation,v_notes,v_details,s.id,'pending',
+# #                 coalesce((d.requirement_rules->>'personalAppearance')::boolean,false),d.pricing_mode,
+# #                 case when d.pricing_mode='fixed' then 'assessed' else 'pending' end,
+# #                 case when d.pricing_mode='fixed' then d.fee_centavos else null end,
+# #                 case when d.pricing_mode='fixed' then 'Configured fixed fee at submission' else null end,
+# #                 case when d.pricing_mode='fixed' then clock_timestamp() else null end,'agency_minutes_v1',d.processing_target_minutes,'pre_processing')"
+#             PL/pgSQL function barangayan_private.submit_service_request(jsonb) line 99 at SQL statement
+#             SQL function "submit_service_request" statement 1
+#             SQL statement "select public.submit_service_request('{"details": {"isRenter": false, "personalAppearanceAcknowledged": true}, "attachments": [], "purposeCode": "first_employment", "documentTypeId": "2f92bb02-e2f9-44bb-b663-c041fb302afc", "idempotencyKey": "d5903cab-5df2-4803-8157-57cbcb956a62"}'::jsonb)"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 10 - Issuance of Barangay Clearance for Business Establishments submits pending assessment
+# Failed test 10: "Issuance of Barangay Clearance for Business Establishments submits pending assessment"
+#     died: 42501: resident_profile_completion_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.require_complete_profile_for_submission() line 14 at RAISE
+#             SQL statement "insert into public.service_requests(id,barangay_id,resident_id,document_type_id,contract_version,idempotency_key,submission_payload,
+# #                 purpose_code,purpose_label,purpose_explanation,requester_notes,supporting_details,approved_id_submission_id,requirements_review_state,
+# #                 personal_appearance_required,pricing_mode_snapshot,fee_assessment_state,assessed_amount_centavos,fee_basis,fee_assessed_at,
+# #                 timing_model,target_minutes_snapshot,sla_state)
+# #               values(v_request,a.barangay_id,a.id,d.id,2,v_key,p_input,v_purpose->>'code',v_purpose->>'label',v_explanation,v_notes,v_details,s.id,'pending',
+# #                 coalesce((d.requirement_rules->>'personalAppearance')::boolean,false),d.pricing_mode,
+# #                 case when d.pricing_mode='fixed' then 'assessed' else 'pending' end,
+# #                 case when d.pricing_mode='fixed' then d.fee_centavos else null end,
+# #                 case when d.pricing_mode='fixed' then 'Configured fixed fee at submission' else null end,
+# #                 case when d.pricing_mode='fixed' then clock_timestamp() else null end,'agency_minutes_v1',d.processing_target_minutes,'pre_processing')"
+#             PL/pgSQL function barangayan_private.submit_service_request(jsonb) line 99 at SQL statement
+#             SQL function "submit_service_request" statement 1
+#             SQL statement "select public.submit_service_request('{"details": {"businessName": "Test Shop", "establishmentAddress": "Main Street", "personalAppearanceAcknowledged": true}, "attachments": [{"path": "b5000000-0000-0000-0000-000000000001/c5000000-0000-0000-0000-000000000001/dti.pdf", "mimeType": "application/pdf", "sizeBytes": 1000, "requirementCode": "dti"}], "purposeCode": "new_business", "documentTypeId": "d81255b5-d52d-41ac-81d9-5a27d9fdf866", "idempotencyKey": "98130530-0e36-4fb9-9bee-c7cbe92282ce"}'::jsonb)"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 11 - Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment
+# Failed test 11: "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment"
+#     died: 42501: resident_profile_completion_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.require_complete_profile_for_submission() line 14 at RAISE
+#             SQL statement "insert into public.service_requests(id,barangay_id,resident_id,document_type_id,contract_version,idempotency_key,submission_payload,
+# #                 purpose_code,purpose_label,purpose_explanation,requester_notes,supporting_details,approved_id_submission_id,requirements_review_state,
+# #                 personal_appearance_required,pricing_mode_snapshot,fee_assessment_state,assessed_amount_centavos,fee_basis,fee_assessed_at,
+# #                 timing_model,target_minutes_snapshot,sla_state)
+# #               values(v_request,a.barangay_id,a.id,d.id,2,v_key,p_input,v_purpose->>'code',v_purpose->>'label',v_explanation,v_notes,v_details,s.id,'pending',
+# #                 coalesce((d.requirement_rules->>'personalAppearance')::boolean,false),d.pricing_mode,
+# #                 case when d.pricing_mode='fixed' then 'assessed' else 'pending' end,
+# #                 case when d.pricing_mode='fixed' then d.fee_centavos else null end,
+# #                 case when d.pricing_mode='fixed' then 'Configured fixed fee at submission' else null end,
+# #                 case when d.pricing_mode='fixed' then clock_timestamp() else null end,'agency_minutes_v1',d.processing_target_minutes,'pre_processing')"
+#             PL/pgSQL function barangayan_private.submit_service_request(jsonb) line 99 at SQL statement
+#             SQL function "submit_service_request" statement 1
+#             SQL statement "select public.submit_service_request('{"details": {"copies": 3, "recordReference": "Record 12", "personalAppearanceAcknowledged": true}, "attachments": [], "purposeCode": "government", "documentTypeId": "3523fcb1-ad38-4fe1-a175-8444e81811f0", "idempotencyKey": "25597403-3143-4554-8e33-e7e9d86fb84b"}'::jsonb)"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+SET
+RESET
+sla
+UPDATE 0
+SELECT 0
+INSERT 0 0
+UPDATE 0
+UPDATE 0
+UPDATE 0
+not ok 12 - Repeated resume rejected
+# Failed test 12: "Repeated resume rejected"
+#       caught: no exception
+#       wanted: 22023
+UPDATE 0
+true
+UPDATE 0
+ok 13 - Delayed evaluator succeeds
+ok 14 - Repeated evaluation creates no duplicate threshold alerts
+not ok 15 - Delayed evaluation records each crossed threshold once
+# Failed test 15: "Delayed evaluation records each crossed threshold once"
+#         have: 0
+#         want: 6
+ok 16 - Ready or released clock does not create unfinished alert
+SET
+SET
+ok 17 - Resident cannot access administrator report
+ok 18 - Residents cannot read alerts
+ok 19 - Resident cannot invoke server evaluator
+UPDATE 0
+not ok 20 - Resident RLS update cannot change snapshot
+# Failed test 20: "Resident RLS update cannot change snapshot"
+#     (test result was NULL)
+SET
+ok 21 - Foreign staff cannot read alerts
+ok 22 - Foreign report has no tenant rows
+SET
+not ok 23 - Raw administrator snapshot tampering rejected
+# Failed test 23: "Raw administrator snapshot tampering rejected"
+#       caught: no exception
+#       wanted: 42501
+not ok 24 - Authorized staff read threshold events
+# Failed test 24: "Authorized staff read threshold events"
+#         have: 0
+#         want: 6
+not ok 25 - Staff report includes old submission selected by completion
+# Failed test 25: "Staff report includes old submission selected by completion"
+#         have: 0
+#         want: 4
+ok 26 - Cancellation closes all open waits
+not ok 27 - Cancellation records server stop time
+# Failed test 27: "Cancellation records server stop time"
+#     (test result was NULL)
+RESET
+ok 28 - Server evaluates at least once per minute
+1..28
+# Looks like you failed 11 tests of 28
+ROLLBACK

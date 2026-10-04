@@ -1,0 +1,225 @@
+
+> lint
+> expo lint
+
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\actions\admin-audit-actions.ts
+  3:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\about-us\about-us-form.tsx
+    9:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   10:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+   11:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+   12:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+  311:13  error  Definition for rule '@next/next/no-img-element' was not found                   @next/next/no-img-element
+  346:17  error  Definition for rule '@next/next/no-img-element' was not found                   @next/next/no-img-element
+  448:23  error  Definition for rule '@next/next/no-img-element' was not found                   @next/next/no-img-element
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\about-us\page.tsx
+  1:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\announcements\announcement-form.tsx
+   7:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   8:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+   9:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+  10:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\announcements\announcement-row.tsx
+   7:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   8:31  error  Unable to resolve path to module '@/components/admin/confirm-button'            import/no-unresolved
+   9:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+  10:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+  11:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\announcements\page.tsx
+  1:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\dashboard\loading.tsx
+  1:30  error  Unable to resolve path to module '@/components/loading/page-skeleton'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\dashboard\page.tsx
+  12:27  error  Unable to resolve path to module '@/components/admin/data-table'   import/no-unresolved
+  13:28  error  Unable to resolve path to module '@/components/admin/status-pill'  import/no-unresolved
+  14:44  error  Unable to resolve path to module '@/lib/supabase/server'           import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\client-wrapper.tsx
+  4:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\loading.tsx
+  1:30  error  Unable to resolve path to module '@/components/loading/page-skeleton'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\page.tsx
+  1:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\qr-code-display.tsx
+  5:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'  import/no-unresolved
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'          import/no-unresolved
+  8:26  error  Unable to resolve path to module '@/components/ui/toast'          import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\qr-codes-tab.tsx
+  4:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'  import/no-unresolved
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'          import/no-unresolved
+  7:26  error  Unable to resolve path to module '@/components/ui/toast'          import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\qr-instructions-modal.tsx
+   5:29  error  Unable to resolve path to module '@hookform/resolvers/zod'                      import/no-unresolved
+   6:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   7:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+   8:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+  11:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\emergency-qr\qr-instructions-tab.tsx
+  4:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'  import/no-unresolved
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'          import/no-unresolved
+  7:26  error  Unable to resolve path to module '@/components/ui/toast'          import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\evacuation-centers\evacuation-center-form.tsx
+   7:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   8:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+   9:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+  10:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\evacuation-centers\evacuation-center-row.tsx
+   7:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   8:31  error  Unable to resolve path to module '@/components/admin/confirm-button'            import/no-unresolved
+   9:26  error  Unable to resolve path to module '@/components/ui/toast'                        import/no-unresolved
+  10:45  error  Unable to resolve path to module '@/lib/supabase/client'                        import/no-unresolved
+  11:38  error  Unable to resolve path to module '@/components/loading/loading-button-content'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\evacuation-centers\page.tsx
+  1:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\.kilo\worktrees\inquisitive-meadow\apps\admin-web\src\app\(admin)\faq\faq-form.tsx
+   7:32  error  Unable to resolve path to module '@/actions/admin-audit-actions'                import/no-unresolved
+   8:26  error  Unabl
+[Full output in root-lint.log.gz]
+  import/no-unresolved
+  10:24  error  Unable to resolve path to module '@/components/shell/top-nav'                import/no-unresolved
+  11:45  error  Unable to resolve path to module '@/components/theme/use-reset-preferences'  import/no-unresolved
+  12:45  error  Unable to resolve path to module '@/lib/supabase/client'                     import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\shell\top-nav.tsx
+  8:33  error  Unable to resolve path to module '@/hooks/use-unread-counts'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\theme\use-reset-preferences.ts
+  3:37  error  Unable to resolve path to module '@/components/theme/accent-controller'  import/no-unresolved
+  4:35  error  Unable to resolve path to module '@/components/theme/font-controller'    import/no-unresolved
+  5:36  error  Unable to resolve path to module '@/components/theme/theme-controller'   import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\button.tsx
+  5:20  error  Unable to resolve path to module '@/lib/utils'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\card.tsx
+  3:20  error  Unable to resolve path to module '@/lib/utils'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\dialog.tsx
+  7:20  error  Unable to resolve path to module '@/lib/utils'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\input.tsx
+  3:20  error  Unable to resolve path to module '@/lib/utils'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\label.tsx
+  6:20  error  Unable to resolve path to module '@/lib/utils'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\components\ui\password-input.tsx
+  6:23  error  Unable to resolve path to module '@/components/ui/input'  import/no-unresolved
+  7:20  error  Unable to resolve path to module '@/lib/utils'            import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-about-us.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  6:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-announcements.ts
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  7:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-emergency-guidelines.ts
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  7:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-emergency-hotlines.ts
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  7:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-emergency-qr-content.ts
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  7:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-evacuation-centers.ts
+  7:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-family-members.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-faq-articles.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  6:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-incident-categories.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-medical-drives.ts
+  7:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  8:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-my-incidents.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  6:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-paymongo-source.ts
+  3:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-qr-checkins.ts
+  6:45  error  Unable to resolve path to module '@/lib/supabase/client'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-site-content.ts
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  6:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-unread-counts.tsx
+  5:45  error  Unable to resolve path to module '@/lib/supabase/client'   import/no-unresolved
+  6:35  error  Unable to resolve path to module '@/lib/realtime-channel'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\lib\auth\get-optional-user.ts
+  3:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\lib\auth\require-user.ts
+  5:44  error  Unable to resolve path to module '@/lib/supabase/server'  import/no-unresolved
+
+C:\Users\User\barangayan\apps\resident-web\src\lib\barangay-boundary.ts
+  3:35  error  Unable to resolve path to module '@/data/ampid1-boundary.json'  import/no-unresolved
+
+C:\Users\User\barangayan\packages\shared\src\lib\service-tracking.ts
+  66:13  warning  Array type using 'Array<T>' is forbidden. Use 'T[]' instead  @typescript-eslint/array-type
+  71:18  warning  Array type using 'Array<T>' is forbidden. Use 'T[]' instead  @typescript-eslint/array-type
+
+C:\Users\User\barangayan\packages\shared\src\schemas\incident-map.ts
+  2:23  warning  'MapMarker' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\supabase\functions\cancel-payment\index.ts
+  9:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\check-payment-status\index.ts
+  13:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\create-payment-source\index.ts
+  22:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\export-my-data\index.ts
+  9:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\generate-household-qr\index.ts
+  1:30  error  Unable to resolve path to module 'https://esm.sh/@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\paymongo-webhook\index.ts
+  21:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+C:\Users\User\barangayan\supabase\functions\refund-payment\index.ts
+  15:30  error  Unable to resolve path to module 'jsr:@supabase/supabase-js@2'  import/no-unresolved
+
+✖ 126299 problems (93345 errors, 32954 warnings)
+  80863 errors and 572 warnings potentially fixable with the `--fix` option.
+

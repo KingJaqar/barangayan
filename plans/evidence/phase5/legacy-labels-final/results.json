@@ -1,0 +1,106 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-03T15:44:14.585Z",
+      "finishedAt": "2026-10-03T15:44:25.514Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-03T15:44:25.605Z",
+      "finishedAt": "2026-10-03T15:44:31.176Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-03T15:44:31.262Z",
+      "finishedAt": "2026-10-03T15:45:16.077Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T15:45:16.185Z",
+      "finishedAt": "2026-10-03T15:46:52.355Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T15:46:52.448Z",
+      "finishedAt": "2026-10-03T15:47:16.565Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T15:47:16.654Z",
+      "finishedAt": "2026-10-03T15:47:35.270Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "command": "npm run build",
+      "startedAt": "2026-10-03T15:47:35.364Z",
+      "finishedAt": "2026-10-03T15:48:14.276Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-build.log"
+    },
+    {
+      "id": "admin-web-build",
+      "directory": "apps/admin-web",
+      "command": "npm run build",
+      "startedAt": "2026-10-03T15:48:14.373Z",
+      "finishedAt": "2026-10-03T15:48:32.206Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-build.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo export --platform android --output-dir dist/phase0-android",
+      "startedAt": "2026-10-03T15:48:32.300Z",
+      "finishedAt": "2026-10-03T15:50:44.291Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-export.log"
+    }
+  ]
+}

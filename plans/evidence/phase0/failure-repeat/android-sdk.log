@@ -1,0 +1,7 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Dependency validation is unreliable in offline-mode
+The following packages should be updated for best compatibility with the installed expo version:
+  react-native-view-shot@5.1.1 - expected version: 5.1.0
+Your project may not work correctly until you install the expected versions of the packages.
+Found outdated dependencies

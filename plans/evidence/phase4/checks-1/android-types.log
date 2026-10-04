@@ -1,0 +1,11 @@
+src/components/services/charter-request-form.tsx(75,328): error TS18047: 'approved' is possibly 'null'.
+src/components/services/charter-request-form.tsx(75,357): error TS18047: 'approved' is possibly 'null'.
+src/components/services/resident-payment-screen.tsx(18,23): error TS2345: Argument of type '{ legacy_fee_centavos: number | null; contract_version: number; idempotency_key: string | null; submission_payload: Json; purpose_code: string | null; purpose_label: string | null; ... 40 more ...; payments: { ...; }[]; }' is not assignable to parameter of type 'SetStateAction<Request | null>'.
+  Type '{ legacy_fee_centavos: number | null; contract_version: number; idempotency_key: string | null; submission_payload: Json; purpose_code: string | null; purpose_label: string | null; ... 40 more ...; payments: { ...; }[]; }' is not assignable to type 'Request'.
+    Type '{ legacy_fee_centavos: number | null; contract_version: number; idempotency_key: string | null; submission_payload: Json; purpose_code: string | null; purpose_label: string | null; ... 40 more ...; payments: { ...; }[]; }' is not assignable to type '{ document_types: { name: string; fee_centavos: number; } | null; payments: { status: string; document_fee_centavos: number; }[]; }'.
+      Types of property 'payments' are incompatible.
+        Type '{ status: string; document_fee_centavos: number | null; }[]' is not assignable to type '{ status: string; document_fee_centavos: number; }[]'.
+          Type '{ status: string; document_fee_centavos: number | null; }' is not assignable to type '{ status: string; document_fee_centavos: number; }'.
+            Types of property 'document_fee_centavos' are incompatible.
+              Type 'number | null' is not assignable to type 'number'.
+                Type 'null' is not assignable to type 'number'.

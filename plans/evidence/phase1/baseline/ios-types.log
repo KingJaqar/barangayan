@@ -1,0 +1,13 @@
+
+> @barangayan/resident-ios@1.0.0 typecheck
+> tsc --noEmit
+
+src/data/resident-api.ts(3,28): error TS2307: Cannot find module 'expo-crypto' or its corresponding type declarations.
+src/lib/secure-storage.ts(1,30): error TS2307: Cannot find module 'expo-secure-store' or its corresponding type declarations.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error workspace @barangayan/resident-ios@1.0.0
+npm error location C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

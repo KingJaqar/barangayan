@@ -16,6 +16,13 @@ comment on column public.evacuation_centers.verified is
 -- ============================================================================
 -- 2. Seed evacuation centers for Barangay Ampid I (Barangay Ampid I, San Mateo)
 -- ============================================================================
+-- Local reset creates the pilot in seed.sql after migrations. Existing installs
+-- still receive this data; empty installs defer it to the development seed.
+do $pilot_seed$
+begin
+  if not exists (select 1 from public.barangays where id = '00000000-0000-0000-0000-000000000001') then
+    return;
+  end if;
 insert into public.evacuation_centers
   (id, barangay_id, name, address, position, capacity, current_occupancy,
    is_active, contact_number, facilities, verified, created_at, updated_at)
@@ -91,3 +98,4 @@ on conflict (id) do update set
   facilities   = excluded.facilities,
   verified     = excluded.verified,
   updated_at   = now();
+end $pilot_seed$;

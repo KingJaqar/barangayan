@@ -1,0 +1,95 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "shared-tests",
+      "directory": "packages/shared",
+      "command": "npm run test",
+      "startedAt": "2026-09-30T15:45:58.206Z",
+      "finishedAt": "2026-09-30T15:46:02.227Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-tests.log"
+    },
+    {
+      "id": "ios-tests",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run test",
+      "startedAt": "2026-09-30T15:46:02.314Z",
+      "finishedAt": "2026-09-30T15:46:05.050Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "ios-tests.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T15:46:05.126Z",
+      "finishedAt": "2026-09-30T15:46:47.690Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T15:46:47.765Z",
+      "finishedAt": "2026-09-30T15:47:05.049Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    },
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "command": "npm run build",
+      "startedAt": "2026-09-30T15:47:05.132Z",
+      "finishedAt": "2026-09-30T15:47:45.794Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-build.log"
+    },
+    {
+      "id": "admin-web-build",
+      "directory": "apps/admin-web",
+      "command": "npm run build",
+      "startedAt": "2026-09-30T15:47:45.878Z",
+      "finishedAt": "2026-09-30T15:48:08.258Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-build.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo export --platform android --output-dir dist/phase0-android",
+      "startedAt": "2026-09-30T15:48:08.337Z",
+      "finishedAt": "2026-09-30T15:49:35.536Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-export.log"
+    },
+    {
+      "id": "ios-export",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run export:ios -- --output-dir dist/phase0-ios",
+      "startedAt": "2026-09-30T15:49:35.609Z",
+      "finishedAt": "2026-09-30T15:49:37.555Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-export.log"
+    }
+  ]
+}

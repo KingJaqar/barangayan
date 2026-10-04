@@ -1,3 +1,6 @@
+import { AgencySlaStatus } from '@/components/admin/agency-sla-status';
+import { requestFee } from '@barangayan/shared';
+import { PickupChoice } from './pickup-choice';
 import { notFound } from 'next/navigation';
 
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -14,7 +17,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
 
   const { data: request } = await supabase
     .from('service_requests')
-    .select('*, document_types(name, fee_centavos, description)')
+    .select('*, document_types(name, fee_centavos, description), payments(document_fee_centavos, amount_centavos, status)')
     .eq('id', requestId)
     .single();
 
@@ -22,11 +25,14 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
+  const paid = request.payments.find(payment=>payment.status==='paid') ?? request.payments[0];
+  const amount = requestFee(request, request.document_types?.fee_centavos ?? 0, paid?.document_fee_centavos ?? paid?.amount_centavos);
   const history = (request.status_history as unknown as StatusHistoryEntry[]) ?? [];
   const canCancel = !['ready_for_pickup', 'completed', 'cancelled'].includes(request.status) && request.payment_status !== 'paid';
 
   return (
     <div className="mx-auto max-w-2xl">
+      <AgencySlaStatus requestId={request.id} />
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">{request.document_types?.name ?? 'Document Request'}</h1>
@@ -41,7 +47,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       <div className="mb-6 grid grid-cols-2 gap-4 rounded-xl border border-black/10 bg-white p-5 text-sm dark:border-white/10 dark:bg-zinc-900">
         <div>
           <p className="text-zinc-400">Fee</p>
-          <p className="font-semibold">{formatCentavosAsPHP(request.document_types?.fee_centavos ?? 0)}</p>
+          <p className="font-semibold">{amount === null ? 'Awaiting fee assessment' : request.fee_assessment_state === 'waived' ? 'Fee waived — no payment required' : formatCentavosAsPHP(amount)}</p>
         </div>
         <div>
           <p className="text-zinc-400">Submitted</p>
@@ -72,6 +78,8 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
         </ol>
       </div>
 
+      {amount !== null && amount > 0 && request.payment_status !== 'paid' && !['completed','cancelled'].includes(request.status) ? <PickupChoice requestId={request.id}/> : null}
+      {request.purpose_label ? <div className="mb-6 rounded-xl border p-4"><h2>Purpose</h2><p>{request.purpose_label}</p><p>{request.purpose_explanation}</p></div> : null}
       {canCancel && <CancelRequestButton requestId={request.id} />}
     </div>
   );

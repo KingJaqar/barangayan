@@ -1,4 +1,7 @@
 'use client';
+import { ServiceCharter } from '../resident-service-form';
+import { servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
+
 
 /**
  * Step 1 — the modal's default view for any selected document. Content ported verbatim
@@ -7,7 +10,6 @@
  * navigating to /services/requests/new/[documentId].
  */
 
-import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
 import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,7 +25,7 @@ export function DetailsStep({ doc, isAuthenticated, onRequest }: { doc: Document
           {doc.description ? <p className="mt-1 text-sm text-muted-foreground">{doc.description}</p> : null}
         </div>
         <span className="shrink-0 rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-          {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
+          {servicePriceLabel(doc)}
         </span>
       </div>
 
@@ -49,7 +51,7 @@ export function DetailsStep({ doc, isAuthenticated, onRequest }: { doc: Document
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Estimated Time</span>
-          <span className="font-semibold">{formatProcessingTime(doc.processing_target_hours)}</span>
+          <span className="font-semibold">{serviceProcessingLabel(doc)}</span>
         </div>
       </div>
 
@@ -61,6 +63,7 @@ export function DetailsStep({ doc, isAuthenticated, onRequest }: { doc: Document
         Processing times are estimates and may vary during peak periods.
       </div>
 
+      <ServiceCharter doc={doc}/>
       {isAuthenticated ? (
         <Button size="lg" className="w-full sm:w-auto sm:self-start" onClick={onRequest}>
           Request This Document

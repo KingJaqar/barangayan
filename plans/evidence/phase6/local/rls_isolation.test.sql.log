@@ -1,0 +1,54 @@
+BEGIN
+1..17
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+SET
+SET
+ok 1 - Resident A can read their own service_requests
+ok 2 - Resident A cannot read Resident B's (barangay B) service_requests
+ok 3 - Resident A cannot read barangay B's announcements
+ok 4 - Resident A cannot INSERT into payments directly (post migration 0017)
+RESET
+SET
+SET
+UPDATE 1
+UPDATE 0
+RESET
+ok 5 - Admin A can update service_requests in their own barangay
+ok 6 - Admin A cannot update service_requests in barangay B
+SET
+ok 7 - Anon can read non-deleted announcements across barangays
+ok 8 - Anon cannot read a soft-deleted announcement (post S0-5 / migration 0019)
+RESET
+SET
+SET
+ok 9 - Resident A cannot call admin_register_for_drive (admin-only)
+RESET
+SET
+SET
+ok 10 - Admin A can register Resident A (own barangay) for the drive
+ok 11 - Admin A cannot register Resident B, who is in barangay B
+RESET
+SET
+SET
+ok 12 - Admin A can update a Barangay A drive registration
+ok 13 - Admin A cannot update a Barangay B drive registration
+RESET
+SET
+SET
+ok 14 - Resident A cannot mark their confirmed registration attended
+RESET
+SET
+SET
+ok 15 - Resident B cannot confirm their pending registration
+ok 16 - Resident B can cancel their own pending registration
+RESET
+ok 17 - Only the authorized admin update and resident cancellation persisted
+ROLLBACK

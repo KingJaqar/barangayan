@@ -1,13 +1,13 @@
+import { ServiceSlaReport } from '@/components/admin/service-sla-report';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import {
-  computeDocumentTypeTrends,
   formatCentavosAsPHP,
   formatDateTime,
   getSlaFlag,
   type Tables,
 } from '@barangayan/shared';
-import { AlertTriangle, ArrowUpRight, Clock, PackageCheck, TrendingUp, Users, Wallet } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, Clock, PackageCheck, Users, Wallet } from 'lucide-react';
 
 import { DataTable } from '@/components/admin/data-table';
 import { StatusPill } from '@/components/admin/status-pill';
@@ -190,7 +190,7 @@ async function RecentRequests() {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from('service_requests')
-    .select('*, document_types(name), profiles(full_name)')
+    .select('*, document_types(name), profiles!service_requests_resident_id_fkey(full_name)')
     .order('created_at', { ascending: false })
     .limit(8);
   const requests = (data ?? []) as unknown as ServiceRequest[];
@@ -243,56 +243,7 @@ async function RecentTransactions() {
   );
 }
 
-const TREND_WINDOW_DAYS = 30;
-
-// Ticket 12's other half: a rolling-average completion time per document type over the
-// last 30 days, compared against that type's target. status_history already logs a
-// 'completed' timestamp (0002/0026 trigger) — no new column needed to compute this.
-async function ProcessingTimeTrends() {
-  const supabase = await createSupabaseServerClient();
-  const windowStart = new Date();
-  windowStart.setDate(windowStart.getDate() - TREND_WINDOW_DAYS);
-
-  const [{ data: documentTypes }, { data: completedRequests }] = await Promise.all([
-    supabase.from('document_types').select('id, name, processing_target_hours').eq('is_active', true).order('name'),
-    supabase
-      .from('service_requests')
-      .select('document_type_id, created_at, status_history')
-      .eq('status', 'completed')
-      .gte('created_at', windowStart.toISOString()),
-  ]);
-
-  const trends = computeDocumentTypeTrends(completedRequests ?? [], documentTypes ?? []);
-  const withData = trends.filter((t) => t.completedCount > 0);
-
-  if (withData.length === 0) return null;
-
-  return (
-    <PanelCard title={`Processing Time Trend (last ${TREND_WINDOW_DAYS} days)`} viewAllHref="/services">
-      <div className="divide-y divide-black/[0.04] bg-white dark:divide-white/[0.04] dark:bg-zinc-900">
-        {withData.map((t) => {
-          const overTarget = (t.averageHours ?? 0) > t.targetHours;
-          return (
-            <div key={t.documentTypeId} className="flex items-center justify-between gap-4 px-4 py-3.5">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium">{t.documentTypeName}</p>
-                <p className="text-xs text-zinc-400">
-                  {t.completedCount} completed · target {t.targetHours}h
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-1.5">
-                <TrendingUp className={`h-3.5 w-3.5 ${overTarget ? 'text-red-500' : 'text-[var(--accent)]'}`} />
-                <span className={`text-sm font-semibold tabular-nums ${overTarget ? 'text-red-600 dark:text-red-400' : ''}`}>
-                  {t.averageHours!.toFixed(1)}h avg
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </PanelCard>
-  );
-}
+function ProcessingTimeTrends() { return <ServiceSlaReport />; }
 
 type AttentionItem = {
   id: string;
@@ -312,6 +263,7 @@ async function NeedsAttention() {
     supabase
       .from('service_requests')
       .select('id, reference_number, created_at, document_types(processing_target_hours)')
+      .eq('timing_model', 'legacy_hours')
       .in('status', ['submitted', 'in_progress', 'ready_for_pickup'])
       .order('created_at', { ascending: true }),
     supabase

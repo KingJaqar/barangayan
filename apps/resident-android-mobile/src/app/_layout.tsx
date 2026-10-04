@@ -136,6 +136,10 @@ function RootNavigator() {
       {/* Unconditionally reachable — it only redirects into whichever of (app)/(auth) is
           actually reachable below, so it doesn't need its own guard. */}
       <Stack.Screen name="index" />
+      <Stack.Screen name="auth/callback" />
+      <Stack.Protected guard={!!session && !holdInAuthGroup}>
+        <Stack.Screen name="complete-profile" />
+      </Stack.Protected>
 
       <Stack.Protected guard={appReachable}>
         <Stack.Screen name="(app)" />

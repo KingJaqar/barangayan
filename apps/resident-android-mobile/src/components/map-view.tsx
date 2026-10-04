@@ -80,6 +80,9 @@ const LEAFLET_HTML = `
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
+    window.addEventListener('error', function () {
+      if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_ERROR' }));
+    });
     // ── State ────────────────────────────────────────────────────────────────
     var map = null;
     var markerLayer = L.layerGroup();
@@ -190,7 +193,7 @@ const LEAFLET_HTML = `
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-      }).addTo(map);
+      }).on('tileerror', function () { postToRN({ type: 'MAP_ERROR' }); }).addTo(map);
 
       markerLayer.addTo(map);
       boundaryLayer.addTo(map);
@@ -384,18 +387,21 @@ export interface MapViewProps {
    * snapped back to its last accepted position instead.
    */
   picker?: { enabled: boolean; position: LatLng | null };
+  /** Registration is advisory; Settings keeps the default hard constraint. */
+  constrainPicker?: boolean;
   /** Fires with the pin's new position once it passes the `boundary` check (if any). */
   onPickerMoved?: (position: LatLng) => void;
   /** Fires when a tap/drag landed outside `boundary` and was rejected. */
   onPickerRejected?: (attemptedPosition: LatLng) => void;
   onMarkerTap?: (markerId: string) => void;
   onMapReady?: () => void;
+  onMapError?: () => void;
   style?: ViewStyle;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, onPickerMoved, onPickerRejected, onMarkerTap, onMapReady, style }, ref) => {
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, onMarkerTap, onMapReady, onMapError, style }, ref) => {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
   // Last picker position that passed the boundary check — what an out-of-boundary
@@ -479,6 +485,7 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
     }
 
     switch (msg.type) {
+      case 'MAP_ERROR': { onMapError?.(); break; }
       case 'MAP_READY': {
         isReadyRef.current = true;
         onMapReady?.();
@@ -507,7 +514,7 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       }
       case 'PICKER_MOVED': {
         const pos = msg.payload;
-        if (boundary && !isPointInPolygon(pos, boundary)) {
+        if (constrainPicker && boundary && !isPointInPolygon(pos, boundary)) {
           // Reject: snap the pin back to the last position that was inside the boundary.
           onPickerRejected?.(pos);
           sendMessage({ type: 'SET_PICKER', payload: { enabled: true, position: lastAcceptedPickerPosRef.current } });

@@ -1,0 +1,33 @@
+BEGIN
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+ok 1 - Google identity waits for mandatory resident fields
+ok 2 - Password signup uses server locality
+ok 3 - Province is assigned
+ok 4 - Outside home advisory overrides forged verification and inside GPS
+ok 5 - GPS observation retained separately
+ok 6 - Outside home does not block registration
+ok 7 - Password tenant injection denied
+ok 8 - Invalid coordinates cannot be stored
+SET
+b6000000-0000-0000-0000-000000000001
+ok 9 - Completion cannot set role
+ok 10 - Metadata-free Google completion works without password
+ok 11 - Server chooses permitted role
+ok 12 - Server chooses configured tenant
+ok 13 - Home classification independent of outside GPS
+ok 14 - Completion recorded
+ok 15 - Direct advisory replacement blocked
+ok 16 - Settings outside pin blocked server side
+ok 17 - Polygon hole excluded
+ok 18 - Settings polygon edge accepted
+ok 19 - Settings timestamp server derived
+ok 20 - Extra coordinate claims rejected
+ok 21 - Completion retains locality protections
+RESET
+ok 22 - Missing boundary produces unable to check
+ok 23 - Hole boundary inclusive
+1..23
+ROLLBACK

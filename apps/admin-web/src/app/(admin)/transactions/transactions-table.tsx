@@ -108,7 +108,7 @@ function AddTransactionForm({
       const supabase = createSupabaseBrowserClient();
       const { data, error } = await supabase
         .from('service_requests')
-        .select('id, barangay_id, profiles(full_name), document_types(name)')
+        .select('id, barangay_id, profiles!service_requests_resident_id_fkey(full_name), document_types(name)')
         .eq('reference_number', trimmed)
         .is('deleted_at', null)
         .maybeSingle();

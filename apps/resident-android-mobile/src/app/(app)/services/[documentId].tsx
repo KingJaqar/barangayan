@@ -1,5 +1,6 @@
+import { catalogContract, charterSections, servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { formatCentavosAsPHP, formatProcessingTime, type Tables } from '@barangayan/shared';
+import { type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -42,21 +43,30 @@ function DocumentDetailSkeleton() {
 
 export default function DocumentDetailScreen() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
+  return <DocumentDetailContent key={documentId}/>;
+}
+function DocumentDetailContent() {
+  const { documentId } = useLocalSearchParams<{ documentId: string }>();
   const router = useRouter();
   const { session } = useAuth();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
 
   useEffect(() => {
+    let active = true;
     supabase
       .from('document_types')
       .select('*')
       .eq('id', documentId)
-      .single()
-      .then(({ data }) => setDoc(data));
-  }, [documentId]);
+      .eq('is_active', true).is('deleted_at', null).maybeSingle()
+      .then(({ data, error }) => { if (active) { setDoc(data); setLoadError(error ? 'Could not load this service. Reconnect and retry.' : null); } });
+    return () => { active = false; };
+  }, [documentId, retry]);
 
+  if (loadError) return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole="alert">{loadError}</ThemedText><PrimaryButton label="Retry loading service" onPress={() => { setLoadError(null); setDoc(undefined); setRetry(value => value + 1); }}/><PrimaryButton label="Back to Services" variant="secondary" onPress={() => router.replace('/services')}/></View></SafeAreaView>;
   if (doc === undefined) {
     return <DocumentDetailSkeleton />;
   }
@@ -84,6 +94,7 @@ export default function DocumentDetailScreen() {
         </View>
 
       <ScrollView contentContainerStyle={styles.content}>
+        {catalogContract(doc) ? <View style={{ gap: 16 }}>{charterSections.map(([key,label]) => <View key={key}><ThemedText type="smallBold">{label}</ThemedText><ThemedText>{catalogContract(doc)!.charter[key] ?? 'Not specified in the source charter'}</ThemedText></View>)}</View> : null}
         <ThemedView type="backgroundElement" style={[styles.illustration, styles.shadowSm]}>
           <View style={[styles.auraBack, { backgroundColor: `${theme.primary}14` }]} />
           <View style={[styles.auraFront, { backgroundColor: `${theme.primary}0A` }]} />
@@ -96,7 +107,7 @@ export default function DocumentDetailScreen() {
           </ThemedText>
           <View style={[styles.feePill, styles.hairline, { backgroundColor: `${theme.primary}26` }]}>
             <ThemedText type="smallBold" style={{ color: theme.primary }}>
-              {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
+              {servicePriceLabel(doc)}
             </ThemedText>
           </View>
         </View>
@@ -145,7 +156,7 @@ export default function DocumentDetailScreen() {
               <ThemedText type="small" themeColor="textSecondary">
                 Estimated Time
               </ThemedText>
-              <ThemedText type="smallBold">{formatProcessingTime(doc.processing_target_hours)}</ThemedText>
+              <ThemedText type="smallBold">{serviceProcessingLabel(doc)}</ThemedText>
             </View>
           </Card>
         </View>

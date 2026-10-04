@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import type { Tables } from '@barangayan/shared';
+import { AccountRequestScope, type Tables } from '@barangayan/shared';
 
 export type ProfileWithBarangay = Pick<
   Tables<'profiles'>,
@@ -18,6 +18,10 @@ export type ProfileWithBarangay = Pick<
   | 'house_no'
   | 'street'
   | 'city'
+  | 'province'
+  | 'current_id_submission_id'
+  | 'approved_id_submission_id'
+  | 'id_repair_required'
   | 'employment_status'
   | 'occupation'
   | 'id_verification_status'
@@ -50,8 +54,10 @@ export function useProfile(userId: string): {
   const [profile, setProfile] = useState<ProfileWithBarangay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const scope = useRef(new AccountRequestScope());
 
   const doFetch = useCallback(() => {
+    const ticket = scope.current.begin(userId);
     setIsLoading(true);
     setError(null);
 
@@ -59,12 +65,14 @@ export function useProfile(userId: string): {
     supabase
       .from('profiles')
       .select(
-        'id, first_name, last_name, middle_name, suffix, sex, email, mobile_number, house_no, street, city, employment_status, occupation, id_verification_status, avatar_url, id_type, id_photo_urls, barangay_id, theme_preference, accent_color, font_preference, household_members, barangays(name)',
+        'id, first_name, last_name, middle_name, suffix, sex, email, mobile_number, house_no, street, city, province, current_id_submission_id, approved_id_submission_id, id_repair_required, employment_status, occupation, id_verification_status, avatar_url, id_type, id_photo_urls, barangay_id, theme_preference, accent_color, font_preference, household_members, barangays(name)',
       )
       .eq('id', userId)
       .single()
       .then(({ data, error: qErr }) => {
+        if (!scope.current.accepts(ticket, userId)) return;
         if (qErr) {
+          setProfile(null);
           setError(qErr.message);
         } else {
           setProfile(data as ProfileWithBarangay | null);
@@ -74,8 +82,18 @@ export function useProfile(userId: string): {
   }, [userId]);
 
   useEffect(() => {
-    Promise.resolve().then(() => doFetch());
-  }, [doFetch]);
+    let active = true;
+    const requestScope = scope.current;
+    requestScope.setOwner(userId);
+    Promise.resolve().then(() => { if (active) doFetch(); });
+    const supabase = createSupabaseBrowserClient();
+    const onFocus = () => doFetch();
+    window.addEventListener('focus', onFocus);
+    const channel = supabase.channel(`profile:${userId}`).on('postgres_changes', {
+      event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${userId}`,
+    }, doFetch).subscribe();
+    return () => { active = false; requestScope.clear(); window.removeEventListener('focus', onFocus); supabase.removeChannel(channel); };
+  }, [doFetch, userId]);
 
-  return { profile, isLoading, error, refetch: doFetch };
+  return { profile: profile?.id === userId ? profile : null, isLoading, error, refetch: doFetch };
 }

@@ -1,4 +1,7 @@
 'use client';
+import { AgencySlaStatus } from '@/components/services/agency-sla-status';
+import { submittedDetailLines, requestFee } from '@barangayan/shared';
+
 
 import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
 import { Banknote, CheckCircle2, HelpCircle, QrCode, RefreshCw, Store, Wallet } from 'lucide-react';
@@ -14,6 +17,7 @@ import { useCountdown } from '@/hooks/use-countdown';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 type ServiceRequest = Tables<'service_requests'> & {
+  payments?: {document_fee_centavos:number|null;amount_centavos:number;status:string}[];
   document_types: Pick<Tables<'document_types'>, 'name' | 'processing_target_hours' | 'fee_centavos'> | null;
 };
 
@@ -71,7 +75,7 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
     function load() {
       supabase
         .from('service_requests')
-        .select('*, document_types(name, processing_target_hours, fee_centavos)')
+        .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
         .eq('id', requestId)
         .single()
         .then(({ data }) => {
@@ -179,13 +183,14 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
   const fraction = isCancelled ? 0 : progressFraction(request.status, request.created_at, targetHours);
   const progressColor = request.status === 'completed' ? 'var(--primary)' : PROGRESS_AMBER;
 
-  const fee = request.document_types?.fee_centavos ?? 0;
+  const recordedPayment = request.payments?.find(payment => payment.status === 'paid') ?? request.payments?.[0];
+  const fee = requestFee(request, request.document_types?.fee_centavos ?? 0, recordedPayment?.document_fee_centavos ?? recordedPayment?.amount_centavos);
   const paymentMethodLabel = request.payment_method === 'pickup' ? 'Pay at Pickup' : request.payment_method === 'qrph' ? 'QR PH' : 'Not yet selected';
   const PaymentMethodIcon = request.payment_method === 'pickup' ? Banknote : request.payment_method === 'qrph' ? QrCode : HelpCircle;
   const isPaid = request.payment_status === 'paid';
   const isRefunded = request.payment_status === 'refunded';
   const canPayNow = request.status !== 'cancelled' && request.status !== 'completed';
-  const showQrPayNow = request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && fee >= 100 && PAYMENT_SETTLEMENT_READY;
+  const showQrPayNow = request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && fee !== null && fee >= 100 && PAYMENT_SETTLEMENT_READY;
   const hasActivePendingPayment = !!pendingPayment && (pendingRemaining ?? 0) > 0;
   const showCancelSlot =
     request.status !== 'ready_for_pickup' && request.status !== 'completed' && request.status !== 'cancelled' && request.payment_status !== 'paid';
@@ -197,7 +202,8 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         <p className="text-sm text-muted-foreground">Ref #{request.reference_number}</p>
       </div>
 
-      {!isCancelled ? (
+      {request.timing_model !== 'agency_minutes_v1' ? <p className="text-xs text-muted-foreground">Previous timing model · original processing estimate retained</p> : null}
+      {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} /> : !isCancelled ? (
         <div className="rounded-2xl border border-border bg-card p-5">
           <div className="mb-2 flex items-start justify-between">
             <div>
@@ -229,7 +235,7 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         </div>
         <div className="flex items-center justify-between px-4 pb-4">
           <span className="text-sm text-muted-foreground">Total Amount Due</span>
-          <span className="font-semibold">{fee === 0 ? 'Free' : formatCentavosAsPHP(fee)}</span>
+          <span className="font-semibold">{fee === null ? 'Awaiting fee assessment' : fee === 0 ? 'No payment required' : formatCentavosAsPHP(fee)}</span>
         </div>
 
         {showQrPayNow || showCancelSlot ? (
@@ -312,9 +318,11 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         ) : null}
       </div>
 
+      {request.purpose_label ? <section className="rounded-xl border p-4"><h2>Purpose</h2><p>{request.purpose_label}</p><p>{request.purpose_explanation}</p><dl>{submittedDetailLines(request.supporting_details).map(([label,value])=><div key={label}><dt className="font-medium">{label}</dt><dd>{value}</dd></div>)}</dl></section> : null}
+      {fee !== null && fee > 0 && !isPaid && !isRefunded && canPayNow ? <Button asChild><a href={`/services/payment/${requestId}`}>Choose or continue payment</a></Button> : null}
       {request.requester_notes ? (
         <div className="rounded-2xl border border-border bg-card p-5">
-          <p className="mb-1 font-semibold">Purpose</p>
+          <p className="mb-1 font-semibold">Additional notes</p>
           <p className="text-sm text-muted-foreground">{request.requester_notes}</p>
         </div>
       ) : null}

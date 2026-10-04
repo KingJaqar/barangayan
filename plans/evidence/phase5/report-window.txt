@@ -1,0 +1,123 @@
+- banner:
+  - button "Toggle sidebar":
+  - img "Barangayan logo"
+  - paragraph: Barangayan
+  - paragraph: Barangay Ampid I admin
+  - generic: Services
+  - textbox "Search residents, requests, incidents..."
+  - button "Notifications":
+    - generic: "2"
+  - button "P Phase Three":
+    - generic: P
+    - generic: Phase Three
+- complementary:
+  - navigation "Admin navigation":
+    - paragraph: Overview
+    - link "Dashboard":
+      - /url: /dashboard
+      - generic: Dashboard
+    - link "Theme":
+      - /url: /theme
+      - generic: Theme
+    - button "Toggle color theme":
+    - paragraph: Operations
+    - link "Services":
+      - /url: /services
+      - generic: Services
+    - link "Announcements":
+      - /url: /announcements
+      - generic: Announcements
+    - link "Requests":
+      - /url: /requests
+      - generic: Requests
+    - link "Transactions":
+      - /url: /transactions
+      - generic: Transactions
+    - paragraph: Directories & Mapping
+    - link "Resident directory":
+      - /url: /residents
+      - generic: Resident directory
+    - link "Incident reports":
+      - /url: /incident-reports
+      - generic: Incident reports
+    - link "Incident map":
+      - /url: /incident-map
+      - generic: Incident map
+    - link "Health":
+      - /url: /health
+      - generic: Health
+    - link "Medical Applicants":
+      - /url: /health/applicants
+      - generic: Medical Applicants
+    - link "Waste Management":
+      - /url: /waste-management
+      - generic: Waste Management
+    - paragraph: Emergency & DRRM
+    - link "Hub":
+      - /url: /hub
+      - generic: Hub
+    - link "Evacuation Centers":
+      - /url: /evacuation-centers
+      - generic: Evacuation Centers
+    - link "Emergency QR":
+      - /url: /emergency-qr
+      - generic: Emergency QR
+    - link "Households & Residents":
+      - /url: /households-residents
+      - generic: Households & Residents
+    - paragraph: Administration
+    - link "Staff member":
+      - /url: /staff
+      - generic: Staff member
+    - link "FAQ content":
+      - /url: /faq
+      - generic: FAQ content
+    - link "Terms & Privacy":
+      - /url: /terms-privacy
+      - generic: Terms & Privacy
+    - link "About Us":
+      - /url: /about-us
+      - generic: About Us
+    - link "Settings":
+      - /url: /settings
+      - generic: Settings
+    - button "Logout":
+      - generic: Logout
+- main:
+  - heading "Service SLA reporting" [level=1]
+  - heading "Service processing report" [level=2]
+  - text: From (UTC)
+  - textbox "From (UTC)": 2026-01-02
+  - text: Until, exclusive (UTC)
+  - textbox "Until, exclusive (UTC)" [active]: 2026-01-03
+  - paragraph: Processing and waits use readiness in this window. Turnaround uses actual release. Current overdue and paused counts are as of 10/3/2026, 10:28:49 PM. Cancelled requests are excluded from successful-completion compliance.
+  - term: Ready requests
+  - definition: "3"
+  - term: Average agency processing
+  - definition: 15m 0s
+  - term: Within target
+  - definition: 100.0%
+  - term: Average resident wait
+  - definition: 1m 0s
+  - term: Current overdue requests
+  - definition: "1"
+  - term: Current paused requests
+  - definition: "1"
+  - term: Released requests
+  - definition: "0"
+  - term: Average total turnaround
+  - definition: No samples
+  - paragraph: "Previous timing model: 0 retained requests; 0 completed in this window. These samples are separate from agency-minute compliance."
+  - heading "Requests needing attention" [level=3]
+  - list:
+    - link "#REQ-2026-00027":
+      - /url: /requests/e5b8a242-97c7-48cd-95c7-a750aed75bd7
+    - text: "· On Track · 6m 49s · Waiting: Resident returning with original certificate"
+    - link "#REQ-2026-00035":
+      - /url: /requests/3a87f91c-cba4-48fe-a696-47f861f96ae5
+    - text: · Overdue · 19m 15s
+  - heading "Recorded threshold alerts" [level=3]
+  - paragraph: Each threshold is recorded once per request. Delayed evaluation retains both crossed thresholds. Alerts remain available after readiness.
+  - list
+- button "Open Next.js Dev Tools":
+- alert

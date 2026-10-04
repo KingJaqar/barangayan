@@ -16,4 +16,5 @@ export const supabase = createSupabaseClient({
   url,
   anonKey,
   authStorage: AsyncStorage,
+  flowType: 'pkce',
 });

@@ -1,0 +1,130 @@
+v14.5: Pulling from supabase/postgrest
+2.8.1: Pulling from supabase/kong
+0.53.0-alpine: Pulling from supabase/vector
+v1.76.2: Pulling from supabase/edge-runtime
+v1.77.5: Pulling from supabase/storage-api
+v2.197.0: Pulling from supabase/gotrue
+v0.99.0: Pulling from supabase/postgres-meta
+1.50.12: Pulling from supabase/logflare
+6f15f912791d: Pulling fs layer
+2026.09.14-sha-4dd8a95: Pulling from supabase/studio
+17.6.1.155: Pulling from supabase/postgres
+v2.135.3: Pulling from supabase/realtime
+213ec9aee27d: Pulling fs layer
+a70653f7a2d5: Pulling fs layer
+814dd06d26c7: Pulling fs layer
+531e3bd93090: Pulling fs layer
+v1.30.2: Pulling from supabase/mailpit
+4f4fb700ef54: Pulling fs layer
+1074353eec0d: Pulling fs layer
+0179246107e3: Pulling fs layer
+c8a04bee2d5a: Pulling fs layer
+7b95344fc011: Pulling fs layer
+cbf2f7f0a3ba: Pulling fs layer
+a8ac7f6c67ab: Pulling fs layer
+2dd72d057e2c: Pulling fs layer
+e9e66b831eba: Pulling fs layer
+c224a83fbc9c: Pulling fs layer
+2817b1665314: Pulling fs layer
+a48745f287c0: Pulling fs layer
+44136fa355b3: Download complete
+a70653f7a2d5: Download complete
+6f15f912791d: Download complete
+814dd06d26c7: Download complete
+6f15f912791d: Pull complete
+Digest: sha256:b574528fe109c8343c1247155734d03df8c34b462f342dca0ccc20244fc36ef9
+Status: Downloaded newer image for public.ecr.aws/supabase/postgrest:v14.5
+public.ecr.aws/supabase/postgrest:v14.5
+c0cb7126d877: Pulling fs layer
+74c409e3506a: Pulling fs layer
+71eb50013731: Pulling fs layer
+55afa1ecc21d: Pulling fs layer
+f30f4fcb85f4: Pulling fs layer
+e5d190db8191: Pulling fs layer
+e6f31ffc071e: Pulling fs layer
+f6ee6ec72260: Pulling fs layer
+54c04bf9f4fc: Pulling fs layer
+6b02a50dcd71: Pulling fs layer
+56258ccfdddc: Pulling fs layer
+15f8ad8fae49: Pulling fs layer
+05c0c2aca497: Pulling fs layer
+75f753062429: Pulling fs layer
+a06e5fe4d6ae: Pulling fs layer
+eb54a47ae47d: Pulling fs layer
+34de6b21cc2e: Pulling fs layer
+fac22bc5cecd: Pulling fs layer
+05ee0ed47954: Pulling fs layer
+e53a5764ca1a: Pulling fs layer
+44136fa355b3: Download complete
+d22dfcc17234: Pulling fs layer
+a2e97797e3e6: Pulling fs layer
+0dde2b9b421d: Pulling fs layer
+b5ffb33994ae: Pulling fs layer
+040dc8c62515: Pulling fs layer
+9efa776e29cd: Pulling fs layer
+0832874a287b: Pulling fs layer
+2c01495487b9: Pulling fs layer
+119d43eec815: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+e969b0bb2c88: Pulling fs layer
+bb8f02002931: Pulling fs layer
+3cddab114eda: Pulling fs layer
+2f3356853560: Pulling fs layer
+45dd7940c54d: Pulling fs layer
+cea7eb9bbe80: Pulling fs layer
+51c53f95c2ca: Pulling fs layer
+a8ac7f6c67ab: Pulling fs layer
+3d9090abcf25: Pulling fs layer
+0282d618b52c: Pulling fs layer
+a8ac7f6c67ab: Pulling fs layer
+d37adeb288b9: Pulling fs layer
+16dadad4b826: Pulling fs layer
+b4d5a01ad0d8: Pulling fs layer
+5353de927f8e: Pulling fs layer
+cea7eb9bbe80: Pulling fs layer
+51c53f95c2ca: Pulling fs layer
+3cddab114eda: Pulling fs layer
+0282d618b52c: Pulling fs layer
+13b2a4b99d04: Pulling fs layer
+e6f31ffc071e: Pulling fs layer
+cfef8a23a9cb: Pulling fs layer
+cf825171b7dc: Pulling fs layer
+53a351a56892: Pulling fs layer
+4fd2a8fb49ea: Pulling fs layer
+61e28571ce56: Pulling fs layer
+2caf845bedf7: Pulling fs layer
+0706ae270a0e: Pulling fs layer
+f74c82c39622: Pulling fs layer
+299f5f0d1cbd: Pulling fs layer
+1abd1e9eeac8: Pulling fs layer
+e4728f91888d: Pulling fs layer
+ce45bd6f1475: Pulling fs layer
+bf9514de8b26: Pulling fs layer
+d90582095f55: Pulling fs layer
+6287691cbdd7: Pulling fs layer
+05e7149f55b7: Pulling fs layer
+adf12054a2ae: Pulling fs layer
+abd74937b95a: Pulling fs layer
+b61f577aa499: Pulling fs layer
+b2c2756dd830: Pulling fs layer
+d800b4c0b90c: Pulling fs layer
+958ebfdbc56d: Pulling fs layer
+9b96d300616a: Pulling fs layer
+70827fc5f7b5: Pulling fs layer
+3be12de86dc3: Pulling fs layer
+7374a47570a9: Pulling fs layer
+17caa96af9ef: Pulling fs layer
+213ec9aee27d: Download complete
+a70653f7a2d5: Pull complete
+213ec9aee27d: Pull complete
+3b73a8ed8ed9: Download complete
+cbf2f7f0a3ba: Download complete
+4f4fb700ef54: Download complete
+4f4fb700ef54: Download complete
+1074353eec0d: Download complete
+1074353eec0d: Pull complete
+cbf2f7f0a3ba: Pull complete
+c8a04bee2d5a: Download complete
+0179246107e3: Download complete
+629029e972f5: Download complete
+531e3bd93090: Download complete

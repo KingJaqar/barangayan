@@ -1,0 +1,51 @@
+src/app/(app)/health/register.tsx(438,72): error TS2345: Argument of type '{ p_drive_id: string; p_age: number; p_is_pwd: boolean; p_comorbidities: ("Hypertension" | "Diabetes" | "Immunocompromised" | "Pregnant" | "Allergy")[]; p_prior_dose_date: string | undefined; }' is not assignable to parameter of type 'undefined'.
+src/app/(app)/reports/[incidentId].tsx(525,68): error TS2345: Argument of type '{ p_incident_id: string; }' is not assignable to parameter of type 'undefined'.
+src/app/(app)/reports/[incidentId].tsx(568,63): error TS2345: Argument of type '{ p_incident_id: string; }' is not assignable to parameter of type 'undefined'.
+src/app/(app)/reports/new.tsx(370,7): error TS2353: Object literal may only specify known properties, and 'barangay_id' does not exist in type 'never[]'.
+src/app/(app)/services/payment/[requestId].tsx(116,80): error TS2345: Argument of type '{ p_request_id: string; p_method: "pickup" | "qrph"; }' is not assignable to parameter of type 'undefined'.
+src/app/(app)/services/payment/pickup/[requestId].tsx(70,11): error TS2353: Object literal may only specify known properties, and 'service_request_id' does not exist in type 'never[]'.
+src/app/(app)/services/payment/pickup/[requestId].tsx(71,29): error TS2339: Property 'barangay_id' does not exist on type 'never'.
+src/app/(app)/services/request/[documentId].tsx(144,9): error TS2353: Object literal may only specify known properties, and 'barangay_id' does not exist in type 'never[]'.
+src/app/(app)/services/request/[documentId].tsx(159,46): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(app)/services/requests/[requestId].tsx(136,28): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(app)/services/requests/[requestId].tsx(136,48): error TS2339: Property 'expires_at' does not exist on type 'never'.
+src/app/(app)/services/requests/[requestId].tsx(136,75): error TS2339: Property 'expires_at' does not exist on type 'never'.
+src/app/(app)/services/requests/[requestId].tsx(234,80): error TS2345: Argument of type '{ p_request_id: string; p_note: null; }' is not assignable to parameter of type 'undefined'.
+src/app/(app)/settings/location-verification.tsx(165,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+src/app/(app)/settings/profile.tsx(1156,17): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+src/app/(app)/settings/profile.tsx(1250,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+src/hooks/use-about-us.ts(57,39): error TS2339: Property 'id' does not exist on type 'never'.
+src/hooks/use-family-members.ts(92,11): error TS2353: Object literal may only specify known properties, and 'profile_id' does not exist in type 'never[]'.
+src/hooks/use-family-members.ts(120,17): error TS2345: Argument of type 'Partial<{ avatar_url: string | null; checked_in_at: string | null; checked_in_center_id: string | null; checked_in_center_name: string | null; created_at: string; id: string; is_checked_in: boolean; ... 5 more ...; updated_at: string; }>' is not assignable to parameter of type 'never'.
+src/hooks/use-font-preference.tsx(49,17): error TS2345: Argument of type '{ font_preference: string; }' is not assignable to parameter of type 'never'.
+src/hooks/use-medical-drives.ts(302,77): error TS2345: Argument of type '{ p_drive_id: string; p_age: number; p_is_pwd: boolean; p_comorbidities: string[]; p_prior_dose_date: string | undefined; }' is not assignable to parameter of type 'undefined'.
+src/hooks/use-notification-preferences.tsx(48,15): error TS2345: Argument of type '{ push_notifications_enabled: boolean; }' is not assignable to parameter of type 'never'.
+src/hooks/use-notification-realtime.ts(54,75): error TS2339: Property 'title' does not exist on type 'never'.
+src/hooks/use-profile-household-members.ts(96,15): error TS2345: Argument of type 'any' is not assignable to parameter of type 'never'.
+src/hooks/use-qr-checkins.ts(68,15): error TS2345: Argument of type '{ evacuation_center_id: string; user_id: string; barangay_id: string; }' is not assignable to parameter of type 'never[]'.
+  Type '{ evacuation_center_id: string; user_id: string; barangay_id: string; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/hooks/use-qr-checkins.ts(95,17): error TS2345: Argument of type '{ barangay_id: string; checked_in_at: string; created_at: string; evacuation_center_id: string; id: string; user_id: string; }' is not assignable to parameter of type 'never[]'.
+  Type '{ barangay_id: string; checked_in_at: string; created_at: string; evacuation_center_id: string; id: string; user_id: string; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/hooks/use-qr-checkins.ts(114,15): error TS2345: Argument of type '{ is_checked_in: boolean; }' is not assignable to parameter of type 'never'.
+src/hooks/use-theme-preference.tsx(111,17): error TS2345: Argument of type '{ theme_preference: ThemePreference; }' is not assignable to parameter of type 'never'.
+src/hooks/use-theme-preference.tsx(124,17): error TS2345: Argument of type '{ accent_color: string; }' is not assignable to parameter of type 'never'.
+src/hooks/use-theme-preference.tsx(137,17): error TS2345: Argument of type '{ custom_accent_colors: string[]; }' is not assignable to parameter of type 'never'.
+src/hooks/use-unread-counts.tsx(79,32): error TS2339: Property 'status' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(79,55): error TS2339: Property 'status' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(82,32): error TS2339: Property 'status' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(82,60): error TS2339: Property 'resolved_read_at' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(97,58): error TS2339: Property 'announcement_id' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(99,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/hooks/use-unread-counts.tsx(146,15): error TS2345: Argument of type '{ resolved_read_at: string; }' is not assignable to parameter of type 'never'.
+src/hooks/use-unread-counts.tsx(163,17): error TS2345: Argument of type '{ resolved_read_at: string; }' is not assignable to parameter of type 'never'.
+src/hooks/use-unread-counts.tsx(176,17): error TS2345: Argument of type '{ resolved_read_at: null; }' is not assignable to parameter of type 'never'.
+src/hooks/use-unread-counts.tsx(189,9): error TS2345: Argument of type '{ resident_id: string; announcement_id: string; }[]' is not assignable to parameter of type 'never[]'.
+  Type '{ resident_id: string; announcement_id: string; }' is not assignable to type 'never'.
+src/hooks/use-unread-counts.tsx(205,13): error TS2353: Object literal may only specify known properties, and 'resident_id' does not exist in type 'never[]'.
+src/lib/push-notifications.ts(100,61): error TS2345: Argument of type '{ p_expo_push_token: string; p_device_type: string; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(9,97): error TS2345: Argument of type '{ p_input: { firstName: string; lastName: string; sex: "female" | "male"; mobileNumber: string; houseNo: string; street: string; employmentStatus: "employed" | "unemployed" | "student" | "self_employed" | "retired"; birthDate: string; middleName?: string | undefined; suffix?: string | undefined; occupation?: string ...' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(10,83): error TS2345: Argument of type '{ p_input: { submissionId: string; idType: string; frontPath: string; backPath: string; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(11,76): error TS2345: Argument of type '{ p_input: { submissionId: string; decision: "verified" | "verification_failed" | "revoked"; reason?: string | undefined; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(12,85): error TS2345: Argument of type '{ p_input: { documentTypeId: string; idempotencyKey: string; purposeCode: string; details: { businessName?: string | undefined; establishmentAddress?: string | undefined; isRenter?: boolean | undefined; recordReference?: string | undefined; copies?: number | undefined; personalAppearanceAcknowledged?: boolean | unde...' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(13,88): error TS2345: Argument of type '{ p_input: { requestId: string; state: "assessed" | "waived"; amountCentavos: number; basis: string; billablePages?: number | undefined; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(14,96): error TS2345: Argument of type '{ p_input: { requestId: string; action: "pause" | "accept" | "resume" | "ready" | "release" | "cancel"; reason?: string | undefined; requirementsComplete?: boolean | undefined; personalAppearanceReady?: boolean | undefined; }; }' is not assignable to parameter of type 'undefined'.

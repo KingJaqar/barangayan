@@ -1,3 +1,4 @@
+import { requestFee } from '@barangayan/shared';
 import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
@@ -96,7 +97,7 @@ export default function QrPhPaymentScreen() {
 
   // Fallback breakdown shown before the QR source has loaded — the source response
   // (once available) is the authoritative total actually being charged.
-  const documentFee = request?.document_types?.fee_centavos ?? 0;
+  const documentFee = request ? requestFee(request, request.document_types?.fee_centavos ?? 0) : null;
   const { source, status, errorMessage, cancelPayment, cancelling } = usePaymongoSource(requestId);
   const totalDue = source?.amountCentavos ?? documentFee;
 
@@ -130,8 +131,8 @@ export default function QrPhPaymentScreen() {
       params: {
         requestId,
         refNumber: request.reference_number,
-        amount: String(totalDue),
-        documentFee: String(source?.documentFeeCentavos ?? documentFee),
+        amount: String(totalDue ?? 0),
+        documentFee: String(source?.documentFeeCentavos ?? documentFee ?? 0),
         method: 'QR PH',
         sourceId: source?.paymentIntentId ?? '',
       },
@@ -244,12 +245,12 @@ export default function QrPhPaymentScreen() {
             <View style={styles.breakdown}>
               <View style={styles.breakdownRow}>
                 <ThemedText type="small" themeColor="textSecondary">Document Fee</ThemedText>
-                <ThemedText type="small">{formatCentavosAsPHP(source?.documentFeeCentavos ?? documentFee)}</ThemedText>
+                <ThemedText type="small">{source?.documentFeeCentavos != null ? formatCentavosAsPHP(source.documentFeeCentavos) : documentFee === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(documentFee)}</ThemedText>
               </View>
             </View>
 
             <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
-              {totalDue === 0 ? 'Free' : formatCentavosAsPHP(totalDue)}
+              {totalDue === 0 ? 'Free' : totalDue === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(totalDue)}
             </ThemedText>
             {source ? (
               <>
@@ -365,7 +366,7 @@ export default function QrPhPaymentScreen() {
 
       <PaymentSuccessModal
         visible={showSuccessModal}
-        amountCentavos={totalDue}
+        amountCentavos={source?.amountCentavos ?? 0}
         onConfirm={handleConfirmSuccess}
       />
     </SafeAreaView>

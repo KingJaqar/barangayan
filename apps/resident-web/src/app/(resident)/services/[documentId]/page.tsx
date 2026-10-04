@@ -1,4 +1,5 @@
-import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
+import { ServiceCharter } from '@/components/services/resident-service-form';
+import { servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
 import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -32,7 +33,7 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
           {doc.description ? <p className="mt-1 text-sm text-muted-foreground">{doc.description}</p> : null}
         </div>
         <span className="shrink-0 rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-          {doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}
+          {servicePriceLabel(doc)}
         </span>
       </div>
 
@@ -58,7 +59,7 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Estimated Time</span>
-          <span className="font-semibold">{formatProcessingTime(doc.processing_target_hours)}</span>
+          <span className="font-semibold">{serviceProcessingLabel(doc)}</span>
         </div>
       </div>
 
@@ -70,6 +71,7 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
         Processing times are estimates and may vary during peak periods.
       </div>
 
+      <ServiceCharter doc={doc}/>
       <div className="mt-6">
         {user ? (
           <Button asChild size="lg" className="w-full sm:w-auto">

@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
 import { DocumentTypeCatalog } from './document-type-catalog';
 import { DocumentTypeForm } from './document-type-form';
@@ -11,12 +12,19 @@ export default async function DocumentsPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: profile } = await supabase.from('profiles').select('barangay_id').eq('id', user!.id).single();
-  const { data: documentTypes } = await supabase
+  if (!user) redirect('/login');
+  const { data: profile, error: profileError } = await supabase.from('profiles').select('barangay_id').eq('id', user.id).single();
+  const { data: documentTypes, error: catalogError } = await supabase
     .from('document_types')
     .select('*')
     .is('deleted_at', null)
     .order('name');
+
+  if (profileError || !profile?.barangay_id || catalogError) return <div className="mx-auto max-w-4xl">
+    <h1 className="text-2xl font-bold">Services</h1>
+    <p role="alert" className="my-4 text-sm text-red-600">Unable to load the document catalog. Check your connection and try again.</p>
+    <a href="/services" className="text-sm underline">Retry</a>
+  </div>;
 
   return (
     <div className="mx-auto max-w-4xl">

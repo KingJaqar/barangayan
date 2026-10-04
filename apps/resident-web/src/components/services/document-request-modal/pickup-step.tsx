@@ -11,14 +11,13 @@
 import { formatCentavosAsPHP } from '@barangayan/shared';
 import { Banknote } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export function PickupStep({
   requestId,
-  barangayId,
   referenceNumber,
   documentName,
   feeCentavos,
@@ -31,28 +30,19 @@ export function PickupStep({
   feeCentavos: number;
   onDone: () => void;
 }) {
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const save = useCallback(async () => {
+    setSaved(false);
+    setError(null);
+    const client = createSupabaseBrowserClient();
+    const { error } = await client.rpc('start_pickup_payment', { p_request_id: requestId });
+    if (error) setError(error.message);
+    else setSaved(true);
+  }, [requestId]);
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
-
-    async function ensurePaymentRow() {
-      // Idempotent-ish: only create a payments row if one doesn't already exist for this
-      // request (e.g. the resident backs out and returns to this screen).
-      const { data: existing } = await supabase.from('payments').select('id').eq('service_request_id', requestId).maybeSingle();
-
-      if (!existing) {
-        await supabase.from('payments').insert({
-          service_request_id: requestId,
-          barangay_id: barangayId,
-          method: 'pickup',
-          amount_centavos: feeCentavos,
-          document_fee_centavos: feeCentavos,
-          status: 'pending',
-        });
-      }
-    }
-
-    ensurePaymentRow();
-  }, [requestId, barangayId, feeCentavos]);
+    void Promise.resolve().then(save);
+  }, [save]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -74,7 +64,15 @@ export function PickupStep({
         </p>
       </div>
 
-      <Button size="lg" onClick={onDone}>
+      {error ? (
+        <div role="alert">
+          <p>{error}</p>
+          <Button onClick={() => void save()}>Retry recording pickup payment</Button>
+        </div>
+      ) : (
+        <p role="status">{saved ? 'Pickup payment recorded.' : 'Recording pickup payment…'}</p>
+      )}
+      <Button size="lg" disabled={!saved} onClick={onDone}>
         Done
       </Button>
       {/* ?open= lands on the Requests list with this request's tracking drawer already

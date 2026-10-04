@@ -1,0 +1,25 @@
+
+> @barangayan/resident-ios@1.0.0 export:ios
+> expo export --platform ios --output-dir dist/phase0-ios
+
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+PluginError: Failed to resolve plugin for module "expo-secure-store" relative to "C:\Users\User\barangayan\apps\resident-ios-mobile". Do you have node modules installed?
+PluginError: Failed to resolve plugin for module "expo-secure-store" relative to "C:\Users\User\barangayan\apps\resident-ios-mobile". Do you have node modules installed?
+    at resolvePluginForModule (C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\utils\plugin-resolver.js:84:9)
+    at resolveConfigPluginFunctionWithInfo (C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\utils\plugin-resolver.js:133:7)
+    at resolveConfigPluginFunction (C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\utils\plugin-resolver.js:124:7)
+    at withStaticPlugin (C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\plugins\withStaticPlugin.js:83:70)
+    at C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\plugins\withPlugins.js:28:84
+    at Array.reduce (<anonymous>)
+    at withPlugins (C:\Users\User\barangayan\node_modules\@expo\config-plugins\build\plugins\withPlugins.js:28:18)
+    at withConfigPlugins (C:\Users\User\barangayan\node_modules\@expo\config\build\plugins\withConfigPlugins.js:33:47)
+    at fillAndReturnConfig (C:\Users\User\barangayan\node_modules\@expo\config\build\Config.js:247:78)
+    at getConfig (C:\Users\User\barangayan\node_modules\@expo\config\build\Config.js:300:12)
+npm error Lifecycle script `export:ios` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error workspace @barangayan/resident-ios@1.0.0
+npm error location C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c expo export --platform ios --output-dir dist/phase0-ios

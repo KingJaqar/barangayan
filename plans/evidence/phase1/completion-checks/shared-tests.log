@@ -1,0 +1,26 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 4ms
+ ✓ src/lib/haversine.test.ts (4 tests) 5ms
+ ✓ src/lib/osrm.test.ts (4 tests) 7ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 7ms
+ ✓ src/lib/format.test.ts (17 tests) 41ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 6ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 7ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 8ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 10ms
+ ✓ src/schemas/payment.test.ts (9 tests) 10ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 11ms
+ ✓ src/schemas/staff.test.ts (9 tests) 8ms
+ ✓ src/schemas/service-foundations.test.ts (15 tests) 14ms
+
+ Test Files  13 passed (13)
+      Tests  108 passed (108)
+   Start at  20:35:05
+   Duration  2.07s (transform 1.71s, setup 0ms, collect 3.55s, tests 137ms, environment 4ms, prepare 10.64s)
+

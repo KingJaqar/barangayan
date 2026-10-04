@@ -1,0 +1,13 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\app\(auth)\register\register-form.tsx
+  3:1  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+C:\Users\User\barangayan\apps\resident-web\src\app\(resident)\settings\location-verification\location-verification-form.tsx
+  94:6  warning  React Hook useEffect has a missing dependency: 'boundary'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 2 problems (0 errors, 2 warnings)
+

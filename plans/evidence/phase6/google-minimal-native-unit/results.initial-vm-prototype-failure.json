@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "checks": [],
+  "error": "Values have same structure but are not reference-equal:\n\n{\n  options: {\n    redirectTo: 'barangayan://auth/callback',\n    skipBrowserRedirect: true\n  },\n  provider: 'google'\n}\n"
+}

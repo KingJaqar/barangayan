@@ -1,0 +1,34 @@
+PASS: Source inventory hashes still identify the inspected files
+PASS: Every indexed line reference exists
+PASS: resident-web UI and data consumers indexed
+PASS: admin-web UI and data consumers indexed
+PASS: resident-android-mobile UI and data consumers indexed
+PASS: resident-ios-mobile UI and data consumers indexed
+PASS: catalog boundary indexed
+PASS: requests boundary indexed
+PASS: identity boundary indexed
+PASS: payments boundary indexed
+PASS: sla boundary indexed
+PASS: locality boundary indexed
+PASS: auth boundary indexed
+PASS: scores boundary indexed
+PASS: realtime boundary indexed
+PASS: exports boundary indexed
+PASS: Primary, legacy, iOS, correction, storage, map, financial and export boundaries present
+PASS: All requirement checklist IDs have phase and verification mappings
+PASS: Every attempted check retains timing, exit and log evidence
+PASS: All applicable baseline checks recorded, including blocked backend/device probes
+PASS: ios-types persistent diagnostic reproduced
+PASS: ios-export persistent diagnostic reproduced
+PASS: ios-release persistent diagnostic reproduced
+PASS: ios-lint persistent diagnostic reproduced
+PASS: android-sdk persistent diagnostic reproduced
+PASS: ios-sdk persistent diagnostic reproduced
+PASS: database-tests persistent diagnostic reproduced
+PASS: edge-types persistent diagnostic reproduced
+PASS: Root lint generated-output diagnostic reproduced independently of build race
+PASS: Transient resident web route types recover without source changes
+PASS: Original user files are byte-for-byte preserved
+PASS: Tracked change boundary retains only the original migration edit
+PASS: External and feature checks remain explicitly unverified
+Phase 0 verdict: complete

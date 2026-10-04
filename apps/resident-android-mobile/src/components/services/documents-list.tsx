@@ -1,10 +1,12 @@
-import { formatCentavosAsPHP, formatProcessingTime, type Tables } from '@barangayan/shared';
+import { servicePriceLabel } from '@barangayan/shared';
+import { serviceProcessingLabel, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
+import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getDocumentIcon } from '@/constants/document-icons';
@@ -18,6 +20,8 @@ type DocumentType = Tables<'document_types'>;
 export function DocumentsList() {
   const theme = useTheme();
   const [documents, setDocuments] = useState<DocumentType[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
   // Each mount gets its own unique channel name so that fast re-mounts (e.g. via
   // router.replace('/services') from the COD confirmation screen) never try to add
   // postgres_changes listeners to a channel that a previous instance already
@@ -27,12 +31,13 @@ export function DocumentsList() {
   const [channelName] = useState(() => `document-types-${Date.now()}`);
 
   useEffect(() => {
+    let active = true;
     function load() {
       supabase
         .from('document_types')
-        .select('*')
+        .select('*').eq('is_active', true)
         .order('name')
-        .then(({ data }) => setDocuments(data ?? []));
+        .then(({ data, error: queryError }) => { if (active) { setDocuments(queryError ? null : data ?? []); setError(queryError ? 'Could not load the service catalog. Reconnect and retry.' : null); } });
     }
 
     load();
@@ -46,10 +51,12 @@ export function DocumentsList() {
       .subscribe();
 
     return () => {
+      active = false;
       supabase.removeChannel(channel);
     };
-  }, [channelName]);
+  }, [channelName, retry]);
 
+  if (error) return <View style={styles.list}><ThemedText accessibilityRole="alert">{error}</ThemedText><PrimaryButton label="Retry catalog" onPress={() => setRetry(value => value + 1)}/></View>;
   if (documents === null) {
     return <PlaceholderPanel label="Loading catalog…" />;
   }
@@ -73,24 +80,12 @@ export function DocumentsList() {
                 <View style={styles.processingRow}>
                   <Ionicons name="time-outline" size={12} color={theme.textSecondary} />
                   <ThemedText type="small" themeColor="textSecondary">
-                    {formatProcessingTime(doc.processing_target_hours)}
+                    {serviceProcessingLabel(doc)}
                   </ThemedText>
                 </View>
               </View>
 
-              {doc.fee_centavos === 0 ? (
-                <View style={[styles.pricePill, styles.pricePillFree, { borderColor: theme.textSecondary }]}>
-                  <ThemedText type="small" themeColor="textSecondary">
-                    Free
-                  </ThemedText>
-                </View>
-              ) : (
-                <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
-                  <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                    {formatCentavosAsPHP(doc.fee_centavos)}
-                  </ThemedText>
-                </View>
-              )}
+              <View style={{ maxWidth: 160 }}><ThemedText type="small">{servicePriceLabel(doc)}</ThemedText></View>
             </ThemedView>
           </Pressable>
         </Link>

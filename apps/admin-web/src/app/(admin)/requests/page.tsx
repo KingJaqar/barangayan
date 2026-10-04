@@ -54,7 +54,7 @@ export default async function RequestsPage({
 
   const { data } = await supabase
     .from('service_requests')
-    .select('*, document_types(name), profiles(full_name)')
+    .select('*, document_types(name), profiles!service_requests_resident_id_fkey(full_name)')
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
 
@@ -67,7 +67,7 @@ export default async function RequestsPage({
 
   const { data: documentTypes } = await supabase
     .from('document_types')
-    .select('id, name')
+    .select('id, name, contract_version')
     .eq('is_active', true)
     .is('deleted_at', null)
     .order('name');

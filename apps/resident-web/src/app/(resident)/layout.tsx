@@ -1,6 +1,8 @@
 import { ResidentShell } from '@/components/shell/resident-shell';
 import { UnreadCountsProvider } from '@/hooks/use-unread-counts';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
+import { ProfileCompletionBanner } from '@/components/auth/profile-completion-banner';
+import { ProfileSetupNotice } from '@/components/auth/profile-setup-notice';
 
 /**
  * Shell for every route under (resident) — the resident-web counterpart of the mobile
@@ -13,7 +15,7 @@ import { getOptionalUser } from '@/lib/auth/get-optional-user';
  * Authenticated users of every role stay in this resident shell.
  */
 export default async function ResidentLayout({ children }: { children: React.ReactNode }) {
-  const { user, profile } = await getOptionalUser();
+  const { user, profile, profileSetupPending } = await getOptionalUser();
 
   return (
     <UnreadCountsProvider userId={user?.id ?? null}>
@@ -22,6 +24,7 @@ export default async function ResidentLayout({ children }: { children: React.Rea
         residentName={profile?.full_name ?? null}
         avatarUrl={profile?.avatar_url ?? null}
         isAuthenticated={user !== null}>
+        {profileSetupPending ? <ProfileSetupNotice /> : user && <ProfileCompletionBanner userId={user.id} />}
         {children}
       </ResidentShell>
     </UnreadCountsProvider>

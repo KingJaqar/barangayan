@@ -1,0 +1,106 @@
+BEGIN
+INSERT 0 2
+INSERT 0 1
+INSERT 0 3
+
+ok 1 - Exactly four pilot services active
+ok 2 - Other tenant activity unchanged
+ok 3 - Other tenant fee unchanged
+ok 4 - Equivalent indigency identifier reused
+ok 5 - General-purpose clearance deactivated without deletion
+ok 6 - All four preserve Simple, G2C and fifteen minutes
+ok 7 - Missing CTC personnel remains explicitly unknown
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+ok 8 - Certificate of Indigency submits pending assessment
+ok 9 - Issuance of Barangay Clearance for Business Establishments submits pending assessment
+ok 10 - First Time Job Seeker submits pending assessment
+ok 11 - Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment
+ok 12 - Resident cannot review
+SET
+ok 13 - ID approval alone cannot accept requirements
+ok 14 - ID approval alone cannot accept requirements
+ok 15 - ID approval alone cannot accept requirements
+ok 16 - ID approval alone cannot accept requirements
+ok 17 - Staff record requirements separately
+ok 18 - Staff record requirements separately
+ok 19 - Staff record requirements separately
+ok 20 - Staff record requirements separately
+ok 21 - Appearance acknowledgment is not actual presence
+ok 22 - Appearance acknowledgment is not actual presence
+ok 23 - Appearance acknowledgment is not actual presence
+ok 24 - Appearance acknowledgment is not actual presence
+ok 25 - Staff record actual appearance
+ok 26 - Staff record actual appearance
+ok 27 - Staff record actual appearance
+ok 28 - Staff record actual appearance
+ok 29 - Review and appearance actor/time recorded
+ok 30 - Review and appearance actor/time recorded
+ok 31 - Review and appearance actor/time recorded
+ok 32 - Review and appearance actor/time recorded
+94390a62-fe43-4843-9d3d-0b5b88d9192f
+9477e036-002c-4150-884f-47de48cbd6d4
+f4be0643-3e38-446e-826d-baad9f171c3f
+29b94eec-9c14-487d-8319-348d12595415
+RESET
+sla
+UPDATE 4
+SELECT 1
+ok 33 - Before twelve minutes
+ok 34 - At twelve minutes
+ok 35 - At fifteen minutes still near target
+ok 36 - Strictly after fifteen minutes overdue
+INSERT 0 1
+UPDATE 1
+ok 37 - Pause freezes counted time
+ok 38 - Pause reason displayed
+ok 39 - Cannot pause paused clock
+UPDATE 1
+UPDATE 1
+ok 40 - Overlapping closed pause rejected
+ok 41 - Repeated resume rejected
+UPDATE 1
+ok 42 - Readiness stops processing at target after sixty second wait
+ok 43 - Ready at fifteen counted minutes completes within target
+true
+UPDATE 1
+ok 44 - Actual release separately stops total turnaround
+ok 45 - Delayed evaluator succeeds
+ok 46 - Repeated evaluation creates no duplicate threshold alerts
+ok 47 - Delayed evaluation records each crossed threshold once
+ok 48 - Ready or released clock does not create unfinished alert
+SET
+SET
+ok 49 - Resident cannot access administrator report
+ok 50 - Residents cannot read alerts
+ok 51 - Resident cannot invoke server evaluator
+UPDATE 0
+ok 52 - Resident RLS update cannot change snapshot
+SET
+ok 53 - Foreign staff cannot read alerts
+ok 54 - Foreign report has no tenant rows
+SET
+ok 55 - Raw administrator snapshot tampering rejected
+ok 56 - Authorized staff read threshold events
+ok 57 - Staff report includes old submission selected by completion
+ok 58 - Resume without pause rejected
+ok 59 - Whitespace pause reason rejected
+f4be0643-3e38-446e-826d-baad9f171c3f
+9477e036-002c-4150-884f-47de48cbd6d4
+94390a62-fe43-4843-9d3d-0b5b88d9192f
+f4be0643-3e38-446e-826d-baad9f171c3f
+9477e036-002c-4150-884f-47de48cbd6d4
+94390a62-fe43-4843-9d3d-0b5b88d9192f
+ok 60 - Cancellation closes all open waits
+ok 61 - Cancellation records server stop time
+RESET
+ok 62 - Server evaluates at least once per minute
+1..62
+ROLLBACK

@@ -1,3 +1,4 @@
+import { AgencySlaStatus } from './agency-sla-status';
 import { Ionicons } from '@expo/vector-icons';
 import {
   estimateLabel,
@@ -14,6 +15,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
+import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
@@ -57,6 +59,8 @@ export function RequestsList() {
   const { session } = useAuth();
   const theme = useTheme();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
   const [filter, setFilter] = useState<Filter>('all');
   const [activeSubFilter, setActiveSubFilter] = useState<ActiveSubFilter>('all');
   // Unique per instance — see use-my-incidents.ts. A fixed topic returns the SAME,
@@ -74,6 +78,7 @@ export function RequestsList() {
 
   useEffect(() => {
     if (!session) return;
+    let active = true;
 
     const channel = supabase
       .channel(`my-service-requests-${instanceId}`)
@@ -90,14 +95,19 @@ export function RequestsList() {
         .select('*, document_types(name, processing_target_hours)')
         .eq('resident_id', session!.user.id)
         .order('created_at', { ascending: false })
-        .then(({ data }) => setRequests((data as ServiceRequest[]) ?? []));
+        .then(({ data, error: queryError }) => {
+          if (!active) return;
+          setRequests(queryError ? null : (data as ServiceRequest[]) ?? []);
+          setError(queryError ? 'Could not load your requests. Reconnect and retry.' : null);
+        });
     }
 
     load();
     return () => {
+      active = false;
       supabase.removeChannel(channel);
     };
-  }, [session, instanceId]);
+  }, [session, instanceId, retry]);
 
   function matchesActiveSubFilter(r: ServiceRequest, sub: ActiveSubFilter): boolean {
     if (sub === 'all') return true;
@@ -169,7 +179,12 @@ export function RequestsList() {
         />
       ) : null}
 
-      {requests === null ? (
+      {error ? (
+        <View style={styles.list}>
+          <ThemedText accessibilityRole="alert">{error}</ThemedText>
+          <PrimaryButton label="Retry requests" onPress={() => setRetry(value => value + 1)} />
+        </View>
+      ) : requests === null ? (
         <PlaceholderPanel label="Loading your requests…" />
       ) : filtered.length === 0 ? (
         <PlaceholderPanel label="No requests in this filter yet." />
@@ -217,7 +232,8 @@ export function RequestsList() {
                       </ThemedText>
                     </View>
 
-                    {request.status !== 'cancelled' ? (
+                    {request.timing_model !== 'agency_minutes_v1' ? <ThemedText type="small">Previous timing model</ThemedText> : null}
+                    {request.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={request.id} compact /> : request.status !== 'cancelled' ? (
                       <View style={styles.progressRow}>
                         <ProgressBar
                           fraction={progressFraction(

@@ -72,6 +72,12 @@ begin
   end if;
 end $$;
 
+-- Sample articles are optional while replaying the schema without a pilot.
+do $pilot_seed$
+begin
+  if not exists (select 1 from public.barangays where id = '00000000-0000-0000-0000-000000000001') then
+    return;
+  end if;
 insert into public.faq_articles
   (id, barangay_id, question, answer, category, is_active, sort_order, created_at, updated_at, deleted_at)
 values
@@ -220,3 +226,4 @@ values
     null
   )
 on conflict (id) do nothing;
+end $pilot_seed$;

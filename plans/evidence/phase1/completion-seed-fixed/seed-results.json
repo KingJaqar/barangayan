@@ -1,0 +1,42 @@
+{
+  "before": {
+    "about_us": 0,
+    "admin_audit_log": 0,
+    "announcement_reads": 0,
+    "announcements": 0,
+    "barangay_localities": 0,
+    "barangay_officials": 0,
+    "barangays": 0,
+    "developer_profiles": 0,
+    "document_types": 0,
+    "drive_registrations": 0,
+    "emergency_information": 0,
+    "emergency_qr_content": 0,
+    "evacuation_center_checkins": 0,
+    "evacuation_center_qr_codes": 0,
+    "evacuation_centers": 0,
+    "faq_articles": 0,
+    "household_members": 0,
+    "id_submissions": 0,
+    "incident_categories": 0,
+    "incident_confirmations": 0,
+    "incidents": 0,
+    "medical_drives": 0,
+    "payments": 0,
+    "profiles": 0,
+    "push_tokens": 0,
+    "request_attachments": 0,
+    "service_request_pauses": 0,
+    "service_requests": 0,
+    "site_content": 0,
+    "waste_collection_schedules": 0,
+    "waste_zones": 0
+  },
+  "results": [
+    {
+      "attempt": 1,
+      "exitCode": 3,
+      "counts": null
+    }
+  ]
+}

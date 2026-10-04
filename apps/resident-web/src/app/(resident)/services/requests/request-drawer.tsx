@@ -64,7 +64,7 @@ export function RequestDrawer({ requestId, open, onClose }: { requestId: string 
     const supabase = createSupabaseBrowserClient();
     supabase
       .from('service_requests')
-      .select('*, document_types(name, processing_target_hours, fee_centavos)')
+      .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
       .eq('id', requestId)
       .single()
       .then(({ data }) => {

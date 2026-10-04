@@ -1,0 +1,359 @@
+
+╭──────────────────────────────────────────────────────╮
+│ 🌐 APIs                                              │
+├────────────────┬─────────────────────────────────────┤
+│ Project URL    │ http://127.0.0.1:54321              │
+│ REST           │ http://127.0.0.1:54321/rest/v1      │
+│ GraphQL        │ http://127.0.0.1:54321/graphql/v1   │
+│ Edge Functions │ http://127.0.0.1:54321/functions/v1 │
+╰────────────────┴─────────────────────────────────────╯
+
+╭───────────────────────────────────────────────────────────────╮
+│ ⛁ Database                                                    │
+├─────┬─────────────────────────────────────────────────────────┤
+│ URL │ [LOCAL DATABASE URL REDACTED] │
+╰─────┴─────────────────────────────────────────────────────────╯
+
+╭──────────────────────────────────────────────────────────────╮
+│ 🔑 Authentication Keys                                       │
+├─────────────┬────────────────────────────────────────────────┤
+│ Publishable │ [LOCAL API KEY REDACTED] │
+│ Secret      │ [LOCAL API KEY REDACTED]      │
+╰─────────────┴────────────────────────────────────────────────╯
+
+╭───────────────────────────────────────────────────────────────────────────────╮
+│ 📦 Storage (S3)                                                               │
+├────────────┬──────────────────────────────────────────────────────────────────┤
+│ URL        │ http://127.0.0.1:54321/storage/v1/s3                             │
+[LOCAL CREDENTIAL LINE REDACTED]
+[LOCAL CREDENTIAL LINE REDACTED]
+│ Region     │ local                                                            │
+╰────────────┴──────────────────────────────────────────────────────────────────╯
+v2.197.0: Pulling from supabase/gotrue
+2.8.1: Pulling from supabase/kong
+814dd06d26c7: Pulling fs layer
+531e3bd93090: Pulling fs layer
+v2.135.3: Pulling from supabase/realtime
+v1.76.2: Pulling from supabase/edge-runtime
+v1.77.5: Pulling from supabase/storage-api
+c0cb7126d877: Pulling fs layer
+55afa1ecc21d: Pulling fs layer
+74c409e3506a: Pulling fs layer
+71eb50013731: Pulling fs layer
+f30f4fcb85f4: Pulling fs layer
+e5d190db8191: Pulling fs layer
+17.6.1.155: Pulling from supabase/postgres
+44136fa355b3: Already exists
+Digest: sha256:1b53405d8680a09d6f44494b7990bf7da2ea43f84a258c59717d4539abf09f6d
+Status: Downloaded newer image for public.ecr.aws/supabase/kong:2.8.1
+public.ecr.aws/supabase/kong:2.8.1
+2dd72d057e2c: Pulling fs layer
+2817b1665314: Pulling fs layer
+a48745f287c0: Pulling fs layer
+e9e66b831eba: Pulling fs layer
+a8ac7f6c67ab: Pulling fs layer
+c224a83fbc9c: Pulling fs layer
+41e9f49dd3b3: Download complete
+c0cb7126d877: Download complete
+f30f4fcb85f4: Download complete
+74c409e3506a: Download complete
+71eb50013731: Download complete
+6b02a50dcd71: Pulling fs layer
+e6f31ffc071e: Pulling fs layer
+e53a5764ca1a: Pulling fs layer
+05c0c2aca497: Pulling fs layer
+34de6b21cc2e: Pulling fs layer
+56258ccfdddc: Pulling fs layer
+eb54a47ae47d: Pulling fs layer
+75f753062429: Pulling fs layer
+f6ee6ec72260: Pulling fs layer
+05ee0ed47954: Pulling fs layer
+15f8ad8fae49: Pulling fs layer
+a06e5fe4d6ae: Pulling fs layer
+54c04bf9f4fc: Pulling fs layer
+fac22bc5cecd: Pulling fs layer
+44136fa355b3: Already exists
+e6f31ffc071e: Pulling fs layer
+2caf845bedf7: Pulling fs layer
+d90582095f55: Pulling fs layer
+cfef8a23a9cb: Pulling fs layer
+13b2a4b99d04: Pulling fs layer
+53a351a56892: Pulling fs layer
+1abd1e9eeac8: Pulling fs layer
+70827fc5f7b5: Pulling fs layer
+17caa96af9ef: Pulling fs layer
+05e7149f55b7: Pulling fs layer
+299f5f0d1cbd: Pulling fs layer
+6287691cbdd7: Pulling fs layer
+d800b4c0b90c: Pulling fs layer
+cf825171b7dc: Pulling fs layer
+b2c2756dd830: Pulling fs layer
+b61f577aa499: Pulling fs layer
+f74c82c39622: Pulling fs layer
+4fd2a8fb49ea: Pulling fs layer
+958ebfdbc56d: Pulling fs layer
+ce45bd6f1475: Pulling fs layer
+abd74937b95a: Pulling fs layer
+61e28571ce56: Pulling fs layer
+0706ae270a0e: Pulling fs layer
+e4728f91888d: Pulling fs layer
+bf9514de8b26: Pulling fs layer
+adf12054a2ae: Pulling fs layer
+9b96d300616a: Pulling fs layer
+3be12de86dc3: Pulling fs layer
+7374a47570a9: Pulling fs layer
+55afa1ecc21d: Download complete
+71eb50013731: Pull complete
+55afa1ecc21d: Pull complete
+74c409e3506a: Pull complete
+e5d190db8191: Download complete
+c0cb7126d877: Pull complete
+f30f4fcb85f4: Pull complete
+e5d190db8191: Pull complete
+Digest: sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b
+Status: Downloaded newer image for public.ecr.aws/supabase/gotrue:v2.197.0
+public.ecr.aws/supabase/gotrue:v2.197.0
+4f4fb700ef54: Pulling fs layer
+aadc1df55248: Pulling fs layer
+115059bab117: Pulling fs layer
+2f95f9f41a30: Pulling fs layer
+f5775935d0d2: Pulling fs layer
+062e450697fa: Pulling fs layer
+231d82102a74: Pulling fs layer
+32b7ef0c5fea: Pulling fs layer
+7b69c108b62c: Pulling fs layer
+2f8dc9fd16f0: Pulling fs layer
+b470f3a22f61: Pulling fs layer
+e7e8db2397d8: Pulling fs layer
+4f4fb700ef54: Already exists
+69aa8f72f2ac: Download complete
+fac22bc5cecd: Download complete
+34de6b21cc2e: Download complete
+05c0c2aca497: Download complete
+e6f31ffc071e: Download complete
+e6f31ffc071e: Download complete
+e6f31ffc071e: Pull complete
+6b02a50dcd71: Download complete
+05c0c2aca497: Pull complete
+75f753062429: Download complete
+f6ee6ec72260: Download complete
+e53a5764ca1a: Download complete
+54c04bf9f4fc: Download complete
+15f8ad8fae49: Download complete
+a06e5fe4d6ae: Download complete
+fac22bc5cecd: Pull complete
+a06e5fe4d6ae: Pull complete
+05ee0ed47954: Download complete
+Digest: sha256:edd22bef4477b900d5c300e287ce9b18bff9b81a0291bee14ee0b7c7b71a2899
+Status: Downloaded newer image for public.ecr.aws/supabase/edge-runtime:v1.76.2
+public.ecr.aws/supabase/edge-runtime:v1.76.2
+56258ccfdddc: Download complete
+1fe2dde07c78: Download complete
+56258ccfdddc: Pull complete
+75f753062429: Pull complete
+e53a5764ca1a: Pull complete
+54c04bf9f4fc: Pull complete
+f6ee6ec72260: Pull complete
+15f8ad8fae49: Pull complete
+cfef8a23a9cb: Download complete
+d90582095f55: Download complete
+1abd1e9eeac8: Download complete
+53a351a56892: Download complete
+2caf845bedf7: Download complete
+70827fc5f7b5: Download complete
+b61f577aa499: Download complete
+299f5f0d1cbd: Download complete
+6287691cbdd7: Download complete
+05e7149f55b7: Download complete
+cf825171b7dc: Download complete
+7374a47570a9: Download complete
+b2c2756dd830: Download complete
+d800b4c0b90c: Download complete
+61e28571ce56: Download complete
+13b2a4b99d04: Download complete
+f74c82c39622: Download complete
+eb54a47ae47d: Download complete
+e4728f91888d: Download complete
+ce45bd6f1475: Download complete
+adf12054a2ae: Download complete
+958ebfdbc56d: Download complete
+3be12de86dc3: Download complete
+eb54a47ae47d: Pull complete
+9b96d300616a: Download complete
+34de6b21cc2e: Pull complete
+6b02a50dcd71: Pull complete
+05ee0ed47954: Pull complete
+Digest: sha256:4ae1890ba0c6fd24d975c34f3aa201a01d410171c8ba6eddeb675ef92341a62d
+Status: Downloaded newer image for public.ecr.aws/supabase/storage-api:v1.77.5
+public.ecr.aws/supabase/storage-api:v1.77.5
+0706ae270a0e: Download complete
+abd74937b95a: Download complete
+bf9514de8b26: Download complete
+4fd2a8fb49ea: Download complete
+bf9514de8b26: Pull complete
+4fd2a8fb49ea: Pull complete
+4d348447c544: Download complete
+b470f3a22f61: Download complete
+e7e8db2397d8: Download complete
+115059bab117: Download complete
+f5775935d0d2: Download complete
+32b7ef0c5fea: Download complete
+062e450697fa: Download complete
+062e450697fa: Pull complete
+2f95f9f41a30: Download complete
+2f8dc9fd16f0: Download complete
+231d82102a74: Download complete
+7b69c108b62c: Download complete
+aadc1df55248: Download complete
+aadc1df55248: Pull complete
+b470f3a22f61: Pull complete
+2f8dc9fd16f0: Pull complete
+7b69c108b62c: Pull complete
+e7e8db2397d8: Pull complete
+32b7ef0c5fea: Pull complete
+2f95f9f41a30: Pull complete
+115059bab117: Pull complete
+f5775935d0d2: Pull complete
+231d82102a74: Pull complete
+4f4fb700ef54: Pull complete
+Digest: sha256:816ceed4ef3d41f70f020a115db7863cf612252801391327a956cee60b1cca7d
+Status: Downloaded newer image for public.ecr.aws/supabase/realtime:v2.135.3
+public.ecr.aws/supabase/realtime:v2.135.3
+17caa96af9ef: Download complete
+6287691cbdd7: Pull complete
+ce45bd6f1475: Pull complete
+17caa96af9ef: Pull complete
+e4728f91888d: Pull complete
+958ebfdbc56d: Pull complete
+3be12de86dc3: Pull complete
+9b96d300616a: Pull complete
+7374a47570a9: Pull complete
+b2c2756dd830: Pull complete
+f74c82c39622: Pull complete
+abd74937b95a: Pull complete
+d90582095f55: Pull complete
+1abd1e9eeac8: Pull complete
+53a351a56892: Pull complete
+2caf845bedf7: Pull complete
+cf825171b7dc: Pull complete
+61e28571ce56: Pull complete
+cfef8a23a9cb: Pull complete
+b61f577aa499: Pull complete
+299f5f0d1cbd: Pull complete
+adf12054a2ae: Pull complete
+0706ae270a0e: Pull complete
+70827fc5f7b5: Pull complete
+05e7149f55b7: Pull complete
+d800b4c0b90c: Pull complete
+13b2a4b99d04: Pull complete
+Digest: sha256:3866d94d8426927e8db3f1c5d790752292bfbe27b5f1f46e199ae1b7d3c1710b
+Status: Downloaded newer image for public.ecr.aws/supabase/postgres:17.6.1.155
+public.ecr.aws/supabase/postgres:17.6.1.155
+Starting database...
+Initialising schema...
+Seeding globals from roles.sql...
+Applying migration 0001_barangays_and_profiles.sql...
+Applying migration 0002_document_types_and_service_requests.sql...
+Applying migration 0003_announcements.sql...
+Applying migration 0004_service_request_reference_default.sql...
+Applying migration 0005_guest_readable_public_content.sql...
+Applying migration 0006_profile_theme_preference.sql...
+Applying migration 0007_payments_and_admin_access.sql...
+Applying migration 0008_resident_directory_access.sql...
+Applying migration 0009_admin_crud_and_soft_delete.sql...
+Applying migration 0010_resident_set_payment_method.sql...
+Applying migration 0011_announcements_admin_write.sql...
+Applying migration 0012_profile_trigger_and_verification_status.sql...
+Applying migration 0013_protect_verification_fields.sql...
+Applying migration 0014_request_delivery_workflow.sql...
+Applying migration 0015_request_delivery_transition_rpc.sql...
+Applying migration 0017_harden_payments_rls.sql...
+Applying migration 0018_begin_processing_rpc.sql...
+Applying migration 0019_fix_announcement_soft_delete.sql...
+Applying migration 0020_id_documents_storage.sql...
+Applying migration 0021_enable_pgtap.sql...
+Applying migration 0022_maps_tables.sql...
+Applying migration 0023_seed_incident_categories.sql...
+Applying migration 0024_ampid1_boundary.sql...
+Applying migration 0025_incident_management.sql...
+Applying migration 0026_incident_report_workflow.sql...
+Applying migration 0027_incidents_realtime.sql...
+Applying migration 0029_drop_diag_temp.sql...
+Applying migration 0030_diag_temp2.sql...
+Applying migration 0031_drop_diag_temp2.sql...
+Applying migration 0032_withdraw_incident_rpc.sql...
+Applying migration 0033_diag_temp3.sql...
+Applying migration 0034_drop_diag_temp3.sql...
+Applying migration 0035_medical_drives.sql...
+Applying migration 0036_medical_drives_admin_rls.sql...
+Applying migration 0037_profile_birth_date.sql...
+Applying migration 0038_health_realtime.sql...
+Applying migration 0039_profile_extended_fields.sql...
+Applying migration 0040_profile_avatar.sql...
+Applying migration 0041_id_verification_status.sql...
+Applying migration 0042_id_documents_public_bucket.sql...
+Applying migration 0043_emergency_content.sql...
+Applying migration 0044_evacuation_centers_verified.sql...
+Applying migration 0045_evacuation_center_checkins.sql...
+Applying migration 0046_household_members.sql...
+Applying migration 0047_emergency_information.sql...
+Applying migration 0048_realtime_publications.sql...
+Applying migration 0049_seed_empty_tables.sql...
+Applying migration 0050_create_emergency_qr_tables.sql...
+Applying migration 0051_waste_management.sql...
+Applying migration 0052_household_admin_management.sql...
+Applying migration 0053_faq.sql...
+Applying migration 0054_barangay_settings.sql...
+Applying migration 0055_grant_guest_read_access.sql...
+Applying migration 0056_admin_staff_management.sql...
+Applying migration 0057_barangay_officials.sql...
+Applying migration 0058_admin_audit_log.sql...
+Applying migration 0059_site_content_and_about_us.sql...
+Applying migration 0060_storage_site_content.sql...
+Applying migration 0061_save_about_us_rpc.sql...
+Applying migration 0062_seed_site_content_and_about_us.sql...
+Applying migration 0063_push_notifications.sql...
+Applying migration 0064_qrph_instant_payment_and_refunds.sql...
+Applying migration 0065_qrph_payment_intents.sql...
+Applying migration 0066_qrph_persistent_qr_and_resident_cancel.sql...
+Applying migration 0067_fix_household_members_uuid_sync.sql...
+Applying migration 0068_signup_birth_date.sql...
+Applying migration 0069_fix_emergency_information_tenant_leak.sql...
+Applying migration 0070_waste_management_resident_read.sql...
+Applying migration 0071_add_missing_fk_indexes.sql...
+Applying migration 0072_admin_register_for_drive.sql...
+Applying migration 0073_id_documents_private_again.sql...
+Applying migration 0074_account_deletion.sql...
+Applying migration 0075_profile_theme_customization.sql...
+Applying migration 0076_placeholder.sql...
+Applying migration 0077_waste_zone_cron_scoring.sql...
+Applying migration 0078_registration_location_verification.sql...
+Applying migration 0079_export_rate_limit.sql...
+Applying migration 0080_reports_unread_counts.sql...
+Applying migration 0081_resident_profile_field_split.sql...
+Applying migration 0082_remove_delivery_add_pickup.sql...
+Applying migration 0083_incident_location_details.sql...
+Applying migration 0084_announcement_detailed_description.sql...
+Applying migration 0085_resident_mark_resolved_incident_read.sql...
+Applying migration 0086_about_us_logo_size.sql...
+Applying migration 0087_about_us_title.sql...
+Applying migration 0088_faq_articles_guest_read.sql...
+Applying migration 0089_id_verification_failed_status.sql...
+Applying migration 0090_location_verification.sql...
+Applying migration 0091_verified_location_address.sql...
+Applying migration 0092_drive_registrations_admin_update.sql...
+Applying migration 0093_resident_ios_backend_safety.sql...
+Applying migration 0094_resident_ios_tenant_write_guards.sql...
+Applying migration 20261001030133_phase1_shared_foundations.sql...
+Seeding data from supabase/seed.sql...
+Starting containers...
+Waiting for health checks...
+Started supabase local development setup.
+
+Local dev security notice
+All services bind to 0.0.0.0 (network-accessible, not just localhost)
+[LOCAL CREDENTIAL LINE REDACTED]
+Studio, pgMeta (/pg/*), and analytics have no authentication
+
+A new version of Supabase CLI is available: v2.119.0 (currently installed v2.118.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

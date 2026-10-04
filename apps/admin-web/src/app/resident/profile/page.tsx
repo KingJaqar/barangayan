@@ -1,3 +1,4 @@
+import { IdUpload } from './id-upload';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { ProfileForm } from './profile-form';
@@ -11,7 +12,7 @@ export default async function ResidentProfilePage() {
   const { data: profile } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, middle_name, suffix, sex, email, mobile_number, house_no, street, city, employment_status, occupation, id_verification_status, barangays(name)',
+      'id, first_name, last_name, middle_name, suffix, sex, email, mobile_number, house_no, street, city, province, employment_status, occupation, id_verification_status, barangays(name)',
     )
     .eq('id', user!.id)
     .single();
@@ -23,11 +24,12 @@ export default async function ResidentProfilePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold">My Profile</h1>
         <p className="text-sm text-zinc-500">
-          Keep your contact details up to date. ID document upload and photo verification are available in the mobile app.
+          Keep your contact details and ID evidence up to date.
         </p>
       </div>
 
       <ProfileForm profile={profile} />
+      <IdUpload/>
     </div>
   );
 }

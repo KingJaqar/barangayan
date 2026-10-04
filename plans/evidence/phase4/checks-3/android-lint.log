@@ -1,0 +1,18 @@
+
+> @barangayan/mobile@1.0.0 lint
+> expo lint
+
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\services\[documentId].tsx
+  3:10  warning  'formatCentavosAsPHP' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\services\documents-list.tsx
+  2:10  warning  'formatCentavosAsPHP' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\hooks\use-profile.ts
+  67:13  warning  The ref value 'scope.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'scope.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+

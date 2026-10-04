@@ -1,0 +1,20 @@
+/mnt/c/Users/User/barangayan/supabase/tests/catalog_staff_workflows.test.sql ........... ok
+/mnt/c/Users/User/barangayan/supabase/tests/resident_ios_tenant_write_guards.test.sql .. ok
+/mnt/c/Users/User/barangayan/supabase/tests/rls_isolation.test.sql ..................... ok
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql ............... 
+Dubious, test returned 3 (wstat 768, 0x300)
+All 81 subtests passed 
+/mnt/c/Users/User/barangayan/supabase/tests/trusted_evidence_locality.test.sql ......... ok
+
+Test Summary Report
+-------------------
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql             (Wstat: 768 (exited 3) Tests: 81 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+Files=5, Tests=167,  1 wallclock secs ( 0.07 usr  0.03 sys +  0.08 cusr  0.04 csys =  0.22 CPU)
+Result: FAIL
+Connecting to local database...
+psql:/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql:170: ERROR:  incompatible_catalog_rules_or_page_rate
+CONTEXT:  PL/pgSQL function barangayan_private.guard_catalog_contract() line 28 at RAISE
+error running container: exit 1
+Try rerunning the command with --debug to troubleshoot the error.

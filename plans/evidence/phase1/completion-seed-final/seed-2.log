@@ -1,0 +1,18 @@
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+CREATE EXTENSION
+INSERT 0 0
+INSERT 0 0
+INSERT 0 4
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+psql:C:/Users/User/barangayan/supabase/seed.sql:206: NOTICE:  extension "pgcrypto" already exists, skipping

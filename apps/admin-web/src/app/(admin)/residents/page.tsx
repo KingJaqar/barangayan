@@ -41,6 +41,8 @@ export type ResidentRow = {
   id_photo_urls: string[];
   id_type: string | null;
   id_verification_status: IdVerificationStatus | null;
+  current_id_submission_id: string | null;
+  id_repair_required: boolean;
   created_at: string;
   /** Point-in-polygon geofencing result at signup (migration 0075). NULL = check
    *  couldn't run (no boundary/permission denied); FALSE = device location was
@@ -80,7 +82,7 @@ export default async function ResidentsPage({
       'id, full_name, first_name, last_name, middle_name, suffix, sex, avatar_url, email, ' +
         'mobile_number, home_address, house_no, street, city, employment_status, occupation, ' +
         'birth_date, email_verification_status, household_members, id_photo_urls, id_type, ' +
-        'id_verification_status, created_at, location_verified, verified_location, verified_location_address',
+        'id_verification_status, current_id_submission_id, id_repair_required, created_at, location_verified, verified_location, verified_location_address',
     )
     .eq('role', 'resident')
     .is('deleted_at', null)

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "Successful browser flow exchanges PKCE and provisions before returning",
+    "Concurrent callbacks consume the code once and provision once",
+    "Provisioning failure retries setup without replaying a consumed PKCE code",
+    "Session-read failure retries verification without replaying PKCE",
+    "Expired pending sign-in is rejected before exchange or profile setup",
+    "Provider cancellation clears pending state without provisioning",
+    "Failed Auth exchange cannot create a profile",
+    "Existing-account linking uses supported identity operation and same setup",
+    "Malformed callback cannot reach Auth or profile operation"
+  ]
+}

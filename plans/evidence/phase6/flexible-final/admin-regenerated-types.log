@@ -1,0 +1,12 @@
+
+> @barangayan/web@0.1.0 typecheck
+> tsc --noEmit
+
+.next/dev/types/routes.d.ts(111,1): error TS1128: Declaration or statement expected.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

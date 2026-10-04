@@ -1,0 +1,4 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Dependency validation is unreliable in offline-mode
+Dependencies are up to date

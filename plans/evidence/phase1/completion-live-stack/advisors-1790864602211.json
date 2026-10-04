@@ -1,0 +1,10 @@
+{
+  "command": "advisors",
+  "startedAt": "2026-10-01T14:23:19.608Z",
+  "finishedAt": "2026-10-01T14:23:22.212Z",
+  "exitCode": 0,
+  "passed": true,
+  "log": "completion-live-stack/advisors-1790864602211.log",
+  "appliedMigrations": [],
+  "assertions": 0
+}

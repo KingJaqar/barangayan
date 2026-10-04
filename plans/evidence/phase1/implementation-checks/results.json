@@ -1,0 +1,73 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "shared-tests",
+      "directory": "packages/shared",
+      "command": "npm run test",
+      "startedAt": "2026-10-01T03:15:47.074Z",
+      "finishedAt": "2026-10-01T03:15:50.475Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-tests.log"
+    },
+    {
+      "id": "shared-types",
+      "directory": "packages/shared",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:15:50.559Z",
+      "finishedAt": "2026-10-01T03:15:54.758Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "shared-types.log"
+    },
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:15:54.856Z",
+      "finishedAt": "2026-10-01T03:16:06.145Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:16:06.236Z",
+      "finishedAt": "2026-10-01T03:16:19.489Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:16:19.679Z",
+      "finishedAt": "2026-10-01T03:16:37.073Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:16:37.148Z",
+      "finishedAt": "2026-10-01T03:16:43.327Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "ios-types.log"
+    }
+  ]
+}

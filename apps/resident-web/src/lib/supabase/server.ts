@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-import type { Database } from '@barangayan/shared';
+import { boundedAuthFetch, type Database } from '@barangayan/shared';
 
 /**
  * Supabase client for Server Components, Route Handlers, and Server Actions. Next.js
@@ -18,6 +18,7 @@ export async function createSupabaseServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      global: { fetch: boundedAuthFetch },
       cookies: {
         getAll() {
           return cookieStore.getAll();

@@ -1,0 +1,965 @@
+# Phase 0 source inventory
+
+Generated with `node scripts/phase0-inventory.cjs`. Complements `../../Phase_0_Baseline_and_Change_Boundaries.md`.
+
+HEAD: fb49ecd937c8ceaa6263521f40f84fae05bfe621. 758 source/config files scanned; 2864 line references; 305 SQL declarations.
+
+This is a candidate and call-site index, not proof of runtime authorization. Paths below are relative to the repository root.
+
+## catalog
+
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`: 17, 193, 257, 314, 327, 331
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`: 11, 38, 67, 105, 106, 130, 134
+- `apps/admin-web/src/app/(admin)/requests/page.tsx`: 9, 57, 69, 88
+- `apps/admin-web/src/app/(admin)/requests/requests-table.tsx`: 378
+- `apps/admin-web/src/app/(admin)/residents/resident-directory.tsx`: 37, 188, 472
+- `apps/admin-web/src/app/(admin)/services/document-type-catalog.tsx`: 8
+- `apps/admin-web/src/app/(admin)/services/document-type-form.tsx`: 3, 32, 49, 55, 78
+- `apps/admin-web/src/app/(admin)/services/document-type-row.tsx`: 3, 13, 34, 43, 54, 77, 94, 112, 129, 134, 158, 165, 263
+- `apps/admin-web/src/app/(admin)/services/page.tsx`: 6, 16
+- `apps/admin-web/src/app/(admin)/transactions/page.tsx`: 37, 56, 82
+- `apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx`: 25, 111, 126, 657
+- `apps/admin-web/src/app/resident/page.tsx`: 31, 86
+- `apps/admin-web/src/app/resident/requests/[requestId]/page.tsx`: 17, 32, 44
+- `apps/admin-web/src/app/resident/requests/new/new-request-form.tsx`: 8, 11, 12, 87
+- `apps/admin-web/src/app/resident/requests/new/page.tsx`: 9, 10
+- `apps/admin-web/src/app/resident/requests/page.tsx`: 18, 40, 48
+- `apps/admin-web/src/lib/payments.ts`: 49, 63
+- `apps/resident-android-mobile/src/app/(app)/home/index.tsx`: 25, 84, 199
+- `apps/resident-android-mobile/src/app/(app)/services/[documentId].tsx`: 2, 21, 53, 148
+- `apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx`: 21, 87, 100, 154
+- `apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx`: 18, 52, 61, 93, 117
+- `apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx`: 35, 91, 99, 239
+- `apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx`: 30, 74
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`: 34, 114, 271, 276
+- `apps/resident-android-mobile/src/components/services/documents-list.tsx`: 1, 15, 17, 32, 45, 76
+- `apps/resident-android-mobile/src/components/services/logs-list.tsx`: 18, 35, 60, 63, 69, 78
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`: 28, 90, 188, 195, 226, 244
+- `apps/resident-android-mobile/src/constants/document-icons.ts`: 4, 8
+- `apps/resident-android-mobile/src/hooks/use-paymongo-source.ts`: 27
+- `apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx`: 1, 15
+- `apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx`: 1, 14
+- `apps/resident-ios-mobile/src/app/request/[id].tsx`: 27
+- `apps/resident-ios-mobile/src/app/requests.tsx`: 14
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 28, 30, 34, 36
+- `apps/resident-web/src/app/(resident)/home/page.tsx`: 38, 129
+- `apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx`: 1, 21, 61
+- `apps/resident-web/src/app/(resident)/services/documents/page.tsx`: 7, 22, 23
+- `apps/resident-web/src/app/(resident)/services/layout.tsx`: 10
+- `apps/resident-web/src/app/(resident)/services/logs/page.tsx`: 22, 41, 46
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx`: 19, 30
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx`: 19, 34, 35
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx`: 23, 37, 38
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`: 22
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx`: 17, 74, 177, 182, 196
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 3, 15, 148
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/page.tsx`: 20
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`: 46
+- `apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx`: 13, 29, 67
+- `apps/resident-web/src/app/(resident)/services/requests/requests-list.tsx`: 26, 58, 79
+- `apps/resident-web/src/components/services/document-request-modal/details-step.tsx`: 10, 52
+- `apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx`: 124
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 14, 157
+- `apps/resident-web/src/components/services/document-request-modal/types.ts`: 3
+- `apps/resident-web/src/components/services/documents-list.tsx`: 12, 23, 85
+- `apps/resident-web/src/components/services/services-segment-nav.tsx`: 18
+- `apps/resident-web/src/hooks/use-paymongo-source.ts`: 34
+- `packages/shared/src/constants/document-catalog-shape.ts`: 4
+- `packages/shared/src/lib/format.test.ts`: 9, 49, 51, 55, 59, 63
+- `packages/shared/src/lib/format.ts`: 1, 30, 32, 34, 59
+- `packages/shared/src/lib/service-tracking.test.ts`: 50, 70
+- `packages/shared/src/lib/service-tracking.ts`: 3, 71, 88
+- `packages/shared/src/schemas/document-type.test.ts`: 3, 5, 13, 18, 27, 32, 37
+- `packages/shared/src/schemas/document-type.ts`: 4, 8, 16
+- `packages/shared/src/schemas/request-form.ts`: 7
+- `packages/shared/src/types/database.ts`: 385, 395, 407, 419, 424, 1426
+- `packages/shared/src/types/domain.ts`: 25
+- `supabase/functions/create-payment-source/index.ts`: 15, 109
+- `supabase/functions/export-my-data/index.ts`: 79
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 8, 11, 17, 25, 28, 46
+- `supabase/migrations/0005_guest_readable_public_content.sql`: 2, 14
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 2, 179, 183
+- `supabase/migrations/0008_resident_directory_access.sql`: 24, 27
+- `supabase/migrations/0009_admin_crud_and_soft_delete.sql`: 8, 17
+- `supabase/migrations/0011_announcements_admin_write.sql`: 5
+- `supabase/migrations/0027_incidents_realtime.sql`: 6
+- `supabase/migrations/0064_qrph_instant_payment_and_refunds.sql`: 85
+- `supabase/seed.sql`: 20, 21
+- `supabase/tests/rls_isolation.test.sql`: 48
+
+## requests
+
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`: 16, 22, 171, 172, 192, 226, 237, 259, 313, 319, 326, 346, 350
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`: 10, 37
+- `apps/admin-web/src/app/(admin)/requests/page.tsx`: 8, 56
+- `apps/admin-web/src/app/(admin)/requests/requests-table.tsx`: 66, 266, 278, 291, 313
+- `apps/admin-web/src/app/(admin)/residents/resident-directory.tsx`: 187
+- `apps/admin-web/src/app/(admin)/services/document-type-row.tsx`: 20
+- `apps/admin-web/src/app/(admin)/transactions/page.tsx`: 23, 37, 54, 55, 56, 62
+- `apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx`: 23, 24, 110, 450, 463, 472, 474, 481, 484, 496, 513, 518, 569, 570, 605, 632, 635, 644, 648, 657, 661, 783, 795, 813
+- `apps/admin-web/src/app/resident/page.tsx`: 30
+- `apps/admin-web/src/app/resident/requests/[requestId]/cancel-request-button.tsx`: 15
+- `apps/admin-web/src/app/resident/requests/[requestId]/page.tsx`: 16
+- `apps/admin-web/src/app/resident/requests/new/new-request-form.tsx`: 8, 29, 47
+- `apps/admin-web/src/app/resident/requests/page.tsx`: 17
+- `apps/admin-web/src/components/admin/header.tsx`: 133
+- `apps/admin-web/src/components/admin/request-status-actions.tsx`: 28, 61, 69, 92, 100, 124, 132, 157, 165, 200
+- `apps/admin-web/src/lib/audit-notifications.ts`: 188, 200
+- `apps/admin-web/src/lib/payments.ts`: 48
+- `apps/resident-android-mobile/src/app/(app)/home/index.tsx`: 24, 75, 83
+- `apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx`: 189, 206
+- `apps/resident-android-mobile/src/app/(app)/reports/new.tsx`: 8
+- `apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx`: 20, 86, 112
+- `apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx`: 17, 51
+- `apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx`: 34, 90
+- `apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx`: 1, 94, 96, 123, 142, 148
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`: 33, 113, 150, 234, 246
+- `apps/resident-android-mobile/src/components/services/logs-list.tsx`: 17, 22, 34
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`: 27, 82, 89, 112
+- `apps/resident-android-mobile/src/components/status-badge.tsx`: 22, 35
+- `apps/resident-android-mobile/src/hooks/use-notification-realtime.ts`: 87, 90, 92, 93
+- `apps/resident-android-mobile/src/lib/data-export-pdf.ts`: 4, 14
+- `apps/resident-android-mobile/src/lib/notification-templates.ts`: 42, 43
+- `apps/resident-ios-mobile/src/app/services/request/[id].tsx`: 1, 22
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 34, 36, 43, 47, 53, 55
+- `apps/resident-web/src/app/(resident)/home/page.tsx`: 28, 37
+- `apps/resident-web/src/app/(resident)/services/logs/page.tsx`: 11, 21
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx`: 18
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/payment-method-form.tsx`: 44
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx`: 18
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx`: 22
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`: 21
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx`: 16, 73, 102, 158
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 3, 25, 26, 90, 119, 125
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`: 45
+- `apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx`: 28, 66
+- `apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx`: 23
+- `apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx`: 5, 46
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 14, 92, 121, 127
+- `apps/resident-web/src/lib/data-export-html.ts`: 6, 16
+- `packages/shared/src/lib/request-status.ts`: 11
+- `packages/shared/src/schemas/admin-audit-log.ts`: 47, 97, 106, 109, 127
+- `packages/shared/src/schemas/payment.ts`: 11
+- `packages/shared/src/schemas/request-form.test.ts`: 3, 5, 7, 14, 23, 28, 33
+- `packages/shared/src/schemas/request-form.ts`: 9, 20
+- `packages/shared/src/types/database.ts`: 1199, 1365, 1372, 1388, 1404, 1416, 1423, 1430, 1626, 1630, 1634, 1638, 1656
+- `supabase/functions/cancel-payment/index.ts`: 53
+- `supabase/functions/check-payment-status/index.ts`: 77, 124
+- `supabase/functions/create-payment-source/index.ts`: 107, 121, 288, 367
+- `supabase/functions/export-my-data/index.ts`: 78, 95
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 37, 42, 64, 67, 72, 82, 83, 104, 105, 128, 129, 134
+- `supabase/migrations/0004_service_request_reference_default.sql`: 5, 13
+- `supabase/migrations/0005_guest_readable_public_content.sql`: 4
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 2, 5, 10, 13, 18, 22, 26, 49, 60, 84, 93, 106, 109, 114, 149, 163, 172
+- `supabase/migrations/0008_resident_directory_access.sql`: 15, 20
+- `supabase/migrations/0009_admin_crud_and_soft_delete.sql`: 3, 5, 15, 21, 28
+- `supabase/migrations/0010_resident_set_payment_method.sql`: 5, 34
+- `supabase/migrations/0011_announcements_admin_write.sql`: 5
+- `supabase/migrations/0014_request_delivery_workflow.sql`: 6, 7, 9, 10, 16, 18, 33, 45, 51, 54, 59, 75, 89
+- `supabase/migrations/0015_request_delivery_transition_rpc.sql`: 2, 21, 34
+- `supabase/migrations/0018_begin_processing_rpc.sql`: 1, 5, 12, 23, 35
+- `supabase/migrations/0020_id_documents_storage.sql`: 2, 5, 31, 32, 33, 41, 42
+- `supabase/migrations/0025_incident_management.sql`: 14
+- `supabase/migrations/0027_incidents_realtime.sql`: 6
+- `supabase/migrations/0058_admin_audit_log.sql`: 5
+- `supabase/migrations/0064_qrph_instant_payment_and_refunds.sql`: 3, 39, 40, 41, 42, 46, 53, 57
+- `supabase/migrations/0066_qrph_persistent_qr_and_resident_cancel.sql`: 9, 13, 24, 41, 45
+- `supabase/migrations/0071_add_missing_fk_indexes.sql`: 4, 15, 16, 17, 18, 19, 20
+- `supabase/migrations/0074_account_deletion.sql`: 5, 22
+- `supabase/migrations/0082_remove_delivery_add_pickup.sql`: 4, 22, 24, 25, 30, 32, 50, 63, 65, 66, 70, 72, 88, 102, 109, 113, 129, 142, 149, 151, 162, 179, 192, 195, 214, 217, 218, 242
+- `supabase/tests/rls_isolation.test.sql`: 7, 10, 52, 90, 92, 96, 97, 120, 124, 134, 136, 140, 142
+
+## identity
+
+- `apps/admin-web/src/app/(admin)/residents/page.tsx`: 14, 41, 42, 43, 82, 83, 97, 98, 99, 100, 101, 111, 112, 130
+- `apps/admin-web/src/app/(admin)/residents/resident-directory.tsx`: 168, 179, 194, 199, 203, 204, 219, 330, 630, 687, 688, 964, 966, 973, 975
+- `apps/admin-web/src/app/resident/profile/page.tsx`: 14
+- `apps/admin-web/src/app/resident/profile/profile-form.tsx`: 26, 112, 114
+- `apps/resident-android-mobile/src/app/(app)/reports/new.tsx`: 8
+- `apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx`: 108
+- `apps/resident-android-mobile/src/app/(app)/settings/profile.tsx`: 20, 908, 914, 920, 930, 938, 941, 942, 948, 949, 953, 954, 958, 959, 963, 964, 1027, 1033, 1036, 1069, 1192, 1269, 1270, 1271, 1579, 1600, 1606
+- `apps/resident-android-mobile/src/lib/image-upload.ts`: 33
+- `apps/resident-web/src/actions/id-document-signed-url.ts`: 6, 19, 35, 43
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 78
+- `apps/resident-web/src/app/(resident)/settings/profile/page.tsx`: 14
+- `apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx`: 8, 15, 56, 83, 85, 86, 112, 180, 189, 527, 528, 535, 543, 546, 547, 559, 562, 563, 577, 613, 615, 634, 656, 660, 738, 743, 748, 753, 957, 1200, 1201, 1202
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 80
+- `apps/resident-web/src/hooks/use-profile.ts`: 23, 25, 26, 62
+- `apps/resident-web/src/lib/image-upload.ts`: 9
+- `packages/shared/src/constants/id-verification.ts`: 4, 37, 41, 50, 52
+- `packages/shared/src/types/database.ts`: 1226, 1227, 1228, 1267, 1268, 1269, 1308, 1309, 1310
+- `supabase/functions/delete-my-account/index.ts`: 76, 79
+- `supabase/functions/export-my-data/index.ts`: 50
+- `supabase/migrations/0020_id_documents_storage.sql`: 3, 8, 19, 26, 38
+- `supabase/migrations/0039_profile_extended_fields.sql`: 8, 10, 15, 16, 37, 38, 40, 43
+- `supabase/migrations/0041_id_verification_status.sql`: 3, 14, 15, 17, 28, 33, 46, 47, 57, 58, 61, 63, 64, 66
+- `supabase/migrations/0042_id_documents_public_bucket.sql`: 1, 9, 17, 22, 31, 32, 36, 45
+- `supabase/migrations/0073_id_documents_private_again.sql`: 1, 4, 19
+- `supabase/migrations/0074_account_deletion.sql`: 51, 52, 53
+- `supabase/migrations/0089_id_verification_failed_status.sql`: 1, 12, 15, 18, 19, 21, 31, 45, 46, 56, 57
+- `supabase/migrations/0093_resident_ios_backend_safety.sql`: 255, 261
+
+## payments
+
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`: 21, 174, 225, 229, 233, 318, 345
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`: 11, 38, 48, 51, 53, 72, 81, 82, 98, 103, 104, 105, 106
+- `apps/admin-web/src/app/(admin)/requests/requests-table.tsx`: 73, 94, 294, 300, 316, 332, 415, 423, 424, 472, 473
+- `apps/admin-web/src/app/(admin)/services/document-type-form.tsx`: 54, 77
+- `apps/admin-web/src/app/(admin)/services/document-type-row.tsx`: 33, 42, 93, 133, 157, 164, 262
+- `apps/admin-web/src/app/(admin)/transactions/page.tsx`: 21, 22, 23, 35, 42, 44, 84, 85, 86, 107
+- `apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx`: 19, 22, 174, 183, 351, 361, 423, 428, 442, 457, 528, 551, 577, 579, 583, 592, 720, 722, 733, 734
+- `apps/admin-web/src/app/resident/requests/[requestId]/page.tsx`: 17, 26, 37, 44
+- `apps/admin-web/src/app/resident/requests/new/new-request-form.tsx`: 12, 85
+- `apps/admin-web/src/app/resident/requests/new/page.tsx`: 10
+- `apps/admin-web/src/app/resident/requests/page.tsx`: 18, 57
+- `apps/admin-web/src/components/admin/payment-refund-action.tsx`: 40
+- `apps/admin-web/src/components/admin/request-status-actions.tsx`: 9, 201, 204, 214
+- `apps/admin-web/src/lib/payments.ts`: 8, 11, 29, 38, 46, 49, 58, 63
+- `apps/resident-android-mobile/src/app/(app)/services/[documentId].tsx`: 99
+- `apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx`: 15, 21, 72, 87, 100, 102, 114, 116, 125, 175, 212
+- `apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx`: 18, 37, 52, 59, 61, 63, 69, 74, 93
+- `apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx`: 21, 35, 69, 91, 99
+- `apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx`: 277
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`: 18, 34, 114, 124, 155, 179, 240, 276, 278, 281, 283, 287, 289, 292, 293, 300, 313, 410
+- `apps/resident-android-mobile/src/components/services/documents-list.tsx`: 81, 90
+- `apps/resident-android-mobile/src/components/services/logs-list.tsx`: 18, 23, 24, 35, 69, 78
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`: 104, 179
+- `apps/resident-android-mobile/src/constants/payment.ts`: 10
+- `apps/resident-android-mobile/src/hooks/use-paymongo-source.ts`: 148, 159, 175, 187
+- `apps/resident-android-mobile/src/lib/notification-templates.ts`: 45
+- `apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx`: 15
+- `apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx`: 14
+- `apps/resident-ios-mobile/src/app/request/[id].tsx`: 19, 27
+- `apps/resident-ios-mobile/src/app/requests.tsx`: 14
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 36
+- `apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx`: 35
+- `apps/resident-web/src/app/(resident)/services/documents/page.tsx`: 23
+- `apps/resident-web/src/app/(resident)/services/logs/page.tsx`: 12, 22, 46
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx`: 19, 30
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/payment-method-form.tsx`: 9, 15, 34, 46, 50, 89, 121
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx`: 19, 35
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/pickup-confirmation.tsx`: 15, 35, 37, 40, 45
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx`: 9, 23, 38
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/qrph-payment.tsx`: 10
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`: 22
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx`: 12, 17, 74, 84, 105, 121, 182, 183, 184, 185, 186, 188, 191
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 146, 223
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`: 46
+- `apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx`: 29, 67
+- `apps/resident-web/src/app/(resident)/services/requests/requests-list.tsx`: 24, 90
+- `apps/resident-web/src/components/services/document-request-modal/details-step.tsx`: 26
+- `apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx`: 254, 265, 275
+- `apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx`: 7, 15, 36, 48, 52, 90, 122
+- `apps/resident-web/src/components/services/document-request-modal/pickup-step.tsx`: 38, 40, 43, 48
+- `apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx`: 20
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 155, 232
+- `apps/resident-web/src/components/services/documents-list.tsx`: 22, 83
+- `apps/resident-web/src/constants/payment.ts`: 13
+- `apps/resident-web/src/hooks/use-paymongo-source.ts`: 19, 155, 166, 183, 195
+- `packages/shared/src/lib/request-status.ts`: 12
+- `packages/shared/src/schemas/payment.test.ts`: 3, 42, 44, 59, 71
+- `packages/shared/src/schemas/payment.ts`: 20, 23, 37
+- `packages/shared/src/types/database.ts`: 391, 403, 415, 1097, 1104, 1109, 1110, 1111, 1129, 1134, 1135, 1136, 1154, 1159, 1160, 1161, 1373, 1374, 1389, 1390, 1405, 1406, 1692
+- `supabase/config.toml`: 398, 407, 410
+- `supabase/functions/cancel-payment/index.ts`: 3, 8, 52, 53, 79, 81, 108
+- `supabase/functions/check-payment-status/index.ts`: 1, 2, 10, 11, 12, 25, 32, 72, 76, 77, 106, 111, 123, 124, 125, 127, 128, 132, 136
+- `supabase/functions/create-payment-source/index.ts`: 2, 9, 10, 15, 16, 17, 35, 46, 109, 116, 136, 150, 162, 173, 175, 199, 202, 222, 223, 226, 244, 262, 268, 273, 289, 299, 307, 316, 322, 332, 333, 345, 348, 368, 372, 383, 394, 404, 408, 419, 422, 434, 450, 462, 481, 482, 496, 509, 529, 538, 563, 572, 606
+- `supabase/functions/export-my-data/index.ts`: 79
+- `supabase/functions/paymongo-webhook/index.ts`: 1, 86, 93, 95, 103, 105, 118, 123, 137, 147, 153, 154, 157, 159, 169, 177, 179
+- `supabase/functions/refund-payment/index.ts`: 8, 11, 13, 79, 80, 90, 106, 119, 128, 137, 139, 162
+- `supabase/migrations/0001_barangays_and_profiles.sql`: 3
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 2, 3, 16, 51, 54, 55, 56
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 1, 10, 14, 17, 18, 24, 34, 42, 44, 45, 55, 65, 66, 70, 71, 77, 82, 84, 86, 87, 94, 102, 103
+- `supabase/migrations/0009_admin_crud_and_soft_delete.sql`: 3, 4, 5, 16, 33, 37, 38
+- `supabase/migrations/0010_resident_set_payment_method.sql`: 7, 20, 35, 48
+- `supabase/migrations/0012_profile_trigger_and_verification_status.sql`: 12
+- `supabase/migrations/0017_harden_payments_rls.sql`: 1, 4, 5, 6
+- `supabase/migrations/0027_incidents_realtime.sql`: 6
+- `supabase/migrations/0064_qrph_instant_payment_and_refunds.sql`: 10, 11, 17, 21, 22, 33, 35, 40, 42, 43, 46, 47, 54, 58, 65, 66, 67, 68, 75, 77, 80, 81, 82, 84, 85, 86, 87
+- `supabase/migrations/0065_qrph_payment_intents.sql`: 10, 11, 17, 21, 22, 24, 25, 30, 33, 51, 56, 61
+- `supabase/migrations/0066_qrph_persistent_qr_and_resident_cancel.sql`: 1, 4, 8, 11, 21, 23, 35
+- `supabase/migrations/0071_add_missing_fk_indexes.sql`: 4, 23, 25, 27, 29
+- `supabase/migrations/0074_account_deletion.sql`: 6, 11, 22
+- `supabase/migrations/0082_remove_delivery_add_pickup.sql`: 7, 9, 10, 159, 161, 173, 184, 193, 205, 210, 214, 215, 218, 219, 221, 226, 228, 243, 257, 258, 263
+- `supabase/migrations/0093_resident_ios_backend_safety.sql`: 271, 273, 276
+- `supabase/seed.sql`: 21
+- `supabase/tests/rls_isolation.test.sql`: 9, 48, 106, 110
+
+## sla
+
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`: 4, 7, 249, 257, 260, 265, 274, 280, 314, 327, 331
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`: 31, 46
+- `apps/admin-web/src/app/(admin)/requests/requests-table.tsx`: 403
+- `apps/admin-web/src/app/(admin)/services/document-type-form.tsx`: 55, 78
+- `apps/admin-web/src/app/(admin)/services/document-type-row.tsx`: 34, 43, 94, 134, 158, 165, 263
+- `apps/admin-web/src/app/resident/requests/[requestId]/page.tsx`: 25
+- `apps/admin-web/src/app/resident/requests/new/new-request-form.tsx`: 12, 87
+- `apps/admin-web/src/app/resident/requests/new/page.tsx`: 10
+- `apps/admin-web/src/app/resident/requests/page.tsx`: 6, 18, 40
+- `apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx`: 206
+- `apps/resident-android-mobile/src/app/(app)/services/[documentId].tsx`: 148
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`: 2, 34, 114, 269, 271, 273, 350
+- `apps/resident-android-mobile/src/components/progress-bar.tsx`: 6
+- `apps/resident-android-mobile/src/components/services/documents-list.tsx`: 76
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`: 3, 6, 28, 90, 223, 226, 242, 244
+- `apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx`: 15
+- `apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx`: 14
+- `apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx`: 61
+- `apps/resident-web/src/app/(resident)/services/documents/page.tsx`: 23
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`: 22
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx`: 3, 17, 74, 175, 177, 179, 206
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 148
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`: 46
+- `apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx`: 29, 67
+- `apps/resident-web/src/app/(resident)/services/requests/requests-list.tsx`: 12, 26, 58
+- `apps/resident-web/src/components/services/document-request-modal/details-step.tsx`: 52
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 157
+- `apps/resident-web/src/components/services/documents-list.tsx`: 23, 85
+- `packages/shared/src/lib/format.test.ts`: 4, 10, 67, 70, 75, 80, 84, 87, 92, 97
+- `packages/shared/src/lib/format.ts`: 30, 32, 47, 50, 62, 64
+- `packages/shared/src/lib/service-tracking.test.ts`: 3, 5, 10, 15, 17, 22, 26, 27, 34, 39, 42, 43, 44, 48, 50, 55, 60, 63, 70, 71
+- `packages/shared/src/lib/service-tracking.ts`: 3, 5, 22, 24, 25, 39, 43, 54, 65, 69, 71, 75, 88
+- `packages/shared/src/types/database.ts`: 395, 407, 419, 1379, 1395, 1411
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 17, 39, 59, 108, 116, 120
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 121, 122, 123, 124, 136, 141
+- `supabase/migrations/0009_admin_crud_and_soft_delete.sql`: 4, 23
+- `supabase/migrations/0014_request_delivery_workflow.sql`: 21, 29
+- `supabase/migrations/0018_begin_processing_rpc.sql`: 9
+- `supabase/migrations/0066_qrph_persistent_qr_and_resident_cancel.sql`: 9
+- `supabase/migrations/0082_remove_delivery_add_pickup.sql`: 6, 35, 43, 51, 59, 61
+- `supabase/seed.sql`: 21
+- `supabase/tests/rls_isolation.test.sql`: 48
+
+## locality
+
+- `apps/admin-web/src/actions/admin-audit-actions.ts`: 65, 73
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`: 124
+- `apps/admin-web/src/app/(admin)/households-residents/page.tsx`: 16, 62
+- `apps/admin-web/src/app/(admin)/incident-map/BoundaryFitButton.tsx`: 8, 14, 18, 19
+- `apps/admin-web/src/app/(admin)/incident-map/IncidentMapClient.tsx`: 13, 16, 22
+- `apps/admin-web/src/app/(admin)/incident-map/MapCanvas.tsx`: 20, 25, 37, 38, 46, 55, 60, 220, 222, 224, 274
+- `apps/admin-web/src/app/(admin)/incident-map/page.tsx`: 9, 45, 63, 64, 109
+- `apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx`: 260, 261
+- `apps/admin-web/src/app/(admin)/incident-reports/page.tsx`: 10, 57
+- `apps/admin-web/src/app/(admin)/layout.tsx`: 25, 35
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`: 12, 38, 91
+- `apps/admin-web/src/app/(admin)/residents/page.tsx`: 21, 32, 33, 35, 46, 47, 48, 51, 52, 53, 81, 83, 125, 126, 128
+- `apps/admin-web/src/app/(admin)/residents/resident-directory.tsx`: 283, 285, 306, 315, 317, 319, 320, 681, 683, 691, 906, 922, 1004, 1005, 1008
+- `apps/admin-web/src/app/(admin)/staff/page.tsx`: 62
+- `apps/admin-web/src/app/(admin)/staff/staff-form.tsx`: 34
+- `apps/admin-web/src/app/(admin)/staff/staff-table.tsx`: 112, 255, 264, 266
+- `apps/admin-web/src/app/api/admin/residents/route.ts`: 74, 90
+- `apps/admin-web/src/app/api/admin/staff/invite/route.ts`: 57, 83, 121
+- `apps/admin-web/src/app/resident/layout.tsx`: 29, 43
+- `apps/admin-web/src/app/resident/profile/page.tsx`: 14
+- `apps/admin-web/src/app/resident/profile/profile-form.tsx`: 21, 23, 28, 57, 59, 61, 75, 77, 95, 97, 179, 187
+- `apps/admin-web/src/components/admin/table-scroll-area.tsx`: 7
+- `apps/admin-web/src/hooks/use-barangay-settings.ts`: 99, 143
+- `apps/admin-web/src/hooks/use-households.ts`: 29, 55
+- `apps/resident-android-mobile/assets/geojson/ampid1-boundary.json`: 9
+- `apps/resident-android-mobile/src/app/(app)/health/register.tsx`: 674
+- `apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx`: 40, 481, 486, 662, 663
+- `apps/resident-android-mobile/src/app/(app)/home/index.tsx`: 125
+- `apps/resident-android-mobile/src/app/(app)/maps/index.tsx`: 72, 73, 74, 398
+- `apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx`: 325, 353
+- `apps/resident-android-mobile/src/app/(app)/reports/new.tsx`: 60, 61, 198, 200, 239, 240, 241, 244, 257, 258, 261, 635, 636
+- `apps/resident-android-mobile/src/app/(app)/settings/index.tsx`: 257
+- `apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx`: 5, 6, 9, 13, 14, 16, 47, 48, 49, 166, 167, 168, 206, 222, 233, 237
+- `apps/resident-android-mobile/src/app/(app)/settings/profile.tsx`: 884, 887, 1017, 1019, 1057, 1059, 1074, 1107, 1261, 1262, 1264, 1462, 1463, 1465, 1473
+- `apps/resident-android-mobile/src/app/(auth)/register.tsx`: 5, 216, 221, 222, 240, 241, 245, 266, 323, 339, 346, 651, 654, 673
+- `apps/resident-android-mobile/src/components/map-view.tsx`: 16, 32, 33, 35, 86, 96, 196, 273, 274, 284, 288, 297, 299, 309, 372, 375, 376, 377, 382, 387, 389, 398, 401, 454, 457, 458, 490, 491, 510, 511
+- `apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx`: 3, 6, 7, 37, 47, 120, 136
+- `apps/resident-android-mobile/src/hooks/use-ampid1-boundary.ts`: 3
+- `apps/resident-android-mobile/src/hooks/use-profile.ts`: 9, 50
+- `apps/resident-android-mobile/src/hooks/use-theme-preference.tsx`: 72
+- `apps/resident-ios-mobile/src/app/profile.tsx`: 17, 37, 49, 63
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 24
+- `apps/resident-ios-mobile/src/features/auth/register-screen.tsx`: 72, 74
+- `apps/resident-ios-mobile/tests/secure-storage.test.ts`: 13
+- `apps/resident-web/src/app/(auth)/register/register-form.tsx`: 7, 183, 188, 216, 217, 221, 236, 295, 309, 315, 598, 599, 613
+- `apps/resident-web/src/app/(resident)/announcements/page.tsx`: 5
+- `apps/resident-web/src/app/(resident)/emergency/centers/page.tsx`: 5, 14, 24, 25, 28
+- `apps/resident-web/src/app/(resident)/health/register/[driveId]/page.tsx`: 19, 35
+- `apps/resident-web/src/app/(resident)/home/page.tsx`: 53
+- `apps/resident-web/src/app/(resident)/maps/page.tsx`: 7, 18, 49, 89, 110
+- `apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx`: 34, 46, 363
+- `apps/resident-web/src/app/(resident)/reports/new/page.tsx`: 5, 15, 24
+- `apps/resident-web/src/app/(resident)/settings/layout.tsx`: 38, 42
+- `apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx`: 5, 9, 15, 16, 33, 39, 73, 143, 144, 145, 163, 174
+- `apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-map-wrapper.tsx`: 19
+- `apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-map.tsx`: 6, 7, 9, 10, 13, 32, 36, 41, 49, 84, 86, 97, 107, 112, 127, 129, 131, 143, 144
+- `apps/resident-web/src/app/(resident)/settings/location-verification/page.tsx`: 5, 16, 17, 27, 33, 34, 35
+- `apps/resident-web/src/app/(resident)/settings/profile/page.tsx`: 14
+- `apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx`: 18, 78, 80, 91, 869, 871, 892, 894, 911, 937, 959, 971, 973, 1138
+- `apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx`: 84
+- `apps/resident-web/src/components/emergency/centers-content.tsx`: 18, 20, 112
+- `apps/resident-web/src/components/emergency/centers-map-client.tsx`: 25
+- `apps/resident-web/src/components/emergency/centers-map.tsx`: 10, 92, 93, 95, 99, 115, 116, 142, 155, 165, 202, 203, 231
+- `apps/resident-web/src/components/health/register-drawer.tsx`: 88, 98
+- `apps/resident-web/src/components/maps/boundary-fit-button.tsx`: 14
+- `apps/resident-web/src/components/maps/map-canvas.tsx`: 11, 40, 43, 53, 54, 63, 81, 82, 83, 90, 95, 181, 184, 186
+- `apps/resident-web/src/components/maps/map-client-wrapper.tsx`: 18
+- `apps/resident-web/src/components/reports/location-picker-map-wrapper.tsx`: 18
+- `apps/resident-web/src/components/reports/location-picker-map.tsx`: 69, 72, 75, 88, 98, 106, 107, 110, 122, 126
+- `apps/resident-web/src/data/ampid1-boundary.json`: 9
+- `apps/resident-web/src/hooks/use-profile.ts`: 18, 20, 33, 62
+- `apps/resident-web/src/lib/auth/get-optional-user.ts`: 26, 42
+- `apps/resident-web/src/lib/auth/require-user.ts`: 25, 44, 60
+- `apps/resident-web/src/lib/barangay-boundary.ts`: 3, 6, 7, 9, 10, 12, 14, 15, 22, 23
+- `packages/shared/src/lib/point-in-polygon.test.ts`: 3, 19, 21, 25, 29, 48, 49, 50
+- `packages/shared/src/lib/point-in-polygon.ts`: 32
+- `packages/shared/src/schemas/auth.ts`: 58
+- `packages/shared/src/schemas/staff.test.ts`: 11, 37, 50
+- `packages/shared/src/schemas/staff.ts`: 9, 19
+- `packages/shared/src/types/database.ts`: 102, 152, 235, 289, 301, 303, 311, 319, 380, 427, 542, 608, 643, 754, 801, 902, 1003, 1092, 1178, 1210, 1222, 1223, 1230, 1234, 1236, 1243, 1244, 1251, 1263, 1264, 1271, 1272, 1277, 1284, 1285, 1292, 1304, 1305, 1312, 1313, 1318, 1325, 1326, 1333, 1419, 1480, 1536, 1593
+- `packages/shared/src/types/domain.ts`: 67
+- `packages/shared/src/types/map-bridge.ts`: 22, 24, 33
+- `supabase/config.toml`: 394
+- `supabase/functions/check-payment-status/index.ts`: 3
+- `supabase/functions/create-payment-source/index.ts`: 116
+- `supabase/migrations/0001_barangays_and_profiles.sql`: 7, 12, 15, 17, 23, 30, 32, 33, 42, 46
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 13, 44
+- `supabase/migrations/0003_announcements.sql`: 7
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 27
+- `supabase/migrations/0012_profile_trigger_and_verification_status.sql`: 61, 71, 79
+- `supabase/migrations/0022_maps_tables.sql`: 15, 45, 95
+- `supabase/migrations/0023_seed_incident_categories.sql`: 8, 10, 19
+- `supabase/migrations/0024_ampid1_boundary.sql`: 1, 5, 6, 12, 13
+- `supabase/migrations/0035_medical_drives.sql`: 40
+- `supabase/migrations/0039_profile_extended_fields.sql`: 68, 78, 87
+- `supabase/migrations/0045_evacuation_center_checkins.sql`: 11
+- `supabase/migrations/0047_emergency_information.sql`: 8
+- `supabase/migrations/0049_seed_empty_tables.sql`: 161
+- `supabase/migrations/0050_create_emergency_qr_tables.sql`: 12
+- `supabase/migrations/0051_waste_management.sql`: 12, 27
+- `supabase/migrations/0053_faq.sql`: 10
+- `supabase/migrations/0054_barangay_settings.sql`: 5, 14, 16, 18, 19, 25, 28, 34, 42, 77
+- `supabase/migrations/0057_barangay_officials.sql`: 25
+- `supabase/migrations/0058_admin_audit_log.sql`: 11, 43
+- `supabase/migrations/0059_site_content_and_about_us.sql`: 13, 37, 64, 164, 167, 171
+- `supabase/migrations/0062_seed_site_content_and_about_us.sql`: 50, 89, 116, 149
+- `supabase/migrations/0064_qrph_instant_payment_and_refunds.sql`: 74, 77, 87
+- `supabase/migrations/0068_signup_birth_date.sql`: 7, 27, 45, 55
+- `supabase/migrations/0074_account_deletion.sql`: 48
+- `supabase/migrations/0078_registration_location_verification.sql`: 4, 10, 16, 17, 19, 20, 21, 23, 26, 28, 41, 44, 53, 63, 65, 69, 71, 83, 85, 94, 98, 99, 106, 110, 111, 122
+- `supabase/migrations/0079_export_rate_limit.sql`: 8
+- `supabase/migrations/0081_resident_profile_field_split.sql`: 3, 7, 19, 22, 35, 37, 53, 58, 59, 61, 73, 75, 77, 102, 104, 106, 107, 108, 109, 118, 119, 125, 131, 132, 133, 150, 153, 167, 178, 180, 192, 194, 202, 207, 209, 217, 218, 226, 231, 233, 241, 242, 253, 254, 256
+- `supabase/migrations/0082_remove_delivery_add_pickup.sql`: 1, 9, 257
+- `supabase/migrations/0085_resident_mark_resolved_incident_read.sql`: 23
+- `supabase/migrations/0090_location_verification.sql`: 2, 3, 5, 7, 8, 12, 13, 15, 17, 19, 21, 23
+- `supabase/migrations/0091_verified_location_address.sql`: 4, 8, 10, 11, 13
+- `supabase/migrations/0094_resident_ios_tenant_write_guards.sql`: 2, 73, 75
+- `supabase/seed.sql`: 6, 7, 9, 80, 374
+- `supabase/tests/resident_ios_tenant_write_guards.test.sql`: 4
+- `supabase/tests/rls_isolation.test.sql`: 22, 27, 155
+
+## auth
+
+- `apps/admin-web/src/actions/admin-audit-actions.ts`: 59
+- `apps/admin-web/src/app/(admin)/about-us/page.tsx`: 9
+- `apps/admin-web/src/app/(admin)/announcements/page.tsx`: 12
+- `apps/admin-web/src/app/(admin)/emergency-qr/page.tsx`: 8
+- `apps/admin-web/src/app/(admin)/evacuation-centers/page.tsx`: 12
+- `apps/admin-web/src/app/(admin)/faq/page.tsx`: 10
+- `apps/admin-web/src/app/(admin)/health/page.tsx`: 47
+- `apps/admin-web/src/app/(admin)/households-residents/page.tsx`: 40
+- `apps/admin-web/src/app/(admin)/hub/page.tsx`: 10
+- `apps/admin-web/src/app/(admin)/incident-map/page.tsx`: 39
+- `apps/admin-web/src/app/(admin)/incident-reports/page.tsx`: 43
+- `apps/admin-web/src/app/(admin)/layout.tsx`: 17
+- `apps/admin-web/src/app/(admin)/requests/page.tsx`: 52
+- `apps/admin-web/src/app/(admin)/services/page.tsx`: 13
+- `apps/admin-web/src/app/(admin)/settings/page.tsx`: 9
+- `apps/admin-web/src/app/(admin)/staff/page.tsx`: 27
+- `apps/admin-web/src/app/(admin)/terms-privacy/page.tsx`: 9
+- `apps/admin-web/src/app/(admin)/theme/page.tsx`: 15
+- `apps/admin-web/src/app/(admin)/theme/theme-form.tsx`: 85
+- `apps/admin-web/src/app/(admin)/transactions/page.tsx`: 31
+- `apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx`: 169
+- `apps/admin-web/src/app/(admin)/waste-management/page.tsx`: 23
+- `apps/admin-web/src/app/api/admin/residents/route.ts`: 28, 56, 62, 81
+- `apps/admin-web/src/app/api/admin/staff/invite/route.ts`: 31, 66, 89, 107
+- `apps/admin-web/src/app/forgot-password/page.tsx`: 27
+- `apps/admin-web/src/app/login/page.tsx`: 29
+- `apps/admin-web/src/app/reset-password/page.tsx`: 56, 64, 81
+- `apps/admin-web/src/app/resident/layout.tsx`: 21
+- `apps/admin-web/src/app/resident/page.tsx`: 26
+- `apps/admin-web/src/app/resident/profile/page.tsx`: 9
+- `apps/admin-web/src/app/resident/reports/new/new-report-form.tsx`: 86
+- `apps/admin-web/src/app/resident/reports/page.tsx`: 12
+- `apps/admin-web/src/app/resident/requests/new/new-request-form.tsx`: 43
+- `apps/admin-web/src/app/resident/requests/page.tsx`: 14
+- `apps/admin-web/src/components/admin/admin-shell.tsx`: 29
+- `apps/admin-web/src/components/resident/resident-shell.tsx`: 38
+- `apps/admin-web/src/lib/payments.ts`: 26
+- `apps/admin-web/src/proxy.ts`: 35
+- `apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx`: 142, 158
+- `apps/resident-android-mobile/src/app/(app)/settings/index.tsx`: 176
+- `apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx`: 23, 26
+- `apps/resident-android-mobile/src/app/(auth)/login.tsx`: 36
+- `apps/resident-android-mobile/src/app/(auth)/otp.tsx`: 22, 24, 45, 63
+- `apps/resident-android-mobile/src/app/(auth)/register.tsx`: 318, 321, 326, 328, 345, 353, 354, 360, 372, 378, 386
+- `apps/resident-android-mobile/src/app/(auth)/reset-password.tsx`: 36
+- `apps/resident-android-mobile/src/app/_layout.tsx`: 116
+- `apps/resident-android-mobile/src/components/loading-overlay.tsx`: 10
+- `apps/resident-android-mobile/src/hooks/use-auth.tsx`: 31, 34, 69, 80, 105, 109
+- `apps/resident-ios-mobile/src/app/settings/change-password.tsx`: 24, 26
+- `apps/resident-ios-mobile/src/features/auth/auth-screen.tsx`: 21
+- `apps/resident-ios-mobile/src/features/auth/recovery-screen.tsx`: 31, 38, 45
+- `apps/resident-ios-mobile/src/features/auth/register-screen.tsx`: 67, 77
+- `apps/resident-ios-mobile/src/lib/runtime.tsx`: 65, 130, 141, 145, 153, 154, 157, 159
+- `apps/resident-ios-mobile/tests/secure-storage.test.ts`: 32, 38
+- `apps/resident-web/src/actions/id-document-signed-url.ts`: 29
+- `apps/resident-web/src/app/(auth)/forgot-password/page.tsx`: 15, 31
+- `apps/resident-web/src/app/(auth)/layout.tsx`: 34
+- `apps/resident-web/src/app/(auth)/login/page.tsx`: 49
+- `apps/resident-web/src/app/(auth)/onboarding/page.tsx`: 40
+- `apps/resident-web/src/app/(auth)/register/register-form.tsx`: 151, 290, 293, 298, 322, 323, 327, 336, 337, 340
+- `apps/resident-web/src/app/(auth)/reset-password/page.tsx`: 45
+- `apps/resident-web/src/app/(auth)/verify-otp/page.tsx`: 16, 45, 61
+- `apps/resident-web/src/app/(resident)/emergency/family/page.tsx`: 7
+- `apps/resident-web/src/app/(resident)/emergency/layout.tsx`: 5, 6
+- `apps/resident-web/src/app/(resident)/emergency/page.tsx`: 9, 14
+- `apps/resident-web/src/app/(resident)/emergency/scan/page.tsx`: 7
+- `apps/resident-web/src/app/(resident)/health/layout.tsx`: 5
+- `apps/resident-web/src/app/(resident)/health/my-registrations/page.tsx`: 7
+- `apps/resident-web/src/app/(resident)/health/register/[driveId]/page.tsx`: 4, 14
+- `apps/resident-web/src/app/(resident)/home/page.tsx`: 24, 25
+- `apps/resident-web/src/app/(resident)/layout.tsx`: 8, 11
+- `apps/resident-web/src/app/(resident)/maps/page.tsx`: 16, 24
+- `apps/resident-web/src/app/(resident)/reports/[incidentId]/page.tsx`: 3, 13
+- `apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx`: 181
+- `apps/resident-web/src/app/(resident)/reports/new/page.tsx`: 4, 9
+- `apps/resident-web/src/app/(resident)/reports/page.tsx`: 8
+- `apps/resident-web/src/app/(resident)/services/layout.tsx`: 10, 11
+- `apps/resident-web/src/app/(resident)/services/logs/page.tsx`: 5, 17
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx`: 3, 14
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx`: 3, 14
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx`: 3, 18
+- `apps/resident-web/src/app/(resident)/services/payment/success/page.tsx`: 6, 19
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`: 1, 17
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx`: 103
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/page.tsx`: 3, 16
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`: 4, 39
+- `apps/resident-web/src/app/(resident)/settings/about/page.tsx`: 6
+- `apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx`: 5, 163, 179
+- `apps/resident-web/src/app/(resident)/settings/change-password/page.tsx`: 1, 7, 8
+- `apps/resident-web/src/app/(resident)/settings/delete-account/delete-account-form.tsx`: 48, 66
+- `apps/resident-web/src/app/(resident)/settings/delete-account/page.tsx`: 1, 7
+- `apps/resident-web/src/app/(resident)/settings/help/[articleId]/page.tsx`: 10
+- `apps/resident-web/src/app/(resident)/settings/help/page.tsx`: 6
+- `apps/resident-web/src/app/(resident)/settings/layout.tsx`: 10, 31
+- `apps/resident-web/src/app/(resident)/settings/location-verification/page.tsx`: 4, 12
+- `apps/resident-web/src/app/(resident)/settings/profile/page.tsx`: 1, 8
+- `apps/resident-web/src/app/(resident)/settings/terms-privacy/page.tsx`: 6
+- `apps/resident-web/src/app/(resident)/settings/theme/page.tsx`: 8
+- `apps/resident-web/src/components/emergency/household-qr-dialog.tsx`: 32
+- `apps/resident-web/src/components/reports/incident-drawer.tsx`: 57
+- `apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx`: 146
+- `apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx`: 105
+- `apps/resident-web/src/components/shared/auth-gate.tsx`: 8
+- `apps/resident-web/src/components/shell/resident-shell.tsx`: 39
+- `apps/resident-web/src/hooks/use-my-incidents.ts`: 63, 102
+- `apps/resident-web/src/hooks/use-profile.ts`: 40
+- `apps/resident-web/src/lib/auth/get-optional-user.ts`: 5, 7, 18
+- `apps/resident-web/src/lib/auth/require-user.ts`: 21, 25, 27, 30, 35
+- `apps/resident-web/src/proxy.ts`: 42
+- `packages/shared/src/types/database.ts`: 1654, 1655
+- `supabase/config.toml`: 319, 325, 365, 367, 369
+- `supabase/functions/cancel-payment/index.ts`: 41
+- `supabase/functions/check-payment-status/index.ts`: 62
+- `supabase/functions/create-payment-source/index.ts`: 95
+- `supabase/functions/delete-my-account/index.ts`: 49, 110
+- `supabase/functions/export-my-data/index.ts`: 40
+- `supabase/functions/generate-household-qr/index.ts`: 50
+- `supabase/functions/refund-payment/index.ts`: 51
+- `supabase/migrations/0001_barangays_and_profiles.sql`: 88, 98, 108
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 30, 76
+- `supabase/migrations/0003_announcements.sql`: 25
+- `supabase/migrations/0005_guest_readable_public_content.sql`: 8
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 58, 68, 73, 74, 111, 116, 117, 158, 166, 185, 186
+- `supabase/migrations/0008_resident_directory_access.sql`: 8, 9
+- `supabase/migrations/0009_admin_crud_and_soft_delete.sql`: 30, 40, 55, 56, 64, 65, 69, 70
+- `supabase/migrations/0011_announcements_admin_write.sql`: 23, 36, 37
+- `supabase/migrations/0012_profile_trigger_and_verification_status.sql`: 6, 41, 88, 98
+- `supabase/migrations/0013_protect_verification_fields.sql`: 16
+- `supabase/migrations/0014_request_delivery_workflow.sql`: 69, 78
+- `supabase/migrations/0015_request_delivery_transition_rpc.sql`: 15, 24
+- `supabase/migrations/0018_begin_processing_rpc.sql`: 19, 26
+- `supabase/migrations/0020_id_documents_storage.sql`: 39, 43
+- `supabase/migrations/0022_maps_tables.sql`: 5, 31, 37, 38, 72, 79, 87, 88, 125, 126
+- `supabase/migrations/0025_incident_management.sql`: 140, 190, 207, 255, 266
+- `supabase/migrations/0026_incident_report_workflow.sql`: 51, 68, 112, 123, 167
+- `supabase/migrations/0032_withdraw_incident_rpc.sql`: 55
+- `supabase/migrations/0036_medical_drives_admin_rls.sql`: 21, 27, 28, 38, 42
+- `supabase/migrations/0039_profile_extended_fields.sql`: 28, 47, 51, 97
+- `supabase/migrations/0041_id_verification_status.sql`: 41, 59
+- `supabase/migrations/0042_id_documents_public_bucket.sql`: 46
+- `supabase/migrations/0045_evacuation_center_checkins.sql`: 31, 40, 48, 49
+- `supabase/migrations/0046_household_members.sql`: 37, 39
+- `supabase/migrations/0047_emergency_information.sql`: 38, 39
+- `supabase/migrations/0052_household_admin_management.sql`: 20, 23, 27, 30
+- `supabase/migrations/0056_admin_staff_management.sql`: 32, 33, 48, 49, 54, 55, 70
+- `supabase/migrations/0057_barangay_officials.sql`: 81, 82, 91, 92, 101, 102, 105, 106, 115, 116
+- `supabase/migrations/0058_admin_audit_log.sql`: 37, 38, 48, 49, 57, 58, 61, 62
+- `supabase/migrations/0059_site_content_and_about_us.sql`: 106, 110, 114, 133, 134, 138, 139, 143, 144
+- `supabase/migrations/0060_storage_site_content.sql`: 14, 15, 30, 31
+- `supabase/migrations/0061_save_about_us_rpc.sql`: 32, 35
+- `supabase/migrations/0068_signup_birth_date.sql`: 5, 9, 66
+- `supabase/migrations/0069_fix_emergency_information_tenant_leak.sql`: 31
+- `supabase/migrations/0070_waste_management_resident_read.sql`: 16, 25
+- `supabase/migrations/0072_admin_register_for_drive.sql`: 47, 51
+- `supabase/migrations/0074_account_deletion.sql`: 79, 80
+- `supabase/migrations/0078_registration_location_verification.sql`: 6, 31, 119
+- `supabase/migrations/0081_resident_profile_field_split.sql`: 130, 138, 250
+- `supabase/migrations/0082_remove_delivery_add_pickup.sql`: 82, 91, 123, 132
+- `supabase/migrations/0086_about_us_logo_size.sql`: 37, 40
+- `supabase/migrations/0087_about_us_title.sql`: 37, 40
+- `supabase/migrations/0089_id_verification_failed_status.sql`: 39, 58
+- `supabase/migrations/0092_drive_registrations_admin_update.sql`: 9, 14, 18, 23
+- `supabase/migrations/0093_resident_ios_backend_safety.sql`: 120, 127, 163, 170, 212, 219, 256, 260
+- `supabase/seed.sql`: 329, 369, 409
+
+## scores
+
+- `apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx`: 18, 98, 110, 113, 133, 140, 224, 271, 275
+- `apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx`: 87, 89, 90, 104, 306, 309, 314, 343, 346, 351, 366, 432, 476, 485
+- `apps/admin-web/src/app/(admin)/health/applicants/page.tsx`: 10, 15, 82
+- `apps/resident-android-mobile/src/app/(app)/health/index.tsx`: 983, 994, 1100, 1104, 1526, 1530, 1534, 2121
+- `apps/resident-android-mobile/src/app/(app)/health/register.tsx`: 332, 333, 438, 450, 451, 455, 456, 523, 531
+- `apps/resident-android-mobile/src/hooks/use-medical-drives.ts`: 36, 41, 51, 52, 302
+- `apps/resident-ios-mobile/src/app/health/register/[id].tsx`: 36, 37
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 73, 78
+- `apps/resident-web/src/components/health/applicant-form.tsx`: 85, 120, 141, 144
+- `apps/resident-web/src/components/health/my-registrations-content.tsx`: 108
+- `apps/resident-web/src/components/health/registration-drawer.tsx`: 88, 91
+- `apps/resident-web/src/hooks/use-medical-drives.ts`: 17, 18, 25, 175
+- `packages/shared/src/constants/drive-types.ts`: 7
+- `packages/shared/src/constants/priority-weights.ts`: 4, 5, 12
+- `packages/shared/src/types/database.ts`: 435, 442, 449, 456, 463, 470, 1642, 1664
+- `packages/shared/src/types/domain.ts`: 51, 52
+- `supabase/migrations/0035_medical_drives.sql`: 3, 81, 82, 88, 97, 98, 130, 142, 158, 206, 222, 224, 226, 240, 241
+- `supabase/migrations/0072_admin_register_for_drive.sql`: 5, 8, 9, 19, 38, 95, 110, 115, 126, 128, 130, 144, 145
+- `supabase/tests/resident_ios_tenant_write_guards.test.sql`: 31, 34
+- `supabase/tests/rls_isolation.test.sql`: 12, 75, 166, 174, 180, 191, 200
+
+## realtime
+
+- `apps/admin-web/src/app/(admin)/about-us/about-us-form.tsx`: 91, 93, 98
+- `apps/admin-web/src/app/(admin)/emergency-qr/client-wrapper.tsx`: 28, 30
+- `apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-row.tsx`: 66, 68
+- `apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx`: 274, 275
+- `apps/admin-web/src/app/(admin)/health/drive-table.tsx`: 295, 296
+- `apps/admin-web/src/app/(admin)/households-residents/households-table.tsx`: 121, 122
+- `apps/admin-web/src/app/(admin)/hub/emergency-row.tsx`: 50, 51
+- `apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx`: 312, 320, 321
+- `apps/admin-web/src/app/(admin)/requests/requests-table.tsx`: 265, 266
+- `apps/admin-web/src/app/(admin)/terms-privacy/client-wrapper.tsx`: 32, 34
+- `apps/admin-web/src/hooks/use-admin-audit-notifications.ts`: 56, 58
+- `apps/admin-web/src/hooks/use-audit-log-browser.ts`: 227, 229
+- `apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx`: 496, 498
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`: 99, 100, 147, 149, 154
+- `apps/resident-android-mobile/src/components/services/documents-list.tsx`: 23, 44, 45
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`: 79, 81
+- `apps/resident-android-mobile/src/hooks/use-about-us.ts`: 77, 79, 86
+- `apps/resident-android-mobile/src/hooks/use-announcements.ts`: 42, 43
+- `apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts`: 62, 64
+- `apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts`: 93, 95
+- `apps/resident-android-mobile/src/hooks/use-emergency-hotlines.ts`: 93, 95
+- `apps/resident-android-mobile/src/hooks/use-emergency-qr-content.ts`: 86, 88
+- `apps/resident-android-mobile/src/hooks/use-faq-articles.ts`: 52, 54
+- `apps/resident-android-mobile/src/hooks/use-incidents.ts`: 102, 104
+- `apps/resident-android-mobile/src/hooks/use-medical-drives.ts`: 248, 250, 268, 270
+- `apps/resident-android-mobile/src/hooks/use-my-incidents.ts`: 48, 50, 105, 145, 147
+- `apps/resident-android-mobile/src/hooks/use-notification-realtime.ts`: 31, 33, 43, 45, 61, 63, 75, 77, 87, 89
+- `apps/resident-android-mobile/src/hooks/use-paymongo-source.ts`: 156, 158
+- `apps/resident-android-mobile/src/hooks/use-site-content.ts`: 48, 50
+- `apps/resident-android-mobile/src/hooks/use-unread-counts.tsx`: 114, 116, 123, 124, 128, 130
+- `apps/resident-android-mobile/src/lib/realtime-channel.ts`: 6
+- `apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx`: 271, 272
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx`: 62, 101, 102, 104
+- `apps/resident-web/src/hooks/use-about-us.ts`: 80, 81, 82
+- `apps/resident-web/src/hooks/use-announcements.ts`: 60, 61
+- `apps/resident-web/src/hooks/use-emergency-guidelines.ts`: 63, 65
+- `apps/resident-web/src/hooks/use-emergency-hotlines.ts`: 60, 62
+- `apps/resident-web/src/hooks/use-emergency-qr-content.ts`: 60, 62
+- `apps/resident-web/src/hooks/use-faq-articles.ts`: 57, 59
+- `apps/resident-web/src/hooks/use-medical-drives.ts`: 145, 146, 160, 161
+- `apps/resident-web/src/hooks/use-my-incidents.ts`: 106, 108
+- `apps/resident-web/src/hooks/use-paymongo-source.ts`: 163, 165
+- `apps/resident-web/src/hooks/use-site-content.ts`: 53, 55
+- `apps/resident-web/src/hooks/use-unread-counts.tsx`: 112, 114, 121, 122, 126, 128
+- `apps/resident-web/src/lib/realtime-channel.ts`: 6
+- `supabase/migrations/0002_document_types_and_service_requests.sql`: 134
+- `supabase/migrations/0003_announcements.sql`: 32
+- `supabase/migrations/0007_payments_and_admin_access.sql`: 82
+- `supabase/migrations/0008_resident_directory_access.sql`: 27
+- `supabase/migrations/0027_incidents_realtime.sql`: 3, 5, 16
+- `supabase/migrations/0038_health_realtime.sql`: 1, 2, 5, 6
+- `supabase/migrations/0048_realtime_publications.sql`: 2, 4, 5, 6, 7
+- `supabase/migrations/0050_create_emergency_qr_tables.sql`: 117, 118, 122, 123
+- `supabase/migrations/0051_waste_management.sql`: 118, 119, 123, 124
+- `supabase/migrations/0053_faq.sql`: 66, 70, 71
+- `supabase/migrations/0058_admin_audit_log.sql`: 66
+- `supabase/migrations/0059_site_content_and_about_us.sql`: 149, 150, 151, 155, 156
+- `supabase/migrations/0080_reports_unread_counts.sql`: 34
+
+## exports
+
+- `apps/admin-web/src/app/layout.tsx`: 22
+- `apps/admin-web/src/components/admin/data-table.tsx`: 5, 24
+- `apps/admin-web/src/components/admin/editable-data-table.tsx`: 35, 104
+- `apps/admin-web/src/hooks/use-households.ts`: 34
+- `apps/admin-web/src/lib/audit-notifications.ts`: 129, 312
+- `apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx`: 66
+- `apps/resident-android-mobile/src/app/(app)/settings/index.tsx`: 66, 80, 92, 94, 114, 123, 129, 141, 144, 146, 395, 398
+- `apps/resident-android-mobile/src/lib/data-export-pdf.ts`: 1, 6, 7, 87, 89
+- `apps/resident-android-mobile/src/lib/emergency-cache.ts`: 26, 41
+- `apps/resident-ios-mobile/src/data/resident-api.ts`: 8, 19
+- `apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx`: 19, 246, 416
+- `apps/resident-web/src/app/(resident)/settings/about/page.tsx`: 4
+- `apps/resident-web/src/app/(resident)/settings/change-password/page.tsx`: 4
+- `apps/resident-web/src/app/(resident)/settings/delete-account/page.tsx`: 4
+- `apps/resident-web/src/app/(resident)/settings/download-data/page.tsx`: 5, 22, 26, 33, 52, 64
+- `apps/resident-web/src/app/(resident)/settings/help/[articleId]/page.tsx`: 8
+- `apps/resident-web/src/app/(resident)/settings/help/page.tsx`: 4
+- `apps/resident-web/src/app/(resident)/settings/location-verification/page.tsx`: 9
+- `apps/resident-web/src/app/(resident)/settings/profile/page.tsx`: 5
+- `apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx`: 35
+- `apps/resident-web/src/app/(resident)/settings/terms-privacy/page.tsx`: 4
+- `apps/resident-web/src/app/(resident)/settings/theme/page.tsx`: 5
+- `apps/resident-web/src/app/layout.tsx`: 10
+- `apps/resident-web/src/lib/data-export-html.ts`: 1, 8, 9, 89, 91
+- `packages/shared/src/index.ts`: 2
+- `packages/shared/src/types/database.ts`: 9
+- `supabase/functions/export-my-data/index.ts`: 60
+- `supabase/migrations/0079_export_rate_limit.sql`: 1, 18
+
+## All UI routes and Android interaction surfaces
+
+- `apps/admin-web/src/app/(admin)/about-us/page.tsx`
+- `apps/admin-web/src/app/(admin)/announcements/page.tsx`
+- `apps/admin-web/src/app/(admin)/dashboard/page.tsx`
+- `apps/admin-web/src/app/(admin)/emergency-qr/page.tsx`
+- `apps/admin-web/src/app/(admin)/evacuation-centers/page.tsx`
+- `apps/admin-web/src/app/(admin)/faq/page.tsx`
+- `apps/admin-web/src/app/(admin)/health/applicants/page.tsx`
+- `apps/admin-web/src/app/(admin)/health/page.tsx`
+- `apps/admin-web/src/app/(admin)/households-residents/page.tsx`
+- `apps/admin-web/src/app/(admin)/hub/page.tsx`
+- `apps/admin-web/src/app/(admin)/incident-map/page.tsx`
+- `apps/admin-web/src/app/(admin)/incident-reports/page.tsx`
+- `apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx`
+- `apps/admin-web/src/app/(admin)/requests/page.tsx`
+- `apps/admin-web/src/app/(admin)/residents/page.tsx`
+- `apps/admin-web/src/app/(admin)/services/page.tsx`
+- `apps/admin-web/src/app/(admin)/settings/page.tsx`
+- `apps/admin-web/src/app/(admin)/staff/page.tsx`
+- `apps/admin-web/src/app/(admin)/terms-privacy/page.tsx`
+- `apps/admin-web/src/app/(admin)/theme/page.tsx`
+- `apps/admin-web/src/app/(admin)/transactions/page.tsx`
+- `apps/admin-web/src/app/(admin)/waste-management/page.tsx`
+- `apps/admin-web/src/app/api/admin/residents/route.ts`
+- `apps/admin-web/src/app/api/admin/staff/invite/route.ts`
+- `apps/admin-web/src/app/forgot-password/page.tsx`
+- `apps/admin-web/src/app/login/page.tsx`
+- `apps/admin-web/src/app/page.tsx`
+- `apps/admin-web/src/app/reset-password/page.tsx`
+- `apps/admin-web/src/app/resident/page.tsx`
+- `apps/admin-web/src/app/resident/profile/page.tsx`
+- `apps/admin-web/src/app/resident/reports/new/page.tsx`
+- `apps/admin-web/src/app/resident/reports/page.tsx`
+- `apps/admin-web/src/app/resident/requests/[requestId]/page.tsx`
+- `apps/admin-web/src/app/resident/requests/new/page.tsx`
+- `apps/admin-web/src/app/resident/requests/page.tsx`
+- `apps/resident-android-mobile/src/app/(app)/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/health/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/health/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/health/register.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/emergency-info/qr-guide.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/emergency-info/scan.tsx`
+- `apps/resident-android-mobile/src/app/(app)/home/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/index/emergency-info/qr-guide.tsx`
+- `apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/maps/hotline-directory.tsx`
+- `apps/resident-android-mobile/src/app/(app)/maps/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/maps/preparedness-guide.tsx`
+- `apps/resident-android-mobile/src/app/(app)/reports/[incidentId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/reports/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/reports/new.tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/[documentId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/payment/[requestId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/request/[documentId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/services/requests/[requestId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/about.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/help/[articleId].tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/help/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/index.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/profile.tsx`
+- `apps/resident-android-mobile/src/app/(app)/settings/terms-privacy.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/_layout.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/auth-choice.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/completion.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/login.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/otp.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/personalization.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/register.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/reset-password.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/value-prop.tsx`
+- `apps/resident-android-mobile/src/app/(auth)/welcome.tsx`
+- `apps/resident-android-mobile/src/app/_layout.tsx`
+- `apps/resident-android-mobile/src/app/index.tsx`
+- `apps/resident-android-mobile/src/components/add-family-member-modal.tsx`
+- `apps/resident-android-mobile/src/components/animated-icon.tsx`
+- `apps/resident-android-mobile/src/components/animated-icon.web.tsx`
+- `apps/resident-android-mobile/src/components/app-header.tsx`
+- `apps/resident-android-mobile/src/components/app-tabs.tsx`
+- `apps/resident-android-mobile/src/components/app-tabs.web.tsx`
+- `apps/resident-android-mobile/src/components/auth-header.tsx`
+- `apps/resident-android-mobile/src/components/authenticated-scan-view.tsx`
+- `apps/resident-android-mobile/src/components/avatar.tsx`
+- `apps/resident-android-mobile/src/components/birthday-calendar-modal.tsx`
+- `apps/resident-android-mobile/src/components/card.tsx`
+- `apps/resident-android-mobile/src/components/center-detail-card.tsx`
+- `apps/resident-android-mobile/src/components/color-picker.tsx`
+- `apps/resident-android-mobile/src/components/count-badge.tsx`
+- `apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx`
+- `apps/resident-android-mobile/src/components/delete-account-modal.tsx`
+- `apps/resident-android-mobile/src/components/divider.tsx`
+- `apps/resident-android-mobile/src/components/emergency-accordion.tsx`
+- `apps/resident-android-mobile/src/components/evacuation-center-card.tsx`
+- `apps/resident-android-mobile/src/components/external-link.tsx`
+- `apps/resident-android-mobile/src/components/family-content.tsx`
+- `apps/resident-android-mobile/src/components/family-member-modal.tsx`
+- `apps/resident-android-mobile/src/components/filter-chips.tsx`
+- `apps/resident-android-mobile/src/components/guest-auth-callout-screen.tsx`
+- `apps/resident-android-mobile/src/components/guest-auth-callout.tsx`
+- `apps/resident-android-mobile/src/components/guest-prompt.tsx`
+- `apps/resident-android-mobile/src/components/hint-row.tsx`
+- `apps/resident-android-mobile/src/components/horizontal-center-picker.tsx`
+- `apps/resident-android-mobile/src/components/hotline-row.tsx`
+- `apps/resident-android-mobile/src/components/household-qr-modal.tsx`
+- `apps/resident-android-mobile/src/components/loading-overlay.tsx`
+- `apps/resident-android-mobile/src/components/map-view.tsx`
+- `apps/resident-android-mobile/src/components/notification-bell.tsx`
+- `apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx`
+- `apps/resident-android-mobile/src/components/onboarding/onboarding-progress-dots.tsx`
+- `apps/resident-android-mobile/src/components/onboarding/onboarding-toast.tsx`
+- `apps/resident-android-mobile/src/components/placeholder-panel.tsx`
+- `apps/resident-android-mobile/src/components/preference-toggle.tsx`
+- `apps/resident-android-mobile/src/components/primary-button.tsx`
+- `apps/resident-android-mobile/src/components/progress-bar.tsx`
+- `apps/resident-android-mobile/src/components/qr-guide-content.tsx`
+- `apps/resident-android-mobile/src/components/qr-permission-modal.tsx`
+- `apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx`
+- `apps/resident-android-mobile/src/components/qr-show-modal.tsx`
+- `apps/resident-android-mobile/src/components/reports/announcement-card.tsx`
+- `apps/resident-android-mobile/src/components/reports/announcement-modal.tsx`
+- `apps/resident-android-mobile/src/components/reports/announcements-feed.tsx`
+- `apps/resident-android-mobile/src/components/reports/fade-in-view.tsx`
+- `apps/resident-android-mobile/src/components/reports/feedback-modal.tsx`
+- `apps/resident-android-mobile/src/components/reports/incident-card.tsx`
+- `apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx`
+- `apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx`
+- `apps/resident-android-mobile/src/components/reports/photo-viewer-modal.tsx`
+- `apps/resident-android-mobile/src/components/reports/shimmer.tsx`
+- `apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx`
+- `apps/resident-android-mobile/src/components/search-bar.tsx`
+- `apps/resident-android-mobile/src/components/segmented-control.tsx`
+- `apps/resident-android-mobile/src/components/services/action-success-modal.tsx`
+- `apps/resident-android-mobile/src/components/services/animated-appear.tsx`
+- `apps/resident-android-mobile/src/components/services/countdown-timer.tsx`
+- `apps/resident-android-mobile/src/components/services/documents-list.tsx`
+- `apps/resident-android-mobile/src/components/services/logs-list.tsx`
+- `apps/resident-android-mobile/src/components/services/payment-success-modal.tsx`
+- `apps/resident-android-mobile/src/components/services/qr-generating-indicator.tsx`
+- `apps/resident-android-mobile/src/components/services/requests-list.tsx`
+- `apps/resident-android-mobile/src/components/services/skeleton.tsx`
+- `apps/resident-android-mobile/src/components/settings-icon.tsx`
+- `apps/resident-android-mobile/src/components/settings-row.tsx`
+- `apps/resident-android-mobile/src/components/status-badge.tsx`
+- `apps/resident-android-mobile/src/components/text-field.tsx`
+- `apps/resident-android-mobile/src/components/themed-text.tsx`
+- `apps/resident-android-mobile/src/components/themed-view.tsx`
+- `apps/resident-android-mobile/src/components/ui/collapsible.tsx`
+- `apps/resident-android-mobile/src/components/web-badge.tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/health/[id].tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/health/index.tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/home/index.tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/maps/index.tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/reports/[id].tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/reports/index.tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx`
+- `apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx`
+- `apps/resident-ios-mobile/src/app/auth.tsx`
+- `apps/resident-ios-mobile/src/app/emergency.tsx`
+- `apps/resident-ios-mobile/src/app/health/register/[id].tsx`
+- `apps/resident-ios-mobile/src/app/index.tsx`
+- `apps/resident-ios-mobile/src/app/profile.tsx`
+- `apps/resident-ios-mobile/src/app/recovery.tsx`
+- `apps/resident-ios-mobile/src/app/register.tsx`
+- `apps/resident-ios-mobile/src/app/request/[id].tsx`
+- `apps/resident-ios-mobile/src/app/requests.tsx`
+- `apps/resident-ios-mobile/src/app/services/request/[id].tsx`
+- `apps/resident-ios-mobile/src/app/settings/help/[id].tsx`
+- `apps/resident-ios-mobile/src/app/settings/help/index.tsx`
+- `apps/resident-ios-mobile/src/app/settings/index.tsx`
+- `apps/resident-web/src/app/(auth)/forgot-password/page.tsx`
+- `apps/resident-web/src/app/(auth)/login/page.tsx`
+- `apps/resident-web/src/app/(auth)/onboarding/page.tsx`
+- `apps/resident-web/src/app/(auth)/register/page.tsx`
+- `apps/resident-web/src/app/(auth)/reset-password/page.tsx`
+- `apps/resident-web/src/app/(auth)/verify-otp/page.tsx`
+- `apps/resident-web/src/app/(resident)/announcements/page.tsx`
+- `apps/resident-web/src/app/(resident)/emergency/alerts/page.tsx`
+- `apps/resident-web/src/app/(resident)/emergency/centers/page.tsx`
+- `apps/resident-web/src/app/(resident)/emergency/family/page.tsx`
+- `apps/resident-web/src/app/(resident)/emergency/page.tsx`
+- `apps/resident-web/src/app/(resident)/emergency/scan/page.tsx`
+- `apps/resident-web/src/app/(resident)/health/my-registrations/page.tsx`
+- `apps/resident-web/src/app/(resident)/health/page.tsx`
+- `apps/resident-web/src/app/(resident)/health/register/[driveId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/home/page.tsx`
+- `apps/resident-web/src/app/(resident)/maps/directory/page.tsx`
+- `apps/resident-web/src/app/(resident)/maps/page.tsx`
+- `apps/resident-web/src/app/(resident)/maps/preparedness/page.tsx`
+- `apps/resident-web/src/app/(resident)/reports/[incidentId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/reports/new/page.tsx`
+- `apps/resident-web/src/app/(resident)/reports/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/documents/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/logs/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/payment/success/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/services/requests/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/about/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/change-password/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/delete-account/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/download-data/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/help/[articleId]/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/help/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/location-verification/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/notifications/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/profile/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/terms-privacy/page.tsx`
+- `apps/resident-web/src/app/(resident)/settings/theme/page.tsx`
+- `apps/resident-web/src/app/page.tsx`

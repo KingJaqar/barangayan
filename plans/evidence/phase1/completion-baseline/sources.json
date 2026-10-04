@@ -1,0 +1,30 @@
+[
+  {
+    "file": "supabase/migrations/0044_evacuation_centers_verified.sql",
+    "sha256": "093a4601bbb4925638d5abd27d993329765d95125dfc56c74f100bc9e806e5bd"
+  },
+  {
+    "file": "supabase/migrations/0049_seed_empty_tables.sql",
+    "sha256": "2c22b2b6289d23927afda25b3de77660e5930d0a6b3496d8de268b7b47685c94"
+  },
+  {
+    "file": "supabase/migrations/0053_faq.sql",
+    "sha256": "fb677d1a0dba0b7ee4a787094deb8b998093e3fb8f4491c937b1b119d89f515e"
+  },
+  {
+    "file": "supabase/seed.sql",
+    "sha256": "31d9b9b3639922a430337c433f9f3dade0c94698b3ad7592dd478408238860e7"
+  },
+  {
+    "file": "scripts/phase1-verify.cjs",
+    "sha256": "e26fb46009839fc94247782243ee9214d7eed849a9633f3fcb27f7f36c12c7d7"
+  },
+  {
+    "file": "scripts/phase1-sql-checks.cjs",
+    "sha256": "df04ed6303f9b1243c3213dd4642facbbe79bcf494e257ea528a1d2fcceae045"
+  },
+  {
+    "file": "plans/Major_Web_AndroidMobile_Improvement_Plan.md",
+    "sha256": "94518222cc42071194e27431a7327090743f54122de3c6858117ccb0122bdade"
+  }
+]

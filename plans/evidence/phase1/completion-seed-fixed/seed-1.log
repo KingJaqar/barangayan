@@ -1,0 +1,14 @@
+INSERT 0 1
+INSERT 0 1
+INSERT 0 5
+INSERT 0 3
+INSERT 0 16
+CREATE EXTENSION
+INSERT 0 1
+INSERT 0 1
+INSERT 0 4
+INSERT 0 6
+psql:C:/Users/User/barangayan/supabase/seed.sql:206: NOTICE:  extension "pgcrypto" already exists, skipping
+psql:C:/Users/User/barangayan/supabase/seed.sql:463: ERROR:  syntax error at or near "on"
+LINE 1: on conflict (id) do nothing;
+        ^

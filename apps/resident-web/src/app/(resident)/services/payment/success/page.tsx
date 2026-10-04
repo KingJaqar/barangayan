@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { requireUser } from '@/lib/auth/require-user';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 /**
  * Ported from mobile's PaymentSuccessScreen — only reached from the QR PH flow once
@@ -16,10 +17,19 @@ export default async function PaymentSuccessPage({
 }: {
   searchParams: Promise<{ requestId?: string; refNumber?: string; amount?: string; documentFee?: string; method?: string; sourceId?: string }>;
 }) {
-  await requireUser();
-  const { requestId, refNumber, amount, documentFee, method, sourceId } = await searchParams;
-  const amountCentavos = Number(amount ?? 0);
-  const paidAt = new Date().toISOString();
+  const { user } = await requireUser();
+  const { requestId } = await searchParams;
+  const client = await createSupabaseServerClient();
+  const { data: payment, error } = await client.from('payments')
+    .select('*, service_requests!inner(reference_number, resident_id)').eq('service_request_id', requestId ?? '')
+    .eq('service_requests.resident_id', user.id).eq('status', 'paid').order('created_at', { ascending: false }).limit(1).maybeSingle();
+  if (error || !payment) return <div role="alert"><p>No confirmed payment receipt is available for this request.</p><Link href={requestId ? `/services/payment/${requestId}` : '/services/requests'}>Return to request payment</Link></div>;
+  const amountCentavos = payment.amount_centavos;
+  const paidAt = payment.paid_at ?? payment.created_at;
+  const refNumber = payment.service_requests?.reference_number;
+  const documentFee = payment.document_fee_centavos;
+  const method = payment.method === 'pickup' ? 'Pay at Pickup' : 'QR PH';
+  const sourceId = payment.paymongo_payment_id ?? payment.paymongo_source_id;
 
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
@@ -35,7 +45,7 @@ export default async function PaymentSuccessPage({
         <DetailRow label="Ref Number" value={refNumber ?? '—'} />
         <DetailRow label="Date/Time" value={formatDateTime(paidAt)} />
         <DetailRow label="Method" value={method ?? 'QR PH'} />
-        {documentFee ? <DetailRow label="Document Fee" value={formatCentavosAsPHP(Number(documentFee))} /> : null}
+        {documentFee != null ? <DetailRow label="Document Fee" value={formatCentavosAsPHP(documentFee)} /> : null}
         {sourceId ? <DetailRow label="Transaction Ref" value={sourceId} /> : null}
       </div>
 

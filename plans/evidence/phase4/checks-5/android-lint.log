@@ -1,0 +1,15 @@
+
+> @barangayan/mobile@1.0.0 lint
+> expo lint
+
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\components\services\logs-list.tsx
+  53:6  warning  React Hook useCallback has an unnecessary dependency: 'retry'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\hooks\use-profile.ts
+  67:13  warning  The ref value 'scope.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'scope.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 2 problems (0 errors, 2 warnings)
+

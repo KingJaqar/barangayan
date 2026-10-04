@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "sdk": "57.0.0",
+  "device": "emulator-5556 / sdk_gphone64_x86_64",
+  "cases": {
+    "ready": [
+      "Completed Within Target",
+      "Agency processing: 15m 0s / 15 minutes",
+      "Resident wait: 1m 0s"
+    ],
+    "released": [
+      "Completed Within Target",
+      "Agency processing: 12m 36s / 15 minutes",
+      "Resident wait: 16m 3s",
+      "Total turnaround: 31m 6s"
+    ],
+    "legacy": [
+      "Previous timing model · original processing estimate retained",
+      "Processing Time"
+    ],
+    "paused": [
+      "On Track",
+      "Agency processing: 5m 0s / 15 minutes",
+      "Waiting for resident: Resident supplying original certificate · SLA position retained"
+    ],
+    "connection-error": [
+      "Processing clock unavailable. Please retry.",
+      "Retry"
+    ],
+    "recovered": [
+      "On Track",
+      "Agency processing: 5m 0s / 15 minutes"
+    ]
+  },
+  "pausedResidentWaitSeconds": 354,
+  "recoveredResidentWaitSeconds": 947,
+  "agencySecondsFrozen": 300
+}

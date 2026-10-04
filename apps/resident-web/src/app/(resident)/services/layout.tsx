@@ -1,3 +1,4 @@
+import { ServicesVerification } from '@/components/services/services-verification';
 import { ServicesSegmentNav } from '@/components/services/services-segment-nav';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 
@@ -16,6 +17,7 @@ export default async function ServicesLayout({ children }: { children: React.Rea
   return (
     <div className="mx-auto max-w-4xl">
       <ServicesSegmentNav isAuthenticated={user !== null} />
+      {user ? <ServicesVerification/> : null}
       {children}
     </div>
   );

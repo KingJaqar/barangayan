@@ -1,0 +1,9 @@
+{
+  "command": "start-help",
+  "startedAt": "2026-10-01T13:45:55.459Z",
+  "finishedAt": "2026-10-01T13:45:56.170Z",
+  "exitCode": 0,
+  "passed": true,
+  "log": "completion-live-stack/start-help-1790862356167.log",
+  "appliedMigrations": []
+}

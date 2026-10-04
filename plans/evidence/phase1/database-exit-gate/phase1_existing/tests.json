@@ -1,0 +1,34 @@
+{
+  "database": "phase1_existing",
+  "finishedAt": "2026-10-01T04:12:06.625Z",
+  "results": [
+    {
+      "name": "foundations",
+      "file": "supabase/tests/service_foundations.test.sql",
+      "exitCode": 0,
+      "assertions": 111,
+      "passed": true
+    },
+    {
+      "name": "legacy-rls",
+      "file": "supabase/tests/rls_isolation.test.sql",
+      "exitCode": 0,
+      "assertions": 17,
+      "passed": true
+    },
+    {
+      "name": "ios-rls",
+      "file": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "exitCode": 0,
+      "assertions": 7,
+      "passed": true
+    },
+    {
+      "name": "historical-reads",
+      "file": "scripts/fixtures/phase1-history-reads.sql",
+      "exitCode": 0,
+      "assertions": 9,
+      "passed": true
+    }
+  ]
+}

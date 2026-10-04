@@ -1,0 +1,62 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "ios-lint",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T16:07:35.875Z",
+      "finishedAt": "2026-09-30T16:07:45.731Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-lint.log"
+    },
+    {
+      "id": "android-sdk",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo install --check",
+      "startedAt": "2026-09-30T16:07:45.808Z",
+      "finishedAt": "2026-09-30T16:07:47.903Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "android-sdk.log"
+    },
+    {
+      "id": "ios-sdk",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npx --no-install expo install --check",
+      "startedAt": "2026-09-30T16:07:47.974Z",
+      "finishedAt": "2026-09-30T16:07:50.353Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-sdk.log"
+    },
+    {
+      "id": "database-tests",
+      "directory": ".",
+      "command": "supabase test db",
+      "startedAt": "2026-09-30T16:07:50.422Z",
+      "finishedAt": "2026-09-30T16:07:50.469Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "database-tests.log"
+    },
+    {
+      "id": "edge-types",
+      "directory": ".",
+      "command": "deno check supabase/functions/*/index.ts",
+      "startedAt": "2026-09-30T16:07:50.537Z",
+      "finishedAt": "2026-09-30T16:07:50.581Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "edge-types.log"
+    }
+  ]
+}

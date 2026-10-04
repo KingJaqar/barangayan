@@ -1,0 +1,84 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "shared-types",
+      "directory": "packages/shared",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-03T14:31:06.625Z",
+      "finishedAt": "2026-10-03T14:31:11.917Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-types.log"
+    },
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-03T14:31:12.013Z",
+      "finishedAt": "2026-10-03T14:31:17.454Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-03T14:31:17.547Z",
+      "finishedAt": "2026-10-03T14:31:23.174Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-03T14:31:23.269Z",
+      "finishedAt": "2026-10-03T14:31:44.688Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T14:31:44.785Z",
+      "finishedAt": "2026-10-03T14:32:04.248Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T14:32:04.335Z",
+      "finishedAt": "2026-10-03T14:32:28.549Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T14:32:28.637Z",
+      "finishedAt": "2026-10-03T14:32:39.275Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-lint.log"
+    }
+  ]
+}

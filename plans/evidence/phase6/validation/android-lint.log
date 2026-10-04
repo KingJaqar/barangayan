@@ -1,0 +1,13 @@
+
+> @barangayan/mobile@1.0.0 lint
+> expo lint
+
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\settings\profile.tsx
+  1892:1  warning  Import in body of module; reorder to top  import/first
+
+✖ 1 problem (0 errors, 1 warning)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

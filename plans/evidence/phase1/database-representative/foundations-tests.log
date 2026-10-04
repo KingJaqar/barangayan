@@ -1,0 +1,85 @@
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 5
+INSERT 0 4
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 4
+CREATE TABLE
+INSERT 0 1
+GRANT
+SET
+                 throws_ok                 
+-------------------------------------------
+ ok 1 - Anonymous cannot invoke submission
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 2 - Anonymous cannot read ID versions
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 3 - Anonymous cannot read attachments
+(1 row)
+
+RESET
+SET
+SET
+SET
+             throws_ok              
+------------------------------------
+ ok 4 - Resident cannot assign role
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 5 - Resident cannot assign tenant
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 6 - No approval blocks submission
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 7 - ID version table has no direct write grant
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 8 - Resident publishes owned uploaded ID version
+(1 row)
+
+                 lives_ok                  
+-------------------------------------------
+ ok 9 - ID publication retry is idempotent
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 10 - Retry creates one version
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 11 - Resident cannot approve evidence
+(1 row)
+
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 12 - Resident cannot assign a versioned verification outcome
+(1 row)
+
+psql:supabase/tests/service_foundations.test.sql:57: ERROR:  WITH clause containing a data-modifying statement must be at the top level
+LINE 1: select is((with changed as (update storage.objects set metad...
+                        ^

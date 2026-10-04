@@ -1,0 +1,84 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "shared-tests",
+      "directory": "packages/shared",
+      "command": "npm run test",
+      "startedAt": "2026-10-01T03:38:32.701Z",
+      "finishedAt": "2026-10-01T03:38:36.055Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-tests.log"
+    },
+    {
+      "id": "ios-tests",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run test",
+      "startedAt": "2026-10-01T03:38:36.134Z",
+      "finishedAt": "2026-10-01T03:38:38.971Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "ios-tests.log"
+    },
+    {
+      "id": "shared-types",
+      "directory": "packages/shared",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:38:39.059Z",
+      "finishedAt": "2026-10-01T03:38:43.434Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-types.log"
+    },
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:38:43.545Z",
+      "finishedAt": "2026-10-01T03:38:55.497Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:38:55.577Z",
+      "finishedAt": "2026-10-01T03:39:09.105Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:39:09.214Z",
+      "finishedAt": "2026-10-01T03:39:26.117Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:39:26.195Z",
+      "finishedAt": "2026-10-01T03:39:31.855Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "ios-types.log"
+    }
+  ]
+}

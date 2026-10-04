@@ -1,0 +1,30 @@
+SET
+BEGIN
+ plan 
+------
+ 1..7
+(1 row)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 3
+SET
+SET
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 1 - Resident cannot register for another barangay medical drive
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 2 - Rejected medical registration preserves stock
+(1 row)
+
+psql:supabase/tests/resident_ios_tenant_write_guards.test.sql:34: ERROR:  operator does not exist: json = json
+LINE 1: result := $1 IS DISTINCT FROM $2
+                     ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+QUERY:  result := $1 IS DISTINCT FROM $2
+CONTEXT:  PL/pgSQL function isnt(anyelement,anyelement,text) line 6 at assignment

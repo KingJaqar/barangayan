@@ -1,6 +1,10 @@
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
+import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
+import { useProfile } from '@/hooks/use-profile';
+import { PrimaryButton } from '@/components/primary-button';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -32,6 +36,9 @@ const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
 // rendered at all for a guest, rather than being reachable-but-gated.
 export default function ServicesScreen() {
   const { session } = useAuth();
+  const router = useRouter();
+  const { profile, refetch, isLoading, error } = useProfile();
+  useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -92,6 +99,9 @@ export default function ServicesScreen() {
       </View>
 
       <ScrollView>
+        <ProfileCompletionBanner />
+        {session && !isLoading && !error && idVerificationState(profile) === 'verified' ? <View style={{ padding: 16 }}><ThemedText type="smallBold">Valid ID Verified</ThemedText></View> : null}
+        {session && (isLoading || error || idVerificationState(profile) !== 'verified') ? <View style={{ padding: 16, gap: 8 }}><ThemedText accessibilityRole="alert">{isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}</ThemedText><PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')}/>{error ? <PrimaryButton label="Retry verification check" variant="secondary" onPress={refetch}/> : null}</View> : null}
         {!session || segment === 'documents' ? <DocumentsList /> : null}
         {session && segment === 'requests' && <RequestsList />}
         {session && segment === 'logs' && <LogsList />}

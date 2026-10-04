@@ -2,6 +2,14 @@
 -- All inserts use ON CONFLICT DO NOTHING so this migration is safe to re-run.
 -- Idempotent: re-applying will not duplicate rows.
 
+-- The pilot is optional during schema replay and is created later by seed.sql.
+-- Preserve the original existing-install behavior without inventing a tenant.
+do $pilot_seed$
+begin
+  if not exists (select 1 from public.barangays where id = '00000000-0000-0000-0000-000000000001') then
+    return;
+  end if;
+
 -- ============================================================================
 -- 1. emergency_information (3 guidelines + 3 hotlines)
 -- ============================================================================
@@ -296,3 +304,4 @@ begin
     )
     and deleted_at is null;
 end $$;
+end $pilot_seed$;

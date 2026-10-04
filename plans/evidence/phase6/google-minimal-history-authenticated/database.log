@@ -1,0 +1,3168 @@
+google_profile_existing: inspect fixture roles
+pg_database_owner
+pg_read_all_data
+pg_write_all_data
+pg_monitor
+pg_read_all_settings
+pg_read_all_stats
+pg_stat_scan_tables
+pg_read_server_files
+pg_write_server_files
+pg_execute_server_program
+pg_signal_backend
+pg_checkpoint
+pg_maintain
+pg_use_reserved_connections
+pg_create_subscription
+postgres
+anon
+authenticated
+service_role
+
+Reset google_profile_existing
+
+Create google_profile_existing
+
+google_profile_existing: Infrastructure fixture
+SET
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE PUBLICATION
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+SET
+psql:C:/Users/User/barangayan/plans/evidence/phase6/google-minimal-history-authenticated/bootstrap.sql:42: WARNING:  "wal_level" is insufficient to publish logical changes
+HINT:  Set "wal_level" to "logical" before creating subscriptions.
+
+google_profile_existing: 0001_barangays_and_profiles.sql
+SET
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0002_document_types_and_service_requests.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+CREATE SEQUENCE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER PUBLICATION
+
+google_profile_existing: 0003_announcements.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+google_profile_existing: 0004_service_request_reference_default.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+DROP FUNCTION
+
+google_profile_existing: 0005_guest_readable_public_content.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0006_profile_theme_preference.sql
+SET
+ALTER TABLE
+
+google_profile_existing: 0007_payments_and_admin_access.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+ALTER PUBLICATION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE POLICY
+
+google_profile_existing: 0008_resident_directory_access.sql
+SET
+CREATE POLICY
+CREATE VIEW
+ALTER PUBLICATION
+
+google_profile_existing: 0009_admin_crud_and_soft_delete.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0010_resident_set_payment_method.sql
+SET
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0011_announcements_admin_write.sql
+SET
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:17: NOTICE:  policy "residents can read announcements from their barangay" for relation "public.announcements" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:18: NOTICE:  policy "guests can read all announcements" for relation "public.announcements" does not exist, skipping
+
+google_profile_existing: 0012_profile_trigger_and_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0012_profile_trigger_and_verification_status.sql:94: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+
+google_profile_existing: 0013_protect_verification_fields.sql
+SET
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0013_protect_verification_fields.sql:44: NOTICE:  trigger "guard_verification_fields" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0014_request_delivery_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0014_request_delivery_workflow.sql:51: NOTICE:  trigger "guard_service_request_completion" for relation "public.service_requests" does not exist, skipping
+
+google_profile_existing: 0015_request_delivery_transition_rpc.sql
+SET
+CREATE FUNCTION
+
+google_profile_existing: 0017_harden_payments_rls.sql
+SET
+ALTER TABLE
+DROP POLICY
+ALTER TABLE
+
+google_profile_existing: 0018_begin_processing_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0019_fix_announcement_soft_delete.sql
+SET
+DROP POLICY
+DROP POLICY
+
+google_profile_existing: 0020_id_documents_storage.sql
+SET
+ALTER TABLE
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0021_enable_pgtap.sql
+SET
+CREATE EXTENSION
+
+google_profile_existing: 0022_maps_tables.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0023_seed_incident_categories.sql
+SET
+INSERT 0 0
+
+google_profile_existing: 0024_ampid1_boundary.sql
+SET
+UPDATE 0
+
+google_profile_existing: 0025_incident_management.sql
+SET
+CREATE TRIGGER
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0026_incident_report_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE POLICY
+
+google_profile_existing: 0027_incidents_realtime.sql
+SET
+ALTER PUBLICATION
+
+google_profile_existing: 0029_drop_diag_temp.sql
+SET
+DROP FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0029_drop_diag_temp.sql:4: NOTICE:  function public.__diag_soft_delete_incident_def() does not exist, skipping
+
+google_profile_existing: 0030_diag_temp2.sql
+SET
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0031_drop_diag_temp2.sql
+SET
+DROP FUNCTION
+
+google_profile_existing: 0032_withdraw_incident_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0033_diag_temp3.sql
+SET
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0034_drop_diag_temp3.sql
+SET
+DROP FUNCTION
+
+google_profile_existing: 0035_medical_drives.sql
+SET
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+
+google_profile_existing: 0036_medical_drives_admin_rls.sql
+SET
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0037_profile_birth_date.sql
+SET
+ALTER TABLE
+COMMENT
+
+google_profile_existing: 0038_health_realtime.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+google_profile_existing: 0039_profile_extended_fields.sql
+SET
+ALTER TABLE
+UPDATE 0
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0040_profile_avatar.sql
+SET
+ALTER TABLE
+COMMENT
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0041_id_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0041_id_verification_status.sql:61: NOTICE:  trigger "trg_guard_id_verification_status" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0042_id_documents_public_bucket.sql
+SET
+UPDATE 1
+UPDATE 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0043_emergency_content.sql
+SET
+
+google_profile_existing: 0044_evacuation_centers_verified.sql
+SET
+ALTER TABLE
+COMMENT
+DO
+
+google_profile_existing: 0045_evacuation_center_checkins.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0046_household_members.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+
+google_profile_existing: 0047_emergency_information.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0048_realtime_publications.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+google_profile_existing: 0049_seed_empty_tables.sql
+SET
+DO
+
+google_profile_existing: 0050_create_emergency_qr_tables.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:78: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:84: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:112: NOTICE:  identifier "Allow full access to evacuation_center_qr_codes for barangay admins" will be truncated to "Allow full access to evacuation_center_qr_codes for barangay ad"
+
+google_profile_existing: 0051_waste_management.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+
+google_profile_existing: 0052_household_admin_management.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:14: NOTICE:  policy "admins manage barangay household members" for relation "public.household_members" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:191: NOTICE:  trigger "sync_household_members_from_jsonb" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0053_faq.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER TABLE
+DO
+DO
+
+google_profile_existing: 0054_barangay_settings.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:16: NOTICE:  trigger "barangays_set_updated_at" for relation "public.barangays" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:25: NOTICE:  policy "admins can update barangay config in their barangay" for relation "public.barangays" does not exist, skipping
+
+google_profile_existing: 0055_grant_guest_read_access.sql
+SET
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:26: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:34: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+
+google_profile_existing: 0056_admin_staff_management.sql
+SET
+ALTER TABLE
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:25: NOTICE:  policy "admins can read admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:26: NOTICE:  policy "admins can read admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:41: NOTICE:  policy "admins can update admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:42: NOTICE:  policy "admins can update admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:78: NOTICE:  trigger "trg_guard_role_escalation" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0057_barangay_officials.sql
+SET
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+INSERT 0 0
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:65: NOTICE:  trigger "trg_barangay_officials_updated_at" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:75: NOTICE:  policy "admins read barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:85: NOTICE:  policy "admins insert barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:95: NOTICE:  policy "admins update barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:109: NOTICE:  policy "admins delete barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:153: NOTICE:  trigger "trg_sync_barangay_official" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0058_admin_audit_log.sql
+SET
+DROP VIEW
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER PUBLICATION
+
+google_profile_existing: 0059_site_content_and_about_us.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+DO
+INSERT 0 0
+INSERT 0 0
+
+google_profile_existing: 0060_storage_site_content.sql
+SET
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0061_save_about_us_rpc.sql
+SET
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0062_seed_site_content_and_about_us.sql
+SET
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+DELETE 0
+INSERT 0 0
+
+google_profile_existing: 0063_push_notifications.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE FUNCTION
+
+google_profile_existing: 0064_qrph_instant_payment_and_refunds.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+COMMENT
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+COMMENT
+
+google_profile_existing: 0065_qrph_payment_intents.sql
+SET
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+DO
+ALTER TABLE
+
+google_profile_existing: 0066_qrph_persistent_qr_and_resident_cancel.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0067_fix_household_members_uuid_sync.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0068_signup_birth_date.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0069_fix_emergency_information_tenant_leak.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0070_waste_management_resident_read.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+google_profile_existing: 0071_add_missing_fk_indexes.sql
+SET
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+
+google_profile_existing: 0072_admin_register_for_drive.sql
+SET
+CREATE FUNCTION
+
+google_profile_existing: 0073_id_documents_private_again.sql
+SET
+UPDATE 1
+
+google_profile_existing: 0074_account_deletion.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE INDEX
+CREATE FUNCTION
+COMMENT
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0074_account_deletion.sql:18: NOTICE:  column "deleted_at" of relation "profiles" already exists, skipping
+
+google_profile_existing: 0075_profile_theme_customization.sql
+SET
+ALTER TABLE
+
+google_profile_existing: 0076_placeholder.sql
+SET
+
+google_profile_existing: 0077_waste_zone_cron_scoring.sql
+SET
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DO
+DO
+ recompute_waste_zone_scores 
+-----------------------------
+ 
+(1 row)
+
+psql:C:/Users/User/barangayan/supabase/migrations/0077_waste_zone_cron_scoring.sql:96: NOTICE:  pg_cron extension unavailable in this environment — skipping scheduled job (recompute_waste_zone_scores() can still be called manually).
+
+google_profile_existing: 0078_registration_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0079_export_rate_limit.sql
+SET
+ALTER TABLE
+COMMENT
+
+google_profile_existing: 0080_reports_unread_counts.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+google_profile_existing: 0081_resident_profile_field_split.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0081_resident_profile_field_split.sql:122: NOTICE:  trigger "compose_profiles_display_fields" for relation "public.profiles" does not exist, skipping
+
+google_profile_existing: 0082_remove_delivery_add_pickup.sql
+SET
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+DO
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+ALTER TABLE
+ALTER TABLE
+COMMENT
+
+google_profile_existing: 0083_incident_location_details.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+google_profile_existing: 0084_announcement_detailed_description.sql
+SET
+ALTER TABLE
+COMMENT
+
+google_profile_existing: 0085_resident_mark_resolved_incident_read.sql
+SET
+CREATE POLICY
+
+google_profile_existing: 0086_about_us_logo_size.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0087_about_us_title.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+google_profile_existing: 0088_faq_articles_guest_read.sql
+SET
+CREATE POLICY
+
+google_profile_existing: 0089_id_verification_failed_status.sql
+SET
+ALTER TABLE
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+google_profile_existing: 0090_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+google_profile_existing: 0091_verified_location_address.sql
+SET
+ALTER TABLE
+COMMENT
+
+google_profile_existing: 0092_drive_registrations_admin_update.sql
+SET
+CREATE POLICY
+
+google_profile_existing: 0093_resident_ios_backend_safety.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+DROP POLICY
+CREATE POLICY
+ALTER TABLE
+CREATE INDEX
+COMMENT
+
+google_profile_existing: 0094_resident_ios_tenant_write_guards.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+COMMENT
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:32: NOTICE:  trigger "guard_drive_registration_tenant" for relation "public.drive_registrations" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:66: NOTICE:  trigger "guard_evacuation_checkin_tenant" for relation "public.evacuation_center_checkins" does not exist, skipping
+
+google_profile_existing: 0095_phase1_shared_foundations.sql
+SET
+BEGIN
+CREATE SCHEMA
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 0
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER POLICY
+ALTER POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+GRANT
+COMMENT
+COMMENT
+COMMENT
+COMMIT
+
+google_profile_existing: Historical approvals and addresses
+SET
+INSERT 0 1
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+ set_config 
+------------
+ true
+(1 row)
+
+UPDATE 1
+UPDATE 1
+INSERT 0 2
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+INSERT 0 4
+
+google_profile_existing: 0096_phase2_trusted_evidence_locality.sql
+SET
+BEGIN
+ALTER TABLE
+DO
+ALTER TABLE
+DO
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+UPDATE 3
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+google_profile_existing: 0097_phase3_catalog_staff_workflows.sql
+SET
+BEGIN
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE INDEX
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+google_profile_existing: 0098_phase4_resident_submission_payment.sql
+SET
+BEGIN
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+
+google_profile_existing: 0099_phase5_sla_engine_reporting.sql
+SET
+BEGIN
+ALTER TABLE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+DO
+REVOKE
+COMMIT
+psql:C:/Users/User/barangayan/supabase/migrations/0099_phase5_sla_engine_reporting.sql:122: NOTICE:  pg_cron unavailable: SLA requires an external once-per-minute SQL scheduler before release
+
+google_profile_existing: 0100_restore_admin_document_type_creation.sql
+SET
+BEGIN
+DROP TRIGGER
+DROP FUNCTION
+COMMIT
+
+google_profile_existing: 0101_unified_document_type_charter_forms.sql
+SET
+BEGIN
+ALTER TABLE
+ALTER TABLE
+DROP INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMENT
+COMMENT
+COMMIT
+
+google_profile_existing: snapshot barangays
+[{"id": "a2000000-0000-0000-0000-000000000001", "name": "Barangay Ampid I", "config": {}, "boundary": null, "created_at": "2026-10-04T16:05:20.885904+08:00", "updated_at": "2026-10-04T16:05:20.885904+08:00"}, {"id": "a3000000-0000-0000-0000-000000000001", "name": "Historical Other Tenant", "config": {"keep": "unchanged"}, "boundary": null, "created_at": "2026-10-04T16:05:20.820401+08:00", "updated_at": "2026-10-04T16:05:20.820401+08:00"}]
+
+google_profile_existing: snapshot profiles
+[{"id": "b2000000-0000-0000-0000-000000000001", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Complete Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Legacy free text retained exactly", "id_photo_urls": ["b2000000-0000-0000-0000-000000000001/id-front.jpg", "b2000000-0000-0000-0000-000000000001/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": "d1339112-47ed-490f-8de4-55eea32fc201", "approved_id_submission_id": "d1339112-47ed-490f-8de4-55eea32fc201", "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000002", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Missing Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Another unsplittable address", "id_photo_urls": ["b2000000-0000-0000-0000-000000000002/missing-front.jpg", "b2000000-0000-0000-0000-000000000002/missing-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": true, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000003", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Pending Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Pending free text", "id_photo_urls": ["b2000000-0000-0000-0000-000000000003/id-front.jpg", "b2000000-0000-0000-0000-000000000003/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "pending", "current_id_submission_id": "1faf948c-c58d-4b3a-9a96-c5c5661ba200", "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000001", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Unsplit Historical Name", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.828094+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:20.828094+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Unstructured address, preserved verbatim", "id_photo_urls": ["b3000000-0000-0000-0000-000000000001/old-front.jpg", "b3000000-0000-0000-0000-000000000001/old-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000002", "sex": null, "city": null, "role": "admin", "email": null, "street": null, "suffix": null, "id_type": null, "house_no": null, "province": null, "full_name": "Historical Administrator", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.828094+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:20.828094+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": null, "id_photo_urls": [], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": null, "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}]
+
+google_profile_existing: snapshot document_types
+[{"id": "1c83066b-e9c9-4ac9-bec8-4556c73c94a3", "name": "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n3. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "ALL", "feesToBePaid": "₱10.00 /page. TOTAL: ₱10.00 /PAGE. Staff confirm total billable pages across all requested copies.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing details.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the documents needed by the client.", "classification": "Simple", "officeDivision": "Office of the Secretary/Treasurer's Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 5 mins, 2 mins, 6 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": null, "checklistOfRequirements": "1. VALID ID\n3. PERSONAL APPEARANCE", "whereToSecureRequirements": "OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "government", "label": "Submission to a government office", "requiresExplanation": false}, {"code": "legal", "label": "Legal documentation", "requiresExplanation": false}, {"code": "reference", "label": "Official or administrative reference", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certified copies of barangay records. ₱10 per total billable page confirmed by staff across all requested copies.", "fee_centavos": 1000, "pricing_mode": "per_page", "requirements": ["Verified valid ID", "Personal appearance"], "service_kind": "certified_true_copy", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": false, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "823854ce-a74b-46ad-81c4-fc00a5073b8c", "name": "Certificate of Indigency", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "RESIDENTS", "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office/Punong Barangay Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR", "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "medical", "label": "Medical assistance", "requiresExplanation": false}, {"code": "education", "label": "Educational assistance", "requiresExplanation": false}, {"code": "burial", "label": "Burial/funeral assistance", "requiresExplanation": false}, {"code": "welfare", "label": "Financial or social welfare assistance", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certificate for residents. Staff confirm eligibility, six-month residency and the applicable fee or exemption.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["Valid ID/HOA certificate (6 months residency)", "Personal appearance", "Lessor endorsement for transients/renters"], "service_kind": "indigency", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": true, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "c69c64e2-5bae-4ccd-b22d-b4b9c1674361", "name": "Issuance of Barangay Clearance for Business Establishments", "charter": {"clientSteps": "1. Fill up the necessary and applicable form for your request document\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "ALL", "feesToBePaid": "See Attached Tax Code (depends on the kind of transaction). The tax code is absent from the supplied PDF; staff assessment is required.", "agencyActions": "1. Give the Log Book to the Client.\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer/Collecting staff\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. DTI\n2. VALID ID\n3. PERSONAL APPEARANCE", "whereToSecureRequirements": "TREASURER'S OFFICE"}, "purposes": [{"code": "new_business", "label": "New business permit application", "requiresExplanation": false}, {"code": "renewal", "label": "Business permit renewal", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Clearance for business establishments. Staff assess fees using the applicable tax code.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["DTI", "Verified valid ID", "Personal appearance"], "service_kind": "business", "contract_version": 2, "requirement_rules": {"dtiRequired": true, "hoaRequired": false, "lessorForRenter": false, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "c9017a3a-5a2e-4bde-83b4-813ca236aa19", "name": "First Time Job Seeker", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "RESIDENTS", "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office/Punong Barangay Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR", "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "first_employment", "label": "First employment application", "requiresExplanation": false}, {"code": "pre_employment", "label": "Pre-employment documentary requirements", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certificate for residents seeking first employment. Staff confirm eligibility and the applicable exemption.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["Valid ID/HOA certificate (6 months residency)", "Personal appearance", "Lessor endorsement for transients/renters"], "service_kind": "first_time_job_seeker", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": true, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "d3000000-0000-0000-0000-000000000001", "name": "Historical inactive service", "charter": null, "purposes": [], "is_active": false, "created_at": "2026-10-04T16:05:20.849594+08:00", "deleted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "description": null, "fee_centavos": 12500, "pricing_mode": "fixed", "requirements": [], "service_kind": null, "contract_version": 1, "requirement_rules": {}, "processing_target_hours": 48, "processing_target_minutes": null}]
+
+google_profile_existing: snapshot service_requests
+[{"id": "c3000000-0000-0000-0000-000000000001", "status": "completed", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-01-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "paid", "status_history": [{"at": "2026-10-04T16:05:20.85322+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-04T16:05:20.862919+08:00", "note": null, "status": "completed"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00001", "eligibility_state": "pending", "submission_payload": null, "supporting_details": null, "legacy_fee_centavos": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "requirements_review_note": null, "requirements_reviewed_at": null, "requirements_reviewed_by": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false, "personal_appearance_recorded_by": null}, {"id": "c3000000-0000-0000-0000-000000000002", "status": "cancelled", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-02-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "refunded", "status_history": [{"at": "2026-10-04T16:05:20.85322+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-04T16:05:20.865149+08:00", "note": null, "status": "cancelled"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00002", "eligibility_state": "pending", "submission_payload": null, "supporting_details": null, "legacy_fee_centavos": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "requirements_review_note": null, "requirements_reviewed_at": null, "requirements_reviewed_by": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false, "personal_appearance_recorded_by": null}]
+
+google_profile_existing: snapshot payments
+[{"id": "e3000000-0000-0000-0000-000000000001", "method": "pickup", "status": "paid", "paid_at": null, "created_at": "2026-10-04T16:05:20.866008+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000001", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}, {"id": "e3000000-0000-0000-0000-000000000002", "method": "qrph", "status": "refunded", "paid_at": null, "created_at": "2026-10-04T16:05:20.866008+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000002", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}]
+
+google_profile_existing: snapshot drive_registrations
+[{"id": "f3000000-0000-0000-0000-000000000002", "age": 70, "is_pwd": true, "status": "pending", "user_id": "b3000000-0000-0000-0000-000000000001", "drive_id": "f3000000-0000-0000-0000-000000000001", "created_at": "2026-10-04T16:05:20.879172+08:00", "updated_at": "2026-10-04T16:05:20.879172+08:00", "comorbidities": ["hypertension"], "priority_score": 90, "prior_dose_date": null, "applicant_number": "HIST-00001"}]
+
+google_profile_existing: snapshot household_members
+[]
+
+google_profile_existing: 0102_phase6_registration_maps_auth.sql
+SET
+BEGIN
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+REVOKE
+COMMIT
+
+google_profile_existing: 0103_phase6_deferred_profile_completion.sql
+SET
+BEGIN
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+COMMIT
+
+google_profile_existing: 0104_google_minimal_resident_profiles.sql
+SET
+BEGIN
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+COMMENT
+NOTIFY
+COMMIT
+
+google_profile_existing: snapshot barangays
+[{"id": "a2000000-0000-0000-0000-000000000001", "name": "Barangay Ampid I", "config": {}, "boundary": null, "created_at": "2026-10-04T16:05:20.885904+08:00", "updated_at": "2026-10-04T16:05:20.885904+08:00"}, {"id": "a3000000-0000-0000-0000-000000000001", "name": "Historical Other Tenant", "config": {"keep": "unchanged"}, "boundary": null, "created_at": "2026-10-04T16:05:20.820401+08:00", "updated_at": "2026-10-04T16:05:20.820401+08:00"}]
+
+google_profile_existing: snapshot profiles
+[{"id": "b2000000-0000-0000-0000-000000000001", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Complete Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Legacy free text retained exactly", "id_photo_urls": ["b2000000-0000-0000-0000-000000000001/id-front.jpg", "b2000000-0000-0000-0000-000000000001/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": "d1339112-47ed-490f-8de4-55eea32fc201", "approved_id_submission_id": "d1339112-47ed-490f-8de4-55eea32fc201", "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "registration_home_location": null, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000002", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Missing Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Another unsplittable address", "id_photo_urls": ["b2000000-0000-0000-0000-000000000002/missing-front.jpg", "b2000000-0000-0000-0000-000000000002/missing-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": true, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "registration_home_location": null, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000003", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Pending Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.88908+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:21.023704+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Pending free text", "id_photo_urls": ["b2000000-0000-0000-0000-000000000003/id-front.jpg", "b2000000-0000-0000-0000-000000000003/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "pending", "current_id_submission_id": "1faf948c-c58d-4b3a-9a96-c5c5661ba200", "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "registration_home_location": null, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000001", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Unsplit Historical Name", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.828094+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:20.828094+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Unstructured address, preserved verbatim", "id_photo_urls": ["b3000000-0000-0000-0000-000000000001/old-front.jpg", "b3000000-0000-0000-0000-000000000001/old-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "registration_home_location": null, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000002", "sex": null, "city": null, "role": "admin", "email": null, "street": null, "suffix": null, "id_type": null, "house_no": null, "province": null, "full_name": "Historical Administrator", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-04T16:05:20.828094+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-04T16:05:20.828094+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": null, "id_photo_urls": [], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": null, "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "registration_home_location": null, "email_verification_requested_at": null}]
+
+google_profile_existing: snapshot document_types
+[{"id": "1c83066b-e9c9-4ac9-bec8-4556c73c94a3", "name": "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n3. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "ALL", "feesToBePaid": "₱10.00 /page. TOTAL: ₱10.00 /PAGE. Staff confirm total billable pages across all requested copies.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing details.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the documents needed by the client.", "classification": "Simple", "officeDivision": "Office of the Secretary/Treasurer's Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 5 mins, 2 mins, 6 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": null, "checklistOfRequirements": "1. VALID ID\n3. PERSONAL APPEARANCE", "whereToSecureRequirements": "OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "government", "label": "Submission to a government office", "requiresExplanation": false}, {"code": "legal", "label": "Legal documentation", "requiresExplanation": false}, {"code": "reference", "label": "Official or administrative reference", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certified copies of barangay records. ₱10 per total billable page confirmed by staff across all requested copies.", "fee_centavos": 1000, "pricing_mode": "per_page", "requirements": ["Verified valid ID", "Personal appearance"], "service_kind": "certified_true_copy", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": false, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "823854ce-a74b-46ad-81c4-fc00a5073b8c", "name": "Certificate of Indigency", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "RESIDENTS", "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office/Punong Barangay Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR", "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "medical", "label": "Medical assistance", "requiresExplanation": false}, {"code": "education", "label": "Educational assistance", "requiresExplanation": false}, {"code": "burial", "label": "Burial/funeral assistance", "requiresExplanation": false}, {"code": "welfare", "label": "Financial or social welfare assistance", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certificate for residents. Staff confirm eligibility, six-month residency and the applicable fee or exemption.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["Valid ID/HOA certificate (6 months residency)", "Personal appearance", "Lessor endorsement for transients/renters"], "service_kind": "indigency", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": true, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "c69c64e2-5bae-4ccd-b22d-b4b9c1674361", "name": "Issuance of Barangay Clearance for Business Establishments", "charter": {"clientSteps": "1. Fill up the necessary and applicable form for your request document\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "ALL", "feesToBePaid": "See Attached Tax Code (depends on the kind of transaction). The tax code is absent from the supplied PDF; staff assessment is required.", "agencyActions": "1. Give the Log Book to the Client.\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer/Collecting staff\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. DTI\n2. VALID ID\n3. PERSONAL APPEARANCE", "whereToSecureRequirements": "TREASURER'S OFFICE"}, "purposes": [{"code": "new_business", "label": "New business permit application", "requiresExplanation": false}, {"code": "renewal", "label": "Business permit renewal", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Clearance for business establishments. Staff assess fees using the applicable tax code.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["DTI", "Verified valid ID", "Personal appearance"], "service_kind": "business", "contract_version": 2, "requirement_rules": {"dtiRequired": true, "hoaRequired": false, "lessorForRenter": false, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "c9017a3a-5a2e-4bde-83b4-813ca236aa19", "name": "First Time Job Seeker", "charter": {"clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification", "whoMayAvail": "RESIDENTS", "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.", "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.", "classification": "Simple", "officeDivision": "Treasurer's Office/Punong Barangay Office", "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.", "transactionType": "G2C", "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official", "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR", "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"}, "purposes": [{"code": "first_employment", "label": "First employment application", "requiresExplanation": false}, {"code": "pre_employment", "label": "Pre-employment documentary requirements", "requiresExplanation": false}, {"code": "others", "label": "Others", "requiresExplanation": true}], "is_active": true, "created_at": "2026-10-04T16:05:21.219131+08:00", "deleted_at": null, "barangay_id": "a2000000-0000-0000-0000-000000000001", "description": "Certificate for residents seeking first employment. Staff confirm eligibility and the applicable exemption.", "fee_centavos": 0, "pricing_mode": "assessment", "requirements": ["Valid ID/HOA certificate (6 months residency)", "Personal appearance", "Lessor endorsement for transients/renters"], "service_kind": "first_time_job_seeker", "contract_version": 2, "requirement_rules": {"dtiRequired": false, "hoaRequired": false, "lessorForRenter": true, "personalAppearance": true}, "processing_target_hours": 24, "processing_target_minutes": 15}, {"id": "d3000000-0000-0000-0000-000000000001", "name": "Historical inactive service", "charter": null, "purposes": [], "is_active": false, "created_at": "2026-10-04T16:05:20.849594+08:00", "deleted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "description": null, "fee_centavos": 12500, "pricing_mode": "fixed", "requirements": [], "service_kind": null, "contract_version": 1, "requirement_rules": {}, "processing_target_hours": 48, "processing_target_minutes": null}]
+
+google_profile_existing: snapshot service_requests
+[{"id": "c3000000-0000-0000-0000-000000000001", "status": "completed", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-01-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "paid", "status_history": [{"at": "2026-10-04T16:05:20.85322+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-04T16:05:20.862919+08:00", "note": null, "status": "completed"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00001", "eligibility_state": "pending", "submission_payload": null, "supporting_details": null, "legacy_fee_centavos": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "requirements_review_note": null, "requirements_reviewed_at": null, "requirements_reviewed_by": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false, "personal_appearance_recorded_by": null}, {"id": "c3000000-0000-0000-0000-000000000002", "status": "cancelled", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-02-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "refunded", "status_history": [{"at": "2026-10-04T16:05:20.85322+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-04T16:05:20.865149+08:00", "note": null, "status": "cancelled"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00002", "eligibility_state": "pending", "submission_payload": null, "supporting_details": null, "legacy_fee_centavos": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "requirements_review_note": null, "requirements_reviewed_at": null, "requirements_reviewed_by": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false, "personal_appearance_recorded_by": null}]
+
+google_profile_existing: snapshot payments
+[{"id": "e3000000-0000-0000-0000-000000000001", "method": "pickup", "status": "paid", "paid_at": null, "created_at": "2026-10-04T16:05:20.866008+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000001", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}, {"id": "e3000000-0000-0000-0000-000000000002", "method": "qrph", "status": "refunded", "paid_at": null, "created_at": "2026-10-04T16:05:20.866008+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-04T16:05:20.866008+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000002", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}]
+
+google_profile_existing: snapshot drive_registrations
+[{"id": "f3000000-0000-0000-0000-000000000002", "age": 70, "is_pwd": true, "status": "pending", "user_id": "b3000000-0000-0000-0000-000000000001", "drive_id": "f3000000-0000-0000-0000-000000000001", "created_at": "2026-10-04T16:05:20.879172+08:00", "updated_at": "2026-10-04T16:05:20.879172+08:00", "comorbidities": ["hypertension"], "priority_score": 90, "prior_dose_date": null, "applicant_number": "HIST-00001"}]
+
+google_profile_existing: snapshot household_members
+[]
+
+google_profile_existing: Historical reconciliation assertions
+SET
+DO
+
+google_profile_existing: Phase 6 database acceptance
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+                             is                             
+------------------------------------------------------------
+ ok 1 - Google identity waits for mandatory resident fields
+(1 row)
+
+                     is                      
+---------------------------------------------
+ ok 2 - Password signup uses server locality
+(1 row)
+
+             is              
+-----------------------------
+ ok 3 - Province is assigned
+(1 row)
+
+                                    is                                     
+---------------------------------------------------------------------------
+ ok 4 - Outside home advisory overrides forged verification and inside GPS
+(1 row)
+
+                     is                     
+--------------------------------------------
+ ok 5 - GPS observation retained separately
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 6 - Outside home does not block registration
+(1 row)
+
+                throws_ok                
+-----------------------------------------
+ ok 7 - Password tenant injection denied
+(1 row)
+
+                  throws_ok                  
+---------------------------------------------
+ ok 8 - Invalid coordinates cannot be stored
+(1 row)
+
+SET
+              set_config              
+--------------------------------------
+ b6000000-0000-0000-0000-000000000001
+(1 row)
+
+             throws_ok             
+-----------------------------------
+ ok 9 - Completion cannot set role
+(1 row)
+
+                            lives_ok                            
+----------------------------------------------------------------
+ ok 10 - Metadata-free Google completion works without password
+(1 row)
+
+                  is                   
+---------------------------------------
+ ok 11 - Server chooses permitted role
+(1 row)
+
+                    is                    
+------------------------------------------
+ ok 12 - Server chooses configured tenant
+(1 row)
+
+                           is                           
+--------------------------------------------------------
+ ok 13 - Home classification independent of outside GPS
+(1 row)
+
+            isnt             
+-----------------------------
+ ok 14 - Completion recorded
+(1 row)
+
+                  throws_ok                  
+---------------------------------------------
+ ok 15 - Direct advisory replacement blocked
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 16 - Settings outside pin blocked server side
+(1 row)
+
+           throws_ok           
+-------------------------------
+ ok 17 - Polygon hole excluded
+(1 row)
+
+                lives_ok                
+----------------------------------------
+ ok 18 - Settings polygon edge accepted
+(1 row)
+
+                    ok                     
+-------------------------------------------
+ ok 19 - Settings timestamp server derived
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 20 - Extra coordinate claims rejected
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 21 - Completion retains locality protections
+(1 row)
+
+RESET
+                        is                         
+---------------------------------------------------
+ ok 22 - Missing boundary produces unable to check
+(1 row)
+
+               is                
+---------------------------------
+ ok 23 - Hole boundary inclusive
+(1 row)
+
+ finish 
+--------
+ 1..23
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: admin_document_type_creation.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 1
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+                                   lives_ok                                    
+-------------------------------------------------------------------------------
+ ok 1 - Administrator can create an active document alongside charter services
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 2 - Creation retains existing contract
+(1 row)
+
+             is              
+-----------------------------
+ ok 3 - Created fee retained
+(1 row)
+
+                    is                    
+------------------------------------------
+ ok 4 - Created processing hours retained
+(1 row)
+
+                  is                  
+--------------------------------------
+ ok 5 - Created requirements retained
+(1 row)
+
+                            is                             
+-----------------------------------------------------------
+ ok 6 - Four charter services and minute targets preserved
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 7 - Administrator can deactivate additional type
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 8 - Administrator can reactivate additional type
+(1 row)
+
+                       throws_ok                        
+--------------------------------------------------------
+ ok 9 - Administrator cannot create in foreign barangay
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 10 - Charter contract cannot be downgraded
+(1 row)
+
+SET
+                   throws_ok                   
+-----------------------------------------------
+ ok 11 - Resident cannot create document types
+(1 row)
+
+SET
+                       throws_ok                        
+--------------------------------------------------------
+ ok 12 - Foreign administrator cannot create in Ampid 1
+(1 row)
+
+                             is                             
+------------------------------------------------------------
+ ok 13 - Foreign administrator cannot read created document
+(1 row)
+
+RESET
+SET
+                       throws_ok                        
+--------------------------------------------------------
+ ok 14 - Anonymous visitor cannot create document types
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..14
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: catalog_staff_workflows.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 1
+INSERT 0 3
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 1 - Exactly four pilot services active
+(1 row)
+
+                   ok                   
+----------------------------------------
+ ok 2 - Other tenant activity unchanged
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 3 - Other tenant fee unchanged
+(1 row)
+
+                      is                       
+-----------------------------------------------
+ ok 4 - Equivalent indigency identifier reused
+(1 row)
+
+                              ok                               
+---------------------------------------------------------------
+ ok 5 - General-purpose clearance deactivated without deletion
+(1 row)
+
+                            is                            
+----------------------------------------------------------
+ ok 6 - All four preserve Simple, G2C and fifteen minutes
+(1 row)
+
+                           is                            
+---------------------------------------------------------
+ ok 7 - Missing CTC personnel remains explicitly unknown
+(1 row)
+
+INSERT 0 3
+INSERT 0 3
+UPDATE 1
+INSERT 0 3
+SET
+SET
+        publish_id_submission         
+--------------------------------------
+ c5000000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+         review_id_submission         
+--------------------------------------
+ c5000000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+                                                              lives_ok                                                               
+-------------------------------------------------------------------------------------------------------------------------------------
+ ok 8 - Certificate of Indigency submits pending assessment
+ ok 9 - First Time Job Seeker submits pending assessment
+ ok 10 - Issuance of Barangay Clearance for Business Establishments submits pending assessment
+ ok 11 - Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment
+(4 rows)
+
+           throws_ok            
+--------------------------------
+ ok 12 - Resident cannot review
+(1 row)
+
+SET
+                      throws_ok                       
+------------------------------------------------------
+ ok 13 - ID approval alone cannot accept requirements
+ ok 14 - ID approval alone cannot accept requirements
+ ok 15 - ID approval alone cannot accept requirements
+ ok 16 - ID approval alone cannot accept requirements
+(4 rows)
+
+                   lives_ok                   
+----------------------------------------------
+ ok 17 - Staff record requirements separately
+ ok 18 - Staff record requirements separately
+ ok 19 - Staff record requirements separately
+ ok 20 - Staff record requirements separately
+(4 rows)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 21 - Appearance acknowledgment is not actual presence
+ ok 22 - Appearance acknowledgment is not actual presence
+ ok 23 - Appearance acknowledgment is not actual presence
+ ok 24 - Appearance acknowledgment is not actual presence
+(4 rows)
+
+                lives_ok                
+----------------------------------------
+ ok 25 - Staff record actual appearance
+ ok 26 - Staff record actual appearance
+ ok 27 - Staff record actual appearance
+ ok 28 - Staff record actual appearance
+(4 rows)
+
+                        ok                         
+---------------------------------------------------
+ ok 29 - Review and appearance actor/time recorded
+ ok 30 - Review and appearance actor/time recorded
+ ok 31 - Review and appearance actor/time recorded
+ ok 32 - Review and appearance actor/time recorded
+(4 rows)
+
+                     lives_ok                     
+--------------------------------------------------
+ ok 33 - Every service fee or exemption confirmed
+ ok 34 - Every service fee or exemption confirmed
+ ok 35 - Every service fee or exemption confirmed
+ ok 36 - Every service fee or exemption confirmed
+(4 rows)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 37 - Four total pages cost forty pesos, not times three copies
+(1 row)
+
+             lives_ok              
+-----------------------------------
+ ok 38 - Reviewed request accepted
+ ok 39 - Reviewed request accepted
+ ok 40 - Reviewed request accepted
+ ok 41 - Reviewed request accepted
+(4 rows)
+
+            lives_ok             
+---------------------------------
+ ok 42 - Reviewed document ready
+ ok 43 - Reviewed document ready
+ ok 44 - Reviewed document ready
+ ok 45 - Reviewed document ready
+(4 rows)
+
+               throws_ok               
+---------------------------------------
+ ok 46 - Unpaid request cannot release
+ ok 47 - Unpaid request cannot release
+ ok 48 - Unpaid request cannot release
+(3 rows)
+
+                         lives_ok                         
+----------------------------------------------------------
+ ok 49 - Eligible first job seeker waiver permits release
+(1 row)
+
+               throws_ok                
+----------------------------------------
+ ok 50 - Review locked after acceptance
+(1 row)
+
+               throws_ok                
+----------------------------------------
+ ok 51 - Raw staff review bypass denied
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..51
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: deferred_profile_completion.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+SET
+              set_config              
+--------------------------------------
+ b6030000-0000-0000-0000-000000000001
+(1 row)
+
+                                 is                                  
+---------------------------------------------------------------------
+ ok 1 - Google identity can remain without invented resident details
+(1 row)
+
+                             is                              
+-------------------------------------------------------------
+ ok 2 - Missing profile derives only enabled browsing tenant
+(1 row)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 3 - Public browsing excludes foreign and deleted announcements
+(1 row)
+
+                             is                              
+-------------------------------------------------------------
+ ok 4 - Document guidance readable before completing profile
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 5 - Health information readable before registering
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 6 - Direct report submission requires profile
+(1 row)
+
+                     throws_ok                      
+----------------------------------------------------
+ ok 7 - Direct health registration requires profile
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 8 - Direct document request requires profile
+(1 row)
+
+                        lives_ok                         
+---------------------------------------------------------
+ ok 9 - Deferred completion still works without password
+(1 row)
+
+                             is                              
+-------------------------------------------------------------
+ ok 10 - After completion existing tenant policies take over
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 11 - Completing profile preserves tenant isolation
+(1 row)
+
+                    lives_ok                    
+------------------------------------------------
+ ok 12 - Completed resident may submit a report
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 13 - Completion does not approve ID evidence
+(1 row)
+
+RESET
+UPDATE 1
+SET
+                             throws_ok                             
+-------------------------------------------------------------------
+ ok 14 - Whitespace-only required address cannot bypass completion
+(1 row)
+
+RESET
+UPDATE 1
+SET
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 15 - Partial existing profiles cannot bypass submission gate
+(1 row)
+
+                       is                       
+------------------------------------------------
+ ok 16 - Partial profiles can continue browsing
+(1 row)
+
+RESET
+INSERT 0 1
+INSERT 0 1
+SET
+              set_config              
+--------------------------------------
+ b6030000-0000-0000-0000-000000000002
+(1 row)
+
+                   is                    
+-----------------------------------------
+ ok 17 - Ambiguous locality fails closed
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 18 - No cross-tenant browsing fallback
+(1 row)
+
+ finish 
+--------
+ 1..18
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: document_charter_forms.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+UPDATE 1
+SELECT 1
+GRANT
+INSERT 0 1
+INSERT 0 1
+SET
+SET
+                lives_ok                
+----------------------------------------
+ ok 1 - Create complete general charter
+(1 row)
+
+                   lives_ok                   
+----------------------------------------------
+ ok 2 - Multiple general services can coexist
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 3 - Persisted charter: clientSteps
+ ok 4 - Persisted charter: whoMayAvail
+ ok 5 - Persisted charter: feesToBePaid
+ ok 6 - Persisted charter: agencyActions
+ ok 7 - Persisted charter: classification
+ ok 8 - Persisted charter: officeDivision
+ ok 9 - Persisted charter: processingTime
+ ok 10 - Persisted charter: transactionType
+ ok 11 - Persisted charter: personResponsible
+ ok 12 - Persisted charter: checklistOfRequirements
+ ok 13 - Persisted charter: whereToSecureRequirements
+(11 rows)
+
+                        is                        
+--------------------------------------------------
+ ok 14 - SLA target distinct from procedure prose
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 15 - Confirmed charge distinct from published fees
+(1 row)
+
+              throws_ok              
+-------------------------------------
+ ok 16 - Incomplete charter rejected
+(1 row)
+
+               throws_ok               
+---------------------------------------
+ ok 17 - Blank classification rejected
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 18 - Incompatible supporting rule rejected
+(1 row)
+
+                throws_ok                
+-----------------------------------------
+ ok 19 - Existing service workflow fixed
+(1 row)
+
+            lives_ok             
+---------------------------------
+ ok 20 - Edit all charter fields
+(1 row)
+
+                         is                         
+----------------------------------------------------
+ ok 21 - Updated charter: clientSteps
+ ok 22 - Updated charter: whoMayAvail
+ ok 23 - Updated charter: feesToBePaid
+ ok 24 - Updated charter: agencyActions
+ ok 25 - Updated charter: classification
+ ok 26 - Updated charter: officeDivision
+ ok 27 - Updated charter: processingTime
+ ok 28 - Updated charter: transactionType
+ ok 29 - Updated charter: personResponsible
+ ok 30 - Updated charter: checklistOfRequirements
+ ok 31 - Updated charter: whereToSecureRequirements
+(11 rows)
+
+              is               
+-------------------------------
+ ok 32 - Updated name persists
+(1 row)
+
+                is                
+----------------------------------
+ ok 33 - Updated purposes persist
+(1 row)
+
+                            lives_ok                             
+-----------------------------------------------------------------
+ ok 34 - Legacy catalog gains charter without rewriting requests
+(1 row)
+
+                            is                            
+----------------------------------------------------------
+ ok 35 - Unsnapshotted original fee preserved before edit
+(1 row)
+
+                  is                   
+---------------------------------------
+ ok 36 - Historical contract preserved
+(1 row)
+
+                 is                  
+-------------------------------------
+ ok 37 - Historical timing preserved
+(1 row)
+
+                      is                       
+-----------------------------------------------
+ ok 38 - Historical update timestamp preserved
+(1 row)
+
+                   throws_ok                    
+------------------------------------------------
+ ok 39 - Recorded request fee remains immutable
+(1 row)
+
+SET
+              results_eq               
+---------------------------------------
+ ok 40 - Residents cannot edit catalog
+(1 row)
+
+SET
+                     is                     
+--------------------------------------------
+ ok 41 - Foreign tenant cannot read catalog
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..41
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: google_minimal_profiles.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                              is                               
+---------------------------------------------------------------
+ ok 1 - Google identity insert immediately creates one profile
+(1 row)
+
+                    is                    
+------------------------------------------
+ ok 2 - Auth identity supplies first name
+(1 row)
+
+                        is                        
+--------------------------------------------------
+ ok 3 - Structured multiword surname is preserved
+(1 row)
+
+                              is                              
+--------------------------------------------------------------
+ ok 4 - Email comes from auth.users, not identity/user claims
+(1 row)
+
+                         is                          
+-----------------------------------------------------
+ ok 5 - Tenant comes only from enabled configuration
+(1 row)
+
+                     is                     
+--------------------------------------------
+ ok 6 - Metadata cannot assign a staff role
+(1 row)
+
+                                      ok                                       
+-------------------------------------------------------------------------------
+ ok 7 - Bootstrap invents no demographics, location, completion or ID approval
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 8 - Configured locality display remains available
+(1 row)
+
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+SELECT 1
+GRANT
+SET
+              set_config              
+--------------------------------------
+ b6040000-0000-0000-0000-000000000001
+(1 row)
+
+                              is                              
+--------------------------------------------------------------
+ ok 9 - Retry operates on current authenticated identity only
+(1 row)
+
+                 is                  
+-------------------------------------
+ ok 10 - Repeated call is idempotent
+(1 row)
+
+                             is                             
+------------------------------------------------------------
+ ok 11 - Retry preserves every existing field and timestamp
+(1 row)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 12 - Incomplete profile can browse only own-tenant information
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 13 - Incomplete profile can read document guidance
+(1 row)
+
+                         is                          
+-----------------------------------------------------
+ ok 14 - Incomplete profile can read health guidance
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 15 - Minimal profile cannot submit reports
+(1 row)
+
+                          throws_ok                          
+-------------------------------------------------------------
+ ok 16 - Minimal profile cannot register for health services
+(1 row)
+
+                 throws_ok                  
+--------------------------------------------
+ ok 17 - Health RPC enforces completion too
+(1 row)
+
+                            is                            
+----------------------------------------------------------
+ ok 18 - Failed registration cannot consume a health slot
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 19 - Minimal profile cannot request documents
+(1 row)
+
+                                   throws_ok                                   
+-------------------------------------------------------------------------------
+ ok 20 - Authenticated users cannot invoke the internal identity-taking helper
+(1 row)
+
+              set_config              
+--------------------------------------
+ b6040000-0000-0000-0000-000000000001
+(1 row)
+
+                                 throws_ok                                 
+---------------------------------------------------------------------------
+ ok 21 - Spoofing the bootstrap marker cannot bypass client map protection
+(1 row)
+
+ set_config 
+------------
+ 
+(1 row)
+
+                                   lives_ok                                    
+-------------------------------------------------------------------------------
+ ok 22 - Resident can complete the existing minimal profile without a password
+(1 row)
+
+                                   ok                                   
+------------------------------------------------------------------------
+ ok 23 - Completion remains separate from administrator ID verification
+(1 row)
+
+                    lives_ok                    
+------------------------------------------------
+ ok 24 - Completed resident may submit a report
+(1 row)
+
+                            lives_ok                            
+----------------------------------------------------------------
+ ok 25 - Completed resident may register through the health RPC
+(1 row)
+
+RESET
+UPDATE 1
+UPDATE 1
+SET
+    ensure_google_resident_profile    
+--------------------------------------
+ b6040000-0000-0000-0000-000000000001
+(1 row)
+
+                               is                               
+----------------------------------------------------------------
+ ok 26 - Provider refresh cannot overwrite a completed resident
+(1 row)
+
+RESET
+INSERT 0 1
+INSERT 0 1
+DELETE 1
+SET
+              set_config              
+--------------------------------------
+ b6040000-0000-0000-0000-000000000002
+(1 row)
+
+                                 lives_ok                                 
+--------------------------------------------------------------------------
+ ok 27 - Session restart repairs earlier Google account without a profile
+(1 row)
+
+                              is                              
+--------------------------------------------------------------
+ ok 28 - Full-name fallback matches editable form suggestions
+(1 row)
+
+RESET
+                      is                      
+----------------------------------------------
+ ok 29 - Mononym retains available first name
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 30 - Mononym does not invent a surname
+(1 row)
+
+                                    is                                     
+---------------------------------------------------------------------------
+ ok 31 - Malformed metadata and email-only identities do not invent a name
+(1 row)
+
+INSERT 0 1
+INSERT 0 1
+                                      ok                                       
+-------------------------------------------------------------------------------
+ ok 32 - Name-less Google identity still gets a profile without invented names
+(1 row)
+
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                               is                               
+----------------------------------------------------------------
+ ok 33 - Linking preserves existing staff role, tenant and name
+(1 row)
+
+INSERT 0 1
+                          throws_ok                          
+-------------------------------------------------------------
+ ok 34 - Anonymous Auth identity cannot provision a resident
+(1 row)
+
+INSERT 0 1
+SET
+              set_config              
+--------------------------------------
+ b6040000-0000-0000-0000-000000000003
+(1 row)
+
+                                throws_ok                                
+-------------------------------------------------------------------------
+ ok 35 - Editable provider metadata cannot impersonate a Google identity
+(1 row)
+
+RESET
+SET
+                     throws_ok                     
+---------------------------------------------------
+ ok 36 - Anonymous role cannot invoke provisioning
+(1 row)
+
+RESET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+                      throws_ok                      
+-----------------------------------------------------
+ ok 37 - Missing authenticated identity fails closed
+(1 row)
+
+RESET
+UPDATE 1
+SET
+              set_config              
+--------------------------------------
+ b6040000-0000-0000-0000-000000000002
+(1 row)
+
+                  throws_ok                  
+---------------------------------------------
+ ok 38 - Deleted profile cannot be recreated
+(1 row)
+
+RESET
+INSERT 0 1
+INSERT 0 1
+                       throws_ok                        
+--------------------------------------------------------
+ ok 39 - Ambiguous registration tenant fails atomically
+(1 row)
+
+                                  is                                  
+----------------------------------------------------------------------
+ ok 40 - Configuration failure leaves no incorrectly assigned profile
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 41 - Failed identity insert rolls back
+(1 row)
+
+UPDATE 3
+                    throws_ok                     
+--------------------------------------------------
+ ok 42 - Missing registration tenant fails closed
+(1 row)
+
+ finish 
+--------
+ 1..42
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: resident_ios_tenant_write_guards.test.sql
+SET
+BEGIN
+ plan 
+------
+ 1..7
+(1 row)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+UPDATE 1
+INSERT 0 2
+INSERT 0 3
+SET
+SET
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 1 - Resident cannot register for another barangay medical drive
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 2 - Rejected medical registration preserves stock
+(1 row)
+
+                         ok                          
+-----------------------------------------------------
+ ok 3 - Resident can register for own barangay drive
+(1 row)
+
+                         throws_ok                         
+-----------------------------------------------------------
+ ok 4 - Resident cannot check into another barangay center
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 5 - Resident cannot check into an inactive center
+(1 row)
+
+                           lives_ok                           
+--------------------------------------------------------------
+ ok 6 - Resident can check into an active own-barangay center
+(1 row)
+
+RESET
+SET
+SET
+                         throws_ok                          
+------------------------------------------------------------
+ ok 7 - Administrator cannot use the resident check-in path
+(1 row)
+
+RESET
+ finish 
+--------
+(0 rows)
+
+ROLLBACK
+
+google_profile_existing: rls_isolation.test.sql
+SET
+BEGIN
+ plan  
+-------
+ 1..17
+(1 row)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+UPDATE 1
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+SET
+SET
+                      results_eq                       
+-------------------------------------------------------
+ ok 1 - Resident A can read their own service_requests
+(1 row)
+
+                                 is_empty                                 
+--------------------------------------------------------------------------
+ ok 2 - Resident A cannot read Resident B's (barangay B) service_requests
+(1 row)
+
+                         is_empty                         
+----------------------------------------------------------
+ ok 3 - Resident A cannot read barangay B's announcements
+(1 row)
+
+                                  throws_ok                                   
+------------------------------------------------------------------------------
+ ok 4 - Resident A cannot INSERT into payments directly (post migration 0017)
+(1 row)
+
+RESET
+SET
+SET
+UPDATE 1
+UPDATE 0
+RESET
+                            results_eq                            
+------------------------------------------------------------------
+ ok 5 - Admin A can update service_requests in their own barangay
+(1 row)
+
+                             is                              
+-------------------------------------------------------------
+ ok 6 - Admin A cannot update service_requests in barangay B
+(1 row)
+
+SET
+                           results_eq                            
+-----------------------------------------------------------------
+ ok 7 - Anon can read non-deleted announcements across barangays
+(1 row)
+
+                                     is_empty                                     
+----------------------------------------------------------------------------------
+ ok 8 - Anon cannot read a soft-deleted announcement (post S0-5 / migration 0019)
+(1 row)
+
+RESET
+SET
+SET
+                              throws_ok                              
+---------------------------------------------------------------------
+ ok 9 - Resident A cannot call admin_register_for_drive (admin-only)
+(1 row)
+
+RESET
+SET
+SET
+                                  ok                                  
+----------------------------------------------------------------------
+ ok 10 - Admin A can register Resident A (own barangay) for the drive
+(1 row)
+
+                            throws_ok                             
+------------------------------------------------------------------
+ ok 11 - Admin A cannot register Resident B, who is in barangay B
+(1 row)
+
+RESET
+SET
+SET
+                         results_eq                         
+------------------------------------------------------------
+ ok 12 - Admin A can update a Barangay A drive registration
+(1 row)
+
+                           is_empty                            
+---------------------------------------------------------------
+ ok 13 - Admin A cannot update a Barangay B drive registration
+(1 row)
+
+RESET
+SET
+SET
+                               is_empty                               
+----------------------------------------------------------------------
+ ok 14 - Resident A cannot mark their confirmed registration attended
+(1 row)
+
+RESET
+SET
+SET
+                          throws_ok                           
+--------------------------------------------------------------
+ ok 15 - Resident B cannot confirm their pending registration
+(1 row)
+
+                          results_eq                          
+--------------------------------------------------------------
+ ok 16 - Resident B can cancel their own pending registration
+(1 row)
+
+RESET
+                                  results_eq                                  
+------------------------------------------------------------------------------
+ ok 17 - Only the authorized admin update and resident cancellation persisted
+(1 row)
+
+ finish 
+--------
+(0 rows)
+
+ROLLBACK
+
+google_profile_existing: service_foundations.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 1
+INSERT 0 0
+INSERT 0 2
+INSERT 0 5
+INSERT 0 4
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 4
+CREATE TABLE
+INSERT 0 1
+GRANT
+SET
+                 throws_ok                 
+-------------------------------------------
+ ok 1 - Anonymous cannot invoke submission
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 2 - Anonymous cannot read ID versions
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 3 - Anonymous cannot read attachments
+(1 row)
+
+RESET
+SET
+SET
+SET
+             throws_ok              
+------------------------------------
+ ok 4 - Resident cannot assign role
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 5 - Resident cannot assign tenant
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 6 - No approval blocks submission
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 7 - ID version table has no direct write grant
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 8 - Resident publishes owned uploaded ID version
+(1 row)
+
+                 lives_ok                  
+-------------------------------------------
+ ok 9 - ID publication retry is idempotent
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 10 - Retry creates one version
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 11 - Resident cannot approve evidence
+(1 row)
+
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 12 - Resident cannot assign a versioned verification outcome
+(1 row)
+
+                         is                         
+----------------------------------------------------
+ ok 13 - Resident cannot overwrite version evidence
+(1 row)
+
+                    lives_ok                     
+-------------------------------------------------
+ ok 14 - Resident cannot delete version evidence
+(1 row)
+
+                 throws_ok                  
+--------------------------------------------
+ ok 15 - Pending approval blocks submission
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 16 - Direct insert cannot downgrade v2 service
+(1 row)
+
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 17 - Cross-tenant related service rejected at table boundary
+(1 row)
+
+                        throws_ok                        
+---------------------------------------------------------
+ ok 18 - Legacy direct insert cannot forge initial state
+(1 row)
+
+                             throws_ok                             
+-------------------------------------------------------------------
+ ok 19 - Legacy insert cannot reserve a controlled idempotency key
+(1 row)
+
+SET
+                                   throws_ok                                    
+--------------------------------------------------------------------------------
+ ok 20 - Caller cannot impersonate controlled submission with a session setting
+(1 row)
+
+SET
+                       lives_ok                        
+-------------------------------------------------------
+ ok 21 - Legacy supported submission remains available
+(1 row)
+
+                         lives_ok                          
+-----------------------------------------------------------
+ ok 22 - Existing cancellation RPC retains legacy behavior
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 23 - Legacy cancellation keeps established status
+(1 row)
+
+                           throws_ok                           
+---------------------------------------------------------------
+ ok 24 - Legacy insert cannot forge agency acceptance evidence
+(1 row)
+
+SET
+                         throws_ok                         
+-----------------------------------------------------------
+ ok 25 - Other tenant administrator cannot review evidence
+(1 row)
+
+                           is                            
+---------------------------------------------------------
+ ok 26 - Other tenant administrator cannot read evidence
+(1 row)
+
+SET
+                                throws_ok                                
+-------------------------------------------------------------------------
+ ok 27 - Historical request contract cannot be converted by a raw update
+(1 row)
+
+                        lives_ok                        
+--------------------------------------------------------
+ ok 28 - Tenant administrator approves reviewed version
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 29 - Repeated review rejected
+(1 row)
+
+SET
+            throws_ok             
+----------------------------------
+ ok 30 - Forged identity rejected
+(1 row)
+
+                   throws_ok                    
+------------------------------------------------
+ ok 31 - Whitespace Others explanation rejected
+(1 row)
+
+             throws_ok              
+------------------------------------
+ ok 32 - Excessive purpose rejected
+(1 row)
+
+                     throws_ok                      
+----------------------------------------------------
+ ok 33 - Missing appearance acknowledgment rejected
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 34 - Foreign uploaded file reference rejected
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 35 - Forged size does not match uploaded metadata
+(1 row)
+
+                      throws_ok                      
+-----------------------------------------------------
+ ok 36 - Failed or missing upload cannot be attached
+(1 row)
+
+                        lives_ok                         
+---------------------------------------------------------
+ ok 37 - Verified resident submits while pricing pending
+(1 row)
+
+                    lives_ok                     
+-------------------------------------------------
+ ok 38 - Same-key retry returns original request
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 39 - One persisted request for retries
+(1 row)
+
+                      throws_ok                      
+-----------------------------------------------------
+ ok 40 - Same key with changed payload is a conflict
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 41 - Fee state is separate from request status
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 42 - Clock does not start at online submission
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 43 - Target snapshot persisted
+(1 row)
+
+              throws_ok              
+-------------------------------------
+ ok 44 - Resident cannot assess fees
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 45 - Resident cannot start agency processing
+(1 row)
+
+SET
+                            throws_ok                             
+------------------------------------------------------------------
+ ok 46 - Pending fee assessment blocks payment at ledger boundary
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 47 - Administrator must use controlled assessment
+(1 row)
+
+SET
+                                       throws_ok                                       
+---------------------------------------------------------------------------------------
+ ok 48 - Administrator cannot impersonate controlled assessment with a session setting
+(1 row)
+
+SET
+                        throws_ok                        
+---------------------------------------------------------
+ ok 49 - Appearance readiness required before acceptance
+(1 row)
+
+                             lives_ok                              
+-------------------------------------------------------------------
+ ok 50 - Audited requirement review and actual appearance recorded
+(1 row)
+
+                         lives_ok                         
+----------------------------------------------------------
+ ok 51 - Complete requirements and appearance start clock
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 52 - Pause requires documented resident reason
+(1 row)
+
+            lives_ok            
+--------------------------------
+ ok 53 - Resident wait recorded
+(1 row)
+
+             throws_ok              
+------------------------------------
+ ok 54 - Overlapping pause rejected
+(1 row)
+
+         lives_ok          
+---------------------------
+ ok 55 - Open wait resumed
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 56 - Repeated resume rejected
+(1 row)
+
+                       lives_ok                       
+------------------------------------------------------
+ ok 57 - Explicit waiver persists administrator basis
+(1 row)
+
+                 lives_ok                 
+------------------------------------------
+ ok 58 - Readiness stops processing clock
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 59 - Waiver bypasses payment and permits release
+(1 row)
+
+                                     ok                                      
+-----------------------------------------------------------------------------
+ ok 60 - Acceptance, readiness and release are separate ordered server times
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 61 - Target snapshot cannot be overwritten
+(1 row)
+
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 62 - Catalog rejects duplicate purpose codes at server boundary
+(1 row)
+
+                        lives_ok                        
+--------------------------------------------------------
+ ok 63 - Administrator may change future catalog target
+(1 row)
+
+                           is                           
+--------------------------------------------------------
+ ok 64 - Existing target snapshot survives catalog edit
+(1 row)
+
+SET
+                                 throws_ok                                  
+----------------------------------------------------------------------------
+ ok 65 - Renter requires lessor evidence independently of verified identity
+(1 row)
+
+                            lives_ok                             
+-----------------------------------------------------------------
+ ok 66 - Owned file at exact 5 MB limit attaches transactionally
+(1 row)
+
+                        is                        
+--------------------------------------------------
+ ok 67 - Owner reads attached supporting metadata
+(1 row)
+
+                         throws_ok                          
+------------------------------------------------------------
+ ok 68 - Attachment associations have no direct write grant
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 69 - Upload cannot assign another owner path
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 70 - Supporting evidence cannot be overwritten
+(1 row)
+
+SET
+                               is                                
+-----------------------------------------------------------------
+ ok 71 - Same-tenant administrator reads attachment associations
+(1 row)
+
+                                     is                                      
+-----------------------------------------------------------------------------
+ ok 72 - Administrator reads attached evidence, not unattached foreign files
+(1 row)
+
+                   lives_ok                    
+-----------------------------------------------
+ ok 73 - Administrator confirms request amount
+(1 row)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 74 - Payment rejects amount differing from assessment
+(1 row)
+
+                    lives_ok                     
+-------------------------------------------------
+ ok 75 - Confirmed request amount begins payment
+(1 row)
+
+                 throws_ok                 
+-------------------------------------------
+ ok 76 - Second active payment is rejected
+(1 row)
+
+                 throws_ok                  
+--------------------------------------------
+ ok 77 - Amount freezes when payment begins
+(1 row)
+
+                       throws_ok                        
+--------------------------------------------------------
+ ok 78 - Ledger cannot overwrite frozen assessed amount
+(1 row)
+
+SET
+                             is                             
+------------------------------------------------------------
+ ok 79 - Other-tenant administrator cannot read attachments
+(1 row)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 80 - Other-tenant administrator cannot read supporting objects
+(1 row)
+
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 81 - Other-tenant administrator cannot assess a foreign request
+(1 row)
+
+RESET
+INSERT 0 1
+SET
+SET
+                       lives_ok                        
+-------------------------------------------------------
+ ok 82 - Copy request snapshots description and copies
+(1 row)
+
+SET
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 83 - Total pages cannot be multiplied by requested copies again
+(1 row)
+
+                  lives_ok                  
+--------------------------------------------
+ ok 84 - Ten pesos per total confirmed page
+(1 row)
+
+                 lives_ok                 
+------------------------------------------
+ ok 85 - Copy requirement review recorded
+(1 row)
+
+                           lives_ok                            
+---------------------------------------------------------------
+ ok 86 - Copy processing can start after complete requirements
+(1 row)
+
+          lives_ok          
+----------------------------
+ ok 87 - Copy wait recorded
+(1 row)
+
+SET
+                                 lives_ok                                 
+--------------------------------------------------------------------------
+ ok 88 - Existing resident cancellation RPC supports v2 and freezes clock
+(1 row)
+
+                      is                       
+-----------------------------------------------
+ ok 89 - Cancellation freezes new timing state
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 90 - Cancellation closes documented resident waits
+(1 row)
+
+RESET
+INSERT 0 1
+INSERT 0 1
+INSERT 0 2
+SET
+SET
+                              throws_ok                              
+---------------------------------------------------------------------
+ ok 91 - Business identity approval does not replace DTI requirement
+(1 row)
+
+                                 lives_ok                                 
+--------------------------------------------------------------------------
+ ok 92 - Business request accepts owned DTI evidence and business details
+(1 row)
+
+                               throws_ok                               
+-----------------------------------------------------------------------
+ ok 93 - Job seeker identity approval does not replace HOA requirement
+(1 row)
+
+                                         lives_ok                                          
+-------------------------------------------------------------------------------------------
+ ok 94 - Job seeker request accepts configured HOA evidence without non-renter lessor file
+(1 row)
+
+RESET
+INSERT 0 2
+SET
+SET
+                          lives_ok                           
+-------------------------------------------------------------
+ ok 95 - Unrelated profile edit preserves versioned approval
+(1 row)
+
+                   is                    
+-----------------------------------------
+ ok 96 - Unrelated edit retains approval
+(1 row)
+
+                              lives_ok                               
+---------------------------------------------------------------------
+ ok 97 - Replacement publishes a distinct immutable evidence version
+(1 row)
+
+                 is                  
+-------------------------------------
+ ok 98 - Replacement clears approval
+(1 row)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 99 - Replacement pending evidence blocks new requests
+(1 row)
+
+                               is                                
+-----------------------------------------------------------------
+ ok 100 - Historical request retains reviewed evidence reference
+(1 row)
+
+SET
+                        throws_ok                        
+---------------------------------------------------------
+ ok 101 - Stale evidence review cannot alter replacement
+(1 row)
+
+                         lives_ok                          
+-----------------------------------------------------------
+ ok 102 - Administrator rejection records reason and actor
+(1 row)
+
+SET
+                    throws_ok                     
+--------------------------------------------------
+ ok 103 - Failed verification blocks new requests
+(1 row)
+
+                                     lives_ok                                      
+-----------------------------------------------------------------------------------
+ ok 104 - Lost-response retry still retrieves historical request after replacement
+(1 row)
+
+SET
+                                     lives_ok                                     
+----------------------------------------------------------------------------------
+ ok 105 - Named OAuth identity without registration metadata can complete profile
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 106 - User metadata role does not assign authority
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 107 - Completion derives configured locality
+(1 row)
+
+                  is                  
+--------------------------------------
+ ok 108 - Completion derives province
+(1 row)
+
+                  throws_ok                   
+----------------------------------------------
+ ok 109 - Completion rejects tenant injection
+(1 row)
+
+                     throws_ok                      
+----------------------------------------------------
+ ok 110 - Required profile enum cannot be JSON null
+(1 row)
+
+                                lives_ok                                 
+-------------------------------------------------------------------------
+ ok 111 - Existing self-service account anonymization remains compatible
+(1 row)
+
+                           throws_ok                           
+---------------------------------------------------------------
+ ok 112 - Deleted identity cannot invoke controlled submission
+(1 row)
+
+                           throws_ok                           
+---------------------------------------------------------------
+ ok 113 - Profile completion cannot restore a deleted identity
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..113
+(1 row)
+
+ROLLBACK
+
+google_profile_existing: trusted_evidence_locality.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                      is                       
+-----------------------------------------------
+ ok 1 - New profile locality is server derived
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 2 - Province is server derived
+(1 row)
+
+                   is                   
+----------------------------------------
+ ok 3 - Unsplittable free text survives
+(1 row)
+
+INSERT 0 2
+INSERT 0 1
+UPDATE 1
+              set_config              
+--------------------------------------
+ b2100000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+          throws_ok           
+------------------------------
+ ok 4 - City tampering denied
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 5 - Province tampering denied
+(1 row)
+
+                throws_ok                
+-----------------------------------------
+ ok 6 - Free-text locality bypass denied
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 7 - Type-only changes cannot retain approval
+(1 row)
+
+             throws_ok             
+-----------------------------------
+ ok 8 - Raw status mutation denied
+(1 row)
+
+          lives_ok          
+----------------------------
+ ok 9 - Ordinary edits work
+(1 row)
+
+                      is                      
+----------------------------------------------
+ ok 10 - Ordinary edits retain exact approval
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 11 - Imported evidence cannot be overwritten
+(1 row)
+
+ finish 
+--------
+ 1..11
+(1 row)
+
+ROLLBACK
+

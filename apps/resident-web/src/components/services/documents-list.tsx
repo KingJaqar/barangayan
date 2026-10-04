@@ -9,19 +9,13 @@
  * deep links and guest SEO.
  */
 
-import { formatCentavosAsPHP, formatProcessingTime } from '@barangayan/shared';
+import { servicePriceLabel, serviceProcessingLabel, type Tables } from '@barangayan/shared';
 import { FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { DocumentRequestModal } from './document-request-modal/document-request-modal';
 
-interface DocumentTypeRow {
-  id: string;
-  name: string;
-  description: string | null;
-  fee_centavos: number;
-  processing_target_hours: number;
-}
+type DocumentTypeRow = Tables<'document_types'>;
 
 export function DocumentsList({ documentTypes, isAuthenticated }: { documentTypes: DocumentTypeRow[]; isAuthenticated: boolean }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -37,6 +31,7 @@ export function DocumentsList({ documentTypes, isAuthenticated }: { documentType
     setSelectedId(id);
   }
 
+  const handlePanelOpened = useCallback(() => setPanelSettled(true), []);
   function handleClose() {
     setSelectedId(null);
     setPanelSettled(false);
@@ -80,9 +75,9 @@ export function DocumentsList({ documentTypes, isAuthenticated }: { documentType
               </div>
               {doc.description ? <p className="line-clamp-2 text-sm text-muted-foreground">{doc.description}</p> : null}
               <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
-                <span>{doc.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(doc.fee_centavos)}</span>
+                <span>{servicePriceLabel(doc)}</span>
                 <span>·</span>
-                <span>{formatProcessingTime(doc.processing_target_hours)}</span>
+                <span>{serviceProcessingLabel(doc)}</span>
               </div>
             </button>
           );
@@ -94,7 +89,7 @@ export function DocumentsList({ documentTypes, isAuthenticated }: { documentType
         open={open}
         isAuthenticated={isAuthenticated}
         onClose={handleClose}
-        onOpenAnimationComplete={() => setPanelSettled(true)}
+        onOpenAnimationComplete={handlePanelOpened}
       />
     </>
   );

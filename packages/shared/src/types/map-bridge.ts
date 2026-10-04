@@ -38,6 +38,7 @@ export type MapBridgeInboundMessage =
 /** Messages sent FROM the WebView's Leaflet page BACK to React Native. */
 export type MapBridgeOutboundMessage =
   | { type: 'MAP_READY' }
+  | { type: 'MAP_ERROR' }
   | { type: 'MARKER_TAPPED'; payload: { markerId: string } }
   | { type: 'MAP_MOVED'; payload: { center: LatLng; zoom: number } }
   /** The picker pin was placed (tap) or moved (drag) — see SET_PICKER above. */

@@ -1,0 +1,13 @@
+
+> @barangayan/resident-ios@1.0.0 check:release
+> node scripts/check-release.cjs
+
+Missing release configuration: IOS_BUNDLE_IDENTIFIER, IOS_URL_SCHEME, EAS_PROJECT_ID, EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY, EXPO_PUBLIC_BARANGAY_ID
+Release gates remain closed: householdEditing, privateIdUploads, qrph, pickup, mapProviders, emergencyContent, evacuationCheckin, householdQr, publicIncidents, medicalRegistration, completeExport, accountDeletion, remotePush
+npm error Lifecycle script `check:release` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error workspace @barangayan/resident-ios@1.0.0
+npm error location C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node scripts/check-release.cjs

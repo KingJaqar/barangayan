@@ -86,12 +86,12 @@ Deno.serve(async (req: Request) => {
   /** Resolves our payments row from whichever PayMongo id this event carries. QR PH
    * events reference the PaymentIntent; older Sources-era rows are matched by source id
    * so historical data still reconciles. */
-  async function findPayment(): Promise<{ id: string; status: string } | null> {
+  async function findPayment(): Promise<{ id: string; status: string; amount_centavos: number } | null> {
     const intentId = attrs.payment_intent_id ?? resource?.payment_intent_id;
     if (intentId) {
       const { data } = await supabase
         .from('payments')
-        .select('id, status')
+        .select('id, status, amount_centavos')
         .eq('paymongo_payment_intent_id', intentId)
         .maybeSingle();
       if (data) return data;
@@ -101,7 +101,7 @@ Deno.serve(async (req: Request) => {
     if (sourceId) {
       const { data } = await supabase
         .from('payments')
-        .select('id, status')
+        .select('id, status, amount_centavos')
         .eq('paymongo_source_id', sourceId)
         .maybeSingle();
       if (data) return data;
@@ -114,7 +114,11 @@ Deno.serve(async (req: Request) => {
     const payment = await findPayment();
     if (!payment) return ack(); // Not one of ours — acknowledge so PayMongo stops retrying.
 
-    await supabase
+    if (attrs.amount !== payment.amount_centavos || attrs.currency !== 'PHP') {
+      return new Response(JSON.stringify({ error: 'Payment amount mismatch' }), { status: 409, headers: corsHeaders });
+    }
+    if (payment.status === 'paid' || payment.status === 'refunded') return ack();
+    const { error: settlementError } = await supabase
       .from('payments')
       .update({
         status: 'paid',
@@ -122,7 +126,12 @@ Deno.serve(async (req: Request) => {
         // resource.id is the Payment id (pay_...) — the only id the Refunds API accepts.
         paymongo_payment_id: resource?.id ?? null,
       })
-      .eq('id', payment.id);
+      .eq('id', payment.id).not('status', 'in', '(paid,refunded)');
+
+    if (settlementError) {
+      console.error('Webhook payment settlement failed', settlementError);
+      return new Response(JSON.stringify({ error: 'Could not record payment' }), { status: 500, headers: corsHeaders });
+    }
 
     return ack();
   }

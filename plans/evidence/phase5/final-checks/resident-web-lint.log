@@ -1,0 +1,113 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\.next-phase5\dev\build\chunks\[root-of-the-server]__0783rmk._.js
+    2:85   warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+    4:53   error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+    8:91   warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+   10:56   error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   57:9    error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  128:71   warning  '__turbopack_context__' is defined but never used                                                                    @typescript-eslint/no-unused-vars
+  128:94   warning  'module' is defined but never used                                                                                   @typescript-eslint/no-unused-vars
+  128:102  warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  130:1    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  299:5    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  301:5    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  303:5    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+C:\Users\User\barangayan\apps\resident-web\.next-phase5\dev\build\chunks\[root-of-the-server]__0rr2ivw._.js
+   2:73  warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+   4:47  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   8:77  warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  10:49  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+  14:75  warning  'exports' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+  16:48  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+  43:1   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  45:1   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  52:21  warning  'ipc' is defined but never used                                                                                      @typescript-eslint/no-unused-vars
+  86:33  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+
+C:\Users\User\barangayan\apps\resident-web\.next-phase5\dev\build\chunks\[turbopack]_runtime.js
+    58:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   143:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   251:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   267:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   277:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   339:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   354:24  error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+   598:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+   607:13  warning  Expected an assignment or function call and instead saw an expression                                                @typescript-eslint/no-unused-expressions
+   702:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+   702:69  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   730:12  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   741:13  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   787:30  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   816:34  error    A `require()` style import is forbidden                                                                              @typescript-eslint/no-require-imports
+   888:5   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+   946:9   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1173:9   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1191:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1259:9   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1273:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  1306:5   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1445:9   error    Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable              @next/next/no-assign-module-variable
+  1593:5   error  
+[Full output in resident-web-lint.log.gz]
+cript-eslint/no-unused-vars
+  386:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  387:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  393:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  395:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  396:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  402:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  404:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  405:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  411:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  413:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  414:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  420:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  422:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  423:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  429:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  431:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  432:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  438:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  440:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  441:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  447:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  449:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  450:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  462:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  464:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  465:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  471:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  473:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  474:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  480:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  482:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  483:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  489:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  491:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  492:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  498:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  500:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  501:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  507:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  509:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  510:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+  516:9    warning  'handler' is assigned a value but only used as a type                                                                @typescript-eslint/no-unused-vars
+  518:3    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  519:8    warning  '__Unused' is defined but never used                                                                                 @typescript-eslint/no-unused-vars
+
+✖ 7444 problems (778 errors, 6666 warnings)
+  4 errors and 62 warnings potentially fixable with the `--fix` option.
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\resident-web
+npm error workspace @barangayan/resident-web@0.1.0
+npm error location C:\Users\User\barangayan\apps\resident-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint

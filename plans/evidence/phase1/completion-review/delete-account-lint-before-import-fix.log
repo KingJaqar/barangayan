@@ -1,0 +1,12 @@
+error[no-import-prefix]: Inline 'npm:', 'jsr:' or 'https:' dependency not allowed
+  --> C:\Users\User\barangayan\supabase\functions\delete-my-account\index.ts:14:30
+   | 
+14 | import { createClient } from 'jsr:@supabase/supabase-js@2';
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = hint: Add it as a dependency in a deno.json or package.json instead and reference it here via its bare specifier
+
+  docs: https://docs.deno.com/lint/rules/no-import-prefix
+
+
+Found 1 problem
+Checked 2 files

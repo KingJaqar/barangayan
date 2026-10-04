@@ -1,0 +1,44 @@
+[
+  {
+    "table": "barangays",
+    "beforeCount": 2,
+    "afterCount": 2,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "profiles",
+    "beforeCount": 3,
+    "afterCount": 3,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "document_types",
+    "beforeCount": 1,
+    "afterCount": 1,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "service_requests",
+    "beforeCount": 2,
+    "afterCount": 2,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "payments",
+    "beforeCount": 2,
+    "afterCount": 2,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "drive_registrations",
+    "beforeCount": 1,
+    "afterCount": 1,
+    "everyLegacyValueUnchanged": true
+  },
+  {
+    "table": "household_members",
+    "beforeCount": 0,
+    "afterCount": 0,
+    "everyLegacyValueUnchanged": true
+  }
+]

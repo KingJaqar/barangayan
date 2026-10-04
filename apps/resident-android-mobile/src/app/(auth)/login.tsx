@@ -1,3 +1,4 @@
+import { GoogleButton } from '@/components/google-button';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -113,6 +114,7 @@ export default function LoginScreen() {
 
             <PrimaryButton label="Log In" loading={loading} onPress={handleLogin} />
 
+            <GoogleButton label="Sign in with Google" />
             <View style={styles.dividerRow}>
               <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
               <ThemedText type="small" themeColor="textSecondary">

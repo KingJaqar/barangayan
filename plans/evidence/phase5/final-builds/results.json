@@ -1,0 +1,51 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "command": "npm run build",
+      "startedAt": "2026-10-03T14:11:10.440Z",
+      "finishedAt": "2026-10-03T14:11:44.602Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-build.log"
+    },
+    {
+      "id": "admin-web-build",
+      "directory": "apps/admin-web",
+      "command": "npm run build",
+      "startedAt": "2026-10-03T14:11:44.700Z",
+      "finishedAt": "2026-10-03T14:12:17.085Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-build.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo export --platform android --output-dir dist/phase0-android",
+      "startedAt": "2026-10-03T14:12:17.186Z",
+      "finishedAt": "2026-10-03T14:12:58.945Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-export.log"
+    },
+    {
+      "id": "android-sdk",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo install --check",
+      "startedAt": "2026-10-03T14:12:59.039Z",
+      "finishedAt": "2026-10-03T14:13:01.530Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-sdk.log"
+    }
+  ]
+}

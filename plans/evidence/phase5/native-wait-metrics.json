@@ -1,0 +1,8 @@
+{
+  "position": "on_track",
+  "agencySeconds": 300,
+  "targetSeconds": 900,
+  "waitingReason": "Resident supplying original certificate",
+  "turnaroundSeconds": 600.695944,
+  "residentWaitSeconds": 0.695944
+}

@@ -5,14 +5,14 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 // Routes under this layout that intentionally render WITH a session already present —
 // every other route here redirects an authenticated visitor straight to /home.
-const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/onboarding']);
+const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/onboarding', '/complete-profile']);
 
 /**
  * Unauthenticated shell for login/register/verify-otp/forgot-password/reset-password —
  * redirects away if a session already exists, so a logged-in resident can't land back
  * on an auth screen via a stale bookmark or browser-back.
  *
- * Two exemptions:
+ * Authenticated exemptions:
  * - /reset-password: verify-otp's verifyOtp({type:'recovery'}) establishes a real
  *   session before the resident ever reaches that page, and a session cookie alone
  *   can't distinguish a recovery session from a normal one server-side (that
@@ -21,6 +21,7 @@ const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/onboarding']);
  *   could get right generically.
  * - /onboarding: the one-time post-login welcome step (see its own page) — it runs
  *   AFTER login/register succeed, by design, so a session is expected here.
+ * - /complete-profile: authenticated residents finish missing required fields here.
  *
  * This layout's plain, chrome-free wrapper (no ResidentShell nav/header) is also
  * exactly the distraction-free container /onboarding wants, which is why it lives

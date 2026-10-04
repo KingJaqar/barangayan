@@ -1,0 +1,112 @@
+SET
+BEGIN
+ plan  
+-------
+ 1..17
+(1 row)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+SET
+SET
+                      results_eq                       
+-------------------------------------------------------
+ ok 1 - Resident A can read their own service_requests
+(1 row)
+
+                                 is_empty                                 
+--------------------------------------------------------------------------
+ ok 2 - Resident A cannot read Resident B's (barangay B) service_requests
+(1 row)
+
+                         is_empty                         
+----------------------------------------------------------
+ ok 3 - Resident A cannot read barangay B's announcements
+(1 row)
+
+                                  throws_ok                                   
+------------------------------------------------------------------------------
+ ok 4 - Resident A cannot INSERT into payments directly (post migration 0017)
+(1 row)
+
+RESET
+SET
+SET
+UPDATE 1
+UPDATE 0
+RESET
+                            results_eq                            
+------------------------------------------------------------------
+ ok 5 - Admin A can update service_requests in their own barangay
+(1 row)
+
+                             is                              
+-------------------------------------------------------------
+ ok 6 - Admin A cannot update service_requests in barangay B
+(1 row)
+
+SET
+                           results_eq                            
+-----------------------------------------------------------------
+ ok 7 - Anon can read non-deleted announcements across barangays
+(1 row)
+
+                                     is_empty                                     
+----------------------------------------------------------------------------------
+ ok 8 - Anon cannot read a soft-deleted announcement (post S0-5 / migration 0019)
+(1 row)
+
+RESET
+SET
+SET
+                              throws_ok                              
+---------------------------------------------------------------------
+ ok 9 - Resident A cannot call admin_register_for_drive (admin-only)
+(1 row)
+
+RESET
+SET
+SET
+                                  ok                                  
+----------------------------------------------------------------------
+ ok 10 - Admin A can register Resident A (own barangay) for the drive
+(1 row)
+
+                            throws_ok                             
+------------------------------------------------------------------
+ ok 11 - Admin A cannot register Resident B, who is in barangay B
+(1 row)
+
+RESET
+SET
+SET
+                         results_eq                         
+------------------------------------------------------------
+ ok 12 - Admin A can update a Barangay A drive registration
+(1 row)
+
+                           is_empty                            
+---------------------------------------------------------------
+ ok 13 - Admin A cannot update a Barangay B drive registration
+(1 row)
+
+RESET
+SET
+SET
+                               is_empty                               
+----------------------------------------------------------------------
+ ok 14 - Resident A cannot mark their confirmed registration attended
+(1 row)
+
+RESET
+SET
+SET
+psql:supabase/tests/rls_isolation.test.sql:262: ERROR:  new row violates row-level security policy for table "drive_registrations"
+CONTEXT:  PL/pgSQL function is_empty(text,text) line 9 at FOR over EXECUTE statement

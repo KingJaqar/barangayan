@@ -1,8 +1,11 @@
+import { ResidentActionGate } from '@/components/resident-action-gate';
+import { catalogContract, ResidentSubmissionAttempt } from '@barangayan/shared';
+import { CharterRequestForm } from '@/components/services/charter-request-form';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -56,6 +59,15 @@ function RequestFormSkeleton() {
 }
 
 export default function RequestFormScreen() {
+  return <ResidentActionGate><RequestFormScreenContent /></ResidentActionGate>;
+}
+
+function RequestFormScreenContent() {
+  const { documentId } = useLocalSearchParams<{ documentId: string }>();
+  return <RequestFormContent key={documentId} />;
+}
+
+function RequestFormContent() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
   const router = useRouter();
   const { session } = useAuth();
@@ -65,14 +77,24 @@ export default function RequestFormScreen() {
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
+  const legacyPath = useRef<string|null>(null);
+  const [attempt] = useState(() => new ResidentSubmissionAttempt());
   const [pickedIdImage, setPickedIdImage] = useState<PickedImage | null>(null);
   const [idUploadError, setIdUploadError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
-    supabase.from('document_types').select('*').eq('id', documentId).single().then(({ data }) => setDoc(data));
-  }, [documentId]);
+    let active = true;
+    supabase.from('document_types').select('*').eq('id', documentId).eq('is_active', true).is('deleted_at', null).maybeSingle().then(({ data, error: queryError }) => {
+      if (!active) return;
+      setLoadError(queryError ? 'Could not load this service. Reconnect and retry.' : null);
+      setDoc(data);
+    });
+    return () => { active = false; };
+  }, [documentId, reload]);
 
   async function handlePickFile() {
     const picked = await pickImageAsset();
@@ -88,7 +110,7 @@ export default function RequestFormScreen() {
     }
 
     setIdUploadError(null);
-    setPickedIdImage(picked);
+    setPickedIdImage(picked); legacyPath.current = null;
   }
 
   // S0-8: uploads the picked ID image to Storage *before* the service_requests insert
@@ -100,7 +122,8 @@ export default function RequestFormScreen() {
 
     const ext = imageExtension(pickedIdImage.mimeType);
     const folderId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    const path = `${userId}/${folderId}/id.${ext}`;
+    legacyPath.current ??= `${userId}/${folderId}/id.${ext}`;
+    const path = legacyPath.current;
 
     try {
       const bytes = await readImageBytes(pickedIdImage);
@@ -108,7 +131,9 @@ export default function RequestFormScreen() {
         .from('id-documents')
         .upload(path, bytes, { contentType: pickedIdImage.mimeType, upsert: false });
       if (uploadError) {
-        return { path: null, error: uploadError.message };
+        const {data:saved}=await supabase.storage.from('id-documents').download(path);
+        const existing=saved?new Uint8Array(await saved.arrayBuffer()):null;
+        if(!existing || existing.length!==bytes.length || existing.some((v,i)=>v!==bytes[i])) return { path: null, error: uploadError.message };
       }
       return { path, error: null };
     } catch (readError) {
@@ -138,33 +163,22 @@ export default function RequestFormScreen() {
       return;
     }
 
-    const { data, error: insertError } = await supabase
-      .from('service_requests')
-      .insert({
-        barangay_id: doc.barangay_id,
-        resident_id: session.user.id,
-        document_type_id: doc.id,
-        requester_notes: result.data.requesterNotes ?? null,
-        id_document_path: idDocumentPath,
-      })
-      .select()
-      .single();
-    setSubmitting(false);
-
-    if (insertError || !data) {
-      setError(insertError?.message ?? 'Could not submit request.');
-      return;
-    }
-
-    router.replace(`/services/payment/${data.id}`);
+    try {
+      const data = await attempt.submit(supabase, { documentTypeId: doc.id, purposeCode: 'legacy', requesterNotes: result.data.requesterNotes, legacyIdPath: idDocumentPath ?? undefined, details: {}, attachments: [] });
+      router.replace(`/services/payment/${data.id}`);
+    } catch (failure) { setError((failure as Error).message); }
+    finally { setSubmitting(false); }
   }
 
+  if (loadError) return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole="alert">{loadError}</ThemedText><PrimaryButton label="Retry loading service" onPress={() => { setLoadError(null); setDoc(undefined); setReload(value => value + 1); }}/><PrimaryButton label="Back to Services" variant="secondary" onPress={() => router.replace('/services')}/></View></SafeAreaView>;
   if (doc === undefined) {
     return <RequestFormSkeleton />;
   }
   if (doc === null) {
     return <PlaceholderPanel label="Document not found." />;
   }
+
+  if (catalogContract(doc)) return <CharterRequestForm key={doc.id} doc={doc}/>;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>

@@ -1,0 +1,276 @@
+{
+  "created": [
+    {
+      "disabled": false,
+      "label": "Name",
+      "value": "Charter form verification"
+    },
+    {
+      "disabled": false,
+      "label": "Description",
+      "value": "Synthetic complete charter service"
+    },
+    {
+      "disabled": true,
+      "label": "Service workflow",
+      "value": "general"
+    },
+    {
+      "disabled": false,
+      "label": "Office/Division",
+      "value": "Records Office"
+    },
+    {
+      "disabled": false,
+      "label": "Classification",
+      "value": "Complex"
+    },
+    {
+      "disabled": false,
+      "label": "Type of Transaction",
+      "value": "G2B"
+    },
+    {
+      "disabled": false,
+      "label": "Who May Avail",
+      "value": "Local applicants"
+    },
+    {
+      "disabled": false,
+      "label": "Checklist of Requirements",
+      "value": "Valid ID\nApplication form"
+    },
+    {
+      "disabled": false,
+      "label": "Where to Secure the Requirements",
+      "value": "Barangay front desk"
+    },
+    {
+      "disabled": false,
+      "label": "Client Steps",
+      "value": "1. Submit application\n2. Collect document"
+    },
+    {
+      "disabled": false,
+      "label": "Agency Actions",
+      "value": "Review application and issue document"
+    },
+    {
+      "disabled": false,
+      "label": "Fees to Be Paid",
+      "value": "Published fee: ₱25.50"
+    },
+    {
+      "disabled": false,
+      "label": "Processing Time",
+      "value": "Review: 10 minutes; release: 5 minutes"
+    },
+    {
+      "disabled": false,
+      "label": "Person Responsible",
+      "value": "Records officer"
+    },
+    {
+      "disabled": false,
+      "label": "Processing Target (minutes)",
+      "value": "25"
+    },
+    {
+      "disabled": false,
+      "label": "Purpose",
+      "value": "Application"
+    },
+    {
+      "checked": true,
+      "disabled": false,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": true,
+      "disabled": false,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "disabled": false,
+      "label": "Pricing",
+      "value": "fixed"
+    },
+    {
+      "disabled": false,
+      "label": "Confirmed fee (₱)",
+      "value": "25.5"
+    }
+  ],
+  "updated": [
+    {
+      "disabled": false,
+      "label": "Name",
+      "value": "Updated charter verification"
+    },
+    {
+      "disabled": false,
+      "label": "Description",
+      "value": "Updated Synthetic complete charter service"
+    },
+    {
+      "disabled": true,
+      "label": "Service workflow",
+      "value": "general"
+    },
+    {
+      "disabled": false,
+      "label": "Office/Division",
+      "value": "Updated Records Office"
+    },
+    {
+      "disabled": false,
+      "label": "Classification",
+      "value": "Updated Complex"
+    },
+    {
+      "disabled": false,
+      "label": "Type of Transaction",
+      "value": "Updated G2B"
+    },
+    {
+      "disabled": false,
+      "label": "Who May Avail",
+      "value": "Updated Local applicants"
+    },
+    {
+      "disabled": false,
+      "label": "Checklist of Requirements",
+      "value": "Updated Valid ID\nApplication form"
+    },
+    {
+      "disabled": false,
+      "label": "Where to Secure the Requirements",
+      "value": "Updated Barangay front desk"
+    },
+    {
+      "disabled": false,
+      "label": "Client Steps",
+      "value": "Updated 1. Submit application\n2. Collect document"
+    },
+    {
+      "disabled": false,
+      "label": "Agency Actions",
+      "value": "Updated Review application and issue document"
+    },
+    {
+      "disabled": false,
+      "label": "Fees to Be Paid",
+      "value": "Updated Published fee: ₱25.50"
+    },
+    {
+      "disabled": false,
+      "label": "Processing Time",
+      "value": "Updated Review: 10 minutes; release: 5 minutes"
+    },
+    {
+      "disabled": false,
+      "label": "Person Responsible",
+      "value": "Updated Records officer"
+    },
+    {
+      "disabled": false,
+      "label": "Processing Target (minutes)",
+      "value": "35"
+    },
+    {
+      "disabled": false,
+      "label": "Purpose",
+      "value": "Updated Application"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": true,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "label": "",
+      "value": "on"
+    },
+    {
+      "disabled": false,
+      "label": "Pricing",
+      "value": "assessment"
+    }
+  ],
+  "validation": "Classification: Enter a value.",
+  "checkedAt": "2026-10-04T01:45:50.997Z",
+  "browserErrors": [],
+  "preFixBrowserErrors": [
+    {
+      "level": "error",
+      "message": "./apps/admin-web/src/app/globals.css:1536:32\nError: Parsing CSS source code failed\n  1534 |   }\n  1535 |   .bg-\\[var\\(--acz\\1 �\\)\\] {\n> 1536 |     background-color: var(--acz\u0001�);\n       |                                ^\n  1537 |   }\n  1538 |   .bg-\\[var\\(--ac\\|\\1 �\\)\\] {\n  1539 |     background-color: var(--ac|\u0001�);\n\nUnexpected token Delim('\\u{1}')\n\nGenerated code of PostCSS transform of file content of apps/admin-web/src/app/globals.css:\n./apps/admin-web/src/app/globals.css:1536:32\n  1534 |   }\n  1535 |   .bg-\\[var\\(--acz\\1 �\\)\\] {\n> 1536 |     background-color: var(--acz\u0001�);\n       |                                ^\n  1537 |   }\n  1538 |   .bg-\\[var\\(--ac\\|\\1 �\\)\\] {\n  1539 |     background-color: var(--ac|\u0001�);\n\nImport trace:\n  Client Component Browser:\n    ./apps/admin-web/src/app/globals.css [Client Component Browser]\n    ./apps/admin-web/src/app/layout.tsx [Server Component]",
+      "timestamp": "2026-10-04T01:42:49.918Z",
+      "url": "http://127.0.0.1:3101/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    },
+    {
+      "level": "error",
+      "message": "./apps/admin-web/src/app/globals.css:1542:32\nError: Parsing CSS source code failed\n  1540 |   }\n  1541 |   .bg-\\[var\\(--ac�\\2 �\\)\\] {\n> 1542 |     background-color: var(--ac�\u0002�);\n       |                               ^\n  1543 |   }\n  1544 |   .bg-amber-50 {\n  1545 |     background-color: var(--color-amber-50);\n\nUnexpected token Delim('\\u{2}')\n\nGenerated code of PostCSS transform of file content of apps/admin-web/src/app/globals.css:\n./apps/admin-web/src/app/globals.css:1542:32\n  1540 |   }\n  1541 |   .bg-\\[var\\(--ac�\\2 �\\)\\] {\n> 1542 |     background-color: var(--ac�\u0002�);\n       |                               ^\n  1543 |   }\n  1544 |   .bg-amber-50 {\n  1545 |     background-color: var(--color-amber-50);\n\nImport trace:\n  Client Component Browser:\n    ./apps/admin-web/src/app/globals.css [Client Component Browser]\n    ./apps/admin-web/src/app/layout.tsx [Server Component]",
+      "timestamp": "2026-10-04T01:42:49.920Z",
+      "url": "http://127.0.0.1:3101/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    },
+    {
+      "level": "error",
+      "message": "./apps/admin-web/src/app/globals.css:1539:31\nError: Parsing CSS source code failed\n  1537 |   }\n  1538 |   .bg-\\[var\\(--ac\\|\\1 �\\)\\] {\n> 1539 |     background-color: var(--ac|\u0001�);\n       |                               ^\n  1540 |   }\n  1541 |   .bg-\\[var\\(--ac�\\2 �\\)\\] {\n  1542 |     background-color: var(--ac�\u0002�);\n\nUnexpected token Delim('|')\n\nGenerated code of PostCSS transform of file content of apps/admin-web/src/app/globals.css:\n./apps/admin-web/src/app/globals.css:1539:31\n  1537 |   }\n  1538 |   .bg-\\[var\\(--ac\\|\\1 �\\)\\] {\n> 1539 |     background-color: var(--ac|\u0001�);\n       |                               ^\n  1540 |   }\n  1541 |   .bg-\\[var\\(--ac�\\2 �\\)\\] {\n  1542 |     background-color: var(--ac�\u0002�);\n\nImport trace:\n  Client Component Browser:\n    ./apps/admin-web/src/app/globals.css [Client Component Browser]\n    ./apps/admin-web/src/app/layout.tsx [Server Component]",
+      "timestamp": "2026-10-04T01:42:49.920Z",
+      "url": "http://127.0.0.1:3101/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    },
+    {
+      "level": "error",
+      "message": "./apps/admin-web/src/app/globals.css:3488:33\nError: Parsing CSS source code failed\n  3486 |     width: calc(var(--spacing) * 1.5);\n  3487 |   }\n> 3488 |   :is(.\\[\\&l\\1 \\5 ���\\]\\:w-1\\.5)l\u0001\u0005�\u0000� {\n       |                           ^\n  3489 |     width: calc(var(--spacing) * 1.5);\n  3490 |   }\n  3491 |   :is(.\\[\\&�\\1 \\5 ���\\]\\:w-1\\.5)�\u0001\u0005�\u0000� {\n\nUnexpected token Ident(\"l\")\n\nGenerated code of PostCSS transform of file content of apps/admin-web/src/app/globals.css:\n./apps/admin-web/src/app/globals.css:3488:33\n  3486 |     width: calc(var(--spacing) * 1.5);\n  3487 |   }\n> 3488 |   :is(.\\[\\&l\\1 \\5 ���\\]\\:w-1\\.5)l\u0001\u0005�\u0000� {\n       |                           ^\n  3489 |     width: calc(var(--spacing) * 1.5);\n  3490 |   }\n  3491 |   :is(.\\[\\&�\\1 \\5 ���\\]\\:w-1\\.5)�\u0001\u0005�\u0000� {\n\nImport trace:\n  Client Component Browser:\n    ./apps/admin-web/src/app/globals.css [Client Component Browser]\n    ./apps/admin-web/src/app/layout.tsx [Server Component]",
+      "timestamp": "2026-10-04T01:42:49.921Z",
+      "url": "http://127.0.0.1:3101/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    },
+    {
+      "level": "error",
+      "message": "./apps/admin-web/src/app/globals.css:3491:33\nError: Parsing CSS source code failed\n  3489 |     width: calc(var(--spacing) * 1.5);\n  3490 |   }\n> 3491 |   :is(.\\[\\&�\\1 \\5 ���\\]\\:w-1\\.5)�\u0001\u0005�\u0000� {\n       |                         ^\n  3492 |     width: calc(var(--spacing) * 1.5);\n  3493 |   }\n  3494 | }\n\nUnexpected token Ident(\"�\")\n\nGenerated code of PostCSS transform of file content of apps/admin-web/src/app/globals.css:\n./apps/admin-web/src/app/globals.css:3491:33\n  3489 |     width: calc(var(--spacing) * 1.5);\n  3490 |   }\n> 3491 |   :is(.\\[\\&�\\1 \\5 ���\\]\\:w-1\\.5)�\u0001\u0005�\u0000� {\n       |                         ^\n  3492 |     width: calc(var(--spacing) * 1.5);\n  3493 |   }\n  3494 | }\n\nImport trace:\n  Client Component Browser:\n    ./apps/admin-web/src/app/globals.css [Client Component Browser]\n    ./apps/admin-web/src/app/layout.tsx [Server Component]",
+      "timestamp": "2026-10-04T01:42:49.921Z",
+      "url": "http://127.0.0.1:3101/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js"
+    }
+  ]
+}

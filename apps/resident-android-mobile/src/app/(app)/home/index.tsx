@@ -1,4 +1,5 @@
 import type { Tables } from '@barangayan/shared';
+import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
@@ -109,6 +110,7 @@ export default function HomeScreen() {
       </View>
       <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: BottomTabInset + Spacing.three }]}>
+          <ProfileCompletionBanner />
         <View style={styles.profileRow}>
           {session ? (
             <View style={styles.profileInfo}>

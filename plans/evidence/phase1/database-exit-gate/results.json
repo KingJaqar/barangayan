@@ -1,0 +1,1114 @@
+[
+  {
+    "database": "phase1_existing",
+    "label": "Supabase infrastructure fixture",
+    "source": "dist\\phase1-tools\\phase1_existing-bootstrap.sql",
+    "startedAt": "2026-10-01T04:10:11.117Z",
+    "finishedAt": "2026-10-01T04:10:11.288Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0001_barangays_and_profiles.sql",
+    "source": "supabase\\migrations\\0001_barangays_and_profiles.sql",
+    "startedAt": "2026-10-01T04:10:11.290Z",
+    "finishedAt": "2026-10-01T04:10:11.419Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0002_document_types_and_service_requests.sql",
+    "source": "supabase\\migrations\\0002_document_types_and_service_requests.sql",
+    "startedAt": "2026-10-01T04:10:11.420Z",
+    "finishedAt": "2026-10-01T04:10:11.555Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0003_announcements.sql",
+    "source": "supabase\\migrations\\0003_announcements.sql",
+    "startedAt": "2026-10-01T04:10:11.555Z",
+    "finishedAt": "2026-10-01T04:10:11.668Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0004_service_request_reference_default.sql",
+    "source": "supabase\\migrations\\0004_service_request_reference_default.sql",
+    "startedAt": "2026-10-01T04:10:11.668Z",
+    "finishedAt": "2026-10-01T04:10:11.768Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0005_guest_readable_public_content.sql",
+    "source": "supabase\\migrations\\0005_guest_readable_public_content.sql",
+    "startedAt": "2026-10-01T04:10:11.768Z",
+    "finishedAt": "2026-10-01T04:10:11.871Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0006_profile_theme_preference.sql",
+    "source": "supabase\\migrations\\0006_profile_theme_preference.sql",
+    "startedAt": "2026-10-01T04:10:11.872Z",
+    "finishedAt": "2026-10-01T04:10:11.984Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0007_payments_and_admin_access.sql",
+    "source": "supabase\\migrations\\0007_payments_and_admin_access.sql",
+    "startedAt": "2026-10-01T04:10:11.984Z",
+    "finishedAt": "2026-10-01T04:10:12.125Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0008_resident_directory_access.sql",
+    "source": "supabase\\migrations\\0008_resident_directory_access.sql",
+    "startedAt": "2026-10-01T04:10:12.125Z",
+    "finishedAt": "2026-10-01T04:10:12.235Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0009_admin_crud_and_soft_delete.sql",
+    "source": "supabase\\migrations\\0009_admin_crud_and_soft_delete.sql",
+    "startedAt": "2026-10-01T04:10:12.235Z",
+    "finishedAt": "2026-10-01T04:10:12.342Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0010_resident_set_payment_method.sql",
+    "source": "supabase\\migrations\\0010_resident_set_payment_method.sql",
+    "startedAt": "2026-10-01T04:10:12.343Z",
+    "finishedAt": "2026-10-01T04:10:12.441Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0011_announcements_admin_write.sql",
+    "source": "supabase\\migrations\\0011_announcements_admin_write.sql",
+    "startedAt": "2026-10-01T04:10:12.441Z",
+    "finishedAt": "2026-10-01T04:10:12.552Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0012_profile_trigger_and_verification_status.sql",
+    "source": "supabase\\migrations\\0012_profile_trigger_and_verification_status.sql",
+    "startedAt": "2026-10-01T04:10:12.552Z",
+    "finishedAt": "2026-10-01T04:10:12.668Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0013_protect_verification_fields.sql",
+    "source": "supabase\\migrations\\0013_protect_verification_fields.sql",
+    "startedAt": "2026-10-01T04:10:12.668Z",
+    "finishedAt": "2026-10-01T04:10:12.769Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0014_request_delivery_workflow.sql",
+    "source": "supabase\\migrations\\0014_request_delivery_workflow.sql",
+    "startedAt": "2026-10-01T04:10:12.770Z",
+    "finishedAt": "2026-10-01T04:10:12.878Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0015_request_delivery_transition_rpc.sql",
+    "source": "supabase\\migrations\\0015_request_delivery_transition_rpc.sql",
+    "startedAt": "2026-10-01T04:10:12.879Z",
+    "finishedAt": "2026-10-01T04:10:12.975Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0017_harden_payments_rls.sql",
+    "source": "supabase\\migrations\\0017_harden_payments_rls.sql",
+    "startedAt": "2026-10-01T04:10:12.976Z",
+    "finishedAt": "2026-10-01T04:10:13.073Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0018_begin_processing_rpc.sql",
+    "source": "supabase\\migrations\\0018_begin_processing_rpc.sql",
+    "startedAt": "2026-10-01T04:10:13.074Z",
+    "finishedAt": "2026-10-01T04:10:13.173Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0019_fix_announcement_soft_delete.sql",
+    "source": "supabase\\migrations\\0019_fix_announcement_soft_delete.sql",
+    "startedAt": "2026-10-01T04:10:13.174Z",
+    "finishedAt": "2026-10-01T04:10:13.268Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0020_id_documents_storage.sql",
+    "source": "supabase\\migrations\\0020_id_documents_storage.sql",
+    "startedAt": "2026-10-01T04:10:13.269Z",
+    "finishedAt": "2026-10-01T04:10:13.375Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0021_enable_pgtap.sql",
+    "source": "supabase\\migrations\\0021_enable_pgtap.sql",
+    "startedAt": "2026-10-01T04:10:13.375Z",
+    "finishedAt": "2026-10-01T04:10:13.550Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0022_maps_tables.sql",
+    "source": "supabase\\migrations\\0022_maps_tables.sql",
+    "startedAt": "2026-10-01T04:10:13.551Z",
+    "finishedAt": "2026-10-01T04:10:13.694Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0023_seed_incident_categories.sql",
+    "source": "supabase\\migrations\\0023_seed_incident_categories.sql",
+    "startedAt": "2026-10-01T04:10:13.694Z",
+    "finishedAt": "2026-10-01T04:10:13.787Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0024_ampid1_boundary.sql",
+    "source": "supabase\\migrations\\0024_ampid1_boundary.sql",
+    "startedAt": "2026-10-01T04:10:13.788Z",
+    "finishedAt": "2026-10-01T04:10:13.880Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0025_incident_management.sql",
+    "source": "supabase\\migrations\\0025_incident_management.sql",
+    "startedAt": "2026-10-01T04:10:13.880Z",
+    "finishedAt": "2026-10-01T04:10:14.005Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0026_incident_report_workflow.sql",
+    "source": "supabase\\migrations\\0026_incident_report_workflow.sql",
+    "startedAt": "2026-10-01T04:10:14.006Z",
+    "finishedAt": "2026-10-01T04:10:14.111Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0027_incidents_realtime.sql",
+    "source": "supabase\\migrations\\0027_incidents_realtime.sql",
+    "startedAt": "2026-10-01T04:10:14.111Z",
+    "finishedAt": "2026-10-01T04:10:14.208Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0029_drop_diag_temp.sql",
+    "source": "supabase\\migrations\\0029_drop_diag_temp.sql",
+    "startedAt": "2026-10-01T04:10:14.209Z",
+    "finishedAt": "2026-10-01T04:10:14.300Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0030_diag_temp2.sql",
+    "source": "supabase\\migrations\\0030_diag_temp2.sql",
+    "startedAt": "2026-10-01T04:10:14.301Z",
+    "finishedAt": "2026-10-01T04:10:14.399Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0031_drop_diag_temp2.sql",
+    "source": "supabase\\migrations\\0031_drop_diag_temp2.sql",
+    "startedAt": "2026-10-01T04:10:14.400Z",
+    "finishedAt": "2026-10-01T04:10:14.493Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0032_withdraw_incident_rpc.sql",
+    "source": "supabase\\migrations\\0032_withdraw_incident_rpc.sql",
+    "startedAt": "2026-10-01T04:10:14.494Z",
+    "finishedAt": "2026-10-01T04:10:14.593Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0033_diag_temp3.sql",
+    "source": "supabase\\migrations\\0033_diag_temp3.sql",
+    "startedAt": "2026-10-01T04:10:14.594Z",
+    "finishedAt": "2026-10-01T04:10:14.692Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0034_drop_diag_temp3.sql",
+    "source": "supabase\\migrations\\0034_drop_diag_temp3.sql",
+    "startedAt": "2026-10-01T04:10:14.693Z",
+    "finishedAt": "2026-10-01T04:10:14.792Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0035_medical_drives.sql",
+    "source": "supabase\\migrations\\0035_medical_drives.sql",
+    "startedAt": "2026-10-01T04:10:14.793Z",
+    "finishedAt": "2026-10-01T04:10:14.929Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0036_medical_drives_admin_rls.sql",
+    "source": "supabase\\migrations\\0036_medical_drives_admin_rls.sql",
+    "startedAt": "2026-10-01T04:10:14.929Z",
+    "finishedAt": "2026-10-01T04:10:15.029Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0037_profile_birth_date.sql",
+    "source": "supabase\\migrations\\0037_profile_birth_date.sql",
+    "startedAt": "2026-10-01T04:10:15.029Z",
+    "finishedAt": "2026-10-01T04:10:15.130Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0038_health_realtime.sql",
+    "source": "supabase\\migrations\\0038_health_realtime.sql",
+    "startedAt": "2026-10-01T04:10:15.130Z",
+    "finishedAt": "2026-10-01T04:10:15.227Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0039_profile_extended_fields.sql",
+    "source": "supabase\\migrations\\0039_profile_extended_fields.sql",
+    "startedAt": "2026-10-01T04:10:15.228Z",
+    "finishedAt": "2026-10-01T04:10:15.336Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0040_profile_avatar.sql",
+    "source": "supabase\\migrations\\0040_profile_avatar.sql",
+    "startedAt": "2026-10-01T04:10:15.337Z",
+    "finishedAt": "2026-10-01T04:10:15.442Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0041_id_verification_status.sql",
+    "source": "supabase\\migrations\\0041_id_verification_status.sql",
+    "startedAt": "2026-10-01T04:10:15.442Z",
+    "finishedAt": "2026-10-01T04:10:15.555Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0042_id_documents_public_bucket.sql",
+    "source": "supabase\\migrations\\0042_id_documents_public_bucket.sql",
+    "startedAt": "2026-10-01T04:10:15.555Z",
+    "finishedAt": "2026-10-01T04:10:15.659Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0043_emergency_content.sql",
+    "source": "supabase\\migrations\\0043_emergency_content.sql",
+    "startedAt": "2026-10-01T04:10:15.660Z",
+    "finishedAt": "2026-10-01T04:10:15.752Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "Existing pilot reference fixture (not an empty-chain repair)",
+    "source": "dist\\phase1-tools\\existing-pilot-fixture.sql",
+    "startedAt": "2026-10-01T04:10:15.752Z",
+    "finishedAt": "2026-10-01T04:10:15.848Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0044_evacuation_centers_verified.sql",
+    "source": "supabase\\migrations\\0044_evacuation_centers_verified.sql",
+    "startedAt": "2026-10-01T04:10:15.848Z",
+    "finishedAt": "2026-10-01T04:10:15.956Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0045_evacuation_center_checkins.sql",
+    "source": "supabase\\migrations\\0045_evacuation_center_checkins.sql",
+    "startedAt": "2026-10-01T04:10:15.957Z",
+    "finishedAt": "2026-10-01T04:10:16.079Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0046_household_members.sql",
+    "source": "supabase\\migrations\\0046_household_members.sql",
+    "startedAt": "2026-10-01T04:10:16.080Z",
+    "finishedAt": "2026-10-01T04:10:16.201Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0047_emergency_information.sql",
+    "source": "supabase\\migrations\\0047_emergency_information.sql",
+    "startedAt": "2026-10-01T04:10:16.202Z",
+    "finishedAt": "2026-10-01T04:10:16.330Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0048_realtime_publications.sql",
+    "source": "supabase\\migrations\\0048_realtime_publications.sql",
+    "startedAt": "2026-10-01T04:10:16.331Z",
+    "finishedAt": "2026-10-01T04:10:16.433Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0049_seed_empty_tables.sql",
+    "source": "supabase\\migrations\\0049_seed_empty_tables.sql",
+    "startedAt": "2026-10-01T04:10:16.434Z",
+    "finishedAt": "2026-10-01T04:10:16.559Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0050_create_emergency_qr_tables.sql",
+    "source": "supabase\\migrations\\0050_create_emergency_qr_tables.sql",
+    "startedAt": "2026-10-01T04:10:16.559Z",
+    "finishedAt": "2026-10-01T04:10:16.697Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0051_waste_management.sql",
+    "source": "supabase\\migrations\\0051_waste_management.sql",
+    "startedAt": "2026-10-01T04:10:16.698Z",
+    "finishedAt": "2026-10-01T04:10:16.830Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0052_household_admin_management.sql",
+    "source": "supabase\\migrations\\0052_household_admin_management.sql",
+    "startedAt": "2026-10-01T04:10:16.831Z",
+    "finishedAt": "2026-10-01T04:10:16.951Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0053_faq.sql",
+    "source": "supabase\\migrations\\0053_faq.sql",
+    "startedAt": "2026-10-01T04:10:16.952Z",
+    "finishedAt": "2026-10-01T04:10:17.087Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0054_barangay_settings.sql",
+    "source": "supabase\\migrations\\0054_barangay_settings.sql",
+    "startedAt": "2026-10-01T04:10:17.088Z",
+    "finishedAt": "2026-10-01T04:10:17.198Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0055_grant_guest_read_access.sql",
+    "source": "supabase\\migrations\\0055_grant_guest_read_access.sql",
+    "startedAt": "2026-10-01T04:10:17.198Z",
+    "finishedAt": "2026-10-01T04:10:17.301Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0056_admin_staff_management.sql",
+    "source": "supabase\\migrations\\0056_admin_staff_management.sql",
+    "startedAt": "2026-10-01T04:10:17.301Z",
+    "finishedAt": "2026-10-01T04:10:17.409Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0057_barangay_officials.sql",
+    "source": "supabase\\migrations\\0057_barangay_officials.sql",
+    "startedAt": "2026-10-01T04:10:17.410Z",
+    "finishedAt": "2026-10-01T04:10:17.539Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0058_admin_audit_log.sql",
+    "source": "supabase\\migrations\\0058_admin_audit_log.sql",
+    "startedAt": "2026-10-01T04:10:17.540Z",
+    "finishedAt": "2026-10-01T04:10:17.664Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0059_site_content_and_about_us.sql",
+    "source": "supabase\\migrations\\0059_site_content_and_about_us.sql",
+    "startedAt": "2026-10-01T04:10:17.665Z",
+    "finishedAt": "2026-10-01T04:10:17.825Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0060_storage_site_content.sql",
+    "source": "supabase\\migrations\\0060_storage_site_content.sql",
+    "startedAt": "2026-10-01T04:10:17.826Z",
+    "finishedAt": "2026-10-01T04:10:17.938Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0061_save_about_us_rpc.sql",
+    "source": "supabase\\migrations\\0061_save_about_us_rpc.sql",
+    "startedAt": "2026-10-01T04:10:17.939Z",
+    "finishedAt": "2026-10-01T04:10:18.038Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0062_seed_site_content_and_about_us.sql",
+    "source": "supabase\\migrations\\0062_seed_site_content_and_about_us.sql",
+    "startedAt": "2026-10-01T04:10:18.038Z",
+    "finishedAt": "2026-10-01T04:10:18.154Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0063_push_notifications.sql",
+    "source": "supabase\\migrations\\0063_push_notifications.sql",
+    "startedAt": "2026-10-01T04:10:18.155Z",
+    "finishedAt": "2026-10-01T04:10:18.278Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0064_qrph_instant_payment_and_refunds.sql",
+    "source": "supabase\\migrations\\0064_qrph_instant_payment_and_refunds.sql",
+    "startedAt": "2026-10-01T04:10:18.279Z",
+    "finishedAt": "2026-10-01T04:10:18.393Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0065_qrph_payment_intents.sql",
+    "source": "supabase\\migrations\\0065_qrph_payment_intents.sql",
+    "startedAt": "2026-10-01T04:10:18.394Z",
+    "finishedAt": "2026-10-01T04:10:18.504Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0066_qrph_persistent_qr_and_resident_cancel.sql",
+    "source": "supabase\\migrations\\0066_qrph_persistent_qr_and_resident_cancel.sql",
+    "startedAt": "2026-10-01T04:10:18.504Z",
+    "finishedAt": "2026-10-01T04:10:18.608Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0067_fix_household_members_uuid_sync.sql",
+    "source": "supabase\\migrations\\0067_fix_household_members_uuid_sync.sql",
+    "startedAt": "2026-10-01T04:10:18.609Z",
+    "finishedAt": "2026-10-01T04:10:18.705Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0068_signup_birth_date.sql",
+    "source": "supabase\\migrations\\0068_signup_birth_date.sql",
+    "startedAt": "2026-10-01T04:10:18.705Z",
+    "finishedAt": "2026-10-01T04:10:18.802Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0069_fix_emergency_information_tenant_leak.sql",
+    "source": "supabase\\migrations\\0069_fix_emergency_information_tenant_leak.sql",
+    "startedAt": "2026-10-01T04:10:18.802Z",
+    "finishedAt": "2026-10-01T04:10:18.911Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0070_waste_management_resident_read.sql",
+    "source": "supabase\\migrations\\0070_waste_management_resident_read.sql",
+    "startedAt": "2026-10-01T04:10:18.911Z",
+    "finishedAt": "2026-10-01T04:10:19.023Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0071_add_missing_fk_indexes.sql",
+    "source": "supabase\\migrations\\0071_add_missing_fk_indexes.sql",
+    "startedAt": "2026-10-01T04:10:19.024Z",
+    "finishedAt": "2026-10-01T04:10:19.147Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0072_admin_register_for_drive.sql",
+    "source": "supabase\\migrations\\0072_admin_register_for_drive.sql",
+    "startedAt": "2026-10-01T04:10:19.147Z",
+    "finishedAt": "2026-10-01T04:10:19.247Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0073_id_documents_private_again.sql",
+    "source": "supabase\\migrations\\0073_id_documents_private_again.sql",
+    "startedAt": "2026-10-01T04:10:19.247Z",
+    "finishedAt": "2026-10-01T04:10:19.345Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0074_account_deletion.sql",
+    "source": "supabase\\migrations\\0074_account_deletion.sql",
+    "startedAt": "2026-10-01T04:10:19.345Z",
+    "finishedAt": "2026-10-01T04:10:19.457Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0075_profile_theme_customization.sql",
+    "source": "supabase\\migrations\\0075_profile_theme_customization.sql",
+    "startedAt": "2026-10-01T04:10:19.458Z",
+    "finishedAt": "2026-10-01T04:10:19.563Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0076_placeholder.sql",
+    "source": "supabase\\migrations\\0076_placeholder.sql",
+    "startedAt": "2026-10-01T04:10:19.564Z",
+    "finishedAt": "2026-10-01T04:10:19.656Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0077_waste_zone_cron_scoring.sql",
+    "source": "supabase\\migrations\\0077_waste_zone_cron_scoring.sql",
+    "startedAt": "2026-10-01T04:10:19.657Z",
+    "finishedAt": "2026-10-01T04:10:19.787Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0078_registration_location_verification.sql",
+    "source": "supabase\\migrations\\0078_registration_location_verification.sql",
+    "startedAt": "2026-10-01T04:10:19.788Z",
+    "finishedAt": "2026-10-01T04:10:19.896Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0079_export_rate_limit.sql",
+    "source": "supabase\\migrations\\0079_export_rate_limit.sql",
+    "startedAt": "2026-10-01T04:10:19.897Z",
+    "finishedAt": "2026-10-01T04:10:19.996Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0080_reports_unread_counts.sql",
+    "source": "supabase\\migrations\\0080_reports_unread_counts.sql",
+    "startedAt": "2026-10-01T04:10:19.997Z",
+    "finishedAt": "2026-10-01T04:10:20.111Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0081_resident_profile_field_split.sql",
+    "source": "supabase\\migrations\\0081_resident_profile_field_split.sql",
+    "startedAt": "2026-10-01T04:10:20.111Z",
+    "finishedAt": "2026-10-01T04:10:20.229Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0082_remove_delivery_add_pickup.sql",
+    "source": "supabase\\migrations\\0082_remove_delivery_add_pickup.sql",
+    "startedAt": "2026-10-01T04:10:20.229Z",
+    "finishedAt": "2026-10-01T04:10:20.370Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0083_incident_location_details.sql",
+    "source": "supabase\\migrations\\0083_incident_location_details.sql",
+    "startedAt": "2026-10-01T04:10:20.371Z",
+    "finishedAt": "2026-10-01T04:10:20.471Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0084_announcement_detailed_description.sql",
+    "source": "supabase\\migrations\\0084_announcement_detailed_description.sql",
+    "startedAt": "2026-10-01T04:10:20.471Z",
+    "finishedAt": "2026-10-01T04:10:20.567Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0085_resident_mark_resolved_incident_read.sql",
+    "source": "supabase\\migrations\\0085_resident_mark_resolved_incident_read.sql",
+    "startedAt": "2026-10-01T04:10:20.568Z",
+    "finishedAt": "2026-10-01T04:10:20.663Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0086_about_us_logo_size.sql",
+    "source": "supabase\\migrations\\0086_about_us_logo_size.sql",
+    "startedAt": "2026-10-01T04:10:20.664Z",
+    "finishedAt": "2026-10-01T04:10:20.766Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0087_about_us_title.sql",
+    "source": "supabase\\migrations\\0087_about_us_title.sql",
+    "startedAt": "2026-10-01T04:10:20.767Z",
+    "finishedAt": "2026-10-01T04:10:20.867Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0088_faq_articles_guest_read.sql",
+    "source": "supabase\\migrations\\0088_faq_articles_guest_read.sql",
+    "startedAt": "2026-10-01T04:10:20.867Z",
+    "finishedAt": "2026-10-01T04:10:20.967Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0089_id_verification_failed_status.sql",
+    "source": "supabase\\migrations\\0089_id_verification_failed_status.sql",
+    "startedAt": "2026-10-01T04:10:20.968Z",
+    "finishedAt": "2026-10-01T04:10:21.070Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0090_location_verification.sql",
+    "source": "supabase\\migrations\\0090_location_verification.sql",
+    "startedAt": "2026-10-01T04:10:21.071Z",
+    "finishedAt": "2026-10-01T04:10:21.169Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0091_verified_location_address.sql",
+    "source": "supabase\\migrations\\0091_verified_location_address.sql",
+    "startedAt": "2026-10-01T04:10:21.170Z",
+    "finishedAt": "2026-10-01T04:10:21.264Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0092_drive_registrations_admin_update.sql",
+    "source": "supabase\\migrations\\0092_drive_registrations_admin_update.sql",
+    "startedAt": "2026-10-01T04:10:21.265Z",
+    "finishedAt": "2026-10-01T04:10:21.366Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0093_resident_ios_backend_safety.sql",
+    "source": "supabase\\migrations\\0093_resident_ios_backend_safety.sql",
+    "startedAt": "2026-10-01T04:10:21.367Z",
+    "finishedAt": "2026-10-01T04:10:21.488Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "0094_resident_ios_tenant_write_guards.sql",
+    "source": "supabase\\migrations\\0094_resident_ios_tenant_write_guards.sql",
+    "startedAt": "2026-10-01T04:10:21.489Z",
+    "finishedAt": "2026-10-01T04:10:21.593Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "Representative pre-migration historical fixture",
+    "source": "scripts\\fixtures\\phase1-historical.sql",
+    "startedAt": "2026-10-01T04:10:21.929Z",
+    "finishedAt": "2026-10-01T04:10:22.072Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_existing",
+    "label": "20261001030133_phase1_shared_foundations.sql",
+    "source": "supabase\\migrations\\20261001030133_phase1_shared_foundations.sql",
+    "startedAt": "2026-10-01T04:10:22.762Z",
+    "finishedAt": "2026-10-01T04:10:22.997Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "Supabase infrastructure fixture",
+    "source": "dist\\phase1-tools\\phase1_empty-bootstrap.sql",
+    "startedAt": "2026-10-01T04:12:12.355Z",
+    "finishedAt": "2026-10-01T04:12:12.519Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0001_barangays_and_profiles.sql",
+    "source": "supabase\\migrations\\0001_barangays_and_profiles.sql",
+    "startedAt": "2026-10-01T04:12:12.520Z",
+    "finishedAt": "2026-10-01T04:12:12.651Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0002_document_types_and_service_requests.sql",
+    "source": "supabase\\migrations\\0002_document_types_and_service_requests.sql",
+    "startedAt": "2026-10-01T04:12:12.652Z",
+    "finishedAt": "2026-10-01T04:12:12.788Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0003_announcements.sql",
+    "source": "supabase\\migrations\\0003_announcements.sql",
+    "startedAt": "2026-10-01T04:12:12.788Z",
+    "finishedAt": "2026-10-01T04:12:12.905Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0004_service_request_reference_default.sql",
+    "source": "supabase\\migrations\\0004_service_request_reference_default.sql",
+    "startedAt": "2026-10-01T04:12:12.905Z",
+    "finishedAt": "2026-10-01T04:12:13.004Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0005_guest_readable_public_content.sql",
+    "source": "supabase\\migrations\\0005_guest_readable_public_content.sql",
+    "startedAt": "2026-10-01T04:12:13.005Z",
+    "finishedAt": "2026-10-01T04:12:13.108Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0006_profile_theme_preference.sql",
+    "source": "supabase\\migrations\\0006_profile_theme_preference.sql",
+    "startedAt": "2026-10-01T04:12:13.109Z",
+    "finishedAt": "2026-10-01T04:12:13.216Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0007_payments_and_admin_access.sql",
+    "source": "supabase\\migrations\\0007_payments_and_admin_access.sql",
+    "startedAt": "2026-10-01T04:12:13.217Z",
+    "finishedAt": "2026-10-01T04:12:13.351Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0008_resident_directory_access.sql",
+    "source": "supabase\\migrations\\0008_resident_directory_access.sql",
+    "startedAt": "2026-10-01T04:12:13.352Z",
+    "finishedAt": "2026-10-01T04:12:13.458Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0009_admin_crud_and_soft_delete.sql",
+    "source": "supabase\\migrations\\0009_admin_crud_and_soft_delete.sql",
+    "startedAt": "2026-10-01T04:12:13.459Z",
+    "finishedAt": "2026-10-01T04:12:13.564Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0010_resident_set_payment_method.sql",
+    "source": "supabase\\migrations\\0010_resident_set_payment_method.sql",
+    "startedAt": "2026-10-01T04:12:13.565Z",
+    "finishedAt": "2026-10-01T04:12:13.669Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0011_announcements_admin_write.sql",
+    "source": "supabase\\migrations\\0011_announcements_admin_write.sql",
+    "startedAt": "2026-10-01T04:12:13.670Z",
+    "finishedAt": "2026-10-01T04:12:13.776Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0012_profile_trigger_and_verification_status.sql",
+    "source": "supabase\\migrations\\0012_profile_trigger_and_verification_status.sql",
+    "startedAt": "2026-10-01T04:12:13.776Z",
+    "finishedAt": "2026-10-01T04:12:13.887Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0013_protect_verification_fields.sql",
+    "source": "supabase\\migrations\\0013_protect_verification_fields.sql",
+    "startedAt": "2026-10-01T04:12:13.888Z",
+    "finishedAt": "2026-10-01T04:12:13.992Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0014_request_delivery_workflow.sql",
+    "source": "supabase\\migrations\\0014_request_delivery_workflow.sql",
+    "startedAt": "2026-10-01T04:12:13.993Z",
+    "finishedAt": "2026-10-01T04:12:14.104Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0015_request_delivery_transition_rpc.sql",
+    "source": "supabase\\migrations\\0015_request_delivery_transition_rpc.sql",
+    "startedAt": "2026-10-01T04:12:14.104Z",
+    "finishedAt": "2026-10-01T04:12:14.205Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0017_harden_payments_rls.sql",
+    "source": "supabase\\migrations\\0017_harden_payments_rls.sql",
+    "startedAt": "2026-10-01T04:12:14.205Z",
+    "finishedAt": "2026-10-01T04:12:14.304Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0018_begin_processing_rpc.sql",
+    "source": "supabase\\migrations\\0018_begin_processing_rpc.sql",
+    "startedAt": "2026-10-01T04:12:14.304Z",
+    "finishedAt": "2026-10-01T04:12:14.404Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0019_fix_announcement_soft_delete.sql",
+    "source": "supabase\\migrations\\0019_fix_announcement_soft_delete.sql",
+    "startedAt": "2026-10-01T04:12:14.405Z",
+    "finishedAt": "2026-10-01T04:12:14.502Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0020_id_documents_storage.sql",
+    "source": "supabase\\migrations\\0020_id_documents_storage.sql",
+    "startedAt": "2026-10-01T04:12:14.502Z",
+    "finishedAt": "2026-10-01T04:12:14.608Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0021_enable_pgtap.sql",
+    "source": "supabase\\migrations\\0021_enable_pgtap.sql",
+    "startedAt": "2026-10-01T04:12:14.609Z",
+    "finishedAt": "2026-10-01T04:12:14.784Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0022_maps_tables.sql",
+    "source": "supabase\\migrations\\0022_maps_tables.sql",
+    "startedAt": "2026-10-01T04:12:14.784Z",
+    "finishedAt": "2026-10-01T04:12:14.924Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0023_seed_incident_categories.sql",
+    "source": "supabase\\migrations\\0023_seed_incident_categories.sql",
+    "startedAt": "2026-10-01T04:12:14.924Z",
+    "finishedAt": "2026-10-01T04:12:15.016Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0024_ampid1_boundary.sql",
+    "source": "supabase\\migrations\\0024_ampid1_boundary.sql",
+    "startedAt": "2026-10-01T04:12:15.016Z",
+    "finishedAt": "2026-10-01T04:12:15.119Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0025_incident_management.sql",
+    "source": "supabase\\migrations\\0025_incident_management.sql",
+    "startedAt": "2026-10-01T04:12:15.120Z",
+    "finishedAt": "2026-10-01T04:12:15.241Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0026_incident_report_workflow.sql",
+    "source": "supabase\\migrations\\0026_incident_report_workflow.sql",
+    "startedAt": "2026-10-01T04:12:15.241Z",
+    "finishedAt": "2026-10-01T04:12:15.346Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0027_incidents_realtime.sql",
+    "source": "supabase\\migrations\\0027_incidents_realtime.sql",
+    "startedAt": "2026-10-01T04:12:15.347Z",
+    "finishedAt": "2026-10-01T04:12:15.442Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0029_drop_diag_temp.sql",
+    "source": "supabase\\migrations\\0029_drop_diag_temp.sql",
+    "startedAt": "2026-10-01T04:12:15.442Z",
+    "finishedAt": "2026-10-01T04:12:15.533Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0030_diag_temp2.sql",
+    "source": "supabase\\migrations\\0030_diag_temp2.sql",
+    "startedAt": "2026-10-01T04:12:15.533Z",
+    "finishedAt": "2026-10-01T04:12:15.634Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0031_drop_diag_temp2.sql",
+    "source": "supabase\\migrations\\0031_drop_diag_temp2.sql",
+    "startedAt": "2026-10-01T04:12:15.635Z",
+    "finishedAt": "2026-10-01T04:12:15.732Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0032_withdraw_incident_rpc.sql",
+    "source": "supabase\\migrations\\0032_withdraw_incident_rpc.sql",
+    "startedAt": "2026-10-01T04:12:15.733Z",
+    "finishedAt": "2026-10-01T04:12:15.837Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0033_diag_temp3.sql",
+    "source": "supabase\\migrations\\0033_diag_temp3.sql",
+    "startedAt": "2026-10-01T04:12:15.837Z",
+    "finishedAt": "2026-10-01T04:12:15.942Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0034_drop_diag_temp3.sql",
+    "source": "supabase\\migrations\\0034_drop_diag_temp3.sql",
+    "startedAt": "2026-10-01T04:12:15.943Z",
+    "finishedAt": "2026-10-01T04:12:16.038Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0035_medical_drives.sql",
+    "source": "supabase\\migrations\\0035_medical_drives.sql",
+    "startedAt": "2026-10-01T04:12:16.038Z",
+    "finishedAt": "2026-10-01T04:12:16.181Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0036_medical_drives_admin_rls.sql",
+    "source": "supabase\\migrations\\0036_medical_drives_admin_rls.sql",
+    "startedAt": "2026-10-01T04:12:16.182Z",
+    "finishedAt": "2026-10-01T04:12:16.281Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0037_profile_birth_date.sql",
+    "source": "supabase\\migrations\\0037_profile_birth_date.sql",
+    "startedAt": "2026-10-01T04:12:16.281Z",
+    "finishedAt": "2026-10-01T04:12:16.377Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0038_health_realtime.sql",
+    "source": "supabase\\migrations\\0038_health_realtime.sql",
+    "startedAt": "2026-10-01T04:12:16.378Z",
+    "finishedAt": "2026-10-01T04:12:16.486Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0039_profile_extended_fields.sql",
+    "source": "supabase\\migrations\\0039_profile_extended_fields.sql",
+    "startedAt": "2026-10-01T04:12:16.487Z",
+    "finishedAt": "2026-10-01T04:12:16.596Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0040_profile_avatar.sql",
+    "source": "supabase\\migrations\\0040_profile_avatar.sql",
+    "startedAt": "2026-10-01T04:12:16.596Z",
+    "finishedAt": "2026-10-01T04:12:16.706Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0041_id_verification_status.sql",
+    "source": "supabase\\migrations\\0041_id_verification_status.sql",
+    "startedAt": "2026-10-01T04:12:16.706Z",
+    "finishedAt": "2026-10-01T04:12:16.814Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0042_id_documents_public_bucket.sql",
+    "source": "supabase\\migrations\\0042_id_documents_public_bucket.sql",
+    "startedAt": "2026-10-01T04:12:16.814Z",
+    "finishedAt": "2026-10-01T04:12:16.921Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0043_emergency_content.sql",
+    "source": "supabase\\migrations\\0043_emergency_content.sql",
+    "startedAt": "2026-10-01T04:12:16.922Z",
+    "finishedAt": "2026-10-01T04:12:17.019Z",
+    "exitCode": 0
+  },
+  {
+    "database": "phase1_empty",
+    "label": "0044_evacuation_centers_verified.sql",
+    "source": "supabase\\migrations\\0044_evacuation_centers_verified.sql",
+    "startedAt": "2026-10-01T04:12:17.020Z",
+    "finishedAt": "2026-10-01T04:12:17.128Z",
+    "exitCode": 3
+  }
+]

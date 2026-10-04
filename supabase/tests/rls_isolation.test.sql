@@ -45,6 +45,10 @@ insert into public.profiles (id, barangay_id, role, full_name) values
   ('b0000000-0000-0000-0000-00000000000b', 'a0000000-0000-0000-0000-000000000002', 'resident', 'RLS Test Resident B'),
   ('b0000000-0000-0000-0000-00000000000c', 'a0000000-0000-0000-0000-000000000001', 'admin', 'RLS Test Admin A');
 
+-- The authorized submission persona has a completed resident profile.
+update public.profiles set first_name='Test',last_name='Resident',house_no='1',street='Fixture Street',
+ sex='female',employment_status='student',mobile_number='09171234567',birth_date='2000-01-01'
+ where id='b0000000-0000-0000-0000-00000000000a';
 insert into public.document_types (id, barangay_id, name, fee_centavos, processing_target_hours) values
   ('c0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'RLS Test Document A', 1000, 24),
   ('c0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000002', 'RLS Test Document B', 1000, 24);
@@ -187,12 +191,11 @@ reset role;
 set local role authenticated;
 set local request.jwt.claim.sub = 'b0000000-0000-0000-0000-00000000000c';
 
-select isnt(
+select ok(
   (select public.admin_register_for_drive(
      'b0000000-0000-0000-0000-00000000000a', 'f0000000-0000-0000-0000-000000000001',
      30, false, '{}'::text[], null
-   )),
-  null,
+   )) is not null,
   'Admin A can register Resident A (own barangay) for the drive'
 );
 
@@ -254,11 +257,12 @@ reset role;
 set local role authenticated;
 set local request.jwt.claim.sub = 'b0000000-0000-0000-0000-00000000000b';
 
-select is_empty(
+select throws_ok(
   $$ update public.drive_registrations
        set status = 'confirmed'
        where id = 'f1000000-0000-0000-0000-000000000002'
        returning id $$,
+  '42501', null,
   'Resident B cannot confirm their pending registration'
 );
 

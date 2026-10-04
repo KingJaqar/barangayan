@@ -1,0 +1,29 @@
+{
+  "database": "127.0.0.1:55431/phase1_existing",
+  "finishedAt": "2026-10-01T03:59:08.187Z",
+  "results": [
+    {
+      "scenario": "Concurrent same-owner same-key submissions",
+      "passed": true,
+      "requestId": "f826e642-1809-4396-8460-c27e7637cdd3",
+      "persistedRows": 1
+    },
+    {
+      "scenario": "Concurrent pauses",
+      "passed": true,
+      "persistedOpenPauses": 1,
+      "rejectedError": "invalid_SLA_transition"
+    },
+    {
+      "scenario": "Payment reservation versus fee reassessment",
+      "passed": true,
+      "stableAmountCentavos": 5000
+    },
+    {
+      "scenario": "Approval revocation versus concurrent submission",
+      "passed": true,
+      "rejectedError": "current_approved_ID_required",
+      "persistedRows": 0
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo export --platform android --output-dir dist/phase0-android",
+      "startedAt": "2026-10-04T06:57:44.068Z",
+      "finishedAt": "2026-10-04T06:58:14.392Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-export.log"
+    }
+  ]
+}

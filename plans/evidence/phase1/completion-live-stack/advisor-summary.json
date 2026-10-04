@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "errorCount": 0,
+  "warningCount": 61,
+  "newTableFindings": [],
+  "warnings": {
+    "auth_rls_initplan": 24,
+    "multiple_permissive_policies": 29,
+    "function_search_path_mutable": 8
+  }
+}

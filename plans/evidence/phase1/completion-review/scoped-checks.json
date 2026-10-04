@@ -1,0 +1,105 @@
+[
+  {
+    "name": "scoped-lint",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "node_modules/eslint/bin/eslint.js",
+      "packages/shared/src/index.ts",
+      "packages/shared/src/types/database.ts",
+      "packages/shared/src/schemas/service-foundations.ts",
+      "packages/shared/src/schemas/service-foundations.test.ts",
+      "packages/shared/src/lib/service-foundations.ts",
+      "packages/shared/src/types/service-foundations.ts",
+      "scripts/phase1-audit.cjs",
+      "scripts/phase1-contracts.cjs",
+      "scripts/phase1-database.cjs",
+      "scripts/phase1-empty-foundation.cjs",
+      "scripts/phase1-races.cjs",
+      "scripts/phase1-seed.cjs",
+      "scripts/phase1-sql-checks.cjs",
+      "scripts/phase1-verify.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-audit.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-audit.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-contracts.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-contracts.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-database.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-database.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-empty-foundation.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-empty-foundation.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-races.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-races.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-seed.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-seed.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-sql-checks.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-sql-checks.cjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "syntax:scripts/phase1-verify.cjs",
+    "command": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "--check",
+      "scripts/phase1-verify.cjs"
+    ],
+    "exitCode": 0
+  }
+]

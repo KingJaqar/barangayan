@@ -1,0 +1,113 @@
+
+> @barangayan/resident-ios@1.0.0 typecheck
+> tsc --noEmit
+
+src/app/(tabs)/health/[id].tsx(10,150): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(tabs)/health/[id].tsx(11,253): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(tabs)/health/[id].tsx(11,287): error TS2339: Property 'eligible_criteria' does not exist on type 'never'.
+src/app/(tabs)/health/[id].tsx(11,333): error TS2339: Property 'location' does not exist on type 'never'.
+src/app/(tabs)/health/[id].tsx(11,370): error TS2339: Property 'drive_date' does not exist on type 'never'.
+src/app/(tabs)/health/[id].tsx(11,547): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,97): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,112): error TS2339: Property 'type' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,126): error TS2339: Property 'drive_date' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,343): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,404): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,427): error TS2339: Property 'drive_date' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,448): error TS2339: Property 'time_start' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,479): error TS2339: Property 'time_end' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,520): error TS2339: Property 'location' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,549): error TS2339: Property 'stock_remaining' does not exist on type 'never'.
+src/app/(tabs)/health/index.tsx(10,573): error TS2339: Property 'stock_unit' does not exist on type 'never'.
+src/app/(tabs)/home/index.tsx(10,162): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(tabs)/reports/[id].tsx(15,250): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(tabs)/reports/[id].tsx(15,284): error TS2339: Property 'body' does not exist on type 'never'.
+src/app/(tabs)/reports/[id].tsx(15,311): error TS2339: Property 'detailed_description' does not exist on type 'never'.
+src/app/(tabs)/reports/[id].tsx(15,356): error TS2339: Property 'detailed_description' does not exist on type 'never'.
+src/app/(tabs)/reports/index.tsx(8,143): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(tabs)/reports/index.tsx(8,166): error TS2339: Property 'category' does not exist on type 'never'.
+src/app/(tabs)/reports/index.tsx(8,194): error TS2339: Property 'published_at' does not exist on type 'never'.
+src/app/(tabs)/reports/index.tsx(8,286): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,40): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,83): error TS2339: Property 'fee_centavos' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,115): error TS2339: Property 'description' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,166): error TS2339: Property 'processing_target_hours' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,249): error TS2339: Property 'requirements' does not exist on type 'never'.
+src/app/(tabs)/services/[id].tsx(15,267): error TS7006: Parameter 'requirement' implicitly has an 'any' type.
+src/app/(tabs)/services/[id].tsx(15,280): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/app/(tabs)/services/[id].tsx(16,123): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(11,58): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(11,70): error TS2339: Property 'description' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(14,52): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(14,93): error TS2339: Property 'fee_centavos' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(14,137): error TS2339: Property 'processing_target_hours' does not exist on type 'never'.
+src/app/(tabs)/services/index.tsx(14,219): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/emergency.tsx(16,54): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/emergency.tsx(16,78): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/emergency.tsx(16,103): error TS2339: Property 'body' does not exist on type 'never'.
+src/app/emergency.tsx(17,93): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/emergency.tsx(17,119): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/emergency.tsx(17,145): error TS2339: Property 'address' does not exist on type 'never'.
+src/app/emergency.tsx(17,199): error TS2339: Property 'contact_number' does not exist on type 'never'.
+src/app/emergency.tsx(17,267): error TS2339: Property 'current_occupancy' does not exist on type 'never'.
+src/app/emergency.tsx(17,297): error TS2339: Property 'capacity' does not exist on type 'never'.
+src/app/health/register/[id].tsx(24,155): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/health/register/[id].tsx(41,172): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/profile.tsx(55,62): error TS2345: Argument of type '{ suffix: string | null; sex: "male" | "female"; street: string; occupation: string | null; city: string | null; mobile_number: string; first_name: string; middle_name: string | null; last_name: string; house_no: string; employment_status: "employed" | ... 3 more ... | "retired"; birth_date: string; }' is not assignable to parameter of type 'never'.
+src/app/request/[id].tsx(19,99): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/request/[id].tsx(19,118): error TS2339: Property 'payment_status' does not exist on type 'never'.
+src/app/request/[id].tsx(27,250): error TS2339: Property 'document_types' does not exist on type 'never'.
+src/app/request/[id].tsx(27,315): error TS2339: Property 'reference_number' does not exist on type 'never'.
+src/app/request/[id].tsx(27,401): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/request/[id].tsx(27,417): error TS2339: Property 'payment_status' does not exist on type 'never'.
+src/app/request/[id].tsx(27,456): error TS2339: Property 'requester_notes' does not exist on type 'never'.
+src/app/request/[id].tsx(27,510): error TS2339: Property 'payment_method' does not exist on type 'never'.
+src/app/request/[id].tsx(27,588): error TS2339: Property 'updated_at' does not exist on type 'never'.
+src/app/requests.tsx(14,142): error TS2339: Property 'document_types' does not exist on type 'never'.
+src/app/requests.tsx(14,174): error TS2339: Property 'reference_number' does not exist on type 'never'.
+src/app/requests.tsx(14,211): error TS2339: Property 'reference_number' does not exist on type 'never'.
+src/app/requests.tsx(14,288): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/requests.tsx(14,304): error TS2339: Property 'payment_status' does not exist on type 'never'.
+src/app/requests.tsx(14,381): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/services/request/[id].tsx(22,77): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/services/request/[id].tsx(24,73): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/services/request/[id].tsx(28,180): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/settings/help/[id].tsx(9,141): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/settings/help/[id].tsx(10,250): error TS2339: Property 'question' does not exist on type 'never'.
+src/app/settings/help/[id].tsx(10,287): error TS2339: Property 'answer' does not exist on type 'never'.
+src/app/settings/help/index.tsx(7,348): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/settings/help/index.tsx(7,380): error TS2339: Property 'question' does not exist on type 'never'.
+src/app/settings/help/index.tsx(7,406): error TS2339: Property 'category' does not exist on type 'never'.
+src/app/settings/help/index.tsx(7,479): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/settings/information.tsx(7,61): error TS2339: Property 'section' does not exist on type 'never'.
+src/app/settings/information.tsx(8,329): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/settings/information.tsx(8,353): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/settings/information.tsx(8,378): error TS2339: Property 'body' does not exist on type 'never'.
+src/data/resident-api.ts(3,28): error TS2307: Cannot find module 'expo-crypto' or its corresponding type declarations.
+src/data/resident-api.ts(43,76): error TS2345: Argument of type '{ id: any; barangay_id: string; resident_id: string; document_type_id: string; requester_notes: string | null; }' is not assignable to parameter of type 'never[]'.
+  Type '{ id: any; barangay_id: string; resident_id: string; document_type_id: string; requester_notes: string | null; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/data/resident-api.ts(53,72): error TS2345: Argument of type '{ p_request_id: string; p_note: string; }' is not assignable to parameter of type 'undefined'.
+src/data/resident-api.ts(56,28): error TS2339: Property 'status' does not exist on type 'never'.
+src/data/resident-api.ts(66,74): error TS2353: Object literal may only specify known properties, and 'announcement_id' does not exist in type 'never[]'.
+src/data/resident-api.ts(73,61): error TS2345: Argument of type '{ p_prior_dose_date?: string | undefined; p_drive_id: string; p_age: number; p_is_pwd: boolean; p_comorbidities: string[]; }' is not assignable to parameter of type 'undefined'.
+src/data/resident-api.ts(77,55): error TS2339: Property 'data' does not exist on type 'never'.
+src/data/resident-api.ts(79,70): error TS2339: Property 'id' does not exist on type 'never'.
+src/data/resident-api.ts(79,74): error TS2698: Spread types may only be created from object types.
+src/lib/runtime.tsx(133,43): error TS2339: Property 'role' does not exist on type 'never'.
+src/lib/runtime.tsx(133,71): error TS2339: Property 'barangay_id' does not exist on type 'never'.
+src/lib/runtime.tsx(226,25): error TS2339: Property 'role' does not exist on type 'never'.
+src/lib/runtime.tsx(226,53): error TS2339: Property 'barangay_id' does not exist on type 'never'.
+src/lib/secure-storage.ts(1,30): error TS2307: Cannot find module 'expo-secure-store' or its corresponding type declarations.
+../../packages/shared/src/lib/service-foundations.ts(9,97): error TS2345: Argument of type '{ p_input: { firstName: string; lastName: string; sex: "male" | "female"; mobileNumber: string; houseNo: string; street: string; employmentStatus: "employed" | "unemployed" | "student" | "self_employed" | "retired"; birthDate: string; middleName?: string | undefined; suffix?: string | undefined; occupation?: string ...' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(10,83): error TS2345: Argument of type '{ p_input: { submissionId: string; idType: string; frontPath: string; backPath: string; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(11,76): error TS2345: Argument of type '{ p_input: { submissionId: string; decision: "verified" | "verification_failed" | "revoked"; reason?: string | undefined; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(12,85): error TS2345: Argument of type '{ p_input: { documentTypeId: string; idempotencyKey: string; purposeCode: string; details: { businessName?: string | undefined; establishmentAddress?: string | undefined; isRenter?: boolean | undefined; recordReference?: string | undefined; copies?: number | undefined; personalAppearanceAcknowledged?: boolean | unde...' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(13,88): error TS2345: Argument of type '{ p_input: { requestId: string; state: "assessed" | "waived"; amountCentavos: number; basis: string; billablePages?: number | undefined; }; }' is not assignable to parameter of type 'undefined'.
+../../packages/shared/src/lib/service-foundations.ts(14,96): error TS2345: Argument of type '{ p_input: { requestId: string; action: "accept" | "pause" | "resume" | "ready" | "release" | "cancel"; reason?: string | undefined; requirementsComplete?: boolean | undefined; personalAppearanceReady?: boolean | undefined; }; }' is not assignable to parameter of type 'undefined'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error workspace @barangayan/resident-ios@1.0.0
+npm error location C:\Users\User\barangayan\apps\resident-ios-mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "assertions": [
+    "Prepare earlier Google account without a profile",
+    "Web session startup repairs missing Google profile",
+    "Home uses the saved Google account name",
+    "Direct report link still requires resident details",
+    "Completion retains the intended report route",
+    "Completion prefills persisted first and last names"
+  ],
+  "consoleErrors": [],
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Skip for now', { exact: true })\u001b[22m\n"
+}

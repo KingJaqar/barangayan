@@ -1,0 +1,22 @@
+{
+  "project": "pwjbucnyqexiepoinoke",
+  "migration": "0104_google_minimal_resident_profiles.sql",
+  "humanAuthorizedApplication": true,
+  "appliedSuccessfully": true,
+  "rpcInstalled": true,
+  "identityTriggerEnabled": true,
+  "authenticatedCanRetry": true,
+  "anonymousCanRetry": false,
+  "authenticatedCanChooseIdentity": false,
+  "enabledRegistrationLocalities": 1,
+  "profileCountBefore": 18,
+  "profileCountAfter": 18,
+  "profileDigestBefore": "a1ad13dc417e8527357c9b6212326718",
+  "profileDigestAfter": "a1ad13dc417e8527357c9b6212326718",
+  "connectorHistoryVersion": "20261004082819",
+  "connectorHistoryName": "0104_google_minimal_resident_profiles",
+  "historyAdjustmentRejectedByAutomaticReview": true,
+  "historyAdjustmentExecuted": false,
+  "realGoogleConsentVerified": false,
+  "productionTestUsersCreated": false
+}

@@ -1,0 +1,16 @@
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 0
+INSERT 0 2
+INSERT 0 5
+INSERT 0 4
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+psql:supabase/tests/service_foundations.test.sql:37: ERROR:  insert or update on table "objects" violates foreign key constraint "objects_bucket_id_fkey"
+DETAIL:  Key (bucket_id)=(id-documents) is not present in table "buckets".

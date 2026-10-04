@@ -1,0 +1,16 @@
+
+> lint
+> expo lint
+
+(node:6084) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in C:\Users\User\barangayan\apps\admin-web\.next\dev\server\chunks\ssr\node_modules_1kgw8nq._.js at line 2575.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6084) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in C:\Users\User\barangayan\apps\admin-web\.next\dev\static\chunks\node_modules_1bg5hdq._.js at line 437.
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.5
+
+Error: ENOENT: no such file or directory, open 'C:\Users\User\barangayan\apps\admin-web\.next\server\chunks\ssr\apps_admin-web_src_components_admin_payment-refund-action_tsx_0tjsia0._.js'
+    at async open (node:internal/fs/promises:637:25)
+    at async Object.readFile (node:internal/fs/promises:1269:14)
+    at async readAndVerifyFile (C:\Users\User\barangayan\node_modules\eslint\lib\eslint\eslint-helpers.js:1306:16)

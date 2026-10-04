@@ -1,0 +1,21 @@
+2026-10-04 15:53:59.790 +08 [14340] LOG:  starting PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit
+2026-10-04 15:53:59.792 +08 [14340] LOG:  listening on IPv4 address "127.0.0.1", port 55434
+2026-10-04 15:53:59.882 +08 [3624] LOG:  database system was shut down at 2026-10-04 15:53:53 +08
+2026-10-04 15:53:59.921 +08 [14340] LOG:  database system is ready to accept connections
+2026-10-04 15:55:54.302 +08 [21244] WARNING:  "wal_level" is insufficient to publish logical changes
+2026-10-04 15:55:54.302 +08 [21244] HINT:  Set "wal_level" to "logical" before creating subscriptions.
+2026-10-04 15:56:14.750 +08 [44140] ERROR:  role "anon" already exists
+2026-10-04 15:56:14.750 +08 [44140] STATEMENT:  create role anon nologin;
+2026-10-04 15:58:59.866 +08 [32812] LOG:  checkpoint starting: time
+2026-10-04 16:03:08.985 +08 [32812] LOG:  checkpoint complete: wrote 2480 buffers (15.1%); 0 WAL file(s) added, 0 removed, 1 recycled; write=248.673 s, sync=0.424 s, total=249.120 s; sync files=848, longest=0.003 s, average=0.001 s; distance=13763 kB, estimate=13763 kB; lsn=0/22E5E68, redo lsn=0/22E5DD8
+2026-10-04 16:05:05.226 +08 [32812] LOG:  checkpoint starting: immediate force wait
+2026-10-04 16:05:05.241 +08 [32812] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.015 s; sync files=1, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=12387 kB; lsn=0/22E6438, redo lsn=0/22E63E0
+2026-10-04 16:05:06.025 +08 [22156] WARNING:  "wal_level" is insufficient to publish logical changes
+2026-10-04 16:05:06.025 +08 [22156] HINT:  Set "wal_level" to "logical" before creating subscriptions.
+2026-10-04 16:06:56.943 +08 [14340] LOG:  received fast shutdown request
+2026-10-04 16:06:56.945 +08 [14340] LOG:  aborting any active transactions
+2026-10-04 16:06:56.953 +08 [14340] LOG:  background worker "logical replication launcher" (PID 46068) exited with exit code 1
+2026-10-04 16:06:56.955 +08 [32812] LOG:  shutting down
+2026-10-04 16:06:56.956 +08 [32812] LOG:  checkpoint starting: shutdown immediate
+2026-10-04 16:06:57.587 +08 [32812] LOG:  checkpoint complete: wrote 1512 buffers (9.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.288 s, sync=0.332 s, total=0.633 s; sync files=540, longest=0.003 s, average=0.001 s; distance=9260 kB, estimate=12074 kB; lsn=0/2BF1458, redo lsn=0/2BF1458
+2026-10-04 16:06:58.964 +08 [14340] LOG:  database system is shut down

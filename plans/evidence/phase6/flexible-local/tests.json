@@ -1,0 +1,52 @@
+[
+  {
+    "file": "admin_document_type_creation.test.sql",
+    "passed": true,
+    "assertions": 14
+  },
+  {
+    "file": "agency_sla.test.sql",
+    "passed": true,
+    "assertions": 62
+  },
+  {
+    "file": "catalog_staff_workflows.test.sql",
+    "passed": true,
+    "assertions": 51
+  },
+  {
+    "file": "deferred_profile_completion.test.sql",
+    "passed": true,
+    "assertions": 18
+  },
+  {
+    "file": "document_charter_forms.test.sql",
+    "passed": true,
+    "assertions": 41
+  },
+  {
+    "file": "registration_maps_auth.test.sql",
+    "passed": true,
+    "assertions": 23
+  },
+  {
+    "file": "resident_ios_tenant_write_guards.test.sql",
+    "passed": true,
+    "assertions": 7
+  },
+  {
+    "file": "rls_isolation.test.sql",
+    "passed": true,
+    "assertions": 17
+  },
+  {
+    "file": "service_foundations.test.sql",
+    "passed": true,
+    "assertions": 113
+  },
+  {
+    "file": "trusted_evidence_locality.test.sql",
+    "passed": true,
+    "assertions": 11
+  }
+]

@@ -1,0 +1,118 @@
+BEGIN
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ok 1 - Google identity insert immediately creates one profile
+ok 2 - Auth identity supplies first name
+ok 3 - Structured multiword surname is preserved
+ok 4 - Email comes from auth.users, not identity/user claims
+ok 5 - Tenant comes only from enabled configuration
+ok 6 - Metadata cannot assign a staff role
+ok 7 - Bootstrap invents no demographics, location, completion or ID approval
+ok 8 - Configured locality display remains available
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+SELECT 1
+GRANT
+SET
+b6040000-0000-0000-0000-000000000001
+ok 9 - Retry operates on current authenticated identity only
+ok 10 - Repeated call is idempotent
+ok 11 - Retry preserves every existing field and timestamp
+ok 12 - Incomplete profile can browse only own-tenant information
+ok 13 - Incomplete profile can read document guidance
+ok 14 - Incomplete profile can read health guidance
+ok 15 - Minimal profile cannot submit reports
+ok 16 - Minimal profile cannot register for health services
+ok 17 - Minimal profile cannot request documents
+ok 18 - Authenticated users cannot invoke the internal identity-taking helper
+b6040000-0000-0000-0000-000000000001
+ok 19 - Spoofing the bootstrap marker cannot bypass client map protection
+
+not ok 20 - Resident can complete the existing minimal profile without a password
+# Failed test 20: "Resident can complete the existing minimal profile without a password"
+#     died: 22023: invalid_coordinates
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.guard_profile_locations() line 22 at RAISE
+#             SQL statement "insert into public.profiles(id,barangay_id,role,full_name,first_name,last_name,middle_name,suffix,house_no,street,city,province,
+#                 sex,employment_status,occupation,mobile_number,birth_date,email,profile_completed_at)
+#               values(v_uid,v_locality.barangay_id,'resident',v_first || ' ' || v_last,v_first,v_last,
+#                 barangayan_private.optional_text(p_input,'middleName',200),barangayan_private.optional_text(p_input,'suffix',50),
+#                 barangayan_private.required_text(p_input,'houseNo',200),barangayan_private.required_text(p_input,'street',500),v_locality.city,v_locality.province,
+#                 p_input->>'sex',p_input->>'employmentStatus',barangayan_private.optional_text(p_input,'occupation',200),
+#                 p_input->>'mobileNumber',v_birth,v_email,clock_timestamp())
+#               on conflict(id) do update set first_name=excluded.first_name,last_name=excluded.last_name,middle_name=excluded.middle_name,suffix=excluded.suffix,
+#                 house_no=excluded.house_no,street=excluded.street,city=excluded.city,province=excluded.province,sex=excluded.sex,
+#                 employment_status=excluded.employment_status,occupation=excluded.occupation,mobile_number=excluded.mobile_number,birth_date=excluded.birth_date,
+#                 email=excluded.email,profile_completed_at=coalesce(public.profiles.profile_completed_at,excluded.profile_completed_at)"
+#             PL/pgSQL function barangayan_private.complete_resident_profile_fields(jsonb) line 33 at SQL statement
+#             PL/pgSQL function barangayan_private.complete_resident_profile(jsonb) line 9 at assignment
+#             SQL function "complete_resident_profile" statement 1
+#             SQL statement "select public.complete_resident_profile('{"firstName":"Mary Ann","lastName":"de la Cruz","houseNo":"12","street":"Main","sex":"female","employmentStatus":"student","mobileNumber":"09171234567","birthDate":"2000-01-01"}')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 21 - Completion remains separate from administrator ID verification
+# Failed test 21: "Completion remains separate from administrator ID verification"
+not ok 22 - Completed resident may submit a report
+# Failed test 22: "Completed resident may submit a report"
+#     died: 42501: resident_profile_completion_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.require_complete_profile_for_submission() line 15 at RAISE
+#             SQL statement "insert into public.incidents(barangay_id,reporter_id,title,location) values ('a6040000-0000-0000-0000-000000000001',auth.uid(),'Completed','{"lat":1,"lng":1}')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+RESET
+UPDATE 1
+UPDATE 1
+SET
+b6040000-0000-0000-0000-000000000001
+ok 23 - Provider refresh cannot overwrite a completed resident
+RESET
+INSERT 0 1
+INSERT 0 1
+DELETE 1
+SET
+b6040000-0000-0000-0000-000000000002
+ok 24 - Session restart repairs earlier Google account without a profile
+ok 25 - Full-name fallback matches editable form suggestions
+RESET
+ok 26 - Mononym retains available first name
+ok 27 - Mononym does not invent a surname
+ok 28 - Malformed metadata and email-only identities do not invent a name
+INSERT 0 1
+INSERT 0 1
+ok 29 - Name-less Google identity still gets a profile without invented names
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ok 30 - Linking preserves existing staff role, tenant and name
+INSERT 0 1
+ok 31 - Anonymous Auth identity cannot provision a resident
+INSERT 0 1
+SET
+b6040000-0000-0000-0000-000000000003
+ok 32 - Editable provider metadata cannot impersonate a Google identity
+RESET
+SET
+ok 33 - Anonymous role cannot invoke provisioning
+RESET
+SET
+
+ok 34 - Missing authenticated identity fails closed
+RESET
+UPDATE 1
+SET
+b6040000-0000-0000-0000-000000000002
+ok 35 - Deleted profile cannot be recreated
+RESET
+INSERT 0 1
+INSERT 0 1
+ok 36 - Ambiguous registration tenant fails atomically
+ok 37 - Configuration failure leaves no incorrectly assigned profile
+ok 38 - Failed identity insert rolls back
+UPDATE 3
+ok 39 - Missing registration tenant fails closed
+1..39
+# Looks like you failed 3 tests of 39
+ROLLBACK

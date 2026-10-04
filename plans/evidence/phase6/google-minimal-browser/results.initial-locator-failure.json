@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "assertions": [
+    "Prepare earlier Google account without a profile"
+  ],
+  "consoleErrors": [],
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Complete your resident profile', { exact: true }) to be visible\u001b[22m\n"
+}

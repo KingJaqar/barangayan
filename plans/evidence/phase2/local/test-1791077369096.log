@@ -1,0 +1,23 @@
+/mnt/c/Users/User/barangayan/supabase/tests/admin_document_type_creation.test.sql ...... ok
+/mnt/c/Users/User/barangayan/supabase/tests/agency_sla.test.sql ........................ ok
+/mnt/c/Users/User/barangayan/supabase/tests/catalog_staff_workflows.test.sql ........... ok
+/mnt/c/Users/User/barangayan/supabase/tests/document_charter_forms.test.sql ............ 
+# Failed test 40: "Residents cannot edit catalog"
+#       caught: no exception
+#       wanted: 42501
+# Looks like you failed 1 test of 41
+Failed 1/41 subtests 
+/mnt/c/Users/User/barangayan/supabase/tests/resident_ios_tenant_write_guards.test.sql .. ok
+/mnt/c/Users/User/barangayan/supabase/tests/rls_isolation.test.sql ..................... ok
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql ............... ok
+/mnt/c/Users/User/barangayan/supabase/tests/trusted_evidence_locality.test.sql ......... ok
+
+Test Summary Report
+-------------------
+/mnt/c/Users/User/barangayan/supabase/tests/document_charter_forms.test.sql          (Wstat: 0 Tests: 41 Failed: 1)
+  Failed test:  40
+Files=8, Tests=316,  2 wallclock secs ( 0.10 usr  0.02 sys +  0.12 cusr  0.07 csys =  0.31 CPU)
+Result: FAIL
+Connecting to local database...
+error running container: exit 1
+Try rerunning the command with --debug to troubleshoot the error.

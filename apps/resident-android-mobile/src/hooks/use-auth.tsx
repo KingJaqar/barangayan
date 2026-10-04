@@ -1,10 +1,15 @@
 import type { Session } from '@supabase/supabase-js';
+import { ensureGoogleResidentProfile, needsResidentProfile } from '@barangayan/shared';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextValue {
   session: Session | null;
+  needsCompletion: boolean | null;
+  completionError: string | null;
+  refreshCompletion: () => Promise<void>;
   /** True until the initial getSession() check resolves — keep the splash screen up
    * during this window so signed-in/signed-out never flashes the wrong screen first. */
   isLoading: boolean;
@@ -48,6 +53,9 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue>({
   session: null,
+  needsCompletion: null,
+  completionError: null,
+  refreshCompletion: async () => {},
   isLoading: true,
   isPasswordRecovery: false,
   setPasswordRecovery: () => {},
@@ -60,6 +68,21 @@ const AuthContext = createContext<AuthContextValue>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
+  const [completion, setCompletion] = useState<{ userId: string; needed: boolean } | null>(null);
+  const [completionError, setCompletionError] = useState<string | null>(null);
+  async function refreshCompletion() {
+    if (!session) return;
+    await ensureGoogleResidentProfile(supabase, session.user);
+    const needed = await needsResidentProfile(supabase, session.user.id);
+    setCompletion({ userId: session.user.id, needed }); setCompletionError(null);
+  }
+  useEffect(() => {
+    let active = true;
+    if (session) void ensureGoogleResidentProfile(supabase, session.user).then(() => needsResidentProfile(supabase, session.user.id)).then(needed => {
+      if (active) { setCompletion({ userId: session.user.id, needed }); setCompletionError(null); }
+    }).catch(cause => { if (active) setCompletionError(cause.message); });
+    return () => { active = false; };
+  }, [session]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
@@ -94,6 +117,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Stack.Protected would briefly consider (app) unreachable and bounce the user to
     // (auth) instead of leaving them on their current Settings screen.
     setIsGuest(true);
+    const previousId = session?.user.id;
+    setSession(null);
+    setCompletion(null); setCompletionError(null);
+    await AsyncStorage.multiRemove(['emergency_cache_resident_profile', ...(previousId ? [`resident_profile_v2:${previousId}`] : [])]).catch(() => {});
     try {
       // signOut()'s server round-trip revokes the refresh token, but a caller showing a
       // blocking "Logging out..." indicator must never be stuck behind it forever if the
@@ -101,10 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Guest Mode (isGuest, above) by the time this settles; a stalled revoke just means
       // the old refresh token dies later server-side (on its own expiry) instead of
       // immediately, not that anything in this app stays signed in.
-      await Promise.race([
-        supabase.auth.signOut(),
-        new Promise((resolve) => setTimeout(resolve, 6000)),
-      ]);
+      await supabase.auth.signOut({ scope: 'local' });
     } catch (error) {
       console.warn('supabase.auth.signOut() failed (already switched to local Guest Mode):', error);
     }
@@ -114,6 +138,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         session,
+        needsCompletion: session ? (completion?.userId === session.user.id ? completion.needed : null) : false,
+        completionError,
+        refreshCompletion,
         isLoading,
         isPasswordRecovery,
         setPasswordRecovery: setIsPasswordRecovery,

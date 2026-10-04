@@ -1,0 +1,1702 @@
+Inspect fixture roles
+postgres
+pg_database_owner
+pg_read_all_data
+pg_write_all_data
+pg_monitor
+pg_read_all_settings
+pg_read_all_stats
+pg_stat_scan_tables
+pg_read_server_files
+pg_write_server_files
+pg_execute_server_program
+pg_signal_backend
+pg_checkpoint
+pg_maintain
+pg_use_reserved_connections
+pg_create_subscription
+anon
+authenticated
+service_role
+
+Reset phase6_empty
+
+Create phase6_empty
+
+phase6_empty: Infrastructure fixture
+SET
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE PUBLICATION
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+SET
+psql:C:/Users/User/barangayan/plans/evidence/phase6/migration-regression/bootstrap.sql:42: WARNING:  "wal_level" is insufficient to publish logical changes
+HINT:  Set "wal_level" to "logical" before creating subscriptions.
+
+phase6_empty: 0001_barangays_and_profiles.sql
+SET
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0002_document_types_and_service_requests.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+CREATE SEQUENCE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER PUBLICATION
+
+phase6_empty: 0003_announcements.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase6_empty: 0004_service_request_reference_default.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+DROP FUNCTION
+
+phase6_empty: 0005_guest_readable_public_content.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0006_profile_theme_preference.sql
+SET
+ALTER TABLE
+
+phase6_empty: 0007_payments_and_admin_access.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+ALTER PUBLICATION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE POLICY
+
+phase6_empty: 0008_resident_directory_access.sql
+SET
+CREATE POLICY
+CREATE VIEW
+ALTER PUBLICATION
+
+phase6_empty: 0009_admin_crud_and_soft_delete.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0010_resident_set_payment_method.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0011_announcements_admin_write.sql
+SET
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:17: NOTICE:  policy "residents can read announcements from their barangay" for relation "public.announcements" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:18: NOTICE:  policy "guests can read all announcements" for relation "public.announcements" does not exist, skipping
+
+phase6_empty: 0012_profile_trigger_and_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0012_profile_trigger_and_verification_status.sql:94: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+
+phase6_empty: 0013_protect_verification_fields.sql
+SET
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0013_protect_verification_fields.sql:44: NOTICE:  trigger "guard_verification_fields" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0014_request_delivery_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0014_request_delivery_workflow.sql:51: NOTICE:  trigger "guard_service_request_completion" for relation "public.service_requests" does not exist, skipping
+
+phase6_empty: 0015_request_delivery_transition_rpc.sql
+SET
+CREATE FUNCTION
+
+phase6_empty: 0017_harden_payments_rls.sql
+SET
+ALTER TABLE
+DROP POLICY
+ALTER TABLE
+
+phase6_empty: 0018_begin_processing_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0019_fix_announcement_soft_delete.sql
+SET
+DROP POLICY
+DROP POLICY
+
+phase6_empty: 0020_id_documents_storage.sql
+SET
+ALTER TABLE
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0021_enable_pgtap.sql
+SET
+CREATE EXTENSION
+
+phase6_empty: 0022_maps_tables.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0023_seed_incident_categories.sql
+SET
+INSERT 0 0
+
+phase6_empty: 0024_ampid1_boundary.sql
+SET
+UPDATE 0
+
+phase6_empty: 0025_incident_management.sql
+SET
+CREATE TRIGGER
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0026_incident_report_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE POLICY
+
+phase6_empty: 0027_incidents_realtime.sql
+SET
+ALTER PUBLICATION
+
+phase6_empty: 0029_drop_diag_temp.sql
+SET
+DROP FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0029_drop_diag_temp.sql:4: NOTICE:  function public.__diag_soft_delete_incident_def() does not exist, skipping
+
+phase6_empty: 0030_diag_temp2.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0031_drop_diag_temp2.sql
+SET
+DROP FUNCTION
+
+phase6_empty: 0032_withdraw_incident_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0033_diag_temp3.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0034_drop_diag_temp3.sql
+SET
+DROP FUNCTION
+
+phase6_empty: 0035_medical_drives.sql
+SET
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+
+phase6_empty: 0036_medical_drives_admin_rls.sql
+SET
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0037_profile_birth_date.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase6_empty: 0038_health_realtime.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase6_empty: 0039_profile_extended_fields.sql
+SET
+ALTER TABLE
+UPDATE 0
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0040_profile_avatar.sql
+SET
+ALTER TABLE
+COMMENT
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0041_id_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0041_id_verification_status.sql:61: NOTICE:  trigger "trg_guard_id_verification_status" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0042_id_documents_public_bucket.sql
+SET
+UPDATE 1
+UPDATE 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0043_emergency_content.sql
+SET
+
+phase6_empty: 0044_evacuation_centers_verified.sql
+SET
+ALTER TABLE
+COMMENT
+DO
+
+phase6_empty: 0045_evacuation_center_checkins.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0046_household_members.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+
+phase6_empty: 0047_emergency_information.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0048_realtime_publications.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase6_empty: 0049_seed_empty_tables.sql
+SET
+DO
+
+phase6_empty: 0050_create_emergency_qr_tables.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:78: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:84: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:112: NOTICE:  identifier "Allow full access to evacuation_center_qr_codes for barangay admins" will be truncated to "Allow full access to evacuation_center_qr_codes for barangay ad"
+
+phase6_empty: 0051_waste_management.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+
+phase6_empty: 0052_household_admin_management.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:14: NOTICE:  policy "admins manage barangay household members" for relation "public.household_members" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:191: NOTICE:  trigger "sync_household_members_from_jsonb" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0053_faq.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER TABLE
+DO
+DO
+
+phase6_empty: 0054_barangay_settings.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:16: NOTICE:  trigger "barangays_set_updated_at" for relation "public.barangays" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:25: NOTICE:  policy "admins can update barangay config in their barangay" for relation "public.barangays" does not exist, skipping
+
+phase6_empty: 0055_grant_guest_read_access.sql
+SET
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:26: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:34: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+
+phase6_empty: 0056_admin_staff_management.sql
+SET
+ALTER TABLE
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:25: NOTICE:  policy "admins can read admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:26: NOTICE:  policy "admins can read admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:41: NOTICE:  policy "admins can update admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:42: NOTICE:  policy "admins can update admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:78: NOTICE:  trigger "trg_guard_role_escalation" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0057_barangay_officials.sql
+SET
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+INSERT 0 0
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:65: NOTICE:  trigger "trg_barangay_officials_updated_at" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:75: NOTICE:  policy "admins read barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:85: NOTICE:  policy "admins insert barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:95: NOTICE:  policy "admins update barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:109: NOTICE:  policy "admins delete barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:153: NOTICE:  trigger "trg_sync_barangay_official" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0058_admin_audit_log.sql
+SET
+DROP VIEW
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER PUBLICATION
+
+phase6_empty: 0059_site_content_and_about_us.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+DO
+INSERT 0 0
+INSERT 0 0
+
+phase6_empty: 0060_storage_site_content.sql
+SET
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0061_save_about_us_rpc.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0062_seed_site_content_and_about_us.sql
+SET
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+DELETE 0
+INSERT 0 0
+
+phase6_empty: 0063_push_notifications.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE FUNCTION
+
+phase6_empty: 0064_qrph_instant_payment_and_refunds.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+COMMENT
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase6_empty: 0065_qrph_payment_intents.sql
+SET
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+DO
+ALTER TABLE
+
+phase6_empty: 0066_qrph_persistent_qr_and_resident_cancel.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0067_fix_household_members_uuid_sync.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0068_signup_birth_date.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0069_fix_emergency_information_tenant_leak.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0070_waste_management_resident_read.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase6_empty: 0071_add_missing_fk_indexes.sql
+SET
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+
+phase6_empty: 0072_admin_register_for_drive.sql
+SET
+CREATE FUNCTION
+
+phase6_empty: 0073_id_documents_private_again.sql
+SET
+UPDATE 1
+
+phase6_empty: 0074_account_deletion.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE INDEX
+CREATE FUNCTION
+COMMENT
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0074_account_deletion.sql:18: NOTICE:  column "deleted_at" of relation "profiles" already exists, skipping
+
+phase6_empty: 0075_profile_theme_customization.sql
+SET
+ALTER TABLE
+
+phase6_empty: 0076_placeholder.sql
+SET
+
+phase6_empty: 0077_waste_zone_cron_scoring.sql
+SET
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DO
+DO
+ recompute_waste_zone_scores 
+-----------------------------
+ 
+(1 row)
+
+psql:C:/Users/User/barangayan/supabase/migrations/0077_waste_zone_cron_scoring.sql:96: NOTICE:  pg_cron extension unavailable in this environment — skipping scheduled job (recompute_waste_zone_scores() can still be called manually).
+
+phase6_empty: 0078_registration_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0079_export_rate_limit.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase6_empty: 0080_reports_unread_counts.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase6_empty: 0081_resident_profile_field_split.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0081_resident_profile_field_split.sql:122: NOTICE:  trigger "compose_profiles_display_fields" for relation "public.profiles" does not exist, skipping
+
+phase6_empty: 0082_remove_delivery_add_pickup.sql
+SET
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+DO
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+ALTER TABLE
+ALTER TABLE
+COMMENT
+
+phase6_empty: 0083_incident_location_details.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase6_empty: 0084_announcement_detailed_description.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase6_empty: 0085_resident_mark_resolved_incident_read.sql
+SET
+CREATE POLICY
+
+phase6_empty: 0086_about_us_logo_size.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0087_about_us_title.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase6_empty: 0088_faq_articles_guest_read.sql
+SET
+CREATE POLICY
+
+phase6_empty: 0089_id_verification_failed_status.sql
+SET
+ALTER TABLE
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase6_empty: 0090_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase6_empty: 0091_verified_location_address.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase6_empty: 0092_drive_registrations_admin_update.sql
+SET
+CREATE POLICY
+
+phase6_empty: 0093_resident_ios_backend_safety.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+DROP POLICY
+CREATE POLICY
+ALTER TABLE
+CREATE INDEX
+COMMENT
+
+phase6_empty: 0094_resident_ios_tenant_write_guards.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+COMMENT
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:32: NOTICE:  trigger "guard_drive_registration_tenant" for relation "public.drive_registrations" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:66: NOTICE:  trigger "guard_evacuation_checkin_tenant" for relation "public.evacuation_center_checkins" does not exist, skipping
+
+phase6_empty: 0095_phase1_shared_foundations.sql
+SET
+BEGIN
+CREATE SCHEMA
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 0
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER POLICY
+ALTER POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+GRANT
+COMMENT
+COMMENT
+COMMENT
+COMMIT
+
+phase6_empty: 0096_phase2_trusted_evidence_locality.sql
+SET
+BEGIN
+ALTER TABLE
+DO
+ALTER TABLE
+DO
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+UPDATE 0
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+phase6_empty: 0097_phase3_catalog_staff_workflows.sql
+SET
+BEGIN
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE INDEX
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+phase6_empty: 0098_phase4_resident_submission_payment.sql
+SET
+BEGIN
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+COMMIT
+
+phase6_empty: 0099_phase5_sla_engine_reporting.sql
+SET
+BEGIN
+ALTER TABLE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+DO
+REVOKE
+COMMIT
+psql:C:/Users/User/barangayan/supabase/migrations/0099_phase5_sla_engine_reporting.sql:122: NOTICE:  pg_cron unavailable: SLA requires an external once-per-minute SQL scheduler before release
+
+phase6_empty: 0100_restore_admin_document_type_creation.sql
+SET
+BEGIN
+DROP TRIGGER
+DROP FUNCTION
+COMMIT
+
+phase6_empty: 0101_unified_document_type_charter_forms.sql
+SET
+BEGIN
+ALTER TABLE
+ALTER TABLE
+DROP INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMENT
+COMMENT
+COMMIT
+
+phase6_empty: 0102_phase6_registration_maps_auth.sql
+SET
+BEGIN
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+REVOKE
+COMMIT
+
+phase6_empty: Phase 6 database acceptance
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 0
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+                             is                             
+------------------------------------------------------------
+ ok 1 - Google identity waits for mandatory resident fields
+(1 row)
+
+                     is                      
+---------------------------------------------
+ ok 2 - Password signup uses server locality
+(1 row)
+
+             is              
+-----------------------------
+ ok 3 - Province is assigned
+(1 row)
+
+                                    is                                     
+---------------------------------------------------------------------------
+ ok 4 - Outside home advisory overrides forged verification and inside GPS
+(1 row)
+
+                     is                     
+--------------------------------------------
+ ok 5 - GPS observation retained separately
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 6 - Outside home does not block registration
+(1 row)
+
+                throws_ok                
+-----------------------------------------
+ ok 7 - Password tenant injection denied
+(1 row)
+
+                  throws_ok                  
+---------------------------------------------
+ ok 8 - Invalid coordinates cannot be stored
+(1 row)
+
+SET
+              set_config              
+--------------------------------------
+ b6000000-0000-0000-0000-000000000001
+(1 row)
+
+             throws_ok             
+-----------------------------------
+ ok 9 - Completion cannot set role
+(1 row)
+
+                            lives_ok                            
+----------------------------------------------------------------
+ ok 10 - Metadata-free Google completion works without password
+(1 row)
+
+                  is                   
+---------------------------------------
+ ok 11 - Server chooses permitted role
+(1 row)
+
+                    is                    
+------------------------------------------
+ ok 12 - Server chooses configured tenant
+(1 row)
+
+                           is                           
+--------------------------------------------------------
+ ok 13 - Home classification independent of outside GPS
+(1 row)
+
+            isnt             
+-----------------------------
+ ok 14 - Completion recorded
+(1 row)
+
+                  throws_ok                  
+---------------------------------------------
+ ok 15 - Direct advisory replacement blocked
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 16 - Settings outside pin blocked server side
+(1 row)
+
+           throws_ok           
+-------------------------------
+ ok 17 - Polygon hole excluded
+(1 row)
+
+                lives_ok                
+----------------------------------------
+ ok 18 - Settings polygon edge accepted
+(1 row)
+
+                    ok                     
+-------------------------------------------
+ ok 19 - Settings timestamp server derived
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 20 - Extra coordinate claims rejected
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 21 - Completion retains locality protections
+(1 row)
+
+RESET
+                        is                         
+---------------------------------------------------
+ ok 22 - Missing boundary produces unable to check
+(1 row)
+
+               is                
+---------------------------------
+ ok 23 - Hole boundary inclusive
+(1 row)
+
+ finish 
+--------
+ 1..23
+(1 row)
+
+ROLLBACK
+
+phase6_empty: admin_document_type_creation.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 1
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+                                   lives_ok                                    
+-------------------------------------------------------------------------------
+ ok 1 - Administrator can create an active document alongside charter services
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 2 - Creation retains existing contract
+(1 row)
+
+             is              
+-----------------------------
+ ok 3 - Created fee retained
+(1 row)
+
+                    is                    
+------------------------------------------
+ ok 4 - Created processing hours retained
+(1 row)
+
+                  is                  
+--------------------------------------
+ ok 5 - Created requirements retained
+(1 row)
+
+                            is                             
+-----------------------------------------------------------
+ ok 6 - Four charter services and minute targets preserved
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 7 - Administrator can deactivate additional type
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 8 - Administrator can reactivate additional type
+(1 row)
+
+                       throws_ok                        
+--------------------------------------------------------
+ ok 9 - Administrator cannot create in foreign barangay
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 10 - Charter contract cannot be downgraded
+(1 row)
+
+SET
+                   throws_ok                   
+-----------------------------------------------
+ ok 11 - Resident cannot create document types
+(1 row)
+
+SET
+                       throws_ok                        
+--------------------------------------------------------
+ ok 12 - Foreign administrator cannot create in Ampid 1
+(1 row)
+
+                             is                             
+------------------------------------------------------------
+ ok 13 - Foreign administrator cannot read created document
+(1 row)
+
+RESET
+SET
+                       throws_ok                        
+--------------------------------------------------------
+ ok 14 - Anonymous visitor cannot create document types
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..14
+(1 row)
+
+ROLLBACK
+
+phase6_empty: agency_sla.test.sql
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 2
+INSERT 0 1
+INSERT 0 3
+ configure_ampid_charter 
+-------------------------
+ 
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 1 - Exactly four pilot services active
+(1 row)
+
+                   ok                   
+----------------------------------------
+ ok 2 - Other tenant activity unchanged
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 3 - Other tenant fee unchanged
+(1 row)
+
+                      is                       
+-----------------------------------------------
+ ok 4 - Equivalent indigency identifier reused
+(1 row)
+
+                              ok                               
+---------------------------------------------------------------
+ ok 5 - General-purpose clearance deactivated without deletion
+(1 row)
+
+                            is                            
+----------------------------------------------------------
+ ok 6 - All four preserve Simple, G2C and fifteen minutes
+(1 row)
+
+                           is                            
+---------------------------------------------------------
+ ok 7 - Missing CTC personnel remains explicitly unknown
+(1 row)
+
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+        publish_id_submission         
+--------------------------------------
+ c5000000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+         review_id_submission         
+--------------------------------------
+ c5000000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+                                                              lives_ok                                                               
+-------------------------------------------------------------------------------------------------------------------------------------
+ ok 8 - Certificate of Indigency submits pending assessment
+ ok 9 - First Time Job Seeker submits pending assessment
+ ok 10 - Issuance of Barangay Clearance for Business Establishments submits pending assessment
+ ok 11 - Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment
+(4 rows)
+
+           throws_ok            
+--------------------------------
+ ok 12 - Resident cannot review
+(1 row)
+
+SET
+                      throws_ok                       
+------------------------------------------------------
+ ok 13 - ID approval alone cannot accept requirements
+ ok 14 - ID approval alone cannot accept requirements
+ ok 15 - ID approval alone cannot accept requirements
+ ok 16 - ID approval alone cannot accept requirements
+(4 rows)
+
+                   lives_ok                   
+----------------------------------------------
+ ok 17 - Staff record requirements separately
+ ok 18 - Staff record requirements separately
+ ok 19 - Staff record requirements separately
+ ok 20 - Staff record requirements separately
+(4 rows)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 21 - Appearance acknowledgment is not actual presence
+ ok 22 - Appearance acknowledgment is not actual presence
+ ok 23 - Appearance acknowledgment is not actual presence
+ ok 24 - Appearance acknowledgment is not actual presence
+(4 rows)
+
+                lives_ok                
+----------------------------------------
+ ok 25 - Staff record actual appearance
+ ok 26 - Staff record actual appearance
+ ok 27 - Staff record actual appearance
+ ok 28 - Staff record actual appearance
+(4 rows)
+
+                        ok                         
+---------------------------------------------------
+ ok 29 - Review and appearance actor/time recorded
+ ok 30 - Review and appearance actor/time recorded
+ ok 31 - Review and appearance actor/time recorded
+ ok 32 - Review and appearance actor/time recorded
+(4 rows)
+
+    transition_service_request_sla    
+--------------------------------------
+ 76596fa4-d7ee-44f0-a8d8-03f269013c3c
+ 21a53f31-cfc2-41cc-a33e-5a51f8869fff
+ de88a531-f481-4b1b-8b0d-4f5bf57c2131
+ ee6bafcb-470c-43e0-8743-5e2f2be0b78b
+(4 rows)
+
+RESET
+ set_config 
+------------
+ sla
+(1 row)
+
+UPDATE 4
+SELECT 1
+              is               
+-------------------------------
+ ok 33 - Before twelve minutes
+(1 row)
+
+            is             
+---------------------------
+ ok 34 - At twelve minutes
+(1 row)
+
+                      is                      
+----------------------------------------------
+ ok 35 - At fifteen minutes still near target
+(1 row)
+
+                       is                       
+------------------------------------------------
+ ok 36 - Strictly after fifteen minutes overdue
+(1 row)
+
+INSERT 0 1
+UPDATE 1
+                 is                 
+------------------------------------
+ ok 37 - Pause freezes counted time
+(1 row)
+
+               is               
+--------------------------------
+ ok 38 - Pause reason displayed
+(1 row)
+
+             throws_ok             
+-----------------------------------
+ ok 39 - Cannot pause paused clock
+(1 row)
+
+UPDATE 1
+UPDATE 1
+                 throws_ok                 
+-------------------------------------------
+ ok 40 - Overlapping closed pause rejected
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 41 - Repeated resume rejected
+(1 row)
+
+UPDATE 1
+                                  is                                  
+----------------------------------------------------------------------
+ ok 42 - Readiness stops processing at target after sixty second wait
+(1 row)
+
+                                is                                
+------------------------------------------------------------------
+ ok 43 - Ready at fifteen counted minutes completes within target
+(1 row)
+
+ set_config 
+------------
+ true
+(1 row)
+
+UPDATE 1
+                            is                            
+----------------------------------------------------------
+ ok 44 - Actual release separately stops total turnaround
+(1 row)
+
+              lives_ok              
+------------------------------------
+ ok 45 - Delayed evaluator succeeds
+(1 row)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 46 - Repeated evaluation creates no duplicate threshold alerts
+(1 row)
+
+                               is                               
+----------------------------------------------------------------
+ ok 47 - Delayed evaluation records each crossed threshold once
+(1 row)
+
+                                is                                
+------------------------------------------------------------------
+ ok 48 - Ready or released clock does not create unfinished alert
+(1 row)
+
+SET
+SET
+                      throws_ok                      
+-----------------------------------------------------
+ ok 49 - Resident cannot access administrator report
+(1 row)
+
+                  is                  
+--------------------------------------
+ ok 50 - Residents cannot read alerts
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 51 - Resident cannot invoke server evaluator
+(1 row)
+
+UPDATE 0
+                         ok                         
+----------------------------------------------------
+ ok 52 - Resident RLS update cannot change snapshot
+(1 row)
+
+SET
+                    is                    
+------------------------------------------
+ ok 53 - Foreign staff cannot read alerts
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 54 - Foreign report has no tenant rows
+(1 row)
+
+SET
+                       throws_ok                       
+-------------------------------------------------------
+ ok 55 - Raw administrator snapshot tampering rejected
+(1 row)
+
+                       is                       
+------------------------------------------------
+ ok 56 - Authorized staff read threshold events
+(1 row)
+
+                                 is                                  
+---------------------------------------------------------------------
+ ok 57 - Staff report includes old submission selected by completion
+(1 row)
+
+               throws_ok               
+---------------------------------------
+ ok 58 - Resume without pause rejected
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 59 - Whitespace pause reason rejected
+(1 row)
+
+    transition_service_request_sla    
+--------------------------------------
+ de88a531-f481-4b1b-8b0d-4f5bf57c2131
+ ee6bafcb-470c-43e0-8743-5e2f2be0b78b
+ 76596fa4-d7ee-44f0-a8d8-03f269013c3c
+(3 rows)
+
+    transition_service_request_sla    
+--------------------------------------
+ de88a531-f481-4b1b-8b0d-4f5bf57c2131
+ ee6bafcb-470c-43e0-8743-5e2f2be0b78b
+ 76596fa4-d7ee-44f0-a8d8-03f269013c3c
+(3 rows)
+
+                     ok                     
+--------------------------------------------
+ ok 60 - Cancellation closes all open waits
+(1 row)
+
+                      ok                       
+-----------------------------------------------
+ ok 61 - Cancellation records server stop time
+(1 row)
+
+RESET
+psql:C:/Users/User/barangayan/supabase/tests/agency_sla.test.sql:97: ERROR:  relation "cron.job" does not exist
+LINE 1: select ok(exists(select 1 from cron.job where jobname='servi...
+                                       ^
+

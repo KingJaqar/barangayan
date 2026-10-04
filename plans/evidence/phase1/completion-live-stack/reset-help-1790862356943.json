@@ -1,0 +1,9 @@
+{
+  "command": "reset-help",
+  "startedAt": "2026-10-01T13:45:56.259Z",
+  "finishedAt": "2026-10-01T13:45:56.944Z",
+  "exitCode": 0,
+  "passed": true,
+  "log": "completion-live-stack/reset-help-1790862356943.log",
+  "appliedMigrations": []
+}

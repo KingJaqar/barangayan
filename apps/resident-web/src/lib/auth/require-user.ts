@@ -1,3 +1,4 @@
+import { ensureGoogleResidentProfile, needsResidentProfile, residentCompletionDestination } from '@barangayan/shared';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -18,8 +19,7 @@ export interface ResidentProfile {
  *
  * - No session -> redirect to /login?next=<current path>, so login returns the resident
  *   to where they were headed.
- * - Session but no profile row -> redirect to /login (shouldn't happen; handle_new_user
- *   creates the profile atomically with the auth.users row).
+ * - Missing or incomplete resident profile -> mandatory /complete-profile.
  * - Any authenticated role with a profile stays in resident-web.
  *
  * requireUser()/getOptionalUser() are UX guards, not the real security boundary — RLS on
@@ -39,6 +39,9 @@ export async function requireUser(): Promise<{ user: { id: string; email: string
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }
 
+  await ensureGoogleResidentProfile(supabase, user);
+  if (await needsResidentProfile(supabase, user.id)) redirect(residentCompletionDestination((await headers()).get('x-pathname')));
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('id, role, full_name, barangay_id, avatar_url, barangays(name)')
@@ -49,6 +52,9 @@ export async function requireUser(): Promise<{ user: { id: string; email: string
     redirect('/login');
   }
 
+  const { data: locality } = await supabase.from('barangay_localities')
+    .select('display_name').eq('barangay_id', profile.barangay_id).maybeSingle();
+
   return {
     user: { id: user.id, email: user.email },
     profile: {
@@ -57,7 +63,7 @@ export async function requireUser(): Promise<{ user: { id: string; email: string
       full_name: profile.full_name,
       barangay_id: profile.barangay_id,
       avatar_url: profile.avatar_url,
-      barangayName: profile.barangays?.name ?? 'Barangay',
+      barangayName: locality?.display_name ?? profile.barangays?.name ?? 'Barangay',
     },
   };
 }

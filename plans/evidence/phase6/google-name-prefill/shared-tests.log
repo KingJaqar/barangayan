@@ -1,0 +1,32 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 14ms
+ ✓ src/lib/format.test.ts (17 tests) 39ms
+ ✓ src/lib/haversine.test.ts (4 tests) 7ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 5ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 13ms
+ ✓ src/lib/agency-sla.test.ts (13 tests) 9ms
+ ✓ src/lib/osrm.test.ts (4 tests) 12ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 10ms
+ ✓ src/schemas/payment.test.ts (9 tests) 8ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 8ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 9ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 10ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 11ms
+ ✓ src/lib/id-evidence.test.ts (2 tests) 4ms
+ ✓ src/schemas/staff.test.ts (9 tests) 11ms
+ ✓ src/schemas/service-foundations.test.ts (15 tests) 16ms
+ ✓ src/lib/service-catalog.test.ts (9 tests) 16ms
+ ✓ src/lib/resident-submission.test.ts (10 tests) 23ms
+ ✓ src/lib/resident-auth.test.ts (43 tests) 25ms
+
+ Test Files  19 passed (19)
+      Tests  188 passed (188)
+   Start at  14:56:18
+   Duration  2.47s (transform 2.06s, setup 0ms, collect 8.01s, tests 249ms, environment 6ms, prepare 11.76s)
+

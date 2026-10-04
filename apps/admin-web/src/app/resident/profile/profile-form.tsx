@@ -21,6 +21,7 @@ type ProfileFields = Pick<
   | 'house_no'
   | 'street'
   | 'city'
+  | 'province'
   | 'employment_status'
   | 'occupation'
   | 'id_verification_status'
@@ -58,7 +59,7 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
   // "Barangay" is deliberately read-only below (profiles.barangay_id), not a field here.
   const [houseNo, setHouseNo] = useState(profile.house_no ?? '');
   const [street, setStreet] = useState(profile.street ?? '');
-  const [city, setCity] = useState(profile.city ?? '');
+  const city = profile.city ?? '';
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | ''>(
     (profile.employment_status as EmploymentStatus | null) ?? '',
   );
@@ -94,7 +95,6 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
         mobile_number: mobileNumber.trim() || null,
         house_no: houseNo.trim() || null,
         street: street.trim() || null,
-        city: city.trim() || null,
         employment_status: employmentStatus || null,
         occupation: occupation.trim() || null,
       })
@@ -176,8 +176,9 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
       </div>
       <label className="text-sm">
         <span className="mb-1 block font-medium">City</span>
-        <input value={city} onChange={(e) => setCity(e.target.value)} className={inputCls} />
+        <input aria-label="City" value={city} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500`} />
       </label>
+      <label className="text-sm"><span className="mb-1 block font-medium">Province</span><input value={profile.province ?? 'Not configured'} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500`} /></label>
 
       {/* Read-only — this is profiles.barangay_id, assigned automatically at
           registration (AGENTS.md §0), not a free-text address component. */}

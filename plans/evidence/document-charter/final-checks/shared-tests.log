@@ -1,0 +1,30 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/agency-sla.test.ts (13 tests) 12ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 15ms
+ ✓ src/lib/haversine.test.ts (4 tests) 10ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 7ms
+ ✓ src/lib/osrm.test.ts (4 tests) 12ms
+ ✓ src/lib/format.test.ts (17 tests) 60ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 12ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 11ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 12ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 14ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 16ms
+ ✓ src/schemas/payment.test.ts (9 tests) 17ms
+ ✓ src/schemas/staff.test.ts (9 tests) 13ms
+ ✓ src/lib/id-evidence.test.ts (2 tests) 7ms
+ ✓ src/lib/service-catalog.test.ts (9 tests) 22ms
+ ✓ src/schemas/service-foundations.test.ts (15 tests) 26ms
+ ✓ src/lib/resident-submission.test.ts (10 tests) 32ms
+
+ Test Files  17 passed (17)
+      Tests  142 passed (142)
+   Start at  09:40:53
+   Duration  1.79s (transform 2.14s, setup 0ms, collect 5.33s, tests 298ms, environment 6ms, prepare 11.20s)
+

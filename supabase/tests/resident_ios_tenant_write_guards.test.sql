@@ -15,6 +15,10 @@ insert into public.profiles (id, barangay_id, role, full_name) values
   ('b1000000-0000-0000-0000-00000000000b', 'a1000000-0000-0000-0000-000000000002', 'resident', 'iOS Guard Resident B'),
   ('b1000000-0000-0000-0000-00000000000c', 'a1000000-0000-0000-0000-000000000001', 'admin', 'iOS Guard Admin A');
 
+-- The authorized submission persona has a completed resident profile.
+update public.profiles set first_name='Test',last_name='Resident',house_no='1',street='Fixture Street',
+ sex='female',employment_status='student',mobile_number='09171234567',birth_date='2000-01-01'
+ where id='b1000000-0000-0000-0000-00000000000a';
 insert into public.medical_drives (id, barangay_id, title, type, drive_date, time_start, time_end, eligible_criteria, stock_total, stock_remaining) values
   ('f2000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', 'iOS Drive A', 'vaccination', current_date, '08:00', '12:00', 'Residents', 5, 5),
   ('f2000000-0000-0000-0000-000000000002', 'a1000000-0000-0000-0000-000000000002', 'iOS Drive B', 'vaccination', current_date, '08:00', '12:00', 'Residents', 5, 5);
@@ -31,7 +35,7 @@ select throws_ok(
   $$ select public.register_for_drive('f2000000-0000-0000-0000-000000000002', 30, false, '{}'::text[], null) $$,
   'P0011', null, 'Resident cannot register for another barangay medical drive');
 select is((select stock_remaining from public.medical_drives where id = 'f2000000-0000-0000-0000-000000000002'), 5, 'Rejected medical registration preserves stock');
-select isnt((select public.register_for_drive('f2000000-0000-0000-0000-000000000001', 30, false, '{}'::text[], null)), null, 'Resident can register for own barangay drive');
+select ok((select public.register_for_drive('f2000000-0000-0000-0000-000000000001', 30, false, '{}'::text[], null)) is not null, 'Resident can register for own barangay drive');
 
 select throws_ok(
   $$ insert into public.evacuation_center_checkins (evacuation_center_id, user_id, barangay_id) values ('e2000000-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-00000000000a', 'a1000000-0000-0000-0000-000000000001') $$,

@@ -1,0 +1,333 @@
+
+Supabase infrastructure fixture
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE PUBLICATION
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+SET
+psql:C:/Users/User/barangayan/dist/phase1-tools/phase1_empty-bootstrap.sql:42: WARNING:  "wal_level" is insufficient to publish logical changes
+HINT:  Set "wal_level" to "logical" before creating subscriptions.
+
+0001_barangays_and_profiles.sql
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+
+0002_document_types_and_service_requests.sql
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+CREATE SEQUENCE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER PUBLICATION
+
+0003_announcements.sql
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+0004_service_request_reference_default.sql
+ALTER TABLE
+DROP TRIGGER
+DROP FUNCTION
+
+0005_guest_readable_public_content.sql
+CREATE POLICY
+CREATE POLICY
+
+0006_profile_theme_preference.sql
+ALTER TABLE
+
+0007_payments_and_admin_access.sql
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+ALTER PUBLICATION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE POLICY
+
+0008_resident_directory_access.sql
+CREATE POLICY
+CREATE VIEW
+ALTER PUBLICATION
+
+0009_admin_crud_and_soft_delete.sql
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+0010_resident_set_payment_method.sql
+CREATE FUNCTION
+GRANT
+
+0011_announcements_admin_write.sql
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:17: NOTICE:  policy "residents can read announcements from their barangay" for relation "public.announcements" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:18: NOTICE:  policy "guests can read all announcements" for relation "public.announcements" does not exist, skipping
+
+0012_profile_trigger_and_verification_status.sql
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0012_profile_trigger_and_verification_status.sql:94: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+
+0013_protect_verification_fields.sql
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0013_protect_verification_fields.sql:44: NOTICE:  trigger "guard_verification_fields" for relation "public.profiles" does not exist, skipping
+
+0014_request_delivery_workflow.sql
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0014_request_delivery_workflow.sql:51: NOTICE:  trigger "guard_service_request_completion" for relation "public.service_requests" does not exist, skipping
+
+0015_request_delivery_transition_rpc.sql
+CREATE FUNCTION
+
+0017_harden_payments_rls.sql
+ALTER TABLE
+DROP POLICY
+ALTER TABLE
+
+0018_begin_processing_rpc.sql
+CREATE FUNCTION
+COMMENT
+
+0019_fix_announcement_soft_delete.sql
+DROP POLICY
+DROP POLICY
+
+0020_id_documents_storage.sql
+ALTER TABLE
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+0021_enable_pgtap.sql
+CREATE EXTENSION
+
+0022_maps_tables.sql
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+0023_seed_incident_categories.sql
+INSERT 0 0
+
+0024_ampid1_boundary.sql
+UPDATE 0
+
+0025_incident_management.sql
+CREATE TRIGGER
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+0026_incident_report_workflow.sql
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE POLICY
+
+0027_incidents_realtime.sql
+ALTER PUBLICATION
+
+0029_drop_diag_temp.sql
+DROP FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0029_drop_diag_temp.sql:4: NOTICE:  function public.__diag_soft_delete_incident_def() does not exist, skipping
+
+0030_diag_temp2.sql
+CREATE FUNCTION
+GRANT
+
+0031_drop_diag_temp2.sql
+DROP FUNCTION
+
+0032_withdraw_incident_rpc.sql
+CREATE FUNCTION
+COMMENT
+
+0033_diag_temp3.sql
+CREATE FUNCTION
+GRANT
+
+0034_drop_diag_temp3.sql
+DROP FUNCTION
+
+0035_medical_drives.sql
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+
+0036_medical_drives_admin_rls.sql
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+0037_profile_birth_date.sql
+ALTER TABLE
+COMMENT
+
+0038_health_realtime.sql
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+0039_profile_extended_fields.sql
+ALTER TABLE
+UPDATE 0
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+0040_profile_avatar.sql
+ALTER TABLE
+COMMENT
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+0041_id_verification_status.sql
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0041_id_verification_status.sql:61: NOTICE:  trigger "trg_guard_id_verification_status" for relation "public.profiles" does not exist, skipping
+
+0042_id_documents_public_bucket.sql
+UPDATE 1
+UPDATE 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+0043_emergency_content.sql
+
+0044_evacuation_centers_verified.sql
+ALTER TABLE
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0044_evacuation_centers_verified.sql:93: ERROR:  insert or update on table "evacuation_centers" violates foreign key constraint "evacuation_centers_barangay_id_fkey"
+DETAIL:  Key (barangay_id)=(00000000-0000-0000-0000-000000000001) is not present in table "barangays".

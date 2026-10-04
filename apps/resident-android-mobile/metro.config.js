@@ -17,6 +17,16 @@ config.resolver.nodeModulesPaths = [
 ];
 config.resolver.disableHierarchicalLookup = true;
 
+// Local verification tools and web build caches are not mobile source. Watching
+// them can stall Metro while web previews/builds write thousands of generated files.
+const escapedWorkspaceRoot = workspaceRoot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const existingBlockList = config.resolver.blockList;
+config.resolver.blockList = [
+  ...(Array.isArray(existingBlockList) ? existingBlockList : existingBlockList ? [existingBlockList] : []),
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]dist[\\\\/]`),
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/](?:\\.next(?:-[^\\\\/]+)?|dist)[\\\\/]`),
+];
+
 // `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it
 // only sees the hoisted `entities@4` at the workspace root — which dropped the old
 // `lib/maps/*.json` layout that `markdown-it@10` (pulled in by

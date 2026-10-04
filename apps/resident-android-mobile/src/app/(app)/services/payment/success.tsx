@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -12,13 +12,14 @@ import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing, Fonts } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { supabase } from '@/lib/supabase';
 
 // Reached only from the QR PH flow once usePaymongoSource observes status === 'paid'
 // (payment/qrph/[requestId].tsx's redirect). Pay at Pickup never lands here — it has its
 // own confirmation screen (payment/pickup/[requestId].tsx) since there's nothing to
 // "receive" until pickup.
 export default function PaymentSuccessScreen() {
-  const { requestId, refNumber, amount, documentFee, method, sourceId } = useLocalSearchParams<{
+  const { requestId } = useLocalSearchParams<{
     requestId: string;
     refNumber: string;
     amount: string;
@@ -30,9 +31,26 @@ export default function PaymentSuccessScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const [isDownloading, setIsDownloading] = useState(false);
-
-  const amountCentavos = Number(amount ?? 0);
-  const paidAt = new Date().toISOString();
+  const [receipt, setReceipt] = useState<(Tables<'payments'> & { service_requests: { reference_number: string } }) | null>(null);
+  const [receiptError, setReceiptError] = useState<string | null>(null);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    let active = true;
+    supabase.from('payments').select('*, service_requests!inner(reference_number)')
+      .eq('service_request_id', requestId).eq('status', 'paid').order('created_at', { ascending: false }).limit(1).maybeSingle()
+      .then(({ data, error }) => {
+        if (!active) return;
+        setReceipt(data);
+        setReceiptError(error || !data ? 'No confirmed payment receipt is available. Reconnect and retry or return to the request.' : null);
+      });
+    return () => { active = false; };
+  }, [requestId, retry]);
+  const amountCentavos = receipt?.amount_centavos ?? 0;
+  const paidAt = receipt?.paid_at ?? receipt?.created_at ?? '';
+  const refNumber = receipt?.service_requests.reference_number;
+  const documentFee = receipt?.document_fee_centavos;
+  const method = receipt?.method === 'pickup' ? 'Pay at Pickup' : 'QR PH';
+  const sourceId = receipt?.paymongo_payment_id ?? receipt?.paymongo_source_id ?? undefined;
 
   async function handleDownloadReceipt() {
     setIsDownloading(true);
@@ -54,7 +72,7 @@ export default function PaymentSuccessScreen() {
         amountLabel: formatCentavosAsPHP(amountCentavos),
         dateTimeLabel: formatDateTime(paidAt),
         method: method ?? 'QR PH',
-        documentFeeLabel: documentFee ? formatCentavosAsPHP(Number(documentFee)) : undefined,
+        documentFeeLabel: documentFee != null ? formatCentavosAsPHP(documentFee) : undefined,
         transactionRef: sourceId,
       });
       const { uri: printedUri } = await Print.printToFileAsync({ html });
@@ -88,6 +106,8 @@ export default function PaymentSuccessScreen() {
   const checkAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: checkScale.value }],
   }));
+
+  if (!receipt || receipt.service_request_id !== requestId) return <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}><View style={{ padding: 20, gap: 16 }}><ThemedText accessibilityRole={receiptError ? 'alert' : undefined}>{receiptError ?? 'Loading confirmed payment receipt…'}</ThemedText><PrimaryButton label="Retry receipt" onPress={() => setRetry(value => value + 1)}/><PrimaryButton label="Return to request" variant="secondary" onPress={() => router.replace(`/services/requests/${requestId}`)}/></View></SafeAreaView>;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
@@ -136,7 +156,7 @@ export default function PaymentSuccessScreen() {
             <DetailRow label="Date/Time" value={formatDateTime(paidAt)} />
             <Divider />
             <DetailRow label="Method" value={method ?? 'QR PH'} />
-            {documentFee ? (
+            {documentFee != null ? (
               <>
                 <Divider />
                 <DetailRow label="Document Fee" value={formatCentavosAsPHP(Number(documentFee))} />

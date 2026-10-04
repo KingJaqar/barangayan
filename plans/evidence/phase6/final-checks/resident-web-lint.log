@@ -1,0 +1,10 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\app\(resident)\settings\location-verification\location-verification-form.tsx
+  94:6  warning  React Hook useEffect has a missing dependency: 'boundary'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+

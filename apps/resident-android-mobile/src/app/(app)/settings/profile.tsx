@@ -1,3 +1,4 @@
+import { ResidentActionGate } from '@/components/resident-action-gate';
 /**
  * Resident Profile screen — pixel-accurate rebuild of the design file.
  *
@@ -48,19 +49,22 @@ import {
   OTHER_ID_TYPE_PREFIX,
   SEXES,
   idPhotoSide,
+  publishIdEvidence,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
+import { GoogleButton } from '@/components/google-button';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Modal,
   Pressable,
   ScrollView,
+  AccessibilityInfo,
   StyleSheet,
   TextInput,
   View,
@@ -779,6 +783,7 @@ function IdTypeModal({
             {current === t && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
           </Pressable>
         ))}
+        <GoogleButton label="Link Google to this account" link />
       </ScrollView>
     </SlideSheetModal>
   );
@@ -859,9 +864,37 @@ function ChoiceListModal<T extends string>({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
+  return <ResidentActionGate><ProfileScreenContent /></ResidentActionGate>;
+}
+
+function ProfileScreenContent() {
   const router   = useRouter();
+  const {focus} = useLocalSearchParams<{focus?:string}>();
+  const profileScroll = useRef<ScrollView>(null);
+  const idHeading = useRef<View>(null);
+  const idFocusDone = useRef(false);
+  const idSectionY = useRef<number | null>(null);
+  const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { session } = useAuth();
   const { profile, isLoading, refetch } = useProfile();
+  const focusIdSection = useCallback(() => {
+    if (focus !== 'id' || !profile || isLoading || idFocusDone.current) return;
+    if (focusTimer.current) clearTimeout(focusTimer.current);
+    // Debounce content layout and route animation so focus follows the loaded section.
+    focusTimer.current = setTimeout(() => {
+      if (idSectionY.current === null || !idHeading.current || !profileScroll.current) return;
+      profileScroll.current.scrollTo({ y: idSectionY.current, animated: false });
+      requestAnimationFrame(() => {
+        if (idHeading.current) AccessibilityInfo.sendAccessibilityEvent(idHeading.current, 'focus');
+      });
+      idFocusDone.current = true;
+    }, 300);
+  }, [focus, profile, isLoading]);
+  useFocusEffect(useCallback(() => {
+    idFocusDone.current = false;
+    focusIdSection();
+    return () => { if (focusTimer.current) clearTimeout(focusTimer.current); };
+  }, [focusIdSection]));
   const insets   = useSafeAreaInsets();
   const theme    = useTheme();
   // Shadows the module-level PRIMARY_GREEN fallback with the resident's live accent color
@@ -970,6 +1003,7 @@ export default function ProfileScreen() {
 
   // ── UI state ──────────────────────────────────────────────────────────────
   const [saving, setSaving]   = useState(false);
+  const publication = useRef<{ signature: string; id: string } | null>(null);
   const [toast, setToast]     = useState<{ message: string; type: ToastType } | null>(null);
   // Populated by validateRequiredFields() on a Save Changes attempt — the "required"
   // messages shown under empty required fields (fieldStatus below handles the
@@ -1172,11 +1206,8 @@ export default function ProfileScreen() {
   }
 
   // ── ID photo upload (front / back) ────────────────────────────────────────
-  // One canonical path per side — `id-front.<ext>` / `id-back.<ext>` (the
-  // idPhotoSide() convention shared with resident-web) — upsert:true overwrites the
-  // previous photo for that side in storage, so re-uploading replaces it in place
-  // instead of accumulating extra files, and the resident can re-upload either side
-  // independently without disturbing the other.
+  // Each selection uses a fresh immutable path. Publication copies both selected
+  // sides into one reviewed version, including when only the ID type changes.
   async function handleIdUpload(side: 'front' | 'back') {
     if (!session) return;
     const picked = await pickImageAsset();
@@ -1187,10 +1218,12 @@ export default function ProfileScreen() {
     try {
       const bytes = await readImageBytes(picked);
       const ext   = imageExtension(picked.mimeType);
-      const path  = `${session.user.id}/id-${side}.${ext}`;
+      if (!bytes.length || bytes.length > 5 * 1024 * 1024) throw new Error('ID images must be at most 5 MB.');
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(picked.mimeType)) throw new Error('Choose a JPG, PNG, or WebP image.');
+      const path  = `${session.user.id}/versions/${genId()}/id-${side}.${ext}`;
       const { error: uploadErr } = await supabase.storage
         .from('id-documents')
-        .upload(path, bytes, { contentType: picked.mimeType, upsert: true });
+        .upload(path, bytes, { contentType: picked.mimeType, upsert: false });
       if (uploadErr) throw uploadErr;
       if (side === 'front') setIdFrontPath(path);
       else setIdBackPath(path);
@@ -1225,19 +1258,7 @@ export default function ProfileScreen() {
     setSaving(true);
 
     const nextIdType   = composeIdType(idType, otherIdType);
-    const nextIdPhotos = [idFrontPath, idBackPath].filter((p): p is string => !!p);
-
-    // ── ID verification status logic ────────────────────────────────────────
-    // • New ID photo uploaded this session → always reset to 'pending'
-    //   (forces admin re-review even if previously 'verified' or 'verification_failed').
-    // • ID type set + both photos present + no prior status → first-time: 'pending'.
-    // • Otherwise keep the existing status unchanged (don't overwrite verified/failed).
-    let nextIdStatus: 'pending' | 'verified' | 'verification_failed' | null = idVerificationStatus;
-    if (newIdUploaded) {
-      nextIdStatus = 'pending';
-    } else if (!idVerificationStatus && nextIdType && nextIdPhotos.length === 2) {
-      nextIdStatus = 'pending';
-    }
+    const evidenceChanged = newIdUploaded || nextIdType !== profile?.id_type;
 
     // Editing the email address invalidates whatever verification was
     // previously recorded for the old address — clear it so the "Verified
@@ -1261,15 +1282,11 @@ export default function ProfileScreen() {
         // home_address is likewise derived from these three.
         house_no:                 houseNo.trim() || null,
         street:                   street.trim() || null,
-        city:                     city.trim() || null,
+        ...(!profile?.barangays?.barangay_localities ? { city: city.trim() || null } : {}),
         employment_status:        employmentStatus,
         occupation:               occupation.trim() || null,
         birth_date:               birthDateIso,
         household_members:        members as any,
-        id_type:                  nextIdType,
-        id_photo_urls:            nextIdPhotos,
-        id_verification_status:   nextIdStatus,
-        email_verification_status: nextEmailStatus,
       } as any)
       .eq('id', session.user.id);
 
@@ -1280,9 +1297,22 @@ export default function ProfileScreen() {
       showToast(updateErr.message, 'error');
       return;
     }
+    if (evidenceChanged && nextIdType && idFrontPath && idBackPath) {
+      const signature = JSON.stringify([nextIdType, idFrontPath, idBackPath]);
+      if (publication.current?.signature !== signature) publication.current = { signature, id: genId() };
+      try {
+        const result = await publishIdEvidence(supabase, { submissionId: publication.current.id, idType: nextIdType, frontPath: idFrontPath, backPath: idBackPath });
+        setIdFrontPath(result.frontPath); setIdBackPath(result.backPath);
+        setIdVerifStatus('pending'); setNewIdUploaded(false); publication.current = null;
+      } catch (error) {
+        setSaving(false);
+        showToast(error instanceof Error ? error.message : 'Profile details saved; ID submission failed. Please retry.', 'error');
+        return;
+      }
+    }
     // Reflect the computed status locally right away so the badge updates
     // before the next refetch resolves.
-    setIdVerifStatus(nextIdStatus);
+    setIdVerifStatus(evidenceChanged ? 'pending' : idVerificationStatus);
     setEmailVerifStatus(nextEmailStatus);
     setNewIdUploaded(false);
     setSaving(false);
@@ -1317,7 +1347,8 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      <ScrollView
+      <ScrollView ref={profileScroll}
+        onContentSizeChange={focusIdSection}
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 100 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
@@ -1456,22 +1487,21 @@ export default function ProfileScreen() {
             {...fieldStatus(street, fieldErrors.street)}
           />
           <Divider />
-          <InlineFieldInput
-            label="City"
-            required
-            value={city}
-            placeholder="Enter city/municipality"
-            onChangeText={setCity}
-            {...fieldStatus(city, fieldErrors.city)}
-          />
+          {profile?.barangays?.barangay_localities ? <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`City, ${profile?.city ?? 'Not configured'}, read only`}>
+            <View style={fieldStyles.body}><ThemedText style={fieldStyles.label}>City</ThemedText><ThemedText style={fieldStyles.value}>{profile?.city ?? 'Not configured'}</ThemedText></View>
+          </View> : <InlineFieldInput label="City" required value={city} placeholder="Enter city/municipality" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />}
           <Divider />
           {/* Read-only — this is profiles.barangay_id, assigned automatically at
               registration (AGENTS.md §0), not a free-text address component. */}
           <View style={fieldStyles.row}>
             <View style={fieldStyles.body}>
               <ThemedText style={fieldStyles.label}>Barangay</ThemedText>
-              <ThemedText style={fieldStyles.value}>{profile?.barangays?.name ?? '—'}</ThemedText>
+              <ThemedText style={fieldStyles.value}>{profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? '—'}</ThemedText>
             </View>
+          </View>
+          <Divider />
+          <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`Province, ${profile?.province ?? 'Not configured'}, read only`}>
+            <View style={fieldStyles.body}><ThemedText style={fieldStyles.label}>Province</ThemedText><ThemedText style={fieldStyles.value}>{profile?.province ?? 'Not configured'}</ThemedText></View>
           </View>
           <Divider />
           <InlineFieldInput
@@ -1537,9 +1567,13 @@ export default function ProfileScreen() {
         </SectionCard>
 
         {/* ── ⑥ Identification ─────────────────────────────────────────── */}
+        <View onLayout={event => {
+          idSectionY.current = event.nativeEvent.layout.y;
+          focusIdSection();
+        }}>
         <SectionCard>
           <View style={styles.sectionHeaderRow}>
-            <ThemedText style={styles.sectionTitle}>Identification</ThemedText>
+            <View ref={idHeading} accessible accessibilityRole="header" accessibilityLabel="Upload Valid ID"><ThemedText style={styles.sectionTitle}>Upload Valid ID</ThemedText></View>
             {idVerificationStatus === 'verified' && (
               <View style={idStatusStyles.verified}>
                 <Ionicons name="checkmark-circle" size={13} color={PRIMARY_GREEN} />
@@ -1610,6 +1644,7 @@ export default function ProfileScreen() {
           </View>
           <FieldStatusRow error={fieldErrors.idPhotos} />
         </SectionCard>
+        </View>
 
       </ScrollView>
 

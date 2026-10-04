@@ -15,6 +15,25 @@ values (
 )
 on conflict (id) do nothing;
 
+-- Phase 1 reference defaults; existing tenant configuration is not overwritten.
+insert into public.barangay_localities
+  (barangay_id, display_name, city, province, resident_registration_enabled)
+values ('00000000-0000-0000-0000-000000000001', 'Ampid 1', 'San Mateo', 'Rizal', true)
+on conflict (barangay_id) do nothing;
+
+-- 0023 fills existing tenants during migration. The local pilot is created
+-- afterward, so populate the same categories before the sample incident rows.
+insert into public.incident_categories (barangay_id, name, color, icon, is_trash_related)
+select '00000000-0000-0000-0000-000000000001'::uuid, name, color, icon, is_trash_related
+from (values
+  ('Damaged Street Light', '#F59E0B', 'bulb-outline', false),
+  ('Road Damage', '#EF4444', 'construct-outline', false),
+  ('Drainage Issue', '#3B82F6', 'water-outline', true),
+  ('Illegal Dumping', '#10B981', 'trash-outline', true),
+  ('Flooding', '#6366F1', 'thunderstorm-outline', false)
+) as categories(name, color, icon, is_trash_related)
+on conflict (barangay_id, name) do nothing;
+
 -- Mirrors packages/shared/src/constants/document-catalog-shape.ts's SEED_DOCUMENT_TYPES —
 -- keep the two in sync if either changes.
 insert into public.document_types
@@ -42,6 +61,9 @@ values
     array['Valid ID', 'Proof of residency']
   )
 on conflict (barangay_id, name) do nothing;
+
+-- Activate the same source-preserving pilot catalog after creating local seed rows.
+select barangayan_private.configure_ampid_charter();
 
 -- 16 sample announcements — 4 per category (General/Emergency/Health/Events) so the
 -- Home preview card and the Reports > Announcements sub-tab's category filters all have
@@ -182,135 +204,6 @@ values
   )
 on conflict (id) do nothing;
 
--- ============================================================================
--- Sample incidents — realistic data for dev/demo so the Reports feed and the
--- Maps screen both have content without manual entry.
---
--- reporter_id is NULL (anonymous) because seed.sql runs before any auth.users
--- rows exist in a fresh `supabase db reset`. Barangay-scoped RLS still applies
--- via barangay_id. Real production incidents always have a reporter_id.
---
--- category_id is resolved from the 0023 category names for the pilot barangay.
--- ============================================================================
-insert into public.incidents (
-  id, barangay_id, reporter_id, category_id, title, description,
-  location, photo_urls, status, confirmation_count, created_at, updated_at
-)
-select
-  v.id::uuid,
-  '00000000-0000-0000-0000-000000000001'::uuid,
-  null,
-  (select id from public.incident_categories
-     where barangay_id = '00000000-0000-0000-0000-000000000001'
-       and name = v.category_name
-     limit 1),
-  v.title,
-  v.description,
-  v.location::jsonb,
-  '{}'::text[],
-  v.status,
-  v.confirmation_count,
-  now() - (v.age_hours || ' hours')::interval,
-  now() - (v.age_hours || ' hours')::interval
-from (values
-  (
-    '00000000-0000-0000-0000-000000000201',
-    'Road Damage',
-    'Large pothole on the corner of Sitio Pag-asa and Purok 3 road',
-    'Large pothole forming near the drainage outlet. Vehicles swerve dangerously to avoid it, especially at night. Approximate depth 30 cm.',
-    '{"lat":14.6825,"lng":121.1155}',
-    'in_progress', 4, 48
-  ),
-  (
-    '00000000-0000-0000-0000-000000000202',
-    'Illegal Dumping',
-    'Garbage dumped along creek bank near Purok 2',
-    'Pile of household trash and construction debris dumped along the creek bank near Purok 2 bridge. Foul smell noticeable and may block drainage during rain.',
-    '{"lat":14.6820,"lng":121.1148}',
-    'open', 2, 24
-  ),
-  (
-    '00000000-0000-0000-0000-000000000203',
-    'Damaged Street Light',
-    'Streetlamp flickering and out on Purok 4 main road',
-    'The streetlamp at the intersection of the main road and the path to the barangay hall flickered for a week and is now completely out. Area is very dark at night.',
-    '{"lat":14.6832,"lng":121.1162}',
-    'open', 1, 72
-  ),
-  (
-    '00000000-0000-0000-0000-000000000204',
-    'Drainage Issue',
-    'Blocked canal causing flooding after heavy rain near Sitio Riverside',
-    'The main drainage canal along Sitio Riverside is partially blocked by silt and debris. Water flooded the road for over 3 hours after last week''s rain, affecting 12 households.',
-    '{"lat":14.6815,"lng":121.1140}',
-    'resolved', 7, 120
-  ),
-  (
-    '00000000-0000-0000-0000-000000000205',
-    'Road Damage',
-    'Fallen tree branch blocking road to Purok 5',
-    'A large branch fell across the road leading to Purok 5 during last night''s storm. One lane fully blocked; motorcycle riders are at risk.',
-    '{"lat":14.6840,"lng":121.1170}',
-    'resolved', 3, 96
-  ),
-  (
-    '00000000-0000-0000-0000-000000000206',
-    'Illegal Dumping',
-    'Informal trash pile growing behind the basketball court',
-    'An informal dump has been growing behind the barangay basketball court for two weeks. Household garbage mixed with used tyres.',
-    '{"lat":14.6827,"lng":121.1153}',
-    'in_progress', 5, 36
-  )
-on conflict (id) do nothing;
-
--- ============================================================================
--- Evacuation center check-ins for household members (Alex's family)
--- ============================================================================
-insert into public.evacuation_center_checkins
-  (id, evacuation_center_id, user_id, barangay_id, checked_in_at, created_at)
-values
-  (
-    '00000000-0000-0000-0000-00000000x001',
-    '00000000-0000-0000-0000-00000000c002',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '2 hours',
-    now() - interval '2 hours'
-  ),
-  (
-    '00000000-0000-0000-0000-00000000x002',
-    '00000000-0000-0000-0000-00000000c001',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '5 hours',
-    now() - interval '5 hours'
-  ),
-  (
-    '00000000-0000-0000-0000-00000000x003',
-    '00000000-0000-0000-0000-00000000c003',
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    now() - interval '1 day',
-    now() - interval '1 day'
-  )
-on conflict (evacuation_center_id, user_id, checked_in_at) do nothing;
-
--- ============================================================================
--- Incident confirmations — Alex corroborates community reports
--- NOTE: These rows are inserted directly for seed purposes. In production,
--- confirmations should be written through the confirm_incident RPC so that
--- incidents.confirmation_count stays in sync.
--- ============================================================================
-insert into public.incident_confirmations
-  (incident_id, user_id, created_at)
-values
-  ('00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000010', now() - interval '36 hours'),
-  ('00000000-0000-0000-0000-000000000204', '00000000-0000-0000-0000-000000000010', now() - interval '24 hours'),
-  ('00000000-0000-0000-0000-000000000206', '00000000-0000-0000-0000-000000000010', now() - interval '12 hours')
-on conflict (incident_id, user_id) do nothing;
-
-
-
 -- pgcrypto is required for crypt() / gen_salt() used in the test-account block
 -- below. Supabase local dev always bundles it; this is just an explicit guard.
 create extension if not exists pgcrypto with schema extensions;
@@ -408,6 +301,215 @@ on conflict (id) do nothing;
 
 -- NOTE: public.profiles is created automatically by the handle_new_user()
 -- trigger that fired on the auth.users INSERT above. No manual insert needed.
+
+-- ============================================================================
+-- Sample evacuation centers for Barangay Ampid I (matching the Emergency & DRRM
+-- Centers tab design). Coordinates are approximate real locations in San Mateo.
+-- ============================================================================
+insert into public.evacuation_centers
+  (id, barangay_id, name, address, position, capacity, current_occupancy,
+   is_active, contact_number, facilities, verified, created_at, updated_at)
+values
+  (
+    '00000000-0000-0000-0000-00000000c001',
+    '00000000-0000-0000-0000-000000000001',
+    'Ampid 1 Elementary',
+    'General Luna St, Ampid 1, San Mateo',
+    '{"lat": 14.684583, "lng": 121.112071}'::jsonb,
+    1000,
+    450,
+    true,
+    '(02) 8123-4501',
+    array['medical_desk', 'pet_friendly'],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c002',
+    '00000000-0000-0000-0000-000000000001',
+    'San Mateo Civic Center',
+    'Kambal Rd, Guitnang Bayan 2',
+    '{"lat": 14.683500, "lng": 121.115500}'::jsonb,
+    2000,
+    1640,
+    true,
+    '(02) 8123-4502',
+    array['generator'],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c003',
+    '00000000-0000-0000-0000-000000000001',
+    'Dulong Bayan Covered Court',
+    'Gen. Luna St, Dulong Bayan 1',
+    '{"lat": 14.682000, "lng": 121.114000}'::jsonb,
+    800,
+    800,
+    true,
+    '(02) 8123-4503',
+    array[]::text[],
+    true,
+    now(),
+    now()
+  ),
+  (
+    '00000000-0000-0000-0000-00000000c004',
+    '00000000-0000-0000-0000-000000000001',
+    'Malanday National High School',
+    'P. Zamora St, Malanday',
+    '{"lat": 14.681000, "lng": 121.113000}'::jsonb,
+    800,
+    120,
+    true,
+    '(02) 8123-4504',
+    array[]::text[],
+    true,
+    now(),
+    now()
+  )
+ on conflict (id) do update set
+  name         = excluded.name,
+  address      = excluded.address,
+  position     = excluded.position,
+  capacity     = excluded.capacity,
+  current_occupancy = excluded.current_occupancy,
+  is_active    = excluded.is_active,
+  contact_number = excluded.contact_number,
+  facilities   = excluded.facilities,
+  verified     = excluded.verified,
+  updated_at   = now();
+
+-- ============================================================================
+-- Sample incidents — realistic data for dev/demo so the Reports feed and the
+-- Maps screen both have content without manual entry.
+--
+-- These general sample incidents are anonymous; the separate account-linked
+-- reports below exercise ownership. Barangay-scoped RLS still applies.
+--
+-- category_id is resolved from the 0023 category names for the pilot barangay.
+-- ============================================================================
+insert into public.incidents (
+  id, barangay_id, reporter_id, category_id, title, description,
+  location, photo_urls, status, confirmation_count, created_at, updated_at
+)
+select
+  v.id::uuid,
+  '00000000-0000-0000-0000-000000000001'::uuid,
+  null,
+  (select id from public.incident_categories
+     where barangay_id = '00000000-0000-0000-0000-000000000001'
+       and name = v.category_name
+     limit 1),
+  v.title,
+  v.description,
+  v.location::jsonb,
+  '{}'::text[],
+  v.status,
+  v.confirmation_count,
+  now() - (v.age_hours || ' hours')::interval,
+  now() - (v.age_hours || ' hours')::interval
+from (values
+  (
+    '00000000-0000-0000-0000-000000000201',
+    'Road Damage',
+    'Large pothole on the corner of Sitio Pag-asa and Purok 3 road',
+    'Large pothole forming near the drainage outlet. Vehicles swerve dangerously to avoid it, especially at night. Approximate depth 30 cm.',
+    '{"lat":14.6825,"lng":121.1155}',
+    'in_progress', 4, 48
+  ),
+  (
+    '00000000-0000-0000-0000-000000000202',
+    'Illegal Dumping',
+    'Garbage dumped along creek bank near Purok 2',
+    'Pile of household trash and construction debris dumped along the creek bank near Purok 2 bridge. Foul smell noticeable and may block drainage during rain.',
+    '{"lat":14.6820,"lng":121.1148}',
+    'open', 2, 24
+  ),
+  (
+    '00000000-0000-0000-0000-000000000203',
+    'Damaged Street Light',
+    'Streetlamp flickering and out on Purok 4 main road',
+    'The streetlamp at the intersection of the main road and the path to the barangay hall flickered for a week and is now completely out. Area is very dark at night.',
+    '{"lat":14.6832,"lng":121.1162}',
+    'open', 1, 72
+  ),
+  (
+    '00000000-0000-0000-0000-000000000204',
+    'Drainage Issue',
+    'Blocked canal causing flooding after heavy rain near Sitio Riverside',
+    'The main drainage canal along Sitio Riverside is partially blocked by silt and debris. Water flooded the road for over 3 hours after last week''s rain, affecting 12 households.',
+    '{"lat":14.6815,"lng":121.1140}',
+    'resolved', 7, 120
+  ),
+  (
+    '00000000-0000-0000-0000-000000000205',
+    'Road Damage',
+    'Fallen tree branch blocking road to Purok 5',
+    'A large branch fell across the road leading to Purok 5 during last night''s storm. One lane fully blocked; motorcycle riders are at risk.',
+    '{"lat":14.6840,"lng":121.1170}',
+    'resolved', 3, 96
+  ),
+  (
+    '00000000-0000-0000-0000-000000000206',
+    'Illegal Dumping',
+    'Informal trash pile growing behind the basketball court',
+    'An informal dump has been growing behind the barangay basketball court for two weeks. Household garbage mixed with used tyres.',
+    '{"lat":14.6827,"lng":121.1153}',
+    'in_progress', 5, 36
+  )
+) as v(id, category_name, title, description, location, status, confirmation_count, age_hours)
+on conflict (id) do nothing;
+
+-- ============================================================================
+-- Evacuation center check-ins for household members (Alex's family)
+-- ============================================================================
+insert into public.evacuation_center_checkins
+  (id, evacuation_center_id, user_id, barangay_id, checked_in_at, created_at)
+values
+  (
+    '00000000-0000-0000-0000-00000000b001',
+    '00000000-0000-0000-0000-00000000c002',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '2 hours',
+    now() - interval '2 hours'
+  ),
+  (
+    '00000000-0000-0000-0000-00000000b002',
+    '00000000-0000-0000-0000-00000000c001',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '5 hours',
+    now() - interval '5 hours'
+  ),
+  (
+    '00000000-0000-0000-0000-00000000b003',
+    '00000000-0000-0000-0000-00000000c003',
+    '00000000-0000-0000-0000-000000000010',
+    '00000000-0000-0000-0000-000000000001',
+    now() - interval '1 day',
+    now() - interval '1 day'
+  )
+on conflict (id) do nothing;
+
+-- ============================================================================
+-- Incident confirmations — Alex corroborates community reports
+-- NOTE: These rows are inserted directly for seed purposes. In production,
+-- confirmations should be written through the confirm_incident RPC so that
+-- incidents.confirmation_count stays in sync.
+-- ============================================================================
+insert into public.incident_confirmations
+  (incident_id, user_id, created_at)
+values
+  ('00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000010', now() - interval '36 hours'),
+  ('00000000-0000-0000-0000-000000000204', '00000000-0000-0000-0000-000000000010', now() - interval '24 hours'),
+  ('00000000-0000-0000-0000-000000000206', '00000000-0000-0000-0000-000000000010', now() - interval '12 hours')
+on conflict (incident_id, user_id) do nothing;
+
+
 
 -- 3. Alex's incident reports --------------------------------------------------
 -- Three incidents with real Ampid I coordinates, categories from 0023 seed,
@@ -700,7 +802,7 @@ values
   ),
   -- Hotlines
   (
-    '00000000-0000-0000-0000-00000000h100',
+    '00000000-0000-0000-0000-00000000a100',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Police',
@@ -717,7 +819,7 @@ values
     true
   ),
   (
-    '00000000-0000-0000-0000-00000000h101',
+    '00000000-0000-0000-0000-00000000a101',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Fire Department',
@@ -734,7 +836,7 @@ values
     true
   ),
   (
-    '00000000-0000-0000-0000-00000000h102',
+    '00000000-0000-0000-0000-00000000a102',
     '00000000-0000-0000-0000-000000000001',
     'hotlines',
     'Barangay DRRM Office',
@@ -751,86 +853,6 @@ values
     true
   )
 on conflict (id) do nothing;
-
--- ============================================================================
--- Sample evacuation centers for Barangay Ampid I (matching the Emergency & DRRM
--- Centers tab design). Coordinates are approximate real locations in San Mateo.
--- ============================================================================
-insert into public.evacuation_centers
-  (id, barangay_id, name, address, position, capacity, current_occupancy,
-   is_active, contact_number, facilities, verified, created_at, updated_at)
-values
-  (
-    '00000000-0000-0000-0000-00000000c001',
-    '00000000-0000-0000-0000-000000000001',
-    'Ampid 1 Elementary',
-    'General Luna St, Ampid 1, San Mateo',
-    '{"lat": 14.684583, "lng": 121.112071}'::jsonb,
-    1000,
-    450,
-    true,
-    '(02) 8123-4501',
-    array['medical_desk', 'pet_friendly'],
-    true,
-    now(),
-    now()
-  ),
-  (
-    '00000000-0000-0000-0000-00000000c002',
-    '00000000-0000-0000-0000-000000000001',
-    'San Mateo Civic Center',
-    'Kambal Rd, Guitnang Bayan 2',
-    '{"lat": 14.683500, "lng": 121.115500}'::jsonb,
-    2000,
-    1640,
-    true,
-    '(02) 8123-4502',
-    array['generator'],
-    true,
-    now(),
-    now()
-  ),
-  (
-    '00000000-0000-0000-0000-00000000c003',
-    '00000000-0000-0000-0000-000000000001',
-    'Dulong Bayan Covered Court',
-    'Gen. Luna St, Dulong Bayan 1',
-    '{"lat": 14.682000, "lng": 121.114000}'::jsonb,
-    800,
-    800,
-    true,
-    '(02) 8123-4503',
-    array[]::text[],
-    true,
-    now(),
-    now()
-  ),
-  (
-    '00000000-0000-0000-0000-00000000c004',
-    '00000000-0000-0000-0000-000000000001',
-    'Malanday National High School',
-    'P. Zamora St, Malanday',
-    '{"lat": 14.681000, "lng": 121.113000}'::jsonb,
-    800,
-    120,
-    true,
-    '(02) 8123-4504',
-    array[]::text[],
-    true,
-    now(),
-    now()
-  )
- on conflict (id) do update set
-  name         = excluded.name,
-  address      = excluded.address,
-  position     = excluded.position,
-  capacity     = excluded.capacity,
-  current_occupancy = excluded.current_occupancy,
-  is_active    = excluded.is_active,
-  contact_number = excluded.contact_number,
-  facilities   = excluded.facilities,
-  verified     = excluded.verified,
-  updated_at   = now();
 
 -- ============================================================================
 -- Sample household members for the test account (Alex Reyes)
@@ -899,7 +921,7 @@ insert into public.emergency_qr_content
   (id, barangay_id, section, title, body, content, icon, icon_color, icon_bg, sort_order, is_active)
 values
   (
-    '00000000-0000-0000-0000-00000000q101',
+    '00000000-0000-0000-0000-00000000d101',
     '00000000-0000-0000-0000-000000000001',
     'why_scan',
     'Why Scan the Evacuation Center QR?',
@@ -912,7 +934,7 @@ values
     'qr-code-outline', '#2563EB', '#DBEAFE', 1, true
   ),
   (
-    '00000000-0000-0000-0000-00000000q102',
+    '00000000-0000-0000-0000-00000000d102',
     '00000000-0000-0000-0000-000000000001',
     'how_it_works',
     'How to Check In via QR',

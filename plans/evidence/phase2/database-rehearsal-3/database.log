@@ -1,0 +1,2189 @@
+Inspect fixture roles
+postgres
+pg_database_owner
+pg_read_all_data
+pg_write_all_data
+pg_monitor
+pg_read_all_settings
+pg_read_all_stats
+pg_stat_scan_tables
+pg_read_server_files
+pg_write_server_files
+pg_execute_server_program
+pg_signal_backend
+pg_checkpoint
+pg_maintain
+pg_use_reserved_connections
+pg_create_subscription
+anon
+authenticated
+service_role
+
+Reset phase2_empty
+
+Create phase2_empty
+
+phase2_empty: Infrastructure fixture
+SET
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE PUBLICATION
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+SET
+psql:C:/Users/User/barangayan/plans/evidence/phase2/database-rehearsal-3/bootstrap.sql:42: WARNING:  "wal_level" is insufficient to publish logical changes
+HINT:  Set "wal_level" to "logical" before creating subscriptions.
+
+phase2_empty: 0001_barangays_and_profiles.sql
+SET
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0002_document_types_and_service_requests.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+CREATE SEQUENCE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER PUBLICATION
+
+phase2_empty: 0003_announcements.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_empty: 0004_service_request_reference_default.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+DROP FUNCTION
+
+phase2_empty: 0005_guest_readable_public_content.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0006_profile_theme_preference.sql
+SET
+ALTER TABLE
+
+phase2_empty: 0007_payments_and_admin_access.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+ALTER PUBLICATION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE POLICY
+
+phase2_empty: 0008_resident_directory_access.sql
+SET
+CREATE POLICY
+CREATE VIEW
+ALTER PUBLICATION
+
+phase2_empty: 0009_admin_crud_and_soft_delete.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0010_resident_set_payment_method.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0011_announcements_admin_write.sql
+SET
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:17: NOTICE:  policy "residents can read announcements from their barangay" for relation "public.announcements" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:18: NOTICE:  policy "guests can read all announcements" for relation "public.announcements" does not exist, skipping
+
+phase2_empty: 0012_profile_trigger_and_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0012_profile_trigger_and_verification_status.sql:94: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+
+phase2_empty: 0013_protect_verification_fields.sql
+SET
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0013_protect_verification_fields.sql:44: NOTICE:  trigger "guard_verification_fields" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0014_request_delivery_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0014_request_delivery_workflow.sql:51: NOTICE:  trigger "guard_service_request_completion" for relation "public.service_requests" does not exist, skipping
+
+phase2_empty: 0015_request_delivery_transition_rpc.sql
+SET
+CREATE FUNCTION
+
+phase2_empty: 0017_harden_payments_rls.sql
+SET
+ALTER TABLE
+DROP POLICY
+ALTER TABLE
+
+phase2_empty: 0018_begin_processing_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0019_fix_announcement_soft_delete.sql
+SET
+DROP POLICY
+DROP POLICY
+
+phase2_empty: 0020_id_documents_storage.sql
+SET
+ALTER TABLE
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0021_enable_pgtap.sql
+SET
+CREATE EXTENSION
+
+phase2_empty: 0022_maps_tables.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0023_seed_incident_categories.sql
+SET
+INSERT 0 0
+
+phase2_empty: 0024_ampid1_boundary.sql
+SET
+UPDATE 0
+
+phase2_empty: 0025_incident_management.sql
+SET
+CREATE TRIGGER
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0026_incident_report_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE POLICY
+
+phase2_empty: 0027_incidents_realtime.sql
+SET
+ALTER PUBLICATION
+
+phase2_empty: 0029_drop_diag_temp.sql
+SET
+DROP FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0029_drop_diag_temp.sql:4: NOTICE:  function public.__diag_soft_delete_incident_def() does not exist, skipping
+
+phase2_empty: 0030_diag_temp2.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0031_drop_diag_temp2.sql
+SET
+DROP FUNCTION
+
+phase2_empty: 0032_withdraw_incident_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0033_diag_temp3.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0034_drop_diag_temp3.sql
+SET
+DROP FUNCTION
+
+phase2_empty: 0035_medical_drives.sql
+SET
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+
+phase2_empty: 0036_medical_drives_admin_rls.sql
+SET
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0037_profile_birth_date.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_empty: 0038_health_realtime.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase2_empty: 0039_profile_extended_fields.sql
+SET
+ALTER TABLE
+UPDATE 0
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0040_profile_avatar.sql
+SET
+ALTER TABLE
+COMMENT
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0041_id_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0041_id_verification_status.sql:61: NOTICE:  trigger "trg_guard_id_verification_status" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0042_id_documents_public_bucket.sql
+SET
+UPDATE 1
+UPDATE 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0043_emergency_content.sql
+SET
+
+phase2_empty: 0044_evacuation_centers_verified.sql
+SET
+ALTER TABLE
+COMMENT
+DO
+
+phase2_empty: 0045_evacuation_center_checkins.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0046_household_members.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+
+phase2_empty: 0047_emergency_information.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0048_realtime_publications.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase2_empty: 0049_seed_empty_tables.sql
+SET
+DO
+
+phase2_empty: 0050_create_emergency_qr_tables.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:78: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:84: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:112: NOTICE:  identifier "Allow full access to evacuation_center_qr_codes for barangay admins" will be truncated to "Allow full access to evacuation_center_qr_codes for barangay ad"
+
+phase2_empty: 0051_waste_management.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+
+phase2_empty: 0052_household_admin_management.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:14: NOTICE:  policy "admins manage barangay household members" for relation "public.household_members" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:191: NOTICE:  trigger "sync_household_members_from_jsonb" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0053_faq.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER TABLE
+DO
+DO
+
+phase2_empty: 0054_barangay_settings.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:16: NOTICE:  trigger "barangays_set_updated_at" for relation "public.barangays" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:25: NOTICE:  policy "admins can update barangay config in their barangay" for relation "public.barangays" does not exist, skipping
+
+phase2_empty: 0055_grant_guest_read_access.sql
+SET
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:26: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:34: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+
+phase2_empty: 0056_admin_staff_management.sql
+SET
+ALTER TABLE
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:25: NOTICE:  policy "admins can read admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:26: NOTICE:  policy "admins can read admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:41: NOTICE:  policy "admins can update admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:42: NOTICE:  policy "admins can update admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:78: NOTICE:  trigger "trg_guard_role_escalation" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0057_barangay_officials.sql
+SET
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+INSERT 0 0
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:65: NOTICE:  trigger "trg_barangay_officials_updated_at" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:75: NOTICE:  policy "admins read barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:85: NOTICE:  policy "admins insert barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:95: NOTICE:  policy "admins update barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:109: NOTICE:  policy "admins delete barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:153: NOTICE:  trigger "trg_sync_barangay_official" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0058_admin_audit_log.sql
+SET
+DROP VIEW
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_empty: 0059_site_content_and_about_us.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+DO
+INSERT 0 0
+INSERT 0 0
+
+phase2_empty: 0060_storage_site_content.sql
+SET
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0061_save_about_us_rpc.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0062_seed_site_content_and_about_us.sql
+SET
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+DELETE 0
+INSERT 0 0
+
+phase2_empty: 0063_push_notifications.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE FUNCTION
+
+phase2_empty: 0064_qrph_instant_payment_and_refunds.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+COMMENT
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_empty: 0065_qrph_payment_intents.sql
+SET
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+DO
+ALTER TABLE
+
+phase2_empty: 0066_qrph_persistent_qr_and_resident_cancel.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0067_fix_household_members_uuid_sync.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0068_signup_birth_date.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0069_fix_emergency_information_tenant_leak.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0070_waste_management_resident_read.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase2_empty: 0071_add_missing_fk_indexes.sql
+SET
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+
+phase2_empty: 0072_admin_register_for_drive.sql
+SET
+CREATE FUNCTION
+
+phase2_empty: 0073_id_documents_private_again.sql
+SET
+UPDATE 1
+
+phase2_empty: 0074_account_deletion.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE INDEX
+CREATE FUNCTION
+COMMENT
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0074_account_deletion.sql:18: NOTICE:  column "deleted_at" of relation "profiles" already exists, skipping
+
+phase2_empty: 0075_profile_theme_customization.sql
+SET
+ALTER TABLE
+
+phase2_empty: 0076_placeholder.sql
+SET
+
+phase2_empty: 0077_waste_zone_cron_scoring.sql
+SET
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DO
+DO
+ recompute_waste_zone_scores 
+-----------------------------
+ 
+(1 row)
+
+psql:C:/Users/User/barangayan/supabase/migrations/0077_waste_zone_cron_scoring.sql:96: NOTICE:  pg_cron extension unavailable in this environment — skipping scheduled job (recompute_waste_zone_scores() can still be called manually).
+
+phase2_empty: 0078_registration_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0079_export_rate_limit.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_empty: 0080_reports_unread_counts.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_empty: 0081_resident_profile_field_split.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0081_resident_profile_field_split.sql:122: NOTICE:  trigger "compose_profiles_display_fields" for relation "public.profiles" does not exist, skipping
+
+phase2_empty: 0082_remove_delivery_add_pickup.sql
+SET
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+DO
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+ALTER TABLE
+ALTER TABLE
+COMMENT
+
+phase2_empty: 0083_incident_location_details.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_empty: 0084_announcement_detailed_description.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_empty: 0085_resident_mark_resolved_incident_read.sql
+SET
+CREATE POLICY
+
+phase2_empty: 0086_about_us_logo_size.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0087_about_us_title.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_empty: 0088_faq_articles_guest_read.sql
+SET
+CREATE POLICY
+
+phase2_empty: 0089_id_verification_failed_status.sql
+SET
+ALTER TABLE
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_empty: 0090_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_empty: 0091_verified_location_address.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_empty: 0092_drive_registrations_admin_update.sql
+SET
+CREATE POLICY
+
+phase2_empty: 0093_resident_ios_backend_safety.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+DROP POLICY
+CREATE POLICY
+ALTER TABLE
+CREATE INDEX
+COMMENT
+
+phase2_empty: 0094_resident_ios_tenant_write_guards.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+COMMENT
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:32: NOTICE:  trigger "guard_drive_registration_tenant" for relation "public.drive_registrations" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:66: NOTICE:  trigger "guard_evacuation_checkin_tenant" for relation "public.evacuation_center_checkins" does not exist, skipping
+
+phase2_empty: 20261001030133_phase1_shared_foundations.sql
+SET
+BEGIN
+CREATE SCHEMA
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 0
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER POLICY
+ALTER POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+GRANT
+COMMENT
+COMMENT
+COMMENT
+COMMIT
+
+phase2_empty: 20261001145422_phase2_trusted_evidence_locality.sql
+SET
+BEGIN
+ALTER TABLE
+DO
+ALTER TABLE
+DO
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+UPDATE 0
+CREATE FUNCTION
+ALTER FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+phase2_empty: Phase 2 database acceptance
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+                      is                       
+-----------------------------------------------
+ ok 1 - New profile locality is server derived
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 2 - Province is server derived
+(1 row)
+
+                   is                   
+----------------------------------------
+ ok 3 - Unsplittable free text survives
+(1 row)
+
+INSERT 0 2
+INSERT 0 1
+UPDATE 1
+              set_config              
+--------------------------------------
+ b2100000-0000-0000-0000-000000000001
+(1 row)
+
+SET
+          throws_ok           
+------------------------------
+ ok 4 - City tampering denied
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 5 - Province tampering denied
+(1 row)
+
+                throws_ok                
+-----------------------------------------
+ ok 6 - Free-text locality bypass denied
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 7 - Type-only changes cannot retain approval
+(1 row)
+
+             throws_ok             
+-----------------------------------
+ ok 8 - Raw status mutation denied
+(1 row)
+
+          lives_ok          
+----------------------------
+ ok 9 - Ordinary edits work
+(1 row)
+
+                      is                      
+----------------------------------------------
+ ok 10 - Ordinary edits retain exact approval
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 11 - Imported evidence cannot be overwritten
+(1 row)
+
+ finish 
+--------
+ 1..11
+(1 row)
+
+ROLLBACK
+
+Reset phase2_existing
+NOTICE:  database "phase2_existing" does not exist, skipping
+
+Create phase2_existing
+
+phase2_existing: Infrastructure fixture
+SET
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE SCHEMA
+CREATE EXTENSION
+CREATE TABLE
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE PUBLICATION
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+SET
+psql:C:/Users/User/barangayan/plans/evidence/phase2/database-rehearsal-3/bootstrap.sql:42: WARNING:  "wal_level" is insufficient to publish logical changes
+HINT:  Set "wal_level" to "logical" before creating subscriptions.
+
+phase2_existing: 0001_barangays_and_profiles.sql
+SET
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0002_document_types_and_service_requests.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+CREATE SEQUENCE
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER PUBLICATION
+
+phase2_existing: 0003_announcements.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_existing: 0004_service_request_reference_default.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+DROP FUNCTION
+
+phase2_existing: 0005_guest_readable_public_content.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0006_profile_theme_preference.sql
+SET
+ALTER TABLE
+
+phase2_existing: 0007_payments_and_admin_access.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TRIGGER
+ALTER PUBLICATION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE POLICY
+
+phase2_existing: 0008_resident_directory_access.sql
+SET
+CREATE POLICY
+CREATE VIEW
+ALTER PUBLICATION
+
+phase2_existing: 0009_admin_crud_and_soft_delete.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0010_resident_set_payment_method.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0011_announcements_admin_write.sql
+SET
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:17: NOTICE:  policy "residents can read announcements from their barangay" for relation "public.announcements" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0011_announcements_admin_write.sql:18: NOTICE:  policy "guests can read all announcements" for relation "public.announcements" does not exist, skipping
+
+phase2_existing: 0012_profile_trigger_and_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0012_profile_trigger_and_verification_status.sql:94: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+
+phase2_existing: 0013_protect_verification_fields.sql
+SET
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0013_protect_verification_fields.sql:44: NOTICE:  trigger "guard_verification_fields" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0014_request_delivery_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0014_request_delivery_workflow.sql:51: NOTICE:  trigger "guard_service_request_completion" for relation "public.service_requests" does not exist, skipping
+
+phase2_existing: 0015_request_delivery_transition_rpc.sql
+SET
+CREATE FUNCTION
+
+phase2_existing: 0017_harden_payments_rls.sql
+SET
+ALTER TABLE
+DROP POLICY
+ALTER TABLE
+
+phase2_existing: 0018_begin_processing_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0019_fix_announcement_soft_delete.sql
+SET
+DROP POLICY
+DROP POLICY
+
+phase2_existing: 0020_id_documents_storage.sql
+SET
+ALTER TABLE
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0021_enable_pgtap.sql
+SET
+CREATE EXTENSION
+
+phase2_existing: 0022_maps_tables.sql
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0023_seed_incident_categories.sql
+SET
+INSERT 0 0
+
+phase2_existing: 0024_ampid1_boundary.sql
+SET
+UPDATE 0
+
+phase2_existing: 0025_incident_management.sql
+SET
+CREATE TRIGGER
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0026_incident_report_workflow.sql
+SET
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+CREATE FUNCTION
+COMMENT
+CREATE POLICY
+
+phase2_existing: 0027_incidents_realtime.sql
+SET
+ALTER PUBLICATION
+
+phase2_existing: 0029_drop_diag_temp.sql
+SET
+DROP FUNCTION
+psql:C:/Users/User/barangayan/supabase/migrations/0029_drop_diag_temp.sql:4: NOTICE:  function public.__diag_soft_delete_incident_def() does not exist, skipping
+
+phase2_existing: 0030_diag_temp2.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0031_drop_diag_temp2.sql
+SET
+DROP FUNCTION
+
+phase2_existing: 0032_withdraw_incident_rpc.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0033_diag_temp3.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0034_drop_diag_temp3.sql
+SET
+DROP FUNCTION
+
+phase2_existing: 0035_medical_drives.sql
+SET
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TABLE
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+
+phase2_existing: 0036_medical_drives_admin_rls.sql
+SET
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0037_profile_birth_date.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_existing: 0038_health_realtime.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase2_existing: 0039_profile_extended_fields.sql
+SET
+ALTER TABLE
+UPDATE 0
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0040_profile_avatar.sql
+SET
+ALTER TABLE
+COMMENT
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0041_id_verification_status.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0041_id_verification_status.sql:61: NOTICE:  trigger "trg_guard_id_verification_status" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0042_id_documents_public_bucket.sql
+SET
+UPDATE 1
+UPDATE 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0043_emergency_content.sql
+SET
+
+phase2_existing: 0044_evacuation_centers_verified.sql
+SET
+ALTER TABLE
+COMMENT
+DO
+
+phase2_existing: 0045_evacuation_center_checkins.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0046_household_members.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+
+phase2_existing: 0047_emergency_information.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0048_realtime_publications.sql
+SET
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+ALTER PUBLICATION
+
+phase2_existing: 0049_seed_empty_tables.sql
+SET
+DO
+
+phase2_existing: 0050_create_emergency_qr_tables.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:78: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:84: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+psql:C:/Users/User/barangayan/supabase/migrations/0050_create_emergency_qr_tables.sql:112: NOTICE:  identifier "Allow full access to evacuation_center_qr_codes for barangay admins" will be truncated to "Allow full access to evacuation_center_qr_codes for barangay ad"
+
+phase2_existing: 0051_waste_management.sql
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+DO
+
+phase2_existing: 0052_household_admin_management.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:14: NOTICE:  policy "admins manage barangay household members" for relation "public.household_members" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0052_household_admin_management.sql:191: NOTICE:  trigger "sync_household_members_from_jsonb" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0053_faq.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE TRIGGER
+ALTER TABLE
+DO
+DO
+
+phase2_existing: 0054_barangay_settings.sql
+SET
+ALTER TABLE
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DO
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:16: NOTICE:  trigger "barangays_set_updated_at" for relation "public.barangays" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0054_barangay_settings.sql:25: NOTICE:  policy "admins can update barangay config in their barangay" for relation "public.barangays" does not exist, skipping
+
+phase2_existing: 0055_grant_guest_read_access.sql
+SET
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:26: NOTICE:  identifier "Allow read access to emergency_qr_content for authenticated users" will be truncated to "Allow read access to emergency_qr_content for authenticated use"
+psql:C:/Users/User/barangayan/supabase/migrations/0055_grant_guest_read_access.sql:34: NOTICE:  identifier "Allow read access to evacuation_center_qr_codes for authenticated users" will be truncated to "Allow read access to evacuation_center_qr_codes for authenticat"
+
+phase2_existing: 0056_admin_staff_management.sql
+SET
+ALTER TABLE
+ALTER TABLE
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:25: NOTICE:  policy "admins can read admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:26: NOTICE:  policy "admins can read admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:41: NOTICE:  policy "admins can update admin and staff profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:42: NOTICE:  policy "admins can update admin profiles in their barangay" for relation "public.profiles" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0056_admin_staff_management.sql:78: NOTICE:  trigger "trg_guard_role_escalation" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0057_barangay_officials.sql
+SET
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+CREATE POLICY
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+INSERT 0 0
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:65: NOTICE:  trigger "trg_barangay_officials_updated_at" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:75: NOTICE:  policy "admins read barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:85: NOTICE:  policy "admins insert barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:95: NOTICE:  policy "admins update barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:109: NOTICE:  policy "admins delete barangay officials in their barangay" for relation "public.barangay_officials" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0057_barangay_officials.sql:153: NOTICE:  trigger "trg_sync_barangay_official" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0058_admin_audit_log.sql
+SET
+DROP VIEW
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_existing: 0059_site_content_and_about_us.sql
+SET
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+DO
+INSERT 0 0
+INSERT 0 0
+
+phase2_existing: 0060_storage_site_content.sql
+SET
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0061_save_about_us_rpc.sql
+SET
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0062_seed_site_content_and_about_us.sql
+SET
+INSERT 0 0
+INSERT 0 0
+INSERT 0 0
+DELETE 0
+INSERT 0 0
+
+phase2_existing: 0063_push_notifications.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE TABLE
+COMMENT
+ALTER TABLE
+CREATE POLICY
+CREATE FUNCTION
+
+phase2_existing: 0064_qrph_instant_payment_and_refunds.sql
+SET
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+COMMENT
+COMMENT
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_existing: 0065_qrph_payment_intents.sql
+SET
+ALTER TABLE
+COMMENT
+ALTER TABLE
+COMMENT
+DO
+ALTER TABLE
+
+phase2_existing: 0066_qrph_persistent_qr_and_resident_cancel.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0067_fix_household_members_uuid_sync.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0068_signup_birth_date.sql
+SET
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0069_fix_emergency_information_tenant_leak.sql
+SET
+DROP POLICY
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0070_waste_management_resident_read.sql
+SET
+CREATE POLICY
+CREATE POLICY
+
+phase2_existing: 0071_add_missing_fk_indexes.sql
+SET
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+
+phase2_existing: 0072_admin_register_for_drive.sql
+SET
+CREATE FUNCTION
+
+phase2_existing: 0073_id_documents_private_again.sql
+SET
+UPDATE 1
+
+phase2_existing: 0074_account_deletion.sql
+SET
+ALTER TABLE
+COMMENT
+CREATE INDEX
+CREATE FUNCTION
+COMMENT
+DROP POLICY
+CREATE POLICY
+psql:C:/Users/User/barangayan/supabase/migrations/0074_account_deletion.sql:18: NOTICE:  column "deleted_at" of relation "profiles" already exists, skipping
+
+phase2_existing: 0075_profile_theme_customization.sql
+SET
+ALTER TABLE
+
+phase2_existing: 0076_placeholder.sql
+SET
+
+phase2_existing: 0077_waste_zone_cron_scoring.sql
+SET
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+DO
+DO
+ recompute_waste_zone_scores 
+-----------------------------
+ 
+(1 row)
+
+psql:C:/Users/User/barangayan/supabase/migrations/0077_waste_zone_cron_scoring.sql:96: NOTICE:  pg_cron extension unavailable in this environment — skipping scheduled job (recompute_waste_zone_scores() can still be called manually).
+
+phase2_existing: 0078_registration_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0079_export_rate_limit.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_existing: 0080_reports_unread_counts.sql
+SET
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+CREATE POLICY
+ALTER PUBLICATION
+
+phase2_existing: 0081_resident_profile_field_split.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE FUNCTION
+COMMENT
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0081_resident_profile_field_split.sql:122: NOTICE:  trigger "compose_profiles_display_fields" for relation "public.profiles" does not exist, skipping
+
+phase2_existing: 0082_remove_delivery_add_pickup.sql
+SET
+ALTER TABLE
+ALTER TABLE
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+DROP FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+DO
+UPDATE 0
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+ALTER TABLE
+ALTER TABLE
+COMMENT
+
+phase2_existing: 0083_incident_location_details.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_existing: 0084_announcement_detailed_description.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_existing: 0085_resident_mark_resolved_incident_read.sql
+SET
+CREATE POLICY
+
+phase2_existing: 0086_about_us_logo_size.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0087_about_us_title.sql
+SET
+ALTER TABLE
+CREATE FUNCTION
+GRANT
+
+phase2_existing: 0088_faq_articles_guest_read.sql
+SET
+CREATE POLICY
+
+phase2_existing: 0089_id_verification_failed_status.sql
+SET
+ALTER TABLE
+ALTER TABLE
+COMMENT
+CREATE FUNCTION
+COMMENT
+
+phase2_existing: 0090_location_verification.sql
+SET
+ALTER TABLE
+COMMENT
+COMMENT
+
+phase2_existing: 0091_verified_location_address.sql
+SET
+ALTER TABLE
+COMMENT
+
+phase2_existing: 0092_drive_registrations_admin_update.sql
+SET
+CREATE POLICY
+
+phase2_existing: 0093_resident_ios_backend_safety.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+DROP POLICY
+CREATE POLICY
+ALTER TABLE
+CREATE INDEX
+COMMENT
+
+phase2_existing: 0094_resident_ios_tenant_write_guards.sql
+SET
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+DROP TRIGGER
+CREATE TRIGGER
+COMMENT
+COMMENT
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:32: NOTICE:  trigger "guard_drive_registration_tenant" for relation "public.drive_registrations" does not exist, skipping
+psql:C:/Users/User/barangayan/supabase/migrations/0094_resident_ios_tenant_write_guards.sql:66: NOTICE:  trigger "guard_evacuation_checkin_tenant" for relation "public.evacuation_center_checkins" does not exist, skipping
+
+phase2_existing: 20261001030133_phase1_shared_foundations.sql
+SET
+BEGIN
+CREATE SCHEMA
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 0
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+CREATE TABLE
+CREATE INDEX
+ALTER TABLE
+REVOKE
+GRANT
+CREATE POLICY
+INSERT 0 1
+CREATE POLICY
+CREATE POLICY
+CREATE POLICY
+ALTER POLICY
+ALTER POLICY
+CREATE POLICY
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+DROP TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+GRANT
+COMMENT
+COMMENT
+COMMENT
+COMMIT
+
+phase2_existing: Historical approvals and addresses
+SET
+INSERT 0 1
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 1
+INSERT 0 2
+ set_config 
+------------
+ true
+(1 row)
+
+UPDATE 1
+UPDATE 1
+INSERT 0 2
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+INSERT 0 4
+
+phase2_existing: snapshot barangays
+[{"id": "a2000000-0000-0000-0000-000000000001", "name": "Barangay Ampid I", "config": {}, "boundary": null, "created_at": "2026-10-01T23:20:39.704353+08:00", "updated_at": "2026-10-01T23:20:39.704353+08:00"}, {"id": "a3000000-0000-0000-0000-000000000001", "name": "Historical Other Tenant", "config": {"keep": "unchanged"}, "boundary": null, "created_at": "2026-10-01T23:20:39.637165+08:00", "updated_at": "2026-10-01T23:20:39.637165+08:00"}]
+
+phase2_existing: snapshot profiles
+[{"id": "b2000000-0000-0000-0000-000000000001", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Complete Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.708267+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Legacy free text retained exactly", "id_photo_urls": ["b2000000-0000-0000-0000-000000000001/id-front.jpg", "b2000000-0000-0000-0000-000000000001/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000002", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Missing Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.708267+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Another unsplittable address", "id_photo_urls": ["b2000000-0000-0000-0000-000000000002/missing-front.jpg", "b2000000-0000-0000-0000-000000000002/missing-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000003", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Pending Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.708267+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Pending free text", "id_photo_urls": ["b2000000-0000-0000-0000-000000000003/id-front.jpg", "b2000000-0000-0000-0000-000000000003/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "pending", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000001", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Unsplit Historical Name", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.643643+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.643643+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Unstructured address, preserved verbatim", "id_photo_urls": ["b3000000-0000-0000-0000-000000000001/old-front.jpg", "b3000000-0000-0000-0000-000000000001/old-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000002", "sex": null, "city": null, "role": "admin", "email": null, "street": null, "suffix": null, "id_type": null, "house_no": null, "province": null, "full_name": "Historical Administrator", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.643643+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.643643+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": null, "id_photo_urls": [], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": null, "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}]
+
+phase2_existing: snapshot document_types
+[{"id": "d3000000-0000-0000-0000-000000000001", "name": "Historical inactive service", "charter": null, "purposes": [], "is_active": false, "created_at": "2026-10-01T23:20:39.665909+08:00", "deleted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "description": null, "fee_centavos": 12500, "pricing_mode": "fixed", "requirements": [], "service_kind": null, "contract_version": 1, "requirement_rules": {}, "processing_target_hours": 48, "processing_target_minutes": null}]
+
+phase2_existing: snapshot service_requests
+[{"id": "c3000000-0000-0000-0000-000000000001", "status": "completed", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-01-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "paid", "status_history": [{"at": "2026-10-01T23:20:39.669815+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-01T23:20:39.681573+08:00", "note": null, "status": "completed"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00001", "submission_payload": null, "supporting_details": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false}, {"id": "c3000000-0000-0000-0000-000000000002", "status": "cancelled", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-02-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "refunded", "status_history": [{"at": "2026-10-01T23:20:39.669815+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-01T23:20:39.683872+08:00", "note": null, "status": "cancelled"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00002", "submission_payload": null, "supporting_details": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false}]
+
+phase2_existing: snapshot payments
+[{"id": "e3000000-0000-0000-0000-000000000001", "method": "pickup", "status": "paid", "paid_at": null, "created_at": "2026-10-01T23:20:39.684726+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000001", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}, {"id": "e3000000-0000-0000-0000-000000000002", "method": "qrph", "status": "refunded", "paid_at": null, "created_at": "2026-10-01T23:20:39.684726+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000002", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}]
+
+phase2_existing: snapshot drive_registrations
+[{"id": "f3000000-0000-0000-0000-000000000002", "age": 70, "is_pwd": true, "status": "pending", "user_id": "b3000000-0000-0000-0000-000000000001", "drive_id": "f3000000-0000-0000-0000-000000000001", "created_at": "2026-10-01T23:20:39.698318+08:00", "updated_at": "2026-10-01T23:20:39.698318+08:00", "comorbidities": ["hypertension"], "priority_score": 90, "prior_dose_date": null, "applicant_number": "HIST-00001"}]
+
+phase2_existing: snapshot household_members
+[]
+
+phase2_existing: 20261001145422_phase2_trusted_evidence_locality.sql
+SET
+BEGIN
+ALTER TABLE
+DO
+ALTER TABLE
+DO
+CREATE POLICY
+CREATE POLICY
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+UPDATE 3
+CREATE FUNCTION
+ALTER FUNCTION
+REVOKE
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+CREATE TRIGGER
+COMMIT
+
+phase2_existing: snapshot barangays
+[{"id": "a2000000-0000-0000-0000-000000000001", "name": "Barangay Ampid I", "config": {}, "boundary": null, "created_at": "2026-10-01T23:20:39.704353+08:00", "updated_at": "2026-10-01T23:20:39.704353+08:00"}, {"id": "a3000000-0000-0000-0000-000000000001", "name": "Historical Other Tenant", "config": {"keep": "unchanged"}, "boundary": null, "created_at": "2026-10-01T23:20:39.637165+08:00", "updated_at": "2026-10-01T23:20:39.637165+08:00"}]
+
+phase2_existing: snapshot profiles
+[{"id": "b2000000-0000-0000-0000-000000000001", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Complete Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:40.364568+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Legacy free text retained exactly", "id_photo_urls": ["b2000000-0000-0000-0000-000000000001/id-front.jpg", "b2000000-0000-0000-0000-000000000001/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": "7006d6c9-f738-464d-aba5-dddf044cb9f7", "approved_id_submission_id": "7006d6c9-f738-464d-aba5-dddf044cb9f7", "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000002", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Missing Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:40.364568+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Another unsplittable address", "id_photo_urls": ["b2000000-0000-0000-0000-000000000002/missing-front.jpg", "b2000000-0000-0000-0000-000000000002/missing-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": true, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b2000000-0000-0000-0000-000000000003", "sex": null, "city": "San Mateo", "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": "Rizal", "full_name": "Pending Legacy", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.708267+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:40.364568+08:00", "barangay_id": "a2000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Pending free text", "id_photo_urls": ["b2000000-0000-0000-0000-000000000003/id-front.jpg", "b2000000-0000-0000-0000-000000000003/id-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "pending", "current_id_submission_id": "9357a8a2-8289-4628-a1d7-d69127968e50", "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000001", "sex": null, "city": null, "role": "resident", "email": null, "street": null, "suffix": null, "id_type": "Passport", "house_no": null, "province": null, "full_name": "Unsplit Historical Name", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.643643+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.643643+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": "Unstructured address, preserved verbatim", "id_photo_urls": ["b3000000-0000-0000-0000-000000000001/old-front.jpg", "b3000000-0000-0000-0000-000000000001/old-back.jpg"], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": "verified", "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}, {"id": "b3000000-0000-0000-0000-000000000002", "sex": null, "city": null, "role": "admin", "email": null, "street": null, "suffix": null, "id_type": null, "house_no": null, "province": null, "full_name": "Historical Administrator", "last_name": null, "avatar_url": null, "birth_date": null, "created_at": "2026-10-01T23:20:39.643643+08:00", "deleted_at": null, "first_name": null, "occupation": null, "updated_at": "2026-10-01T23:20:39.643643+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "middle_name": null, "accent_color": "#0F6E5B", "home_address": null, "id_photo_urls": [], "mobile_number": null, "font_preference": "system", "theme_preference": "system", "email_verified_at": null, "employment_status": null, "household_members": [], "location_verified": null, "verified_location": null, "id_repair_required": false, "last_data_export_at": null, "custom_accent_colors": [], "location_verified_at": null, "profile_completed_at": null, "registration_location": null, "id_verification_status": null, "current_id_submission_id": null, "approved_id_submission_id": null, "email_verification_status": "unavailable", "verified_location_address": null, "push_notifications_enabled": true, "email_verification_requested_at": null}]
+
+phase2_existing: snapshot document_types
+[{"id": "d3000000-0000-0000-0000-000000000001", "name": "Historical inactive service", "charter": null, "purposes": [], "is_active": false, "created_at": "2026-10-01T23:20:39.665909+08:00", "deleted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "description": null, "fee_centavos": 12500, "pricing_mode": "fixed", "requirements": [], "service_kind": null, "contract_version": 1, "requirement_rules": {}, "processing_target_hours": 48, "processing_target_minutes": null}]
+
+phase2_existing: snapshot service_requests
+[{"id": "c3000000-0000-0000-0000-000000000001", "status": "completed", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-01-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "paid", "status_history": [{"at": "2026-10-01T23:20:39.669815+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-01T23:20:39.681573+08:00", "note": null, "status": "completed"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00001", "submission_payload": null, "supporting_details": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false}, {"id": "c3000000-0000-0000-0000-000000000002", "status": "cancelled", "ready_at": null, "fee_basis": null, "sla_state": "legacy", "created_at": "2024-02-01T08:00:00+08:00", "deleted_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "accepted_at": null, "barangay_id": "a3000000-0000-0000-0000-000000000001", "released_at": null, "resident_id": "b3000000-0000-0000-0000-000000000001", "cancelled_at": null, "purpose_code": null, "timing_model": "legacy_hours", "purpose_label": null, "billable_pages": null, "payment_method": null, "payment_status": "refunded", "status_history": [{"at": "2026-10-01T23:20:39.669815+08:00", "note": "Request submitted", "status": "submitted"}, {"at": "2026-10-01T23:20:39.683872+08:00", "note": null, "status": "cancelled"}], "fee_assessed_at": null, "fee_assessed_by": null, "idempotency_key": null, "requester_notes": null, "contract_version": 1, "document_type_id": "d3000000-0000-0000-0000-000000000001", "id_document_path": null, "reference_number": "REQ-2026-00002", "submission_payload": null, "supporting_details": null, "purpose_explanation": null, "fee_assessment_state": "legacy", "pricing_mode_snapshot": null, "personal_appearance_at": null, "target_minutes_snapshot": null, "assessed_amount_centavos": null, "approved_id_submission_id": null, "requirements_review_state": "legacy", "personal_appearance_required": false}]
+
+phase2_existing: snapshot payments
+[{"id": "e3000000-0000-0000-0000-000000000001", "method": "pickup", "status": "paid", "paid_at": null, "created_at": "2026-10-01T23:20:39.684726+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000001", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}, {"id": "e3000000-0000-0000-0000-000000000002", "method": "qrph", "status": "refunded", "paid_at": null, "created_at": "2026-10-01T23:20:39.684726+08:00", "deleted_at": null, "expires_at": null, "updated_at": "2026-10-01T23:20:39.684726+08:00", "barangay_id": "a3000000-0000-0000-0000-000000000001", "refunded_at": null, "refunded_by": null, "collected_by": null, "qr_image_url": null, "refund_reason": null, "refund_status": "none", "amount_centavos": 12500, "qrph_creation_key": null, "paymongo_source_id": null, "service_request_id": "c3000000-0000-0000-0000-000000000002", "paymongo_payment_id": null, "refund_transfer_link": null, "document_fee_centavos": 12500, "refund_amount_centavos": null, "paymongo_payment_intent_id": null}]
+
+phase2_existing: snapshot drive_registrations
+[{"id": "f3000000-0000-0000-0000-000000000002", "age": 70, "is_pwd": true, "status": "pending", "user_id": "b3000000-0000-0000-0000-000000000001", "drive_id": "f3000000-0000-0000-0000-000000000001", "created_at": "2026-10-01T23:20:39.698318+08:00", "updated_at": "2026-10-01T23:20:39.698318+08:00", "comorbidities": ["hypertension"], "priority_score": 90, "prior_dose_date": null, "applicant_number": "HIST-00001"}]
+
+phase2_existing: snapshot household_members
+[]
+

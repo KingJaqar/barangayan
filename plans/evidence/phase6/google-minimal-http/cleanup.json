@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "assertions": [
+    "Remove task report fixture",
+    "Remove task health fixture registrations",
+    "Remove task health fixture",
+    "Remove task Auth user and cascaded profile",
+    "Remove task Auth user and cascaded profile"
+  ]
+}

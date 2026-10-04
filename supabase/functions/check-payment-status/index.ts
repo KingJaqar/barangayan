@@ -74,7 +74,7 @@ Deno.serve(async (req: Request) => {
   // rather than an ambiguous "not found".
   const { data: payment, error: paymentError } = await supabase
     .from('payments')
-    .select('id, paymongo_payment_intent_id, status, service_request:service_requests(resident_id)')
+    .select('id, paymongo_payment_intent_id, status, amount_centavos, service_request:service_requests(resident_id)')
     .eq('id', paymentId)
     .single();
 
@@ -124,18 +124,25 @@ Deno.serve(async (req: Request) => {
   // 0007/0064 sync trigger, service_requests.payment_status — still reach 'paid'.
   // service_role because residents have no UPDATE policy on payments.
   if (status === 'paid' && payment.status !== 'paid') {
+    if (intent?.data?.attributes?.amount !== payment.amount_centavos || intent?.data?.attributes?.currency !== 'PHP') {
+      return new Response(JSON.stringify({ error: 'Provider amount does not match the recorded payment. Contact the barangay.' }), { status: 409, headers: corsHeaders });
+    }
     const paymentsPayload = intent?.data?.attributes?.payments;
     const paymongoPaymentId = Array.isArray(paymentsPayload) ? paymentsPayload[0]?.id : undefined;
 
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    await supabaseAdmin
+    const { error: settlementError } = await supabaseAdmin
       .from('payments')
       .update({
         status: 'paid',
         paid_at: new Date().toISOString(),
         ...(paymongoPaymentId ? { paymongo_payment_id: paymongoPaymentId } : {}),
       })
-      .eq('id', payment.id);
+      .eq('id', payment.id).not('status', 'in', '(paid,refunded)');
+    if (settlementError) {
+      console.error('Payment settlement could not be recorded', settlementError);
+      return new Response(JSON.stringify({ error: 'Could not record the confirmed payment. Please retry.' }), { status: 500, headers: corsHeaders });
+    }
   }
 
   return new Response(JSON.stringify({ status }), {

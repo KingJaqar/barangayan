@@ -1,0 +1,10 @@
+
+> @barangayan/web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\dashboard\page.tsx
+  5:3  warning  'computeDocumentTypeTrends' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 1 problem (0 errors, 1 warning)
+

@@ -1,7 +1,11 @@
-@import "tailwindcss";
+/* Tailwind's source(none) disables automatic workspace scanning. Explicit
+ * @source entries alone are additive and still scan generated build caches. */
+@import "tailwindcss" source(none);
 @import "leaflet/dist/leaflet.css";
 @import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+@source "../";
+@source "../../../../packages/shared/src";
 
 /* Class-based dark mode (Tailwind v4) — driven by the .dark class ThemeInitScript /
  * theme-controller.tsx put on <html>, NOT by prefers-color-scheme. This is the fix for

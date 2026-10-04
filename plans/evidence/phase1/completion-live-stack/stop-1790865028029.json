@@ -1,0 +1,10 @@
+{
+  "command": "stop",
+  "startedAt": "2026-10-01T14:30:22.077Z",
+  "finishedAt": "2026-10-01T14:30:28.030Z",
+  "exitCode": 0,
+  "passed": true,
+  "log": "completion-live-stack/stop-1790865028029.log",
+  "appliedMigrations": [],
+  "assertions": 0
+}

@@ -1,5 +1,7 @@
 'use client';
 
+import { needsResidentProfile, residentActionNeedsProfile, residentCompletionDestination, safeResidentRedirect } from '@barangayan/shared';
+import { GoogleButton } from '@/components/auth/google-button';
 import { ArrowLeft, Bell, FileText, Mail, Megaphone } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -37,7 +39,7 @@ function LoginForm() {
 
   const [email, setEmail] = useState(() => searchParams.get('email') ?? '');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(searchParams.has('authError') ? 'Google sign-in was cancelled, expired, or failed. Please try again.' : null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -57,7 +59,13 @@ function LoginForm() {
       return;
     }
 
-    const destination = getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
+    let incomplete;
+    try { incomplete = await needsResidentProfile(supabase, signInData.user.id); }
+    catch { setLoading(false); setError('Unable to load your profile. Please retry.'); return; }
+    const safeNext = safeResidentRedirect(next);
+    const destination = incomplete
+      ? (residentActionNeedsProfile(new URL(safeNext, window.location.origin).pathname) ? residentCompletionDestination(safeNext) : safeNext)
+      : getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
     router.replace(destination);
     router.refresh();
   }
@@ -173,6 +181,7 @@ function LoginForm() {
             </Button>
           </form>
 
+          <div className="mt-3"><GoogleButton label="Sign in with Google" next={next} /></div>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             New here?{' '}
             <Link href="/register" className="font-medium text-primary hover:underline">

@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '../types/database';
+import { boundedAuthFetch } from './auth-fetch';
 
 export interface SupabaseAuthStorage {
   getItem: (key: string) => Promise<string | null> | string | null;
@@ -13,6 +14,7 @@ export interface SupabaseClientConfig {
   anonKey: string;
   /** Custom auth storage adapter — e.g. AsyncStorage on React Native. Omit on web (browser default). */
   authStorage?: SupabaseAuthStorage;
+  flowType?: 'pkce' | 'implicit';
 }
 
 /**
@@ -28,14 +30,17 @@ export function createSupabaseClient({
   url,
   anonKey,
   authStorage,
+  flowType,
 }: SupabaseClientConfig): SupabaseClient<Database> {
   return createClient<Database>(url, anonKey, {
+    ...(flowType === 'pkce' ? { global: { fetch: boundedAuthFetch } } : {}),
     auth: authStorage
       ? {
           storage: authStorage,
           autoRefreshToken: true,
           persistSession: true,
           detectSessionInUrl: false,
+          ...(flowType ? { flowType } : {}),
         }
       : undefined,
   });

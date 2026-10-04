@@ -1,0 +1,29 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T15:53:28.854Z",
+      "finishedAt": "2026-09-30T15:53:48.841Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "ios-lint",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T15:53:48.924Z",
+      "finishedAt": "2026-09-30T15:54:00.351Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-lint.log"
+    }
+  ]
+}

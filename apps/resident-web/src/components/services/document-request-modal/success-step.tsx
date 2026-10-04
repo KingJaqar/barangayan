@@ -7,25 +7,58 @@
  * back on the (now restored to its normal multi-column) documents grid.
  */
 
-import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
+import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
+import { useEffect, useState } from 'react';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import type { SuccessPayload } from './types';
 
 export function SuccessStep({
   requestId,
   referenceNumber,
-  payload,
   onClose,
 }: {
   requestId: string;
   referenceNumber: string;
-  payload: SuccessPayload;
   onClose: () => void;
 }) {
-  const paidAt = new Date().toISOString();
+  const [payment, setPayment] = useState<Tables<'payments'> | null>(null);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    let active = true;
+    createSupabaseBrowserClient()
+      .from('payments')
+      .select('*')
+      .eq('service_request_id', requestId)
+      .eq('status', 'paid')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data, error: queryError }) => {
+        if (active) {
+          setPayment(data);
+          setError(!!queryError || !data);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [requestId, retry]);
+  if (!payment)
+    return (
+      <div role={error ? 'alert' : 'status'}>
+        <p>
+          {error
+            ? 'Could not confirm the recorded payment receipt. Reconnect and retry.'
+            : 'Loading confirmed receipt…'}
+        </p>
+        {error ? <Button onClick={() => setRetry((value) => value + 1)}>Retry receipt</Button> : null}
+      </div>
+    );
+  const paidAt = payment.paid_at ?? payment.created_at;
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -34,15 +67,22 @@ export function SuccessStep({
       </div>
 
       <h2 className="text-2xl font-bold">Payment Successful</h2>
-      <p className="text-2xl font-bold text-primary">{formatCentavosAsPHP(payload.amountCentavos)}</p>
+      <p className="text-2xl font-bold text-primary">{formatCentavosAsPHP(payment.amount_centavos)}</p>
 
       <div className="w-full rounded-2xl border border-border bg-card text-left">
-        <p className="border-b border-border p-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Transaction Details</p>
+        <p className="border-b border-border p-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Transaction Details
+        </p>
         <DetailRow label="Ref Number" value={referenceNumber} />
         <DetailRow label="Date/Time" value={formatDateTime(paidAt)} />
-        <DetailRow label="Method" value={payload.method} />
-        <DetailRow label="Document Fee" value={formatCentavosAsPHP(payload.documentFeeCentavos)} />
-        {payload.sourceId ? <DetailRow label="Transaction Ref" value={payload.sourceId} /> : null}
+        <DetailRow label="Method" value={payment.method === 'pickup' ? 'Pay at Pickup' : 'QR PH'} />
+        <DetailRow
+          label="Document Fee"
+          value={formatCentavosAsPHP(payment.document_fee_centavos ?? payment.amount_centavos)}
+        />
+        {payment.paymongo_payment_id ? (
+          <DetailRow label="Transaction Ref" value={payment.paymongo_payment_id} />
+        ) : null}
       </div>
 
       <div className="flex w-full flex-col gap-2">

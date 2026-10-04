@@ -1,0 +1,36 @@
+/mnt/c/Users/User/barangayan/supabase/tests/resident_ios_tenant_write_guards.test.sql .. ok
+/mnt/c/Users/User/barangayan/supabase/tests/rls_isolation.test.sql ..................... ok
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql ............... 
+Dubious, test returned 3 (wstat 768, 0x300)
+All 13 subtests passed 
+
+Test Summary Report
+-------------------
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql             (Wstat: 768 (exited 3) Tests: 13 Failed: 0)
+  Non-zero exit status: 3
+  Parse errors: No plan found in TAP output
+Files=3, Tests=37,  0 wallclock secs ( 0.03 usr  0.02 sys +  0.02 cusr  0.03 csys =  0.10 CPU)
+Result: FAIL
+Connecting to local database...
+3.36: Pulling from supabase/pg_prove
+4f4fb700ef54: Pulling fs layer
+06d62d0de6d7: Pulling fs layer
+dcccee43ad5d: Pulling fs layer
+a22cb17b3b93: Pulling fs layer
+4f4fb700ef54: Already exists
+4f4fb700ef54: Pull complete
+a008cf086da5: Download complete
+a22cb17b3b93: Download complete
+dcccee43ad5d: Download complete
+dcccee43ad5d: Pull complete
+06d62d0de6d7: Download complete
+06d62d0de6d7: Pull complete
+a22cb17b3b93: Pull complete
+Digest: sha256:eda7c5e68719e9c8287e78c017118407b48df904a51c935f5ab6098b8c0bc6bc
+Status: Downloaded newer image for public.ecr.aws/supabase/pg_prove:3.36
+public.ecr.aws/supabase/pg_prove:3.36
+psql:/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql:66: ERROR:  Direct deletion from storage tables is not allowed. Use the Storage API instead.
+HINT:  This prevents accidental data loss from orphaned objects.
+CONTEXT:  PL/pgSQL function storage.protect_delete() line 5 at RAISE
+error running container: exit 1
+Try rerunning the command with --debug to troubleshoot the error.

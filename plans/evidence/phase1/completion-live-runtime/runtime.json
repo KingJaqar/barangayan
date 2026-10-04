@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-01T14:04:53.2638973Z",
+  "runtime": "Docker Engine in isolated Ubuntu WSL",
+  "distribution": "barangayan-phase1",
+  "subscriptionRequired": false,
+  "desktopUsed": false,
+  "engineSetupPassed": true,
+  "engineSource": "https://docs.docker.com/engine/",
+  "setupSource": "https://docs.docker.com/engine/install/ubuntu/",
+  "cliVersion": "2.118.0",
+  "cliSha256": "f6089a86fb9d9221c958193a277338daddd6822f706929943812fa32e106c86d",
+  "restartRequired": false
+}

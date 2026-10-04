@@ -16,7 +16,7 @@
  * verified_location_address (text, migration 0091) + location_verified_at (0090).
  */
 import type { Json, LatLng } from '@barangayan/shared';
-import { reverseGeocode } from '@barangayan/shared';
+import { reverseGeocode, isPointInPolygon } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { AlertTriangle, CheckCircle2, Loader2, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -82,6 +82,7 @@ export function LocationVerificationForm({
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          if (!isPointInPolygon(point, boundary)) { setRejectedNotice(true); setLocating(false); return; }
           setPosition(point);
           void fetchAddressFor(point);
           setLocating(false);
@@ -106,6 +107,7 @@ export function LocationVerificationForm({
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        if (!isPointInPolygon(point, boundary)) { setRejectedNotice(true); setLocating(false); return; }
         setPosition(point);
         setRejectedNotice(false);
         setSaved(false);
@@ -133,6 +135,7 @@ export function LocationVerificationForm({
 
   async function handleSave() {
     if (!position) return;
+    if (!isPointInPolygon(position, boundary)) { setRejectedNotice(true); return; }
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase

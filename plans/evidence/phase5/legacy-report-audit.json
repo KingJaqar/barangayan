@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "readyCount": 3,
+    "averageProcessingSeconds": 900,
+    "withinTargetPercent": 100,
+    "averageResidentWaitSeconds": 60,
+    "releasedCount": 0,
+    "averageTurnaroundSeconds": null,
+    "overdueCount": 1,
+    "pausedCount": 1,
+    "legacyCount": 1
+  },
+  "trends": [
+    {
+      "documentTypeId": "f5000000-0000-0000-0000-000000000001",
+      "documentTypeName": "Historical service (local test)",
+      "targetHours": 24,
+      "averageHours": 24,
+      "completedCount": 1
+    }
+  ],
+  "passed": true
+}

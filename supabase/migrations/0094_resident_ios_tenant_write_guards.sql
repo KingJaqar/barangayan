@@ -70,6 +70,6 @@ create trigger guard_evacuation_checkin_tenant
   for each row execute function public.guard_evacuation_checkin_tenant();
 
 comment on function public.guard_drive_registration_tenant() is
-  'Rejects non-resident, deleted, inactive-drive, and cross-barangay medical registrations at the table boundary.';
+  'Rejects non-resident, deleted, inactive-drive, and cross-barangay medical registrations at the{PP} table boundary.';
 comment on function public.guard_evacuation_checkin_tenant() is
   'Rejects non-resident, forged-user, inactive-center, and cross-barangay evacuation check-ins at the table boundary.';

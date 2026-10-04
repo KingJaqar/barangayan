@@ -1,0 +1,7 @@
+[
+  {
+    "file": "google_minimal_profiles.test.sql",
+    "passed": true,
+    "assertions": 42
+  }
+]

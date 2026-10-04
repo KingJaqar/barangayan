@@ -1,0 +1,128 @@
+{
+  "cases": [
+    {
+      "seconds": 719.999,
+      "db": {
+        "position": "on_track",
+        "agencySeconds": 719.999,
+        "targetSeconds": 900,
+        "waitingReason": null,
+        "turnaroundSeconds": 87119.999,
+        "residentWaitSeconds": 0
+      },
+      "shared": {
+        "agencySeconds": 719.999,
+        "residentWaitSeconds": 0,
+        "turnaroundSeconds": 87119.999,
+        "targetSeconds": 900,
+        "position": "on_track",
+        "waitingReason": null
+      }
+    },
+    {
+      "seconds": 720,
+      "db": {
+        "position": "near_target",
+        "agencySeconds": 720,
+        "targetSeconds": 900,
+        "waitingReason": null,
+        "turnaroundSeconds": 87120,
+        "residentWaitSeconds": 0
+      },
+      "shared": {
+        "agencySeconds": 720,
+        "residentWaitSeconds": 0,
+        "turnaroundSeconds": 87120,
+        "targetSeconds": 900,
+        "position": "near_target",
+        "waitingReason": null
+      }
+    },
+    {
+      "seconds": 900,
+      "db": {
+        "position": "near_target",
+        "agencySeconds": 900,
+        "targetSeconds": 900,
+        "waitingReason": null,
+        "turnaroundSeconds": 87300,
+        "residentWaitSeconds": 0
+      },
+      "shared": {
+        "agencySeconds": 900,
+        "residentWaitSeconds": 0,
+        "turnaroundSeconds": 87300,
+        "targetSeconds": 900,
+        "position": "near_target",
+        "waitingReason": null
+      }
+    },
+    {
+      "seconds": 900.001,
+      "db": {
+        "position": "overdue",
+        "agencySeconds": 900.001,
+        "targetSeconds": 900,
+        "waitingReason": null,
+        "turnaroundSeconds": 87300.001,
+        "residentWaitSeconds": 0
+      },
+      "shared": {
+        "agencySeconds": 900.001,
+        "residentWaitSeconds": 0,
+        "turnaroundSeconds": 87300.001,
+        "targetSeconds": 900,
+        "position": "overdue",
+        "waitingReason": null
+      }
+    },
+    {
+      "seconds": 960,
+      "db": {
+        "position": "overdue",
+        "agencySeconds": 960,
+        "targetSeconds": 900,
+        "waitingReason": null,
+        "turnaroundSeconds": 87360,
+        "residentWaitSeconds": 0
+      },
+      "shared": {
+        "agencySeconds": 960,
+        "residentWaitSeconds": 0,
+        "turnaroundSeconds": 87360,
+        "targetSeconds": 900,
+        "position": "overdue",
+        "waitingReason": null
+      }
+    }
+  ],
+  "ready": {
+    "database": {
+      "position": "completed_within",
+      "agencySeconds": 900,
+      "targetSeconds": 900,
+      "waitingReason": null,
+      "turnaroundSeconds": 172800,
+      "residentWaitSeconds": 60
+    },
+    "shared": {
+      "agencySeconds": 900,
+      "residentWaitSeconds": 60,
+      "turnaroundSeconds": 172800,
+      "targetSeconds": 900,
+      "position": "completed_within",
+      "waitingReason": null
+    }
+  },
+  "summary": {
+    "readyCount": 1,
+    "averageProcessingSeconds": 900,
+    "withinTargetPercent": 100,
+    "averageResidentWaitSeconds": 60,
+    "releasedCount": 0,
+    "averageTurnaroundSeconds": null,
+    "overdueCount": 0,
+    "pausedCount": 0,
+    "legacyCount": 0
+  }
+}

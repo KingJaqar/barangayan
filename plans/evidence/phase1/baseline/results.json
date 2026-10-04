@@ -1,0 +1,106 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "shared-tests",
+      "directory": "packages/shared",
+      "command": "npm run test",
+      "startedAt": "2026-10-01T03:00:33.683Z",
+      "finishedAt": "2026-10-01T03:00:39.737Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "shared-tests.log"
+    },
+    {
+      "id": "ios-tests",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run test",
+      "startedAt": "2026-10-01T03:00:39.833Z",
+      "finishedAt": "2026-10-01T03:00:41.615Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-tests.log"
+    },
+    {
+      "id": "shared-types",
+      "directory": "packages/shared",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:00:41.724Z",
+      "finishedAt": "2026-10-01T03:00:47.830Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "shared-types.log"
+    },
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:00:47.920Z",
+      "finishedAt": "2026-10-01T03:00:54.425Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:00:54.512Z",
+      "finishedAt": "2026-10-01T03:01:00.791Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-01T03:01:00.888Z",
+      "finishedAt": "2026-10-01T03:01:18.513Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-01T03:01:18.604Z",
+      "finishedAt": "2026-10-01T03:01:24.443Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "ios-types.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-01T03:01:24.522Z",
+      "finishedAt": "2026-10-01T03:01:59.947Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-01T03:02:00.033Z",
+      "finishedAt": "2026-10-01T03:02:17.458Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    }
+  ]
+}

@@ -1,0 +1,530 @@
+[
+  {
+    "label": "google_profile_existing: inspect fixture roles",
+    "exitCode": 0
+  },
+  {
+    "label": "Reset google_profile_existing",
+    "exitCode": 0
+  },
+  {
+    "label": "Create google_profile_existing",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: Infrastructure fixture",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0001_barangays_and_profiles.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0002_document_types_and_service_requests.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0003_announcements.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0004_service_request_reference_default.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0005_guest_readable_public_content.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0006_profile_theme_preference.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0007_payments_and_admin_access.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0008_resident_directory_access.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0009_admin_crud_and_soft_delete.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0010_resident_set_payment_method.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0011_announcements_admin_write.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0012_profile_trigger_and_verification_status.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0013_protect_verification_fields.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0014_request_delivery_workflow.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0015_request_delivery_transition_rpc.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0017_harden_payments_rls.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0018_begin_processing_rpc.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0019_fix_announcement_soft_delete.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0020_id_documents_storage.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0021_enable_pgtap.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0022_maps_tables.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0023_seed_incident_categories.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0024_ampid1_boundary.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0025_incident_management.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0026_incident_report_workflow.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0027_incidents_realtime.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0029_drop_diag_temp.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0030_diag_temp2.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0031_drop_diag_temp2.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0032_withdraw_incident_rpc.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0033_diag_temp3.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0034_drop_diag_temp3.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0035_medical_drives.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0036_medical_drives_admin_rls.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0037_profile_birth_date.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0038_health_realtime.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0039_profile_extended_fields.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0040_profile_avatar.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0041_id_verification_status.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0042_id_documents_public_bucket.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0043_emergency_content.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0044_evacuation_centers_verified.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0045_evacuation_center_checkins.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0046_household_members.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0047_emergency_information.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0048_realtime_publications.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0049_seed_empty_tables.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0050_create_emergency_qr_tables.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0051_waste_management.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0052_household_admin_management.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0053_faq.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0054_barangay_settings.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0055_grant_guest_read_access.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0056_admin_staff_management.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0057_barangay_officials.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0058_admin_audit_log.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0059_site_content_and_about_us.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0060_storage_site_content.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0061_save_about_us_rpc.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0062_seed_site_content_and_about_us.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0063_push_notifications.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0064_qrph_instant_payment_and_refunds.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0065_qrph_payment_intents.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0066_qrph_persistent_qr_and_resident_cancel.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0067_fix_household_members_uuid_sync.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0068_signup_birth_date.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0069_fix_emergency_information_tenant_leak.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0070_waste_management_resident_read.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0071_add_missing_fk_indexes.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0072_admin_register_for_drive.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0073_id_documents_private_again.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0074_account_deletion.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0075_profile_theme_customization.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0076_placeholder.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0077_waste_zone_cron_scoring.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0078_registration_location_verification.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0079_export_rate_limit.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0080_reports_unread_counts.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0081_resident_profile_field_split.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0082_remove_delivery_add_pickup.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0083_incident_location_details.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0084_announcement_detailed_description.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0085_resident_mark_resolved_incident_read.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0086_about_us_logo_size.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0087_about_us_title.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0088_faq_articles_guest_read.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0089_id_verification_failed_status.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0090_location_verification.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0091_verified_location_address.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0092_drive_registrations_admin_update.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0093_resident_ios_backend_safety.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0094_resident_ios_tenant_write_guards.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0095_phase1_shared_foundations.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: Historical approvals and addresses",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0096_phase2_trusted_evidence_locality.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0097_phase3_catalog_staff_workflows.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0098_phase4_resident_submission_payment.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0099_phase5_sla_engine_reporting.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0100_restore_admin_document_type_creation.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0101_unified_document_type_charter_forms.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot barangays",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot profiles",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot document_types",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot service_requests",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot payments",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot drive_registrations",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot household_members",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0102_phase6_registration_maps_auth.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0103_phase6_deferred_profile_completion.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: 0104_google_minimal_resident_profiles.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot barangays",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot profiles",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot document_types",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot service_requests",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot payments",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot drive_registrations",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: snapshot household_members",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: Historical reconciliation assertions",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: Phase 6 database acceptance",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: admin_document_type_creation.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: catalog_staff_workflows.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: deferred_profile_completion.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: document_charter_forms.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: google_minimal_profiles.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: resident_ios_tenant_write_guards.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: rls_isolation.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: service_foundations.test.sql",
+    "exitCode": 0
+  },
+  {
+    "label": "google_profile_existing: trusted_evidence_locality.test.sql",
+    "exitCode": 0
+  }
+]

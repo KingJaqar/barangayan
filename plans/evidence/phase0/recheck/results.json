@@ -1,0 +1,118 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "command": "npm run typecheck",
+      "startedAt": "2026-09-30T15:52:50.523Z",
+      "finishedAt": "2026-09-30T15:53:02.565Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run typecheck",
+      "startedAt": "2026-09-30T15:53:02.649Z",
+      "finishedAt": "2026-09-30T15:53:08.392Z",
+      "exitCode": 2,
+      "signal": null,
+      "error": null,
+      "log": "ios-types.log"
+    },
+    {
+      "id": "root-lint",
+      "directory": ".",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T15:53:08.466Z",
+      "finishedAt": "2026-09-30T15:57:19.243Z",
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "error": "ENOBUFS",
+      "log": "root-lint.log.gz",
+      "logCompleteness": "Lossless captured bytes from incomplete ENOBUFS attempt; see root-lint-stream for completed execution."
+    },
+    {
+      "id": "ios-export",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run export:ios -- --output-dir dist/phase0-ios",
+      "startedAt": "2026-09-30T15:57:19.325Z",
+      "finishedAt": "2026-09-30T15:57:21.205Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-export.log"
+    },
+    {
+      "id": "ios-release",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run check:release",
+      "startedAt": "2026-09-30T15:57:21.275Z",
+      "finishedAt": "2026-09-30T15:57:22.155Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "ios-release.log"
+    },
+    {
+      "id": "supabase-cli",
+      "directory": ".",
+      "command": "supabase --version",
+      "startedAt": "2026-09-30T15:57:22.248Z",
+      "finishedAt": "2026-09-30T15:57:22.292Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "supabase-cli.log"
+    },
+    {
+      "id": "docker",
+      "directory": ".",
+      "command": "docker version",
+      "startedAt": "2026-09-30T15:57:22.365Z",
+      "finishedAt": "2026-09-30T15:57:22.406Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "docker.log"
+    },
+    {
+      "id": "database-client",
+      "directory": ".",
+      "command": "psql --version",
+      "startedAt": "2026-09-30T15:57:22.478Z",
+      "finishedAt": "2026-09-30T15:57:22.522Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "database-client.log"
+    },
+    {
+      "id": "android-device",
+      "directory": ".",
+      "command": "adb devices",
+      "startedAt": "2026-09-30T15:57:22.601Z",
+      "finishedAt": "2026-09-30T15:57:24.873Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-device.log"
+    },
+    {
+      "id": "deno",
+      "directory": ".",
+      "command": "deno --version",
+      "startedAt": "2026-09-30T15:57:24.942Z",
+      "finishedAt": "2026-09-30T15:57:24.983Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "deno.log"
+    }
+  ]
+}

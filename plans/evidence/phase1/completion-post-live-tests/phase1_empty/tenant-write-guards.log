@@ -1,0 +1,58 @@
+SET
+BEGIN
+ plan 
+------
+ 1..7
+(1 row)
+
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 3
+SET
+SET
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 1 - Resident cannot register for another barangay medical drive
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 2 - Rejected medical registration preserves stock
+(1 row)
+
+                         ok                          
+-----------------------------------------------------
+ ok 3 - Resident can register for own barangay drive
+(1 row)
+
+                         throws_ok                         
+-----------------------------------------------------------
+ ok 4 - Resident cannot check into another barangay center
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 5 - Resident cannot check into an inactive center
+(1 row)
+
+                           lives_ok                           
+--------------------------------------------------------------
+ ok 6 - Resident can check into an active own-barangay center
+(1 row)
+
+RESET
+SET
+SET
+                         throws_ok                          
+------------------------------------------------------------
+ ok 7 - Administrator cannot use the resident check-in path
+(1 row)
+
+RESET
+ finish 
+--------
+(0 rows)
+
+ROLLBACK

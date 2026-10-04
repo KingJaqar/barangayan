@@ -1,3 +1,4 @@
+import { ResidentActionGate } from '@/components/resident-action-gate';
 /**
  * Submit Incident Report screen — reached by tapping the FAB on My Incident Reports.
  *
@@ -186,6 +187,10 @@ const catStyles = StyleSheet.create({
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function NewIncidentScreen() {
+  return <ResidentActionGate><NewIncidentScreenContent /></ResidentActionGate>;
+}
+
+function NewIncidentScreenContent() {
   const router = useRouter();
   const { session } = useAuth();
   const { profile } = useProfile();

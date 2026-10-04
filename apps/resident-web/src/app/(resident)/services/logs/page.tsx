@@ -1,3 +1,4 @@
+import { requestFee } from '@barangayan/shared';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { FileText } from 'lucide-react';
 
@@ -19,7 +20,7 @@ export default async function LogsPage() {
 
   const { data: requests } = await supabase
     .from('service_requests')
-    .select('id, status, updated_at, document_types(name, fee_centavos)')
+    .select('*, document_types(name, fee_centavos), payments(document_fee_centavos, amount_centavos)')
     .eq('resident_id', user.id)
     .order('updated_at', { ascending: false });
 
@@ -43,7 +44,7 @@ export default async function LogsPage() {
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="text-xs font-semibold text-muted-foreground">
-                  {r.document_types?.fee_centavos === 0 ? 'Free' : formatCentavosAsPHP(r.document_types?.fee_centavos ?? 0)}
+                  {requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos) === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos)!)}
                 </span>
                 <StatusPill status={r.status} />
               </div>

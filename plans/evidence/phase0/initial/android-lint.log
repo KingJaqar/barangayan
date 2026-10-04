@@ -1,0 +1,46 @@
+
+> @barangayan/mobile@1.0.0 lint
+> expo lint
+
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.5
+
+Error: EPERM: operation not permitted, scandir 'C:\Users\User'
+Occurred while linting C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\health\index.tsx:20
+Rule: "import/no-unresolved"
+    at Object.readdirSync (node:fs:1568:26)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:138:26)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:142:16)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:142:16)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:142:16)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:142:16)
+    at fileExistsWithCaseSync (C:\Users\User\barangayan\node_modules\eslint-module-utils\resolve.js:142:16)
+    at checkSourceValue (C:\Users\User\barangayan\node_modules\eslint-plugin-import\lib\rules\no-unresolved.js:49:52)
+    at checkSourceValue (C:\Users\User\barangayan\node_modules\eslint-module-utils\moduleVisitor.js:32:5)
+    at checkSource (C:\Users\User\barangayan\node_modules\eslint-module-utils\moduleVisitor.js:38:5)
+    at ruleErrorHandler (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:1173:33)
+    at C:\Users\User\barangayan\node_modules\eslint\lib\linter\source-code-visitor.js:76:46
+    at Array.forEach (<anonymous>)
+    at SourceCodeVisitor.callSync (C:\Users\User\barangayan\node_modules\eslint\lib\linter\source-code-visitor.js:76:30)
+    at C:\Users\User\barangayan\node_modules\eslint\lib\linter\source-code-traverser.js:291:18
+    at Array.forEach (<anonymous>)
+    at SourceCodeTraverser.traverseSync (C:\Users\User\barangayan\node_modules\eslint\lib\linter\source-code-traverser.js:290:10)
+    at runRules (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:1214:12)
+    at #flatVerifyWithoutProcessors (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:2115:4)
+    at Linter._verifyWithFlatConfigArrayAndWithoutProcessors (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:2203:43)
+    at Linter._verifyWithFlatConfigArray (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:2306:15)
+    at Linter.verify (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:1677:10)
+    at Linter.verifyAndFix (C:\Users\User\barangayan\node_modules\eslint\lib\linter\linter.js:2571:20)
+    at verifyText (C:\Users\User\barangayan\node_modules\eslint\lib\eslint\eslint-helpers.js:1180:45)
+    at readAndVerifyFile (C:\Users\User\barangayan\node_modules\eslint\lib\eslint\eslint-helpers.js:1321:10)
+npm error Lifecycle script `lint` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\resident-android-mobile
+npm error workspace @barangayan/mobile@1.0.0
+npm error location C:\Users\User\barangayan\apps\resident-android-mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c expo lint

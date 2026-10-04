@@ -1,0 +1,24 @@
+ M apps/admin-web/src/app/(admin)/dashboard/page.tsx
+ M apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx
+ M apps/admin-web/src/app/(admin)/requests/page.tsx
+ M apps/admin-web/src/app/(admin)/transactions/page.tsx
+ M apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx
+ M packages/shared/src/index.ts
+ M packages/shared/src/types/database.ts
+ M supabase/migrations/0094_resident_ios_tenant_write_guards.sql
+ M supabase/tests/resident_ios_tenant_write_guards.test.sql
+ M supabase/tests/rls_isolation.test.sql
+?? .claude/settings.local.json
+?? apps.zip
+?? "barangayan project paper/Ampid1_CitizenCharter_DocumentProcessing_Context.pdf"
+?? packages/shared/src/lib/service-foundations.ts
+?? packages/shared/src/schemas/service-foundations.test.ts
+?? packages/shared/src/schemas/service-foundations.ts
+?? packages/shared/src/types/service-foundations.ts
+?? plans/Major_Web_AndroidMobile_Improvement_Plan.md
+?? plans/Phase_0_Baseline_and_Change_Boundaries.md
+?? plans/Phase_1_Shared_Contracts_and_Additive_Foundations.md
+?? plans/evidence/
+?? scripts/
+?? supabase/migrations/20261001030133_phase1_shared_foundations.sql
+?? supabase/tests/service_foundations.test.sql

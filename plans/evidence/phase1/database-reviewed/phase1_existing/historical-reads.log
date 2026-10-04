@@ -1,0 +1,67 @@
+SET
+BEGIN
+ plan 
+------
+ 1..9
+(1 row)
+
+SET
+SET
+                               is                               
+----------------------------------------------------------------
+ ok 1 - Historical owner reads requests for an inactive service
+(1 row)
+
+                     is                     
+--------------------------------------------
+ ok 2 - Historical outcomes remain readable
+(1 row)
+
+                             ok                              
+-------------------------------------------------------------
+ ok 3 - Historical requests retain original timing semantics
+(1 row)
+
+                        is                        
+--------------------------------------------------
+ ok 4 - Historical ledger amounts remain readable
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 5 - Historical payment outcomes are retained
+(1 row)
+
+                     is                      
+---------------------------------------------
+ ok 6 - Legacy free-text address is retained
+(1 row)
+
+                            is                             
+-----------------------------------------------------------
+ ok 7 - Legacy approved evidence remains readable by owner
+(1 row)
+
+SET
+                               is                               
+----------------------------------------------------------------
+ ok 8 - Historical tenant administrator reads original requests
+(1 row)
+
+RESET
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+SET
+SET
+                               is                               
+----------------------------------------------------------------
+ ok 9 - Unrelated administrator cannot read historical requests
+(1 row)
+
+RESET
+ finish 
+--------
+(0 rows)
+
+ROLLBACK

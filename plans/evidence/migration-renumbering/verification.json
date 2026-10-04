@@ -1,0 +1,26 @@
+[
+  {
+    "oldName": "20261001030133_phase1_shared_foundations.sql",
+    "newName": "0095_phase1_shared_foundations.sql",
+    "sha256": "303A9AF66EACA70B2A67EE5203C7CFAE1618BD0330868BE1B9EE208F1BD1A234",
+    "sqlUnchanged": true
+  },
+  {
+    "oldName": "20261001145422_phase2_trusted_evidence_locality.sql",
+    "newName": "0096_phase2_trusted_evidence_locality.sql",
+    "sha256": "1649AFEFB5BD9497C8E4FB8C472FB933B91A81E985E04F661B0A5BCFB8BF97FF",
+    "sqlUnchanged": true
+  },
+  {
+    "oldName": "20261001160010_phase3_catalog_staff_workflows.sql",
+    "newName": "0097_phase3_catalog_staff_workflows.sql",
+    "sha256": "2F59DA371BE6A682C81E08203586513D586600FEBDDC9B4FAE72E9B56991BE1F",
+    "sqlUnchanged": true
+  },
+  {
+    "oldName": "20261003084732_phase4_resident_submission_payment.sql",
+    "newName": "0098_phase4_resident_submission_payment.sql",
+    "sha256": "6686D2E43B8D5279EA59978EB187E73C2FE3E378254DD5D2F9DAC7183F29130E",
+    "sqlUnchanged": true
+  }
+]

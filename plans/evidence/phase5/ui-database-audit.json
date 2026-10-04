@@ -1,0 +1,155 @@
+{
+  "job": {
+    "jobid": 2,
+    "active": true,
+    "command": "select barangayan_private.evaluate_service_request_slas()",
+    "jobname": "service-request-sla-minute",
+    "database": "postgres",
+    "nodename": "localhost",
+    "nodeport": 5432,
+    "schedule": "* * * * *",
+    "username": "postgres"
+  },
+  "journey": {
+    "pauses": [
+      {
+        "id": "ce529006-abc2-415f-abb8-026cd453931b",
+        "reason": "Resident returning with original certificate",
+        "request_id": "e5b8a242-97c7-48cd-95c7-a750aed75bd7",
+        "resumed_at": "2026-10-03T14:30:22.782418+00:00",
+        "resumed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+        "started_at": "2026-10-03T14:14:19.01953+00:00",
+        "started_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+      }
+    ],
+    "metrics": {
+      "position": "completed_within",
+      "agencySeconds": 756.447577,
+      "targetSeconds": 900,
+      "waitingReason": null,
+      "turnaroundSeconds": 1866.21984,
+      "residentWaitSeconds": 963.762888
+    },
+    "request": {
+      "id": "e5b8a242-97c7-48cd-95c7-a750aed75bd7",
+      "status": "completed",
+      "ready_at": "2026-10-03T14:36:10.099368+00:00",
+      "fee_basis": "Confirmed exemption",
+      "sla_state": "released",
+      "created_at": "2026-10-03T14:07:29.867154+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:38:36.083741+00:00",
+      "accepted_at": "2026-10-03T14:07:29.888903+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": "2026-10-03T14:38:36.086994+00:00",
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:29.867154+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:07:29.887336+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:36:10.097292+00:00",
+          "note": "SLA ready",
+          "status": "ready_for_pickup"
+        },
+        {
+          "at": "2026-10-03T14:38:36.083741+00:00",
+          "note": "SLA release",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:07:29.882299+00:00",
+      "fee_assessed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "idempotency_key": "134a154c-beb5-4221-9691-f08498f41512",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00027",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "134a154c-beb5-4221-9691-f08498f41512"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:07:29.875685+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual originals and eligibility checked",
+      "requirements_reviewed_at": "2026-10-03T14:07:29.875685+00:00",
+      "requirements_reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+    }
+  },
+  "recent_runs": [
+    {
+      "status": "succeeded",
+      "end_time": "2026-10-03T15:37:02.243588+00:00",
+      "start_time": "2026-10-03T15:37:02.23656+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "status": "succeeded",
+      "end_time": "2026-10-03T15:36:00.015013+00:00",
+      "start_time": "2026-10-03T15:36:00.008524+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "status": "succeeded",
+      "end_time": "2026-10-03T15:35:00.01811+00:00",
+      "start_time": "2026-10-03T15:35:00.011373+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "status": "succeeded",
+      "end_time": "2026-10-03T15:34:02.239706+00:00",
+      "start_time": "2026-10-03T15:34:02.233066+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "status": "succeeded",
+      "end_time": "2026-10-03T15:33:00.014827+00:00",
+      "start_time": "2026-10-03T15:33:00.008043+00:00",
+      "return_message": "1 row"
+    }
+  ],
+  "shared": {
+    "agencySeconds": 756.447577,
+    "residentWaitSeconds": 963.762888,
+    "turnaroundSeconds": 1866.21984,
+    "targetSeconds": 900,
+    "position": "completed_within",
+    "waitingReason": null
+  },
+  "passed": true
+}

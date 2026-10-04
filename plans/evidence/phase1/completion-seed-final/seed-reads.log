@@ -1,0 +1,16 @@
+BEGIN
+SET
+1..12
+ok 1 - fresh seed creates exactly the pilot tenant
+ok 2 - fresh registration locality is configured
+ok 3 - Auth trigger provisions the seeded resident
+ok 4 - development password is stored as bcrypt
+ok 5 - seed creates required incident categories
+ok 6 - seed retains the legacy catalog contract
+ok 7 - centers precede check-in references
+ok 8 - fixed check-in IDs prevent duplicate retries
+ok 9 - guidelines and hotlines use valid stable IDs
+ok 10 - QR content uses valid IDs
+ok 11 - fresh seed does not invent document requests
+ok 12 - seed does not invent identity approvals
+ROLLBACK

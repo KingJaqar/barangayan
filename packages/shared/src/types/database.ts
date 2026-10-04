@@ -1,3 +1,5 @@
+import type { CatalogFoundationFields, ProfileFoundationFields, RequestFoundationFields, FoundationTables, FoundationFunctions } from './service-foundations';
+
 export type Json =
   | string
   | number
@@ -38,7 +40,7 @@ export type Database = {
     }
   }
   public: {
-    Tables: {
+    Tables: FoundationTables & {
       about_us: {
         Row: {
           address: string | null
@@ -383,7 +385,7 @@ export type Database = {
         ]
       }
       document_types: {
-        Row: {
+        Row: CatalogFoundationFields & {
           barangay_id: string
           created_at: string
           deleted_at: string | null
@@ -395,7 +397,7 @@ export type Database = {
           processing_target_hours: number
           requirements: string[]
         }
-        Insert: {
+        Insert: Partial<CatalogFoundationFields> & {
           barangay_id: string
           created_at?: string
           deleted_at?: string | null
@@ -407,7 +409,7 @@ export type Database = {
           processing_target_hours?: number
           requirements?: string[]
         }
-        Update: {
+        Update: Partial<CatalogFoundationFields> & {
           barangay_id?: string
           created_at?: string
           deleted_at?: string | null
@@ -1202,7 +1204,7 @@ export type Database = {
         ]
       }
       profiles: {
-        Row: {
+        Row: ProfileFoundationFields & {
           accent_color: string
           avatar_url: string | null
           barangay_id: string
@@ -1234,6 +1236,7 @@ export type Database = {
           location_verified_at: string | null
           push_notifications_enabled: boolean
           registration_location: Json | null
+          registration_home_location: Json | null
           role: string
           sex: string | null
           street: string | null
@@ -1243,7 +1246,7 @@ export type Database = {
           verified_location: Json | null
           verified_location_address: string | null
         }
-        Insert: {
+        Insert: Partial<ProfileFoundationFields> & {
           accent_color?: string
           avatar_url?: string | null
           barangay_id: string
@@ -1275,6 +1278,7 @@ export type Database = {
           occupation?: string | null
           push_notifications_enabled?: boolean
           registration_location?: Json | null
+          registration_home_location?: Json | null
           role?: string
           sex?: string | null
           street?: string | null
@@ -1284,7 +1288,7 @@ export type Database = {
           verified_location?: Json | null
           verified_location_address?: string | null
         }
-        Update: {
+        Update: Partial<ProfileFoundationFields> & {
           accent_color?: string
           avatar_url?: string | null
           barangay_id?: string
@@ -1316,6 +1320,7 @@ export type Database = {
           occupation?: string | null
           push_notifications_enabled?: boolean
           registration_location?: Json | null
+          registration_home_location?: Json | null
           role?: string
           sex?: string | null
           street?: string | null
@@ -1332,6 +1337,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "barangays"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_current_id_submission_fkey"
+            columns: ["current_id_submission_id", "id", "barangay_id"]
+            isOneToOne: false
+            referencedRelation: "id_submissions"
+            referencedColumns: ["id", "resident_id", "barangay_id"]
+          },
+          {
+            foreignKeyName: "profiles_approved_id_submission_fkey"
+            columns: ["approved_id_submission_id", "id", "barangay_id"]
+            isOneToOne: false
+            referencedRelation: "id_submissions"
+            referencedColumns: ["id", "resident_id", "barangay_id"]
           },
         ]
       }
@@ -1363,7 +1382,7 @@ export type Database = {
         Relationships: []
       }
       service_requests: {
-        Row: {
+        Row: RequestFoundationFields & {
           barangay_id: string
           created_at: string
           deleted_at: string | null
@@ -1379,7 +1398,7 @@ export type Database = {
           status_history: Json
           updated_at: string
         }
-        Insert: {
+        Insert: Partial<RequestFoundationFields> & {
           barangay_id: string
           created_at?: string
           deleted_at?: string | null
@@ -1395,7 +1414,7 @@ export type Database = {
           status_history?: Json
           updated_at?: string
         }
-        Update: {
+        Update: Partial<RequestFoundationFields> & {
           barangay_id?: string
           created_at?: string
           deleted_at?: string | null
@@ -1429,6 +1448,20 @@ export type Database = {
           {
             foreignKeyName: "service_requests_resident_id_fkey"
             columns: ["resident_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_approved_submission_fkey"
+            columns: ["approved_id_submission_id", "resident_id", "barangay_id"]
+            isOneToOne: false
+            referencedRelation: "id_submissions"
+            referencedColumns: ["id", "resident_id", "barangay_id"]
+          },
+          {
+            foreignKeyName: "service_requests_fee_assessed_by_fkey"
+            columns: ["fee_assessed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -1599,7 +1632,8 @@ export type Database = {
     Views: {
       [_ in never]: never
     }
-    Functions: {
+    Functions: FoundationFunctions & {
+      ensure_google_resident_profile: { Args: Record<string, never>; Returns: string };
       admin_add_household_member: {
         Args: {
           p_name: string

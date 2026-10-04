@@ -1,0 +1,45 @@
+BEGIN
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+SET
+b6030000-0000-0000-0000-000000000001
+ok 1 - Google identity can remain without invented resident details
+ok 2 - Missing profile derives only enabled browsing tenant
+ok 3 - Public browsing excludes foreign and deleted announcements
+ok 4 - Document guidance readable before completing profile
+ok 5 - Health information readable before registering
+ok 6 - Direct report submission requires profile
+ok 7 - Direct health registration requires profile
+ok 8 - Direct document request requires profile
+ok 9 - Deferred completion still works without password
+ok 10 - After completion existing tenant policies take over
+ok 11 - Completing profile preserves tenant isolation
+ok 12 - Completed resident may submit a report
+ok 13 - Completion does not approve ID evidence
+RESET
+UPDATE 1
+SET
+not ok 14 - Whitespace-only required address cannot bypass completion
+# Failed test 14: "Whitespace-only required address cannot bypass completion"
+#       caught: no exception
+#       wanted: 42501
+RESET
+UPDATE 1
+SET
+ok 15 - Partial existing profiles cannot bypass submission gate
+ok 16 - Partial profiles can continue browsing
+RESET
+INSERT 0 1
+INSERT 0 1
+SET
+b6030000-0000-0000-0000-000000000002
+ok 17 - Ambiguous locality fails closed
+ok 18 - No cross-tenant browsing fallback
+1..18
+# Looks like you failed 1 test of 18
+ROLLBACK

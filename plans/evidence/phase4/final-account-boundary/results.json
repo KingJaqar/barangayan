@@ -1,0 +1,51 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install tsc --noEmit",
+      "startedAt": "2026-10-03T11:19:19.510Z",
+      "finishedAt": "2026-10-03T11:19:35.044Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-03T11:19:35.130Z",
+      "finishedAt": "2026-10-03T11:19:44.414Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo export --platform android --output-dir dist/phase0-android",
+      "startedAt": "2026-10-03T11:19:44.500Z",
+      "finishedAt": "2026-10-03T11:20:12.764Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-export.log"
+    },
+    {
+      "id": "android-sdk",
+      "directory": "apps/resident-android-mobile",
+      "command": "npx --no-install expo install --check",
+      "startedAt": "2026-10-03T11:20:12.861Z",
+      "finishedAt": "2026-10-03T11:20:15.288Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-sdk.log"
+    }
+  ]
+}

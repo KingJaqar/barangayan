@@ -1,0 +1,18 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checks": [
+    {
+      "id": "root-lint",
+      "directory": ".",
+      "command": "npm run lint",
+      "startedAt": "2026-09-30T16:05:10.668Z",
+      "finishedAt": "2026-09-30T16:05:23.685Z",
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "log": "root-lint.log.gz"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+/mnt/c/Users/User/barangayan/supabase/tests/admin_document_type_creation.test.sql ...... ok
+/mnt/c/Users/User/barangayan/supabase/tests/agency_sla.test.sql ........................ ok
+/mnt/c/Users/User/barangayan/supabase/tests/catalog_staff_workflows.test.sql ........... ok
+/mnt/c/Users/User/barangayan/supabase/tests/document_charter_forms.test.sql ............ ok
+/mnt/c/Users/User/barangayan/supabase/tests/resident_ios_tenant_write_guards.test.sql .. ok
+/mnt/c/Users/User/barangayan/supabase/tests/rls_isolation.test.sql ..................... ok
+/mnt/c/Users/User/barangayan/supabase/tests/service_foundations.test.sql ............... ok
+/mnt/c/Users/User/barangayan/supabase/tests/trusted_evidence_locality.test.sql ......... ok
+All tests successful.
+Files=8, Tests=316,  1 wallclock secs ( 0.09 usr  0.03 sys +  0.13 cusr  0.06 csys =  0.31 CPU)
+Result: PASS
+Connecting to local database...
+A new version of Supabase CLI is available: v2.119.0 (currently installed v2.118.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

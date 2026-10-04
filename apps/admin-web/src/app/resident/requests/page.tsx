@@ -1,3 +1,4 @@
+import { AgencySlaStatus } from '@/components/admin/agency-sla-status';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
@@ -15,7 +16,7 @@ export default async function ResidentRequestsPage() {
 
   const { data: requests } = await supabase
     .from('service_requests')
-    .select('id, reference_number, status, payment_status, created_at, document_types(name, fee_centavos, processing_target_hours)')
+    .select('id, reference_number, status, payment_status, created_at, timing_model, document_types(name, fee_centavos, processing_target_hours)')
     .eq('resident_id', user!.id)
     .order('created_at', { ascending: false });
 
@@ -47,11 +48,12 @@ export default async function ResidentRequestsPage() {
                 <div className="min-w-0">
                   <p className="truncate font-semibold">{r.document_types?.name ?? 'Document Request'}</p>
                   <p className="text-xs text-zinc-400">{r.reference_number} · Submitted {formatDateTime(r.created_at)}</p>
-                  {flag !== 'on_track' && (
+                  {r.timing_model !== 'agency_minutes_v1' ? <p className="text-xs text-zinc-400">Previous timing model</p> : null}
+                  {r.timing_model === 'agency_minutes_v1' ? <AgencySlaStatus requestId={r.id} compact /> : flag !== 'on_track' ? (
                     <p className={`mt-0.5 text-xs font-medium ${flag === 'overdue' ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400'}`}>
                       {flag === 'overdue' ? 'Taking longer than usual' : 'Nearing expected completion time'}
                     </p>
-                  )}
+                  ) : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <StatusPill status={r.payment_status} />

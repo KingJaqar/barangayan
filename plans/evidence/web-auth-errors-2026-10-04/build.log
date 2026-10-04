@@ -1,0 +1,87 @@
+
+> @barangayan/resident-web@0.1.0 build
+> next build
+
+▲ Next.js 16.3.0 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 53ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.7s
+  Running TypeScript ...
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.next-auth-error-build/types/**/*.ts'
+  	- include was updated to add '.next-auth-error-build/dev/types/**/*.ts'
+
+  Finished TypeScript in 12.6s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/44) ...
+  Generating static pages using 31 workers (11/44) 
+  Generating static pages using 31 workers (22/44) 
+  Generating static pages using 31 workers (33/44) 
+✓ Generating static pages using 31 workers (44/44) in 955ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /announcements
+├ ○ /apple-icon.png
+├ ƒ /auth/callback
+├ ○ /auth/error
+├ ƒ /complete-profile
+├ ƒ /emergency
+├ ƒ /emergency/alerts
+├ ƒ /emergency/centers
+├ ƒ /emergency/family
+├ ƒ /emergency/scan
+├ ƒ /forgot-password
+├ ƒ /health
+├ ƒ /health/my-registrations
+├ ƒ /health/register/[driveId]
+├ ƒ /home
+├ ○ /icon.png
+├ ƒ /login
+├ ƒ /maps
+├ ƒ /maps/directory
+├ ƒ /maps/preparedness
+├ ƒ /onboarding
+├ ƒ /register
+├ ƒ /reports
+├ ƒ /reports/[incidentId]
+├ ƒ /reports/new
+├ ƒ /reset-password
+├ ƒ /services
+├ ƒ /services/[documentId]
+├ ƒ /services/documents
+├ ƒ /services/logs
+├ ƒ /services/payment/[requestId]
+├ ƒ /services/payment/pickup/[requestId]
+├ ƒ /services/payment/qrph/[requestId]
+├ ƒ /services/payment/success
+├ ƒ /services/requests
+├ ƒ /services/requests/[requestId]
+├ ƒ /services/requests/new/[documentId]
+├ ƒ /settings
+├ ƒ /settings/about
+├ ƒ /settings/change-password
+├ ƒ /settings/delete-account
+├ ƒ /settings/download-data
+├ ƒ /settings/help
+├ ƒ /settings/help/[articleId]
+├ ƒ /settings/location-verification
+├ ƒ /settings/notifications
+├ ƒ /settings/profile
+├ ƒ /settings/terms-privacy
+├ ƒ /settings/theme
+└ ƒ /verify-otp
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

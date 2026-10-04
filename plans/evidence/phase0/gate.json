@@ -1,0 +1,154 @@
+{
+  "verdict": "complete",
+  "scope": "Phase 0 inventory, baseline reproducibility and change boundaries only",
+  "head": "fb49ecd937c8ceaa6263521f40f84fae05bfe621",
+  "checkedAt": "2026-10-01T03:00:36.127Z",
+  "inventory": {
+    "files": 758,
+    "references": 2864,
+    "sqlDeclarations": 305
+  },
+  "baselineAttempts": 52,
+  "checks": [
+    {
+      "name": "Source inventory hashes still identify the inspected files",
+      "passed": true
+    },
+    {
+      "name": "Every indexed line reference exists",
+      "passed": true
+    },
+    {
+      "name": "resident-web UI and data consumers indexed",
+      "passed": true
+    },
+    {
+      "name": "admin-web UI and data consumers indexed",
+      "passed": true
+    },
+    {
+      "name": "resident-android-mobile UI and data consumers indexed",
+      "passed": true
+    },
+    {
+      "name": "resident-ios-mobile UI and data consumers indexed",
+      "passed": true
+    },
+    {
+      "name": "catalog boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "requests boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "identity boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "payments boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "sla boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "locality boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "auth boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "scores boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "realtime boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "exports boundary indexed",
+      "passed": true
+    },
+    {
+      "name": "Primary, legacy, iOS, correction, storage, map, financial and export boundaries present",
+      "passed": true
+    },
+    {
+      "name": "All requirement checklist IDs have phase and verification mappings",
+      "passed": true
+    },
+    {
+      "name": "Every attempted check retains timing, exit and log evidence",
+      "passed": true
+    },
+    {
+      "name": "All applicable baseline checks recorded, including blocked backend/device probes",
+      "passed": true
+    },
+    {
+      "name": "ios-types persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "ios-export persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "ios-release persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "ios-lint persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "android-sdk persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "ios-sdk persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "database-tests persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "edge-types persistent diagnostic reproduced",
+      "passed": true
+    },
+    {
+      "name": "Root lint generated-output diagnostic reproduced independently of build race",
+      "passed": true
+    },
+    {
+      "name": "Transient resident web route types recover without source changes",
+      "passed": true
+    },
+    {
+      "name": "Original user files are byte-for-byte preserved",
+      "passed": true
+    },
+    {
+      "name": "Tracked change boundary retains only the original migration edit",
+      "passed": true
+    },
+    {
+      "name": "External and feature checks remain explicitly unverified",
+      "passed": true
+    }
+  ],
+  "manualReview": "Journey/requirement closure and findings recorded in Phase_0_Baseline_and_Change_Boundaries.md; index integrity does not prove runtime semantics.",
+  "limitations": [
+    "No isolated database/migration/RLS/storage/concurrency execution",
+    "No connected Android device or signed native build",
+    "No authenticated E2E/provider financial or Google OAuth execution",
+    "iOS installation/release gates remain blocked",
+    "Root lint traverses generated output; its bounded execution is recorded without a passing claim"
+  ]
+}

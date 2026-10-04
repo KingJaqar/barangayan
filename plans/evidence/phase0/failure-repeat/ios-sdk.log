@@ -1,0 +1,4 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Dependency validation is unreliable in offline-mode
+CommandError: "expo-crypto" is added as a dependency in your project's package.json but it doesn't seem to be installed. Run "npm install", or the equivalent for your package manager, and try again.

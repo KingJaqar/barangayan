@@ -1,0 +1,35 @@
+{
+  "database": "phase1_foundation_empty",
+  "results": [
+    {
+      "label": "Reset isolated empty-foundation database",
+      "startedAt": "2026-10-01T03:59:05.771Z",
+      "finishedAt": "2026-10-01T03:59:06.578Z",
+      "exitCode": 0
+    },
+    {
+      "label": "Create isolated empty-foundation database",
+      "startedAt": "2026-10-01T03:59:06.579Z",
+      "finishedAt": "2026-10-01T03:59:07.090Z",
+      "exitCode": 0
+    },
+    {
+      "label": "Restore schema-only baseline through 0094",
+      "startedAt": "2026-10-01T03:59:07.091Z",
+      "finishedAt": "2026-10-01T03:59:07.935Z",
+      "exitCode": 0
+    },
+    {
+      "label": "Verify no application records before additive migration",
+      "startedAt": "2026-10-01T03:59:07.935Z",
+      "finishedAt": "2026-10-01T03:59:08.043Z",
+      "exitCode": 0
+    },
+    {
+      "label": "Apply additive Phase 1 migration to empty application schema",
+      "startedAt": "2026-10-01T03:59:08.044Z",
+      "finishedAt": "2026-10-01T03:59:08.269Z",
+      "exitCode": 0
+    }
+  ]
+}

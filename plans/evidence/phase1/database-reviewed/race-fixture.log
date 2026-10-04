@@ -1,0 +1,149 @@
+SET
+BEGIN
+UPDATE 1
+INSERT 0 0
+INSERT 0 2
+INSERT 0 5
+INSERT 0 4
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 4
+CREATE TABLE
+INSERT 0 1
+GRANT
+SET
+ok 1 - Anonymous cannot invoke submission
+ok 2 - Anonymous cannot read ID versions
+ok 3 - Anonymous cannot read attachments
+RESET
+SET
+SET
+SET
+ok 4 - Resident cannot assign role
+ok 5 - Resident cannot assign tenant
+ok 6 - No approval blocks submission
+ok 7 - ID version table has no direct write grant
+ok 8 - Resident publishes owned uploaded ID version
+ok 9 - ID publication retry is idempotent
+ok 10 - Retry creates one version
+ok 11 - Resident cannot approve evidence
+ok 12 - Resident cannot assign a versioned verification outcome
+ok 13 - Resident cannot overwrite version evidence
+ok 14 - Resident cannot delete version evidence
+ok 15 - Pending approval blocks submission
+ok 16 - Direct insert cannot downgrade v2 service
+ok 17 - Cross-tenant related service rejected at table boundary
+ok 18 - Legacy direct insert cannot forge initial state
+ok 19 - Legacy insert cannot reserve a controlled idempotency key
+SET
+ok 20 - Caller cannot impersonate controlled submission with a session setting
+SET
+ok 21 - Legacy supported submission remains available
+ok 22 - Existing cancellation RPC retains legacy behavior
+ok 23 - Legacy cancellation keeps established status
+SET
+ok 24 - Other tenant administrator cannot review evidence
+ok 25 - Other tenant administrator cannot read evidence
+SET
+ok 26 - Tenant administrator approves reviewed version
+ok 27 - Repeated review rejected
+SET
+ok 28 - Forged identity rejected
+ok 29 - Whitespace Others explanation rejected
+ok 30 - Excessive purpose rejected
+ok 31 - Missing appearance acknowledgment rejected
+ok 32 - Foreign uploaded file reference rejected
+ok 33 - Forged size does not match uploaded metadata
+ok 34 - Failed or missing upload cannot be attached
+ok 35 - Verified resident submits while pricing pending
+ok 36 - Same-key retry returns original request
+ok 37 - One persisted request for retries
+ok 38 - Same key with changed payload is a conflict
+ok 39 - Fee state is separate from request status
+ok 40 - Clock does not start at online submission
+ok 41 - Target snapshot persisted
+ok 42 - Resident cannot assess fees
+ok 43 - Resident cannot start agency processing
+SET
+ok 44 - Pending fee assessment blocks payment at ledger boundary
+ok 45 - Administrator must use controlled assessment
+SET
+ok 46 - Administrator cannot impersonate controlled assessment with a session setting
+SET
+ok 47 - Appearance readiness required before acceptance
+ok 48 - Complete requirements and appearance start clock
+ok 49 - Pause requires documented resident reason
+ok 50 - Resident wait recorded
+ok 51 - Overlapping pause rejected
+ok 52 - Open wait resumed
+ok 53 - Repeated resume rejected
+ok 54 - Explicit waiver persists administrator basis
+ok 55 - Readiness stops processing clock
+ok 56 - Waiver bypasses payment and permits release
+ok 57 - Acceptance, readiness and release are separate ordered server times
+ok 58 - Target snapshot cannot be overwritten
+ok 59 - Catalog rejects duplicate purpose codes at server boundary
+ok 60 - Administrator may change future catalog target
+ok 61 - Existing target snapshot survives catalog edit
+SET
+ok 62 - Renter requires lessor evidence independently of verified identity
+ok 63 - Owned file at exact 5 MB limit attaches transactionally
+ok 64 - Owner reads attached supporting metadata
+ok 65 - Attachment associations have no direct write grant
+ok 66 - Upload cannot assign another owner path
+ok 67 - Supporting evidence cannot be overwritten
+SET
+ok 68 - Same-tenant administrator reads attachment associations
+ok 69 - Administrator reads attached evidence, not unattached foreign files
+ok 70 - Administrator confirms request amount
+ok 71 - Payment rejects amount differing from assessment
+ok 72 - Confirmed request amount begins payment
+ok 73 - Second active payment is rejected
+ok 74 - Amount freezes when payment begins
+ok 75 - Ledger cannot overwrite frozen assessed amount
+SET
+ok 76 - Other-tenant administrator cannot read attachments
+ok 77 - Other-tenant administrator cannot read supporting objects
+ok 78 - Other-tenant administrator cannot assess a foreign request
+RESET
+INSERT 0 1
+SET
+SET
+ok 79 - Copy request snapshots description and copies
+SET
+ok 80 - Total pages cannot be multiplied by requested copies again
+ok 81 - Ten pesos per total confirmed page
+ok 82 - Copy processing can start after complete requirements
+ok 83 - Copy wait recorded
+SET
+ok 84 - Existing resident cancellation RPC supports v2 and freezes clock
+ok 85 - Cancellation freezes new timing state
+ok 86 - Cancellation closes documented resident waits
+RESET
+INSERT 0 2
+SET
+SET
+ok 87 - Unrelated profile edit preserves versioned approval
+ok 88 - Unrelated edit retains approval
+ok 89 - Replacement publishes a distinct immutable evidence version
+ok 90 - Replacement clears approval
+ok 91 - Replacement pending evidence blocks new requests
+ok 92 - Historical request retains reviewed evidence reference
+SET
+ok 93 - Stale evidence review cannot alter replacement
+ok 94 - Administrator rejection records reason and actor
+SET
+ok 95 - Failed verification blocks new requests
+ok 96 - Lost-response retry still retrieves historical request after replacement
+SET
+ok 97 - Named OAuth identity without registration metadata can complete profile
+ok 98 - User metadata role does not assign authority
+ok 99 - Completion derives configured locality
+ok 100 - Completion derives province
+ok 101 - Completion rejects tenant injection
+ok 102 - Required profile enum cannot be JSON null
+RESET
+1..102
+COMMIT

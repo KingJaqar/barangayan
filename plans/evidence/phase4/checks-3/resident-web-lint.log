@@ -1,0 +1,25 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\app\(resident)\services\[documentId]\page.tsx
+  3:10  warning  'formatCentavosAsPHP' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-web\src\components\services\document-request-modal\details-step.tsx
+  13:10  warning  'formatCentavosAsPHP' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-web\src\components\services\document-request-modal\pickup-step.tsx
+  21:3  warning  'barangayId' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\resident-web\src\components\services\request-payment-journey.tsx
+  36:169  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+C:\Users\User\barangayan\apps\resident-web\src\components\services\resident-service-form.tsx
+  58:33  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts
+  94:42  warning  The ref value 'scope.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'scope.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 6 problems (0 errors, 6 warnings)
+

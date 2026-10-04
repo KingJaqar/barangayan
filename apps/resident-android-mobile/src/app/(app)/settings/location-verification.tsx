@@ -18,7 +18,7 @@
  */
 import { Ionicons } from '@expo/vector-icons';
 import type { LatLng } from '@barangayan/shared';
-import { reverseGeocode } from '@barangayan/shared';
+import { reverseGeocode, isPointInPolygon } from '@barangayan/shared';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
@@ -97,6 +97,7 @@ export default function LocationVerificationScreen() {
         }
         const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
         const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        if (!boundary || !isPointInPolygon(point, boundary)) { if (!cancelled) setRejectedNotice(true); return; }
         if (!cancelled) {
           setPosition(point);
           void fetchAddressFor(point);
@@ -135,6 +136,7 @@ export default function LocationVerificationScreen() {
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      if (!boundary || !isPointInPolygon(point, boundary)) { setRejectedNotice(true); return; }
       setPosition(point);
       setRejectedNotice(false);
       setSaved(false);
@@ -159,6 +161,7 @@ export default function LocationVerificationScreen() {
 
   async function handleSave() {
     if (!session || !position) return;
+    if (!boundary || !isPointInPolygon(position, boundary)) { setRejectedNotice(true); return; }
     setSaving(true);
     const { error } = await supabase
       .from('profiles')
@@ -170,7 +173,7 @@ export default function LocationVerificationScreen() {
       .eq('id', session.user.id);
     setSaving(false);
     if (error) {
-      setRejectedNotice(false);
+      Alert.alert('Location not saved', 'Check your connection and choose a pin inside the boundary, then retry.');
       return;
     }
     setSaved(true);

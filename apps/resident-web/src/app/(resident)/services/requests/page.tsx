@@ -43,7 +43,7 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
   const supabase = await createSupabaseServerClient();
   const { data: requests } = await supabase
     .from('service_requests')
-    .select('id, reference_number, status, payment_status, created_at, document_types(name, processing_target_hours)')
+    .select('id, reference_number, status, payment_status, created_at, timing_model, document_types(name, processing_target_hours)')
     .eq('resident_id', user.id)
     .order('created_at', { ascending: false });
 

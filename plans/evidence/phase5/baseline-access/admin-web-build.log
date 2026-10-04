@@ -1,0 +1,66 @@
+
+> @barangayan/web@0.1.0 build
+> next build
+
+▲ Next.js 16.3.0 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 69ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.6s
+  Running TypeScript ...
+  Finished TypeScript in 14.6s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/37) ...
+  Generating static pages using 31 workers (9/37) 
+  Generating static pages using 31 workers (18/37) 
+  Generating static pages using 31 workers (27/37) 
+✓ Generating static pages using 31 workers (37/37) in 861ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /about-us
+├ ƒ /announcements
+├ ƒ /api/admin/residents
+├ ƒ /api/admin/staff/invite
+├ ○ /apple-icon.png
+├ ƒ /dashboard
+├ ƒ /emergency-qr
+├ ƒ /evacuation-centers
+├ ƒ /faq
+├ ○ /forgot-password
+├ ƒ /health
+├ ƒ /health/applicants
+├ ƒ /households-residents
+├ ƒ /hub
+├ ○ /icon.png
+├ ƒ /incident-map
+├ ƒ /incident-reports
+├ ○ /login
+├ ƒ /requests
+├ ƒ /requests/[requestId]
+├ ○ /reset-password
+├ ƒ /resident
+├ ƒ /resident/profile
+├ ƒ /resident/reports
+├ ƒ /resident/reports/new
+├ ƒ /resident/requests
+├ ƒ /resident/requests/[requestId]
+├ ƒ /resident/requests/new
+├ ƒ /residents
+├ ƒ /services
+├ ƒ /settings
+├ ƒ /staff
+├ ƒ /terms-privacy
+├ ƒ /theme
+├ ƒ /transactions
+└ ƒ /waste-management
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

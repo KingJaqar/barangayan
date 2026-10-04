@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "assertions": [
+    "Read sole configured test registration locality",
+    "Create synthetic Auth user",
+    "Profile absent before Google identity insert"
+  ],
+  "error": "ifError got unwanted exception: Database error querying schema"
+}

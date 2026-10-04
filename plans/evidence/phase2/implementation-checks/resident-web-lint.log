@@ -1,0 +1,40 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts
+  58:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts:58:3
+  56 |   const [error, setError] = useState<string | null>(null);
+  57 |   const scope = useRef(new AccountRequestScope());
+> 58 |   scope.current.setOwner(userId);
+     |   ^^^^^^^^^^^^^ Passing a ref to a function may read its value during render
+  59 |
+  60 |   const doFetch = useCallback(() => {
+  61 |     const ticket = scope.current.begin(userId);           react-hooks/refs
+  58:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\resident-web\src\hooks\use-profile.ts:58:3
+  56 |   const [error, setError] = useState<string | null>(null);
+  57 |   const scope = useRef(new AccountRequestScope());
+> 58 |   scope.current.setOwner(userId);
+     |   ^^^^^^^^^^^^^^^^^^^^^^ Passing a ref to a function may read its value during render
+  59 |
+  60 |   const doFetch = useCallback(() => {
+  61 |     const ticket = scope.current.begin(userId);  react-hooks/refs
+
+✖ 2 problems (2 errors, 0 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\resident-web
+npm error workspace @barangayan/resident-web@0.1.0
+npm error location C:\Users\User\barangayan\apps\resident-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint

@@ -1,0 +1,15 @@
+{
+    "exitCode":  0,
+    "finishedAt":  "2026-10-01T12:52:23.8816743Z",
+    "features":  [
+                     {
+                         "FeatureName":  "Microsoft-Windows-Subsystem-Linux",
+                         "State":  0
+                     },
+                     {
+                         "FeatureName":  "VirtualMachinePlatform",
+                         "State":  3
+                     }
+                 ],
+    "restartPerformed":  false
+}

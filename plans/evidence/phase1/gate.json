@@ -1,0 +1,1833 @@
+{
+  "checkedAt": "2026-10-01T14:37:23.951Z",
+  "verdict": "complete",
+  "scope": [
+    "Android",
+    "resident web",
+    "web admin",
+    "shared/backend"
+  ],
+  "independentChecksPass": true,
+  "checks": [
+    {
+      "name": "Full migration chain from empty database",
+      "passed": true
+    },
+    {
+      "name": "Representative existing database migrated",
+      "passed": true
+    },
+    {
+      "name": "Every historical column/value reconciles",
+      "passed": true
+    },
+    {
+      "name": "Representative SQL suites pass",
+      "passed": true
+    },
+    {
+      "name": "Empty migration-chain SQL suites pass",
+      "passed": true
+    },
+    {
+      "name": "Four multi-session concurrency scenarios pass",
+      "passed": true
+    },
+    {
+      "name": "Shared contracts match introspected schema",
+      "passed": true
+    },
+    {
+      "name": "Normal development seed and retry pass",
+      "passed": true
+    },
+    {
+      "name": "Fresh migration creates no synthetic application rows",
+      "passed": true
+    },
+    {
+      "name": "shared-tests",
+      "passed": true
+    },
+    {
+      "name": "shared-types",
+      "passed": true
+    },
+    {
+      "name": "resident-web-types",
+      "passed": true
+    },
+    {
+      "name": "admin-web-types",
+      "passed": true
+    },
+    {
+      "name": "android-types",
+      "passed": true
+    },
+    {
+      "name": "resident-web-lint",
+      "passed": true
+    },
+    {
+      "name": "admin-web-lint",
+      "passed": true
+    },
+    {
+      "name": "android-lint",
+      "passed": true
+    },
+    {
+      "name": "resident-web-build",
+      "passed": true
+    },
+    {
+      "name": "admin-web-build",
+      "passed": true
+    },
+    {
+      "name": "android-export",
+      "passed": true
+    },
+    {
+      "name": "Unrelated protected user files are unchanged",
+      "passed": true
+    },
+    {
+      "name": "Authorized Android-only plan is preserved",
+      "passed": true
+    },
+    {
+      "name": "Scoped source/script lint and final diff checks pass",
+      "passed": true
+    },
+    {
+      "name": "Private grants, storage, RLS and advisors pass",
+      "passed": true
+    },
+    {
+      "name": "Account deletion nested storage compatibility passes",
+      "passed": true
+    },
+    {
+      "name": "Local test services stopped after verification",
+      "passed": true
+    }
+  ],
+  "exitGate": [
+    {
+      "condition": "Migrations succeed on empty database",
+      "passed": true,
+      "evidence": "completion-database/results.json"
+    },
+    {
+      "condition": "Migrations succeed on representative existing database",
+      "passed": true,
+      "evidence": "completion-database/results.json"
+    },
+    {
+      "condition": "Historical records remain readable",
+      "passed": true,
+      "evidence": "completion-database/reconciliation.json; phase1_existing/historical-reads.log"
+    },
+    {
+      "condition": "Unauthorized operations fail",
+      "passed": true,
+      "evidence": "completion-post-live-tests/phase1_empty/tests.json; completion-database/phase1_existing/tests.json; races.json; native grants/SQL and completion-http/results.json"
+    }
+  ],
+  "databaseExitGatePassed": true,
+  "liveServicesVerified": true,
+  "nativeStackVerified": true,
+  "nativeGrantsPassed": true,
+  "runtime": "Docker Engine in isolated Ubuntu WSL",
+  "subscriptionRequired": false,
+  "blocker": null,
+  "limitations": [
+    "Representative existing-data evidence uses PostgreSQL 17.11 with Supabase role/schema fixtures; fresh migrations and HTTP journeys also pass on actual Supabase services",
+    "No deployment or production data changes",
+    "Dependent consumer, catalog, SLA evaluator, Google and legacy-ID rollouts remain later phases"
+  ],
+  "manifest": [
+    {
+      "file": "packages/shared/src/index.ts",
+      "sha256": "b0c7db5122260d715a0874d5be00657082ad0c33bef8254f9e081551896377c6"
+    },
+    {
+      "file": "packages/shared/src/types/database.ts",
+      "sha256": "2f5201879d3b10e4f9cb0a00a092fa54d935bebeaae9a5cfc0e511f27405c2cd"
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "3593c43ccb9908a8c225d8f582e8a84a327b620e0db395bde7961118424b95db"
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.test.ts",
+      "sha256": "f790ee54ea41798ce3c3caa9affac0c8053ac6d36eaab6ed78ea01653e6008ca"
+    },
+    {
+      "file": "packages/shared/src/types/service-foundations.ts",
+      "sha256": "167a66b08bd4ed3265d4d8541057c306b8ff8bf46399bf6178888f6f096fed9f"
+    },
+    {
+      "file": "packages/shared/src/lib/service-foundations.ts",
+      "sha256": "2ce3aa085dfc040d69bf5b17b37aac8a8d9b038d543b0615554dc1467ee5d7ed"
+    },
+    {
+      "file": "supabase/migrations/0044_evacuation_centers_verified.sql",
+      "sha256": "cceeb453d0730db79b1830ec07181f02e1c712813771b054663851a550db7908"
+    },
+    {
+      "file": "supabase/migrations/0049_seed_empty_tables.sql",
+      "sha256": "950854f856bfc32649a5672d1dea163bbb6ced80248b7d7e75dc2d31a6a74eb8"
+    },
+    {
+      "file": "supabase/migrations/0053_faq.sql",
+      "sha256": "c360f7767231bac89d42f45c6ef4f90dafeaaa2db84f98ebca27aa18122db52e"
+    },
+    {
+      "file": "supabase/migrations/20261001030133_phase1_shared_foundations.sql",
+      "sha256": "303a9af66eaca70b2a67ee5203c7cfae1618bd0330868be1b9ee208f1bd1a234"
+    },
+    {
+      "file": "supabase/seed.sql",
+      "sha256": "97435ab5ad24353115d8ed447803c7aa55d41b26a4330649c3916099779418e3"
+    },
+    {
+      "file": "supabase/functions/delete-my-account/index.ts",
+      "sha256": "06c3eaea75f5783a31669ddb0dd79cf2922b1d9c82e3bd27466d7ed6429e6ff0"
+    },
+    {
+      "file": "supabase/functions/delete-my-account/storage-cleanup.ts",
+      "sha256": "d631b34de60dd9db66e480a2b88ca8675f0bdcef014e12098967f22e319154fb"
+    },
+    {
+      "file": "supabase/functions/delete-my-account/storage-cleanup.test.ts",
+      "sha256": "483344e333adc0ca6de087560e38ad76396b9f94c20637ea418730385fd0fbdb"
+    },
+    {
+      "file": "supabase/tests/resident_ios_tenant_write_guards.test.sql",
+      "sha256": "c26b6764e3d72da38209343737c2e0990dcbf6c865228d80f79a3846d1458c2b"
+    },
+    {
+      "file": "supabase/tests/rls_isolation.test.sql",
+      "sha256": "943ef2fd2eaac772c686cb7aee1e63030fe748cbcf065e6e6e04ed9e53dea480"
+    },
+    {
+      "file": "supabase/tests/service_foundations.test.sql",
+      "sha256": "c7f54689e63f9821a6c67e13223e2fdd3739ff84c4dc6a40a8feb5b229c21c0b"
+    },
+    {
+      "file": "scripts/phase1-audit.cjs",
+      "sha256": "2aaea839cded1a27eca07244dcdb5ea4d7fff06df9db8c83dbfc2109481fcecb"
+    },
+    {
+      "file": "scripts/phase1-contracts.cjs",
+      "sha256": "ee4f2becd6dfe8e0d33920fcf36f432b6cc4d215ec766d4942a7f1cfce131bce"
+    },
+    {
+      "file": "scripts/phase1-database.cjs",
+      "sha256": "ccb60b3c5f1024f8ca2507906f8c6405653090d4a4a20135491c7527b418d476"
+    },
+    {
+      "file": "scripts/phase1-empty-foundation.cjs",
+      "sha256": "a05627da2d9c43daac88752c2c169e6ccc4a6bc1f5171b6b7e5dcd4302123ed1"
+    },
+    {
+      "file": "scripts/phase1-http.cjs",
+      "sha256": "e128a604664c159dd987818756dcb6eb59ff471dd4768ca0397f335471b56523"
+    },
+    {
+      "file": "scripts/phase1-live-stack.cjs",
+      "sha256": "5a784d3767d75e9fe719707d12257e7e181c2a3144707550e2d0ac0608678cd9"
+    },
+    {
+      "file": "scripts/phase1-races.cjs",
+      "sha256": "b52a27a8536f33ba009685aae48e6b0e1ab9eb568609bcbca6cf0e291c1bbd58"
+    },
+    {
+      "file": "scripts/phase1-seed.cjs",
+      "sha256": "189364c069188398e34cf915d88a43f9263e4a915faa9ff365cc3958479a77cd"
+    },
+    {
+      "file": "scripts/phase1-setup-free-engine.sh",
+      "sha256": "f72c49dcc4f82dea6c67589a27a1002ebdac4aa3b44f3b5ed695f714f095a1f4"
+    },
+    {
+      "file": "scripts/phase1-sql-checks.cjs",
+      "sha256": "f6f6be9ebaae9a024198983a777116c5f2cab062532dd4d91c0b30cd056082ed"
+    },
+    {
+      "file": "scripts/phase1-verify.cjs",
+      "sha256": "68ed00b12bbed0df05b68f3c333adef503ddf4efa5217241909b8f7f348097b9"
+    },
+    {
+      "file": "scripts/fixtures/phase1-grants-audit.sql",
+      "sha256": "0936e60bc188ed12706ce751a5024a5bc9a19c51c279b54306740e494cf69d49"
+    },
+    {
+      "file": "scripts/fixtures/phase1-historical.sql",
+      "sha256": "92047396e05943c42572a0325c6361e1e4c9f1c9e7d1d4b485a975a02bbb412f"
+    },
+    {
+      "file": "scripts/fixtures/phase1-history-reads.sql",
+      "sha256": "edc071b96315899b11a0102901af6f7b573eb445ecbad97ad8dc15cf98eca72e"
+    },
+    {
+      "file": "scripts/fixtures/phase1-seed-reads.sql",
+      "sha256": "e9ebebf56784fe388fd7164fae67adffb0fe62c3da4ea1b0653058b82bdb538e"
+    },
+    {
+      "file": "scripts/fixtures/phase1-supabase-bootstrap.sql",
+      "sha256": "45c49143722657fc9b733423b063c8be542c8053d6c5ebc62100484a9bd40661"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/dashboard/page.tsx",
+      "sha256": "4aa57feb59a0885f6c6f1a28e9147ec634c8e0e81c9bc0d054516168335846ae"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/page.tsx",
+      "sha256": "ff7f897e5b959245fde02c11b5064e76fc25d36fe1da455aa93e69966994419e"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+      "sha256": "552caa5ff97459f7ce7dab7ffaca84d51e65d87c0696d00028384473f6179b2e"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+      "sha256": "a99263105357b6eb8000d0d573d2eae64dc51fd665215134349b448ba4426a65"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+      "sha256": "b0bdd9e50a589f75316400340529a6cfb92d25acc1fed3afa1b52fc433a39936"
+    },
+    {
+      "file": "plans/Major_Web_AndroidMobile_Improvement_Plan.md",
+      "sha256": "94518222cc42071194e27431a7327090743f54122de3c6858117ccb0122bdade"
+    },
+    {
+      "file": "plans/Phase_1_Shared_Contracts_and_Additive_Foundations.md",
+      "sha256": "8e0d1f3d275c7cc53f659deb31cd2b5e453aa24c0a2d285a8f1650f56cfae6dd"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/admin-web-build.log",
+      "sha256": "431b28ef8ddda8aec8cf0f5f4c045ea46a662caeae0f7177ecffec19b0d1a514"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/results.json",
+      "sha256": "565236d049404f99b6bbaa3f53013117aa81fae7e55944ab813cfb2db27ed575"
+    },
+    {
+      "file": "plans/evidence/phase1/admin-compatibility/working-tree.txt",
+      "sha256": "237397d6c0bf0fa8f620b8aadc30b63b0a1cc153775895a9a1cc6d8e5ee937e7"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/ios-tests.log",
+      "sha256": "9dd92ec15d35eea80e7d5d2784771877536a414a391e2f6128f9a18b13150791"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/ios-types.log",
+      "sha256": "ec69e31216d3c2c9ff53a1f54185dfaf896f2d737f9fb6dffc56d9323a27e2c9"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/resident-web-lint.log",
+      "sha256": "b88a3fc04387fc87c52acda4de1f218df2dad2c3449ba749fca12a8702794e9e"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/results.json",
+      "sha256": "87eec5ea90c7ff63dde27b852d1aed92ead1ac40b77dc2b7308ca75b6be3573e"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/shared-tests.log",
+      "sha256": "55bd268ee469a337c2d8a45b0023383b9160b898a8c0427c64f511e76c7fd775"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline/working-tree.txt",
+      "sha256": "a99f9d36ea33e6a0a94f187ee2fb2f4d7bd218cc855d3943352b3e78e5f65967"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/ios-tests.log",
+      "sha256": "56e60e4370f442a7d35c53bbd92fecddf202857a59a47c938f8e1e1a2dfe604a"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/ios-types.log",
+      "sha256": "ec69e31216d3c2c9ff53a1f54185dfaf896f2d737f9fb6dffc56d9323a27e2c9"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/resident-web-lint.log",
+      "sha256": "b88a3fc04387fc87c52acda4de1f218df2dad2c3449ba749fca12a8702794e9e"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/results.json",
+      "sha256": "ae7662ed055b519c71153341221361cf4a9f0b1a31032475eb060d42e277cd04"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/shared-tests.log",
+      "sha256": "ce927f3a68eba34aab0b5fe4264404d533ca1159b6dc6891663538aecd27a269"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/baseline-unrestricted/working-tree.txt",
+      "sha256": "d8947c6a6b8f89d42a410dddad9e9a732468e0fb8619ea4c3e605a8529765ad9"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/admin-web-build.log",
+      "sha256": "7fb34149418e0333fbbee2ef3fa73abe50f28dd3dc455d2a6736cdb7b19dc9c0"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/android-export.log",
+      "sha256": "ca2c254b3d96f4a9004b76c0a7c3c5141dbd929c450ab14633d732ab3fb50d97"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/android-lint.log",
+      "sha256": "e581224e7c54ee282eb04d0411859accf4e97435c0b1c8a7e7b5dbeb973efc99"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/ios-export.log",
+      "sha256": "7efe600ec11768db24e5ac4b0fc49d6bb61c268dac804687f304e9c3d1bbdeb6"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/ios-lint.log",
+      "sha256": "3d2fe0454541bb0ff75868a8d1e429bd6b3ff2340f64e0a832edeed9926a60c2"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/ios-tests.log",
+      "sha256": "cc17a5093048633255338de2028a7ab3713f2f982fbea7676ce2fed9a277eec4"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/resident-web-build.log",
+      "sha256": "fd913dc6fc93735fdee65b3be01fa83d8805d3e4dc1decf73919a07878621a11"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/resident-web-lint.log",
+      "sha256": "b88a3fc04387fc87c52acda4de1f218df2dad2c3449ba749fca12a8702794e9e"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/results.json",
+      "sha256": "e547f01f3bf17f3580daabc58f197cc138d591a5cda72a70d76fa871401908fa"
+    },
+    {
+      "file": "plans/evidence/phase1/builds/working-tree.txt",
+      "sha256": "1900f60d2dae41d0a71fc45be5d5e937af3bd6898407898c46cdecfe7ed993de"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-audit/advisors.json",
+      "sha256": "3a078461c5ff43d0b064c0f0797fe9c0222637e796227b1417dd9200639d434f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-audit/advisors.log",
+      "sha256": "d400c7c39d35f2611d5e4ab483571e23c4783d4dc806f27f29f13936bf97e656"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-audit/audit-result.json",
+      "sha256": "c9d8fd9168e83c071301d1fca6fdc5641011d1137ee6f3d17977c66f1cfdf7d3"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-audit/grants-audit.json",
+      "sha256": "45a0b3fa96000fbcc248411f275dfefc1e6106a0df733e304e06f402891497be"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/docker-install.json",
+      "sha256": "ce3b8a987554c786289374bc1ddc7b7c87559771c327a50c8f5c2b6078f40250"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/docker-install.log",
+      "sha256": "9f7360c227e192e46546ced6e6528a2534b80e5d8eb971c39df2abadd7417f42"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/environment.json",
+      "sha256": "aa731df0f7d5b6c632715b1dacc8b93866d8cb615a74fc4327fa55f3001a97a6"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/full-stack-start.log",
+      "sha256": "7740f8a16f9ce04f10a357b0ed6e4a55f4c9f65f29bcddc02ac98c2df80c04e5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/previous-report.md",
+      "sha256": "b4140c85eeb696f4da393805172e42dcbe4d061ce5bf026b0cbaf7d44546db76"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/runtime-after-setup.json",
+      "sha256": "2497e752cb6381d2e7c2095b191cbda3f5945364d1ca564676879b063cedde17"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/scoped-checks.json",
+      "sha256": "c1a98bebfe35d580de1f43433872aa698f42438bd6cb4e07b710f3bb8fdca9b2"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/sources.json",
+      "sha256": "27e45168542490687e1ebd5504bfa4432f0e24739c8c4c117eeac545011e9c98"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/working-tree.txt",
+      "sha256": "7b0fa41030179fef18a1463bb9c05d6f59500442ba7c77bffa7ffd248eb7d409"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/wsl-install-started.json",
+      "sha256": "63b2ee362b17308e3e61c3407300fe1cf8ab4d8ff455f857831cb54478f8201d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/wsl-install.json",
+      "sha256": "761ad784ddd84713070e254ba95a5ba7f220b6c82eafab7d20e2eb85d638fba6"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-baseline/wsl-install.log",
+      "sha256": "701d65436d2cedf2047775778963980a49151fa0a0cec8776bbbc12734a44393"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/admin-web-build.log",
+      "sha256": "45c0dca0fd6db7c2ec29da8022097d9bc59a132109dab958835a0342c47a3390"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/android-export.log",
+      "sha256": "68987e1db1d27b78e7c965276ec11dd4ad7c4daafdf73bbb3d46c1df0cb5a265"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/android-lint.log",
+      "sha256": "e581224e7c54ee282eb04d0411859accf4e97435c0b1c8a7e7b5dbeb973efc99"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/preservation.json",
+      "sha256": "88d5418ec3ce844a2318a6a47d511b5c30f4dcdd89fe5403b5dcbedbcc54e887"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/resident-web-build.log",
+      "sha256": "132a13ffba8a36f9dce11ac86369a659e93dc6ac43a230aa8217f57b4ab7a390"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/resident-web-lint.log",
+      "sha256": "b88a3fc04387fc87c52acda4de1f218df2dad2c3449ba749fca12a8702794e9e"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/results.json",
+      "sha256": "615ea64dc1a792e6b78a96f9077d4d4b6f232619606e18fafceb6dbf80bff78c"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/shared-tests.log",
+      "sha256": "da7834418274c7d986ecccbd75d7cb5c51080cf0204afa3f55b2a3aebba41ea0"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-checks/working-tree.txt",
+      "sha256": "75660624ca02f924860fc4654d8a19a44a9d5fd22b283fa1db3995ce4471ab49"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-contracts/contract-check.json",
+      "sha256": "3bc724cdf17c0cd5d80d33d6aa76ec9b05c915ab44ff71ec2d89479ce1623c2e"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-contracts/contract-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-contracts/generated-types.log",
+      "sha256": "4baf775fc25ef884656dbf8191c4c6c47b2a376a9fe150075adfab09a0fa996d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-contracts/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/advisors.log",
+      "sha256": "02adde365a58da5c6f11f19769515e1392f1abde939c619aba5bcbfe3e750c71"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/after.json",
+      "sha256": "a3e238e0c2f411123291481f452b83239c9f9a80b4aaf76803dd19fd74ab3ba5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/before.json",
+      "sha256": "a0c38a8652ae64becc2b0d211181440f16f1aa8bbcf63828043d8ca6f622fdde"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/diff-check.log",
+      "sha256": "363f4b52cc42c821d3b287476fe584dc1eadf42afc747857fad591053a6136e5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_empty/foundations.log",
+      "sha256": "f06620a8c5e45c168a976420facc9837e254d007ecf02e85e294c4e4e7e836d9"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_empty/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_empty/tenant-write-guards.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_empty/tests.json",
+      "sha256": "2918e998809b910986cf59cbf925ac17cc9b6d9d774c742c0f25b1b776832704"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_empty.log",
+      "sha256": "0c9fcfad1f3ebfbede42b8b533dd59734edcb0402907965113e3c8f357d4c110"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing/foundations.log",
+      "sha256": "dfba7b0f7f949c848dd7d10cb510c8280401f0320be231c3002daacdf6d99d12"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing/historical-reads.log",
+      "sha256": "b8e4120e2afe18a8e9046dbfaf349600192b8a589f17b12f931d56dcab4ed978"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing/tenant-write-guards.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing/tests.json",
+      "sha256": "52195935fc667141f7f58012827c6db49bbc0e386934de72626b61d8155acdba"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/phase1_existing.log",
+      "sha256": "0c372214d3c66072c26e9b4f1c1d39a0e29cf28c771fee3681cf1d18e0c2d0cd"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/postgres-shutdown.json",
+      "sha256": "d6aedb08992c5291978b32cc7c026a0af0d1387d2330996d37ca3d44892b04fc"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/postgres-shutdown.log",
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/race-fixture.log",
+      "sha256": "278dc554d1e3abe4f72e305f27944b9d8d4ca7ce4aa67df947204c0bfd9af676"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/races.json",
+      "sha256": "81930b15fe9fb6d1184d748720f4a7499e097afa8c5d8e71d66b0ffec9e375ce"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/results.json",
+      "sha256": "dc9469444eafe4e20f274ec6a8d7253bcc092d4a5aa4d2afeb84d142083e0cc3"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/scoped-checks.json",
+      "sha256": "059481282db6a1d25a87b6339bf8e4059c02c6a75af8c03ec354ffdffa5c93f9"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-contracts.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-database.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-empty-foundation.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-races.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-seed.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-sql-checks.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-database/syntax-scripts-phase1-verify.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-http/results-1790864332689.json",
+      "sha256": "e0e3dcf939b449305bc82e5651d76b547543512c0141837b705c81edd218a106"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-http/results.json",
+      "sha256": "e0e3dcf939b449305bc82e5651d76b547543512c0141837b705c81edd218a106"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/free-engine-setup.json",
+      "sha256": "384e669b737359bdc1fcd026c6bd08b3d9e889b000829b7cb45f4f725d580b58"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/free-engine-setup.log",
+      "sha256": "b25da8705e2e11660705b1fe1a738625f121d5ec25ebfd747a7723a51f18507d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/report-before-live-verification.md",
+      "sha256": "454dcf5492a577dd0bfb6af7bede4c2397c2ac7432cda3c0bb9dfcc1a5e5d058"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/runtime.json",
+      "sha256": "e113c1ba6b0e9f164baabbb6e6e0160c7cb0163977588521e442249e8accd348"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/shutdown.json",
+      "sha256": "f415b778030f751f3530ae4c0245ce829a66b61b398168db28cece4d78847210"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/supabase-changelog.md",
+      "sha256": "72866128aadccc5e0fef4991d25a5a38b285d3b2cf75bc92dbfd20f30c9e119d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/wsl-available.txt",
+      "sha256": "9cc9171b89214841f9520e2cb9cdb705950041f35ef353017ecc0cf88106c7a6"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/wsl-engine-install.json",
+      "sha256": "c90650ed4f37300f7fdc332074725aadfaf2ae2ac2d6734ed724a6022446ea3d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-runtime/wsl-engine-install.log",
+      "sha256": "82c89fb409dd3b40ad0c8ac8472606e456017ba637a83e06083e556eda34be4e"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/advisor-summary.json",
+      "sha256": "2ec01d737136ea1544237ed8dfa6e8de60136ee4b48b63869ef20ab2e32c53e2"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/advisors-1790864602211.json",
+      "sha256": "21dd09529cb4f4c71e44ade2b9aa390848d8433b21c70064e521d8ab202eedf2"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/advisors-1790864602211.log",
+      "sha256": "f3fb64c6ec9837a5559a172a5f45bc5be69d6467dafb5bd444e1f8d5a1b5b3ae"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/grants-audit.json",
+      "sha256": "fbdfd16956b98fe30068ee103905f0df33d6c80d5a10d3ce4a02be8c644a7984"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/help-1790862355362.json",
+      "sha256": "d009536e4b91e81a9a5d3beb6d8d43884ef6bd63659207cb48dec6f9973bcacf"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/help-1790862355362.log",
+      "sha256": "e0ba006de8272060117dc470df325c22c6749d6891abe897bd50e77366b93f6e"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/reset-1790863956680.json",
+      "sha256": "51b435ea0a916064972c602fca766bd9fdb6313427a080108a4ba91381dc42d5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/reset-1790863956680.log",
+      "sha256": "71fbc7768ef99fe3cf075eadc6029585b80e499962be27d8fe09dcf33a20e647"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/reset-help-1790862356943.json",
+      "sha256": "3f69e817fed3d0e47cd3ef2792a2addba53f147c83d0ec836a7f80e5e3fce379"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/reset-help-1790862356943.log",
+      "sha256": "090d8aa1133a360cb3b26eae4140dfbf4eb8cc125850fd0f07057c2855b563b2"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/results.json",
+      "sha256": "2bbb60a5a42605708c49febf3adee88a2dcfd274cb965f5b7c28836cb0e6346a"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-1790862706513.json",
+      "sha256": "b9837481516137b5f13708d158a358cea39845c735eda221af4584653bda4d3b"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-1790862706513.log",
+      "sha256": "f7122d90330b403b43feaf95c15aeaa494af67e212ab551c0831d0e05232b30f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-1790863822779.json",
+      "sha256": "0b443fca8428695358c264634a15652f1c9b3c687b1541690188cfeeb848b788"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-1790863822779.log",
+      "sha256": "7ab175ad8c578a75db8a25d1ad5290f3c5f2925501f69cdfcb5363aa62293b5f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-help-1790862356167.json",
+      "sha256": "02a29d0195a9cea25122ff035ea78f0e91945adef597409befd3bb65a2ccbe3c"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/start-help-1790862356167.log",
+      "sha256": "8bc05a1120c942275b0eb0de1523c7b09437814dcdcf9d954ca6a247759aedac"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/stop-1790865028029.json",
+      "sha256": "95e409b65e447477f2192c6a078607658c2c8ea1b5855bf32c028465bbcbdf7f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/stop-1790865028029.log",
+      "sha256": "ae6af976cc5dbdc7de85e411e5875e9402943298fff87bd927ace6e194cc9b63"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-1790864063860.json",
+      "sha256": "6379bc9db5d95989dfab198aba19f12d3b3a1753837b1bda55caf4c24e03a7d1"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-1790864063860.log",
+      "sha256": "bae913d0bb834052cec0a5a37e080a1c87c7b5e69507b19b9f9240b32c01702b"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-1790864287400.json",
+      "sha256": "7f5cf44006a26fe14eaba8a4515892f75667fd136aa9a27e77bf3d44729ca6a8"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-1790864287400.log",
+      "sha256": "e0a4f2c25e1e74a87cb7096b1145bc924f3e403b53e841f4a7386f0cfe4f4d5f"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-help-1790862357779.json",
+      "sha256": "80fbc93fb9fe900108086d09ef6c0897fe2ec93d8cfeb8b28b3e2499b4a890df"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-live-stack/test-help-1790862357779.log",
+      "sha256": "1d11f5e64c616e46c91cf71f693259f7bf2fc54e376a4f0e8d30c48207555cd5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-post-live-tests/phase1_empty/foundations.log",
+      "sha256": "1e5d0e4c17946d219f32eff1f810000316b9eee6e0067e4380222e92e1ac1b8a"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-post-live-tests/phase1_empty/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-post-live-tests/phase1_empty/tenant-write-guards.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-post-live-tests/phase1_empty/tests.json",
+      "sha256": "0b8f66677abf4d8eb5e6a1ef7ea3559f9340ae08d65546273e3087f451dfb750"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-lint-before-import-fix.json",
+      "sha256": "d96934c8768a673ab09fd00b16492c27454ead6922e77f3dc04b4208426f8461"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-lint-before-import-fix.log",
+      "sha256": "0426c73cf470afd128d73eada51f62753ebf030e41da7e29a04f2786a644cbab"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-lint.json",
+      "sha256": "9c4c923354211d947bc534f9e531f681dd6fe6184a317835423851c70e9a4835"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-lint.log",
+      "sha256": "8c29d194f19aa4f4abe4d3885febda81d0d0cb7922ac57afbbb0434692d972aa"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-types-before-import-fix.json",
+      "sha256": "433559b2210f7cde7f261c816d7229cd4ea0a4d066f45901f8cb0d86440a2a07"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-types-before-import-fix.log",
+      "sha256": "d67ca51b3c0a3d37f10e17dbda802039eb13d0fd6defa1e100ca21f6486d3497"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-types.json",
+      "sha256": "433559b2210f7cde7f261c816d7229cd4ea0a4d066f45901f8cb0d86440a2a07"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/delete-account-types.log",
+      "sha256": "8d25847731c54f88f6349457d55e62e25d4ede0e80d52525601c92d6389f6bcb"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/deno-runtime.json",
+      "sha256": "1c2de448d356219bf7f9b61f7762f65ab6f5da5117b6336a32245235766d1c16"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/diff-check-final.log",
+      "sha256": "363f4b52cc42c821d3b287476fe584dc1eadf42afc747857fad591053a6136e5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/diff-check.log",
+      "sha256": "363f4b52cc42c821d3b287476fe584dc1eadf42afc747857fad591053a6136e5"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/scoped-checks-final.json",
+      "sha256": "5bf92badee85fd72eccaa9bc646c378371fcf071c0a05da182dee13926c8c6e2"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/scoped-checks.json",
+      "sha256": "d9588ceb3cf3dc98251e8ed138922c6c110b043f66c741d8df6a778449ddfb6a"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/scoped-lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/storage-cleanup-lint.json",
+      "sha256": "e193ede200675572a0332c0437d13a92a2ae292ee3b43d5943781a5bf4adc259"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/storage-cleanup-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/storage-cleanup-tests.json",
+      "sha256": "153719e317bccd22ccdf4ede110f156ec5b355af0581201190c3af0e10fb0f5e"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/storage-cleanup-tests.log",
+      "sha256": "2ab6809c0d5bbceec65a8b83899af10fc7c4111b85f704ab45045d27d3d10f93"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-audit.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-contracts.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-database.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-empty-foundation.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-http.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-live-stack.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-races.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-seed.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-sql-checks.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-final-scripts-phase1-verify.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-audit.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-contracts.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-database.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-empty-foundation.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-races.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-seed.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-sql-checks.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-review/syntax-scripts-phase1-verify.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed/seed-1.log",
+      "sha256": "2ae86f4945f4ac92ced2f7e395478f1bbeb15fc823406bf3c72a5f8ebcd92a3d"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed/seed-results.json",
+      "sha256": "fd991478ef71e72ace215fcae61f7cc1ea90f4b62af032a770ddd4fdedeb5474"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-final/seed-1.log",
+      "sha256": "8249e02b75b31794e4737c3730e2b7e9e355fb3dbc89bbb4e1d091418e7f3864"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-final/seed-2.log",
+      "sha256": "45ceaf45e8e92b2b34f50044a06ce0657e614449f9e0ee0a54c8830e0c85749a"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-final/seed-reads.log",
+      "sha256": "40064fa081b20a5d3caca724525e46d9970692b26a7bee99ae5632fe445692ef"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-final/seed-results.json",
+      "sha256": "d6d620ee183ac25f364fcb42a3f3d5e95d3bdac41409ae6b5eb163dc42ad6160"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-fixed/seed-1.log",
+      "sha256": "dd10f4df92891a7ff8b8299a25da1d07559480dc226d19d781beb29bf17ff0fa"
+    },
+    {
+      "file": "plans/evidence/phase1/completion-seed-fixed/seed-results.json",
+      "sha256": "fd991478ef71e72ace215fcae61f7cc1ea90f4b62af032a770ddd4fdedeb5474"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-acceptance/contract-check.json",
+      "sha256": "306d287cc715767acde164ae50ef5d851a7a5d59d49058b056a766df31651761"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-acceptance/contract-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-acceptance/generated-types.log",
+      "sha256": "4baf775fc25ef884656dbf8191c4c6c47b2a376a9fe150075adfab09a0fa996d"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-acceptance/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-reviewed/contract-check.json",
+      "sha256": "0988d50e8741548d240af6e84ac538c3b49d42028ab2128653d71fc602a93bfa"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-reviewed/contract-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-reviewed/generated-types.log",
+      "sha256": "4baf775fc25ef884656dbf8191c4c6c47b2a376a9fe150075adfab09a0fa996d"
+    },
+    {
+      "file": "plans/evidence/phase1/contracts-reviewed/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/database/phase1_empty.log",
+      "sha256": "128dfce7584b9db01133cec3f3a294b9e233a86ba1cb966a8420d85f73b8eb7e"
+    },
+    {
+      "file": "plans/evidence/phase1/database/phase1_existing.log",
+      "sha256": "9ef1626798df27cbb024ba7b5187062cdd4a2c6e1adb4239465bee3ae8c7f62d"
+    },
+    {
+      "file": "plans/evidence/phase1/database/results.json",
+      "sha256": "a1cd90d27a566b3bf245562267ddcc255b794c51cbdb4be2bcf933219809bac2"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/after.json",
+      "sha256": "769c36a6bd60340ba324829c61ff58ed7940fc970fffee33eadc29776729763f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/before.json",
+      "sha256": "e5e7563d93933a2970e645b5fd657f0551eae41b9dc5a074760ccd00db79181f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/empty-foundation.json",
+      "sha256": "83372ca4f67a69a26e0d11d57f0e0cebf468b560da60d12d5e0417a26fcc9bc1"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/empty-foundation.log",
+      "sha256": "e2a833f6ae224e51f21741d7dcc96fdebff5b21a7ba6a59aace883f9c2ed34f5"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing/foundations.log",
+      "sha256": "3eab73d2f03513c9a35947bef3274c6076803ad1361f9c1e292beef438b94710"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing/historical-reads.log",
+      "sha256": "b8e4120e2afe18a8e9046dbfaf349600192b8a589f17b12f931d56dcab4ed978"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing/tests.json",
+      "sha256": "64a4a6c1b2a11eac29a1fe634c3f5c47ff1830ea8457abe80828bb680ec66cb5"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_existing.log",
+      "sha256": "2f0120ca8e045f329b6effe2e13d1f70000e835134834f391e7d60b044398c60"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_foundation_empty/foundations.log",
+      "sha256": "a310d4bba8984ef1ab421537e8a905fac041ad2167272e32926f115a5669e88c"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_foundation_empty/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_foundation_empty/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/phase1_foundation_empty/tests.json",
+      "sha256": "c088cc3f553bc3b354fcf95813284c8c2617725fc36d26d8be7e3559f87ff519"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/race-fixture.log",
+      "sha256": "8af59a8636c286e29eafd8dc0da09a48fe487306f58fcf4f4a9fc3e8a76ff01b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/races.json",
+      "sha256": "d1c1ff3efc8dd3b33a1d2a51abe9871ec1357b5b539f14bf6c2d0b5536134b96"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-acceptance/results.json",
+      "sha256": "efcf8906f9a8a94ab23cb07b9bf761649f7e617b0719bd2239146a505330daf0"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/advisors-result.json",
+      "sha256": "62363ecfd66b68539c96b5a2363d7ffd4abf10ea6f35cffc2fefa01b6ad75ca5"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/advisors.json",
+      "sha256": "d0ee63f9c6728267b85a0509b9483707acf393f770b08baf901a35338d257045"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/advisors.log",
+      "sha256": "a797100f1eb1eb596ddc39200fac3d177f822c100417d339a30a859ae493ca98"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/after.json",
+      "sha256": "3cf54ee493e060de48403c6d3d99c79f7e4d11299b33629129a096652b553051"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/before.json",
+      "sha256": "9961972877b74fa11bc9b3f35d3531e56b2f39e099c0ed335418d82be9d4d0c3"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/empty-foundation.json",
+      "sha256": "50398da1b9928fe6492497b6ad886254ee31e3f9af4f5fcb78d916d18fd1b2b0"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/empty-foundation.log",
+      "sha256": "e2a833f6ae224e51f21741d7dcc96fdebff5b21a7ba6a59aace883f9c2ed34f5"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/grants-audit.json",
+      "sha256": "13e0b5b08c8cb295e4890c995ada1cc41cc66a1e07ae98f7396f65b80cce1d24"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_empty.log",
+      "sha256": "e405d75db04add2f77ebb647f2e8e98f3ddebb41d2e82be134aa43f254a67e4b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing/foundations.log",
+      "sha256": "dfba7b0f7f949c848dd7d10cb510c8280401f0320be231c3002daacdf6d99d12"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing/historical-reads.log",
+      "sha256": "b8e4120e2afe18a8e9046dbfaf349600192b8a589f17b12f931d56dcab4ed978"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing/tests.json",
+      "sha256": "4e31f71b52237564f4f23c669773cac5796e2295e00f8528da7baf55badbe279"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_existing.log",
+      "sha256": "2f0120ca8e045f329b6effe2e13d1f70000e835134834f391e7d60b044398c60"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_foundation_empty/foundations.log",
+      "sha256": "76d2268dd68d8cabe34086781d55d904efbe4f8fdceb2c80c29cd2a6c159c61b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_foundation_empty/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_foundation_empty/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/phase1_foundation_empty/tests.json",
+      "sha256": "4b1fb930fe1c8a1d7fb27dd583735234865301d451bd3df8eb7a833e0188e8ba"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/race-fixture.log",
+      "sha256": "278dc554d1e3abe4f72e305f27944b9d8d4ca7ce4aa67df947204c0bfd9af676"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/races.json",
+      "sha256": "dc623acb97f8b5c5a6da85cd2fe473516da18375758c0197f3a20a4ae4ada45e"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/results.json",
+      "sha256": "905d56e9ed65ba16e79836f9dc4e5352ed0f2b8102d15f6c5382518f998528fe"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/shutdown.json",
+      "sha256": "fd45f6c03e0fda54b779deb901ed2a83e984300767347969dec58cb68ac75767"
+    },
+    {
+      "file": "plans/evidence/phase1/database-exit-gate/shutdown.log",
+      "sha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/advisors.log",
+      "sha256": "4d6fa3bf59c268b6d84e1e5d88f9fba63e7dcffc36098d95ee418b2b2e3e81ac"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/after.json",
+      "sha256": "1e3a03483ea84b947ae3e80c9609748337a07ecb503b7f31e2677142571f61cb"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/before.json",
+      "sha256": "bffe4abd14cc7263e4326377b81ae842aac69b47fa61819ba8ca4afea804b67a"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/foundations-tests.log",
+      "sha256": "2955934f8b70fb4dd4827def06c87feefd0929443b6a6a22b612ebaa1c321c3a"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/phase1_existing.log",
+      "sha256": "2f0120ca8e045f329b6effe2e13d1f70000e835134834f391e7d60b044398c60"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/race-fixture.log",
+      "sha256": "5159096d6ec009f367df4d0f37b7797a970383b5d9ba3a5eb43399ba86514f9a"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/races.json",
+      "sha256": "1c92865fed099fde09125cd73641e22536bbb1d92baef0f2039b8edcc2a57a5e"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/results.json",
+      "sha256": "68e4b4cdd4f0a0504127b325957f99d5f2048da4625da307d08f49bca25e7e76"
+    },
+    {
+      "file": "plans/evidence/phase1/database-final/typegen.log",
+      "sha256": "d471a1cb9f7f804dddf5496298c58082afcc041d7b4b685d0311415880983048"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/after.json",
+      "sha256": "1eaefe7322bdaa53dee46cef8996a24854dc83420249314d1538d0034eb763eb"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/before.json",
+      "sha256": "88b9c9c956f529c6eab8803f09fd099cf858e900313cc7104095fdf07fbea632"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/empty-baseline-schema.log",
+      "sha256": "0193ca6418ae4f2e0c7be99276d36fe03dd207a2ad7c894d5f9d7780fc572af1"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/empty-foundation-migration.log",
+      "sha256": "ae0220cd4126e35863469ca448da031513a6b2d0d0b9fca36bc3d24c49ef549e"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/empty-foundation-tests-2.log",
+      "sha256": "3c38bbf36e4342c12847ed3dfd1480e6cb3bcaebdd65ba74ce5ca61a956b85d1"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/empty-foundation-tests.log",
+      "sha256": "75329367698071f55ebd5cc73182cbccfc60296725c3676cc652e578d1408529"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/ios-rls-tests.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/legacy-rls-tests.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/phase1_existing.log",
+      "sha256": "2f0120ca8e045f329b6effe2e13d1f70000e835134834f391e7d60b044398c60"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-rehearsal/results.json",
+      "sha256": "780dbe89a5a2669ab0f0efdbe3fe511f246a2d0ab41f7b059df5c4ab4c0a52b9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/advisors-2.log",
+      "sha256": "adecc5f6c1c038eec89a8cce79c1c979dfd42846fb90f9da8e22bad1ed237647"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/advisors.log",
+      "sha256": "4ac7818591a2bdc086562b9a751afb717c4f0ceae90c0f08fa7291e6679fd9c3"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/after.json",
+      "sha256": "1cc4170f3e5df5de0d8c462799c277a5ffa2eb68a56a1148b147f7b7605870e4"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/before.json",
+      "sha256": "516d32c74d4424bf8f1c01e927958a9a78e3c6a9d59aaf834e39be8ecd102a26"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/foundations-tests-2.log",
+      "sha256": "b54ce746401e6a6e54719f5f98c676b15f1562135704bf7100421eeb49f3323c"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/foundations-tests.log",
+      "sha256": "6e48c0167881ab5aa8dcf7eee147a9746e5b5f1eec5e21f26bcfe82f907170de"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/ios-rls-tests-2.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/ios-rls-tests.log",
+      "sha256": "a7788e93436bdc2b492004dac91a0bf755b79999486c21fc17a368974872c85f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/legacy-rls-tests-2.log",
+      "sha256": "e79e703a52df1deaacecda65bf98a017f09c240d07863a1552bce558b2cff302"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/legacy-rls-tests-3.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/legacy-rls-tests.log",
+      "sha256": "7bb9e8a38bc61ed8b561274ceca0dca864ab5767c2a81d0610264047e49f566d"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/phase1_existing.log",
+      "sha256": "682e23b9aac78d59b7b4fe4f2a347aff65faab19e9924701459731aefc0f439c"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/results.json",
+      "sha256": "ced621404316d43a7cb35a94a872e26c77ac5c496a5b095f8a9769cb359fc0b3"
+    },
+    {
+      "file": "plans/evidence/phase1/database-representative/typegen.log",
+      "sha256": "d471a1cb9f7f804dddf5496298c58082afcc041d7b4b685d0311415880983048"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/after.json",
+      "sha256": "1d9fadffdf31615c85f6551cba4a39677e47245bf85d7eec1f07486ab6d471f6"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/before.json",
+      "sha256": "19726b5a5b6f9135fce461b18f9fe83e6063746326c39d8f8f6255c73c76959d"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/contract-check.json",
+      "sha256": "856a3f02921d1ee45e53bdc4e17abbb677ae333386bea6d783b99b19f5b4b08b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/contract-check.log",
+      "sha256": "2aca6e97df20568a3ecdd4c85c18ef3022dd6ad833c64efce5d723ea24846276"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/empty-foundation.json",
+      "sha256": "babdcd85a3d1ad270d5bdc9a060ac713b6aa04138d6eccbae3a63df4416aedd3"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/empty-foundation.log",
+      "sha256": "e2a833f6ae224e51f21741d7dcc96fdebff5b21a7ba6a59aace883f9c2ed34f5"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/generated-types.log",
+      "sha256": "4baf775fc25ef884656dbf8191c4c6c47b2a376a9fe150075adfab09a0fa996d"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/generated-types.ts",
+      "sha256": "157bee285d00e483a48d424db345476c8f5e0751a89680c1a697f1ce22c3ffce"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing/foundations.log",
+      "sha256": "1cf1ae87d77e0ef63f87abe3ad9d5b1d6cf45bd20c977569f056d893e2f6e2e6"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing/historical-reads.log",
+      "sha256": "b8e4120e2afe18a8e9046dbfaf349600192b8a589f17b12f931d56dcab4ed978"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing/tests.json",
+      "sha256": "b00d1d8c0aea87e0de4d02b3189abd2b0417e72af3a331962caeecfec9552be7"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_existing.log",
+      "sha256": "2f0120ca8e045f329b6effe2e13d1f70000e835134834f391e7d60b044398c60"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_foundation_empty/foundations.log",
+      "sha256": "256678b9a77a1d29343cf87fa1d3d5f64a91ef5720d6e8e94f1df9fb7b71fac2"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_foundation_empty/ios-rls.log",
+      "sha256": "33f247d83fbb499f5d8467f4d28e8a4e08bfb63741412604109acd6cf54cfa8b"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_foundation_empty/legacy-rls.log",
+      "sha256": "1a4d33e7e00809f9328e958f2eeb8fc1bff3227d7ae79a442d1bab4c4d9019c9"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/phase1_foundation_empty/tests.json",
+      "sha256": "f69c81741a45998bb2cab38177d7c53baf16f3b9f0ea25d8486b398f755c2270"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/race-fixture.log",
+      "sha256": "74a6dda22e91ad58cbd5ccfb8123f5e9fe03a7ea86bc6cd18a53d42790543940"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/races.json",
+      "sha256": "cb587dbdc42fb4deab7b21238ae3ea617b38b0f9c9444232b1b263ad4cf95183"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/reconciliation.json",
+      "sha256": "ba2d80a7aaab2183a4830d1b93718dcd89d7c190563e2a3b92f5dcae8bb8af5f"
+    },
+    {
+      "file": "plans/evidence/phase1/database-reviewed/results.json",
+      "sha256": "7efe55d3b288ff04dff55037906f94499db260994b50deccebcb013f34de4ad9"
+    },
+    {
+      "file": "plans/evidence/phase1/diff-check.log",
+      "sha256": "4567a4852c00c89142ce8d440ee80cef63c2a3d4af5084499959b0caa76eb4b7"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/ios-tests.log",
+      "sha256": "9b819a039f51281b28d8dd6d5792e7083427f5b9c92b1bab106b0e98036448c3"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/ios-types.log",
+      "sha256": "ec69e31216d3c2c9ff53a1f54185dfaf896f2d737f9fb6dffc56d9323a27e2c9"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/results.json",
+      "sha256": "bf5e0084aec637837d64f68a51140046610c36663affb05f6f4e18199a1400e8"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/shared-tests.log",
+      "sha256": "c20e6baef4302b223194c64e972179e8b19d4212c51c83509f408fb980bd15b0"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/final-checks/working-tree.txt",
+      "sha256": "a063b683830023fddedde49a9c35836e4b5d3c09c571c124d19b833bb3701a9c"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/admin-web-types.log",
+      "sha256": "39f0b49485b4469b71ad65df5efc3ef57e5217768f4e668462bd2440747a2b34"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/android-types.log",
+      "sha256": "ee8ea35f8916337953e873b28a470ec8345849af588e646cd70ff3c2da9b3edc"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/ios-types.log",
+      "sha256": "4561b442d37967c905d60ff826970e2027e76e0aabe8b9e89f7b0299da751139"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/resident-web-types.log",
+      "sha256": "dfafbdd28fb241b4842db8c23e216601f344f41a109db10cf4d15d60b4147ba6"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/results.json",
+      "sha256": "1022fe49dd24486e7195dfa2e10a17db73227ea328416244b2f6433774e6c2bd"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/shared-tests.log",
+      "sha256": "a2b7e3006b789673ad21714db9e480e864de7371ff14c33693f2be55a370b534"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/shared-types.log",
+      "sha256": "4ff109b0e486c3a29c8c2d35e8b984393b4e2aad9f9849ac3fc13bb9da2a7f1f"
+    },
+    {
+      "file": "plans/evidence/phase1/implementation-checks/working-tree.txt",
+      "sha256": "6162081ab0b2ade980a26f78a248e01bc635e0bc9e283844837fcad18838b63c"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/admin-web-build.log",
+      "sha256": "45115e73517071237694e5e9ff0c94aa51e6df2348742a7a1b9b97296a880982"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/android-export.log",
+      "sha256": "7e2467a1698a6293cbb6decc4af89354018765eaa88042ca784d88496c1a53f4"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/resident-web-build.log",
+      "sha256": "a255eb74ddc1f02ab927be16d20924729685f59d5f205d4bf262ac5f60a3f07e"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/results.json",
+      "sha256": "09f9fa0fce4162bbe876538ab8083a38f5641f0c31e8292d9304b4fafcefec6b"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-builds/working-tree.txt",
+      "sha256": "5559f3159f03cf7f1b393df20b0a49845f4ca17b65df1545e80619d97d58516d"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/admin-web-lint.log",
+      "sha256": "ba7ac211b6a56c1e4f8ef6b57418a099e5625f801718245f276a0529e858a205"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/admin-web-types.log",
+      "sha256": "a3af54d3076a9994180ee58976730a1fa4232860fd56575941dd59407420f57f"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/android-lint.log",
+      "sha256": "e581224e7c54ee282eb04d0411859accf4e97435c0b1c8a7e7b5dbeb973efc99"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/ios-tests.log",
+      "sha256": "3e9c2ff4e418caf26f67c56660c833cbd52275b397184070929f0333f640461e"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/ios-types.log",
+      "sha256": "ec69e31216d3c2c9ff53a1f54185dfaf896f2d737f9fb6dffc56d9323a27e2c9"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/resident-web-lint.log",
+      "sha256": "b88a3fc04387fc87c52acda4de1f218df2dad2c3449ba749fca12a8702794e9e"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/results.json",
+      "sha256": "036b7649292e7c5358ce9e530071bfce4a2dd56faa0e6065ca3a191d9c193216"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/shared-tests.log",
+      "sha256": "e18c5b2ee77fc4ee25aa46731ea3bfb7270adb2c2801f3c8ff5effba7c05dfaa"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/reviewed-checks/working-tree.txt",
+      "sha256": "5f3e3ebea56be0c0f1ec28ee7ab5262a6d1bdd42a694862ff83ccb8a9983bf4a"
+    },
+    {
+      "file": "plans/evidence/phase1/scoped-checks.json",
+      "sha256": "c1a98bebfe35d580de1f43433872aa698f42438bd6cb4e07b710f3bb8fdca9b2"
+    },
+    {
+      "file": "plans/evidence/phase1/scoped-lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-contracts.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-database.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-empty-foundation.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-races.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-sql-checks.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/syntax-scripts-phase1-verify.cjs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/admin-web-types.log",
+      "sha256": "14337a13515164063dadd3eb6ac07077df2b1ddbd9ef2fddc8b0fa4cd9ac1070"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/android-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/existing-migration.diff",
+      "sha256": "b705cd028fba6d08c9fda9faf20914b498ac6e5f45d9b3b114573010ba1d4421"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/ios-types.log",
+      "sha256": "ec69e31216d3c2c9ff53a1f54185dfaf896f2d737f9fb6dffc56d9323a27e2c9"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/preservation-after.json",
+      "sha256": "cd3b20dd8014d3530d3c0ebf90cc443a18c9af14969c1ec439330a5dd6240bab"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/preservation.json",
+      "sha256": "eee85e643b2569f81e642adbccf5c02ed0295e4d268135ea5c56a468fc731889"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/resident-web-types.log",
+      "sha256": "aec1c4b52c0cdead4ff9a111b844f6af1307d016d0b4365fdd14faf08666f450"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/results.json",
+      "sha256": "90bb094f3d96094694b4f2b59ec27ea4cae1b45c939b829c0f247f72668a255c"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/shared-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "plans/evidence/phase1/types-recheck/working-tree.txt",
+      "sha256": "fcf2d2f132150a987a3082402a054f408f4b7aa1906bf8c9ff8ce70fd427198d"
+    }
+  ]
+}

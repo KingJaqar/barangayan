@@ -1,0 +1,23 @@
+BEGIN
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ok 1 - New profile locality is server derived
+ok 2 - Province is server derived
+ok 3 - Unsplittable free text survives
+INSERT 0 2
+INSERT 0 1
+UPDATE 1
+b2100000-0000-0000-0000-000000000001
+SET
+ok 4 - City tampering denied
+ok 5 - Province tampering denied
+ok 6 - Free-text locality bypass denied
+ok 7 - Type-only changes cannot retain approval
+ok 8 - Raw status mutation denied
+ok 9 - Ordinary edits work
+ok 10 - Ordinary edits retain exact approval
+ok 11 - Imported evidence cannot be overwritten
+1..11
+ROLLBACK

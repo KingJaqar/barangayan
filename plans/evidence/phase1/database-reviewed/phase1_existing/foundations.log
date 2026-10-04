@@ -1,0 +1,565 @@
+SET
+BEGIN
+ no_plan 
+---------
+(0 rows)
+
+UPDATE 1
+INSERT 0 0
+INSERT 0 2
+INSERT 0 5
+INSERT 0 4
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 4
+CREATE TABLE
+INSERT 0 1
+GRANT
+SET
+                 throws_ok                 
+-------------------------------------------
+ ok 1 - Anonymous cannot invoke submission
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 2 - Anonymous cannot read ID versions
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 3 - Anonymous cannot read attachments
+(1 row)
+
+RESET
+SET
+SET
+SET
+             throws_ok              
+------------------------------------
+ ok 4 - Resident cannot assign role
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 5 - Resident cannot assign tenant
+(1 row)
+
+              throws_ok               
+--------------------------------------
+ ok 6 - No approval blocks submission
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 7 - ID version table has no direct write grant
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 8 - Resident publishes owned uploaded ID version
+(1 row)
+
+                 lives_ok                  
+-------------------------------------------
+ ok 9 - ID publication retry is idempotent
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 10 - Retry creates one version
+(1 row)
+
+                throws_ok                 
+------------------------------------------
+ ok 11 - Resident cannot approve evidence
+(1 row)
+
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 12 - Resident cannot assign a versioned verification outcome
+(1 row)
+
+                         is                         
+----------------------------------------------------
+ ok 13 - Resident cannot overwrite version evidence
+(1 row)
+
+                       is                        
+-------------------------------------------------
+ ok 14 - Resident cannot delete version evidence
+(1 row)
+
+                 throws_ok                  
+--------------------------------------------
+ ok 15 - Pending approval blocks submission
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 16 - Direct insert cannot downgrade v2 service
+(1 row)
+
+                            throws_ok                            
+-----------------------------------------------------------------
+ ok 17 - Cross-tenant related service rejected at table boundary
+(1 row)
+
+                        throws_ok                        
+---------------------------------------------------------
+ ok 18 - Legacy direct insert cannot forge initial state
+(1 row)
+
+                             throws_ok                             
+-------------------------------------------------------------------
+ ok 19 - Legacy insert cannot reserve a controlled idempotency key
+(1 row)
+
+SET
+                                   throws_ok                                    
+--------------------------------------------------------------------------------
+ ok 20 - Caller cannot impersonate controlled submission with a session setting
+(1 row)
+
+SET
+                       lives_ok                        
+-------------------------------------------------------
+ ok 21 - Legacy supported submission remains available
+(1 row)
+
+                         lives_ok                          
+-----------------------------------------------------------
+ ok 22 - Existing cancellation RPC retains legacy behavior
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 23 - Legacy cancellation keeps established status
+(1 row)
+
+SET
+                         throws_ok                         
+-----------------------------------------------------------
+ ok 24 - Other tenant administrator cannot review evidence
+(1 row)
+
+                           is                            
+---------------------------------------------------------
+ ok 25 - Other tenant administrator cannot read evidence
+(1 row)
+
+SET
+                        lives_ok                        
+--------------------------------------------------------
+ ok 26 - Tenant administrator approves reviewed version
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 27 - Repeated review rejected
+(1 row)
+
+SET
+            throws_ok             
+----------------------------------
+ ok 28 - Forged identity rejected
+(1 row)
+
+                   throws_ok                    
+------------------------------------------------
+ ok 29 - Whitespace Others explanation rejected
+(1 row)
+
+             throws_ok              
+------------------------------------
+ ok 30 - Excessive purpose rejected
+(1 row)
+
+                     throws_ok                      
+----------------------------------------------------
+ ok 31 - Missing appearance acknowledgment rejected
+(1 row)
+
+                    throws_ok                     
+--------------------------------------------------
+ ok 32 - Foreign uploaded file reference rejected
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 33 - Forged size does not match uploaded metadata
+(1 row)
+
+                      throws_ok                      
+-----------------------------------------------------
+ ok 34 - Failed or missing upload cannot be attached
+(1 row)
+
+                        lives_ok                         
+---------------------------------------------------------
+ ok 35 - Verified resident submits while pricing pending
+(1 row)
+
+                    lives_ok                     
+-------------------------------------------------
+ ok 36 - Same-key retry returns original request
+(1 row)
+
+                    is                     
+-------------------------------------------
+ ok 37 - One persisted request for retries
+(1 row)
+
+                      throws_ok                      
+-----------------------------------------------------
+ ok 38 - Same key with changed payload is a conflict
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 39 - Fee state is separate from request status
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 40 - Clock does not start at online submission
+(1 row)
+
+                is                 
+-----------------------------------
+ ok 41 - Target snapshot persisted
+(1 row)
+
+              throws_ok              
+-------------------------------------
+ ok 42 - Resident cannot assess fees
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 43 - Resident cannot start agency processing
+(1 row)
+
+SET
+                            throws_ok                             
+------------------------------------------------------------------
+ ok 44 - Pending fee assessment blocks payment at ledger boundary
+(1 row)
+
+                      throws_ok                       
+------------------------------------------------------
+ ok 45 - Administrator must use controlled assessment
+(1 row)
+
+SET
+                                       throws_ok                                       
+---------------------------------------------------------------------------------------
+ ok 46 - Administrator cannot impersonate controlled assessment with a session setting
+(1 row)
+
+SET
+                        throws_ok                        
+---------------------------------------------------------
+ ok 47 - Appearance readiness required before acceptance
+(1 row)
+
+                         lives_ok                         
+----------------------------------------------------------
+ ok 48 - Complete requirements and appearance start clock
+(1 row)
+
+                     throws_ok                     
+---------------------------------------------------
+ ok 49 - Pause requires documented resident reason
+(1 row)
+
+            lives_ok            
+--------------------------------
+ ok 50 - Resident wait recorded
+(1 row)
+
+             throws_ok              
+------------------------------------
+ ok 51 - Overlapping pause rejected
+(1 row)
+
+         lives_ok          
+---------------------------
+ ok 52 - Open wait resumed
+(1 row)
+
+            throws_ok             
+----------------------------------
+ ok 53 - Repeated resume rejected
+(1 row)
+
+                       lives_ok                       
+------------------------------------------------------
+ ok 54 - Explicit waiver persists administrator basis
+(1 row)
+
+                 lives_ok                 
+------------------------------------------
+ ok 55 - Readiness stops processing clock
+(1 row)
+
+                      lives_ok                       
+-----------------------------------------------------
+ ok 56 - Waiver bypasses payment and permits release
+(1 row)
+
+                                     ok                                      
+-----------------------------------------------------------------------------
+ ok 57 - Acceptance, readiness and release are separate ordered server times
+(1 row)
+
+                   throws_ok                   
+-----------------------------------------------
+ ok 58 - Target snapshot cannot be overwritten
+(1 row)
+
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 59 - Catalog rejects duplicate purpose codes at server boundary
+(1 row)
+
+                        lives_ok                        
+--------------------------------------------------------
+ ok 60 - Administrator may change future catalog target
+(1 row)
+
+                           is                           
+--------------------------------------------------------
+ ok 61 - Existing target snapshot survives catalog edit
+(1 row)
+
+SET
+                                 throws_ok                                  
+----------------------------------------------------------------------------
+ ok 62 - Renter requires lessor evidence independently of verified identity
+(1 row)
+
+                            lives_ok                             
+-----------------------------------------------------------------
+ ok 63 - Owned file at exact 5 MB limit attaches transactionally
+(1 row)
+
+                        is                        
+--------------------------------------------------
+ ok 64 - Owner reads attached supporting metadata
+(1 row)
+
+                         throws_ok                          
+------------------------------------------------------------
+ ok 65 - Attachment associations have no direct write grant
+(1 row)
+
+                    throws_ok                    
+-------------------------------------------------
+ ok 66 - Upload cannot assign another owner path
+(1 row)
+
+                        is                         
+---------------------------------------------------
+ ok 67 - Supporting evidence cannot be overwritten
+(1 row)
+
+SET
+                               is                                
+-----------------------------------------------------------------
+ ok 68 - Same-tenant administrator reads attachment associations
+(1 row)
+
+                                     is                                      
+-----------------------------------------------------------------------------
+ ok 69 - Administrator reads attached evidence, not unattached foreign files
+(1 row)
+
+                   lives_ok                    
+-----------------------------------------------
+ ok 70 - Administrator confirms request amount
+(1 row)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 71 - Payment rejects amount differing from assessment
+(1 row)
+
+                    lives_ok                     
+-------------------------------------------------
+ ok 72 - Confirmed request amount begins payment
+(1 row)
+
+                 throws_ok                 
+-------------------------------------------
+ ok 73 - Second active payment is rejected
+(1 row)
+
+                 throws_ok                  
+--------------------------------------------
+ ok 74 - Amount freezes when payment begins
+(1 row)
+
+                       throws_ok                        
+--------------------------------------------------------
+ ok 75 - Ledger cannot overwrite frozen assessed amount
+(1 row)
+
+SET
+                             is                             
+------------------------------------------------------------
+ ok 76 - Other-tenant administrator cannot read attachments
+(1 row)
+
+                                is                                 
+-------------------------------------------------------------------
+ ok 77 - Other-tenant administrator cannot read supporting objects
+(1 row)
+
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 78 - Other-tenant administrator cannot assess a foreign request
+(1 row)
+
+RESET
+INSERT 0 1
+SET
+SET
+                       lives_ok                        
+-------------------------------------------------------
+ ok 79 - Copy request snapshots description and copies
+(1 row)
+
+SET
+                             throws_ok                              
+--------------------------------------------------------------------
+ ok 80 - Total pages cannot be multiplied by requested copies again
+(1 row)
+
+                  lives_ok                  
+--------------------------------------------
+ ok 81 - Ten pesos per total confirmed page
+(1 row)
+
+                           lives_ok                            
+---------------------------------------------------------------
+ ok 82 - Copy processing can start after complete requirements
+(1 row)
+
+          lives_ok          
+----------------------------
+ ok 83 - Copy wait recorded
+(1 row)
+
+SET
+                                 lives_ok                                 
+--------------------------------------------------------------------------
+ ok 84 - Existing resident cancellation RPC supports v2 and freezes clock
+(1 row)
+
+                      is                       
+-----------------------------------------------
+ ok 85 - Cancellation freezes new timing state
+(1 row)
+
+                          is                           
+-------------------------------------------------------
+ ok 86 - Cancellation closes documented resident waits
+(1 row)
+
+RESET
+INSERT 0 2
+SET
+SET
+                          lives_ok                           
+-------------------------------------------------------------
+ ok 87 - Unrelated profile edit preserves versioned approval
+(1 row)
+
+                   is                    
+-----------------------------------------
+ ok 88 - Unrelated edit retains approval
+(1 row)
+
+                              lives_ok                               
+---------------------------------------------------------------------
+ ok 89 - Replacement publishes a distinct immutable evidence version
+(1 row)
+
+                 is                  
+-------------------------------------
+ ok 90 - Replacement clears approval
+(1 row)
+
+                        throws_ok                         
+----------------------------------------------------------
+ ok 91 - Replacement pending evidence blocks new requests
+(1 row)
+
+                               is                               
+----------------------------------------------------------------
+ ok 92 - Historical request retains reviewed evidence reference
+(1 row)
+
+SET
+                       throws_ok                        
+--------------------------------------------------------
+ ok 93 - Stale evidence review cannot alter replacement
+(1 row)
+
+                         lives_ok                         
+----------------------------------------------------------
+ ok 94 - Administrator rejection records reason and actor
+(1 row)
+
+SET
+                    throws_ok                    
+-------------------------------------------------
+ ok 95 - Failed verification blocks new requests
+(1 row)
+
+                                     lives_ok                                     
+----------------------------------------------------------------------------------
+ ok 96 - Lost-response retry still retrieves historical request after replacement
+(1 row)
+
+SET
+                                    lives_ok                                     
+---------------------------------------------------------------------------------
+ ok 97 - Named OAuth identity without registration metadata can complete profile
+(1 row)
+
+                          is                          
+------------------------------------------------------
+ ok 98 - User metadata role does not assign authority
+(1 row)
+
+                       is                       
+------------------------------------------------
+ ok 99 - Completion derives configured locality
+(1 row)
+
+                  is                  
+--------------------------------------
+ ok 100 - Completion derives province
+(1 row)
+
+                  throws_ok                   
+----------------------------------------------
+ ok 101 - Completion rejects tenant injection
+(1 row)
+
+                     throws_ok                      
+----------------------------------------------------
+ ok 102 - Required profile enum cannot be JSON null
+(1 row)
+
+RESET
+ finish 
+--------
+ 1..102
+(1 row)
+
+ROLLBACK
