@@ -1,4 +1,4 @@
-import { driveRegistrationSchema, type Database } from '@barangayan/shared';
+import { driveRegistrationSchema, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type Database } from '@barangayan/shared';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'expo-crypto';
 import { z } from 'zod';
@@ -67,15 +67,15 @@ export function residentApi(client: SupabaseClient<Database>, barangayId: string
       if (error) throw error;
     },
     drives: (signal: AbortSignal) => pages((from, to) => client.from('medical_drives').select('*').eq('barangay_id', barangayId).eq('is_active', true).is('deleted_at', null).order('drive_date').order('id').range(from, to).abortSignal(signal), signal),
-    registrations: (signal: AbortSignal) => pages((from, to) => client.from('drive_registrations').select('*,medical_drives(title,drive_date)').eq('user_id', owner()).order('created_at', { ascending: false }).order('id').range(from, to).abortSignal(signal), signal),
+    registrations: (signal: AbortSignal) => pages((from, to) => client.from('drive_registrations').select(`${RESIDENT_DRIVE_REGISTRATION_COLUMNS},medical_drives(title,drive_date)`).eq('user_id', owner()).order('created_at', { ascending: false }).order('id').range(from, to).abortSignal(signal), signal),
     async registerForDrive(input: unknown) {
       const value = driveRegistrationSchema.parse(input);
       const result = await client.rpc('register_for_drive', {
         p_drive_id: value.driveId, p_age: value.age, p_is_pwd: value.isPwd, p_comorbidities: value.comorbidities,
         ...(value.priorDoseDate ? { p_prior_dose_date: value.priorDoseDate } : {}),
       });
-      if (!result.error && result.data) return result.data;
-      const reconciled = await client.from('drive_registrations').select('id,applicant_number,priority_score,status').eq('drive_id', value.driveId).eq('user_id', owner()).maybeSingle();
+      if (!result.error && result.data) return residentDriveRegistrationResultSchema.parse(result.data);
+      const reconciled = await client.from('drive_registrations').select('id,applicant_number,status').eq('drive_id', value.driveId).eq('user_id', owner()).maybeSingle();
       if (reconciled.data) return { registration_id: reconciled.data.id, ...reconciled.data };
       throw result.error ?? reconciled.error ?? new Error('Registration result unavailable');
     },

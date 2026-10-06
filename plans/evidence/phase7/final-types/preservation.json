@@ -1,0 +1,18 @@
+[
+  {
+    "file": "supabase/migrations/0094_resident_ios_tenant_write_guards.sql",
+    "sha256": "1a3e44efc21839d3a105424192f81b27e2b4afd4798f9cd721fc0c17136991f7"
+  },
+  {
+    "file": ".claude/settings.local.json",
+    "sha256": "93ec3452811c5d976bd639e7043f3ad8981044556e598002334a41ba191333e0"
+  },
+  {
+    "file": "barangayan project paper/Ampid1_CitizenCharter_DocumentProcessing_Context.pdf",
+    "sha256": "f70aa3d16c94a7bcc84b0ddd5c35c99d209f3d0f83fc70c1a831ca907580f561"
+  },
+  {
+    "file": "plans/Major_Web_AndroidMobile_Improvement_Plan.md",
+    "sha256": "0f53da055251a43d59203366799d87396feb578679a2820411ecf306f0803551"
+  }
+]

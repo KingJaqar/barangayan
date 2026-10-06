@@ -1,0 +1,137 @@
+[
+  {
+    "database": "phase7_empty",
+    "label": "Portable infrastructure fixture",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0001_barangays_and_profiles.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0002_document_types_and_service_requests.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0003_announcements.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0004_service_request_reference_default.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0005_guest_readable_public_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0006_profile_theme_preference.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0007_payments_and_admin_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0008_resident_directory_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0009_admin_crud_and_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0010_resident_set_payment_method.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0011_announcements_admin_write.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0012_profile_trigger_and_verification_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0013_protect_verification_fields.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0014_request_delivery_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0015_request_delivery_transition_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0017_harden_payments_rls.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0018_begin_processing_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0019_fix_announcement_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0020_id_documents_storage.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0021_enable_pgtap.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0022_maps_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0023_seed_incident_categories.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0024_ampid1_boundary.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0025_incident_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0026_incident_report_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0027_incidents_realtime.sql",
+    "passed": true
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "checks": [
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run typecheck",
+      "startedAt": "2026-10-04T10:03:30.395Z",
+      "finishedAt": "2026-10-04T10:03:37.969Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "ios-types.log"
+    },
+    {
+      "id": "ios-lint",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T10:03:38.048Z",
+      "finishedAt": "2026-10-04T10:03:57.244Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "ios-lint.log"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "scores": [
+    {
+      "priority_score": 90,
+      "registration_id": "f3000000-0000-0000-0000-000000000002"
+    }
+  ],
+  "tables": [
+    {
+      "table": "profiles",
+      "rows": 2,
+      "unchanged": true
+    },
+    {
+      "table": "barangays",
+      "rows": 1,
+      "unchanged": true
+    },
+    {
+      "table": "medical_drives",
+      "rows": 1,
+      "unchanged": true
+    },
+    {
+      "table": "drive_registrations",
+      "rows": 1,
+      "unchanged": true
+    },
+    {
+      "table": "service_requests",
+      "rows": 2,
+      "unchanged": true
+    },
+    {
+      "table": "payments",
+      "rows": 2,
+      "unchanged": true
+    },
+    {
+      "table": "id_submissions",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "document_types",
+      "rows": 1,
+      "unchanged": true
+    }
+  ]
+}

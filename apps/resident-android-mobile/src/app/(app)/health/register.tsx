@@ -1,4 +1,5 @@
 import { ResidentActionGate } from '@/components/resident-action-gate';
+import { residentDriveRegistrationResultSchema } from '@barangayan/shared';
 /**
  * Applicant Registration — Module 10.
  *
@@ -335,7 +336,6 @@ function ApplicantRegistrationScreenContent() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [result, setResult] = useState<{
     applicant_number: string;
-    priority_score: number;
   } | null>(null);
 
   // ── Success animation ──────────────────────────────────────────────────────
@@ -450,15 +450,9 @@ function ApplicantRegistrationScreenContent() {
 
       if (error) throw new Error(error.message);
 
-      const res = data as {
-        registration_id: string;
-        applicant_number: string;
-        priority_score: number;
-        status: string;
-      };
+      const res = residentDriveRegistrationResultSchema.parse(data);
       setResult({
         applicant_number: res.applicant_number,
-        priority_score: res.priority_score,
       });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Registration failed. Please try again.';
@@ -526,14 +520,6 @@ function ApplicantRegistrationScreenContent() {
             <ThemedText style={[s.successNumLabel, { color: PRIMARY_GREEN }]}>Your Applicant Number</ThemedText>
             <ThemedText style={[s.successNum, { color: PRIMARY_GREEN }]}>
               {fmtConfirmedNumber(result.applicant_number)}
-            </ThemedText>
-          </View>
-
-          {/* Priority score */}
-          <View style={s.successMeta}>
-            <Ionicons name="star" size={16} color={PRIMARY_GREEN} />
-            <ThemedText themeColor="textSecondary" style={s.successMetaText}>
-              Priority score: <ThemedText style={{ fontWeight: '700' }}>{result.priority_score} pts</ThemedText>
             </ThemedText>
           </View>
 
@@ -1484,15 +1470,6 @@ const s = StyleSheet.create({
     fontWeight: '800',
     // color applied inline with the live accent.
     letterSpacing: 0.5,
-  },
-  successMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  successMetaText: {
-    fontSize: 14,
-    lineHeight: 20,
   },
   successNote: {
     fontSize: 13,

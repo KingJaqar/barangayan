@@ -1,0 +1,70 @@
+{
+  "events": [
+    {
+      "schema": "public",
+      "table": "medical_drives",
+      "commit_timestamp": "2026-10-04T09:57:47.818Z",
+      "eventType": "UPDATE",
+      "new": {
+        "id": "29359614-7210-4ae1-8c28-4b81ba8ac15a",
+        "type": "vaccination",
+        "title": "Phase Seven Privacy Drive",
+        "location": "Barangay Health Center",
+        "time_end": "12:00:00",
+        "is_active": true,
+        "created_at": "2026-10-04T09:56:02.109237+00:00",
+        "deleted_at": null,
+        "drive_date": "2026-10-04",
+        "stock_unit": "slots",
+        "time_start": "08:00:00",
+        "updated_at": "2026-10-04T09:57:47.81393+00:00",
+        "barangay_id": "00000000-0000-0000-0000-000000000001",
+        "stock_label": "Remaining Slots",
+        "stock_total": 10,
+        "stock_remaining": 8,
+        "eligible_criteria": "Test residents"
+      },
+      "old": {
+        "id": "29359614-7210-4ae1-8c28-4b81ba8ac15a"
+      },
+      "errors": null
+    },
+    {
+      "schema": "public",
+      "table": "drive_registrations",
+      "commit_timestamp": "2026-10-04T09:57:47.828Z",
+      "eventType": "UPDATE",
+      "new": {
+        "id": "adaa3514-7a6d-4d24-b2c1-a0ecf140cc05",
+        "age": 65,
+        "is_pwd": true,
+        "status": "confirmed",
+        "user_id": "d7039790-0f50-4af9-ba67-f09d4fc10c24",
+        "drive_id": "29359614-7210-4ae1-8c28-4b81ba8ac15a",
+        "created_at": "2026-10-04T09:56:02.666714+00:00",
+        "updated_at": "2026-10-04T09:57:47.824954+00:00",
+        "comorbidities": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "prior_dose_date": "2020-01-01",
+        "applicant_number": "VAC-20261004-0001"
+      },
+      "old": {
+        "id": "adaa3514-7a6d-4d24-b2c1-a0ecf140cc05"
+      },
+      "errors": null
+    }
+  ],
+  "system": [
+    {
+      "message": "Subscribed to PostgreSQL",
+      "status": "ok",
+      "extension": "postgres_changes",
+      "channel": "phase7-diagnostic-1791107783514"
+    }
+  ]
+}

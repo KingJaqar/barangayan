@@ -97,12 +97,16 @@ export function SegmentedControl<Key extends string>({
             onPress={() => onChange(segment.key)}
             style={styles.segmentPressable}
             accessibilityRole="tab"
+            accessibilityLabel={segment.label}
             accessibilityState={{ selected: isActive }}>
             <View style={styles.segment}>
               <ThemedText
                 type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
                 themeColor={isActive ? undefined : 'textSecondary'}
-                style={isActive ? activeTextStyle : undefined}>
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.65}
+                style={[styles.label, isActive ? activeTextStyle : undefined]}>
                 {segment.label}
               </ThemedText>
             </View>
@@ -130,11 +134,19 @@ const styles = StyleSheet.create({
   },
   segmentPressable: {
     flex: 1,
+    minWidth: 0,
     zIndex: 1,
   },
   segment: {
+    minHeight: 44,
+    paddingHorizontal: Spacing.one,
     paddingVertical: Spacing.two,
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: Spacing.three,
+  },
+  label: {
+    width: '100%',
+    textAlign: 'center',
   },
 });

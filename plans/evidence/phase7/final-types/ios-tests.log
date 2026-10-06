@@ -1,0 +1,15 @@
+
+> @barangayan/resident-ios@1.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-ios-mobile
+
+ ✓ tests/secure-storage.test.ts (5 tests) 12ms
+ ✓ tests/config.test.ts (3 tests) 9ms
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  18:14:56
+   Duration  1.44s (transform 141ms, setup 0ms, collect 236ms, tests 21ms, environment 0ms, prepare 520ms)
+

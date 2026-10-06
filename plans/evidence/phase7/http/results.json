@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "assertions": [
+    "Synthetic foreign tenant created",
+    "resident: Auth account created",
+    "resident: completed fixture profile created",
+    "second: Auth account created",
+    "second: completed fixture profile created",
+    "third: Auth account created",
+    "third: completed fixture profile created",
+    "admin: Auth account created",
+    "admin: completed fixture profile created",
+    "foreignAdmin: Auth account created",
+    "foreignAdmin: completed fixture profile created",
+    "foreignResident: Auth account created",
+    "foreignResident: completed fixture profile created",
+    "Dedicated test drives created",
+    "resident: real Auth session",
+    "admin: real Auth session",
+    "foreignAdmin: real Auth session",
+    "Resident registration succeeds through real RPC",
+    "Resident RPC returns only safe confirmation fields",
+    "Resident wildcard REST remains readable",
+    "Wildcard REST has no score",
+    "Explicit old score column denied",
+    "Protected REST applies RLS",
+    "Resident REST cannot retrieve score rows",
+    "Nested protected REST join executes",
+    "Nested join cannot reveal own score",
+    "Inner join authorization applies",
+    "Inner joins cannot infer score by matching rows",
+    "Resident CSV request yields no protected values",
+    "Resident cannot invoke staff RPC",
+    "Resident cannot forge score row",
+    "Actual administrator page join works",
+    "Administrator exact formula result is 80",
+    "Foreign administrator REST executes",
+    "Foreign administrator cannot retrieve local score",
+    "Foreign administrator RPC rejected",
+    "Administrator cannot overwrite historical score",
+    "Resident cancellation cannot tamper with scoring inputs",
+    "Staff registration succeeds",
+    "Staff result preserves infant/comorbidity score",
+    "Staff confirmation succeeds",
+    "Real Realtime registration event received",
+    "Realtime payloads carry no score key",
+    "Malicious protected-table subscription receives no score events",
+    "Administrator ranked REST/export query",
+    "Administrator ranking values remain correct",
+    "Actual personal-data export handler succeeds with resident JWT",
+    "Export retains resident registration and applicant number",
+    "Personal-data export has no score field anywhere",
+    "Unauthenticated export denied",
+    "second: real Auth session",
+    "third: real Auth session",
+    "Concurrent capacity race reserves exactly one slot",
+    "Inspect concurrent results",
+    "Race creates exactly one registration and one protected score",
+    "Inspect stock",
+    "Concurrent capacity never oversells",
+    "Retry duplicate remains denied without extra score",
+    "Reconcile successful registrations",
+    "Retry did not duplicate registration or score"
+  ],
+  "realtimeStatuses": [
+    {
+      "table": "drive_registrations",
+      "state": "SUBSCRIBED"
+    },
+    {
+      "table": "drive_registrations",
+      "system": {
+        "message": "Subscribed to PostgreSQL",
+        "status": "ok",
+        "extension": "postgres_changes",
+        "channel": "phase7-drive_registrations-7bd31d61-d97a-4337-8da0-99aa7a4f14f7"
+      }
+    },
+    {
+      "table": "drive_registration_scores",
+      "state": "SUBSCRIBED"
+    },
+    {
+      "table": "drive_registration_scores",
+      "system": {
+        "message": "Unable to subscribe to changes with given parameters. Please check Realtime is enabled for the given connect parameters: [event: *, schema: public, table: drive_registration_scores, filters: [], select: nil]",
+        "status": "error",
+        "extension": "postgres_changes",
+        "channel": "phase7-drive_registration_scores-5b1ea881-963a-4f53-bfce-0d1dbe2e4e5b"
+      }
+    },
+    {
+      "table": "drive_registrations",
+      "state": "CLOSED"
+    },
+    {
+      "table": "drive_registration_scores",
+      "state": "CLOSED"
+    }
+  ]
+}

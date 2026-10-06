@@ -1,0 +1,51 @@
+{
+  "node": "v24.13.1",
+  "platform": "win32",
+  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "checks": [
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T11:56:49.471Z",
+      "finishedAt": "2026-10-04T11:57:12.156Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T11:57:12.232Z",
+      "finishedAt": "2026-10-04T11:57:35.429Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "admin-web-lint.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T11:57:35.505Z",
+      "finishedAt": "2026-10-04T11:57:52.759Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "ios-lint",
+      "directory": "apps/resident-ios-mobile",
+      "command": "npm run lint",
+      "startedAt": "2026-10-04T11:57:52.834Z",
+      "finishedAt": "2026-10-04T11:58:11.772Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "log": "ios-lint.log"
+    }
+  ]
+}

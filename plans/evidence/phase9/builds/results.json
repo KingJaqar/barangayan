@@ -1,0 +1,31 @@
+{
+  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "checks": [
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/next/dist/bin/next",
+        "build"
+      ],
+      "startedAt": "2026-10-06T05:58:17.424Z",
+      "finishedAt": "2026-10-06T05:59:11.089Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "resident-web-build.log"
+    },
+    {
+      "id": "admin-web-build",
+      "directory": "apps/admin-web",
+      "args": [
+        "node_modules/next/dist/bin/next",
+        "build"
+      ],
+      "startedAt": "2026-10-06T05:59:11.206Z",
+      "finishedAt": "2026-10-06T05:59:36.226Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "admin-web-build.log"
+    }
+  ]
+}

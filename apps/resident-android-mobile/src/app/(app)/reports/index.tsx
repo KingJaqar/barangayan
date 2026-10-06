@@ -178,9 +178,9 @@ export default function ReportsScreen() {
       <View style={styles.section1}>
         <SegmentedControl
           segments={[
-            { key: 'incident-reports', label: 'Incident Reports' },
-            { key: 'active', label: 'Active Reports' },
-            { key: 'resolved', label: 'Resolved Reports' },
+            { key: 'incident-reports', label: 'Incidents' },
+            { key: 'active', label: 'Active' },
+            { key: 'resolved', label: 'Resolved' },
             { key: 'announcements', label: 'Announcements' },
           ]}
           activeKey={segment}

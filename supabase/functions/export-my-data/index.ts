@@ -79,7 +79,7 @@ Deno.serve(async (req: Request) => {
           .select('*, document_types(name), payments(*)')
           .eq('resident_id', user.id),
         supabase.from('incidents').select('*').eq('reporter_id', user.id),
-        supabase.from('drive_registrations').select('*, medical_drives(title, drive_date)').eq('user_id', user.id),
+        supabase.from('drive_registrations').select('id,drive_id,user_id,applicant_number,age,is_pwd,comorbidities,prior_dose_date,status,created_at,updated_at, medical_drives(title, drive_date)').eq('user_id', user.id),
         supabase.from('evacuation_center_checkins').select('*').eq('user_id', user.id),
         supabase.from('push_tokens').select('device_type, last_used_at, created_at').eq('user_id', user.id),
       ]);

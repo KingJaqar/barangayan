@@ -1,0 +1,16 @@
+{
+  "passed": false,
+  "assertions": [
+    "Delete task fixture administrator audits",
+    "Delete task fixture registrations",
+    "Delete task fixture drives",
+    "Delete task fixture user",
+    "Delete task fixture user",
+    "Delete task fixture user",
+    "Delete task fixture user",
+    "Delete task fixture user",
+    "Delete task fixture user",
+    "Delete task foreign tenant"
+  ],
+  "realtimeStatuses": []
+}

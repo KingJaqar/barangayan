@@ -1,0 +1,8 @@
+Download https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-2.117.2.tgz
+Download https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.117.2.tgz
+Download https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.117.2.tgz
+Download https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.117.2.tgz
+Download https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.117.2.tgz
+Download https://registry.npmjs.org/@supabase/phoenix/-/phoenix-0.4.5.tgz
+Download https://registry.npmjs.org/iceberg-js/-/iceberg-js-0.8.1.tgz
+Check supabase/functions/export-my-data/index.ts

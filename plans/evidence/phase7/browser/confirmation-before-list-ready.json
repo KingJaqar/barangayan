@@ -1,0 +1,16 @@
+{
+  "passed": false,
+  "assertions": [
+    "Resident detail keeps applicant identity",
+    "Resident detail: no visible score",
+    "Resident detail: no accessibility score",
+    "Resident detail: no error overlay",
+    "Resident confirmation: no visible score",
+    "Resident confirmation: no accessibility score",
+    "Resident confirmation: no error overlay",
+    "Confirmation retains applicant number",
+    "Browser submission creates expected protected senior score"
+  ],
+  "consoleErrors": [],
+  "error": "Confirmation returns to saved registration list"
+}

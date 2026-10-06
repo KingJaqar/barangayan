@@ -1,0 +1,122 @@
+{
+  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "checks": [
+    {
+      "id": "shared-tests",
+      "directory": "packages/shared",
+      "args": [
+        "node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "startedAt": "2026-10-06T05:57:08.339Z",
+      "finishedAt": "2026-10-06T05:57:15.279Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "shared-tests.log"
+    },
+    {
+      "id": "shared-types",
+      "directory": "packages/shared",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T05:57:15.428Z",
+      "finishedAt": "2026-10-06T05:57:19.981Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "shared-types.log"
+    },
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T05:57:20.145Z",
+      "finishedAt": "2026-10-06T05:57:26.518Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "admin-web-types",
+      "directory": "apps/admin-web",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T05:57:26.678Z",
+      "finishedAt": "2026-10-06T05:57:32.132Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "admin-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T05:57:32.263Z",
+      "finishedAt": "2026-10-06T05:57:46.681Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "ios-tests",
+      "directory": "apps/resident-ios-mobile",
+      "args": [
+        "node_modules/vitest/vitest.mjs",
+        "run"
+      ],
+      "startedAt": "2026-10-06T05:57:46.822Z",
+      "finishedAt": "2026-10-06T05:57:49.989Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "ios-tests.log"
+    },
+    {
+      "id": "ios-types",
+      "directory": "apps/resident-ios-mobile",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T05:57:50.113Z",
+      "finishedAt": "2026-10-06T05:57:57.077Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "ios-types.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-06T05:57:57.206Z",
+      "finishedAt": "2026-10-06T05:58:41.098Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "admin-web-lint",
+      "directory": "apps/admin-web",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-06T05:58:41.239Z",
+      "finishedAt": "2026-10-06T05:59:08.601Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "admin-web-lint.log"
+    }
+  ]
+}

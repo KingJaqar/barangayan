@@ -1,0 +1,245 @@
+{
+  "verified_at": "2026-10-06 03:19:18 UTC",
+  "project_ref": "pwjbucnyqexiepoinoke",
+  "project_name": "Barangayan",
+  "authorization": "User explicitly requested fixing the explained migration-history mismatch.",
+  "change": {
+    "table": "supabase_migrations.schema_migrations",
+    "field": "version",
+    "from": "20261004082819",
+    "to": "0104",
+    "affected_rows": 1,
+    "name": "0104_google_minimal_resident_profiles",
+    "schema_sql_replayed": false
+  },
+  "preconditions": {
+    "stored_sql_matches_local_0104_after_line_ending_normalization": true,
+    "installed_function_bodies": [
+      {
+        "name": "barangayan_private.google_resident_names",
+        "exists": true,
+        "body_matches": true
+      },
+      {
+        "name": "barangayan_private.provision_google_resident",
+        "exists": true,
+        "body_matches": true
+      },
+      {
+        "name": "barangayan_private.guard_profile_locations",
+        "exists": true,
+        "body_matches": true
+      },
+      {
+        "name": "barangayan_private.create_google_resident_profile",
+        "exists": true,
+        "body_matches": true
+      },
+      {
+        "name": "barangayan_private.ensure_google_resident_profile",
+        "exists": true,
+        "body_matches": true
+      },
+      {
+        "name": "public.ensure_google_resident_profile",
+        "exists": true,
+        "body_matches": true
+      }
+    ],
+    "target_0104_absent_before": true
+  },
+  "verification": {
+    "history_only_target_version_changed": true,
+    "profiles_unchanged": true,
+    "function_definitions_permissions_unchanged": true,
+    "trigger_unchanged": true
+  },
+  "history_count_before": 102,
+  "history_count_after": 102,
+  "profiles_before": {
+    "count": 19,
+    "contents_md5": "5d15be3e0169c3bba6e0225bab266ffd"
+  },
+  "profiles_after": {
+    "count": 19,
+    "contents_md5": "5d15be3e0169c3bba6e0225bab266ffd"
+  },
+  "target_before": {
+    "name": "0104_google_minimal_resident_profiles",
+    "version": "20261004082819",
+    "statements_md5": "2a9097c6522904020ab0da1c5f034d62",
+    "statement_count": 1
+  },
+  "target_after": {
+    "name": "0104_google_minimal_resident_profiles",
+    "version": "0104",
+    "statements_md5": "2a9097c6522904020ab0da1c5f034d62",
+    "statement_count": 1
+  },
+  "functions_before": [
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.create_google_resident_profile()",
+      "definition_md5": "7b42a72f6cd2b39a1e809ed33879a377",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.ensure_google_resident_profile()",
+      "definition_md5": "1ff06260d8f0ecc6d48ec43e4b74496b",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.google_resident_names(jsonb)",
+      "definition_md5": "43fffb9d72ff5412e9e2029a1f579b12",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.guard_profile_locations()",
+      "definition_md5": "c8c8050c8d6ab4363ae06e7a57659c57",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.provision_google_resident(uuid)",
+      "definition_md5": "45fa4a151fe2fe1fcc5d171c55f877db",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "ensure_google_resident_profile()",
+      "definition_md5": "cf2641e0faa7780391c431ad141c4603",
+      "security_definer": false
+    }
+  ],
+  "functions_after": [
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.create_google_resident_profile()",
+      "definition_md5": "7b42a72f6cd2b39a1e809ed33879a377",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.ensure_google_resident_profile()",
+      "definition_md5": "1ff06260d8f0ecc6d48ec43e4b74496b",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.google_resident_names(jsonb)",
+      "definition_md5": "43fffb9d72ff5412e9e2029a1f579b12",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.guard_profile_locations()",
+      "definition_md5": "c8c8050c8d6ab4363ae06e7a57659c57",
+      "security_definer": true
+    },
+    {
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "barangayan_private.provision_google_resident(uuid)",
+      "definition_md5": "45fa4a151fe2fe1fcc5d171c55f877db",
+      "security_definer": false
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "config": [
+        "search_path=\"\""
+      ],
+      "signature": "ensure_google_resident_profile()",
+      "definition_md5": "cf2641e0faa7780391c431ad141c4603",
+      "security_definer": false
+    }
+  ],
+  "trigger_before": {
+    "name": "create_google_resident_profile",
+    "enabled": "O",
+    "definition": "CREATE TRIGGER create_google_resident_profile AFTER INSERT ON auth.identities FOR EACH ROW WHEN ((new.provider = 'google'::text)) EXECUTE FUNCTION barangayan_private.create_google_resident_profile()"
+  },
+  "trigger_after": {
+    "name": "create_google_resident_profile",
+    "enabled": "O",
+    "definition": "CREATE TRIGGER create_google_resident_profile AFTER INSERT ON auth.identities FOR EACH ROW WHEN ((new.provider = 'google'::text)) EXECUTE FUNCTION barangayan_private.create_google_resident_profile()"
+  },
+  "cli": {
+    "version": "2.118.0",
+    "migration_list_exit_code": 0,
+    "remote_only_versions_after": [],
+    "pending_versions_after": [
+      "0105",
+      "0106"
+    ],
+    "dry_run_exit_code": 0,
+    "dry_run_command": "npx --no-install supabase db push --dry-run --skip-vault --project-ref pwjbucnyqexiepoinoke",
+    "dry_run_output": "Initialising login role...\nDRY RUN: migrations will *not* be pushed to the database.\nConnecting to remote database...\nWould push these migrations:\n • 0105_phase7_administrator_only_scores.sql\n • 0106_remove_obsolete_registration_score.sql\n{\"upToDate\":false,\"dryRun\":true,\"migrations\":[\"0105_phase7_administrator_only_scores.sql\",\"0106_remove_obsolete_registration_score.sql\"],\"seeds\":[],\"roles\":[],\"message\":\"Finished supabase db push.\"}\nA new version of Supabase CLI is available: v2.119.0 (currently installed v2.118.0)\nWe recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli\n"
+  },
+  "release": "No application migrations, seeds, roles, vault updates, application deployment, or user-data changes performed. Phase 7 still requires 0105, compatible applications/export, then 0106.",
+  "transaction_sql": "begin;\nset local lock_timeout='5s';\nset local statement_timeout='15s';\nlock table supabase_migrations.schema_migrations in share row exclusive mode;\ndo $repair$\ndeclare original jsonb; untouched jsonb; changed integer;\nbegin\n if exists(select 1 from supabase_migrations.schema_migrations where version='0104') then\n  raise exception '0104 already exists; history repair aborted';\n end if;\n select to_jsonb(m) into strict original from supabase_migrations.schema_migrations m\n where version='20261004082819' and name='0104_google_minimal_resident_profiles'\n   and cardinality(statements)=1 and md5(array_to_string(statements,E'\\n'))='2a9097c6522904020ab0da1c5f034d62';\n select jsonb_agg(to_jsonb(m) order by version) into untouched from supabase_migrations.schema_migrations m where version<>'20261004082819';\n update supabase_migrations.schema_migrations set version='0104'\n where version='20261004082819' and name='0104_google_minimal_resident_profiles';\n get diagnostics changed=row_count;\n if changed<>1 then raise exception 'Expected exactly one repaired history entry'; end if;\n if (select to_jsonb(m)-'version' from supabase_migrations.schema_migrations m where version='0104') is distinct from original-'version' then\n  raise exception 'Migration metadata changed; repair rolled back';\n end if;\n if (select jsonb_agg(to_jsonb(m) order by version) from supabase_migrations.schema_migrations m where version<>'0104') is distinct from untouched then\n  raise exception 'Unrelated migration history changed; repair rolled back';\n end if;\nend $repair$;\ncommit;\nselect version,name,cardinality(statements) as statement_count,md5(array_to_string(statements,E'\\n')) as statements_md5\nfrom supabase_migrations.schema_migrations where version in ('0104','20261004082819');"
+}

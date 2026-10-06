@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "device": "emulator-5578",
+  "requiredLabels": [
+    "Phase Seven Native Registration",
+    "My Registrations",
+    "CON-20261004-0001"
+  ],
+  "scoreFreeVisibleAndAccessibilityLabels": true
+}

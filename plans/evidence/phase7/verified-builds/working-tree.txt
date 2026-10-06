@@ -1,0 +1,114 @@
+ M apps/admin-web/src/app/(admin)/health/applicants/page.tsx
+ M apps/resident-android-mobile/src/app/(app)/health/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/health/register.tsx
+ M apps/resident-android-mobile/src/hooks/use-medical-drives.ts
+ M apps/resident-ios-mobile/src/data/resident-api.ts
+ M apps/resident-web/src/components/health/applicant-form.tsx
+ M apps/resident-web/src/components/health/registration-drawer.tsx
+ M apps/resident-web/src/hooks/use-medical-drives.ts
+ M packages/shared/src/constants/priority-weights.ts
+ M packages/shared/src/schemas/drive-registration.ts
+ M packages/shared/src/types/database.ts
+ M supabase/functions/export-my-data/index.ts
+ M supabase/tests/rls_isolation.test.sql
+?? packages/shared/src/schemas/drive-registration-result.test.ts
+?? plans/evidence/phase7/baseline/admin-web-lint.log
+?? plans/evidence/phase7/baseline/admin-web-types.log
+?? plans/evidence/phase7/baseline/android-lint.log
+?? plans/evidence/phase7/baseline/android-types.log
+?? plans/evidence/phase7/baseline/existing-migration.diff
+?? plans/evidence/phase7/baseline/preservation-after.json
+?? plans/evidence/phase7/baseline/preservation.json
+?? plans/evidence/phase7/baseline/resident-web-lint.log
+?? plans/evidence/phase7/baseline/resident-web-types.log
+?? plans/evidence/phase7/baseline/results.json
+?? plans/evidence/phase7/baseline/shared-tests.log
+?? plans/evidence/phase7/baseline/shared-types.log
+?? plans/evidence/phase7/baseline/working-tree.txt
+?? plans/evidence/phase7/database/admin_document_type_creation.test.sql.log
+?? plans/evidence/phase7/database/administrator_scores.test.sql.log
+?? plans/evidence/phase7/database/advisors.log
+?? plans/evidence/phase7/database/after.json
+?? plans/evidence/phase7/database/agency_sla.test.sql.log
+?? plans/evidence/phase7/database/before.json
+?? plans/evidence/phase7/database/catalog_staff_workflows.test.sql.log
+?? plans/evidence/phase7/database/deferred_profile_completion.test.sql.log
+?? plans/evidence/phase7/database/document_charter_forms.test.sql.log
+?? plans/evidence/phase7/database/final-release-schema.log
+?? plans/evidence/phase7/database/focused-results.json
+?? plans/evidence/phase7/database/google_minimal_profiles.test.sql.log
+?? plans/evidence/phase7/database/migration.log
+?? plans/evidence/phase7/database/reconciliation.json
+?? plans/evidence/phase7/database/registration_maps_auth.test.sql.log
+?? plans/evidence/phase7/database/resident_ios_tenant_write_guards.test.sql.log
+?? plans/evidence/phase7/database/rls_isolation.test.sql.log
+?? plans/evidence/phase7/database/score-exposure-baseline.log
+?? plans/evidence/phase7/database/service_foundations.test.sql.log
+?? plans/evidence/phase7/database/test-results.json
+?? plans/evidence/phase7/database/trusted_evidence_locality.test.sql.log
+?? plans/evidence/phase7/export-deno-check.log
+?? plans/evidence/phase7/final-replay/bootstrap.sql
+?? plans/evidence/phase7/final-replay/phase7_empty-after.json
+?? plans/evidence/phase7/final-replay/phase7_empty-before.json
+?? plans/evidence/phase7/final-replay/phase7_empty-reconciliation.json
+?? plans/evidence/phase7/final-replay/phase7_empty.log
+?? plans/evidence/phase7/final-replay/phase7_existing-after.json
+?? plans/evidence/phase7/final-replay/phase7_existing-before.json
+?? plans/evidence/phase7/final-replay/phase7_existing-reconciliation.json
+?? plans/evidence/phase7/final-replay/phase7_existing.log
+?? plans/evidence/phase7/final-replay/results.json
+?? plans/evidence/phase7/final-replay/steps.jsonl
+?? plans/evidence/phase7/http/cleanup.json
+?? plans/evidence/phase7/http/initial-loopback-failure.json
+?? plans/evidence/phase7/http/realtime-delivery-failure.json
+?? plans/evidence/phase7/http/realtime-diagnostic.json
+?? plans/evidence/phase7/http/realtime-startup-failure.json
+?? plans/evidence/phase7/http/results.json
+?? plans/evidence/phase7/implementation/admin-web-types.log
+?? plans/evidence/phase7/implementation/android-types.log
+?? plans/evidence/phase7/implementation/existing-migration.diff
+?? plans/evidence/phase7/implementation/preservation-after.json
+?? plans/evidence/phase7/implementation/preservation.json
+?? plans/evidence/phase7/implementation/resident-web-types.log
+?? plans/evidence/phase7/implementation/results.json
+?? plans/evidence/phase7/implementation/shared-tests.log
+?? plans/evidence/phase7/implementation/shared-types.log
+?? plans/evidence/phase7/implementation/working-tree.txt
+?? plans/evidence/phase7/release-checks/admin-web-build.log
+?? plans/evidence/phase7/release-checks/admin-web-lint.log
+?? plans/evidence/phase7/release-checks/android-export.log
+?? plans/evidence/phase7/release-checks/android-lint.log
+?? plans/evidence/phase7/release-checks/android-sdk.log
+?? plans/evidence/phase7/release-checks/existing-migration.diff
+?? plans/evidence/phase7/release-checks/ios-lint.log
+?? plans/evidence/phase7/release-checks/ios-tests.log
+?? plans/evidence/phase7/release-checks/ios-types.log
+?? plans/evidence/phase7/release-checks/preservation-after.json
+?? plans/evidence/phase7/release-checks/preservation.json
+?? plans/evidence/phase7/release-checks/resident-web-build.log
+?? plans/evidence/phase7/release-checks/resident-web-lint.log
+?? plans/evidence/phase7/release-checks/results.json
+?? plans/evidence/phase7/release-checks/working-tree.txt
+?? plans/evidence/phase7/replay-complete/bootstrap.sql
+?? plans/evidence/phase7/replay-complete/phase7_empty-after.json
+?? plans/evidence/phase7/replay-complete/phase7_empty-before.json
+?? plans/evidence/phase7/replay-complete/phase7_empty-reconciliation.json
+?? plans/evidence/phase7/replay-complete/phase7_empty.log
+?? plans/evidence/phase7/replay-complete/phase7_existing-after.json
+?? plans/evidence/phase7/replay-complete/phase7_existing-before.json
+?? plans/evidence/phase7/replay-complete/phase7_existing-reconciliation.json
+?? plans/evidence/phase7/replay-complete/phase7_existing.log
+?? plans/evidence/phase7/replay-complete/results.json
+?? plans/evidence/phase7/replay-complete/steps.jsonl
+?? plans/evidence/phase7/replay/bootstrap.sql
+?? plans/evidence/phase7/replay/phase7_empty.log
+?? plans/evidence/phase7/replay/results.json
+?? scripts/phase7-database.cjs
+?? scripts/phase7-http.cjs
+?? scripts/phase7-local-config.cjs
+?? scripts/phase7-preview.cjs
+?? scripts/phase7-realtime.cjs
+?? scripts/phase7-replay.cjs
+?? supabase/migrations/0105_phase7_administrator_only_scores.sql
+?? supabase/migrations/0106_remove_obsolete_registration_score.sql
+?? supabase/tests/administrator_scores.test.sql

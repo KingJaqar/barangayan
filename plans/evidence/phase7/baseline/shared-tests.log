@@ -1,0 +1,33 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/agency-sla.test.ts (13 tests) 14ms
+ ✓ src/lib/haversine.test.ts (4 tests) 5ms
+ ✓ src/lib/point-in-polygon.test.ts (4 tests) 4ms
+ ✓ src/lib/osrm.test.ts (4 tests) 13ms
+ ✓ src/lib/service-tracking.test.ts (8 tests) 15ms
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 25ms
+ ✓ src/lib/format.test.ts (17 tests) 62ms
+ ✓ src/schemas/request-form.test.ts (5 tests) 11ms
+ ✓ src/schemas/document-type.test.ts (5 tests) 11ms
+ ✓ src/schemas/announcement.test.ts (9 tests) 12ms
+ ✓ src/schemas/payment.test.ts (9 tests) 13ms
+ ✓ src/schemas/drive-registration.test.ts (6 tests) 15ms
+ ✓ src/schemas/incident-report.test.ts (13 tests) 16ms
+ ✓ src/schemas/staff.test.ts (9 tests) 13ms
+ ✓ src/lib/id-evidence.test.ts (2 tests) 7ms
+ ✓ src/schemas/service-foundations.test.ts (15 tests) 31ms
+ ✓ src/lib/service-catalog.test.ts (9 tests) 23ms
+ ✓ src/lib/resident-auth.test.ts (43 tests) 32ms
+ ✓ src/lib/resident-submission.test.ts (10 tests) 30ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 53ms
+
+ Test Files  20 passed (20)
+      Tests  197 passed (197)
+   Start at  17:32:22
+   Duration  5.15s (transform 5.43s, setup 0ms, collect 17.39s, tests 405ms, environment 6ms, prepare 30.18s)
+

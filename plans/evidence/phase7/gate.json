@@ -1,0 +1,235 @@
+{
+  "verdict": "complete",
+  "scope": "Phase 7 local implementation and exit gate; no deployment or production mutation",
+  "checkedAt": "2026-10-06T03:00:45.405Z",
+  "checks": [
+    {
+      "name": "All 12 SQL suites / 445 assertions pass",
+      "passed": true,
+      "evidence": "database/test-results.json"
+    },
+    {
+      "name": "Resident and administrator API/realtime/concurrency coverage",
+      "passed": true,
+      "evidence": "http/results.json"
+    },
+    {
+      "name": "Real browser privacy, administrator display and legacy gate",
+      "passed": true,
+      "evidence": "browser/results.json"
+    },
+    {
+      "name": "Real web confirmation score-free",
+      "passed": true,
+      "evidence": "browser/confirmation-before-list-ready.json; browser/resident-confirmation.png"
+    },
+    {
+      "name": "phase7_empty: full migration chain and exact historical reconciliation",
+      "passed": true,
+      "evidence": "transition-replay"
+    },
+    {
+      "name": "phase7_empty: intermediate null-only mirror protection",
+      "passed": true,
+      "evidence": "transition-replay/phase7_empty-transition.json"
+    },
+    {
+      "name": "phase7_existing: full migration chain and exact historical reconciliation",
+      "passed": true,
+      "evidence": "transition-replay"
+    },
+    {
+      "name": "phase7_existing: intermediate null-only mirror protection",
+      "passed": true,
+      "evidence": "transition-replay/phase7_existing-transition.json"
+    },
+    {
+      "name": "Native registration-list",
+      "passed": true,
+      "evidence": "android/registration-list-results.json"
+    },
+    {
+      "name": "Native registration-details",
+      "passed": true,
+      "evidence": "android/registration-details-results.json"
+    },
+    {
+      "name": "Native registration-form",
+      "passed": true,
+      "evidence": "android/registration-form-results.json"
+    },
+    {
+      "name": "Native registration-confirmation",
+      "passed": true,
+      "evidence": "android/registration-confirmation-results.json"
+    },
+    {
+      "name": "Native saved-native-registration",
+      "passed": true,
+      "evidence": "android/saved-native-registration-results.json"
+    },
+    {
+      "name": "Native submission creates expected protected score",
+      "passed": true,
+      "evidence": "android/database-results.json"
+    },
+    {
+      "name": "Administrator/resident CSV compatibility",
+      "passed": true,
+      "evidence": "compatibility-check.json"
+    },
+    {
+      "name": "final-types: all recorded commands pass",
+      "passed": true,
+      "evidence": "final-types/results.json"
+    },
+    {
+      "name": "final-lint: all recorded commands pass",
+      "passed": true,
+      "evidence": "final-lint/results.json"
+    },
+    {
+      "name": "verified-builds: all recorded commands pass",
+      "passed": true,
+      "evidence": "verified-builds/results.json"
+    },
+    {
+      "name": "final-restored-config: all recorded commands pass",
+      "passed": true,
+      "evidence": "final-restored-config/results.json"
+    },
+    {
+      "name": "202 shared / 8 iOS unit tests passed",
+      "passed": true,
+      "evidence": "final-types"
+    },
+    {
+      "name": "No error/Phase 7 advisor findings",
+      "passed": true,
+      "evidence": "database/advisor-summary.json"
+    },
+    {
+      "name": "Export Deno check recorded",
+      "passed": true,
+      "evidence": "export-deno-check.log; final-review.json"
+    },
+    {
+      "name": "Scoped lint and diff checks pass",
+      "passed": true,
+      "evidence": "final-review.json"
+    },
+    {
+      "name": "Synthetic fixtures cleaned and original values preserved",
+      "passed": true,
+      "evidence": "http/cleanup.json; database/post-cleanup-reconciliation.json"
+    },
+    {
+      "name": "Task processes/files cleaned",
+      "passed": true,
+      "evidence": "cleanup.json"
+    }
+  ],
+  "exitGate": [
+    {
+      "condition": "Resident REST/RPC cannot retrieve scores",
+      "passed": true,
+      "evidence": "http/results.json; database/administrator_scores.test.sql.log"
+    },
+    {
+      "condition": "Resident realtime cannot retrieve scores",
+      "passed": true,
+      "evidence": "http/results.json"
+    },
+    {
+      "condition": "Resident exports cannot retrieve scores",
+      "passed": true,
+      "evidence": "http/results.json; compatibility-check.json"
+    },
+    {
+      "condition": "Active same-tenant administrators retain values/rankings",
+      "passed": true,
+      "evidence": "http/results.json; browser/results.json; transition-replay/phase7_existing-reconciliation.json"
+    }
+  ],
+  "reviewedSourceHashes": [
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/page.tsx",
+      "sha256": "328f0cd46dcd2178019a25042527130686e7f6b6d24ca5e0e943266c9608c6ac"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "sha256": "2c3141f26b1f43371e667e2799fa320d80aa0537a1c966257af34b250c83ac0e"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "sha256": "91b73e621c2c7ee096da41885fdbf648abd557c4d9936f67f55cc5b418615495"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "sha256": "815b8e454392fcb57f66b86f03f78dee18bc57dcb2c3c4c3248042dbd760e9a1"
+    },
+    {
+      "file": "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "sha256": "9160f5ebf3d737b05d0fd9fa2f64666107043da24329ba55a660412f1cb46dfc"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/applicant-form.tsx",
+      "sha256": "41cbc401ca21d41a8ae789ab89bcc6f2a81cef5c9696c1acaf962ccd0e22bb99"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/registration-drawer.tsx",
+      "sha256": "6bdda2012706b896f1e6aa75dccff38a0c24578c905a16019f9341926660d52f"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-medical-drives.ts",
+      "sha256": "3735aabf32c6b2b041cbdc6b9812c811e07f22e7219845634d7081dee830ea41"
+    },
+    {
+      "file": "packages/shared/src/constants/priority-weights.ts",
+      "sha256": "7087b1e68ec213662e2803793492c11dcf26d573c999395519aeab66b0bb47cb"
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration.ts",
+      "sha256": "8fc33f90d0c5b0ef87496281684fc4aa09e767862d903876835d283dbf576b78"
+    },
+    {
+      "file": "packages/shared/src/types/database.ts",
+      "sha256": "ccd39ed6cb8f54b852421a05a6a148111d4ba2a37d68ba346b2dfc4fe9a6bdd4"
+    },
+    {
+      "file": "plans/Major_Web_AndroidMobile_Improvement_Plan.md",
+      "sha256": "14b0839a21deb0540fc4cec9daed5662efdfc1621777659d6440a6f5af4dea3d"
+    },
+    {
+      "file": "supabase/functions/export-my-data/index.ts",
+      "sha256": "4931f3c860d5b813b183384fad50e2442f2dc191feb4f73bbb94855b4f5ecd67"
+    },
+    {
+      "file": "supabase/tests/rls_isolation.test.sql",
+      "sha256": "5a171f9fc762ddc1b01ed5867c8768d7c1d2e408e331e30e179e5146dcae64ed"
+    },
+    {
+      "file": "supabase/migrations/0105_phase7_administrator_only_scores.sql",
+      "sha256": "131b88b0d960ddd8b3811533fbb834a77a31f2f0207221b5a87bc059a98ed43e"
+    },
+    {
+      "file": "supabase/migrations/0106_remove_obsolete_registration_score.sql",
+      "sha256": "bc3b5c1539344bfc91694de5bad081f312c088fac8bd4d7a4836f6940ff54775"
+    },
+    {
+      "file": "supabase/tests/administrator_scores.test.sql",
+      "sha256": "e5fc0b878699f226fd29bb31ccee6741d622609e9404201667315f08d6c574fa"
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration-result.test.ts",
+      "sha256": "dcac003fe169352376b89a8f34acdfd8fdc060246f4362cec7cee464c5611221"
+    }
+  ],
+  "limitations": [
+    "No hosted migration or production release performed",
+    "Signed native release/device qualification remains outside the locally verified SDK 57 Expo Go journey",
+    "Personal-data handler and Deno checks passed; deployed Edge Runtime serving was not tested",
+    "Phase 6 real Google/provider release gates remain open",
+    "Two unchanged resident-web lint warnings and 61 existing database advisor warnings remain"
+  ]
+}

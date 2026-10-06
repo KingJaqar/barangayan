@@ -1,0 +1,3397 @@
+{
+  "profiles": [
+    {
+      "id": "00000000-0000-0000-0000-000000000010",
+      "sex": null,
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "alex@gmaiil.com",
+      "street": null,
+      "suffix": null,
+      "id_type": null,
+      "house_no": null,
+      "province": "Rizal",
+      "full_name": "Alex Reyes",
+      "last_name": null,
+      "avatar_url": null,
+      "birth_date": null,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "first_name": null,
+      "occupation": null,
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "Purok 3, Sitio Pag-asa, Barangay Ampid I",
+      "id_photo_urls": [],
+      "mobile_number": "+639175551234",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": null,
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "098dd8cc-e7fc-4e35-8dc9-f76c9099ef7a",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-9009d4a4-2e3f-43d8-bea0-1f96380961d5@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:08:39.593896+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:08:39.593896+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "112439a4-eba8-432c-9fb2-d0a6e3659ab4",
+      "sex": "female",
+      "city": null,
+      "role": "admin",
+      "email": "phase5-admin-c0939d46-b838-4729-a5b9-f3055c59ee2a@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": null,
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:09:30.000178+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:09:30.000178+00:00",
+      "barangay_id": "173ab2e3-f5c4-441c-81db-b8d0b559e7cf",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Phase Five foreign tenant",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-fd435f00-6bec-45ca-8ba9-a823e421c39f@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": "Passport",
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:09:29.392517+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:09:30.556284+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [
+        "256c0886-d6e1-4a33-81f6-68513dda71cc/versions/43532a97-89fa-4bf7-97d3-1a1e47aa945e/id-front.png",
+        "256c0886-d6e1-4a33-81f6-68513dda71cc/versions/43532a97-89fa-4bf7-97d3-1a1e47aa945e/id-back.png"
+      ],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": "verified",
+      "current_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "29a69496-94ab-4964-9f23-850c92b9252c",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "admin",
+      "email": "phase5-admin-003bf679-e7cd-4801-8b32-af084ee9089f@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:08:38.996602+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:08:38.996602+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "2e1ce835-b481-4fa6-aba4-1284c9729065",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-49cba09b-7928-4fcb-a8f0-81b3f8c8d37c@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": "Passport",
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:08:38.678691+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:08:39.873797+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [
+        "2e1ce835-b481-4fa6-aba4-1284c9729065/versions/2526def5-e09f-4eaf-924e-dc9c957b9fe2/id-front.png",
+        "2e1ce835-b481-4fa6-aba4-1284c9729065/versions/2526def5-e09f-4eaf-924e-dc9c957b9fe2/id-back.png"
+      ],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": "verified",
+      "current_id_submission_id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "approved_id_submission_id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "3e722bf0-9fd7-46e7-bc07-158e97de9815",
+      "sex": "female",
+      "city": null,
+      "role": "admin",
+      "email": "phase5-admin-a1e7f57e-302e-4506-9153-7d01bbf8e360@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": null,
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:08:39.301796+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:08:39.301796+00:00",
+      "barangay_id": "745d861a-24cb-4fa9-8f9a-0b42f44d7260",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Phase Five foreign tenant",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "4326225e-9cc5-45cc-befe-c2e1a689bad5",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-7f2c8a30-00a6-49a5-a484-0085c362b04d@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:07:26.398225+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:07:26.398225+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "447db58a-643f-45d8-a020-f128d971bd10",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-password-e531f77e-677d-486e-8e8d-c62be2b5c340@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Password Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T03:58:45.771324+00:00",
+      "deleted_at": null,
+      "first_name": "Password",
+      "occupation": null,
+      "updated_at": "2026-10-04T03:58:45.771324+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": false,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": {
+        "lat": 0,
+        "lng": 0
+      },
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": {
+        "lat": 0,
+        "lng": 1
+      },
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-5d18e7e9-878f-42e6-9fec-aec1d7f94ae6@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": "Passport",
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:07:25.491415+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:07:26.719595+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [
+        "51e1d7bb-3637-44fb-84c3-f69003807161/versions/82fbd7f8-bb79-4b5c-9f84-989ce7287eb2/id-front.png",
+        "51e1d7bb-3637-44fb-84c3-f69003807161/versions/82fbd7f8-bb79-4b5c-9f84-989ce7287eb2/id-back.png"
+      ],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": "verified",
+      "current_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "585b9860-4ac6-445d-8902-d29a09a8b299",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-incomplete-8c49f7e9-8a0f-4fc7-8f96-519ca47b876f@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "15",
+      "province": "Rizal",
+      "full_name": "Provider Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:55:50.083323+00:00",
+      "deleted_at": null,
+      "first_name": "Provider",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:55:50.082682+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "15 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": "2026-10-04T02:55:50.087335+00:00",
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "5fe9478d-6d52-40de-b2e3-0710d4189df1",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-incomplete-4a1760fd-102f-4ce9-b0b3-852bca0889d0@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "15",
+      "province": "Rizal",
+      "full_name": "Provider Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T03:58:46.691271+00:00",
+      "deleted_at": null,
+      "first_name": "Provider",
+      "occupation": null,
+      "updated_at": "2026-10-04T03:58:46.703911+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "15 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": "2026-10-04T03:58:46.695648+00:00",
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "75cae2a3-989c-43c9-9732-98ea80db8cbe",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-password-8a2219eb-5dbb-407d-a177-a9461a2654d0@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Password Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:55:49.269799+00:00",
+      "deleted_at": null,
+      "first_name": "Password",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:55:49.269799+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": false,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": {
+        "lat": 0,
+        "lng": 0
+      },
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": {
+        "lat": 0,
+        "lng": 1
+      },
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "7eeb4cf5-1e3d-44e8-b8e4-3b6065a6d3ae",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-browser-d253dbba-94bc-44fb-9dc4-b23f8576d84c@test.local",
+      "street": "Test Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Browser Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:43:34.244753+00:00",
+      "deleted_at": null,
+      "first_name": "Browser",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:43:34.244753+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Test Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "9461ccb0-d545-4d4b-8258-9407f86f5097",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-incomplete-1ff64060-dd6c-4668-8903-868003820d3f@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "15",
+      "province": "Rizal",
+      "full_name": "Provider Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:35:19.020577+00:00",
+      "deleted_at": null,
+      "first_name": "Provider",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:35:19.033264+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "15 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": "2026-10-04T02:35:19.024442+00:00",
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "9e2af34c-6c64-406a-90a1-8cfa3261cb8a",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-password-349be4c7-6ca3-401f-ad56-7c1307107a28@test.local",
+      "street": "Main",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Password Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:35:18.259672+00:00",
+      "deleted_at": null,
+      "first_name": "Password",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:35:18.259672+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": false,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": {
+        "lat": 0,
+        "lng": 0
+      },
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": {
+        "lat": 0,
+        "lng": 1
+      },
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "a6751147-1cc4-4cb2-bc13-3bd9d590854c",
+      "sex": "female",
+      "city": null,
+      "role": "admin",
+      "email": "phase5-admin-15acff57-56bc-4760-82e9-78a972895b0f@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": null,
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:07:26.10752+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:07:26.10752+00:00",
+      "barangay_id": "cfd72da1-9870-4c38-af41-eb3f19576a6b",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Phase Five foreign tenant",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "c22767fb-53df-42b0-86c3-2a00f1adbf16",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-ui-7edf233a-7f95-48ce-9920-31b37f0730d4@test.local",
+      "street": "Test Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "15",
+      "province": "Rizal",
+      "full_name": "Browser Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T02:48:23.748526+00:00",
+      "deleted_at": null,
+      "first_name": "Browser",
+      "occupation": null,
+      "updated_at": "2026-10-04T02:48:23.748526+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "15 Test Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": "2026-10-04T02:48:23.758986+00:00",
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "admin",
+      "email": "phase5-admin-2f09eb52-67bb-4db8-88b9-71781850cfa9@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:07:25.807914+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:07:25.807914+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "admin",
+      "email": "phase5-admin-c25fc6e6-5894-4f7e-b0bb-674ba0902932@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:09:29.696891+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:09:29.696891+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "cbc26343-febb-44bf-980d-3e68b11e08b2",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase5-resident-63f594d8-6b7b-484a-bd45-3aed7ae9f189@test.local",
+      "street": "Main Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "12",
+      "province": "Rizal",
+      "full_name": "Phase Three",
+      "last_name": "Three",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-03T14:09:30.296615+00:00",
+      "deleted_at": null,
+      "first_name": "Phase",
+      "occupation": null,
+      "updated_at": "2026-10-03T14:09:30.296615+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "12 Main Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": null,
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    },
+    {
+      "id": "d9d73aa3-5b65-49ca-8f87-a307b3fd4345",
+      "sex": "female",
+      "city": "San Mateo",
+      "role": "resident",
+      "email": "phase6-ui-90fbc817-f09b-45fe-8561-a5bf0da03b5d@test.local",
+      "street": "Fixture Street",
+      "suffix": null,
+      "id_type": null,
+      "house_no": "1",
+      "province": "Rizal",
+      "full_name": "Browser Resident",
+      "last_name": "Resident",
+      "avatar_url": null,
+      "birth_date": "2000-01-01",
+      "created_at": "2026-10-04T04:13:21.296669+00:00",
+      "deleted_at": null,
+      "first_name": "Browser",
+      "occupation": null,
+      "updated_at": "2026-10-04T04:13:21.296669+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "middle_name": null,
+      "accent_color": "#0F6E5B",
+      "home_address": "1 Fixture Street, Ampid 1, San Mateo, Rizal",
+      "id_photo_urls": [],
+      "mobile_number": "09171234567",
+      "font_preference": "system",
+      "theme_preference": "system",
+      "email_verified_at": null,
+      "employment_status": "student",
+      "household_members": [],
+      "location_verified": null,
+      "verified_location": null,
+      "id_repair_required": false,
+      "last_data_export_at": null,
+      "custom_accent_colors": [],
+      "location_verified_at": null,
+      "profile_completed_at": "2026-10-04T04:13:21.30753+00:00",
+      "registration_location": null,
+      "id_verification_status": null,
+      "current_id_submission_id": null,
+      "approved_id_submission_id": null,
+      "email_verification_status": "unavailable",
+      "verified_location_address": null,
+      "push_notifications_enabled": true,
+      "registration_home_location": null,
+      "email_verification_requested_at": null
+    }
+  ],
+  "medical_drives": [
+    {
+      "id": "00000000-0000-0000-0000-000000000501",
+      "type": "vaccination",
+      "title": "Free COVID-19 & Flu Vaccination Day",
+      "location": "Barangay Health Center",
+      "time_end": "16:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-05",
+      "stock_unit": "doses",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Doses",
+      "stock_total": 150,
+      "stock_remaining": 132,
+      "eligible_criteria": "Open to all residents aged 6 months and up. Bring your vaccination card, if available."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000502",
+      "type": "maternal_care",
+      "title": "Prenatal Check-up & Maternal Care Clinic",
+      "location": "Barangay Health Center, Room 2",
+      "time_end": "12:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-06",
+      "stock_unit": "slots",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 30,
+      "stock_remaining": 22,
+      "eligible_criteria": "Pregnant residents of Barangay Ampid I, all trimesters welcome. Walk-ins accepted; priority given to first-time and high-risk pregnancies."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000503",
+      "type": "blood_drive",
+      "title": "Community Blood Donation Drive",
+      "location": "Barangay Multi-Purpose Hall",
+      "time_end": "15:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-08",
+      "stock_unit": "slots",
+      "time_start": "09:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 80,
+      "stock_remaining": 61,
+      "eligible_criteria": "Donors aged 18–65, weighing at least 50 kg, in good general health, and not donated blood in the last 3 months."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000504",
+      "type": "medicine",
+      "title": "Free Medicine Distribution for Senior Citizens",
+      "location": "Barangay Health Center",
+      "time_end": "11:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-04",
+      "stock_unit": "packs",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Stock",
+      "stock_total": 100,
+      "stock_remaining": 100,
+      "eligible_criteria": "Senior citizens (60+) and PWD residents with a valid barangay ID. Maintenance medicines for hypertension and diabetes prioritized."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000505",
+      "type": "dental",
+      "title": "Oral Health & Free Tooth Extraction Mission",
+      "location": "Barangay Covered Court",
+      "time_end": "15:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-10",
+      "stock_unit": "slots",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 60,
+      "stock_remaining": 45,
+      "eligible_criteria": "All residents; children under 12 must be accompanied by a parent or guardian. Bring a valid ID."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000506",
+      "type": "optical",
+      "title": "Free Eye Check-up & Reading Glasses Distribution",
+      "location": "Barangay Health Center",
+      "time_end": "14:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-12",
+      "stock_unit": "pairs",
+      "time_start": "09:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 50,
+      "stock_remaining": 50,
+      "eligible_criteria": "Open to all residents, priority given to senior citizens experiencing blurred near vision."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000507",
+      "type": "emergency_kit",
+      "title": "Family Emergency Kit Give-away",
+      "location": "Barangay Hall Grounds",
+      "time_end": "17:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-07",
+      "stock_unit": "kits",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Stock",
+      "stock_total": 200,
+      "stock_remaining": 178,
+      "eligible_criteria": "One kit per household. Households must be registered residents of Barangay Ampid I; bring proof of residency."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000508",
+      "type": "screening",
+      "title": "Free Medical Screening: Blood Pressure & Blood Sugar",
+      "location": "Barangay Health Center",
+      "time_end": "11:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-03",
+      "stock_unit": "slots",
+      "time_start": "07:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 120,
+      "stock_remaining": 97,
+      "eligible_criteria": "Open to all residents 18 years old and above. Fasting for at least 6 hours recommended for blood sugar testing."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000509",
+      "type": "consultation",
+      "title": "General Medical Consultation with Barangay Physician",
+      "location": "Barangay Health Center, Room 1",
+      "time_end": "17:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-09",
+      "stock_unit": "slots",
+      "time_start": "13:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 40,
+      "stock_remaining": 31,
+      "eligible_criteria": "Open to all residents. First-come, first-served queue; bring your barangay health card if you have one."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000510",
+      "type": "minor_surgical",
+      "title": "Minor Surgical Procedures Mission (Cyst & Lipoma Removal)",
+      "location": "Rural Health Unit Annex",
+      "time_end": "16:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-10-13",
+      "stock_unit": "slots",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 25,
+      "stock_remaining": 25,
+      "eligible_criteria": "Pre-screened patients only. Register at the Barangay Health Center at least 3 days before the mission for evaluation."
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000511",
+      "type": "others",
+      "title": "Deworming & Vitamin A Supplementation for Children",
+      "location": "Barangay Day Care Center",
+      "time_end": "12:00:00",
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "drive_date": "2026-09-30",
+      "stock_unit": "doses",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Doses",
+      "stock_total": 90,
+      "stock_remaining": 12,
+      "eligible_criteria": "Children aged 6 months to 12 years old. Parent or guardian must accompany the child and bring their immunization record."
+    },
+    {
+      "id": "bf6d09fc-8e8f-49dd-96f7-44afdae91864",
+      "type": "vaccination",
+      "title": "Phase6 deferred 47b6f0fd-ec12-4183-966a-d925ecddf5ac",
+      "location": "Barangay Health Center",
+      "time_end": "12:00:00",
+      "is_active": true,
+      "created_at": "2026-10-04T03:58:46.62829+00:00",
+      "deleted_at": null,
+      "drive_date": "2099-01-01",
+      "stock_unit": "slots",
+      "time_start": "08:00:00",
+      "updated_at": "2026-10-04T03:58:46.727008+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "stock_label": "Remaining Slots",
+      "stock_total": 10,
+      "stock_remaining": 9,
+      "eligible_criteria": "Synthetic local fixture"
+    }
+  ],
+  "drive_registrations": [
+    {
+      "id": "f9cd0956-2a41-435e-aafe-0faf74919299",
+      "age": 26,
+      "is_pwd": false,
+      "status": "pending",
+      "user_id": "5fe9478d-6d52-40de-b2e3-0710d4189df1",
+      "drive_id": "bf6d09fc-8e8f-49dd-96f7-44afdae91864",
+      "created_at": "2026-10-04T03:58:46.727008+00:00",
+      "updated_at": "2026-10-04T03:58:46.727008+00:00",
+      "comorbidities": [],
+      "priority_score": 0,
+      "prior_dose_date": null,
+      "applicant_number": "VAC-20261004-0001"
+    }
+  ],
+  "service_requests": [
+    {
+      "id": "02929ff6-553b-4d71-bd8a-d29a05312230",
+      "status": "cancelled",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "cancelled",
+      "created_at": "2026-10-03T14:07:26.915492+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:07:26.9227+00:00",
+      "accepted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": "2026-10-03T14:07:26.924197+00:00",
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:26.915492+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:07:26.9227+00:00",
+          "note": "Withdrawn before requirements complete",
+          "status": "cancelled"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "a0699716-0b77-41da-9359-5957794dc087",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00024",
+      "eligibility_state": "pending",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "a0699716-0b77-41da-9359-5957794dc087"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": null,
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": null,
+      "requirements_reviewed_at": null,
+      "requirements_reviewed_by": null,
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "pending",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": null
+    },
+    {
+      "id": "074d8cac-5e2e-4231-9ca4-862b305fd2f7",
+      "status": "completed",
+      "ready_at": "2026-10-03T14:07:26.901805+00:00",
+      "fee_basis": "Confirmed eligible first job seeker",
+      "sla_state": "released",
+      "created_at": "2026-10-03T14:07:26.737505+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:07:26.90693+00:00",
+      "accepted_at": "2026-10-03T14:07:26.850612+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": "2026-10-03T14:07:26.908425+00:00",
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:26.737505+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:07:26.848842+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:07:26.900342+00:00",
+          "note": "SLA ready",
+          "status": "ready_for_pickup"
+        },
+        {
+          "at": "2026-10-03T14:07:26.90693+00:00",
+          "note": "SLA release",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:07:26.843798+00:00",
+      "fee_assessed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "idempotency_key": "94b4ae5a-f177-4685-9ee6-07bfe887d0c1",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00023",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "94b4ae5a-f177-4685-9ee6-07bfe887d0c1"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:07:26.832683+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual residency and requirements reviewed",
+      "requirements_reviewed_at": "2026-10-03T14:07:26.832684+00:00",
+      "requirements_reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+    },
+    {
+      "id": "3319fd15-8fbe-4ee9-ac29-ed009630ed40",
+      "status": "cancelled",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "cancelled",
+      "created_at": "2026-10-03T14:08:40.057747+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:08:40.065407+00:00",
+      "accepted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "2e1ce835-b481-4fa6-aba4-1284c9729065",
+      "cancelled_at": "2026-10-03T14:08:40.066744+00:00",
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:08:40.057747+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:08:40.065407+00:00",
+          "note": "Withdrawn before requirements complete",
+          "status": "cancelled"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "198a433e-e65a-4ab3-a19a-0d6a23e66114",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00029",
+      "eligibility_state": "pending",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "198a433e-e65a-4ab3-a19a-0d6a23e66114"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": null,
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": null,
+      "requirements_reviewed_at": null,
+      "requirements_reviewed_by": null,
+      "approved_id_submission_id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "requirements_review_state": "pending",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": null
+    },
+    {
+      "id": "3a87f91c-cba4-48fe-a696-47f861f96ae5",
+      "status": "in_progress",
+      "ready_at": null,
+      "fee_basis": "Confirmed exemption",
+      "sla_state": "running",
+      "created_at": "2026-10-03T14:09:33.666523+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:09:33.686459+00:00",
+      "accepted_at": "2026-10-03T14:09:33.687917+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:09:33.666523+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:09:33.686459+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:09:33.681751+00:00",
+      "fee_assessed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "idempotency_key": "d7a104ad-a76c-49eb-b202-eecdec517ccc",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00035",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "d7a104ad-a76c-49eb-b202-eecdec517ccc"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:09:33.675066+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual originals and eligibility checked",
+      "requirements_reviewed_at": "2026-10-03T14:09:33.675066+00:00",
+      "requirements_reviewed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c612587d-436b-43dd-9f18-24d125fe4c6f"
+    },
+    {
+      "id": "643830df-dc1a-4a25-8199-96d7b95a52bb",
+      "status": "ready_for_pickup",
+      "ready_at": "2026-01-02T00:16:00+00:00",
+      "fee_basis": null,
+      "sla_state": "ready",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:08:45.962119+00:00",
+      "accepted_at": "2026-01-02T00:00:00+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "2e1ce835-b481-4fa6-aba4-1284c9729065",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:08:40.071407+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:08:40.084174+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:08:45.962119+00:00",
+          "note": null,
+          "status": "ready_for_pickup"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "8846a837-2cae-4bac-ba33-c3b38637359a",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00030",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "8846a837-2cae-4bac-ba33-c3b38637359a"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:08:40.080108+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": "Deterministic fixture review",
+      "requirements_reviewed_at": "2026-10-03T14:08:40.080108+00:00",
+      "requirements_reviewed_by": "29a69496-94ab-4964-9f23-850c92b9252c",
+      "approved_id_submission_id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "29a69496-94ab-4964-9f23-850c92b9252c"
+    },
+    {
+      "id": "8009ee79-077e-4d87-afcf-dca6e1083cd3",
+      "status": "ready_for_pickup",
+      "ready_at": "2026-01-02T00:16:00+00:00",
+      "fee_basis": null,
+      "sla_state": "ready",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:09:33.60231+00:00",
+      "accepted_at": "2026-01-02T00:00:00+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:09:30.729878+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:09:30.743689+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:09:33.60231+00:00",
+          "note": null,
+          "status": "ready_for_pickup"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "78ce4fa3-ae6e-466d-a43a-f75e1b8305f5",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00033",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "78ce4fa3-ae6e-466d-a43a-f75e1b8305f5"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:09:30.739051+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": "Deterministic fixture review",
+      "requirements_reviewed_at": "2026-10-03T14:09:30.739051+00:00",
+      "requirements_reviewed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c612587d-436b-43dd-9f18-24d125fe4c6f"
+    },
+    {
+      "id": "998caa1e-9472-4ead-a5b0-73c6617fed95",
+      "status": "in_progress",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "paused",
+      "created_at": "2026-10-03T15:39:29.672126+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T15:49:29.655349+00:00",
+      "accepted_at": "2026-10-03T15:44:29.672126+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:29.854526+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T15:49:29.655349+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "5c125373-82a0-4dcd-8a84-c0e0f6c15d0f",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00026",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "5c125373-82a0-4dcd-8a84-c0e0f6c15d0f"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T15:49:29.66191+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": "Native local acceptance fixture",
+      "requirements_reviewed_at": "2026-10-03T15:49:29.66191+00:00",
+      "requirements_reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+    },
+    {
+      "id": "a2a1e570-ca27-4069-b8bf-e756925258b0",
+      "status": "ready_for_pickup",
+      "ready_at": "2026-01-02T00:16:00+00:00",
+      "fee_basis": null,
+      "sla_state": "ready",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:07:29.801081+00:00",
+      "accepted_at": "2026-01-02T00:00:00+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:26.929599+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:07:26.944817+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:07:29.801081+00:00",
+          "note": null,
+          "status": "ready_for_pickup"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "875229f7-3ff1-423e-8546-1321ca765c57",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00025",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "875229f7-3ff1-423e-8546-1321ca765c57"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:07:26.939172+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": "Deterministic fixture review",
+      "requirements_reviewed_at": "2026-10-03T14:07:26.939172+00:00",
+      "requirements_reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+    },
+    {
+      "id": "b257acd3-7982-4544-8a9f-7dd96652e158",
+      "status": "completed",
+      "ready_at": "2026-10-03T14:08:40.046765+00:00",
+      "fee_basis": "Confirmed eligible first job seeker",
+      "sla_state": "released",
+      "created_at": "2026-10-03T14:08:39.892694+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:08:40.051596+00:00",
+      "accepted_at": "2026-10-03T14:08:40.008486+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": "2026-10-03T14:08:40.052964+00:00",
+      "resident_id": "2e1ce835-b481-4fa6-aba4-1284c9729065",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:08:39.892694+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:08:40.006797+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:08:40.045253+00:00",
+          "note": "SLA ready",
+          "status": "ready_for_pickup"
+        },
+        {
+          "at": "2026-10-03T14:08:40.051596+00:00",
+          "note": "SLA release",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:08:40.000312+00:00",
+      "fee_assessed_by": "29a69496-94ab-4964-9f23-850c92b9252c",
+      "idempotency_key": "bca469a7-d65b-4db4-8dd1-3889a212955d",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00028",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "bca469a7-d65b-4db4-8dd1-3889a212955d"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:08:39.988886+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual residency and requirements reviewed",
+      "requirements_reviewed_at": "2026-10-03T14:08:39.988886+00:00",
+      "requirements_reviewed_by": "29a69496-94ab-4964-9f23-850c92b9252c",
+      "approved_id_submission_id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "29a69496-94ab-4964-9f23-850c92b9252c"
+    },
+    {
+      "id": "c35431ed-73c4-4e08-a320-fb005b307666",
+      "status": "cancelled",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "cancelled",
+      "created_at": "2026-10-03T14:09:30.716051+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:09:30.723448+00:00",
+      "accepted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "cancelled_at": "2026-10-03T14:09:30.724733+00:00",
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:09:30.716051+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:09:30.723448+00:00",
+          "note": "Withdrawn before requirements complete",
+          "status": "cancelled"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "c7cf8938-b5a2-4773-ad7a-83c5b1d6f70e",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00032",
+      "eligibility_state": "pending",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "c7cf8938-b5a2-4773-ad7a-83c5b1d6f70e"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": null,
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": null,
+      "requirements_reviewed_at": null,
+      "requirements_reviewed_by": null,
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "requirements_review_state": "pending",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": null
+    },
+    {
+      "id": "c7a10aad-3bdd-465b-8016-8225604808e8",
+      "status": "completed",
+      "ready_at": "2026-10-03T14:09:30.704248+00:00",
+      "fee_basis": "Confirmed eligible first job seeker",
+      "sla_state": "released",
+      "created_at": "2026-10-03T14:09:30.57158+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:09:30.709509+00:00",
+      "accepted_at": "2026-10-03T14:09:30.670873+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": "2026-10-03T14:09:30.710844+00:00",
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:09:30.57158+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:09:30.669492+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:09:30.702771+00:00",
+          "note": "SLA ready",
+          "status": "ready_for_pickup"
+        },
+        {
+          "at": "2026-10-03T14:09:30.709509+00:00",
+          "note": "SLA release",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:09:30.664504+00:00",
+      "fee_assessed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "idempotency_key": "753c249a-2249-4980-a2d4-dc83916cd22e",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00031",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "753c249a-2249-4980-a2d4-dc83916cd22e"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:09:30.655519+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual residency and requirements reviewed",
+      "requirements_reviewed_at": "2026-10-03T14:09:30.65552+00:00",
+      "requirements_reviewed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c612587d-436b-43dd-9f18-24d125fe4c6f"
+    },
+    {
+      "id": "e4367b30-301b-4654-84a1-9d6402dab461",
+      "status": "submitted",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "pre_processing",
+      "created_at": "2026-10-03T14:09:33.658202+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:09:33.658202+00:00",
+      "accepted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "pending",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:09:33.658202+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": "a0fbd41d-9bcc-4636-aeb9-704c0abd4cbe",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00034",
+      "eligibility_state": "pending",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "a0fbd41d-9bcc-4636-aeb9-704c0abd4cbe"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "pending",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": null,
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": null,
+      "requirements_reviewed_at": null,
+      "requirements_reviewed_by": null,
+      "approved_id_submission_id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "requirements_review_state": "pending",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": null
+    },
+    {
+      "id": "e5b8a242-97c7-48cd-95c7-a750aed75bd7",
+      "status": "completed",
+      "ready_at": "2026-10-03T14:36:10.099368+00:00",
+      "fee_basis": "Confirmed exemption",
+      "sla_state": "released",
+      "created_at": "2026-10-03T14:07:29.867154+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T14:38:36.083741+00:00",
+      "accepted_at": "2026-10-03T14:07:29.888903+00:00",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": "2026-10-03T14:38:36.086994+00:00",
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": "first_employment",
+      "timing_model": "agency_minutes_v1",
+      "purpose_label": "First employment application",
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-10-03T14:07:29.867154+00:00",
+          "note": "Request submitted",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-10-03T14:07:29.887336+00:00",
+          "note": "SLA accept",
+          "status": "in_progress"
+        },
+        {
+          "at": "2026-10-03T14:36:10.097292+00:00",
+          "note": "SLA ready",
+          "status": "ready_for_pickup"
+        },
+        {
+          "at": "2026-10-03T14:38:36.083741+00:00",
+          "note": "SLA release",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": "2026-10-03T14:07:29.882299+00:00",
+      "fee_assessed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "idempotency_key": "134a154c-beb5-4221-9691-f08498f41512",
+      "requester_notes": null,
+      "contract_version": 2,
+      "document_type_id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00027",
+      "eligibility_state": "eligible",
+      "submission_payload": {
+        "details": {
+          "isRenter": false,
+          "personalAppearanceAcknowledged": true
+        },
+        "attachments": [],
+        "purposeCode": "first_employment",
+        "documentTypeId": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+        "idempotencyKey": "134a154c-beb5-4221-9691-f08498f41512"
+      },
+      "supporting_details": {
+        "isRenter": false,
+        "personalAppearanceAcknowledged": true
+      },
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "waived",
+      "pricing_mode_snapshot": "assessment",
+      "personal_appearance_at": "2026-10-03T14:07:29.875685+00:00",
+      "target_minutes_snapshot": 15,
+      "assessed_amount_centavos": 0,
+      "requirements_review_note": "Actual originals and eligibility checked",
+      "requirements_reviewed_at": "2026-10-03T14:07:29.875685+00:00",
+      "requirements_reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "approved_id_submission_id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "requirements_review_state": "complete",
+      "personal_appearance_required": true,
+      "personal_appearance_recorded_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7"
+    },
+    {
+      "id": "f5000000-0000-0000-0000-000000000002",
+      "status": "completed",
+      "ready_at": null,
+      "fee_basis": null,
+      "sla_state": "legacy",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "deleted_at": null,
+      "updated_at": "2026-10-03T15:49:55.476292+00:00",
+      "accepted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "released_at": null,
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "cancelled_at": null,
+      "purpose_code": null,
+      "timing_model": "legacy_hours",
+      "purpose_label": null,
+      "billable_pages": null,
+      "payment_method": null,
+      "payment_status": "waived",
+      "status_history": [
+        {
+          "at": "2026-01-01T00:00:00Z",
+          "status": "submitted"
+        },
+        {
+          "at": "2026-01-02T00:00:00Z",
+          "status": "completed"
+        }
+      ],
+      "fee_assessed_at": null,
+      "fee_assessed_by": null,
+      "idempotency_key": null,
+      "requester_notes": "Local historical fixture",
+      "contract_version": 1,
+      "document_type_id": "f5000000-0000-0000-0000-000000000001",
+      "id_document_path": null,
+      "reference_number": "REQ-2026-00080",
+      "eligibility_state": "pending",
+      "submission_payload": null,
+      "supporting_details": null,
+      "legacy_fee_centavos": null,
+      "purpose_explanation": null,
+      "fee_assessment_state": "legacy",
+      "pricing_mode_snapshot": null,
+      "personal_appearance_at": null,
+      "target_minutes_snapshot": null,
+      "assessed_amount_centavos": null,
+      "requirements_review_note": null,
+      "requirements_reviewed_at": null,
+      "requirements_reviewed_by": null,
+      "approved_id_submission_id": null,
+      "requirements_review_state": "legacy",
+      "personal_appearance_required": false,
+      "personal_appearance_recorded_by": null
+    }
+  ],
+  "payments": [],
+  "id_submissions": [
+    {
+      "id": "2526def5-e09f-4eaf-924e-dc9c957b9fe2",
+      "id_type": "Passport",
+      "version": 1,
+      "decision": "verified",
+      "back_path": "2e1ce835-b481-4fa6-aba4-1284c9729065/versions/2526def5-e09f-4eaf-924e-dc9c957b9fe2/id-back.png",
+      "front_path": "2e1ce835-b481-4fa6-aba4-1284c9729065/versions/2526def5-e09f-4eaf-924e-dc9c957b9fe2/id-front.png",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "resident_id": "2e1ce835-b481-4fa6-aba4-1284c9729065",
+      "reviewed_at": "2026-10-03T14:08:39.87807+00:00",
+      "reviewed_by": "29a69496-94ab-4964-9f23-850c92b9252c",
+      "submitted_at": "2026-10-03T14:08:39.847598+00:00",
+      "evidence_origin": "resident_upload",
+      "rejection_reason": null
+    },
+    {
+      "id": "43532a97-89fa-4bf7-97d3-1a1e47aa945e",
+      "id_type": "Passport",
+      "version": 1,
+      "decision": "verified",
+      "back_path": "256c0886-d6e1-4a33-81f6-68513dda71cc/versions/43532a97-89fa-4bf7-97d3-1a1e47aa945e/id-back.png",
+      "front_path": "256c0886-d6e1-4a33-81f6-68513dda71cc/versions/43532a97-89fa-4bf7-97d3-1a1e47aa945e/id-front.png",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "resident_id": "256c0886-d6e1-4a33-81f6-68513dda71cc",
+      "reviewed_at": "2026-10-03T14:09:30.558862+00:00",
+      "reviewed_by": "c612587d-436b-43dd-9f18-24d125fe4c6f",
+      "submitted_at": "2026-10-03T14:09:30.530141+00:00",
+      "evidence_origin": "resident_upload",
+      "rejection_reason": null
+    },
+    {
+      "id": "82fbd7f8-bb79-4b5c-9f84-989ce7287eb2",
+      "id_type": "Passport",
+      "version": 1,
+      "decision": "verified",
+      "back_path": "51e1d7bb-3637-44fb-84c3-f69003807161/versions/82fbd7f8-bb79-4b5c-9f84-989ce7287eb2/id-back.png",
+      "front_path": "51e1d7bb-3637-44fb-84c3-f69003807161/versions/82fbd7f8-bb79-4b5c-9f84-989ce7287eb2/id-front.png",
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "resident_id": "51e1d7bb-3637-44fb-84c3-f69003807161",
+      "reviewed_at": "2026-10-03T14:07:26.722275+00:00",
+      "reviewed_by": "c467cc4c-aeca-43db-80ce-20d6625ac6d7",
+      "submitted_at": "2026-10-03T14:07:26.692797+00:00",
+      "evidence_origin": "resident_upload",
+      "rejection_reason": null
+    }
+  ],
+  "barangays": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Barangay Ampid I",
+      "config": {},
+      "boundary": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.112071,
+              14.684583
+            ],
+            [
+              121.111589,
+              14.683696
+            ],
+            [
+              121.11119,
+              14.682938
+            ],
+            [
+              121.110588,
+              14.68167
+            ],
+            [
+              121.110227,
+              14.680994
+            ],
+            [
+              121.111337,
+              14.680657
+            ],
+            [
+              121.111538,
+              14.681181
+            ],
+            [
+              121.11201,
+              14.680987
+            ],
+            [
+              121.112639,
+              14.68094
+            ],
+            [
+              121.112523,
+              14.68067
+            ],
+            [
+              121.113036,
+              14.680529
+            ],
+            [
+              121.113198,
+              14.68051
+            ],
+            [
+              121.113527,
+              14.680559
+            ],
+            [
+              121.113633,
+              14.680694
+            ],
+            [
+              121.11395,
+              14.680462
+            ],
+            [
+              121.112791,
+              14.67911
+            ],
+            [
+              121.113227,
+              14.678874
+            ],
+            [
+              121.113615,
+              14.678928
+            ],
+            [
+              121.113997,
+              14.678685
+            ],
+            [
+              121.114505,
+              14.678351
+            ],
+            [
+              121.115052,
+              14.677566
+            ],
+            [
+              121.115111,
+              14.677538
+            ],
+            [
+              121.115194,
+              14.677389
+            ],
+            [
+              121.115264,
+              14.677146
+            ],
+            [
+              121.115385,
+              14.677176
+            ],
+            [
+              121.115453,
+              14.677252
+            ],
+            [
+              121.115714,
+              14.677204
+            ],
+            [
+              121.11588,
+              14.677342
+            ],
+            [
+              121.115986,
+              14.677413
+            ],
+            [
+              121.116078,
+              14.67741
+            ],
+            [
+              121.116219,
+              14.677329
+            ],
+            [
+              121.116405,
+              14.677291
+            ],
+            [
+              121.116744,
+              14.677402
+            ],
+            [
+              121.116916,
+              14.677441
+            ],
+            [
+              121.117053,
+              14.677505
+            ],
+            [
+              121.117137,
+              14.677565
+            ],
+            [
+              121.117332,
+              14.677586
+            ],
+            [
+              121.1178,
+              14.67773
+            ],
+            [
+              121.11835,
+              14.67765
+            ],
+            [
+              121.11888,
+              14.6776
+            ],
+            [
+              121.1194,
+              14.67755
+            ],
+            [
+              121.119699,
+              14.677335
+            ],
+            [
+              121.119919,
+              14.677606
+            ],
+            [
+              121.120435,
+              14.677799
+            ],
+            [
+              121.12057,
+              14.677672
+            ],
+            [
+              121.1209,
+              14.67746
+            ],
+            [
+              121.121247,
+              14.676374
+            ],
+            [
+              121.12285,
+              14.675863
+            ],
+            [
+              121.12295,
+              14.675833
+            ],
+            [
+              121.123415,
+              14.675664
+            ],
+            [
+              121.123538,
+              14.675499
+            ],
+            [
+              121.123479,
+              14.675243
+            ],
+            [
+              121.123386,
+              14.67517
+            ],
+            [
+              121.12333,
+              14.675082
+            ],
+            [
+              121.123336,
+              14.674932
+            ],
+            [
+              121.123471,
+              14.674848
+            ],
+            [
+              121.123541,
+              14.674852
+            ],
+            [
+              121.123597,
+              14.674788
+            ],
+            [
+              121.123603,
+              14.674673
+            ],
+            [
+              121.123664,
+              14.674666
+            ],
+            [
+              121.123761,
+              14.674695
+            ],
+            [
+              121.123915,
+              14.674842
+            ],
+            [
+              121.124053,
+              14.674789
+            ],
+            [
+              121.124037,
+              14.674652
+            ],
+            [
+              121.123883,
+              14.674353
+            ],
+            [
+              121.123905,
+              14.67427
+            ],
+            [
+              121.124313,
+              14.674157
+            ],
+            [
+              121.124469,
+              14.67409
+            ],
+            [
+              121.124697,
+              14.674091
+            ],
+            [
+              121.124728,
+              14.674169
+            ],
+            [
+              121.124755,
+              14.674262
+            ],
+            [
+              121.125185,
+              14.673944
+            ],
+            [
+              121.12528,
+              14.674032
+            ],
+            [
+              121.125385,
+              14.674068
+            ],
+            [
+              121.125577,
+              14.674105
+            ],
+            [
+              121.125558,
+              14.674687
+            ],
+            [
+              121.125495,
+              14.67528
+            ],
+            [
+              121.124963,
+              14.67549
+            ],
+            [
+              121.125009,
+              14.676367
+            ],
+            [
+              121.124198,
+              14.67738
+            ],
+            [
+              121.124843,
+              14.678374
+            ],
+            [
+              121.124888,
+              14.678732
+            ],
+            [
+              121.124685,
+              14.678862
+            ],
+            [
+              121.124612,
+              14.67964
+            ],
+            [
+              121.12585,
+              14.679571
+            ],
+            [
+              121.125981,
+              14.680021
+            ],
+            [
+              121.125871,
+              14.68021
+            ],
+            [
+              121.12559,
+              14.680595
+            ],
+            [
+              121.125638,
+              14.681139
+            ],
+            [
+              121.126124,
+              14.681541
+            ],
+            [
+              121.126901,
+              14.682126
+            ],
+            [
+              121.127262,
+              14.682688
+            ],
+            [
+              121.126457,
+              14.683075
+            ],
+            [
+              121.126121,
+              14.683093
+            ],
+            [
+              121.125692,
+              14.683105
+            ],
+            [
+              121.12548,
+              14.683044
+            ],
+            [
+              121.123765,
+              14.683534
+            ],
+            [
+              121.12369,
+              14.683676
+            ],
+            [
+              121.123708,
+              14.683877
+            ],
+            [
+              121.123286,
+              14.684046
+            ],
+            [
+              121.122833,
+              14.684481
+            ],
+            [
+              121.122726,
+              14.684701
+            ],
+            [
+              121.122519,
+              14.684869
+            ],
+            [
+              121.122308,
+              14.685028
+            ],
+            [
+              121.122303,
+              14.685217
+            ],
+            [
+              121.122665,
+              14.685424
+            ],
+            [
+              121.122815,
+              14.685407
+            ],
+            [
+              121.122906,
+              14.685521
+            ],
+            [
+              121.122891,
+              14.685635
+            ],
+            [
+              121.122754,
+              14.685759
+            ],
+            [
+              121.12263,
+              14.685704
+            ],
+            [
+              121.12242,
+              14.685849
+            ],
+            [
+              121.122069,
+              14.685859
+            ],
+            [
+              121.121842,
+              14.686011
+            ],
+            [
+              121.121671,
+              14.686372
+            ],
+            [
+              121.120837,
+              14.686638
+            ],
+            [
+              121.121109,
+              14.685911
+            ],
+            [
+              121.121103,
+              14.685602
+            ],
+            [
+              121.120734,
+              14.685296
+            ],
+            [
+              121.120329,
+              14.684888
+            ],
+            [
+              121.119695,
+              14.684664
+            ],
+            [
+              121.119547,
+              14.684673
+            ],
+            [
+              121.119482,
+              14.684741
+            ],
+            [
+              121.119259,
+              14.685274
+            ],
+            [
+              121.119095,
+              14.685609
+            ],
+            [
+              121.118907,
+              14.685707
+            ],
+            [
+              121.118608,
+              14.685578
+            ],
+            [
+              121.118371,
+              14.685322
+            ],
+            [
+              121.118247,
+              14.685267
+            ],
+            [
+              121.117853,
+              14.685243
+            ],
+            [
+              121.117008,
+              14.684831
+            ],
+            [
+              121.116345,
+              14.684996
+            ],
+            [
+              121.11607,
+              14.684951
+            ],
+            [
+              121.115783,
+              14.684928
+            ],
+            [
+              121.115285,
+              14.685069
+            ],
+            [
+              121.114709,
+              14.685565
+            ],
+            [
+              121.114524,
+              14.68565
+            ],
+            [
+              121.114468,
+              14.685667
+            ],
+            [
+              121.114403,
+              14.685704
+            ],
+            [
+              121.11435,
+              14.685708
+            ],
+            [
+              121.114233,
+              14.685739
+            ],
+            [
+              121.113884,
+              14.685586
+            ],
+            [
+              121.113534,
+              14.685444
+            ],
+            [
+              121.113411,
+              14.685353
+            ],
+            [
+              121.11325,
+              14.68532
+            ],
+            [
+              121.112606,
+              14.684883
+            ],
+            [
+              121.112071,
+              14.684583
+            ]
+          ]
+        ]
+      },
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "updated_at": "2026-10-03T13:59:08.590971+00:00"
+    },
+    {
+      "id": "173ab2e3-f5c4-441c-81db-b8d0b559e7cf",
+      "name": "Phase Five foreign tenant",
+      "config": {},
+      "boundary": null,
+      "created_at": "2026-10-03T14:09:29.855687+00:00",
+      "updated_at": "2026-10-03T14:09:29.855687+00:00"
+    },
+    {
+      "id": "745d861a-24cb-4fa9-8f9a-0b42f44d7260",
+      "name": "Phase Five foreign tenant",
+      "config": {},
+      "boundary": null,
+      "created_at": "2026-10-03T14:08:39.157365+00:00",
+      "updated_at": "2026-10-03T14:08:39.157365+00:00"
+    },
+    {
+      "id": "cfd72da1-9870-4c38-af41-eb3f19576a6b",
+      "name": "Phase Five foreign tenant",
+      "config": {},
+      "boundary": null,
+      "created_at": "2026-10-03T14:07:25.964723+00:00",
+      "updated_at": "2026-10-03T14:07:25.964723+00:00"
+    }
+  ],
+  "document_types": [
+    {
+      "id": "0a6a3e07-f979-4e44-b010-2be47dcd3fc1",
+      "name": "Updated charter verification",
+      "charter": {
+        "clientSteps": "Updated 1. Submit application\n2. Collect document",
+        "whoMayAvail": "Updated Local applicants",
+        "feesToBePaid": "Updated Published fee: ₱25.50",
+        "agencyActions": "Updated Review application and issue document",
+        "classification": "Updated Complex",
+        "officeDivision": "Updated Records Office",
+        "processingTime": "Updated Review: 10 minutes; release: 5 minutes",
+        "transactionType": "Updated G2B",
+        "personResponsible": "Updated Records officer",
+        "checklistOfRequirements": "Updated Valid ID\nApplication form",
+        "whereToSecureRequirements": "Updated Barangay front desk"
+      },
+      "purposes": [
+        {
+          "code": "general",
+          "label": "Updated Application",
+          "requiresExplanation": false
+        }
+      ],
+      "is_active": true,
+      "created_at": "2026-10-04T01:46:21.158094+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Updated Synthetic complete charter service",
+      "fee_centavos": 0,
+      "pricing_mode": "assessment",
+      "requirements": [
+        "Updated Valid ID",
+        "Application form"
+      ],
+      "service_kind": "general",
+      "contract_version": 2,
+      "requirement_rules": {
+        "dtiRequired": false,
+        "hoaRequired": false,
+        "lessorForRenter": false,
+        "personalAppearance": false
+      },
+      "processing_target_hours": 1,
+      "processing_target_minutes": 35
+    },
+    {
+      "id": "3f0c8142-23bf-47d9-9fc3-6e710d2d2508",
+      "name": "First Time Job Seeker",
+      "charter": {
+        "clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification",
+        "whoMayAvail": "RESIDENTS",
+        "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.",
+        "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.",
+        "classification": "Simple",
+        "officeDivision": "Treasurer's Office/Punong Barangay Office",
+        "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.",
+        "transactionType": "G2C",
+        "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official",
+        "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR",
+        "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"
+      },
+      "purposes": [
+        {
+          "code": "first_employment",
+          "label": "First employment application",
+          "requiresExplanation": false
+        },
+        {
+          "code": "pre_employment",
+          "label": "Pre-employment documentary requirements",
+          "requiresExplanation": false
+        },
+        {
+          "code": "others",
+          "label": "Others",
+          "requiresExplanation": true
+        }
+      ],
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Certificate for residents seeking first employment. Staff confirm eligibility and the applicable exemption.",
+      "fee_centavos": 0,
+      "pricing_mode": "assessment",
+      "requirements": [
+        "Valid ID/HOA certificate (6 months residency)",
+        "Personal appearance",
+        "Lessor endorsement for transients/renters"
+      ],
+      "service_kind": "first_time_job_seeker",
+      "contract_version": 2,
+      "requirement_rules": {
+        "dtiRequired": false,
+        "hoaRequired": false,
+        "lessorForRenter": true,
+        "personalAppearance": true
+      },
+      "processing_target_hours": 24,
+      "processing_target_minutes": 15
+    },
+    {
+      "id": "4382ee82-9707-4a3b-a9ca-0a535ec1b242",
+      "name": "Barangay Clearance",
+      "charter": null,
+      "purposes": [],
+      "is_active": false,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "General-purpose clearance for employment, business, or travel requirements.",
+      "fee_centavos": 5000,
+      "pricing_mode": "fixed",
+      "requirements": [
+        "Valid ID",
+        "Proof of residency"
+      ],
+      "service_kind": null,
+      "contract_version": 1,
+      "requirement_rules": {},
+      "processing_target_hours": 24,
+      "processing_target_minutes": null
+    },
+    {
+      "id": "5f74f014-4fcd-4d35-bd1d-949b760efa0c",
+      "name": "Issuance of Barangay Clearance for Business Establishments",
+      "charter": {
+        "clientSteps": "1. Fill up the necessary and applicable form for your request document\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification",
+        "whoMayAvail": "ALL",
+        "feesToBePaid": "See Attached Tax Code (depends on the kind of transaction). The tax code is absent from the supplied PDF; staff assessment is required.",
+        "agencyActions": "1. Give the Log Book to the Client.\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.",
+        "classification": "Simple",
+        "officeDivision": "Treasurer's Office",
+        "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.",
+        "transactionType": "G2C",
+        "personResponsible": "Brgy. Treasurer/Collecting staff\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official",
+        "checklistOfRequirements": "1. DTI\n2. VALID ID\n3. PERSONAL APPEARANCE",
+        "whereToSecureRequirements": "TREASURER'S OFFICE"
+      },
+      "purposes": [
+        {
+          "code": "new_business",
+          "label": "New business permit application",
+          "requiresExplanation": false
+        },
+        {
+          "code": "renewal",
+          "label": "Business permit renewal",
+          "requiresExplanation": false
+        },
+        {
+          "code": "others",
+          "label": "Others",
+          "requiresExplanation": true
+        }
+      ],
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Clearance for business establishments. Staff assess fees using the applicable tax code.",
+      "fee_centavos": 0,
+      "pricing_mode": "assessment",
+      "requirements": [
+        "DTI",
+        "Verified valid ID",
+        "Personal appearance"
+      ],
+      "service_kind": "business",
+      "contract_version": 2,
+      "requirement_rules": {
+        "dtiRequired": true,
+        "hoaRequired": false,
+        "lessorForRenter": false,
+        "personalAppearance": true
+      },
+      "processing_target_hours": 24,
+      "processing_target_minutes": 15
+    },
+    {
+      "id": "700b414a-63e9-4e71-be70-c9588ee2bc02",
+      "name": "Local creation verification",
+      "charter": null,
+      "purposes": [],
+      "is_active": true,
+      "created_at": "2026-10-03T16:32:09.652149+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Disposable local verification document",
+      "fee_centavos": 2500,
+      "pricing_mode": "fixed",
+      "requirements": [
+        "Valid ID",
+        "Supporting certificate"
+      ],
+      "service_kind": null,
+      "contract_version": 1,
+      "requirement_rules": {},
+      "processing_target_hours": 48,
+      "processing_target_minutes": null
+    },
+    {
+      "id": "a1d3cd29-e721-457f-b7d3-7b2f829b5351",
+      "name": "Certificate of Indigency",
+      "charter": {
+        "clientSteps": "1. Filling up of the Applied form\n2. Submit the required documents to the assigned clerk.\n3. Pay the required fees at the treasurers/cashiers office. Make sure to secure Official Receipt that will be issued upon payment.\n4. Return to the assigned clerk for the release of clearance/certification",
+        "whoMayAvail": "RESIDENTS",
+        "feesToBePaid": "₱100.00 / *NO FEES. Charter total: ₱100.00. The supplied page does not explain the distinction; staff must confirm the fee or applicable exemption before payment.",
+        "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing the request.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the Certificate or Clearance to the client.",
+        "classification": "Simple",
+        "officeDivision": "Treasurer's Office/Punong Barangay Office",
+        "processingTime": "Grouped durations shown in the charter: 2 mins, 3 mins, 4 mins, 2 mins, 2 mins, 2 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.",
+        "transactionType": "G2C",
+        "personResponsible": "Brgy. Treasurer\nBrgy. Clerk\nBrgy. Secretary/PB/Authorized Signing Official",
+        "checklistOfRequirements": "1. VALID ID/HOA CERTIFICATE (6 MONTHS RESIDENCY)\n2. PERSONAL APPEARANCE\n3. FOR TRANSCIENTS/RENTERS – ENDORSEMENT FROM THE LESSOR",
+        "whereToSecureRequirements": "TREASURER'S OFFICE/OFFICE OF THE PUNONG BARANGAY/SECRETARY"
+      },
+      "purposes": [
+        {
+          "code": "medical",
+          "label": "Medical assistance",
+          "requiresExplanation": false
+        },
+        {
+          "code": "education",
+          "label": "Educational assistance",
+          "requiresExplanation": false
+        },
+        {
+          "code": "burial",
+          "label": "Burial/funeral assistance",
+          "requiresExplanation": false
+        },
+        {
+          "code": "welfare",
+          "label": "Financial or social welfare assistance",
+          "requiresExplanation": false
+        },
+        {
+          "code": "others",
+          "label": "Others",
+          "requiresExplanation": true
+        }
+      ],
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Certificate for residents. Staff confirm eligibility, six-month residency and the applicable fee or exemption.",
+      "fee_centavos": 0,
+      "pricing_mode": "assessment",
+      "requirements": [
+        "Valid ID/HOA certificate (6 months residency)",
+        "Personal appearance",
+        "Lessor endorsement for transients/renters"
+      ],
+      "service_kind": "indigency",
+      "contract_version": 2,
+      "requirement_rules": {
+        "dtiRequired": false,
+        "hoaRequired": false,
+        "lessorForRenter": true,
+        "personalAppearance": true
+      },
+      "processing_target_hours": 24,
+      "processing_target_minutes": 15
+    },
+    {
+      "id": "c5607668-e812-4a46-afcf-3a048055c0b7",
+      "name": "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)",
+      "charter": {
+        "clientSteps": "1. Filling up of the Applied form\n2. Pay the required fees at the treasurer's office. Make sure to secure Official Receipt that will be issued upon payment.\n3. Return to the assigned clerk for the release of clearance/certification",
+        "whoMayAvail": "ALL",
+        "feesToBePaid": "₱10.00 /page. TOTAL: ₱10.00 /PAGE. Staff confirm total billable pages across all requested copies.",
+        "agencyActions": "1. Take and check the filled up form\n2. Issue the order of payment if all documents were given\n3. Start processing details.\n4. Issue the official receipt.\n5. Check the official receipt.\n6. Issue the documents needed by the client.",
+        "classification": "Simple",
+        "officeDivision": "Office of the Secretary/Treasurer's Office",
+        "processingTime": "Grouped durations shown in the charter: 2 mins, 5 mins, 2 mins, 6 mins.\nTOTAL: 15 MINS. The source does not establish individual action/person assignments.",
+        "transactionType": "G2C",
+        "personResponsible": null,
+        "checklistOfRequirements": "1. VALID ID\n3. PERSONAL APPEARANCE",
+        "whereToSecureRequirements": "OFFICE OF THE PUNONG BARANGAY/SECRETARY"
+      },
+      "purposes": [
+        {
+          "code": "government",
+          "label": "Submission to a government office",
+          "requiresExplanation": false
+        },
+        {
+          "code": "legal",
+          "label": "Legal documentation",
+          "requiresExplanation": false
+        },
+        {
+          "code": "reference",
+          "label": "Official or administrative reference",
+          "requiresExplanation": false
+        },
+        {
+          "code": "others",
+          "label": "Others",
+          "requiresExplanation": true
+        }
+      ],
+      "is_active": true,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Certified copies of barangay records. ₱10 per total billable page confirmed by staff across all requested copies.",
+      "fee_centavos": 1000,
+      "pricing_mode": "per_page",
+      "requirements": [
+        "Verified valid ID",
+        "Personal appearance"
+      ],
+      "service_kind": "certified_true_copy",
+      "contract_version": 2,
+      "requirement_rules": {
+        "dtiRequired": false,
+        "hoaRequired": false,
+        "lessorForRenter": false,
+        "personalAppearance": true
+      },
+      "processing_target_hours": 24,
+      "processing_target_minutes": 15
+    },
+    {
+      "id": "d42c607e-bc03-4acd-a252-f5c3692adb8a",
+      "name": "Certificate of Residency",
+      "charter": null,
+      "purposes": [],
+      "is_active": false,
+      "created_at": "2026-10-03T13:59:08.590971+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": "Certifies that the applicant resides within the barangay.",
+      "fee_centavos": 3000,
+      "pricing_mode": "fixed",
+      "requirements": [
+        "Valid ID",
+        "Proof of residency"
+      ],
+      "service_kind": null,
+      "contract_version": 1,
+      "requirement_rules": {},
+      "processing_target_hours": 24,
+      "processing_target_minutes": null
+    },
+    {
+      "id": "f5000000-0000-0000-0000-000000000001",
+      "name": "Historical service (local test)",
+      "charter": null,
+      "purposes": [],
+      "is_active": false,
+      "created_at": "2026-10-03T15:48:11.713013+00:00",
+      "deleted_at": null,
+      "barangay_id": "00000000-0000-0000-0000-000000000001",
+      "description": null,
+      "fee_centavos": 5000,
+      "pricing_mode": "fixed",
+      "requirements": [],
+      "service_kind": null,
+      "contract_version": 1,
+      "requirement_rules": {},
+      "processing_target_hours": 24,
+      "processing_target_minutes": null
+    }
+  ]
+}

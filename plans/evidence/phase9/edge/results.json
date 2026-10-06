@@ -1,0 +1,109 @@
+{
+  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "checks": [
+    {
+      "id": "cancel-payment",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/cancel-payment/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:20.441Z",
+      "finishedAt": "2026-10-06T05:58:23.061Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "cancel-payment.log"
+    },
+    {
+      "id": "check-payment-status",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/check-payment-status/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:23.197Z",
+      "finishedAt": "2026-10-06T05:58:23.673Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "check-payment-status.log"
+    },
+    {
+      "id": "create-payment-source",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/create-payment-source/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:23.820Z",
+      "finishedAt": "2026-10-06T05:58:24.326Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "create-payment-source.log"
+    },
+    {
+      "id": "delete-my-account",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/delete-my-account/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:24.448Z",
+      "finishedAt": "2026-10-06T05:58:27.690Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "delete-my-account.log"
+    },
+    {
+      "id": "export-my-data",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/export-my-data/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:27.862Z",
+      "finishedAt": "2026-10-06T05:58:28.380Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "export-my-data.log"
+    },
+    {
+      "id": "generate-household-qr",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/generate-household-qr/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:28.532Z",
+      "finishedAt": "2026-10-06T05:58:32.585Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "generate-household-qr.log"
+    },
+    {
+      "id": "paymongo-webhook",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/paymongo-webhook/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:32.740Z",
+      "finishedAt": "2026-10-06T05:58:33.261Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "paymongo-webhook.log"
+    },
+    {
+      "id": "refund-payment",
+      "directory": ".",
+      "args": [
+        "check",
+        "supabase/functions/refund-payment/index.ts"
+      ],
+      "startedAt": "2026-10-06T05:58:33.396Z",
+      "finishedAt": "2026-10-06T05:58:33.954Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "refund-payment.log"
+    }
+  ]
+}

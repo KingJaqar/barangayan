@@ -16,7 +16,7 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ClipboardList, Star, X } from 'lucide-react';
+import { ClipboardList, X } from 'lucide-react';
 
 import { driveTypeConfig, type DriveRegistrationRow } from '@/hooks/use-medical-drives';
 
@@ -87,9 +87,6 @@ export function RegistrationDrawer({ registration, open, onClose }: { registrati
                             <p className="text-xs text-muted-foreground">Applicant Number</p>
                             <p className="text-lg font-bold text-primary">{registration.applicant_number}</p>
                           </div>
-                          <span className="flex shrink-0 items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-xs font-bold text-primary">
-                            <Star size={12} /> {registration.priority_score} pts
-                          </span>
                         </div>
                       </div>
 

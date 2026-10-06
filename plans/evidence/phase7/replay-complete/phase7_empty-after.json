@@ -1,0 +1,13 @@
+{
+  "tables": {
+    "payments": [],
+    "profiles": [],
+    "barangays": [],
+    "document_types": [],
+    "id_submissions": [],
+    "medical_drives": [],
+    "service_requests": [],
+    "drive_registrations": []
+  },
+  "scores": []
+}

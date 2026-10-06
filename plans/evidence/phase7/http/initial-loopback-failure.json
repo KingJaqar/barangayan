@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "assertions": [],
+  "realtimeStatuses": [],
+  "error": "ifError got unwanted exception: TypeError: fetch failed"
+}

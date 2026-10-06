@@ -1,0 +1,13 @@
+{
+  "device": "emulator-5578",
+  "androidApi": "36",
+  "expoGo": [
+    "versionCode=444 minSdk=24 targetSdk=36",
+    "versionName=57.0.9"
+  ],
+  "backend": "Isolated Docker Auth/REST on named local WSL distribution",
+  "preview": "Task Metro port 8087",
+  "nativeBuild": "Expo Go SDK 57; Android Hermes export separately verified",
+  "pushWarning": "Expo Go push delivery unsupported; dismissed before final confirmation",
+  "submissionInput": "Observed button pressed for 250ms after shorter taps produced no response; actual UI/RPC used."
+}

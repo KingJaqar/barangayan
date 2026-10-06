@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "device": "emulator-5578",
+  "requiredLabels": [
+    "Phase Seven Privacy Drive",
+    "Applicant #"
+  ],
+  "scoreFreeVisibleAndAccessibilityLabels": true
+}

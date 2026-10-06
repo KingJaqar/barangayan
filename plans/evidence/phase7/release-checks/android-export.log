@@ -1,0 +1,184 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Starting Metro Bundler
+
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:26472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+
+Failed to generate Hermes bytecode for: C:\Users\User\barangayan\node_modules\expo-router\entry.js
+
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:869:13: warning: the variable "Promise" was not declared in anonymous function
+    var z = Promise,
+            ^~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:3444:24: warning: the variable "URL" was not declared in anonymous arrow function
+        props[0] = new URL(props[0], window.location?.origin).toString();
+                       ^~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:3469:42: warning: the variable "fetch" was not declared in anonymous function
+      value: wrapFetchWithWindowLocation(fetch)
+                                         ^~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:5799:57: warning: the variable "AbortSignal" was not declared in anonymous function
+        if (signal !== undefined && !(signal instanceof AbortSignal)) {
+                                                        ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:6053:71: warning: the variable "performance" was not declared in anonymous function
+      this._timeStamp = initTimestamp !== undefined ? initTimestamp : performance.now();
+                                                                      ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:18391:7: warning: the variable "setTimeout" was not declared in function "logUncaughtError"
+      setTimeout(function () {
+      ^~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:21169:31: warning: the variable "nativeFabricUIManager" was not declared in anonymous function
+  var _nativeFabricUIManage = nativeFabricUIManager,
+                              ^~~~~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:21233:21: warning: the variable "clearTimeout" was not declared in anonymous function
+    cancelTimeout = clearTimeout;
+                    ^~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:26097:15: warning: the variable "Blob" was not declared in anonymous function
+          new Blob();
+              ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:26236:24: warning: the variable "FileReader" was not declared in function "readBlobAsArrayBuffer"
+      var reader = new FileReader();
+                       ^~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:26289:40: warning: the variable "FormData" was not declared in anonymous function
+        } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+                                       ^~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:26291:44: warning: the variable "URLSearchParams" was not declared in anonymous function
+        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+                                           ^~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:26544:23: warning: the variable "XMLHttpRequest" was not declared in anonymous function
+        var xhr = new XMLHttpRequest();
+                      ^~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:30950:25: warning: the variable "ErrorUtils" was not declared in anonymous function
+    var globalHandler = ErrorUtils.getGlobalHandler();
+                        ^~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:31035:22: warning: the variable "DOMException" was not declared in function "timeout"
+    var reason = new DOMException('The signal timed out.', 'TimeoutError');
+                     ^~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:31783:35: warning: the variable "TransformStream" was not declared in anonymous function
+  class TextDecoderStream extends TransformStream {
+                                  ^~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:31785:25: warning: the variable "TextDecoder" was not declared in anonymous function
+      var decoder = new TextDecoder(label, options);
+                        ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:31822:25: warning: the variable "TextEncoder" was not declared in anonymous function
+      var encoder = new TextEncoder();
+                        ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:34090:50: warning: the variable "Request" was not declared in anonymous arrow function
+      return 'body' in input || input instanceof Request || input[Symbol.toStringTag] === 'Request';
+                                                 ^~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:37548:13: warning: the variable "clearImmediate" was not declared in anonymous arrow function
+            clearImmediate(flushQueueImmediate);
+            ^~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:39176:32: warning: the variable "requestAnimationFrame" was not declared in anonymous function
+        this._animationFrame = requestAnimationFrame(() => this.onUpdate());
+                               ^~~~~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:55757:22: warning: the variable "ReadableStream" was not declared in function "wrapWithConsumption"
+    var stream = new ReadableStream({
+                     ^~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:55964:18: warning: the variable "Headers" was not declared in anonymous function
+      return new Headers(this._rawHeaders);
+                 ^~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:56595:16: warning: Direct call to eval(), but lexical scope is not supported.
+        return eval(body);
+               ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:57668:21: warning: the variable "Image" was not declared in anonymous arrow function
+      var img = new Image();
+                    ^~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:95152:9: warning: the variable "REACT_NAVIGATION_DEVTOOLS" was not declared in anonymous arrow function
+        REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:101445:26: warning: the variable "ResizeObserver" was not declared in anonymous arrow function
+      var observer = new ResizeObserver(entries => {
+                         ^~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:102623:16: warning: the variable "requestIdleCallback" was not declared in anonymous arrow function
+      var id = requestIdleCallback(() => {
+               ^~~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:102626:20: warning: the variable "cancelIdleCallback" was not declared in anonymous arrow function
+      return () => cancelIdleCallback(id);
+                   ^~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:114639:11: warning: the variable "cancelAnimationFrame" was not declared in anonymous arrow function
+          cancelAnimationFrame(animationFrame);
+          ^~~~~~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:129563:51: warning: the variable "WeakRef" was not declared in function "createSerializable"
+      if (globalThis.WeakRef && cached instanceof WeakRef) {
+                                                  ^~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:131447:28: warning: Direct call to eval(), but lexical scope is not supported.
+              workletFun = eval('(' + initData.code + '\n)');
+                           ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:158408:41: warning: the variable "getComputedStyle" was not declared in function "fixElementPosition"
+    var parentBorderTopValue = parseInt(getComputedStyle(parent).borderTopWidth);
+                                        ^~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:158738:28: warning: the variable "HTMLElement" was not declared in function "cleanupEnteringAnimations"
+      if (child instanceof HTMLElement) {
+                           ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:162672:24: warning: the variable "MutationObserver" was not declared in function "addHTMLMutationObserver"
+    var observer = new MutationObserver(mutationsList => {
+                       ^~~~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:163122:25: warning: the variable "setInterval" was not declared in anonymous function
+      this.intervalId = setInterval(this.syncPropsBackToReact.bind(this), FLUSH_INTERVAL_MS);
+                        ^~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:163126:9: warning: the variable "clearInterval" was not declared in anonymous function
+        clearInterval(this.intervalId);
+        ^~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:168582:5: warning: the variable "jest" was not declared in anonymous arrow function
+    jest.useFakeTimers();
+    ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:181265:32: warning: the variable "atob" was not declared in function "isValidJWT"
+      var decoded = JSON.parse(atob(base64));
+                               ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:193379:28: warning: the variable "Worker" was not declared in anonymous function
+      this.workerRef = new Worker(objectUrl);
+                           ^~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:195731:12: warning: the variable "btoa" was not declared in anonymous arrow function
+    return btoa(binary);
+           ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:211036:7: warning: the variable "__magic__" was not declared in function "polyfillGlobalThis"
+      __magic__.globalThis = __magic__;
+      ^~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:212653:16: warning: the variable "Intl" was not declared in function "formatCentavosAsPHP"
+    return new Intl.NumberFormat('en-PH', {
+               ^~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:294068:18: warning: the variable "WritableStream" was not declared in anonymous function
+      return new WritableStream(new _internalStreams.FileSystemWritableSink(super.open(_FileTypes.FileMode.WriteOnly)));
+                 ^~~~~~~~~~~~~~
+C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js:294078:18: warning: the variable "Response" was not declared in anonymous function
+      return new Response(await this.arrayBuffer(), {
+                 ^~~~~~~~
+Failed to write file C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.hbc: permission denied
+
+Android Bundling failed 55249ms node_modules\expo-router\entry.js (2469 modules)
+
+Error: C:\Users\User\barangayan\node_modules\hermes-compiler/hermesc/win64-bin/hermesc.exe -emit-binary -out C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.hbc C:\Users\User\AppData\Local\Packages\sandbox.{d203e576-03c5-48a3-9a04-792eca0623d6}\AC\Temp\expo-bundler-0.4351595015652393-1791108034668\index.js -O exited with non-zero code: 6

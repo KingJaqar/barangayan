@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "image": "system-images;android-36;google_apis_playstore;x86_64",
+  "path": "C:\\Users\\User\\barangayan\\dist\\phase7-tools\\emulator\\avds\\barangayan-phase7.avd",
+  "name": "barangayan-phase7",
+  "port": 5578,
+  "bootPassed": true,
+  "bootMilliseconds": 93504,
+  "initialReadinessTimeoutSeconds": 90,
+  "explanation": "Runtime log confirmed boot at 93.5s; investigated after bounded timeout before proceeding."
+}

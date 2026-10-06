@@ -1,0 +1,1057 @@
+[
+  {
+    "database": "phase7_empty",
+    "label": "Portable infrastructure fixture",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0001_barangays_and_profiles.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0002_document_types_and_service_requests.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0003_announcements.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0004_service_request_reference_default.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0005_guest_readable_public_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0006_profile_theme_preference.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0007_payments_and_admin_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0008_resident_directory_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0009_admin_crud_and_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0010_resident_set_payment_method.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0011_announcements_admin_write.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0012_profile_trigger_and_verification_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0013_protect_verification_fields.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0014_request_delivery_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0015_request_delivery_transition_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0017_harden_payments_rls.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0018_begin_processing_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0019_fix_announcement_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0020_id_documents_storage.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0021_enable_pgtap.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0022_maps_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0023_seed_incident_categories.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0024_ampid1_boundary.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0025_incident_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0026_incident_report_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0027_incidents_realtime.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0029_drop_diag_temp.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0030_diag_temp2.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0031_drop_diag_temp2.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0032_withdraw_incident_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0033_diag_temp3.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0034_drop_diag_temp3.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0035_medical_drives.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0036_medical_drives_admin_rls.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0037_profile_birth_date.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0038_health_realtime.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0039_profile_extended_fields.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0040_profile_avatar.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0041_id_verification_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0042_id_documents_public_bucket.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0043_emergency_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0044_evacuation_centers_verified.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0045_evacuation_center_checkins.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0046_household_members.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0047_emergency_information.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0048_realtime_publications.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0049_seed_empty_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0050_create_emergency_qr_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0051_waste_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0052_household_admin_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0053_faq.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0054_barangay_settings.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0055_grant_guest_read_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0056_admin_staff_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0057_barangay_officials.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0058_admin_audit_log.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0059_site_content_and_about_us.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0060_storage_site_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0061_save_about_us_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0062_seed_site_content_and_about_us.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0063_push_notifications.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0064_qrph_instant_payment_and_refunds.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0065_qrph_payment_intents.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0066_qrph_persistent_qr_and_resident_cancel.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0067_fix_household_members_uuid_sync.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0068_signup_birth_date.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0069_fix_emergency_information_tenant_leak.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0070_waste_management_resident_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0071_add_missing_fk_indexes.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0072_admin_register_for_drive.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0073_id_documents_private_again.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0074_account_deletion.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0075_profile_theme_customization.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0076_placeholder.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0077_waste_zone_cron_scoring.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0078_registration_location_verification.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0079_export_rate_limit.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0080_reports_unread_counts.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0081_resident_profile_field_split.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0082_remove_delivery_add_pickup.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0083_incident_location_details.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0084_announcement_detailed_description.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0085_resident_mark_resolved_incident_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0086_about_us_logo_size.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0087_about_us_title.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0088_faq_articles_guest_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0089_id_verification_failed_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0090_location_verification.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0091_verified_location_address.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0092_drive_registrations_admin_update.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0093_resident_ios_backend_safety.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0094_resident_ios_tenant_write_guards.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0095_phase1_shared_foundations.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0096_phase2_trusted_evidence_locality.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0097_phase3_catalog_staff_workflows.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0098_phase4_resident_submission_payment.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0099_phase5_sla_engine_reporting.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0100_restore_admin_document_type_creation.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0101_unified_document_type_charter_forms.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0102_phase6_registration_maps_auth.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0103_phase6_deferred_profile_completion.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0104_google_minimal_resident_profiles.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "0105_phase7_administrator_only_scores.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_empty",
+    "label": "Phase 7 acceptance",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "Portable infrastructure fixture",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0001_barangays_and_profiles.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0002_document_types_and_service_requests.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0003_announcements.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0004_service_request_reference_default.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0005_guest_readable_public_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0006_profile_theme_preference.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0007_payments_and_admin_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0008_resident_directory_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0009_admin_crud_and_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0010_resident_set_payment_method.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0011_announcements_admin_write.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0012_profile_trigger_and_verification_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0013_protect_verification_fields.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0014_request_delivery_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0015_request_delivery_transition_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0017_harden_payments_rls.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0018_begin_processing_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0019_fix_announcement_soft_delete.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0020_id_documents_storage.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0021_enable_pgtap.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0022_maps_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0023_seed_incident_categories.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0024_ampid1_boundary.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0025_incident_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0026_incident_report_workflow.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0027_incidents_realtime.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0029_drop_diag_temp.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0030_diag_temp2.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0031_drop_diag_temp2.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0032_withdraw_incident_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0033_diag_temp3.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0034_drop_diag_temp3.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0035_medical_drives.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0036_medical_drives_admin_rls.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0037_profile_birth_date.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0038_health_realtime.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0039_profile_extended_fields.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0040_profile_avatar.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0041_id_verification_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0042_id_documents_public_bucket.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0043_emergency_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0044_evacuation_centers_verified.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0045_evacuation_center_checkins.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0046_household_members.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0047_emergency_information.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0048_realtime_publications.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0049_seed_empty_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0050_create_emergency_qr_tables.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0051_waste_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0052_household_admin_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0053_faq.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0054_barangay_settings.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0055_grant_guest_read_access.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0056_admin_staff_management.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0057_barangay_officials.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0058_admin_audit_log.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0059_site_content_and_about_us.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0060_storage_site_content.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0061_save_about_us_rpc.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0062_seed_site_content_and_about_us.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0063_push_notifications.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0064_qrph_instant_payment_and_refunds.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0065_qrph_payment_intents.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0066_qrph_persistent_qr_and_resident_cancel.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0067_fix_household_members_uuid_sync.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0068_signup_birth_date.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0069_fix_emergency_information_tenant_leak.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0070_waste_management_resident_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0071_add_missing_fk_indexes.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0072_admin_register_for_drive.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0073_id_documents_private_again.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0074_account_deletion.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0075_profile_theme_customization.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0076_placeholder.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0077_waste_zone_cron_scoring.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0078_registration_location_verification.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0079_export_rate_limit.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0080_reports_unread_counts.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0081_resident_profile_field_split.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0082_remove_delivery_add_pickup.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0083_incident_location_details.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0084_announcement_detailed_description.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0085_resident_mark_resolved_incident_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0086_about_us_logo_size.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0087_about_us_title.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0088_faq_articles_guest_read.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0089_id_verification_failed_status.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0090_location_verification.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0091_verified_location_address.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0092_drive_registrations_admin_update.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0093_resident_ios_backend_safety.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0094_resident_ios_tenant_write_guards.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "Historical requests payments approvals and score 90",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0095_phase1_shared_foundations.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0096_phase2_trusted_evidence_locality.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0097_phase3_catalog_staff_workflows.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0098_phase4_resident_submission_payment.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0099_phase5_sla_engine_reporting.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0100_restore_admin_document_type_creation.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0101_unified_document_type_charter_forms.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0102_phase6_registration_maps_auth.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0103_phase6_deferred_profile_completion.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0104_google_minimal_resident_profiles.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "0105_phase7_administrator_only_scores.sql",
+    "passed": true
+  },
+  {
+    "database": "phase7_existing",
+    "label": "Phase 7 acceptance",
+    "passed": true
+  }
+]

@@ -1,0 +1,29 @@
+BEGIN
+INSERT 0 2
+INSERT 0 1
+
+INSERT 0 3
+INSERT 0 3
+SET
+SET
+ok 1 - Administrator can create an active document alongside charter services
+ok 2 - Creation retains existing contract
+ok 3 - Created fee retained
+ok 4 - Created processing hours retained
+ok 5 - Created requirements retained
+ok 6 - Four charter services and minute targets preserved
+ok 7 - Administrator can deactivate additional type
+ok 8 - Administrator can reactivate additional type
+ok 9 - Administrator cannot create in foreign barangay
+ok 10 - Charter contract cannot be downgraded
+SET
+ok 11 - Resident cannot create document types
+SET
+ok 12 - Foreign administrator cannot create in Ampid 1
+ok 13 - Foreign administrator cannot read created document
+RESET
+SET
+ok 14 - Anonymous visitor cannot create document types
+RESET
+1..14
+ROLLBACK

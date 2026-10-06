@@ -1,0 +1,16 @@
+{
+  "passed": false,
+  "assertions": [
+    "Resident detail keeps applicant identity",
+    "Resident detail: no visible score",
+    "Resident detail: no accessibility score",
+    "Resident detail: no error overlay",
+    "Browser submission creates expected protected senior score",
+    "Confirmation returns to saved registration list",
+    "Reload preserves score-free registration",
+    "Administrator protected join renders browser applicant",
+    "Administrator table retains correct score"
+  ],
+  "consoleErrors": [],
+  "error": "Administrator detail retains score"
+}

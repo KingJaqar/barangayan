@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "assertions": [
+    "admin CSV retrieval succeeds",
+    "Admin CSV keeps score column",
+    "Admin CSV keeps exact original score",
+    "resident CSV retrieval succeeds",
+    "Resident CSV omits score field",
+    "Resident CSV retains registration history"
+  ]
+}

@@ -1,0 +1,70 @@
+BEGIN
+INSERT 0 2
+INSERT 0 1
+INSERT 0 3
+
+ok 1 - Exactly four pilot services active
+ok 2 - Other tenant activity unchanged
+ok 3 - Other tenant fee unchanged
+ok 4 - Equivalent indigency identifier reused
+ok 5 - General-purpose clearance deactivated without deletion
+ok 6 - All four preserve Simple, G2C and fifteen minutes
+ok 7 - Missing CTC personnel remains explicitly unknown
+INSERT 0 3
+INSERT 0 3
+UPDATE 1
+INSERT 0 3
+SET
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+c5000000-0000-0000-0000-000000000001
+SET
+ok 8 - Certificate of Indigency submits pending assessment
+ok 9 - First Time Job Seeker submits pending assessment
+ok 10 - Issuance of Barangay Clearance for Business Establishments submits pending assessment
+ok 11 - Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) submits pending assessment
+ok 12 - Resident cannot review
+SET
+ok 13 - ID approval alone cannot accept requirements
+ok 14 - ID approval alone cannot accept requirements
+ok 15 - ID approval alone cannot accept requirements
+ok 16 - ID approval alone cannot accept requirements
+ok 17 - Staff record requirements separately
+ok 18 - Staff record requirements separately
+ok 19 - Staff record requirements separately
+ok 20 - Staff record requirements separately
+ok 21 - Appearance acknowledgment is not actual presence
+ok 22 - Appearance acknowledgment is not actual presence
+ok 23 - Appearance acknowledgment is not actual presence
+ok 24 - Appearance acknowledgment is not actual presence
+ok 25 - Staff record actual appearance
+ok 26 - Staff record actual appearance
+ok 27 - Staff record actual appearance
+ok 28 - Staff record actual appearance
+ok 29 - Review and appearance actor/time recorded
+ok 30 - Review and appearance actor/time recorded
+ok 31 - Review and appearance actor/time recorded
+ok 32 - Review and appearance actor/time recorded
+ok 33 - Every service fee or exemption confirmed
+ok 34 - Every service fee or exemption confirmed
+ok 35 - Every service fee or exemption confirmed
+ok 36 - Every service fee or exemption confirmed
+ok 37 - Four total pages cost forty pesos, not times three copies
+ok 38 - Reviewed request accepted
+ok 39 - Reviewed request accepted
+ok 40 - Reviewed request accepted
+ok 41 - Reviewed request accepted
+ok 42 - Reviewed document ready
+ok 43 - Reviewed document ready
+ok 44 - Reviewed document ready
+ok 45 - Reviewed document ready
+ok 46 - Unpaid request cannot release
+ok 47 - Unpaid request cannot release
+ok 48 - Unpaid request cannot release
+ok 49 - Eligible first job seeker waiver permits release
+ok 50 - Review locked after acceptance
+ok 51 - Raw staff review bypass denied
+RESET
+1..51
+ROLLBACK

@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "assertions": [
+    "Native submission retains protected senior score 20",
+    "Native submission retains typed applicant number"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "passed": false,
+  "assertions": [
+    "Synthetic foreign tenant created",
+    "resident: Auth account created",
+    "resident: completed fixture profile created",
+    "second: Auth account created",
+    "second: completed fixture profile created",
+    "third: Auth account created",
+    "third: completed fixture profile created",
+    "admin: Auth account created",
+    "admin: completed fixture profile created",
+    "foreignAdmin: Auth account created",
+    "foreignAdmin: completed fixture profile created",
+    "foreignResident: Auth account created",
+    "foreignResident: completed fixture profile created",
+    "Dedicated test drives created",
+    "resident: real Auth session",
+    "admin: real Auth session",
+    "foreignAdmin: real Auth session",
+    "Resident registration succeeds through real RPC",
+    "Resident RPC returns only safe confirmation fields",
+    "Resident wildcard REST remains readable",
+    "Wildcard REST has no score",
+    "Explicit old score column denied",
+    "Protected REST applies RLS",
+    "Resident REST cannot retrieve score rows",
+    "Nested protected REST join executes",
+    "Nested join cannot reveal own score",
+    "Inner join authorization applies",
+    "Inner joins cannot infer score by matching rows",
+    "Resident CSV request yields no protected values",
+    "Resident cannot invoke staff RPC",
+    "Resident cannot forge score row",
+    "Actual administrator page join works",
+    "Administrator exact formula result is 80",
+    "Foreign administrator REST executes",
+    "Foreign administrator cannot retrieve local score",
+    "Foreign administrator RPC rejected",
+    "Administrator cannot overwrite historical score",
+    "Resident cancellation cannot tamper with scoring inputs",
+    "Staff registration succeeds",
+    "Staff result preserves infant/comorbidity score",
+    "Staff confirmation succeeds"
+  ],
+  "realtimeStatuses": [
+    {
+      "table": "drive_registrations",
+      "state": "SUBSCRIBED"
+    },
+    {
+      "table": "drive_registration_scores",
+      "state": "SUBSCRIBED"
+    }
+  ],
+  "error": "Real Realtime registration event received"
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import type { DriveType, Tables } from '@barangayan/shared';
-import { DRIVE_TYPE_CONFIG } from '@barangayan/shared';
+import { DRIVE_TYPE_CONFIG, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type ResidentDriveRegistrationResult } from '@barangayan/shared';
 import { useCallback, useEffect, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -12,12 +12,7 @@ export type DriveRegistrationRow = Tables<'drive_registrations'> & {
   drive?: MedicalDrive | null;
 };
 
-export interface RegisterForDriveResult {
-  registration_id: string;
-  applicant_number: string;
-  priority_score: number;
-  status: string;
-}
+export type RegisterForDriveResult = ResidentDriveRegistrationResult;
 
 /**
  * Web port of mobile's use-medical-drives.ts [C-015, C-016, C-023] — Active Drives is
@@ -116,7 +111,7 @@ export function useMedicalDrives({
     const supabase = createSupabaseBrowserClient();
     const { data, error: qErr } = await supabase
       .from('drive_registrations')
-      .select('*, drive:medical_drives(*)')
+      .select(`${RESIDENT_DRIVE_REGISTRATION_COLUMNS}, drive:medical_drives(*)`)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -181,7 +176,7 @@ export function useMedicalDrives({
       });
       if (qErr) throw new Error(qErr.message);
       await Promise.all([fetchDrives(), fetchMyRegistrations()]);
-      return data as unknown as RegisterForDriveResult;
+      return residentDriveRegistrationResultSchema.parse(data);
     },
     [fetchDrives, fetchMyRegistrations],
   );

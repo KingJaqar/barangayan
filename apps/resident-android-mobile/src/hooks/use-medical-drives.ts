@@ -1,4 +1,4 @@
-import { DRIVE_TYPE_CONFIG, type DriveType } from '@barangayan/shared';
+import { DRIVE_TYPE_CONFIG, RESIDENT_DRIVE_REGISTRATION_COLUMNS, residentDriveRegistrationResultSchema, type ResidentDriveRegistrationResult, type DriveType } from '@barangayan/shared';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -38,7 +38,6 @@ export interface DriveRegistration {
   is_pwd: boolean;
   comorbidities: string[];
   prior_dose_date: string | null;
-  priority_score: number;
   status: string; // drive_registration_status
   created_at: string;
   updated_at: string;
@@ -46,12 +45,7 @@ export interface DriveRegistration {
   drive?: MedicalDrive | null;
 }
 
-export interface RegisterForDriveResult {
-  registration_id: string;
-  applicant_number: string;
-  priority_score: number;
-  status: string;
-}
+export type RegisterForDriveResult = ResidentDriveRegistrationResult;
 
 // ---------------------------------------------------------------------------
 // Hook
@@ -205,7 +199,7 @@ export function useMedicalDrives({
     try {
       const { data, error: err } = await supabase
         .from('drive_registrations')
-        .select('*, drive:medical_drives(*)')
+        .select(`${RESIDENT_DRIVE_REGISTRATION_COLUMNS}, drive:medical_drives(*)`)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
@@ -311,7 +305,7 @@ export function useMedicalDrives({
 
       // Refresh both drives (stock_remaining changed) and registrations list
       await Promise.all([fetchDrives(), fetchMyRegistrations()]);
-      return data as unknown as RegisterForDriveResult;
+      return residentDriveRegistrationResultSchema.parse(data);
     },
     [fetchDrives, fetchMyRegistrations],
   );

@@ -1,0 +1,32 @@
+ M apps/admin-web/src/app/(admin)/health/applicants/page.tsx
+ M apps/resident-android-mobile/src/app/(app)/health/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/health/register.tsx
+ M apps/resident-android-mobile/src/hooks/use-medical-drives.ts
+ M apps/resident-ios-mobile/src/data/resident-api.ts
+ M apps/resident-web/src/components/health/applicant-form.tsx
+ M apps/resident-web/src/components/health/registration-drawer.tsx
+ M apps/resident-web/src/hooks/use-medical-drives.ts
+ M packages/shared/src/constants/priority-weights.ts
+ M packages/shared/src/schemas/drive-registration.ts
+ M packages/shared/src/types/database.ts
+ M supabase/functions/export-my-data/index.ts
+ M supabase/tests/rls_isolation.test.sql
+?? packages/shared/src/schemas/drive-registration-result.test.ts
+?? plans/evidence/phase7/baseline/admin-web-lint.log
+?? plans/evidence/phase7/baseline/admin-web-types.log
+?? plans/evidence/phase7/baseline/android-lint.log
+?? plans/evidence/phase7/baseline/android-types.log
+?? plans/evidence/phase7/baseline/existing-migration.diff
+?? plans/evidence/phase7/baseline/preservation-after.json
+?? plans/evidence/phase7/baseline/preservation.json
+?? plans/evidence/phase7/baseline/resident-web-lint.log
+?? plans/evidence/phase7/baseline/resident-web-types.log
+?? plans/evidence/phase7/baseline/results.json
+?? plans/evidence/phase7/baseline/shared-tests.log
+?? plans/evidence/phase7/baseline/shared-types.log
+?? plans/evidence/phase7/baseline/working-tree.txt
+?? plans/evidence/phase7/database/score-exposure-baseline.log
+?? scripts/phase7-database.cjs
+?? scripts/phase7-edit.cjs
+?? scripts/phase7-prepare.cjs
+?? supabase/migrations/0105_phase7_administrator_only_scores.sql

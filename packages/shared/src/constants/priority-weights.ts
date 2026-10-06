@@ -1,13 +1,13 @@
 import type { PriorityWeightRule } from '../types/domain';
 
 /**
- * Mirrors the weights hardcoded in the `register_for_drive()` / `admin_register_for_drive()`
- * Postgres RPCs (supabase/migrations/0035_medical_drives.sql, 0072_admin_register_for_drive.sql)
- * — the RPCs are the actual source of truth for scoring, since there is no admin-configurable
+ * Mirrors the weights in `barangayan_private.record_drive_priority_score()`
+ * (supabase/migrations/0105_phase7_administrator_only_scores.sql)
+ * — the database is the source of truth for scoring, since there is no admin-configurable
  * weights table yet (see the audit report's ticket #16: "reconcile with priority-weights.ts").
  * There is currently no config UI that reads or writes these values; this constant exists so
  * client code that wants to *display* the scoring rubric doesn't have to duplicate the numbers.
- * If the RPCs' weights ever change, update this file in the same commit.
+ * If the database weights change, update this file in the same commit.
  */
 export const DEFAULT_VACCINATION_PRIORITY_WEIGHTS: PriorityWeightRule[] = [
   { key: 'pwd', label: 'PWD', points: 30 },

@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "dedicatedPorts": [
+    {
+      "port": 3117,
+      "closed": true
+    },
+    {
+      "port": 3118,
+      "closed": true
+    },
+    {
+      "port": 8087,
+      "closed": true
+    },
+    {
+      "port": 55431,
+      "closed": true
+    },
+    {
+      "port": 5578,
+      "closed": true
+    },
+    {
+      "port": 5579,
+      "closed": true
+    }
+  ],
+  "syntheticDockerFixturesRemoved": true,
+  "originalDockerRecordsAndScoresPreserved": true,
+  "taskEmulatorAndFilesRemoved": true,
+  "existingEmulatorRetained": true,
+  "rehearsalDatabasesRemoved": true,
+  "taskPostgresProcessStopped": true,
+  "previewProcessesStopped": true,
+  "testCredentialFileRemoved": true,
+  "generatedTsconfigIncludesReverted": true,
+  "existingDockerResources": "Retained; no unrelated container/image/volume/data cleanup was performed"
+}

@@ -46,7 +46,7 @@ export default async function MedicalApplicantsPage({
 
   const { data: registrations, error: regError } = await supabase
     .from('drive_registrations')
-    .select(`*, medical_drives ( id, title, type, drive_date, location )`)
+    .select(`*, score:drive_registration_scores!inner ( priority_score ), medical_drives ( id, title, type, drive_date, location )`)
     .order('created_at', { ascending: false });
 
   const userIds = [...new Set((registrations ?? []).map((r) => r.user_id))];
@@ -55,10 +55,11 @@ export default async function MedicalApplicantsPage({
     : { data: [] as { id: string; full_name: string }[] };
 
   const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
-  const allRows = (registrations ?? []).map((r) => ({
-    ...r,
-    profiles: profileMap.get(r.user_id) ?? null,
-  })) as unknown as ApplicantRow[];
+  const allRows = (registrations ?? []).map(({ score, ...registration }) => ({
+    ...registration,
+    priority_score: score.priority_score,
+    profiles: profileMap.get(registration.user_id) ?? null,
+  })) as ApplicantRow[];
 
   const counts = {
     total: allRows.length,

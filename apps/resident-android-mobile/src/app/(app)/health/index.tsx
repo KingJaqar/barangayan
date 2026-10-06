@@ -980,7 +980,7 @@ function RegistrationModal({
     isPwd: boolean;
     comorbidities: string[];
     priorDoseDate?: string | null;
-  }) => Promise<{ applicant_number: string; priority_score: number }>;
+  }) => Promise<{ applicant_number: string }>;
 }) {
   const theme = useTheme();
   // Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
@@ -991,7 +991,7 @@ function RegistrationModal({
   const [age, setAge] = useState('');
   const [isPwd, setIsPwd] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<{ applicant_number: string; priority_score: number } | null>(null);
+  const [result, setResult] = useState<{ applicant_number: string } | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
   // Slide in / out animation
@@ -1101,7 +1101,7 @@ function RegistrationModal({
                 </ThemedText>
               </View>
               <ThemedText type="small" themeColor="textSecondary" style={{ textAlign: 'center' }}>
-                Priority score: {result.priority_score} pts · Please arrive on time.
+                Please arrive on time.
               </ThemedText>
               <Pressable
                 onPress={onClose}
@@ -1393,7 +1393,7 @@ const STATUS_CYCLE: {
  * Layout (top → bottom inside the sheet):
  *   • Drag handle
  *   • Drive title + type badge header
- *   • ── Registration Info ── (applicant #, priority score, registered-on date)
+ *   • ── Registration Info ── (applicant #, registered-on date)
  *   • ── Drive Details ──     (date, time, location, eligibility, stock)
  *   • ── Status Timeline ──   (vertical stepper showing the full cycle)
  *   • Close button
@@ -1526,15 +1526,6 @@ function RegistrationDetailSheet({
                     {registration.applicant_number}
                   </ThemedText>
                 </View>
-                {/* Priority score badge */}
-                {registration.priority_score !== undefined && registration.priority_score !== null && (
-                  <View style={[rdStyles.scoreBadge, { backgroundColor: PRIMARY_GREEN + '18', borderColor: PRIMARY_GREEN + '40' }]}>
-                    <Ionicons name="star" size={12} color={PRIMARY_GREEN} />
-                    <ThemedText style={[rdStyles.scoreText, { color: PRIMARY_GREEN }]}>
-                      {registration.priority_score} pts
-                    </ThemedText>
-                  </View>
-                )}
               </View>
 
               {/* Divider */}
@@ -1879,20 +1870,6 @@ const rdStyles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5,
     lineHeight: 28,
-  },
-  scoreBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  scoreText: {
-    fontSize: 13,
-    fontWeight: '700',
-    lineHeight: 17,
   },
   // ── Stock progress bar ───────────────────────────────────────────────────
   stockBarTrack: {

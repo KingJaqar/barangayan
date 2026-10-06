@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "assertions": [],
+  "consoleErrors": [],
+  "error": "page.waitForURL: Timeout 45000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/home\" until \"load\"\n  navigated to \"http://127.0.0.1:3117/onboarding\"\n============================================================"
+}

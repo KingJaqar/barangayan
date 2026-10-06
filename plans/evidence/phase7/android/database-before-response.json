@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "assertions": [],
+  "error": "ifError got unwanted exception: Cannot coerce the result to a single JSON object"
+}

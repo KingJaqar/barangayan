@@ -1,0 +1,76 @@
+BEGIN
+INSERT 0 2
+INSERT 0 7
+INSERT 0 6
+UPDATE 1
+INSERT 0 3
+INSERT 0 1
+ok 1 - Obsolete score column removed
+ok 2 - Protected scores excluded from every Realtime publication
+ok 3 - Resident registration updates remain published
+ok 4 - Anonymous self registration denied
+ok 5 - Anonymous staff registration denied
+ok 6 - Internal score operation inaccessible
+ok 7 - Clients cannot write scores
+SET
+b7070000-0000-0000-0000-000000000001
+SELECT 1
+ok 8 - Resident RPC omits score key
+ok 9 - Resident RPC has exactly applicant, registration, status fields
+ok 10 - Registration status preserved
+ok 11 - Applicant number preserved
+ok 12 - Resident cannot read protected score rows
+ok 13 - Resident cannot read scores in staff audit metadata
+ok 14 - Resident embedded join cannot recover score
+ok 15 - Resident wildcard REST/export rows contain no score
+ok 16 - Explicit obsolete column query fails
+ok 17 - Resident cannot call staff score-returning RPC
+ok 18 - Duplicate retry does not create registration or score
+ok 19 - Cross-tenant registration rejected
+ok 20 - Cancellation cannot tamper with scoring inputs
+ok 21 - Cancellation cannot rewrite applicant history
+ok 22 - Resident cancellation remains supported
+RESET
+ok 23 - PWD senior capped comorbidities and prior dose preserve formula
+ok 24 - Duplicate and failed foreign operation preserve capacity
+ok 25 - Cross-tenant failure rolls back all writes
+SET
+b7070000-0000-0000-0000-000000000002
+ok 26 - Foreign tenant resident can register for their own drive
+ok 27 - Foreign resident cannot read own or other scores
+RESET
+SET
+b7070000-0000-0000-0000-000000000003
+ok 28 - Same-tenant administrator sees only local scores
+ok 29 - Administrator retains exact score
+ok 30 - Active administrator retains historical audit score
+ok 31 - Administrator cannot retrieve foreign scores
+ok 32 - Admin RPC retains score for new resident
+ok 33 - Protected administrator rankings preserve ordering
+ok 34 - Admin edits and status management remain supported
+ok 35 - Admin input edits preserve original score snapshot
+ok 36 - Admin cannot overwrite preserved score
+ok 37 - Staff cannot register foreign resident
+RESET
+SET
+b7070000-0000-0000-0000-000000000004
+ok 38 - Foreign administrator retains only foreign tenant score
+ok 39 - Foreign administrator cannot read local historical audit scores
+RESET
+SET
+b7070000-0000-0000-0000-000000000006
+ok 40 - Deleted administrator cannot read protected scores
+ok 41 - Deleted administrator cannot read historical audit scores
+ok 42 - Deleted administrator cannot return score via RPC
+RESET
+SET
+b7070000-0000-0000-0000-000000000007
+ok 43 - Missing profile cannot retrieve score
+ok 44 - Missing role cannot bypass admin RPC through SQL null comparisons
+RESET
+SET
+ok 45 - Anonymous score storage denied
+RESET
+ok 46 - Every successful registration has exactly one protected score
+1..46
+ROLLBACK

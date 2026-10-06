@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scores": [],
+  "tables": [
+    {
+      "table": "profiles",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "barangays",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "medical_drives",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "drive_registrations",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "service_requests",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "payments",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "id_submissions",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "document_types",
+      "rows": 0,
+      "unchanged": true
+    }
+  ]
+}

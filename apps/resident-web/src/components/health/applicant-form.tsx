@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, ChevronDown, ShieldCheck, Star } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -82,7 +82,7 @@ export function ApplicantForm({
   const [consented, setConsented] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ applicant_number: string; priority_score: number } | null>(null);
+  const [result, setResult] = useState<{ applicant_number: string } | null>(null);
 
   const selectedName = selection.type === 'self' ? residentName : selection.member.name;
   const effectiveAge = profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
@@ -117,7 +117,7 @@ export function ApplicantForm({
         comorbidities: Array.from(comorbidities),
         priorDoseDate: hasPriorDose && priorDoseDate ? priorDoseDate : null,
       });
-      setResult({ applicant_number: res.applicant_number, priority_score: res.priority_score });
+      setResult({ applicant_number: res.applicant_number });
     } catch (e: unknown) {
       setSubmitError(e instanceof Error ? e.message : 'Registration failed. Please try again.');
     } finally {
@@ -140,9 +140,6 @@ export function ApplicantForm({
           <p className="text-xs font-semibold text-primary">Your Applicant Number</p>
           <p className="text-2xl font-extrabold tracking-wide text-primary">{result.applicant_number}</p>
         </div>
-        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Star size={15} className="text-primary" /> Priority score: <span className="font-bold text-foreground">{result.priority_score} pts</span>
-        </p>
         <p className="text-xs text-muted-foreground">
           Please arrive on time at {drive.location} on {fmtShortDate(drive.drive_date)} between {fmt12h(drive.time_start)}–{fmt12h(drive.time_end)}.
         </p>

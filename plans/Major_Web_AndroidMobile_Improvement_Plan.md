@@ -293,7 +293,9 @@ Update shared interfaces and affected Android, resident web, and web admin consu
 
 ### I. Android interaction standards
 
-Apply:
+**Cancelled scope — reference only.** The user permanently cancelled Phase 8 on 2026-10-06. Do not implement this section's Android usability audit or interaction changes, either as Phase 8 or under another phase. Preserve the restored resident Android UI. The original specifications below are retained only as historical context.
+
+Original specifications:
 
 - Minimum interactive target: **48 × 48 dp**.
 - Primary action minimum height: **56 dp**.
@@ -392,7 +394,7 @@ Each phase requires implementation, focused tests, regression checks, and eviden
 
 The Services follow-up is also **complete locally**: Add Document Type remains available, the Services SLA-report shortcut is removed, and create/edit/view share all seventeen requested fields. Migration 0100 removes the four-service-only creation restriction; 0101 supports complete charter forms and general services without duplicate storage or historical rewrites. See the [charter-form checklist](Admin_Document_Type_Charter_Form_Update.md) for create/reload/edit/reload and resident compatibility proof. Underlying dashboard/report functionality remains available.
 
-This completion record does not mark Phases 6–9 complete or waive their acceptance and release gates.
+This completion record does not mark later phases complete or waive their applicable acceptance and release gates. Phase 8 is cancelled as recorded below.
 
 ### Phase 6 — Registration, profile, maps, and Google
 
@@ -407,7 +409,7 @@ This completion record does not mark Phases 6–9 complete or waive their accept
 
 **Exit gate:** Password and Google flows work on web and Android development/release builds, including failures and restart. New Google residents immediately have one Auth-linked minimal profile with available names/email and server-assigned tenant/role; repeated sign-ins, retries and concurrent callbacks do not duplicate profiles or overwrite saved data. Incomplete accounts can browse general information and skip initial completion, while direct links and API attempts to request documents, register for health services, or submit reports require completed resident fields. Expected profile-repair outages preserve public web browsing with an accurate retry notice; retry restores the profile view without a server-rendering crash or observed React script/hydration errors, and saved theme preferences still apply. Completing the profile resumes the intended service and remains separate from administrator ID verification. Existing complete users proceed directly.
 
-**Current evidence: partially complete.** Deferred completion and immediate minimal Google profiles are implemented on web and Android. The user separately authorized applying migration **0104** to the hosted Barangayan project. Its RPC, enabled identity trigger and execution permissions are verified; all **18 existing profiles** retained identical contents. An anonymous Data API call returned **401 / 42501**, confirming RPC recognition and denied anonymous execution. The connector recorded version `20261004082819` for this migration; alignment with repository version `0104` remains separately unapproved and must not be bypassed by replaying the SQL.
+**Current evidence: partially complete.** Deferred completion and immediate minimal Google profiles are implemented on web and Android. The user separately authorized applying migration **0104** to the hosted Barangayan project. Its RPC, enabled identity trigger and execution permissions are verified; all **18 existing profiles** retained identical contents during installation. An anonymous Data API call returned **401 / 42501**, confirming RPC recognition and denied anonymous execution. The connector originally recorded version `20261004082819`; on 2026-10-06 the user authorized correcting only its history version to `0104`. Stored SQL and six installed function bodies matched; the 19 current profiles and unrelated history remained unchanged. Migration listing and the push dry run passed. See [history repair evidence](evidence/migration-history-repair-2026-10-06.json). No application migration SQL was replayed.
 
 Latest recovery checks passed: **197 shared tests**, shared/resident-web/Android types, resident-web lint with two warnings in unchanged location files, resident-web production build, **11 SSR/browser recovery assertions** with no observed console/page errors, and **9 Android callback unit checks**. These recovery browser checks used a synthetic loopback Auth/API transport and do not prove Google consent or database authorization. Earlier minimal-profile checks remain supporting evidence: **396 SQL regression assertions**, the expanded **42-case** focused suite, **34 actual local Auth/REST/RPC checks**, **11 local browser/database checks**, Android export, and empty/representative-history migration replay through 0104. These are separate suites and are not combined into a test total.
 
@@ -415,27 +417,37 @@ The user reports Google signup works; real provider consent/linking and installe
 
 ### Phase 7 — Administrator-only scores
 
-**Actions**
+**Completed actions — verified locally**
 
-- Backfill and reconcile protected scores.
-- Update administrator consumers and resident response types.
-- Remove all resident score exposure.
-- Update affected Android and web legacy consumers.
-- Remove obsolete fields after compatibility checks.
+- [x] Backfill and reconcile protected scores.
+- [x] Update administrator consumers and resident response types.
+- [x] Remove all resident score exposure.
+- [x] Update affected Android and web legacy consumers.
+- [x] Remove obsolete fields after compatibility checks.
 
 **Exit gate:** Resident REST/RPC/realtime/export access cannot retrieve scores; authorized administrators retain correct values and rankings.
 
-### Phase 8 — Android usability audit
+**Current evidence: complete locally.** Protected score backfill and reconciliation, active same-tenant administrator access, score-free resident contracts/UI/exports, Android/web/iOS compatibility, and obsolete-column removal are implemented in sequential migrations **0105–0106** and compatible consumers. The release rehearsal verifies the intervening NULL-only compatibility column before final removal; original scores and all compared historical fields/timestamps are preserved.
 
-**Actions**
+Recorded checks passed: **202 shared tests**, **8 existing iOS tests**, **445 SQL assertions across 12 suites**, **60 real local Auth/REST/RPC/realtime/concurrency assertions**, **6 separate CSV compatibility assertions**, **15 final browser assertions** with no observed console/page errors, and native Android list/detail/form/confirmation/saved-list presentation checks with an actual protected score of 20. Affected typechecks/lint, both web production builds, Android Hermes export and personal-data export Deno check pass. Resident web retains two unchanged lint warnings; database advisors report no errors or Phase 7 findings and 61 existing warnings.
 
-- Improve existing primitives using the interaction tokens.
-- Audit every resident screen.
-- Correct reachability, spacing, keyboard, safe-area, large-text, and TalkBack issues.
+These Phase 7 checks use isolated local resources and SDK 57 Expo Go; they do not confirm deployment, signed native release qualification, deployed Edge Runtime serving, or the still-open Phase 6 Google/provider gates. The separately authorized hosted migration-history repair is **complete as of 2026-10-06**, with no application migration SQL replayed. The successful push dry run identifies only 0105/0106 as pending; it is not a production release check. Apply 0105, ship and verify compatible consumers/export, then apply 0106 only through the separately authorized release process. See the [Phase 7 requirement checklist, evidence and release sequence](Phase_7_Administrator_Only_Scores.md).
 
-**Exit gate:** Recorded checks show no overlapping targets, clipped labels, or inaccessible primary actions.
+### Phase 8 — Android usability audit — CANCELLED
+
+**Status: permanently cancelled by the user on 2026-10-06. Never implement Phase 8.** Do not start or resume it, and do not reintroduce its work under another phase or refactor. The earlier implementation was reverted. Preserve the restored resident Android UI. Cancellation is not a completed or passed exit gate; this phase has no remaining implementation or verification obligations.
+
+**Cancelled actions — historical reference only**
+
+- ~~Improve existing primitives using the interaction tokens.~~
+- ~~Audit every resident screen.~~
+- ~~Correct reachability, spacing, keyboard, safe-area, large-text, and TalkBack issues.~~
+
+**Former exit gate — cancelled, not applicable:** Recorded checks show no overlapping targets, clipped labels, or inaccessible primary actions.
 
 ### Phase 9 — Integration, cleanup, and release
+
+Phase 8 is permanently excluded from this phase's scope. Integration, cleanup, and release work must not reinstate the cancelled Android usability changes.
 
 **Actions**
 
@@ -515,9 +527,19 @@ Provide instructions to:
 
 The chosen browser OAuth approach uses the Web OAuth client on Android. Native Android credentials and signing fingerprints are necessary only if native Google sign-in is later adopted.
 
-### Phase 6 release status — 2026-10-04
+### Hosted migration and release status — 2026-10-06
 
-The hosted Barangayan project (`pwjbucnyqexiepoinoke`) has the authorized 0104 schema installed. Its migration-history entry is `20261004082819 / 0104_google_minimal_resident_profiles`, while the repository filename remains `0104_google_minimal_resident_profiles.sql`. Automatic approval review rejected an attempt to align that new history entry because it would modify production bookkeeping without separate authorization. The action did not run; reconciliation approval remains pending. Preserve earlier history and repository numbering. Confirm actual installed objects and history before future migration operations; do not replay 0104 merely because the versions differ.
+The hosted Barangayan project (`pwjbucnyqexiepoinoke`) has the authorized 0104 schema installed. The connector's original timestamp history entry was reconciled to version `0104` on 2026-10-06 after explicit user authorization. Only the version field changed; stored SQL/metadata, earlier history, current profiles and installed functions/trigger were preserved. The repository filename remains `0104_google_minimal_resident_profiles.sql`. Migration listing now aligns through 0104; the push dry run with vault updates skipped passed and lists only 0105/0106 as pending. See [repair evidence](evidence/migration-history-repair-2026-10-06.json). No application migrations or deployments were performed. Preserve earlier history and repository numbering, and follow the staged Phase 7 release order.
+
+| Release condition | Recorded status |
+|---|---|
+| Hosted 0104 schema and matching migration history | **Verified; history repair complete.** Stored SQL and six function bodies match local 0104; all 19 current profiles and unrelated history are unchanged. |
+| Pending hosted migrations | **0105 and 0106 only**, according to the successful CLI list and dry run. Neither was applied by the repair. |
+| Phase 7 local implementation and exit gate | **Complete locally**, with the recorded evidence above; hosted score isolation is not yet verified. |
+| Phase 7 application/export release | **Pending.** Apply 0105, ship and verify compatible administrator/resident consumers and personal-data export, then apply 0106. |
+| Phase 6 provider/native release gate | **Open.** Real Google/linking and development/signed-release checks still require evidence. |
+
+An unrestricted `supabase db push` currently selects both 0105 and 0106. The authorized release must preserve the application/export checkpoint between them; the successful dry run does not authorize applying both together or replaying 0104.
 
 The retry notice and typed recovery handling have passed local web checks and require the normal web release before they appear on Vercel. No additional Google credential or redirect change is required by the minimal-profile fix. Use the [Phase 6 setup and manual exit checklist](Phase_6_Registration_Profile_Maps_Google.md) to verify real Google signup/repeat sign-in/linking, profile persistence, protected submissions, failures/restart, and installed Android development/signed-release callbacks. These checks remain open. This documentation update does not authorize deployment, further production changes or migration-history edits.
 
@@ -525,7 +547,7 @@ The retry notice and typed recovery handling have passed local web checks and re
 
 During an authorized release:
 
-1. Apply pending migrations in their existing order: 0095–0098 prerequisites, `0099_phase5_sla_engine_reporting.sql`, `0100_restore_admin_document_type_creation.sql`, then `0101_unified_document_type_charter_forms.sql`. Preserve pushed migration numbers and historical columns; ship compatible Android/web consumers together.
+1. For environments missing these changes, apply only missing migrations in their existing order: 0095–0098 prerequisites, `0099_phase5_sla_engine_reporting.sql`, `0100_restore_admin_document_type_creation.sql`, then `0101_unified_document_type_charter_forms.sql`. The hosted Barangayan history already records these versions through 0104; do not replay them. Preserve pushed migration numbers and historical columns; ship compatible Android/web consumers together.
 2. Verify `service-request-sla-minute` is active on a pg_cron host, runs every minute and records successful job executions. The [Phase 5 operational instructions](Phase_5_SLA_Engine_and_Reporting.md#decisions-and-operational-setup) provide the scheduler queries.
 3. If pg_cron is unavailable, configure a trusted database scheduler to call `barangayan_private.evaluate_service_request_slas()` at least once per minute before release. Keep this operation private; repeated evaluations are safe.
 4. Reconcile representative historical fees, timing models, timestamps and other-barangay data. Verify live tenant authorization, Services create/edit persistence and report behavior against the released environment.

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "device": "emulator-5578",
+  "requiredLabels": [
+    "I understand and consent",
+    "Submit Registration"
+  ],
+  "scoreFreeVisibleAndAccessibilityLabels": true
+}

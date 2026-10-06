@@ -63,10 +63,8 @@ const THUMB_SIZE = 52;
 // was virtualized/recycled). The skeleton shimmer already carries the loading-in
 // motion; rows just appear once data resolves.
 //
-// Compact, minimal card — a photo thumbnail is only reserved when one actually exists
-// (the old version always reserved an 80×80 placeholder box even for photo-less
-// reports, the majority of them); when there's no photo the category shows instead as a
-// small icon + label chip inline with the date, reclaiming that space for text.
+// Reserve the same thumbnail space for every report, with a blank frame when no
+// photo is attached. Reports without photos also show the category beside the date.
 export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
   const theme = useTheme();
   const { markIncidentRead, markIncidentUnread } = useUnreadCounts();
@@ -94,8 +92,16 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
       <ThemedView
         type="backgroundElement"
         style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-        {firstPhoto && (
+        {firstPhoto ? (
           <Image source={{ uri: firstPhoto }} style={styles.thumb} resizeMode="cover" />
+        ) : (
+          <View
+            style={[
+              styles.thumb,
+              styles.emptyThumb,
+              { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
+            ]}
+          />
         )}
 
         <View style={styles.content}>
@@ -114,7 +120,7 @@ export function IncidentCard({ incident }: { incident: MyIncidentRow }) {
             </ThemedText>
           )}
 
-          {/* Meta row — category (only when there's no thumbnail to show it on) •
+          {/* Meta row — category (only when there's no attached photo) •
               date • confirmations, all on one compact line */}
           <View style={styles.metaRow}>
             {!firstPhoto && (
@@ -211,6 +217,9 @@ const styles = StyleSheet.create({
     height: THUMB_SIZE,
     borderRadius: 10,
     flexShrink: 0,
+  },
+  emptyThumb: {
+    borderWidth: StyleSheet.hairlineWidth,
   },
   content: {
     flex: 1,

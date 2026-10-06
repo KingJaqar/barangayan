@@ -441,7 +441,6 @@ export type Database = {
           id: string
           is_pwd: boolean
           prior_dose_date: string | null
-          priority_score: number
           status: Database["public"]["Enums"]["drive_registration_status"]
           updated_at: string
           user_id: string
@@ -455,7 +454,6 @@ export type Database = {
           id?: string
           is_pwd?: boolean
           prior_dose_date?: string | null
-          priority_score?: number
           status?: Database["public"]["Enums"]["drive_registration_status"]
           updated_at?: string
           user_id: string
@@ -469,7 +467,6 @@ export type Database = {
           id?: string
           is_pwd?: boolean
           prior_dose_date?: string | null
-          priority_score?: number
           status?: Database["public"]["Enums"]["drive_registration_status"]
           updated_at?: string
           user_id?: string
@@ -483,6 +480,18 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      drive_registration_scores: {
+        Row: { registration_id: string; priority_score: number }
+        Insert: { registration_id: string; priority_score: number }
+        Update: { registration_id?: string; priority_score?: number }
+        Relationships: [{
+          foreignKeyName: "drive_registration_scores_registration_id_fkey"
+          columns: ["registration_id"]
+          isOneToOne: true
+          referencedRelation: "drive_registrations"
+          referencedColumns: ["id"]
+        }]
       }
       emergency_information: {
         Row: {

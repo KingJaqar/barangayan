@@ -1,0 +1,91 @@
+BEGIN
+UPDATE 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ok 1 - Google identity insert immediately creates one profile
+ok 2 - Auth identity supplies first name
+ok 3 - Structured multiword surname is preserved
+ok 4 - Email comes from auth.users, not identity/user claims
+ok 5 - Tenant comes only from enabled configuration
+ok 6 - Metadata cannot assign a staff role
+ok 7 - Bootstrap invents no demographics, location, completion or ID approval
+ok 8 - Configured locality display remains available
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+SELECT 1
+GRANT
+SET
+b6040000-0000-0000-0000-000000000001
+ok 9 - Retry operates on current authenticated identity only
+ok 10 - Repeated call is idempotent
+ok 11 - Retry preserves every existing field and timestamp
+ok 12 - Incomplete profile can browse only own-tenant information
+ok 13 - Incomplete profile can read document guidance
+ok 14 - Incomplete profile can read health guidance
+ok 15 - Minimal profile cannot submit reports
+ok 16 - Minimal profile cannot register for health services
+ok 17 - Health RPC enforces completion too
+ok 18 - Failed registration cannot consume a health slot
+ok 19 - Minimal profile cannot request documents
+ok 20 - Authenticated users cannot invoke the internal identity-taking helper
+ok 21 - Minimal profile retains established client map protection
+ok 22 - Resident can complete the existing minimal profile without a password
+ok 23 - Completion remains separate from administrator ID verification
+ok 24 - Completed resident may submit a report
+ok 25 - Completed resident may register through the health RPC
+RESET
+UPDATE 1
+UPDATE 1
+SET
+b6040000-0000-0000-0000-000000000001
+ok 26 - Provider refresh cannot overwrite a completed resident
+RESET
+INSERT 0 1
+INSERT 0 1
+DELETE 1
+SET
+b6040000-0000-0000-0000-000000000002
+ok 27 - Session restart repairs earlier Google account without a profile
+ok 28 - Full-name fallback matches editable form suggestions
+RESET
+ok 29 - Mononym retains available first name
+ok 30 - Mononym does not invent a surname
+ok 31 - Malformed metadata and email-only identities do not invent a name
+INSERT 0 1
+INSERT 0 1
+ok 32 - Name-less Google identity still gets a profile without invented names
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ok 33 - Linking preserves existing staff role, tenant and name
+INSERT 0 1
+ok 34 - Anonymous Auth identity cannot provision a resident
+INSERT 0 1
+SET
+b6040000-0000-0000-0000-000000000003
+ok 35 - Editable provider metadata cannot impersonate a Google identity
+RESET
+SET
+ok 36 - Anonymous role cannot invoke provisioning
+RESET
+SET
+
+ok 37 - Missing authenticated identity fails closed
+RESET
+UPDATE 1
+SET
+b6040000-0000-0000-0000-000000000002
+ok 38 - Deleted profile cannot be recreated
+RESET
+INSERT 0 1
+INSERT 0 1
+ok 39 - Ambiguous registration tenant fails atomically
+ok 40 - Configuration failure leaves no incorrectly assigned profile
+ok 41 - Failed identity insert rolls back
+UPDATE 3
+ok 42 - Missing registration tenant fails closed
+1..42
+ROLLBACK

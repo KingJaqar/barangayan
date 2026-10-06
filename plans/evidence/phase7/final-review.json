@@ -1,0 +1,8 @@
+{
+  "scriptLintExitCode": 0,
+  "diffCheckExitCode": 0,
+  "exportDenoExitCode": 0,
+  "exportDenoEvidence": "Actual successful deno check --no-config --no-lock --node-modules-dir=none execution; export-deno-check.log",
+  "reviewedAt": "2026-10-04T12:31:37.0428530Z",
+  "review": "Reviewed affected source, all new migrations/tests/helpers, original formula/RPC compatibility, safe projections, publication/RLS boundaries, and final working-tree scope. Removed generated tsconfig changes; no dependency/lockfile changes."
+}

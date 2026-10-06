@@ -76,12 +76,12 @@ insert into public.medical_drives (
   );
 
 insert into public.drive_registrations (
-  id, drive_id, user_id, applicant_number, age, is_pwd, comorbidities, priority_score, status
+  id, drive_id, user_id, applicant_number, age, is_pwd, comorbidities, status
 ) values (
   'f1000000-0000-0000-0000-000000000002',
   'f0000000-0000-0000-0000-000000000002',
   'b0000000-0000-0000-0000-00000000000b',
-  'VAC-RLS-B-0001', 30, false, '{}'::text[], 0, 'pending'
+  'VAC-RLS-B-0001', 30, false, '{}'::text[], 'pending'
 );
 
 -- ============================================================================

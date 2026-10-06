@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "device": "emulator-5578",
+  "requiredLabels": [
+    "Registration Confirmed!",
+    "Your Applicant Number",
+    "#CON-001"
+  ],
+  "scoreFreeVisibleAndAccessibilityLabels": true
+}

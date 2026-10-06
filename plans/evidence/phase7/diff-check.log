@@ -1,0 +1,4 @@
+warning: in the working copy of 'apps/resident-web/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/shared/src/schemas/drive-registration.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/shared/src/types/database.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plans/Major_Web_AndroidMobile_Improvement_Plan.md', LF will be replaced by CRLF the next time Git touches it
