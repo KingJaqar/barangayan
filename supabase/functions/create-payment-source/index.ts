@@ -433,11 +433,14 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // Capture the confirmed row before entering the callback; the mutable query
+  // result cannot retain its non-null narrowing across an async function boundary.
+  const reservationId = reservation.id;
   async function releaseReservation(status: 'failed' | 'cancelled') {
     const { error } = await supabaseAdmin
       .from('payments')
       .update({ status, qrph_creation_key: null })
-      .eq('id', reservation.id)
+      .eq('id', reservationId)
       .eq('status', 'pending');
     if (error) console.error('QR payment reservation cleanup failed', error);
   }

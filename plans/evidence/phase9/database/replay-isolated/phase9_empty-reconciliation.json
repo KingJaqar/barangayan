@@ -1,0 +1,92 @@
+{
+  "baseline": {
+    "payments": [],
+    "profiles": [],
+    "barangays": [],
+    "document_types": [],
+    "medical_drives": [],
+    "service_requests": [],
+    "household_members": [],
+    "drive_registrations": []
+  },
+  "before": {
+    "payments": [],
+    "profiles": [],
+    "barangays": [],
+    "document_types": [],
+    "id_submissions": [],
+    "medical_drives": [],
+    "service_requests": [],
+    "household_members": [],
+    "drive_registrations": []
+  },
+  "after": {
+    "payments": [],
+    "profiles": [],
+    "barangays": [],
+    "document_types": [],
+    "id_submissions": [],
+    "medical_drives": [],
+    "service_requests": [],
+    "household_members": [],
+    "drive_registrations": []
+  },
+  "scores": [],
+  "record": {
+    "database": "phase9_empty",
+    "passed": true,
+    "migrations": 104,
+    "checkpoint": {
+      "constrained": true,
+      "nullMirrors": true
+    },
+    "tables": [
+      {
+        "table": "profiles",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "barangays",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "medical_drives",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "drive_registrations",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "service_requests",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "payments",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "id_submissions",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "document_types",
+        "rows": 0,
+        "originalValuesPreserved": true
+      },
+      {
+        "table": "household_members",
+        "rows": 0,
+        "originalValuesPreserved": true
+      }
+    ],
+    "historicalScores": []
+  }
+}

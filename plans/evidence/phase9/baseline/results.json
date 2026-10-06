@@ -117,6 +117,33 @@
       "exitCode": 0,
       "error": null,
       "log": "admin-web-lint.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-06T05:59:08.874Z",
+      "finishedAt": "2026-10-06T05:59:52.088Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "android-sdk",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/expo/bin/cli",
+        "install",
+        "--check"
+      ],
+      "startedAt": "2026-10-06T05:59:52.224Z",
+      "finishedAt": "2026-10-06T05:59:52.981Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-sdk.log"
     }
   ]
 }

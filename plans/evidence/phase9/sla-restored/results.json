@@ -1,0 +1,19 @@
+{
+  "passed": false,
+  "assertions": [
+    "Create synthetic resident",
+    "Provision synthetic profile",
+    "Real resident session",
+    "Create synthetic admin",
+    "Provision synthetic profile",
+    "Real admin session",
+    "Create foreign tenant",
+    "Create synthetic admin",
+    "Provision synthetic profile",
+    "Real admin session",
+    "Create synthetic resident",
+    "Provision synthetic profile",
+    "Real resident session"
+  ],
+  "error": "ifError got unwanted exception: An invalid response was received from the upstream server"
+}

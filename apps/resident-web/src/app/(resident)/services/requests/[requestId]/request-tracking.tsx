@@ -231,7 +231,7 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
           <span className="flex items-center gap-2 text-sm">
             <PaymentMethodIcon size={16} className="text-muted-foreground" /> {paymentMethodLabel}
           </span>
-          <StatusPill status={isRefunded ? 'refunded' : isPaid ? 'paid' : 'pending'} />
+          <StatusPill status={request.payment_status === 'waived' ? 'waived' : isRefunded ? 'refunded' : isPaid ? 'paid' : 'pending'} />
         </div>
         <div className="flex items-center justify-between px-4 pb-4">
           <span className="text-sm text-muted-foreground">Total Amount Due</span>

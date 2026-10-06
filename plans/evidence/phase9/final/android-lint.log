@@ -1,0 +1,11 @@
+
+C:\Users\User\barangayan\apps\resident-android-mobile\.expo\types\router.d.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+C:\Users\User\barangayan\apps\resident-android-mobile\src\app\(app)\health\register.tsx
+   2:55  warning  'C:\Users\User\barangayan\node_modules\@barangayan\shared\src\index.ts' imported multiple times  import/no-duplicates
+  33:63  warning  'C:\Users\User\barangayan\node_modules\@barangayan\shared\src\index.ts' imported multiple times  import/no-duplicates
+
+✖ 3 problems (0 errors, 3 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

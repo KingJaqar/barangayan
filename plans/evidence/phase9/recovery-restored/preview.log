@@ -1,0 +1,16 @@
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3108
+- Network:       http://localhost:3108
+- Environments: .env.local
+✓ Ready in 1275ms
+✓ Running next.config.ts took 78ms
+
+○ Compiling /login ...
+ GET /login 200 in 1652ms (next.js: 1138ms, proxy.ts: 15ms, application-code: 499ms)
+ GET /login 200 in 271ms (next.js: 34ms, proxy.ts: 124ms, application-code: 113ms)
+Google resident profile setup unavailable { code: 'PGRST202' }
+Google resident profile setup unavailable { code: 'PGRST202' }
+ GET /home 200 in 1677ms (next.js: 1200ms, proxy.ts: 46ms, application-code: 431ms)
+ GET /home 200 in 244ms (next.js: 11ms, proxy.ts: 10ms, application-code: 223ms)
+ GET /reports/new 307 in 2.1s (next.js: 1758ms, proxy.ts: 10ms, application-code: 295ms)
+ GET /complete-profile?next=%2Freports%2Fnew 200 in 925ms (next.js: 717ms, proxy.ts: 14ms, application-code: 193ms)

@@ -1,0 +1,94 @@
+{
+  "verifiedAt": "2026-10-06T09:02:51.725Z",
+  "verdict": "partially complete",
+  "exitGatePassed": false,
+  "localAssignedWorkVerified": true,
+  "criteria": [
+    {
+      "condition": "Critical flows pass",
+      "status": "partially verified",
+      "evidence": [
+        "browser-payment-status/results.json",
+        "scoreBrowser/results.json",
+        "services-stable/results.json",
+        "sla-stable/results.json",
+        "scores-stable/results.json",
+        "provider-corrected/results.json",
+        "callback/results.json",
+        "recovery-restored/browser.json"
+      ],
+      "unverified": [
+        "Real Google provider/linking/restart",
+        "Installed Android development and signed-release flows",
+        "Deployed Vercel and Edge consumers"
+      ]
+    },
+    {
+      "condition": "Data reconciliation succeeds",
+      "status": "passed for representative local data; hosted historical reconciliation unverified",
+      "evidence": [
+        "database/replay-isolated/results.json",
+        "database/replay-isolated/phase9_existing-reconciliation.json",
+        "fixtures/cleanup.json"
+      ]
+    },
+    {
+      "condition": "No known release-blocking defects remain",
+      "status": "not satisfied",
+      "resolved": [
+        "Configured strict payment reservation narrowing",
+        "Waived payment tracking label"
+      ],
+      "remaining": [
+        "Real Google signup/repeat/linking and restart",
+        "Installed Android development/signed-release qualification and full native service flows",
+        "Authorized deployed website and Edge consumer verification",
+        "Dedicated staging setup and exact redirect/environment validation",
+        "Hosted historical reconciliation/release sign-off"
+      ]
+    }
+  ],
+  "counts": {
+    "sqlSuites": 12,
+    "sqlAssertions": 445,
+    "migrationFilesPerRehearsal": 104,
+    "apiAssertions": [
+      {
+        "suite": "services-stable",
+        "count": 299
+      },
+      {
+        "suite": "sla-stable",
+        "count": 83
+      },
+      {
+        "suite": "scores-stable",
+        "count": 60
+      },
+      {
+        "suite": "provider-corrected",
+        "count": 19
+      }
+    ],
+    "actualBrowserAssertions": [
+      {
+        "suite": "browser-payment-status",
+        "count": 32
+      },
+      {
+        "suite": "scoreBrowser",
+        "count": 19
+      }
+    ],
+    "recoveryDoubledAssertions": 11,
+    "callbackDoubledChecks": 9,
+    "edgeFunctions": 8,
+    "removedTaskUsers": 40
+  },
+  "documentation": [
+    "../../Phase_9_Integration_Cleanup_Release.md",
+    "../../Phase_9_Release_Recovery_Runbook.md"
+  ],
+  "productionChanges": false,
+  "phase8Cancelled": true
+}

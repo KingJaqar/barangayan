@@ -1,0 +1,18 @@
+{
+  "head": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
+  "checks": [
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/next/dist/bin/next",
+        "build"
+      ],
+      "startedAt": "2026-10-06T08:51:28.875Z",
+      "finishedAt": "2026-10-06T08:51:31.163Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "resident-web-build.log"
+    }
+  ]
+}

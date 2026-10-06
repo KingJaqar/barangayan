@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "assertions": [
+    "business: resident details retained",
+    "business: pending assessment blocks payment"
+  ],
+  "consoleErrors": [],
+  "journeys": [],
+  "error": "locator.selectOption: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Eligibility', { exact: true })\u001b[22m\n"
+}

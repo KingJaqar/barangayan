@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "assertions": [
+    "Read activated pilot catalog",
+    "Exactly four published services",
+    "Issuance of Barangay Clearance for Business Establishments has eleven categories and fifteen-minute target",
+    "Certificate of Indigency has eleven categories and fifteen-minute target",
+    "First Time Job Seeker has eleven categories and fifteen-minute target",
+    "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) has eleven categories and fifteen-minute target",
+    "CTC personnel explicitly missing",
+    "Create synthetic resident",
+    "Provision synthetic profile",
+    "Real resident session",
+    "Create synthetic admin",
+    "Provision synthetic profile",
+    "Real admin session",
+    "Isolated foreign tenant",
+    "Create synthetic admin",
+    "Provision synthetic profile",
+    "Real admin session"
+  ],
+  "error": "ifError got unwanted exception: An invalid response was received from the upstream server"
+}

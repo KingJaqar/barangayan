@@ -1,4 +1,3 @@
-import { ServiceSlaReport } from '@/components/admin/service-sla-report';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import {
@@ -152,12 +151,6 @@ export default function DashboardPage() {
           </Suspense>
         </PanelCard>
       </div>
-
-      <div className="mt-6">
-        <Suspense fallback={null}>
-          <ProcessingTimeTrends />
-        </Suspense>
-      </div>
     </div>
   );
 }
@@ -242,8 +235,6 @@ async function RecentTransactions() {
     />
   );
 }
-
-function ProcessingTimeTrends() { return <ServiceSlaReport />; }
 
 type AttentionItem = {
   id: string;

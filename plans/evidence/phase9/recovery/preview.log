@@ -1,0 +1,20 @@
+▲ Next.js 16.3.0 (Turbopack)
+- Local:         http://localhost:3108
+- Network:       http://localhost:3108
+- Environments: .env.local
+✓ Ready in 1112ms
+✓ Running next.config.ts took 74ms
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '.next-auth-errors/types/**/*.ts'
+  	- include was updated to add '.next-auth-errors/dev/types/**/*.ts'
+
+
+○ Compiling /login ...
+ GET /login 200 in 2.2s (next.js: 1330ms, proxy.ts: 13ms, application-code: 879ms)
+ GET /login 200 in 239ms (next.js: 19ms, proxy.ts: 39ms, application-code: 182ms)
+ GET /home 200 in 3.0s (next.js: 1768ms, proxy.ts: 66ms, application-code: 1187ms)
+Google resident profile setup unavailable { code: 'PGRST202' }
+Google resident profile setup unavailable { code: 'PGRST202' }

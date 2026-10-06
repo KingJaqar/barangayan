@@ -295,10 +295,9 @@ export default function RequestTrackingScreen() {
         : 'help-circle-outline';
   const isPaid = request.payment_status === 'paid';
   const isRefunded = request.payment_status === 'refunded';
-  const paymentStatusLabel = isRefunded ? 'Refunded' : isPaid ? 'Paid' : 'Pending';
+  const paymentStatusLabel = request.payment_status === 'waived' ? 'Waived' : isRefunded ? 'Refunded' : isPaid ? 'Paid' : 'Pending';
   const paymentStatusColor = isRefunded ? theme.accentRed : isPaid ? theme.primary : theme.textSecondary;
-  // Payment no longer needs admin review first (see create-payment-source's comment) —
-  // only block once the request is in a terminal state.
+  // Payment also requires a confirmed positive assessment in the guards below.
   const canPayNow = request.status !== 'cancelled' && request.status !== 'completed';
   const showQrPayNow =
     request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && totalDue !== null && totalDue >= 100 && PAYMENT_SETTLEMENT_READY;

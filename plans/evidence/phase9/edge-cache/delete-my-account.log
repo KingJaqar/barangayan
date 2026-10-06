@@ -1,0 +1,6 @@
+Check supabase/functions/delete-my-account/index.ts
+TS2307 [ERROR]: Import "@supabase/supabase-js" not a dependency
+  hint: If you want to use a JSR or npm package, try running `deno add jsr:@supabase/supabase-js` or `deno add npm:@supabase/supabase-js`
+    at file:///C:/Users/User/barangayan/supabase/functions/delete-my-account/index.ts:14:30
+
+error: Type checking failed.

@@ -1,0 +1,141 @@
+{
+  "head": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
+  "checks": [
+    {
+      "id": "cancel-payment",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/cancel-payment/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:22.247Z",
+      "finishedAt": "2026-10-06T08:39:24.481Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "cancel-payment.log"
+    },
+    {
+      "id": "check-payment-status",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/check-payment-status/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:24.642Z",
+      "finishedAt": "2026-10-06T08:39:25.164Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "check-payment-status.log"
+    },
+    {
+      "id": "create-payment-source",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/create-payment-source/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:25.292Z",
+      "finishedAt": "2026-10-06T08:39:25.844Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "create-payment-source.log"
+    },
+    {
+      "id": "delete-my-account",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/delete-my-account/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:25.981Z",
+      "finishedAt": "2026-10-06T08:39:26.710Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "delete-my-account.log"
+    },
+    {
+      "id": "export-my-data",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/export-my-data/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:26.839Z",
+      "finishedAt": "2026-10-06T08:39:27.414Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "export-my-data.log"
+    },
+    {
+      "id": "generate-household-qr",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/generate-household-qr/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:27.533Z",
+      "finishedAt": "2026-10-06T08:39:28.115Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "generate-household-qr.log"
+    },
+    {
+      "id": "paymongo-webhook",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/paymongo-webhook/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:28.269Z",
+      "finishedAt": "2026-10-06T08:39:28.897Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "paymongo-webhook.log"
+    },
+    {
+      "id": "refund-payment",
+      "directory": ".",
+      "args": [
+        "check",
+        "--config",
+        "supabase/functions/deno.json",
+        "--node-modules-dir=none",
+        "--no-lock",
+        "supabase/functions/refund-payment/index.ts"
+      ],
+      "startedAt": "2026-10-06T08:39:29.038Z",
+      "finishedAt": "2026-10-06T08:39:29.695Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "refund-payment.log"
+    }
+  ]
+}

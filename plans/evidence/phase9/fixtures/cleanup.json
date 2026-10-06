@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "removedTaskUsers": 40,
+  "tables": [
+    {
+      "table": "profiles",
+      "rows": 22,
+      "unchanged": true
+    },
+    {
+      "table": "barangays",
+      "rows": 4,
+      "unchanged": true
+    },
+    {
+      "table": "document_types",
+      "rows": 9,
+      "unchanged": true
+    },
+    {
+      "table": "service_requests",
+      "rows": 14,
+      "unchanged": true
+    },
+    {
+      "table": "payments",
+      "rows": 0,
+      "unchanged": true
+    },
+    {
+      "table": "id_submissions",
+      "rows": 3,
+      "unchanged": true
+    },
+    {
+      "table": "medical_drives",
+      "rows": 12,
+      "unchanged": true
+    },
+    {
+      "table": "drive_registrations",
+      "rows": 1,
+      "unchanged": true
+    },
+    {
+      "table": "drive_registration_scores",
+      "rows": 1,
+      "unchanged": true
+    }
+  ],
+  "originalAuthUsersUnchanged": true
+}

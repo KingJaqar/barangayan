@@ -1,0 +1,17 @@
+{
+  "container": "/supabase_db_barangayan",
+  "image": "public.ecr.aws/supabase/postgres:17.6.1.155",
+  "ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "0.0.0.0",
+        "HostPort": "54322"
+      },
+      {
+        "HostIp": "::",
+        "HostPort": "54322"
+      }
+    ]
+  },
+  "synthetic": true
+}

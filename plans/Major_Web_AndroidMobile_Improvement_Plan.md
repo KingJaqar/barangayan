@@ -461,6 +461,8 @@ Phase 8 is permanently excluded from this phase's scope. Integration, cleanup, a
 
 **Exit gate:** Critical flows pass, data reconciliation succeeds, and no known release-blocking defects remain.
 
+**Phase 9 execution — 2026-10-06: partially complete; exit gate remains open.** Fresh local integration, migration rehearsal/reconciliation, focused fixes, review and release/recovery instructions are recorded in [Phase 9 evidence](Phase_9_Integration_Cleanup_Release.md). Local tests and builds pass. Read-only hosted inspection now finds migrations through 0106; the older pending-migration table below is historical and superseded for current database state by this record. Deployed consumer/setup validation, real Google/linking and Android development/signed-release qualification remain unverified. The supplied Vercel URLs do not establish a dedicated staging backend; the user confirms no release APK/IPA exists yet. No deployment, hosted migration or production mutation was performed by Phase 9, and cancelled Phase 8 remains excluded.
+
 ## 4. Verification and quality evidence
 
 ### Required test coverage

@@ -1,0 +1,98 @@
+{
+  "taskUsers": 40,
+  "newTaskTenants": 9,
+  "dependencies": [
+    {
+      "table": "about_us",
+      "rows": 0
+    },
+    {
+      "table": "admin_audit_log",
+      "rows": 0
+    },
+    {
+      "table": "announcements",
+      "rows": 0
+    },
+    {
+      "table": "barangay_localities",
+      "rows": 0
+    },
+    {
+      "table": "barangay_officials",
+      "rows": 9
+    },
+    {
+      "table": "developer_profiles",
+      "rows": 0
+    },
+    {
+      "table": "document_types",
+      "rows": 1
+    },
+    {
+      "table": "emergency_information",
+      "rows": 0
+    },
+    {
+      "table": "emergency_qr_content",
+      "rows": 0
+    },
+    {
+      "table": "evacuation_center_checkins",
+      "rows": 0
+    },
+    {
+      "table": "evacuation_centers",
+      "rows": 0
+    },
+    {
+      "table": "faq_articles",
+      "rows": 0
+    },
+    {
+      "table": "id_submissions",
+      "rows": 0
+    },
+    {
+      "table": "incident_categories",
+      "rows": 0
+    },
+    {
+      "table": "incidents",
+      "rows": 0
+    },
+    {
+      "table": "medical_drives",
+      "rows": 0
+    },
+    {
+      "table": "payments",
+      "rows": 1
+    },
+    {
+      "table": "profiles",
+      "rows": 13
+    },
+    {
+      "table": "request_attachments",
+      "rows": 0
+    },
+    {
+      "table": "service_requests",
+      "rows": 1
+    },
+    {
+      "table": "site_content",
+      "rows": 0
+    },
+    {
+      "table": "waste_collection_schedules",
+      "rows": 0
+    },
+    {
+      "table": "waste_zones",
+      "rows": 0
+    }
+  ]
+}

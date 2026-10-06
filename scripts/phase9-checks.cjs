@@ -7,7 +7,7 @@ const { spawnSync } = require('node:child_process');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 const mode = process.argv[2];
-assert.ok(['baseline', 'builds', 'edge'].includes(mode));
+assert.ok(['baseline', 'builds', 'edge', 'final'].includes(mode));
 const run = process.argv[3] || mode;
 assert.match(run, /^[a-z0-9-]+$/);
 const output = path.join(root, 'plans/evidence/phase9', run);
@@ -36,9 +36,20 @@ const checks = mode === 'baseline' ? [
   ['resident-web-build', 'apps/resident-web', ['node_modules/next/dist/bin/next', 'build']],
   ['admin-web-build', 'apps/admin-web', ['node_modules/next/dist/bin/next', 'build']],
   ['android-export', 'apps/resident-android-mobile', ['node_modules/expo/bin/cli', 'export', '--platform', 'android', '--output-dir', '../../dist/phase9-android']],
-] : fs.readdirSync(path.join(root, 'supabase/functions')).filter(name => fs.existsSync(path.join(root, 'supabase/functions', name, 'index.ts'))).map(name => [name, '.', ['check', '--node-modules-dir=none', '--no-lock', `supabase/functions/${name}/index.ts`]]);
+] : mode === 'final' ? [
+  ['resident-web-types', 'apps/resident-web', ['node_modules/typescript/bin/tsc', '--noEmit']],
+  ['android-types', 'apps/resident-android-mobile', ['node_modules/typescript/bin/tsc', '--noEmit']],
+  ['resident-web-lint', 'apps/resident-web', ['node_modules/eslint/bin/eslint.js', '.']],
+  ['android-lint', 'apps/resident-android-mobile', ['node_modules/eslint/bin/eslint.js', '.']],
+  ['phase9-script-lint', '.', ['node_modules/eslint/bin/eslint.js', ...fs.readdirSync(path.join(root,'scripts')).filter(f=>/^phase9-.*\.cjs$/.test(f)).map(f=>'scripts/'+f)]],
+  ['resident-web-build', 'apps/resident-web', ['node_modules/next/dist/bin/next', 'build']],
+  ['android-export', 'apps/resident-android-mobile', ['node_modules/expo/bin/cli', 'export', '--platform', 'android', '--output-dir', '../../dist/phase9-android']],
+] : fs.readdirSync(path.join(root, 'supabase/functions')).filter(name => fs.existsSync(path.join(root, 'supabase/functions', name, 'index.ts'))).map(name => [name, '.', ['check', '--config', 'supabase/functions/deno.json', '--node-modules-dir=none', '--no-lock', `supabase/functions/${name}/index.ts`]]);
 const results = [];
+const selected=process.argv[4]?.split(',');
+if(selected) assert.ok(selected.every(id=>checks.some(check=>check[0]===id)),'Only declared checks can be selected');
 for (const [id, directory, args] of checks) {
+  if(selected&&!selected.includes(id)) continue;
   const log = id + '.log', descriptor = fs.openSync(path.join(output, log), 'w');
   const startedAt = new Date().toISOString();
   const executable = mode === 'edge' ? path.join(root, 'dist/phase1-tools/deno/deno.exe') : process.execPath;

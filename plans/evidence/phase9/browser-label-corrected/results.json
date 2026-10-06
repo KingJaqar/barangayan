@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "assertions": [
+    "business: resident details retained",
+    "business: pending assessment blocks payment",
+    "business: unpaid release disabled",
+    "business: actual UI records readiness and release",
+    "business: approved evidence snapshotted",
+    "business: exact amount or waiver ledger",
+    "indigency: resident details retained",
+    "indigency: pending assessment blocks payment",
+    "indigency: unpaid release disabled",
+    "indigency: actual UI records readiness and release",
+    "indigency: approved evidence snapshotted",
+    "indigency: exact amount or waiver ledger",
+    "first_time_job_seeker: resident details retained",
+    "first_time_job_seeker: pending assessment blocks payment",
+    "first_time_job_seeker: actual UI records readiness and release",
+    "first_time_job_seeker: approved evidence snapshotted",
+    "first_time_job_seeker: exact amount or waiver ledger",
+    "certified_true_copy: resident details retained",
+    "certified_true_copy: pending assessment blocks payment",
+    "certified_true_copy: unpaid release disabled",
+    "certified_true_copy: actual UI records readiness and release",
+    "certified_true_copy: approved evidence snapshotted",
+    "certified_true_copy: exact amount or waiver ledger",
+    "No observed browser runtime/console errors"
+  ],
+  "consoleErrors": [],
+  "journeys": [
+    {
+      "kind": "business",
+      "id": "60ecc047-d9e1-4cf2-9f57-a3a680552a27",
+      "status": "completed",
+      "payment": "paid",
+      "agencyReady": "2026-10-06T08:39:38.309201+00:00",
+      "released": "2026-10-06T08:39:39.610321+00:00"
+    },
+    {
+      "kind": "indigency",
+      "id": "77fac307-aa42-4f74-a60f-43f743222a4e",
+      "status": "completed",
+      "payment": "paid",
+      "agencyReady": "2026-10-06T08:39:54.351903+00:00",
+      "released": "2026-10-06T08:39:57.828386+00:00"
+    },
+    {
+      "kind": "first_time_job_seeker",
+      "id": "73c2fb4e-8164-4a2a-a5a8-90af4d3dc176",
+      "status": "completed",
+      "payment": "waived",
+      "agencyReady": "2026-10-06T08:40:09.981103+00:00",
+      "released": "2026-10-06T08:40:10.832582+00:00"
+    },
+    {
+      "kind": "certified_true_copy",
+      "id": "5f4d3308-da6b-497a-8b6a-86c1d4132b62",
+      "status": "completed",
+      "payment": "paid",
+      "agencyReady": "2026-10-06T08:40:23.627327+00:00",
+      "released": "2026-10-06T08:40:25.110238+00:00"
+    }
+  ]
+}

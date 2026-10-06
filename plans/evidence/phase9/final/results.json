@@ -1,0 +1,105 @@
+{
+  "head": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
+  "checks": [
+    {
+      "id": "resident-web-types",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T08:48:11.570Z",
+      "finishedAt": "2026-10-06T08:48:24.080Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "resident-web-types.log"
+    },
+    {
+      "id": "android-types",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-06T08:48:24.209Z",
+      "finishedAt": "2026-10-06T08:48:38.486Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-types.log"
+    },
+    {
+      "id": "resident-web-lint",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-06T08:48:38.609Z",
+      "finishedAt": "2026-10-06T08:49:03.031Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "resident-web-lint.log"
+    },
+    {
+      "id": "android-lint",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "startedAt": "2026-10-06T08:49:03.162Z",
+      "finishedAt": "2026-10-06T08:49:36.861Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-lint.log"
+    },
+    {
+      "id": "phase9-script-lint",
+      "directory": ".",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/phase9-browser.cjs",
+        "scripts/phase9-checks.cjs",
+        "scripts/phase9-database.cjs",
+        "scripts/phase9-fixtures.cjs",
+        "scripts/phase9-preview.cjs",
+        "scripts/phase9-regression.cjs"
+      ],
+      "startedAt": "2026-10-06T08:49:36.989Z",
+      "finishedAt": "2026-10-06T08:49:45.025Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "phase9-script-lint.log"
+    },
+    {
+      "id": "resident-web-build",
+      "directory": "apps/resident-web",
+      "args": [
+        "node_modules/next/dist/bin/next",
+        "build"
+      ],
+      "startedAt": "2026-10-06T08:49:45.148Z",
+      "finishedAt": "2026-10-06T08:50:09.695Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "resident-web-build.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "../../dist/phase9-android"
+      ],
+      "startedAt": "2026-10-06T08:50:09.823Z",
+      "finishedAt": "2026-10-06T08:51:30.566Z",
+      "exitCode": 1,
+      "error": null,
+      "log": "android-export.log"
+    }
+  ]
+}

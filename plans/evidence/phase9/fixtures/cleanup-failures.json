@@ -1,0 +1,19 @@
+[
+  {
+    "attempt": 1,
+    "operation": "Task-only local fixture cleanup",
+    "transaction": "rolled back",
+    "observed": "legacy_submission_keys_request_id_fkey prevented service_requests deletion"
+  },
+  {
+    "attempt": 2,
+    "operation": "Task-only local fixture cleanup",
+    "transaction": "rolled back",
+    "observed": "document_types_barangay_id_fkey prevented task tenant deletion"
+  },
+  {
+    "diagnostic": "Full actual foreign-key graph and task tenant dependency counts",
+    "evidence": "dependency-audit.json",
+    "resolution": "Delete inspected task child records and foreign document fixtures in dependency order; final cleanup passes."
+  }
+]

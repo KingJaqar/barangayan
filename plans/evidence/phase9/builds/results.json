@@ -1,5 +1,5 @@
 {
-  "head": "d1f3371426cc7a85dcb4c8dfd27754446b41ffad",
+  "head": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
   "checks": [
     {
       "id": "resident-web-build",
@@ -26,6 +26,23 @@
       "exitCode": 0,
       "error": null,
       "log": "admin-web-build.log"
+    },
+    {
+      "id": "android-export",
+      "directory": "apps/resident-android-mobile",
+      "args": [
+        "node_modules/expo/bin/cli",
+        "export",
+        "--platform",
+        "android",
+        "--output-dir",
+        "../../dist/phase9-android"
+      ],
+      "startedAt": "2026-10-06T05:59:36.353Z",
+      "finishedAt": "2026-10-06T06:00:06.482Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "android-export.log"
     }
   ]
 }

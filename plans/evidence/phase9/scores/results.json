@@ -1,0 +1,29 @@
+{
+  "passed": false,
+  "assertions": [
+    "Synthetic foreign tenant created",
+    "resident: Auth account created",
+    "resident: completed fixture profile created",
+    "second: Auth account created",
+    "second: completed fixture profile created",
+    "third: Auth account created",
+    "third: completed fixture profile created",
+    "admin: Auth account created",
+    "admin: completed fixture profile created",
+    "foreignAdmin: Auth account created",
+    "foreignAdmin: completed fixture profile created",
+    "foreignResident: Auth account created",
+    "foreignResident: completed fixture profile created",
+    "Dedicated test drives created",
+    "resident: real Auth session",
+    "admin: real Auth session",
+    "foreignAdmin: real Auth session"
+  ],
+  "realtimeStatuses": [
+    {
+      "table": "drive_registrations",
+      "state": "CHANNEL_ERROR"
+    }
+  ],
+  "error": "drive_registrations: CHANNEL_ERROR"
+}

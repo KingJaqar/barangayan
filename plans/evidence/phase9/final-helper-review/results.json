@@ -1,0 +1,23 @@
+{
+  "head": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
+  "checks": [
+    {
+      "id": "phase9-script-lint",
+      "directory": ".",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/phase9-browser.cjs",
+        "scripts/phase9-checks.cjs",
+        "scripts/phase9-database.cjs",
+        "scripts/phase9-fixtures.cjs",
+        "scripts/phase9-preview.cjs",
+        "scripts/phase9-regression.cjs"
+      ],
+      "startedAt": "2026-10-06T09:01:01.803Z",
+      "finishedAt": "2026-10-06T09:01:14.453Z",
+      "exitCode": 0,
+      "error": null,
+      "log": "phase9-script-lint.log"
+    }
+  ]
+}

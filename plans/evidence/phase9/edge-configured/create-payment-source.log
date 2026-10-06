@@ -1,0 +1,7 @@
+Check supabase/functions/create-payment-source/index.ts
+TS18047 [ERROR]: 'reservation' is possibly 'null'.
+      .eq('id', reservation.id)
+                ~~~~~~~~~~~
+    at file:///C:/Users/User/barangayan/supabase/functions/create-payment-source/index.ts:440:17
+
+error: Type checking failed.

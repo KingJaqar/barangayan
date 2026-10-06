@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "assertions": [],
+  "consoleErrors": [],
+  "error": "page.goto: net::ERR_NETWORK_IO_SUSPENDED at http://localhost:3108/home\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3108/home\", waiting until \"networkidle\"\u001b[22m\n"
+}
