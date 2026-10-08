@@ -7,16 +7,17 @@ import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
 import { AnimatedAppear } from '@/components/services/animated-appear';
 import { SkeletonBlock } from '@/components/services/skeleton';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -73,7 +74,6 @@ function RequestFormContent() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
@@ -183,21 +183,7 @@ function RequestFormContent() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable
-            onPress={() => router.back()}
-            style={styles.backBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Request Form
-            </ThemedText>
-          </View>
-        </View>
+        <ServiceScreenHeader title="Request Document" backLabel="Back to document" />
         <ScrollView contentContainerStyle={styles.content}>
           <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
             <ThemedText type="small" style={{ color: theme.primary }}>
@@ -303,24 +289,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   root: { flex: 1 },
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,

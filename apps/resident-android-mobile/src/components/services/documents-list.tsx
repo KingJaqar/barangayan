@@ -79,13 +79,12 @@ export function DocumentsList() {
                 <ThemedText type="smallBold">{doc.name}</ThemedText>
                 <View style={styles.processingRow}>
                   <Ionicons name="time-outline" size={12} color={theme.textSecondary} />
-                  <ThemedText type="small" themeColor="textSecondary">
+                  <ThemedText type="small" themeColor="textSecondary" style={styles.processingText}>
                     {serviceProcessingLabel(doc)}
                   </ThemedText>
                 </View>
+                <ThemedText type="small">{servicePriceLabel(doc)}</ThemedText>
               </View>
-
-              <View style={{ maxWidth: 160 }}><ThemedText type="small">{servicePriceLabel(doc)}</ThemedText></View>
             </ThemedView>
           </Pressable>
         </Link>
@@ -108,6 +107,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   iconCircle: {
+    flexShrink: 0,
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   },
   cardInfo: {
     flex: 1,
+    minWidth: 0,
     gap: Spacing.half,
   },
   processingRow: {
@@ -123,13 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.one,
   },
-  pricePill: {
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.half,
-    borderRadius: Spacing.four,
-    alignSelf: 'flex-start',
-  },
-  pricePillFree: {
-    borderWidth: 1,
+  processingText: {
+    flex: 1,
   },
 });

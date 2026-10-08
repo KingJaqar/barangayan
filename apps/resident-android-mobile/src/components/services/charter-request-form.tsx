@@ -27,6 +27,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '@/components/primary-button';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ThemedText } from '@/components/themed-text';
 import { TextField } from '@/components/text-field';
 import { useProfile } from '@/hooks/use-profile';
@@ -230,10 +231,10 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
     </View>
   );
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+      <ServiceScreenHeader title="Request Document" backLabel="Back to document" />
+      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <PrimaryButton label="Back to document" variant="secondary" onPress={() => router.back()} />
           <ThemedText type="subtitle">{doc.name}</ThemedText>
           <ThemedText>{servicePriceLabel(doc)}</ThemedText>
           <View style={styles.card}>

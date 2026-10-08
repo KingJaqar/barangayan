@@ -661,7 +661,6 @@ export default function RegisterScreen({ completingProfile = false }: { completi
           <RegistrationMap boundary={barangay?.boundary ?? null} onConfirm={setRegistrationLocation} />
           {localityError && <><ThemedText themeColor="accentRed">{localityError}</ThemedText><PrimaryButton label="Retry locality" onPress={() => setLocalityAttempt(value => value + 1)} /></>}
           {completing && <PrimaryButton label="Skip for now — browse information" variant="secondary" onPress={() => router.replace('/home')} />}
-          {!completing && <GoogleButton label="Sign up with Google" />}
           {error ? (
             <ThemedText type="small" themeColor="accentRed" style={styles.formError}>
               {error}
@@ -671,6 +670,7 @@ export default function RegisterScreen({ completingProfile = false }: { completi
           <View style={styles.submitActions}>
             {completing && <PrimaryButton label="Sign out" variant="secondary" onPress={() => { void logout(); }} />}
             <PrimaryButton label={completing ? "Complete Profile" : "Create Account"} loading={loading} onPress={handleSubmit} />
+            {!completing && <GoogleButton label="Sign up with Google" />}
             <View style={styles.footerRow}>
               <ThemedText themeColor="textSecondary" style={styles.footerText}>
                 Already have an account?{' '}

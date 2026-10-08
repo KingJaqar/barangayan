@@ -3,18 +3,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { type Tables } from '@barangayan/shared';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card } from '@/components/card';
 import { Divider } from '@/components/divider';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { PrimaryButton } from '@/components/primary-button';
 import { SkeletonBlock } from '@/components/services/skeleton';
+import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
-import { Spacing, Fonts } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
@@ -50,7 +51,6 @@ function DocumentDetailContent() {
   const router = useRouter();
   const { session } = useAuth();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
@@ -77,21 +77,7 @@ function DocumentDetailContent() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <Pressable
-            onPress={() => router.back()}
-            style={styles.backBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
-          </Pressable>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Requirements & Guidelines
-            </ThemedText>
-          </View>
-        </View>
+        <ServiceScreenHeader title="Requirements & Guidelines" />
 
       <ScrollView contentContainerStyle={styles.content}>
         {catalogContract(doc) ? <View style={{ gap: 16 }}>{charterSections.map(([key,label]) => <View key={key}><ThemedText type="smallBold">{label}</ThemedText><ThemedText>{catalogContract(doc)!.charter[key] ?? 'Not specified in the source charter'}</ThemedText></View>)}</View> : null}
@@ -193,25 +179,6 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
 
-  /* Header */
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  backBtn: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44, height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
   content: {
     padding: Spacing.four,
     gap: Spacing.two,
@@ -270,17 +237,17 @@ const styles = StyleSheet.create({
     left: -60,
   },
   titleRow: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
     gap: Spacing.two,
   },
   title: {
     fontSize: 26,
+    lineHeight: 32,
     letterSpacing: -0.3,
-    flex: 1,
+    alignSelf: 'stretch',
   },
   feePill: {
+    maxWidth: '100%',
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.one,
     borderRadius: Spacing.four,
@@ -322,9 +289,8 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   skeletonTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: Spacing.two,
     marginTop: Spacing.two,
   },
   skeletonBlockGap: {
