@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-10-11T11:07:07.635Z",
+  "method": "Supabase connector execute_sql",
+  "project": "pwjbucnyqexiepoinoke",
+  "queries": [
+    "plans/evidence/admin-table-phase6-baseline/hosted-schema-query.sql",
+    "plans/evidence/admin-table-phase6-baseline/hosted-scale-query.sql"
+  ],
+  "queryExecution": "Fresh read-only transactions, statement_timeout=8000ms; no production writes",
+  "outputs": [
+    "hosted-schema.json",
+    "hosted-scale.json"
+  ],
+  "docsRead": [
+    "https://docs.expo.dev/versions/v57.0.0/",
+    "node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/page.md",
+    "https://supabase.com/docs/reference/javascript/select",
+    "https://supabase.com/docs/reference/javascript/range"
+  ],
+  "changelogFetch": "Web reader rejected text/markdown content; no Supabase implementation or dependency change made."
+}

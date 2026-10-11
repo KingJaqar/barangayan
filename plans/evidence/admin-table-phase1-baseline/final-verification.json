@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-10-11T08:56:39.280Z",
+  "passed": true,
+  "syntax": [
+    {
+      "file": "audit.mjs",
+      "status": 0
+    },
+    {
+      "file": "checks.mjs",
+      "status": 0
+    },
+    {
+      "file": "field-contracts.mjs",
+      "status": 0
+    },
+    {
+      "file": "finalize.mjs",
+      "status": 0
+    },
+    {
+      "file": "fixtures.mjs",
+      "status": 0
+    },
+    {
+      "file": "focused-lint.mjs",
+      "status": 0
+    },
+    {
+      "file": "inventory.mjs",
+      "status": 0
+    },
+    {
+      "file": "local-read.mjs",
+      "status": 0
+    },
+    {
+      "file": "verify.mjs",
+      "status": 0
+    }
+  ],
+  "fields": "Verified 170 schema field definitions and 8 active tables; AST index matches prior source contracts.",
+  "scope": "Verified 68 source files and 107 migration files against historical evidence; 3190 baseline files preserved.",
+  "readPoliciesMatchHistoricalHosted": true,
+  "sqlValueChecks": 11,
+  "fixtureTests": 41,
+  "fixtureFailures": 0,
+  "affectedLintFiles": 66,
+  "affectedLintStatus": 0,
+  "adminTypecheckStatus": 0,
+  "wholePackageLint": "60s timeout; not passed",
+  "parsedJSONReports": 9,
+  "diffWhitespaceStatus": 0,
+  "noTemporaryResourcesCreated": true,
+  "historicalEvidenceReused": true,
+  "freshAuthenticatedBrowserRealtimeHostedChecks": false
+}

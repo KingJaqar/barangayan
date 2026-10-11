@@ -1,0 +1,71 @@
+✔ synthetic sizes and page slices: independent future-contract oracle only (16.7053ms)
+✔ requests actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (116.0345ms)
+✔ requests actual server page: literal punctuation and search trimming (44.1788ms)
+✔ requests actual server page: query error handling baseline (14.4259ms)
+✔ transactions actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (30.6066ms)
+✔ transactions actual server page: literal punctuation and search trimming (36.7845ms)
+✔ transactions actual server page: query error handling baseline (17.2473ms)
+✔ residents actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (38.9889ms)
+✔ residents actual server page: literal punctuation and search trimming (50.0754ms)
+✔ residents actual server page: query error handling baseline (17ms)
+✔ incident-reports actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (26.3294ms)
+✔ incident-reports actual server page: literal punctuation and search trimming (37.1546ms)
+✔ incident-reports actual server page: query error handling baseline (19.8038ms)
+✔ health actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (28.9859ms)
+✔ health actual server page: literal punctuation and search trimming (32.9201ms)
+✔ health actual server page: query error handling baseline (16.0698ms)
+✔ health/applicants actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (27.6044ms)
+✔ health/applicants actual server page: literal punctuation and search trimming (34.7956ms)
+✔ health/applicants actual server page: query error handling baseline (25.0028ms)
+✔ households-residents actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (18.956ms)
+✔ households-residents actual server page: literal punctuation and search trimming (32.9284ms)
+✔ households-residents actual server page: query error handling baseline (16.8127ms)
+✔ staff actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (32.2109ms)
+✔ staff actual server page: literal punctuation and search trimming (24.782ms)
+✔ staff actual server page: query error handling baseline (24.8909ms)
+✔ actual Requests search cannot find match beyond simulated cap (22.795ms)
+✔ actual Applicants search excludes resident names; preserves score inner projection (14.0256ms)
+✔ actual Staff server excludes missing profiles (12.2278ms)
+✔ actual Health Upcoming includes Today and excludes inactive (25.0793ms)
+✔ comparison/permission/concurrency fixture coverage exists; no runtime pass claim (0.7876ms)
+✔ actual client sort expressions: default keys and absence of unique tie-break (88.1315ms)
+✔ actual Requests reference comparator is lexical, not the proposed numeric-token comparator (0.8432ms)
+✔ actual search predicates: each existing searchable field independently matches (570.4161ms)
+✔ missing optional embeds remain table members, except Staff missing-profile exclusion (64.93ms)
+✔ actual segmented defaults and separate filters (210.9733ms)
+✔ all eight actual pages keep summary membership independent of search (174.7473ms)
+✔ Health actual counts include cancelled registrations, zero drives and registrations for omitted drives (13.0946ms)
+✔ Health secondary registration scan is also capped and undercounts a drive (12.6551ms)
+✔ Households Parent / Other card excludes parents in actual baseline (10.4043ms)
+✔ Applicants actual joined-array substring search matches across a separator (11.0581ms)
+✔ Directory ID presence is independent of ID review decision (11.9784ms)
+✔ each status segment retains its existing membership, including payment cancelled in All (240.1123ms)
+✔ secondary registration failure retains Health rows but substitutes zero counts (11.038ms)
+✖ failed applicant profile lookup keeps inner-score DTO row with a null profile (11.0491ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 43
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2799.4432
+
+✖ failing tests:
+
+test at plans\evidence\admin-table-phase2-baseline\verify.mjs:291:1
+✖ failed applicant profile lookup keeps inner-score DTO row with a null profile (11.0491ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 50
+  
+      at TestContext.<anonymous> (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2-baseline/verify.mjs:295:10)
+      at async Test.run (node:internal/test_runner/test:1110:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:785:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 50,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

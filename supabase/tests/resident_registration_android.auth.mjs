@@ -1,0 +1,57 @@
+// Isolated real Auth/PostgREST integration; no production sends or credentials.
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import { createClient } from '@supabase/supabase-js';
+import { build } from 'esbuild';
+const config = JSON.parse(execFileSync(process.execPath, ['node_modules/supabase/dist/supabase.js','status','-o','json'], { encoding:'utf8',stdio:['ignore','pipe','pipe'],timeout:30000 }));
+assert.equal(new URL(config.API_URL).hostname,'127.0.0.1');
+const boundedFetch = (input,init) => fetch(input,{...init,signal:AbortSignal.timeout(15000)});
+const client = () => createClient(config.API_URL, config.ANON_KEY, { auth:{persistSession:false,autoRefreshToken:false},global:{fetch:boundedFetch} });
+const admin = createClient(config.API_URL,config.SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:boundedFetch}});
+const sql = query => execFileSync('docker',['exec','-i','supabase_db_barangayan','psql','-U','postgres','-d','postgres','-XAt','-v','ON_ERROR_STOP=1'], { input:query,encoding:'utf8',stdio:['pipe','pipe','pipe'] }).trim();
+const must = result => { if(result.error) throw new Error(`Auth/API failure: ${result.error.code || result.error.status || result.error.name}`); return result.data; };
+const bundle = await build({ entryPoints:['packages/shared/src/lib/resident-account-setup.ts'],bundle:true,write:false,platform:'node',format:'esm' });
+const {residentSetupRoute,getResidentAccountSetupStatus} = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
+const email=`phase2-${randomUUID()}@local.test`, auth=client();
+console.log('Local Phase 2 Auth/PostgREST integration started');
+sql("insert into public.barangays(id,name) values ('a6081000-0000-0000-0000-000000000001','Phase Two Local') on conflict do nothing; update public.barangay_localities set resident_registration_enabled=false; insert into public.barangay_localities values ('a6081000-0000-0000-0000-000000000001','Ampid 1','San Mateo','Rizal',true) on conflict(barangay_id) do update set resident_registration_enabled=true;");
+let id;
+try {
+  const sent=must(await auth.auth.signInWithOtp({email,options:{data:{resident_registration_origin:'email_otp'}}}));
+  assert.equal(sent.session,null);
+  const link=must(await admin.auth.admin.generateLink({type:'magiclink',email}));
+  const verified=must(await auth.auth.verifyOtp({email,token:link.properties.email_otp,type:'email'})); id=verified.user.id;
+  const route=async intent=>residentSetupRoute({session:'authenticated',intent,setup:{state:'ready',status:await getResidentAccountSetupStatus(auth)}});
+  assert.equal((await route('email_signup')).destination,'details');
+  const details={firstName:'Phase',lastName:'Resident',houseNo:'12',street:'Main',sex:'female',employmentStatus:'student',mobileNumber:'09171234567',birthDate:'2000-01-01',location:{gps:null,home:null}};
+  must(await auth.rpc('complete_resident_profile_if_unchanged',{p_input:details,p_expected:null}));
+  assert.equal((await route('google_details_saved')).destination,'password');
+  const snapshot=must(await auth.from('profiles').select('*').eq('id',id).single());
+  must(await auth.rpc('complete_resident_profile_if_unchanged',{p_input:{...details,houseNo:'13'},p_expected:snapshot}));
+  assert.equal(must(await auth.from('profiles').select('house_no').eq('id',id).single()).house_no,'13','Completion must actually save reviewed edits');
+  const conflict=await auth.rpc('complete_resident_profile_if_unchanged',{p_input:{...details,houseNo:'overwrite'},p_expected:snapshot});
+  if(conflict.error?.code!=='PT409') console.log('Unexpected conflict response shape', { status:conflict.status,errorKeys:conflict.error ? Object.keys(conflict.error):[],errorName:conflict.error?.name,errorCode:conflict.error?.code,message:conflict.error?.message,dataType:typeof conflict.data });
+  assert.equal(conflict.error?.code,'PT409');
+  assert.equal(must(await auth.from('profiles').select('house_no').eq('id',id).single()).house_no,'13');
+  console.log('PASS real OTP session, details -> password, REST snapshot parity and stale-write rollback');
+  const current=must(await auth.from('profiles').select('*').eq('id',id).single());
+  const races=await Promise.all(['14','15'].map(houseNo=>auth.rpc('complete_resident_profile_if_unchanged',{p_input:{...details,houseNo},p_expected:current})));
+  assert.equal(races.filter(r=>!r.error).length,1); assert.equal(races.filter(r=>r.error?.code==='PT409').length,1);
+  console.log('PASS concurrent same-user snapshots: one commit, one conflict');
+  const password=`A9!${randomUUID()}`;
+  must(await auth.auth.updateUser({password}));
+  assert.equal((await route('sign_in')).destination,'home'); assert.equal(must(await auth.auth.getSession()).session.user.id,id);
+  const restored=client(); must(await restored.auth.setSession(must(await auth.auth.getSession()).session));
+  assert.equal((await getResidentAccountSetupStatus(restored)).passwordSet,true);
+  assert.equal(must(await restored.auth.getUser()).user.id,id);
+  const credential=client(); assert.equal(must(await credential.auth.signInWithPassword({email,password})).user.id,id);
+  console.log('PASS actual password creation, retained verified session, restored session/status and exact credential confirmation');
+  const unknown=await auth.rpc('complete_resident_profile_if_unchanged',{p_input:{...details,userId:randomUUID()},p_expected:must(await auth.from('profiles').select('*').eq('id',id).single())});
+  assert.equal(unknown.error?.code,'22023');
+  console.log('PASS no caller identity escalation through completion input');
+  must(await restored.auth.signOut({scope:'local'})); must(await credential.auth.signOut({scope:'local'}));
+} finally {
+  await auth.auth.signOut({scope:'local'});
+  if(id) must(await admin.auth.admin.deleteUser(id));
+}

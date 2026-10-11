@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-11T11:40:50.080Z",
+  "browsers": [
+    {
+      "name": "chrome",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing"
+      ],
+      "status": "failed",
+      "version": "154.0.8037.99",
+      "error": "AssertionError [ERR_ASSERTION]: {\"left\":0,\"max\":0,\"active\":\"<div role=\\\"region\\\" aria-label=\\\"Fixture rows and columns\\\" tabindex=\\\"0\\\" class=\\\"w-full overflow-x-auto rounded-xl border border-black/10 dark:border-whit\"}\n    at file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:115:12\n    at async check (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:57:40)\n    at async exercise (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:107:3)\n    at async file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:205:47"
+    },
+    {
+      "name": "edge",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Chromium distribution 'msedge' is not found at C:\\Users\\User\\AppData\\Local\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "name": "firefox",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Executable doesn't exist at C:\\Users\\User\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe"
+    },
+    {
+      "name": "webkit",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Executable doesn't exist at C:\\Users\\User\\AppData\\Local\\ms-playwright\\webkit-2336\\Playwright.exe"
+    }
+  ],
+  "limitations": [
+    "Synthetic component fixtures, not authenticated admin routes or database adapters.",
+    "Native physical input, OS overlay scrollbar settings and manual screen-reader verification were not available."
+  ]
+}

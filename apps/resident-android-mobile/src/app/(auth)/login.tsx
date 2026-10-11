@@ -1,6 +1,6 @@
 import { GoogleButton } from '@/components/google-button';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,10 +11,11 @@ import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/use-auth';
+import { authSetupRequests, SetupTimeout, SetupOwner } from '@/lib/setup-request';
+import { residentSetupFailure } from '@barangayan/shared';
 
 type LoginParams = {
-  /** Set by register.tsx after a successful sign-up — shows a one-time success banner. */
-  registered?: string;
   /** Prefills the email field when coming from the registration flow. */
   email?: string;
 };
@@ -24,6 +25,9 @@ export default function LoginScreen() {
   const params = useLocalSearchParams<LoginParams>();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { setSetupIntent } = useAuth();
+  const owner = useRef(new SetupOwner());
+  useEffect(() => { const scope = owner.current; return () => scope.invalidate(); }, []);
 
   const [email, setEmail] = useState(params.email ?? '');
   const [password, setPassword] = useState('');
@@ -32,15 +36,20 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
+    if (loading) return;
+    const owns = owner.current.ticket();
     setError(null);
     setLoading(true);
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-
-    if (signInError) {
-      setError(signInError.message);
-      return;
-    }
+    try {
+      await setSetupIntent('sign_in');
+      await authSetupRequests.run(async () => {
+        if (!owns()) return;
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+      });
+      if (owns()) setPassword('');
+    } catch (cause) { if (owns()) setError(cause instanceof SetupTimeout ? cause.message : residentSetupFailure(cause as { code?: string; status?: number; name?: string }).message); }
+    finally { if (owns()) setLoading(false); }
     // No explicit navigation needed — the session update flows into AuthProvider and
     // Stack.Protected in the root layout routes into (app) automatically.
   }
@@ -48,7 +57,7 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <AuthHeader title="Log In" onBack={() => router.replace('/(auth)/auth-choice')} />
+        <AuthHeader title="Log In" onBack={() => { if (authSetupRequests.busy) { setError('Please wait for the earlier sign-in request to finish.'); return; } owner.current.invalidate(); setPassword(''); router.replace('/(auth)/auth-choice'); }} />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -62,17 +71,7 @@ export default function LoginScreen() {
               Log in to continue to your barangay community.
             </ThemedText>
 
-            {params.registered === '1' ? (
-              <View style={[styles.successBanner, { backgroundColor: `${theme.primary}1A`, borderColor: `${theme.primary}40` }]}>
-                <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                  Account created!
-                </ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  Sign in to continue. Email verification will be available once our mail service is
-                  set up.
-                </ThemedText>
-              </View>
-            ) : null}
+
 
             <View
               style={[
@@ -114,7 +113,7 @@ export default function LoginScreen() {
 
             <PrimaryButton label="Log In" loading={loading} onPress={handleLogin} />
 
-            <GoogleButton label="Sign in with Google" />
+            <GoogleButton label="Sign in with Google" disabled={loading} />
             <View style={styles.dividerRow}>
               <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
               <ThemedText type="small" themeColor="textSecondary">

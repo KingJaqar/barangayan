@@ -1,0 +1,79 @@
+{
+  "nestedRawAlignment": {
+    "columns": true,
+    "constraints": true,
+    "policies": true,
+    "functions": false,
+    "publications": true
+  },
+  "functionsEqualAfterLineEndingNormalization": true,
+  "functionAlignment": [
+    {
+      "name": "admin_add_household_member",
+      "arguments": "p_profile_id uuid, p_name text, p_relation text, p_role text",
+      "rawEqual": false,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "admin_register_for_drive",
+      "arguments": "p_target_user_id uuid, p_drive_id uuid, p_age integer, p_is_pwd boolean, p_comorbidities text[], p_prior_dose_date date",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "begin_processing_request",
+      "arguments": "request_id uuid",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "cancel_service_request",
+      "arguments": "p_request_id uuid, p_note text",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "complete_service_request",
+      "arguments": "p_request_id uuid",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "current_barangay_id",
+      "arguments": "",
+      "rawEqual": false,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "current_role",
+      "arguments": "",
+      "rawEqual": false,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "mark_request_ready_for_pickup",
+      "arguments": "p_request_id uuid",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "service_request_sla_tracking",
+      "arguments": "p_request_id uuid",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "service_sla_report_rows",
+      "arguments": "",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    },
+    {
+      "name": "update_incident_status",
+      "arguments": "p_incident_id uuid, p_status text",
+      "rawEqual": true,
+      "lineEndingNormalizedEqual": true
+    }
+  ],
+  "boundary": "Only 11 captured helper definitions; not full trigger/function or execution equality."
+}

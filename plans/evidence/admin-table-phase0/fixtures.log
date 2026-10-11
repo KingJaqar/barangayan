@@ -1,0 +1,43 @@
+✔ synthetic sizes and page slices: independent future-contract oracle only (16.2731ms)
+✔ requests actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (106.6084ms)
+✔ requests actual server page: literal punctuation and search trimming (45.9972ms)
+✔ requests actual server page: query error handling baseline (14.4898ms)
+✔ transactions actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (27.5768ms)
+✔ transactions actual server page: literal punctuation and search trimming (33.0671ms)
+✔ transactions actual server page: query error handling baseline (14.9566ms)
+✔ residents actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (46.0969ms)
+✔ residents actual server page: literal punctuation and search trimming (35.4544ms)
+✔ residents actual server page: query error handling baseline (16.7794ms)
+✔ incident-reports actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (23.5758ms)
+✔ incident-reports actual server page: literal punctuation and search trimming (39.4282ms)
+✔ incident-reports actual server page: query error handling baseline (13.7391ms)
+✔ health actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (25.5033ms)
+✔ health actual server page: literal punctuation and search trimming (42.4928ms)
+✔ health actual server page: query error handling baseline (13.5719ms)
+✔ health/applicants actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (25.6355ms)
+✔ health/applicants actual server page: literal punctuation and search trimming (33.2582ms)
+✔ health/applicants actual server page: query error handling baseline (14.3157ms)
+✔ households-residents actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (20.098ms)
+✔ households-residents actual server page: literal punctuation and search trimming (36.4684ms)
+✔ households-residents actual server page: query error handling baseline (16.0644ms)
+✔ staff actual server page: baseline 1505 rows truncated to 1000 by simulated API cap (32.371ms)
+✔ staff actual server page: literal punctuation and search trimming (23.9952ms)
+✔ staff actual server page: query error handling baseline (12.1471ms)
+✔ actual Requests search cannot find match beyond simulated cap (22.0633ms)
+✔ actual Applicants search excludes resident names; preserves score inner projection (16.9902ms)
+✔ actual Staff server excludes missing profiles (22.4738ms)
+✔ actual Health Upcoming includes Today and excludes inactive (26.6507ms)
+✔ comparison/permission/concurrency fixture coverage exists; no runtime pass claim (0.7732ms)
+✔ actual client sort expressions: default keys and absence of unique tie-break (73.3568ms)
+✔ actual Requests reference comparator is lexical, not the proposed numeric-token comparator (0.8039ms)
+✔ actual search predicates: each existing searchable field independently matches (481.5885ms)
+✔ missing optional embeds remain table members, except Staff missing-profile exclusion (49.5081ms)
+✔ actual segmented defaults and separate filters (159.3803ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2079.3151

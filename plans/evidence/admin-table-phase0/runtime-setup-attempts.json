@@ -1,0 +1,16 @@
+[
+  {
+    "attempt": 1,
+    "result": "failed before schema restore or fixture creation",
+    "cause": "Role-copy ALTER ROLE postgres NOSUPERUSER conflicts with an initdb bootstrap role named postgres.",
+    "correction": "Use the existing Supabase bootstrap role name supabase_admin; preserve schema owners instead of restoring every object under postgres.",
+    "cleanup": "Task-owned partial container/network/private state removed before a corrected fresh start."
+  },
+  {
+    "attempt": 2,
+    "result": "schema restored; Auth/REST/Realtime unavailable at first startup",
+    "cause": "initdb configured trust for loopback only, so other task-owned containers were rejected by pg_hba.conf.",
+    "correction": "Add SCRAM authentication for the private container network, reload the task-owned database configuration, then restart its three services once. A shell quoting failure occurred before the repair executed; moving the fixed command into the script avoided shell interpolation.",
+    "catalogNote": "Initial deparsed policy/constraint differences included search_path qualification; comparisons now explicitly use public search_path. The hosted-only payment INSERT policy remains a separately documented difference."
+  }
+]

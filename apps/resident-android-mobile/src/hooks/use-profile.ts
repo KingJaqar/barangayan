@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, createElement, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useAuth } from '@/hooks/use-auth';
+import { safeReadRetryDelay } from '@/lib/setup-refresh';
 import { supabase } from '@/lib/supabase';
 
 export type Profile = Tables<'profiles'> & {
@@ -30,9 +31,15 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     const ticket = scope.current.begin(userId);
     setIsLoading(true);
     setError(null);
-    supabase.from('profiles').select('*, barangays(name, boundary, barangay_localities(display_name, city, province))')
+    const load = (attempt: number) => supabase.from('profiles').select('*, barangays(name, boundary, barangay_localities(display_name, city, province))')
       .eq('id', userId).maybeSingle().then(async ({ data, error: queryError }) => {
         if (!scope.current.accepts(ticket, userId)) return;
+        const retryDelay = queryError ? safeReadRetryDelay(attempt) : null;
+        if (retryDelay !== null) {
+          // A newer refetch, sign-out or account switch invalidates this ticket.
+          setTimeout(() => { if (scope.current.accepts(ticket, userId)) load(attempt + 1); }, retryDelay);
+          return;
+        }
         if (queryError) {
           setError('Could not refresh your profile. Reconnect and try again.');
           setProfile(previous => previous?.id === userId ? { ...previous, id_verification_status: null, approved_id_submission_id: null } : null);
@@ -53,6 +60,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
         if (scope.current.accepts(ticket, userId)) setIsLoading(false);
       });
+    load(0);
   }, [userId]);
 
   useEffect(() => {

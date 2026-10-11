@@ -1,0 +1,7 @@
+{
+  "status": 1,
+  "step": "audit.mjs verify",
+  "reason": "Two non-task registration documents changed concurrently; no missing files or outside additions.",
+  "report": "scope-attempt1.json",
+  "action": "Inspect current documents, record their exact hashes, preserve their contents; retain strict checker failure."
+}

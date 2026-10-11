@@ -1,0 +1,62 @@
+# Phase 3 Android Settings, warnings and password management — 2026-10-11
+
+Candidate: working tree over `a75ee345224ed7f93d57b3e0c4de24e7540ba82c` (Phase 0–2 work uncommitted and preserved). Backend: production `pwjbucnyqexiepoinoke` for bounded owned-account device tests; Docker local stack for direct-request tests. No migration, Edge Function, hosted Auth setting or template changed. Device: LDPlayer 9 instance 0, `emulator-5554`, Android 9/API 28, development APK `com.barangayan.resident.dev` (SHA-256 recorded in Phase 2), JS served by owned Metro on 8082. TalkBack was not used (owner instruction this session).
+
+## Implementation
+
+| Area | Change |
+| --- | --- |
+| Status refresh (`hooks/use-auth.tsx`) | A refresh over this user's earlier **ready** status keeps it while reloading, instead of resetting to `loading`. Before this, any Settings-triggered refresh made the root guard treat the resident as not admitted and unmounted `(app)` (Settings → setup screen → Home). A failed background refresh keeps the server-confirmed status and exposes `setupRefreshError` with retry; forbidden/expired-session failures still replace it with an error. A refresh requested mid-flight re-runs afterwards so a pre-save read cannot leave a stale warning. Account switch/logout clear both. |
+| Settings overview | Profile row: **Personal details incomplete** (icon + text + accessible label) only from a ready `profileComplete=false`; password row: **Set Password / Password not set**, **Change Password**, or **Manage Password** (unknown history) from `passwordSet` true/false/null; loading/error show neutral "Checking…/unavailable" text, never a completed or warning state. Email/location/ID indicators unchanged and independent. Refresh-failure row offers retry. |
+| Profile access | Settings Profile no longer wrapped in the profile-completion `ResidentActionGate`; the Settings stack's session guard and the screen's guest prompt remain. Document/health/incident submission screens keep the gate; backend submission guards unchanged. Saving details refreshes setup status right after the committed write. |
+| Change Password modes | `true` → existing current-password change, now also checking the reauthenticated user ID and refreshing status. `null` → Manage Password: same change plus email recovery; never "not set". `false` + Google → first password after fresh Google confirmation (below), returns to Settings. `false` without Google → recovery only. Loading/error → wait/retry. |
+| Fresh Google authentication | Google attempts carry `purpose` (`set_password`/`delete_account`), required for `reauthenticate`. A Settings action is unlocked only when the stored attempt is complete, same expected/exchanged user as the session, ≤ 5 min old, **and** the session's Auth-issued `amr` has an `oauth` sign-in after the attempt began. Rechecked immediately before the write/deletion, consumed after use or when leaving. The callback returns reauthentication to its Settings screen and no longer sets the `settings_password` intent that previously routed into the registration wizard. |
+| Passwordless deletion | `passwordSet=false` + Google: confirmation → Google reauthentication (`delete_account`) → second explicit confirmation → freshness recheck → existing `delete-my-account`. Password/unknown accounts keep the password modal (now with same-user check). No Google and no password: directed to set a password via recovery first. Results after the browser are rendered from state (inline "Account not deleted…" notice; final-confirmation modal shown only on the focused, signed-in Settings screen) because a React Native `Alert` raised while Android returns from the browser was observed to be dropped. |
+| Reauthentication return | On a warm return the callback now goes **back** to the Settings screen that started reauthentication (cold start with no history opens the target). Previously `router.replace` mounted a second Settings/Change Password screen, so two final-confirmation dialogs stacked (live finding). |
+| Reused step | `ResidentPasswordStep` gains a `settings` variant (no sign-out/skip wording) and a `beforeWrite` hook; uncertain-write handling unchanged. |
+
+## Automated and local checks
+
+| Command | Result |
+| --- | --- |
+| `node node_modules/typescript/bin/tsc --project apps/resident-android-mobile/tsconfig.json --noEmit` | Exit 0. |
+| `npm run lint --workspace=@barangayan/mobile` | 0 errors; the 2 pre-existing `health/register.tsx` duplicate-import warnings. |
+| `npx vitest run` (Android app) | **42 tests / 6 files passed** (was 34/5). New `sensitive-auth.test.ts`: AMR parsing incl. non-ASCII metadata; same-purpose/complete/owner/session checks; password-only, older-Google and local-record-only evidence rejected; window expiry and future dates; purposeless reauth records refused; true/false/null/Google mode mapping; warnings only from ready status. Google flow fixtures updated for `purpose`. |
+| `npm run test --workspace=@barangayan/shared -- --reporter=dot` | 239 tests / 24 files passed (shared code unchanged). |
+| `node supabase/tests/resident_sensitive_actions.auth.mjs` with local `functions serve` | SA-1…SA-3 passed — see [sensitive-action-authentication.md](sensitive-action-authentication.md). |
+| `npx expo export --platform android --output-dir .expo/phase3-export --clear --max-workers 2` (workspace TEMP/TMP), final code | Hermes export passed: `entry-6adacdb357e75d95921f2d1d84998be1.hbc`, SHA-256 `BE87E0D8615AFF7759FD14F7951E1A9C297ADD219BDBFCF554719E3EC57445AE` (supersedes the earlier `D8C3D0F4…F26` export). |
+| Hosted Auth policy (dashboard, read-only) | Secure password change off; require current password off. Recorded in the sensitive-action document. |
+
+Database tests were not re-run: no SQL, migration or function changed.
+
+## Development-device results (production backend, owned accounts)
+
+Accounts: completed email fixture "Phase Validation" (Phase 2); fresh owner-authorized Google account `ampid1…@gmail.com`, confirmed unregistered, registered with **Sign up with Google** (owner performed the Google sign-in; Claude entered no Google password). Server state read with scoped read-only SQL.
+
+| ID | Action | Result |
+| --- | --- | --- |
+| P3-D1 | Completed email account → Settings | "Edit Profile", "Change Password", no warnings; Change Password shows current-password form. [screenshot](phase3-native-settings-password-set.png) **Passed.** |
+| P3-D2 | Same account: Settings Profile edit + save, then revert | Stayed on Profile through the background refresh (no bounce to "Checking your account setup…"); both saves confirmed in production, name restored, `password_set` unchanged. **Passed.** |
+| P3-D3 | New Google account after skip → Settings | "Personal details incomplete" and "Set Password · Password not set", each icon + text, accessible labels; email/location rows independent. Server: origin google, `password_set=false`. [screenshot](phase3-native-settings-google-warnings.png) **Passed.** |
+| P3-D4 | Set Password → Confirm with Google → close browser | "Google sign-in cancelled. You can try again."; stays on Set Password; no write. [screenshot](phase3-native-set-password-cancelled.png) **Passed.** |
+| P3-D5 | Confirm with Google → choose another Google account (Enzo) | "A different Google account was selected…"; unintended session discarded before provisioning; signed out. Server: neither account's password state changed (Enzo `password_observed_at` still 2026-10-10; only its sign-in time updated by the rejected exchange). [screenshot](phase3-native-set-password-wrong-account.png) **Passed.** |
+| P3-D6 | Ordinary Google sign-in afterwards | Home with warnings, no wizard. **Passed.** |
+| P3-D7 | Confirm with same account → password form; entered matching password, waited past the window, submitted | Form unlocked after real Google return. Submit ≈ 6 min after the attempt (device clock 86 s ahead of host and aligned with Auth): "Your Google confirmation expired or did not match…"; returned to Confirm. Server: `password_set=false`, no observation. [form](phase3-native-set-password-form.png), [refused](phase3-native-set-password-expired.png) **Passed.** |
+| P3-D8 | Confirm again, set password | Password written 43 s after the new Google sign-in; returned to Settings: "Change Password", personal-details warning still shown independently. Server: `password_set=true`, `password_evidence=auth_password_write`, Google identity retained. [screenshot](phase3-native-settings-after-password.png) **Passed.** (The 2.2 s confirmation popup was not captured by the polling observer.) |
+| P3-D9 | Settings → Profile on the incomplete account | Initially showed the completion gate (finding fixed above); after the fix the full Profile editor opens. **Passed after fix.** |
+| P3-D10 | Fill sex, mobile, house no., street, employment, DOB; save | "Profile saved successfully"; Settings shows "Edit Profile" with no warning and no re-login; Home completion banner gone. Server row complete. [screenshot](phase3-native-settings-warnings-cleared.png) **Passed.** |
+| P3-D11 | Passwordless Google deletion, owner-approved existing Google-only legacy account `xd.xx816@…` (`password_set=false`) | Delete offered **Confirm with Google** (no password field). [prompt](phase3-native-delete-google-prompt.png) **Passed.** |
+| P3-D12 | Same: close the Google browser | First attempt: no feedback (Alert dropped on return) → fixed to inline notice; retest shows "Account not deleted. Google sign-in cancelled." No server change. [screenshot](phase3-native-delete-google-cancelled.png) **Passed after fix.** |
+| P3-D13 | Same: confirm with same Google account, then Cancel at final confirmation | Final "Permanently Delete Account?" modal appeared after the real return. Cancel consumed the confirmation (no dialog on refocus); server: not deleted, not banned. Two stacked dialogs revealed the duplicate-screen defect (fixed above). [modal](phase3-native-delete-final-confirm.png) **Passed; defect fixed.** |
+| P3-D14 | Same: confirm with Google, then Delete Account | Server: profile `deleted_at` set, email cleared, Auth user banned ~100 years; app signed out to guest Settings/Home. [screenshot](phase3-native-delete-google-done.png) **Passed.** |
+| P3-D15 | Navigation-fix re-check, owner-approved new Google account `cocorushxd@…` (signed up via Google; Google consent for name/email/picture accepted on owner instruction) | Set Password → Confirm with Google → form returned on the original screen ([screenshot](phase3-native-set-password-single-return.png)); header Back → Settings → Android Back → Home (no duplicate). Delete → Confirm with Google → single modal on the original, still-scrolled Settings; one Cancel closed it with "Account not deleted." ([screenshot](phase3-native-delete-single-cancel.png)). Server: not deleted, `password_set=false`. **Passed.** |
+
+Not exercised live (unit/local level only): unknown legacy (`null`) Manage Password screen (no owned legacy-unknown fixture); existing-password change and password-based deletion (pre-existing current-password paths plus a new same-user check; exercising them requires typing a real account password); fresh email/password login with the newly set `ampid1…` password (server records `auth_password_write`; the test value exists only in the session scratchpad). These remain in the acceptance matrix for Phase 5 ("Change password and recovery", "Google set password").
+
+## Observer and environment notes
+
+- Metro started with `CI=1` disables file watching; it served stale bundles twice (missing new module, then the old Profile gate). Restarted the owned 8082 Metro without `CI` and verified bundle contents before device checks.
+- An unrelated Opera Mini crash loop covered the app with system dialogs; only that app's process was force-stopped. No settings or data changed.
+- The owned local `functions serve` and its edge-runtime container were stopped after SA tests. Temporary export caches were removed.
+- LDPlayer instance 0 stopped three times around 14:0x local time while host memory was low (three VirtualBox VM processes, ~1.5–4.8 GB free); the owner restarted it. Metro later hung and was restarted (corrupt file-map cache → full crawl). No emulator data was reset.
+- Two inputs landed outside the app while the owner was using the emulator (Gmail switched to its Meet tab; Chrome account-settings page shown). Nothing was sent or changed; Back was used to leave Chrome settings. Later inputs were gated on the focused window.

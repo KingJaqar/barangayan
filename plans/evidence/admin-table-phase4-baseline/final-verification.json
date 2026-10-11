@@ -1,0 +1,283 @@
+{
+  "checkedAt": "2026-10-11T10:00:52.902Z",
+  "baselineContractGateComplete": true,
+  "fixtureTests": 53,
+  "fixtureFailures": 0,
+  "independentSQLValueChecks": 11,
+  "syntax": [
+    {
+      "file": "audit.mjs",
+      "status": 0
+    },
+    {
+      "file": "checks.mjs",
+      "status": 0
+    },
+    {
+      "file": "field-contracts.mjs",
+      "status": 0
+    },
+    {
+      "file": "finalize.mjs",
+      "status": 0
+    },
+    {
+      "file": "fixtures.mjs",
+      "status": 0
+    },
+    {
+      "file": "focused-lint.mjs",
+      "status": 0
+    },
+    {
+      "file": "inventory.mjs",
+      "status": 0
+    },
+    {
+      "file": "local-read.mjs",
+      "status": 0
+    },
+    {
+      "file": "nested-catalog.mjs",
+      "status": 0
+    },
+    {
+      "file": "verify.mjs",
+      "status": 0
+    }
+  ],
+  "results": [
+    {
+      "name": "fixtures",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 3247,
+      "timeoutMs": 35000,
+      "retries": 0
+    },
+    {
+      "name": "typecheck",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 20733,
+      "timeoutMs": 60000,
+      "retries": 0
+    },
+    {
+      "name": "local",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 787,
+      "timeoutMs": 35000,
+      "retries": 0
+    }
+  ],
+  "lint": [
+    {
+      "files": [
+        "apps/admin-web/src/actions/admin-audit-actions.ts",
+        "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+        "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+        "apps/admin-web/src/app/(admin)/health/applicants/page.tsx",
+        "apps/admin-web/src/app/(admin)/health/applicants/types.ts",
+        "apps/admin-web/src/app/(admin)/health/drive-detail-modal.tsx",
+        "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+        "apps/admin-web/src/app/(admin)/health/page.tsx",
+        "apps/admin-web/src/app/(admin)/health/types.ts",
+        "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+        "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+        "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+        "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+        "apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx",
+        "apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx",
+        "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+        "apps/admin-web/src/app/(admin)/incident-reports/page.tsx",
+        "apps/admin-web/src/app/(admin)/incident-reports/types.ts",
+        "apps/admin-web/src/app/(admin)/layout.tsx",
+        "apps/admin-web/src/app/(admin)/loading.tsx",
+        "apps/admin-web/src/app/(admin)/requests/[requestId]/loading.tsx",
+        "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+        "apps/admin-web/src/app/(admin)/requests/page.tsx",
+        "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+        "apps/admin-web/src/app/(admin)/requests/types.ts",
+        "apps/admin-web/src/app/(admin)/residents/page.tsx",
+        "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+        "apps/admin-web/src/app/(admin)/residents/types.ts",
+        "apps/admin-web/src/app/(admin)/staff/page.tsx",
+        "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+        "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+        "apps/admin-web/src/app/(admin)/staff/types.ts",
+        "apps/admin-web/src/app/(admin)/transactions/page.tsx"
+      ],
+      "status": 0,
+      "error": null,
+      "elapsedMs": 31796,
+      "timeoutMs": 45000,
+      "boundary": "Affected source batch only; initial combined lint timeout is retained."
+    },
+    {
+      "files": [
+        "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+        "apps/admin-web/src/app/(admin)/transactions/types.ts",
+        "apps/admin-web/src/app/api/admin/staff/invite/route.ts",
+        "apps/admin-web/src/components/admin/admin-shell.tsx",
+        "apps/admin-web/src/components/admin/agency-sla-status.tsx",
+        "apps/admin-web/src/components/admin/confirm-button.tsx",
+        "apps/admin-web/src/components/admin/data-table.tsx",
+        "apps/admin-web/src/components/admin/date-range-picker.tsx",
+        "apps/admin-web/src/components/admin/editable-data-table.tsx",
+        "apps/admin-web/src/components/admin/header.tsx",
+        "apps/admin-web/src/components/admin/notification-detail-panel.tsx",
+        "apps/admin-web/src/components/admin/notification-item.tsx",
+        "apps/admin-web/src/components/admin/notifications-drawer.tsx",
+        "apps/admin-web/src/components/admin/payment-refund-action.tsx",
+        "apps/admin-web/src/components/admin/request-review-panel.tsx",
+        "apps/admin-web/src/components/admin/request-status-actions.tsx",
+        "apps/admin-web/src/components/admin/scrollable-chip-row.tsx",
+        "apps/admin-web/src/components/admin/service-sla-report.tsx",
+        "apps/admin-web/src/components/admin/sidebar-nav.tsx",
+        "apps/admin-web/src/components/admin/static-placeholder.tsx",
+        "apps/admin-web/src/components/admin/status-pill.tsx",
+        "apps/admin-web/src/components/admin/table-scroll-area.tsx",
+        "apps/admin-web/src/components/loading/loading-button-content.tsx",
+        "apps/admin-web/src/components/loading/loading-status.tsx",
+        "apps/admin-web/src/components/loading/page-skeleton.tsx",
+        "apps/admin-web/src/components/loading/skeleton.tsx",
+        "apps/admin-web/src/components/loading/spinner.tsx",
+        "apps/admin-web/src/hooks/use-admin-audit-notifications.ts",
+        "apps/admin-web/src/hooks/use-audit-log-browser.ts",
+        "apps/admin-web/src/hooks/use-mount-transition.ts",
+        "apps/admin-web/src/lib/audit-notifications.ts",
+        "apps/admin-web/src/lib/supabase/client.ts",
+        "apps/admin-web/src/lib/supabase/server.ts"
+      ],
+      "status": 0,
+      "error": null,
+      "elapsedMs": 21319,
+      "timeoutMs": 45000,
+      "boundary": "Affected source batch only; initial combined lint timeout is retained."
+    }
+  ],
+  "initialLintTimeoutPreserved": true,
+  "explicitLocalReadRetries": 1,
+  "localHostedAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "hostedHistoricalAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": true,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "readPoliciesMatch": true,
+  "policyDifferences": {
+    "onlyInHosted": [
+      {
+        "cmd": "INSERT",
+        "qual": null,
+        "roles": [
+          "authenticated"
+        ],
+        "tablename": "payments",
+        "policyname": "residents can create a payment on their own request",
+        "with_check": "((barangay_id = current_barangay_id()) AND (EXISTS ( SELECT 1\n   FROM service_requests sr\n  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid())))))"
+      }
+    ],
+    "onlyInLocal": []
+  },
+  "indexedSourceFiles": 68,
+  "activeIndexEntries": 638,
+  "verifiedFieldDefinitions": 255,
+  "supplementalColumns": 50,
+  "supplementalFunctions": 11,
+  "scope": {
+    "baselineFiles": 3320,
+    "changed": [],
+    "missing": [],
+    "addedOutsideScope": [],
+    "exactWorkspaceEquality": true
+  },
+  "highestRepositoryMigration": "0109_invalidate_changed_profile_email_verification.sql",
+  "historicalRuntimeCounts": {
+    "authenticatedApiAssertions": 42,
+    "queryEdgeAssertions": 11,
+    "renderedScreens": 8,
+    "browserInteractionAssertions": 30,
+    "realTableSubscriptionChecks": 5,
+    "browserPermissionChecks": 2
+  },
+  "retainedRuntimeReportHashesMatch": true,
+  "freshHostedCatalogAndScaleRead": true,
+  "freshAuthenticatedBrowserRealtimeRun": false,
+  "resourcesCreated": [],
+  "temporaryObjectsCreated": [],
+  "applicationChangesByThisTask": [],
+  "trackedWhitespaceStatus": 0,
+  "artifactHashes": {
+    "audit.mjs": "9af6e0da4e256f3a5745019d54245973105bcc6e5263dd521b4e8a53139cb3f3",
+    "baseline-status.txt": "be2ba36d82b040193a97e2a63a5788f7d8c3e079d27219ae0ef39c2a44a58a98",
+    "baseline.json": "04fe3a5a659b85b972ad00278e17a130e4df09454c40048a4a601f15d26a9ad7",
+    "checks.mjs": "7a03e3a3e56473b01d71d472f755426c5d61e906cc14530aa85b937659735e76",
+    "comparison-fixture-results.json": "58e84f682475299e8f2de98ad354d4744a0016f244e6443683f1b0f9227ce191",
+    "comparison-fixture.sql": "3c355f412b85ed97329dacbc556886e02496ac70c6e6591c8c2851f7e8de0c96",
+    "diff-whitespace.log": "b0ac7ac2773fafbe1989c3d17d618489ae85b563c1d8c69d15a94f875bb02aad",
+    "field-contracts.json": "5371e94d512c20e91c59409a9e12df27b83a234339133117ccf937b47e6fa2fa",
+    "field-contracts.mjs": "176aab9aff7eb566ca8d63908fbbe0c0ff4a7947e6157dbf591fff67084bbce7",
+    "finalize.mjs": "bbae9c91d6b07a00a7aade42d8b3fc87b3a07f27f6374eadbb844f1a312abaca",
+    "fixtures-result.json": "ad047f4ebbac8610235ab2649c4a5bd4166df944baef908ddd2ae63eacd47038",
+    "fixtures.log": "bf2a97fc9a9ff58bdb7db24d94b89da2589639321ad7309ade7d9ca42cad6430",
+    "fixtures.mjs": "ef284c9df0ebc28743fef2d265dcdd56ee223078755e91155dc95d711e89b272",
+    "focused-lint.json": "ccc618265ec0413ce172e7fba3dde72fdf548a6789dea9f4d5fb1e564b47f019",
+    "focused-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "focused-lint.mjs": "55d93b30d95800d0971967fb11b888f8013ee613eb74b01bb1c49d40e55e64d6",
+    "hosted-scale-query.sql": "99d9fa442d0a466a9aac5d9913178542c38b1b534bec72e9f91b423ec6d28915",
+    "hosted-scale.json": "c363f360e839e1fbc727f3de8fbd5de5be69fbe5736dcdc883cfe88cb578f899",
+    "hosted-schema-query.sql": "a17453429cd8fa68e023c97b39d8c48bd3749720c12af589f93de38d86c880cf",
+    "hosted-schema.json": "ffe1987176478ad3d7decfb34f990bf5474b1931117362f6adecd5afe92c1c65",
+    "inventory.mjs": "ea84c58a97dd5e1332b7fed6a31d490e39a803e222d60c6f2cdbd92f1cbe1116",
+    "lint-attempt1-focused.json": "ccc618265ec0413ce172e7fba3dde72fdf548a6789dea9f4d5fb1e564b47f019",
+    "lint-attempt1-result.json": "7fd93bceeb2de6009ce6ee1d1e099ac1daf2bdcde4a42848350600532fc7af62",
+    "lint-attempt1.log": "de64b28c92d13bee5c55d0e043d2305802ad73845b4dbe3e4c0b9516f9b8a3ce",
+    "lint-batch0.json": "6a93e09ca18160e07b66136d2b309ead9a06979084c3a33b29f1904ceab5bb67",
+    "lint-batch0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint-batch1.json": "ebd6d8f56e02dbd90101aeee6de188bebbe5a6e0a00eab286180c417e200c352",
+    "lint-batch1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint-result.json": "7fd93bceeb2de6009ce6ee1d1e099ac1daf2bdcde4a42848350600532fc7af62",
+    "lint.log": "de64b28c92d13bee5c55d0e043d2305802ad73845b4dbe3e4c0b9516f9b8a3ce",
+    "local-attempt1-catalog.log": "f89815d4595407c5445b5cd4bec5a3d3279f8c9d3f4c7f63b9455a24fbbeeeed",
+    "local-attempt1-result.json": "5712ba0c8ed2ef09e562f2c39bb3cf50695f0660a3e36ae5c02b03672478f394",
+    "local-attempt1.log": "71947f8973e9c90e62367cf4d0437b17126ad4779a5359d9a89489d0d10ed552",
+    "local-catalog-approved.log": "e987177c5208d4f5a3d5fecfae2513ab93b2e54a038cfa182f6715707ae30835",
+    "local-read.mjs": "161327ebd53fec3fab2e2fcb0dc76c08dac0a3b54821f4f60a125b313468a825",
+    "local-result.json": "cbbd586d722c20f8dfaba5fcf9e8e7b4d7f28936d23a3b8e7bc0058585aa471b",
+    "local-schema.json": "ec6532e404edc1c74eab33a85fba95c644663e03cd68bdfd9e017d032656ba7a",
+    "local.log": "854d3f4c85319840c4cbe46b2d636f3152cad3d2c31c13c7fb5ace3b730e1827",
+    "nested-catalog.json": "9ed0b5008e5c9200005aa917512fa667ca174f14b43ce5637e249a103faccb53",
+    "nested-catalog.log": "a9942d7b7a331375808d663c45fd20f8c3c1757596312d2e500d5edc25106f96",
+    "nested-catalog.mjs": "e7c71e9123ceeef5c4c5100a917cd2bee3c7200d83cf9d1c2502c570dff67095",
+    "nested-catalog.sql": "79a4155e59ef92e9f11c5c2e51a66a6b676a8b3441b4f1051eb4d752cf5f91a6",
+    "README.md": "86a92e82e5b90febce2645b8130f7d2adbe8035ca86a6d9115b420fe7bd7bbbd",
+    "schema-alignment.json": "1e6e00808305fed93eaac3234097821bdcb4ba5ce01454db018a82717833d954",
+    "scope-and-provenance.json": "43e2e4785d4c4a1a646f4f9e43ad056764a0907b0ce75d22ee220071374734f1",
+    "source-inventory.json": "7228db1c7c833db51ce8bc1c7d7215513fee112ebe001bddcc22b8f969871d83",
+    "sql-comparison.log": "432a131bcdb11ac18617ff42d95e86758ca08c5c443718257f8c70e4b1236293",
+    "typecheck-result.json": "13bec394829873a9982ef1958f4bb6423cef633b7a668581e5d97b4ba58fee4d",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "verify.mjs": "610292ca2259d0361043ecf951b822b6397a4a5589e8a7b9f9029d80fa301677"
+  },
+  "limitations": [
+    "AST/VM checks do not execute every mutation, SQL ordering, RLS or Realtime.",
+    "Retained isolated authenticated/browser/feed evidence is historical with verified source linkage.",
+    "Hosted metadata/scale reads are not authenticated hosted acceptance or performance tests.",
+    "Production build, physical input, cross-browser/accessibility and large-data benchmarks were not run."
+  ]
+}

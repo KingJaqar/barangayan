@@ -41,6 +41,8 @@ export * from './lib/supabase-client';
 export * from './lib/haversine';
 export * from './lib/point-in-polygon';
 export * from './lib/resident-auth';
+export * from './lib/resident-account-setup';
+export * from './lib/resident-email-verification';
 export * from './lib/auth-fetch';
 export * from './lib/osrm';
 export * from './lib/geocode';

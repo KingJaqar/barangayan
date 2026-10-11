@@ -1,0 +1,69 @@
+2026-10-11T10:21:38.328Z eslint:cli CLI args: [ '--debug', 'src/lib/supabase/server.ts' ]
+2026-10-11T10:21:38.331Z eslint:cli Using flat config? true
+2026-10-11T10:21:38.337Z eslint:cli Running on files
+2026-10-11T10:21:38.339Z eslint:eslint Using config loader LegacyConfigLoader
+2026-10-11T10:21:38.339Z eslint:eslint Using file patterns: src/lib/supabase/server.ts
+2026-10-11T10:21:38.339Z eslint:eslint Deleting cache file at C:\Users\User\barangayan\apps\admin-web\.eslintcache
+2026-10-11T10:21:38.341Z eslint:config-loader Calculating config for file C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:38.341Z eslint:config-loader Searching for eslint.config.js
+2026-10-11T10:21:38.343Z eslint:config-loader [Legacy]: Calculating config for C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:38.344Z eslint:config-loader [Legacy]: Using config file C:\Users\User\barangayan\apps\admin-web\eslint.config.mjs and base path C:\Users\User\barangayan\apps\admin-web
+2026-10-11T10:21:38.344Z eslint:config-loader Calculating config array from config file C:\Users\User\barangayan\apps\admin-web\eslint.config.mjs and base path C:\Users\User\barangayan\apps\admin-web
+2026-10-11T10:21:38.345Z eslint:config-loader Loading config file C:\Users\User\barangayan\apps\admin-web\eslint.config.mjs
+2026-10-11T10:21:38.345Z eslint:config-loader Loading config from C:\Users\User\barangayan\apps\admin-web\eslint.config.mjs
+2026-10-11T10:21:38.345Z eslint:config-loader Config file URL is file:///C:/Users/User/barangayan/apps/admin-web/eslint.config.mjs
+2026-10-11T10:21:42.202Z eslint:rules Loading rule 'consistent-return' (remaining=291)
+2026-10-11T10:21:42.259Z eslint:rules Loading rule 'dot-notation' (remaining=290)
+2026-10-11T10:21:42.293Z eslint:rules Loading rule 'init-declarations' (remaining=289)
+2026-10-11T10:21:42.298Z eslint:rules Loading rule 'max-params' (remaining=288)
+2026-10-11T10:21:42.394Z eslint:rules Loading rule 'no-dupe-class-members' (remaining=287)
+2026-10-11T10:21:42.414Z eslint:rules Loading rule 'no-empty-function' (remaining=286)
+2026-10-11T10:21:42.467Z eslint:rules Loading rule 'no-invalid-this' (remaining=285)
+2026-10-11T10:21:42.475Z eslint:rules Loading rule 'no-loop-func' (remaining=284)
+2026-10-11T10:21:42.480Z eslint:rules Loading rule 'no-loss-of-precision' (remaining=283)
+2026-10-11T10:21:42.486Z eslint:rules Loading rule 'no-magic-numbers' (remaining=282)
+2026-10-11T10:21:42.580Z eslint:rules Loading rule 'no-restricted-imports' (remaining=281)
+2026-10-11T10:21:42.781Z eslint:rules Loading rule 'no-unused-expressions' (remaining=280)
+2026-10-11T10:21:42.820Z eslint:rules Loading rule 'no-useless-constructor' (remaining=279)
+2026-10-11T10:21:42.877Z eslint:rules Loading rule 'prefer-destructuring' (remaining=278)
+2026-10-11T10:21:45.391Z eslint:config-loader Config file C:\Users\User\barangayan\apps\admin-web\eslint.config.mjs is not empty
+2026-10-11T10:21:45.393Z eslint:eslint 1 file(s) found in 7053 ms
+2026-10-11T10:21:45.393Z eslint:eslint Linting in single-thread mode.
+2026-10-11T10:21:45.393Z eslint:config-loader Looking up cached config for C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.393Z eslint:config-loader [Legacy]: Looking up cached config for C:\Users\User\barangayan\apps\admin-web\src\lib\supabase
+2026-10-11T10:21:45.433Z eslint:rules Loading rule 'constructor-super' (remaining=277)
+2026-10-11T10:21:45.436Z eslint:rules Loading rule 'getter-return' (remaining=276)
+2026-10-11T10:21:45.438Z eslint:rules Loading rule 'no-class-assign' (remaining=275)
+2026-10-11T10:21:45.441Z eslint:rules Loading rule 'no-const-assign' (remaining=274)
+2026-10-11T10:21:45.442Z eslint:rules Loading rule 'no-dupe-args' (remaining=273)
+2026-10-11T10:21:45.444Z eslint:rules Loading rule 'no-dupe-keys' (remaining=272)
+2026-10-11T10:21:45.446Z eslint:rules Loading rule 'no-func-assign' (remaining=271)
+2026-10-11T10:21:45.448Z eslint:rules Loading rule 'no-import-assign' (remaining=270)
+2026-10-11T10:21:45.453Z eslint:rules Loading rule 'no-new-native-nonconstructor' (remaining=269)
+2026-10-11T10:21:45.456Z eslint:rules Loading rule 'no-new-symbol' (remaining=268)
+2026-10-11T10:21:45.459Z eslint:rules Loading rule 'no-obj-calls' (remaining=267)
+2026-10-11T10:21:45.463Z eslint:rules Loading rule 'no-redeclare' (remaining=266)
+2026-10-11T10:21:45.466Z eslint:rules Loading rule 'no-setter-return' (remaining=265)
+2026-10-11T10:21:45.469Z eslint:rules Loading rule 'no-this-before-super' (remaining=264)
+2026-10-11T10:21:45.472Z eslint:rules Loading rule 'no-undef' (remaining=263)
+2026-10-11T10:21:45.475Z eslint:rules Loading rule 'no-unreachable' (remaining=262)
+2026-10-11T10:21:45.478Z eslint:rules Loading rule 'no-unsafe-negation' (remaining=261)
+2026-10-11T10:21:45.481Z eslint:rules Loading rule 'no-var' (remaining=260)
+2026-10-11T10:21:45.485Z eslint:rules Loading rule 'no-with' (remaining=259)
+2026-10-11T10:21:45.486Z eslint:rules Loading rule 'prefer-const' (remaining=258)
+2026-10-11T10:21:45.493Z eslint:rules Loading rule 'prefer-rest-params' (remaining=257)
+2026-10-11T10:21:45.495Z eslint:rules Loading rule 'prefer-spread' (remaining=256)
+2026-10-11T10:21:45.498Z eslint:rules Loading rule 'no-array-constructor' (remaining=255)
+2026-10-11T10:21:45.501Z eslint:rules Loading rule 'no-unused-vars' (remaining=254)
+2026-10-11T10:21:45.552Z eslint:eslint-helpers File "C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts" read in 3 ms
+2026-10-11T10:21:45.553Z eslint:linter Linting code for C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts (pass 1)
+2026-10-11T10:21:45.553Z eslint:linter Verify
+2026-10-11T10:21:45.553Z eslint:linter With flat config: C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.555Z eslint:languages:js Parsing: C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.609Z eslint:languages:js Parsing successful: C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.609Z eslint:languages:js Scope analysis: C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.609Z eslint:languages:js Scope analysis successful: C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts
+2026-10-11T10:21:45.713Z eslint:linter Generating fixed text for C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts (pass 1)
+2026-10-11T10:21:45.714Z eslint:source-code-fixer Applying fixes
+2026-10-11T10:21:45.714Z eslint:source-code-fixer shouldFix parameter was false, not attempting fixes
+2026-10-11T10:21:45.714Z eslint:eslint-helpers File "C:\Users\User\barangayan\apps\admin-web\src\lib\supabase\server.ts" linted in 161 ms

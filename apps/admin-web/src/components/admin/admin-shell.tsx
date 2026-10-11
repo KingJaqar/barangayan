@@ -42,7 +42,7 @@ export function AdminShell({ barangayName, adminName, barangayId, children }: Ad
       />
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <SidebarNav collapsed={collapsed} onLogout={handleLogout} />
-        <main className="flex-1 overflow-y-auto overflow-x-auto bg-zinc-50 p-8 dark:bg-black">{children}</main>
+        <main data-admin-viewport className="min-w-0 flex-1 overflow-y-auto overflow-x-auto bg-zinc-50 p-8 dark:bg-black">{children}</main>
       </div>
     </div>
   );

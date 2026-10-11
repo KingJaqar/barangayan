@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { Href, Link, useRouter } from 'expo-router';
-import { useState, type ReactNode } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Href, Link, useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState, type ReactNode } from 'react';
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 
@@ -12,6 +12,7 @@ import { CustomAccentColorModal } from '@/components/custom-accent-color-modal';
 import { DeleteAccountModal } from '@/components/delete-account-modal';
 import { Divider } from '@/components/divider';
 import { LoadingOverlay } from '@/components/loading-overlay';
+import { PrimaryButton } from '@/components/primary-button';
 import { PreferenceToggle } from '@/components/preference-toggle';
 import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { SegmentedControl } from '@/components/segmented-control';
@@ -27,6 +28,8 @@ import { useNotificationPreferences } from '@/hooks/use-notification-preferences
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { MAX_CUSTOM_COLORS, useThemePreference, type ThemePreference } from '@/hooks/use-theme-preference';
+import { clearGoogleReauthentication, googleReauthentication, startGoogleAuth } from '@/lib/google-auth';
+import { accountSettingsRows, deletionConfirmation } from '@/lib/sensitive-auth';
 import { supabase } from '@/lib/supabase';
 
 // supabase.functions.invoke() surfaces a non-2xx response as a generic
@@ -48,8 +51,9 @@ async function toEdgeFunctionError(error: unknown): Promise<Error> {
 }
 
 export default function SettingsScreen() {
-  const { session, logout } = useAuth();
+  const { session, logout, setup, setupRefreshError, refreshCompletion } = useAuth();
   const { profile } = useProfile();
+  const rows = accountSettingsRows(setup);
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -65,6 +69,9 @@ export default function SettingsScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isExportingData, setIsExportingData] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isConfirmingGoogle, setIsConfirmingGoogle] = useState(false);
+  const [isGoogleDeleteReady, setIsGoogleDeleteReady] = useState(false);
+  const [deleteNotice, setDeleteNotice] = useState<string | null>(null);
 
   async function handleLogout() {
     // Stays on this screen the whole time — logout() flips into Guest Mode instead of
@@ -153,14 +160,90 @@ export default function SettingsScreen() {
   // device shouldn't be enough on its own to permanently delete an account).
   function handleDeleteAccount() {
     if (!session) return;
+    // The confirmation step depends on the server-maintained password state: an
+    // existing (or unknown legacy) password is re-entered; a passwordless Google
+    // resident confirms with fresh same-account Google authentication instead.
+    const method = deletionConfirmation(setup);
+    if (method === 'unavailable') {
+      Alert.alert('Account Status Unavailable', 'We could not confirm how to verify your account. Retry, then try again.', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Retry', onPress: () => { void refreshCompletion(); } },
+      ]);
+      return;
+    }
+    if (method === 'recover_first') {
+      Alert.alert('Set a Password First', 'Your account has no password and no linked Google sign-in to confirm it is you. Set a password with password recovery from Change Password, then delete your account.');
+      return;
+    }
     Alert.alert(
       'Delete Your Account?',
       'This permanently anonymizes your profile and signs you out of Barangayan for good. Your service request and incident history stays on file for the barangay\'s records, but is no longer linked to your name. This cannot be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete Account', style: 'destructive', onPress: () => setIsDeleteModalVisible(true) },
+        method === 'google'
+          ? { text: 'Confirm with Google', style: 'destructive', onPress: () => { void confirmDeleteWithGoogle(); } }
+          : { text: 'Delete Account', style: 'destructive', onPress: () => setIsDeleteModalVisible(true) },
       ],
     );
+  }
+
+  // ── Passwordless Google deletion ─────────────────────────────────────────
+  // Results are rendered from state (inline notice / modal), not Alert: an Alert
+  // raised while Android is returning from the browser can be silently dropped.
+  async function confirmDeleteWithGoogle() {
+    if (isConfirmingGoogle || isDeletingAccount) return;
+    setDeleteNotice(null);
+    setIsConfirmingGoogle(true);
+    try {
+      await startGoogleAuth('reauthenticate', 'delete_account');
+    } catch (e: unknown) {
+      setDeleteNotice(`Account not deleted. ${e instanceof Error ? e.message : 'Google confirmation did not finish.'}`);
+      return;
+    } finally {
+      setIsConfirmingGoogle(false);
+    }
+    await offerGoogleConfirmedDeletion();
+  }
+
+  // Runs after the in-app return and after a callback that routed back to Settings.
+  // Still requires an explicit final tap; cancelling consumes the confirmation.
+  const offerGoogleConfirmedDeletion = useCallback(async () => {
+    setIsGoogleDeleteReady((await googleReauthentication('delete_account').catch(() => 'none')) === 'fresh');
+  }, []);
+  // Only the focused Settings screen may show the final dialog.
+  const [isFocused, setIsFocused] = useState(false);
+  useFocusEffect(useCallback(() => {
+    setIsFocused(true);
+    void offerGoogleConfirmedDeletion();
+    return () => setIsFocused(false);
+  }, [offerGoogleConfirmedDeletion]));
+
+  function cancelGoogleDeletion() {
+    if (isDeletingAccount) return;
+    setIsGoogleDeleteReady(false);
+    setDeleteNotice('Account not deleted.');
+    void clearGoogleReauthentication().catch(() => {});
+  }
+
+  async function deleteAfterGoogle() {
+    if (isDeletingAccount) return;
+    setIsDeletingAccount(true);
+    try {
+      // Recheck at the moment of the irreversible request, not when the dialog opened.
+      if ((await googleReauthentication('delete_account')) !== 'fresh') {
+        throw new Error('Your Google confirmation expired. Start Delete My Account again.');
+      }
+      const { error } = await supabase.functions.invoke('delete-my-account');
+      if (error) throw await toEdgeFunctionError(error);
+      setIsGoogleDeleteReady(false);
+      await logout();
+    } catch (e: unknown) {
+      void clearGoogleReauthentication().catch(() => {});
+      setIsGoogleDeleteReady(false);
+      setDeleteNotice(`Account not deleted. ${e instanceof Error ? e.message : 'Please try again.'}`);
+    } finally {
+      setIsDeletingAccount(false);
+    }
   }
 
   async function confirmDeleteAccount(password: string) {
@@ -173,7 +256,10 @@ export default function SettingsScreen() {
     // delete-my-account function only checks that the caller holds *a*
     // valid session, not that the person holding it is the account owner
     // right now.
-    const { error: reauthError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: reauthData, error: reauthError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!reauthError && reauthData.user?.id !== session?.user.id) {
+      throw new Error('The account changed. Sign in to your own account and try again.');
+    }
     if (reauthError) {
       if (reauthError.message.toLowerCase().includes('invalid login credentials')) {
         throw new Error('Incorrect password.');
@@ -211,32 +297,56 @@ export default function SettingsScreen() {
           <Section title="Account">
             <Card>
               <Link href="/settings/profile" asChild>
-                <Pressable style={styles.row}>
+                <Pressable
+                  style={styles.row}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${profile?.full_name ?? 'Profile'}, ${rows.profile.subtitle}`}>
                   <Avatar
                     fullName={profile?.full_name ?? 'Resident'}
                     imageUrl={(profile as any)?.avatar_url ?? null}
                   />
                   <View style={styles.rowText}>
                     <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                      Edit Profile
-                    </ThemedText>
+                    <StatusLine text={rows.profile.subtitle} warning={rows.profile.warning} />
                   </View>
                   <Chevron />
                 </Pressable>
               </Link>
               <Divider />
               <Link href="/settings/change-password" asChild>
-                <Pressable style={styles.row}>
+                <Pressable
+                  style={styles.row}
+                  accessibilityRole="button"
+                  accessibilityLabel={[rows.password.title, rows.password.subtitle].filter(Boolean).join(', ')}>
                   <SettingsIcon name="lock-closed" />
-                  <ThemedText style={styles.rowLabel}>Change Password</ThemedText>
+                  <View style={styles.rowText}>
+                    <ThemedText>{rows.password.title}</ThemedText>
+                    {rows.password.subtitle ? <StatusLine text={rows.password.subtitle} warning={rows.password.warning} /> : null}
+                  </View>
                   <Chevron />
                 </Pressable>
               </Link>
+              {setupRefreshError ? (
+                <>
+                  <Divider />
+                  <Pressable
+                    style={styles.row}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${setupRefreshError} Retry account status`}
+                    onPress={() => { void refreshCompletion(); }}>
+                    <SettingsIcon name="refresh" />
+                    <View style={styles.rowText}>
+                      <ThemedText>Retry account status</ThemedText>
+                      <ThemedText type="small" themeColor="accentRed" accessibilityLiveRegion="polite">
+                        {setupRefreshError}
+                      </ThemedText>
+                    </View>
+                  </Pressable>
+                </>
+              ) : null}
               <Divider />
-              {/* Deferred verification — nonblocking, informational only. Once SMTP is
-                  available this becomes an active "Verify Email" entry point. */}
-              <View style={styles.row}>
+              <Link href="/settings/email-verification" asChild>
+              <Pressable style={styles.row} accessibilityRole="button">
                 <SettingsIcon name="mail" />
                 <View style={styles.rowText}>
                   <ThemedText>Email Verification</ThemedText>
@@ -246,7 +356,9 @@ export default function SettingsScreen() {
                       : 'Verify Your Email'}
                   </ThemedText>
                 </View>
-              </View>
+                <Chevron />
+              </Pressable>
+              </Link>
               <Divider />
               <Link href="/settings/location-verification" asChild>
                 <Pressable style={styles.row}>
@@ -400,11 +512,18 @@ export default function SettingsScreen() {
                 <Chevron />
               </Pressable>
               <Divider />
-              <Pressable style={styles.row} onPress={handleDeleteAccount} disabled={isDeletingAccount}>
+              <Pressable style={styles.row} onPress={handleDeleteAccount} disabled={isDeletingAccount || isConfirmingGoogle}>
                 <SettingsIcon name="trash" color={theme.accentRed} />
-                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>Delete My Account</ThemedText>
+                <ThemedText style={[styles.rowLabel, { color: theme.accentRed }]}>
+                  {isConfirmingGoogle ? 'Confirming with Google…' : 'Delete My Account'}
+                </ThemedText>
                 <Chevron color={theme.accentRed} />
               </Pressable>
+              {deleteNotice ? (
+                <ThemedText type="small" themeColor="accentRed" accessibilityLiveRegion="polite" style={styles.deleteNotice}>
+                  {deleteNotice}
+                </ThemedText>
+              ) : null}
             </Card>
           </Section>
         ) : null}
@@ -456,6 +575,21 @@ export default function SettingsScreen() {
         label={isDeletingAccount ? 'Deleting account...' : 'Logging out...'}
       />
 
+      <Modal visible={isGoogleDeleteReady && isFocused && !!session} transparent animationType="fade" onRequestClose={cancelGoogleDeletion}>
+        <View style={styles.confirmOverlay}>
+          <View style={[styles.confirmSheet, { backgroundColor: theme.background }]} accessibilityViewIsModal>
+            <ThemedText type="smallBold" accessibilityRole="header" style={styles.confirmTitle}>
+              Permanently Delete Account?
+            </ThemedText>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.confirmText}>
+              Google confirmed it is you. Deleting cannot be undone.
+            </ThemedText>
+            <PrimaryButton label="Delete Account" variant="destructive" loading={isDeletingAccount} onPress={() => { void deleteAfterGoogle(); }} />
+            <PrimaryButton label="Cancel" variant="secondary" disabled={isDeletingAccount} onPress={cancelGoogleDeletion} />
+          </View>
+        </View>
+      </Modal>
+
       <DeleteAccountModal
         visible={isDeleteModalVisible}
         onClose={() => setIsDeleteModalVisible(false)}
@@ -483,6 +617,26 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
         {title.toUpperCase()}
       </ThemedText>
       {children}
+    </View>
+  );
+}
+
+/** Secondary row text; a warning adds an icon and color, never color alone. */
+function StatusLine({ text, warning }: { text: string; warning: boolean }) {
+  const theme = useTheme();
+  if (!warning) {
+    return (
+      <ThemedText type="small" themeColor="textSecondary">
+        {text}
+      </ThemedText>
+    );
+  }
+  return (
+    <View style={styles.warningLine}>
+      <Ionicons name="alert-circle" size={14} color={theme.accentRed} accessible={false} />
+      <ThemedText type="small" themeColor="accentRed">
+        {text}
+      </ThemedText>
     </View>
   );
 }
@@ -556,6 +710,33 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     flex: 1,
+  },
+  warningLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
+  },
+  deleteNotice: {
+    paddingHorizontal: Spacing.three,
+    paddingBottom: Spacing.three,
+  },
+  confirmOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    padding: Spacing.four,
+  },
+  confirmSheet: {
+    borderRadius: 24,
+    padding: Spacing.four,
+    gap: Spacing.three,
+  },
+  confirmTitle: {
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  confirmText: {
+    textAlign: 'center',
   },
   themeSection: {
     padding: Spacing.three,

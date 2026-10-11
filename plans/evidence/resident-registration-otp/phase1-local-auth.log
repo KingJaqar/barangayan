@@ -1,0 +1,14 @@
+PASS actual OTP creation has a nonempty generated hash and passwordSet=false
+PASS actual OTP resend preserves unset state
+PASS verification/metadata spoofing/refresh do not invent credential or Google evidence
+PASS 18 shared-schema/SQL completeness parity fixtures
+PASS profile-less account completion and concurrent same-user retries create one profile
+PASS actual setup/change, old credential rejection and new credential sign-in
+PASS actual recovery credential update and sign-in
+PASS lifecycle observer failure rolls back password write and preserves working credential
+PASS Auth-managed Google identity linking/unlinking and provisioning preserve profile/origin/password
+PASS legacy initial credential remains usable with unknown provenance
+PASS actual REST rejects anonymous/other-user status arguments/private table exposure
+PASS earlier access JWT cannot resume deleted profile setup or submit an incident
+PASS Auth trigger failure rolls back account creation
+PASS isolated Auth lifecycle integration complete; no passwords/tokens/keys emitted

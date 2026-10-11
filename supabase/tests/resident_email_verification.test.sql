@@ -1,0 +1,26 @@
+begin;
+select no_plan();
+insert into public.barangays(id,name) values ('a6090000-0000-0000-0000-000000000001','Email Verification Local');
+insert into auth.users(id,email,raw_user_meta_data) values ('b6090000-0000-0000-0000-000000000001','verified@local.test','{}');
+insert into public.profiles(id,barangay_id,role,first_name,last_name,email,email_verification_status,email_verified_at,email_verification_requested_at)
+values ('b6090000-0000-0000-0000-000000000001','a6090000-0000-0000-0000-000000000001','resident','Email','Resident','verified@local.test','verified',now(),now());
+select ok(not has_function_privilege('authenticated','barangayan_private.reset_changed_profile_email_verification()','EXECUTE'),'Residents cannot invoke invalidation trigger');
+select ok(not has_function_privilege('anon','barangayan_private.reset_changed_profile_email_verification()','EXECUTE'),'No anonymous invalidation execution');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','b6090000-0000-0000-0000-000000000001',true);
+select set_config('request.jwt.claims','{"sub":"b6090000-0000-0000-0000-000000000001","role":"authenticated"}',true);
+select lives_ok($$update public.profiles set email='VERIFIED@local.test' where id=auth.uid()$$,'Address casing alone preserves verification');
+select is((select email_verification_status from public.profiles where id=auth.uid()),'verified','Same normalized address remains verified');
+select lives_ok($$update public.profiles set email='changed@local.test' where id=auth.uid()$$,'Permitted profile email edit is server-invalidated');
+select is((select email_verification_status from public.profiles where id=auth.uid()),'unverified','New address never inherits the badge');
+select ok((select email_verified_at is null and email_verification_requested_at is null from public.profiles where id=auth.uid()),'Old timestamps cleared');
+select throws_ok($$update public.profiles set email_verification_status='verified' where id=auth.uid()$$,'P0001',null,'Direct resident verification remains denied');
+select throws_ok($$update public.profiles set email='forged@local.test',email_verification_status='verified' where id=auth.uid()$$,'P0001',null,'Address change cannot mask a forged verification write');
+select is((select email from public.profiles where id=auth.uid()),'changed@local.test','Rejected forgery rolls back the email edit');
+select is((select role from public.profiles where id=auth.uid()),'resident','Invalidation does not alter authorization');
+reset role;
+select set_config('request.jwt.claims','{"role":"service_role"}',true);
+select lives_ok($$update public.profiles set email_verification_status='verified',email_verified_at=now() where id='b6090000-0000-0000-0000-000000000001'$$,'Server endpoint retains verification write access');
+select is((select email_verification_status from public.profiles where id='b6090000-0000-0000-0000-000000000001'),'verified','Server-confirmed status persists');
+select * from finish();
+rollback;

@@ -1,0 +1,9 @@
+PASS P4-UPG-1 local database replayed to 0106; 0107-0109 pending and no lifecycle table exists
+PASS P4-UPG-2 representative pre-feature state: 8 Auth users incl. complete/partial/no-profile residents, Google-only, linked, staff, deleted and pending invitation
+PASS P4-UPG-3 `migration up --local` applied 0107, 0108 and 0109 over existing data without error
+PASS P4-UPG-4 backfill: one record per Auth user (absent:2, unknown_initial_hash:6); hash present → unknown, absent → false, none assumed chosen; every credential hash unchanged
+PASS P4-UPG-5 existing password logins work; status is legacy/unknown (never "not set") for hashed accounts, false for Google-only, Google from identities, staff/deleted fail closed; pre-existing completion and verified badge preserved
+PASS P4-UPG-6 a real post-upgrade password write is observed; replaying the 0107 backfill statement changes nothing (known chosen password kept); 0109 clears the badge only when the email changes
+PASS P4-UPG-7 local database restored by a full fresh replay through 0109
+PASS upgrade rehearsal complete; no passwords, tokens or keys emitted
+exit 0

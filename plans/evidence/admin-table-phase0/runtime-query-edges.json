@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "label": "Transaction multi-level OR finds one resident match without excluding other left branches",
+      "count": 1
+    },
+    {
+      "label": "Collector-name filter matches the separately populated collector join"
+    },
+    {
+      "label": "Escaped native imatch preserves percent/underscore/star/comma/parentheses as literal substring",
+      "pattern": "Literal %_\\.\\*,\\(quote\\) Ω",
+      "count": 1
+    },
+    {
+      "label": "Baseline capability limitation: ilike star alias broadens a literal asterisk",
+      "count": 2
+    },
+    {
+      "label": "Quoted regex OR preserves literal punctuation across existing direct columns"
+    },
+    {
+      "label": "Out-of-range API page raises a range error; it is not empty success",
+      "status": 416,
+      "code": "PGRST103",
+      "sdkCount": null
+    },
+    {
+      "label": "One bounded independent count recovers total after invalid range",
+      "count": 1505
+    },
+    {
+      "label": "Applicant pending filter produces an exact inner-score count",
+      "count": 1506
+    },
+    {
+      "label": "Applicant confirmed filter produces an exact inner-score count",
+      "count": 0
+    },
+    {
+      "label": "Applicant attended filter produces an exact inner-score count",
+      "count": 0
+    },
+    {
+      "label": "Applicant cancelled filter produces an exact inner-score count",
+      "count": 0
+    }
+  ],
+  "failures": []
+}

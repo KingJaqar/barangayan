@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-10-11T07:38:46.127Z",
+  "passed": false,
+  "checks": [
+    {
+      "label": "admin: real password session"
+    },
+    {
+      "label": "foreignAdmin: real password session"
+    },
+    {
+      "label": "resident: real password session"
+    },
+    {
+      "label": "removedAdmin: real password session"
+    }
+  ],
+  "limitations": [],
+  "failures": [
+    {
+      "name": "AssertionError",
+      "message": "Synthetic sentinel retained by actual profile triggers"
+    }
+  ]
+}

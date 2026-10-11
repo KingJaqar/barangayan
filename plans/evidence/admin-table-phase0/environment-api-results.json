@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-10-11T06:53:12.432Z",
+  "operations": [
+    {
+      "command": [
+        "docker",
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "status": 0,
+      "stdout": "29.8.1\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "supabase",
+        "--version"
+      ],
+      "status": null,
+      "error": "ENOENT"
+    },
+    {
+      "command": [
+        "psql",
+        "--version"
+      ],
+      "status": null,
+      "error": "ENOENT"
+    },
+    {
+      "probe": "requests-resident-parent-order",
+      "role": "anon",
+      "query": "select=id%2Cresident%3Aprofiles%21service_requests_resident_id_fkey%28full_name%29&order=resident%28full_name%29.asc.nullslast%2Cid.asc&limit=0",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "requests-cross-relation-or",
+      "role": "anon",
+      "query": "select=id%2Cresident%3Aprofiles%21service_requests_resident_id_fkey%28full_name%29%2Cr%3Aprofiles%21service_requests_resident_id_fkey%28%29%2Cd%3Adocument_types%28%29&order=id.asc&limit=0&r.full_name=ilike.*synthetic-no-match*&d.name=ilike.*synthetic-no-match*&or=%28reference_number.ilike.*synthetic-no-match*%2Cr.not.is.null%2Cd.not.is.null%29",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "transactions-nested-parent-order",
+      "role": "anon",
+      "query": "select=id%2Crequest%3Aservice_requests%28resident%3Aprofiles%21service_requests_resident_id_fkey%28full_name%29%29&order=request%28resident%28full_name%29%29.asc%2Cid.asc&limit=0",
+      "status": 400,
+      "contentRange": null,
+      "error": {
+        "code": "PGRST100",
+        "message": "\"failed to parse order (request(resident(full_name)).asc,id.asc)\" (line 1, column 8)",
+        "hint": null
+      },
+      "returnedRows": null
+    },
+    {
+      "probe": "transactions-spread-alias-order",
+      "role": "anon",
+      "query": "select=id%2C...service_requests%28reference_number%2C...profiles%21service_requests_resident_id_fkey%28resident_name%3Afull_name%29%29&order=resident_name.asc%2Cid.asc&limit=0",
+      "status": 400,
+      "contentRange": null,
+      "error": {
+        "code": "42703",
+        "message": "column payments.resident_name does not exist",
+        "hint": null
+      },
+      "returnedRows": null
+    },
+    {
+      "probe": "transactions-spread-related-order",
+      "role": "anon",
+      "query": "select=id%2Cservice_requests%28reference_number%2C...profiles%21service_requests_resident_id_fkey%28resident_name%3Afull_name%29%29&order=service_requests%28resident_name%29.asc%2Cid.asc&limit=0",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "directory-base-order",
+      "role": "anon",
+      "query": "select=id%2Cfull_name%2Cupdated_at&order=full_name.asc.nullslast%2Cid.asc&limit=0",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "incident-category-parent-order",
+      "role": "anon",
+      "query": "select=id%2Ccategory%3Aincident_categories%28name%29&order=category%28name%29.asc.nullslast%2Cid.asc&limit=0",
+      "status": 206,
+      "contentRange": "*/18",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "health-base-order",
+      "role": "anon",
+      "query": "select=id%2Ccreated_at&order=created_at.desc.nullslast%2Cid.asc&limit=0",
+      "status": 206,
+      "contentRange": "*/12",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "health-registration-aggregate",
+      "role": "anon",
+      "query": "select=id%2Cdrive_registrations%28count%28%29%29&order=id.asc&limit=0",
+      "status": 400,
+      "contentRange": null,
+      "error": {
+        "code": "PGRST123",
+        "message": "Use of aggregate functions is not allowed",
+        "hint": null
+      },
+      "returnedRows": null
+    },
+    {
+      "probe": "applicant-score-parent-order",
+      "role": "anon",
+      "query": "select=id%2Cscore%3Adrive_registration_scores%21inner%28priority_score%29&order=score%28priority_score%29.desc.nullslast%2Cid.asc&limit=0",
+      "status": 401,
+      "contentRange": null,
+      "error": {
+        "code": "42501",
+        "message": "permission denied for table drive_registration_scores",
+        "hint": "Grant the required privileges to the current role with: GRANT SELECT ON public.drive_registration_scores TO anon;"
+      },
+      "returnedRows": null
+    },
+    {
+      "probe": "applicant-direct-profile-embed",
+      "role": "anon",
+      "query": "select=id%2Cprofiles%28full_name%29&order=id.asc&limit=0",
+      "status": 400,
+      "contentRange": null,
+      "error": {
+        "code": "PGRST200",
+        "message": "Could not find a relationship between 'drive_registrations' and 'profiles' in the schema cache",
+        "hint": null
+      },
+      "returnedRows": null
+    },
+    {
+      "probe": "household-head-parent-order",
+      "role": "anon",
+      "query": "select=id%2Chead%3Aprofiles%21household_members_profile_id_fkey%28full_name%29%2Cupdated_at&order=head%28full_name%29.asc.nullslast%2Cid.asc&limit=0",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "probe": "staff-profile-parent-order",
+      "role": "anon",
+      "query": "select=id%2Cprofile%3Aprofiles%21inner%28full_name%29&order=profile%28full_name%29.asc.nullslast%2Cid.asc&limit=0",
+      "status": 200,
+      "contentRange": "*/0",
+      "error": null,
+      "returnedRows": 0
+    },
+    {
+      "documentation": "supabase changelog markdown",
+      "status": 200,
+      "breakingChangeLines": [
+        "2026-09-25 · Breaking Change · Database · [supabase.com/changelog/postgres-15-19-17-11-breaking-changes](https://supabase.com/changelog/postgres-15-19-17-11-breaking-changes)",
+        "2026-07-23 · Breaking Change · Platform · [supabase.com/changelog/48235-migration-of-supabase-management-api-logs-all-analytics-endpoint-to-logs-endpoint](https://supabase.com/changelog/48235-migration-of-supabase-management-api-logs-all-analytics-endpoint-to-logs-endpoint)",
+        "2026-07-22 · Breaking Change · Database, Security · [supabase.com/changelog/extension-version-pinning-ignored](https://supabase.com/changelog/extension-version-pinning-ignored)",
+        "## Self-hosted Supabase: Envoy becomes the default API gateway (breaking change)",
+        "2026-07-17 · Breaking Change · Platform · [supabase.com/changelog/48048-self-hosted-supabase-envoy-becomes-the-default-api-gateway-b](https://supabase.com/changelog/48048-self-hosted-supabase-envoy-becomes-the-default-api-gateway-b)",
+        "2026-07-14 · Breaking Change · Realtime · [supabase.com/changelog/realtime-schema-locked-down-against-modification](https://supabase.com/changelog/realtime-schema-locked-down-against-modification)",
+        "2026-06-18 · Breaking Change · Auth · [supabase.com/changelog/47093-self-hosted-supabase-api-external-url-to-include-auth-v1](https://supabase.com/changelog/47093-self-hosted-supabase-api-external-url-to-include-auth-v1)",
+        "2026-06-03 · Breaking Change · Platform · [supabase.com/changelog/46599-changes-to-email-template-customisation-on-free-tier](https://supabase.com/changelog/46599-changes-to-email-template-customisation-on-free-tier)",
+        "## Breaking change in pg_graphql 1.6.0 — GraphQL introspection disabled by default",
+        "2026-05-25 · Breaking Change · Database · [supabase.com/changelog/46320-breaking-change-in-pg-graphql-1-6-0-graphql-introspection-disabled-by-default](https://supabase.com/changelog/46320-breaking-change-in-pg-graphql-1-6-0-graphql-introspection-disabled-by-default)",
+        "2026-05-18 · Breaking Change · Observability · [supabase.com/changelog/46084-self-hosted-supabase-making-analytics-and-vector-opt-in](https://supabase.com/changelog/46084-self-hosted-supabase-making-analytics-and-vector-opt-in)",
+        "## Self-hosted Supabase: switching Studio from supabase_admin to postgres (breaking change)",
+        "2026-05-18 · Breaking Change · Database · [supabase.com/changelog/46081-self-hosted-supabase-switching-studio-from-supabase-admin-to-postgres-breaking-change](https://supabase.com/changelog/46081-self-hosted-supabase-switching-studio-from-supabase-admin-to-postgres-breaking-change)",
+        "## Self-hosted Supabase: upgrading from PG 15 to 17 (breaking change)",
+        "2026-05-18 · Breaking Change · Database · [supabase.com/changelog/46080-self-hosted-supabase-upgrading-from-pg-15-to-17-breaking-change](https://supabase.com/changelog/46080-self-hosted-supabase-upgrading-from-pg-15-to-17-breaking-change)",
+        "## Breaking Change: OAuth token endpoint will return HTTP 200 instead of 201",
+        "2026-05-01 · Breaking Change · Platform · [supabase.com/changelog/45468-breaking-change-oauth-token-endpoint-will-return-http-200-instead-of-201](https://supabase.com/changelog/45468-breaking-change-oauth-token-endpoint-will-return-http-200-instead-of-201)",
+        "## Breaking Change: Tables not exposed to Data and GraphQL API automatically",
+        "2026-04-28 · Breaking Change · Data APIs, Database · [supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically](https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically)",
+        "## Breaking Change: Removing access to OpenAPI spec via the anon key"
+      ]
+    }
+  ]
+}

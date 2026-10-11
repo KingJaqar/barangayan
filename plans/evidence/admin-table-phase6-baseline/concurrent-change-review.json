@@ -1,0 +1,42 @@
+{
+  "reviewedAt": "2026-10-11T10:27:27.828Z",
+  "files": [
+    {
+      "file": "apps/resident-android-mobile/app.json",
+      "baselineSha256": "f03569fe215783857c079958d9da4d05c428f4826a0158e9a180414354162995",
+      "sha256": "d8384cae3eda245e04f466730f94bfea7802d923a1275d1b741413e54d2bef1b",
+      "review": "Expo Android/EAS registration project configuration",
+      "taskWroteFile": false
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/_layout.tsx",
+      "baselineSha256": "beb5a288ab8186a91e03dd439528f1a4b1041d3dabbdf034ec7cca2d8b2a2575",
+      "sha256": "109d25175127377a50bc506ed81fa214dc8996c3470c0f01512080a3fe72f4e2",
+      "review": "Resident native callback hand-off and server setup route guard",
+      "taskWroteFile": false
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/index.tsx",
+      "baselineSha256": "eb66a4505500b4ecef7de14ede2820ebdbe581bc4afb608c4d01f43d25a583f9",
+      "sha256": "16ab4727acf5d821732ec446314734b2a74487cb69266721def48e77ec462585",
+      "review": "Resident root redirect waiting for callback hand-off",
+      "taskWroteFile": false
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/setup-navigation.test.ts",
+      "baselineSha256": "8d4e0abe2c0f8b50d51fac3424003d35f908595d95318ed325476faaf5d8f759",
+      "sha256": "d81b537ee6bb46d56e273856d02a6ec15558a69ac4b878479287b5344ae8d46d",
+      "review": "Callback/navigation tests for exact native route and one hand-off",
+      "taskWroteFile": false
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/setup-navigation.ts",
+      "baselineSha256": "93be6fa7ffec63e28b4cd57db82b3db50ac50eed6ad5a70425cfdd52dda4dfeb",
+      "sha256": "d2a0d825354e0c0ee59d012d864a97e0820ded87e535187cbfe016290dbcf418",
+      "review": "Resident callback routing helper and hand-off state",
+      "taskWroteFile": false
+    }
+  ],
+  "method": "Read current setup helper/tests and git diff for tracked config/layout/root files. Git diff includes pre-existing work; baseline stores hashes only, so exact baseline-to-current textual delta is unavailable.",
+  "boundary": "Concurrent resident registration/navigation changes outside this admin baseline task; preserved without repair/revert. Strict workspace equality remains false. Exact current hashes are required; new drift stops final consistency."
+}

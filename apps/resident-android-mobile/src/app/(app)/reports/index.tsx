@@ -181,7 +181,7 @@ export default function ReportsScreen() {
             { key: 'incident-reports', label: 'Incidents' },
             { key: 'active', label: 'Active' },
             { key: 'resolved', label: 'Resolved' },
-            { key: 'announcements', label: 'Announcements' },
+            { key: 'announcements', label: 'Announcements', icon: 'notifications-outline' },
           ]}
           activeKey={segment}
           onChange={handleSegmentChange}

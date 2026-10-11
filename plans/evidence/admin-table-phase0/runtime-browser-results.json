@@ -1,0 +1,481 @@
+{
+  "timestamp": "2026-10-11T07:45:03.135Z",
+  "passed": true,
+  "browser": "154.0.8037.99",
+  "screens": [
+    {
+      "route": "/requests",
+      "heading": "Requests",
+      "rows": 1000,
+      "headers": [
+        "Reference",
+        "Resident",
+        "Document",
+        "Status",
+        "Payment",
+        "Submitted",
+        "Notes",
+        "Actions"
+      ],
+      "firstRow": "#REQ-PHASE0-00506\tFixture Resident 506\tFixture Document Alpha\tSubmitted\tPending\tJan 1, 2026, 4:26 PM\tFixture notes\t\nMove to Processing\nCancel",
+      "searchPlaceholder": "Search reference, resident, document…",
+      "url": "http://127.0.0.1:3140/requests",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Requests\n\nWork document requests through their lifecycle.\n\nActive\n\n1000\n\nProcessing\n\n0\n\nReady for Pickup\n\n0\n\nCompleted\n\n0\n\nCancelled\n\n0\n\nReference ↑\nAll documents\nFixture Document Alpha\nSearch\n+ Add Request\nActive\nProcessing\nReady for Pickup\nCompleted\nCancelled\nAll\nREFERENCE\n\t\nRESIDENT\n\t\nDOCUMENT\n\t\nSTATUS\n\t\nPAYMENT\n\t\nSUBMITTED\n\t\nNOTES\n\t\nACTIONS\n\n#R"
+    },
+    {
+      "route": "/transactions",
+      "heading": "Financial Transactions",
+      "rows": 1000,
+      "headers": [
+        "Date",
+        "Reference",
+        "Resident",
+        "Document",
+        "Method",
+        "Amount",
+        "Status",
+        "Collected By / Source",
+        "Refund",
+        "Actions"
+      ],
+      "firstRow": "Jan 2, 2026, 9:05 AM\t#REQ-PHASE0-01505\tBeyond Cap Needle Ω\tFixture Document Alpha\tPay at Pickup\t₱1.00\tPending\t—\t—\t",
+      "searchPlaceholder": "Search reference, resident, document, collector…",
+      "url": "http://127.0.0.1:3140/transactions",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Financial Transactions\n\nPickup collections and QR PH receipts.\n\nTotal Collected (Pickup)\n\n₱0.00\n\nTotal Collected (QR PH)\n\n₱0.00\n\nTotal Pending\n\n₱1,000.00\n\nDate ↓\nAll Methods\nPay at Pickup\nQR PH\nSearch\n+ Add Transaction\nAll\nPending\nPaid\nFailed\nExpired\nRefunded\nDATE\n\t\nREFERENCE\n\t\nRESIDENT\n\t\nDOCUMENT\n\t\nMETHOD\n\t\nAMOUNT\n\t\nSTATUS\n\t\nCOLLECTED BY / SOURCE\n"
+    },
+    {
+      "route": "/residents",
+      "heading": "Resident Directory",
+      "rows": 1000,
+      "headers": [
+        "First Name",
+        "Last Name",
+        "Middle Name",
+        "Suffix",
+        "Sex",
+        "Email",
+        "Mobile",
+        "House No.",
+        "Street",
+        "City",
+        "Birthday",
+        "Employment Status",
+        "Occupation",
+        "ID Type",
+        "ID Status",
+        "Household",
+        "Email Verif.",
+        "Location Verified",
+        "Joined",
+        "Actions"
+      ],
+      "firstRow": "B\nBeyond Cap\n\tNeedle Ω\t—\t—\t—\tphase0-resident-1505@example.invalid\t—\t—\t—\t—\t—\t—\tFixture Occupation\t—\tNo ID\t0\tunavailable\tNot verified\tOct 11, 2026\t",
+      "searchPlaceholder": "Search name, email, mobile, ID type…",
+      "url": "http://127.0.0.1:3140/residents",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Resident Directory\n\nRegistered residents in your barangay — CRUD, ID verification, and household info.\n\nTotal\n\n1000\n\nresidents\n\nEmail Verified\n\n0\n\nconfirmed\n\nUnverified\n\n1000\n\nemail\n\nWith ID\n\n0\n\nuploaded\n\nWithout ID\n\n1000\n\nID Pending\n\n0\n\nneeds review\n\nID Verified\n\n0\n\nadmin confirmed\n\nID Failed\n\n0\n\ntry again\n\nHousehold\n\n0\n\ntotal members\n\nName ↑\nAll "
+    },
+    {
+      "route": "/incident-reports",
+      "heading": "Incident Reports",
+      "rows": 1000,
+      "headers": [
+        "Incident",
+        "Category",
+        "Reporter",
+        "Coordinates",
+        "Address",
+        "Specific Area Details",
+        "Confirmed",
+        "Status",
+        "Submitted",
+        "Actions"
+      ],
+      "firstRow": "Fixture Incident 1505\n\nBeyond Cap Needle Ω\n\n\tFixture Category\t\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\n\t—\t—\t—\t👥 0\tOpen\tJan 2, 2026, 9:05 AM\t\nMark In Progress\nMark Unresolved\nRemove",
+      "searchPlaceholder": "Search title, description, reporter, email…",
+      "url": "http://127.0.0.1:3140/incident-reports",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Incident Reports\n\nReview, triage, and resolve community-submitted incident reports.\n\nTotal\n\n1000\n\nacross all statuses\n\nOpen\n\n1000\n\nIn Progress\n\n0\n\nResolved\n\n0\n\nWithdrawn\n\n0\n\nUnresolved\n\n0\n\nSubmitted ↓\nAll categories\nFixture Category\nSearch\n+ Add Incident\nOpen\nIn Progress\nResolved\nWithdrawn\nUnresolved\nAll\nINCIDENT\n\t\nCATEGORY\n\t\nREPORTER\n\t\nCOORDINATES"
+    },
+    {
+      "route": "/health",
+      "heading": "Health",
+      "rows": 1000,
+      "headers": [
+        "Drive",
+        "Category",
+        "Date",
+        "Stock",
+        "Registrations",
+        "Active",
+        "Actions"
+      ],
+      "firstRow": "Fixture Drive 0001\n\nBarangay Health Center\n\n\tMedical Consultation\tOct 11, 2026\t2000/2000 slots\t\n👥\n1000\n\tActive\t",
+      "searchPlaceholder": "Search title, location, eligibility…",
+      "url": "http://127.0.0.1:3140/health",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Health\n\nManage vaccination, medical, and wellness drives for the barangay.\n\nTotal\n\n1000\n\nacross all drives\n\nUpcoming\n\n1000\n\nToday\n\n1000\n\nPast\n\n0\n\nInactive\n\n0\n\nRegistrations\n\n1000\n\nall drives\n\nDate ↑\nAll categories\nVaccination\nMaternal Care\nBlood Drive\nMedicine Distribution\nDental Care\nOptical Care\nEmergency Kit\nMedical Screening\nMedical Consultatio"
+    },
+    {
+      "route": "/health/applicants",
+      "heading": "Medical Applicants",
+      "rows": 1000,
+      "headers": [
+        "Applicant #",
+        "Drive",
+        "Resident",
+        "Age",
+        "PWD",
+        "Priority Score",
+        "Status",
+        "Registered At",
+        "Actions"
+      ],
+      "firstRow": "CON-MISSING-PROFILE\t\n\nFixture Drive 0001\n\nOct 11, 2026\n\t—\t31\tNo\t55\tPending\t\nOct 11, 2026\n3:37 PM\n\t\nCancel registration CON-MISSING-PROFILE",
+      "searchPlaceholder": "Search applicant #, drive, comorbidities…",
+      "url": "http://127.0.0.1:3140/health/applicants",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Medical Applicants\n\nReview and manage resident registrations for medical drives.\n\nTotal\n\n1000\n\nall registrations\n\nPending\n\n1000\n\nConfirmed\n\n0\n\nAttended\n\n0\n\nCancelled\n\n0\n\nPWD\n\n499\n\napplicants\n\nRegistered ↓\nAll categories\nVaccination\nMaternal Care\nBlood Drive\nMedicine Distribution\nDental Care\nOptical Care\nEmergency Kit\nMedical Screening\nMedical Consu"
+    },
+    {
+      "route": "/households-residents",
+      "heading": "Households & Residents",
+      "rows": 1000,
+      "headers": [
+        "Name",
+        "Resident (Head)",
+        "Relation",
+        "Role",
+        "Checked In",
+        "Checked-In Center",
+        "Added",
+        "Actions"
+      ],
+      "firstRow": "Fixture Member 0506\tFixture Resident 506\tChild\tmember\tNo\t—\tJan 1, 2026, 4:26 PM\t",
+      "searchPlaceholder": "Search name, resident, relation…",
+      "url": "http://127.0.0.1:3140/households-residents",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Households & Residents\n\nManage household members and evacuation check-in status.\n\nTotal Members\n\n1000\n\nall records\n\nChecked In\n\n0\n\nat center\n\nNot Checked In\n\n1000\n\nSpouse\n\n0\n\nrelation\n\nChild\n\n0\n\nrelation\n\nParent / Other\n\n1000\n\nrelation\n\nName ↑\nAll relations\nSpouse\nChild\nParent\nSibling\nGrandparent\nGrandchild\nOther\nSearch\n+ Add Member\nAll\nChecked In\n"
+    },
+    {
+      "route": "/staff",
+      "heading": "Staff & Admin Accounts",
+      "rows": 1000,
+      "headers": [
+        "Name",
+        "Role",
+        "Email",
+        "Mobile",
+        "Address",
+        "Hired",
+        "Actions"
+      ],
+      "firstRow": "Fixture Staff 0001\tStaff\tphase0-staff-1@example.invalid\t—\t—\t10/11/2026\t",
+      "searchPlaceholder": "Search name, email, mobile, address…",
+      "url": "http://127.0.0.1:3140/staff",
+      "websocket": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "browser-logs"
+          },
+          {
+            "direction": "in"
+          },
+          {
+            "direction": "out",
+            "event": "client-success"
+          },
+          {
+            "direction": "in"
+          }
+        ],
+        "activeTopics": []
+      },
+      "bodySnippet": "Staff & Admin Accounts\n\nInvite and manage barangay staff and administrator accounts.\n\nTotal Employees\n\n1000\n\nAdmins\n\n0\n\nStaff\n\n1000\n\nnon-admin roles\n\nName ↑\nAll roles\nAdministrator\nStaff\nBarangay Captain\nKagawad\nSK Chairman\nSecretary\nTreasurer\nBarangay Health Worker\nTanod\nClerk\nSearch\n+ Add Staff\nAll\nAdmins\nStaff\nNAME\n\t\nROLE\n\t\nEMAIL\n\t\nMOBILE\n\t\nADDR"
+    }
+  ],
+  "errors": [],
+  "networkFailures": [
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    }
+  ]
+}

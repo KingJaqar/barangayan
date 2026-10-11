@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-10-11T08:34:44.370Z",
+  "passed": true,
+  "scriptSyntax": [
+    {
+      "file": "checks.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "comparison-fixture.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "fixtures.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "inventory.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "local-schema.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "probe.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-api.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-browser.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-finalize.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-interactions.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-query-edges.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-route-permissions.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-seed.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-serve.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-stack.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-subscriptions.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "scope.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "verify.mjs",
+      "exitCode": 0
+    }
+  ],
+  "jsonFilesParsed": 36,
+  "evidenceReferencesChecked": 38,
+  "runtimeCounts": {
+    "authenticatedApiAssertions": 42,
+    "queryEdgeAssertions": 11,
+    "renderedScreens": 8,
+    "browserInteractionAssertions": 30,
+    "realTableSubscriptionChecks": 5,
+    "browserPermissionChecks": 2
+  },
+  "cleanupVerified": true,
+  "baselineFilesCompared": 3113,
+  "concurrentUnrelatedChanges": [
+    "plans/evidence/resident-registration-otp/logs/phase4/database-suite.log",
+    "plans/evidence/resident-registration-otp/logs/phase4/upgrade-rehearsal.log",
+    "plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md"
+  ],
+  "missingFiles": [],
+  "gitDiffCheckExitCode": 0,
+  "gitDiffCheckWarnings": "warning: in the working copy of 'apps/resident-android-mobile/package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/index.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/profile.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/(auth)/login.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/(auth)/register.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/complete-profile.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-android-mobile/src/app/index.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'packages/shared/src/schemas/service-foundations.ts', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'packages/shared/src/types/service-foundations.ts', LF will be replaced by CRLF the next time Git touches it",
+  "boundary": "Artifact and source-scope verification; earlier failed runs stay preserved. No new application/browser/release claim."
+}

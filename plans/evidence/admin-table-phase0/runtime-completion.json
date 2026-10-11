@@ -1,0 +1,251 @@
+{
+  "timestamp": "2026-10-11T08:30:02.197Z",
+  "phase0RuntimeEvidenceComplete": true,
+  "counts": {
+    "authenticatedApiAssertions": 42,
+    "queryEdgeAssertions": 11,
+    "renderedScreens": 8,
+    "browserInteractionAssertions": 30,
+    "realTableSubscriptionChecks": 5,
+    "browserPermissionChecks": 2
+  },
+  "interactions": [
+    {
+      "label": "Current administrator appears in filtered Staff fixture"
+    },
+    {
+      "label": "Staff current-user name editing is locked"
+    },
+    {
+      "label": "Staff hides current-user removal"
+    },
+    {
+      "label": "Paid transaction amount is not editable in the browser"
+    },
+    {
+      "label": "Directory: filter identifies one fixture row"
+    },
+    {
+      "label": "Directory: selected detail opens"
+    },
+    {
+      "label": "Directory: detail closes without changing row identity"
+    },
+    {
+      "label": "Households: filter identifies one fixture row"
+    },
+    {
+      "label": "Households: selected detail opens"
+    },
+    {
+      "label": "Households: detail closes without changing row identity"
+    },
+    {
+      "label": "Applicants: filter identifies one fixture row"
+    },
+    {
+      "label": "Applicants: selected detail opens"
+    },
+    {
+      "label": "Applicants: detail closes without changing row identity"
+    },
+    {
+      "label": "Incidents: filter identifies one fixture row"
+    },
+    {
+      "label": "Incidents: selected detail opens"
+    },
+    {
+      "label": "Incidents: detail closes without changing row identity"
+    },
+    {
+      "label": "Health: filter identifies one fixture row"
+    },
+    {
+      "label": "Health: selected detail opens"
+    },
+    {
+      "label": "Health: detail closes without changing row identity"
+    },
+    {
+      "label": "Failed validation discards the current inline draft"
+    },
+    {
+      "label": "Successful inline age edit persists, refreshes, and preserves score snapshot",
+      "before": 25,
+      "after": 42,
+      "score": 50
+    },
+    {
+      "label": "HTTP-denied edit keeps stored value and exposes failure while discarding draft"
+    },
+    {
+      "label": "Actual incident Realtime event refreshes table props"
+    },
+    {
+      "label": "Baseline defect: open selected detail keeps its pre-refresh snapshot",
+      "selected": "Incident details: Fixture Incident 1505 refreshed again",
+      "refreshedTitle": "Fixture Incident 1505 refreshed"
+    },
+    {
+      "label": "Rapid search typing commits final debounced query"
+    },
+    {
+      "label": "Back restores prior search input"
+    },
+    {
+      "label": "Forward restores committed search input"
+    },
+    {
+      "label": "Final URL and row membership survive an older delayed RSC response"
+    },
+    {
+      "label": "Incident channel sends leave on client route unmount"
+    },
+    {
+      "label": "Removed incident topic delivers no callback or table refresh during bounded post-unmount mutation",
+      "observationMs": 2500,
+      "refreshes": 0,
+      "serverMetadataRows": 0,
+      "metrics": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          }
+        ],
+        "activeTopics": [
+          "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+        ]
+      }
+    }
+  ],
+  "schemaAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "rls": true,
+    "collations": true,
+    "migrations": true,
+    "affectedReadPolicies": true,
+    "knownDifference": "Hosted-only payment INSERT policy; no affected read-policy difference"
+  },
+  "finalServerSubscriptionRows": 0,
+  "subscriptionBoundary": "Server metadata retention alone does not establish a live callback. Each direct client channel was removed, browser context closed, and a removed incident topic delivered no callback/refresh during a 2,500ms mutation observation. Container teardown is verified separately; long stress coverage remains a later gate.",
+  "scope": {
+    "baselineFiles": 3113,
+    "changed": [
+      "plans/evidence/resident-registration-otp/logs/phase4/database-suite.log",
+      "plans/evidence/resident-registration-otp/logs/phase4/upgrade-rehearsal.log",
+      "plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md"
+    ],
+    "missing": [],
+    "applicationChanges": []
+  },
+  "boundaries": [
+    "Representative isolated schema/session/browser checks, not authenticated hosted acceptance",
+    "Chrome only; other browsers, physical input/accessibility and large performance remain Phase 6 gates",
+    "Existing defects documented; no table improvements or application migrations implemented"
+  ],
+  "sourceContainersUntouchedByTask": true
+}

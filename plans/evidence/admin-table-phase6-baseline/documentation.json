@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-11 Asia/Manila",
+  "instructions": [
+    "AGENTS.md",
+    "apps/admin-web/AGENTS.md"
+  ],
+  "installedNextGuide": "node_modules/next/dist/docs/01-app/02-guides/testing/vitest.md",
+  "expo": "https://docs.expo.dev/versions/v57.0.0/",
+  "supabase": [
+    "https://supabase.com/docs/reference/javascript/order",
+    "https://supabase.com/docs/reference/javascript/range",
+    "https://supabase.com/docs/reference/javascript/select",
+    "https://supabase.com/changelog"
+  ],
+  "postgrest": [
+    "https://docs.postgrest.org/en/v14/references/api/resource_embedding.html",
+    "https://docs.postgrest.org/en/v14/references/api/aggregate_functions.html"
+  ],
+  "failures": [
+    "Guessed Next config documentation path absent; discovered and read testing/vitest.md before audit scripts",
+    "Supabase changelog.md unsupported by web reader; HTML changelog used",
+    "First catalog-save tool code exceeded 64000-byte review size; same authorized catalog saved in five bounded chunks"
+  ],
+  "nextTestingLimit": "Installed guide does not claim Vitest supports async Server Components; source VM is a predicate oracle, not a React/Next E2E test",
+  "securityBoundary": "Source/session/RLS and captured helpers reviewed; no security changes; metadata is not all-action authorization execution"
+}

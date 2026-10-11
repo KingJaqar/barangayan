@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-10-11T07:59:25.568Z",
+  "passed": false,
+  "checks": [
+    {
+      "label": "Current administrator appears in filtered Staff fixture"
+    },
+    {
+      "label": "Staff current-user name editing is locked"
+    },
+    {
+      "label": "Staff hides current-user removal"
+    },
+    {
+      "label": "Paid transaction amount is not editable in the browser"
+    },
+    {
+      "label": "Directory: filter identifies one fixture row"
+    },
+    {
+      "label": "Directory: selected detail opens"
+    },
+    {
+      "label": "Directory: detail closes without changing row identity"
+    },
+    {
+      "label": "Households: filter identifies one fixture row"
+    },
+    {
+      "label": "Households: selected detail opens"
+    },
+    {
+      "label": "Households: detail closes without changing row identity"
+    },
+    {
+      "label": "Applicants: filter identifies one fixture row"
+    },
+    {
+      "label": "Applicants: selected detail opens"
+    },
+    {
+      "label": "Applicants: detail closes without changing row identity"
+    },
+    {
+      "label": "Incidents: filter identifies one fixture row"
+    },
+    {
+      "label": "Incidents: selected detail opens"
+    },
+    {
+      "label": "Incidents: detail closes without changing row identity"
+    },
+    {
+      "label": "Health: filter identifies one fixture row"
+    },
+    {
+      "label": "Health: selected detail opens"
+    },
+    {
+      "label": "Health: detail closes without changing row identity"
+    },
+    {
+      "label": "Failed validation discards the current inline draft"
+    },
+    {
+      "label": "Successful inline age edit persists, refreshes, and preserves score snapshot",
+      "before": 25,
+      "after": 42,
+      "score": 50
+    },
+    {
+      "label": "HTTP-denied edit keeps stored value and exposes failure while discarding draft"
+    }
+  ],
+  "observations": [
+    {
+      "label": "Directory selected detail",
+      "row": "F\nFixture\n\tResident 1\t—\t—\t—\tphase0-resident-1@example.invalid\t—\t—\t—\t—\t—\t—\tFixture Occupation\t—\tNo ID\t0\tunavailable\tNot verified\tOct 11, 2026\t",
+      "detail": "F\nFixture Resident 1\n\nphase0-resident-1@example.invalid\n\nNo mobile number\n\nunavailable\nNo ID\n✕\nPERSONAL DETAILS\nAddress\nFixture Address 1\nBirthday\n—\nVerified Location (Settings)\n—\nID Type\n—\nJoined\nOct 11, 2026\nHOUSEHOLD MEMBERS (0)\n\nNo household members recorded.\n\nID VERIFICATION — ADMIN ACTION\nReason for rejection or revocation\nCurrent: No ID\n\nNo ID photo uploaded — cannot verify until the resident uploads one.\n\nID DOCUMENTS (0)\n\nNo ID documents uploaded.\n\nREQUEST HISTORY\n\nFixture Document Alph"
+    },
+    {
+      "label": "Households selected detail",
+      "row": "Fixture Member 1505\tBeyond Cap Needle Ω\tChild\tmember\tNo\t—\tJan 2, 2026, 9:05 AM\t",
+      "detail": "Fixture Member 1505\n\nBeyond Cap Needle Ω · Child · member\n\n✕\nDETAILS\nResident\nBeyond Cap Needle Ω\nRelation\nChild\nRole\nmember\nChecked In\nNo\nChecked-In Center\n—\nAdded\nJan 2, 2026, 9:05 AM\n🗑 Remove Member"
+    },
+    {
+      "label": "Applicants selected detail",
+      "row": "CON-PHASE0-01505\t\n\nFixture Drive 0001\n\nOct 11, 2026\n\t—\t25\tNo\t50\tPending\t\nJan 2, 2026\n9:05 AM\n\t\nCancel registration CON-PHASE0-01505",
+      "detail": "CON-PHASE0-01505\nPending\n✕\n\nREGISTRATION DETAILS\n\nEdit\n\nDRIVE\n\nFixture Drive 0001 · Oct 11, 2026 · Barangay Health Center\n\nRESIDENT\n\n—\n\nAGE\n\n25\n\nPWD\n\nNo\n\nCOMORBIDITIES\n\nhypertension\ndiabetes\n\nPRIOR DOSE DATE\n\n—\n\nPRIORITY SCORE\n\n50\n\nREGISTERED AT\n\nJan 2, 2026, 9:05 AM\n\nLAST UPDATED\n\nOct 11, 2026, 3:37 PM"
+    },
+    {
+      "label": "Incidents selected detail",
+      "row": "Fixture Incident 1505\n\nBeyond Cap Needle Ω\n\n\tFixture Category\t\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\n\t—\t—\t—\t👥 0\tOpen\tJan 2, 2026, 9:05 AM\t\nMark In Progress\nMark Unresolved\nRemove",
+      "detail": "Fixture Incident 1505\nOpen\nFixture Category\n👥 0 confirmed\n✕\n\nINCIDENT DETAILS\n\nEdit\n\nBeyond Cap Needle Ω\n\nREPORTED BY\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\nFixture Address 1505\n\nTo reassign the reporter or category, use the Reporter/Category cells in the table.\n\nSUBMITTED\n\nJan 2, 2026, 9:05 AM\n\nLAST UPDATED\n\nOct 11, 2026, 3:37 PM\n\nMark In Progress\nMark Unresolved\nRemove"
+    },
+    {
+      "label": "Health selected detail",
+      "row": "Fixture Drive 0001\n\nBarangay Health Center\n\n\tMedical Consultation\tOct 11, 2026\t2000/2000 slots\t\n👥\n1000\n\tActive\t",
+      "detail": "Fixture Drive 0001\nMedical Consultation\nActive\n👥 1000 registered\n✕\n\nDRIVE DETAILS\n\nEdit\n\nLOCATION\n\nBarangay Health Center\n\nTIME\n\n8:00 AM – 12:00 PM\n\nELIGIBILITY CRITERIA\n\nFixture residents\n\nSTOCK LABEL / UNIT\n\nRemaining Slots (slots)\n\nTo change the category, date, stock counts, or active status, use the matching cell in the table.\n\nDRIVE DATE\n\nOct 11, 2026\n\nLAST UPDATED\n\nOct 11, 2026, 3:37 PM"
+    }
+  ],
+  "failures": [
+    {
+      "label": "Realtime refresh and selected snapshot",
+      "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+      "visibleTail": "ident reports\nIncident map\nHealth\nMedical Applicants\nWaste Management\n\nEmergency & DRRM\n\nHub\nEvacuation Centers\nEmergency QR\nHouseholds & Residents\n\nAdministration\n\nStaff member\nFAQ content\nTerms & Privacy\nAbout Us\nSettings\nLogout\nIncident Reports\n\nReview, triage, and resolve community-submitted incident reports.\n\nTotal\n\n1000\n\nacross all statuses\n\nOpen\n\n1000\n\nIn Progress\n\n0\n\nResolved\n\n0\n\nWithdrawn\n\n0\n\nUnresolved\n\n0\n\nSubmitted ↓\nAll categories\nFixture Category\nSearch\n+ Add Incident\nOpen\nIn Progress\nResolved\nWithdrawn\nUnresolved\nAll\nINCIDENT\n\t\nCATEGORY\n\t\nREPORTER\n\t\nCOORDINATES\n\t\nADDRESS\n\t\nSPECIFIC AREA DETAILS\n\t\nCONFIRMED\n\t\nSTATUS\n\t\nSUBMITTED\n\t\nACTIONS\n\n\n\nFixture Incident 1505\n\nBeyond Cap Needle Ω\n\n\tFixture Category\t\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\n\t—\t—\t—\t👥 0\tOpen\tJan 2, 2026, 9:05 AM\t\nMark In Progress\nMark Unresolved\nRemove\n\n1 incident shown · status \"open\" · search \"Fixture Incident 1505\". Click any row for full details, or click a cell to edit it in place."
+    },
+    {
+      "label": "Search debounce and Back/Forward",
+      "message": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('tbody tr').filter({ hasText: 'Fixture Incident 1505 refreshed' }) to be visible\u001b[22m\n",
+      "visibleTail": "nt directory\nIncident reports\nIncident map\nHealth\nMedical Applicants\nWaste Management\n\nEmergency & DRRM\n\nHub\nEvacuation Centers\nEmergency QR\nHouseholds & Residents\n\nAdministration\n\nStaff member\nFAQ content\nTerms & Privacy\nAbout Us\nSettings\nLogout\nIncident Reports\n\nReview, triage, and resolve community-submitted incident reports.\n\nTotal\n\n1000\n\nacross all statuses\n\nOpen\n\n1000\n\nIn Progress\n\n0\n\nResolved\n\n0\n\nWithdrawn\n\n0\n\nUnresolved\n\n0\n\nSubmitted ↓\nAll categories\nFixture Category\nSearch\n+ Add Incident\nOpen\nIn Progress\nResolved\nWithdrawn\nUnresolved\nAll\nINCIDENT\n\t\nCATEGORY\n\t\nREPORTER\n\t\nCOORDINATES\n\t\nADDRESS\n\t\nSPECIFIC AREA DETAILS\n\t\nCONFIRMED\n\t\nSTATUS\n\t\nSUBMITTED\n\t\nACTIONS\n\n\n\nFixture Incident 1505\n\nBeyond Cap Needle Ω\n\n\tFixture Category\t\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\n\t—\t—\t—\t👥 0\tOpen\tJan 2, 2026, 9:05 AM\t\nMark In Progress\nMark Unresolved\nRemove\n\n1 incident shown · search \"Fixture Incident 1505\". Click any row for full details, or click a cell to edit it in place."
+    },
+    {
+      "label": "Delayed response race",
+      "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+      "visibleTail": "nt directory\nIncident reports\nIncident map\nHealth\nMedical Applicants\nWaste Management\n\nEmergency & DRRM\n\nHub\nEvacuation Centers\nEmergency QR\nHouseholds & Residents\n\nAdministration\n\nStaff member\nFAQ content\nTerms & Privacy\nAbout Us\nSettings\nLogout\nIncident Reports\n\nReview, triage, and resolve community-submitted incident reports.\n\nTotal\n\n1000\n\nacross all statuses\n\nOpen\n\n1000\n\nIn Progress\n\n0\n\nResolved\n\n0\n\nWithdrawn\n\n0\n\nUnresolved\n\n0\n\nSubmitted ↓\nAll categories\nFixture Category\nSearch\n+ Add Incident\nOpen\nIn Progress\nResolved\nWithdrawn\nUnresolved\nAll\nINCIDENT\n\t\nCATEGORY\n\t\nREPORTER\n\t\nCOORDINATES\n\t\nADDRESS\n\t\nSPECIFIC AREA DETAILS\n\t\nCONFIRMED\n\t\nSTATUS\n\t\nSUBMITTED\n\t\nACTIONS\n\n\n\nFixture Incident 1505\n\nBeyond Cap Needle Ω\n\n\tFixture Category\t\n\nBeyond Cap Needle Ω\n\nphase0-resident-1505@example.invalid\n\n\t—\t—\t—\t👥 0\tOpen\tJan 2, 2026, 9:05 AM\t\nMark In Progress\nMark Unresolved\nRemove\n\n1 incident shown · search \"Fixture Incident 1505\". Click any row for full details, or click a cell to edit it in place."
+    },
+    {
+      "label": "Subscription cleanup across client navigation",
+      "message": "page.waitForFunction: Timeout 15000ms exceeded.",
+      "visibleTail": ", 4:34 PM\t#REQ-PHASE0-00514\tFixture Resident 514\tFixture Document Alpha\tQR PH\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:33 PM\t#REQ-PHASE0-00513\tFixture Resident 513\tFixture Document Alpha\tPay at Pickup\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:32 PM\t#REQ-PHASE0-00512\tFixture Resident 512\tFixture Document Alpha\tQR PH\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:31 PM\t#REQ-PHASE0-00511\tFixture Resident 511\tFixture Document Alpha\tPay at Pickup\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:30 PM\t#REQ-PHASE0-00510\tFixture Resident 510\tFixture Document Alpha\tQR PH\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:29 PM\t#REQ-PHASE0-00509\tFixture Resident 509\tFixture Document Alpha\tPay at Pickup\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:28 PM\t#REQ-PHASE0-00508\tFixture Resident 508\tFixture Document Alpha\tQR PH\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:27 PM\t#REQ-PHASE0-00507\tFixture Resident 507\tFixture Document Alpha\tPay at Pickup\t₱1.00\tPending\t—\t—\t\n\nJan 1, 2026, 4:26 PM\t#REQ-PHASE0-00506\tFixture Resident 506\tFixture Document Alpha\tQR PH\t₱1.00\tPending\t—\t—\t"
+    }
+  ],
+  "pageErrors": [
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "localVersion": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "hostedVersion": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "alignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": false
+  },
+  "localScaleEstimates": [
+    {
+      "relname": "profiles",
+      "n_live_tup": 1
+    },
+    {
+      "relname": "service_requests",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "payments",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "incidents",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "medical_drives",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "drive_registrations",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "household_members",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "barangay_officials",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "drive_registration_scores",
+      "n_live_tup": 0
+    }
+  ],
+  "note": "Catalog comparison only; migration numbers alone do not prove file-content identity. Live row estimates are approximate and not tenant counts."
+}

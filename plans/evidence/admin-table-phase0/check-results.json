@@ -1,0 +1,20 @@
+[
+  {
+    "name": "fixtures",
+    "status": 0,
+    "elapsedMs": 2362,
+    "timeoutMs": 30000
+  },
+  {
+    "name": "admin-typecheck",
+    "status": 0,
+    "elapsedMs": 13831,
+    "timeoutMs": 60000
+  },
+  {
+    "name": "admin-lint",
+    "status": 0,
+    "elapsedMs": 36552,
+    "timeoutMs": 60000
+  }
+]

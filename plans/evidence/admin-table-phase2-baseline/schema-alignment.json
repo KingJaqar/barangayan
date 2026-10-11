@@ -1,0 +1,14 @@
+{
+  "alignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "localVersion": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "hostedCaptureIsHistorical": true,
+  "note": "Catalog comparison is read-only; retained hosted catalog does not prove current hosted state."
+}

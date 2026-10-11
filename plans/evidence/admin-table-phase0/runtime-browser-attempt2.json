@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-10-11T07:43:53.037Z",
+  "passed": false,
+  "browser": "154.0.8037.99",
+  "screens": [],
+  "errors": [
+    {
+      "name": "Error",
+      "message": "locator.getAttribute: Error: strict mode violation: locator('input[placeholder^=\"Search\"]') resolved to 2 elements:\n    1) <input value=\"\" placeholder=\"Search residents, requests, incidents...\" class=\"w-full rounded-full border border-zinc-300 bg-zinc-50 px-4 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-900\"/> aka getByRole('textbox', { name: 'Search residents, requests,' })\n    2) <input value=\"\" type=\"search\" placeholder=\"Search reference, resident, document…\" class=\"rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800\"/> aka getByRole('searchbox', { name: 'Search reference, resident,' })\n\nCall log:\n\u001b[2m  - waiting for locator('input[placeholder^=\"Search\"]')\u001b[22m\n"
+    }
+  ],
+  "networkFailures": [
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/profiles",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "url": "/rest/v1/admin_audit_log",
+      "error": "net::ERR_FAILED"
+    }
+  ]
+}

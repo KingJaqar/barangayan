@@ -1,0 +1,1822 @@
+{
+  "checkedAt": "2026-10-11T10:26:34.774Z",
+  "baselineFiles": 3424,
+  "changed": [
+    "apps/resident-android-mobile/app.json",
+    "apps/resident-android-mobile/src/app/_layout.tsx",
+    "apps/resident-android-mobile/src/app/index.tsx",
+    "apps/resident-android-mobile/src/lib/setup-navigation.test.ts",
+    "apps/resident-android-mobile/src/lib/setup-navigation.ts"
+  ],
+  "missing": [],
+  "addedOutsideScope": [],
+  "sourceParity": [
+    {
+      "file": "apps/admin-web/src/actions/admin-audit-actions.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/drive-detail-modal.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/layout.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/loading.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/[requestId]/loading.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/types.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/api/admin/staff/invite/route.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/app/globals.css",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/admin-shell.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/agency-sla-status.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/confirm-button.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/data-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/date-range-picker.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/editable-data-table.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/header.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notification-detail-panel.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notification-item.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notifications-drawer.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/payment-refund-action.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/request-review-panel.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/request-status-actions.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/scrollable-chip-row.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/service-sla-report.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/sidebar-nav.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/static-placeholder.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/status-pill.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/table-scroll-area.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/loading-button-content.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/loading-status.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/page-skeleton.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/skeleton.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/spinner.tsx",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-admin-audit-notifications.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-audit-log-browser.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-mount-transition.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/audit-notifications.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/supabase/client.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/supabase/server.ts",
+      "sameAsHistoricalRuntime": true
+    },
+    {
+      "file": "packages/shared/src/lib/format.ts",
+      "sameAsHistoricalRuntime": true
+    }
+  ],
+  "migrationParity": [
+    {
+      "file": "supabase/migrations/0107_resident_account_setup_lifecycle.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0108_resident_profile_completion_conflict_guard.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0109_invalidate_changed_profile_email_verification.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0001_barangays_and_profiles.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0002_document_types_and_service_requests.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0003_announcements.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0004_service_request_reference_default.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0005_guest_readable_public_content.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0006_profile_theme_preference.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0007_payments_and_admin_access.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0008_resident_directory_access.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0009_admin_crud_and_soft_delete.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0010_resident_set_payment_method.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0011_announcements_admin_write.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0012_profile_trigger_and_verification_status.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0013_protect_verification_fields.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0014_request_delivery_workflow.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0015_request_delivery_transition_rpc.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0017_harden_payments_rls.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0018_begin_processing_rpc.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0019_fix_announcement_soft_delete.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0020_id_documents_storage.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0021_enable_pgtap.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0022_maps_tables.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0023_seed_incident_categories.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0024_ampid1_boundary.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0025_incident_management.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0026_incident_report_workflow.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0027_incidents_realtime.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0029_drop_diag_temp.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0030_diag_temp2.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0031_drop_diag_temp2.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0032_withdraw_incident_rpc.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0033_diag_temp3.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0034_drop_diag_temp3.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0035_medical_drives.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0036_medical_drives_admin_rls.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0037_profile_birth_date.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0038_health_realtime.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0039_profile_extended_fields.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0040_profile_avatar.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0041_id_verification_status.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0042_id_documents_public_bucket.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0043_emergency_content.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0044_evacuation_centers_verified.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0045_evacuation_center_checkins.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0046_household_members.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0047_emergency_information.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0048_realtime_publications.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0049_seed_empty_tables.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0050_create_emergency_qr_tables.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0051_waste_management.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0052_household_admin_management.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0053_faq.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0054_barangay_settings.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0055_grant_guest_read_access.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0056_admin_staff_management.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0057_barangay_officials.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0058_admin_audit_log.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0059_site_content_and_about_us.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0060_storage_site_content.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0061_save_about_us_rpc.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0062_seed_site_content_and_about_us.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0063_push_notifications.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0064_qrph_instant_payment_and_refunds.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0065_qrph_payment_intents.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0066_qrph_persistent_qr_and_resident_cancel.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0067_fix_household_members_uuid_sync.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0068_signup_birth_date.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0069_fix_emergency_information_tenant_leak.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0070_waste_management_resident_read.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0071_add_missing_fk_indexes.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0072_admin_register_for_drive.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0073_id_documents_private_again.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0074_account_deletion.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0075_profile_theme_customization.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0076_placeholder.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0077_waste_zone_cron_scoring.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0078_registration_location_verification.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0079_export_rate_limit.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0080_reports_unread_counts.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0081_resident_profile_field_split.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0082_remove_delivery_add_pickup.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0083_incident_location_details.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0084_announcement_detailed_description.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0085_resident_mark_resolved_incident_read.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0086_about_us_logo_size.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0087_about_us_title.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0088_faq_articles_guest_read.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0089_id_verification_failed_status.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0090_location_verification.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0091_verified_location_address.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0092_drive_registrations_admin_update.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0093_resident_ios_backend_safety.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0094_resident_ios_tenant_write_guards.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0095_phase1_shared_foundations.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0096_phase2_trusted_evidence_locality.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0097_phase3_catalog_staff_workflows.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0098_phase4_resident_submission_payment.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0099_phase5_sla_engine_reporting.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0100_restore_admin_document_type_creation.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0101_unified_document_type_charter_forms.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0102_phase6_registration_maps_auth.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0103_phase6_deferred_profile_completion.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0104_google_minimal_resident_profiles.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0105_phase7_administrator_only_scores.sql",
+      "unchanged": true
+    },
+    {
+      "file": "supabase/migrations/0106_remove_obsolete_registration_score.sql",
+      "unchanged": true
+    }
+  ],
+  "adminSharedParity": [
+    {
+      "file": "packages/shared/src/lib/resident-account-setup.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-account-setup.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification-client.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/types/resident-account-setup.database.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/.env.local.example",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/.gitignore",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/AGENTS.md",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/CLAUDE.md",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/README.md",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/assets/logo/barangayan-logo-1024.png",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/eslint.config.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/next.config.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/package.json",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/postcss.config.mjs",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/assets/logo/barangayan-logo-1024.png",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/file.svg",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/globe.svg",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/next.svg",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/vercel.svg",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/public/window.svg",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/actions/admin-audit-actions.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/about-us/about-us-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/about-us/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/announcements/announcement-catalog.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/announcements/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/dashboard/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/dashboard/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/client-wrapper.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/mobile-preview-card.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-code-display.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-codes-tab.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-tab.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-catalog.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/evacuation-centers/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/faq/faq-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/faq/faq-list.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/faq/faq-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/faq/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/applicants/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/drive-detail-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/health/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/hub/emergency-catalog.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/hub/emergency-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/hub/emergency-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/hub/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/BoundaryFitButton.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/IncidentMapClient.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/MapCanvas.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/MapFilterPills.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/MapMarkerPopup.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/MapSearchBar.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/MapSegmentToggle.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-map/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/incident-reports/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/layout.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/[requestId]/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/requests/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/document-type-catalog.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/document-type-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/document-type-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/service-catalog-editor.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/services/sla/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/settings/loading.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/settings/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/settings/settings-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/terms-privacy/client-wrapper.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/terms-privacy/content-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/terms-privacy/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/theme/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/theme/theme-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/transactions/types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/trash-incident-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/waste-catalog.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/zone-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/waste-management/zone-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/api/admin/residents/route.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/api/admin/staff/invite/route.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/apple-icon.png",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/forgot-password/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/globals.css",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/icon.png",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/layout.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/login/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/reset-password/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/layout.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/profile/id-upload.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/profile/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/profile/profile-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/reports/new/new-report-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/reports/new/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/reports/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/[requestId]/cancel-request-button.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/[requestId]/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/[requestId]/pickup-choice.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/new/new-request-form.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/new/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/app/resident/requests/page.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/admin-shell.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/agency-sla-status.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/confirm-button.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/data-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/date-range-picker.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/editable-data-table.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/header.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notification-detail-panel.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notification-item.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/notifications-drawer.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/payment-refund-action.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/request-review-panel.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/request-status-actions.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/scrollable-chip-row.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/service-sla-report.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/sidebar-nav.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/static-placeholder.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/status-pill.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/table-scroll-area.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/loading-button-content.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/loading-status.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/page-skeleton.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/skeleton.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/loading/spinner.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/navigation/link-pending-indicator.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/resident/resident-shell.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/ui/accent-controller.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/ui/font-controller.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/ui/icon-controller.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/ui/theme-controller.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/components/ui/toast.tsx",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-admin-audit-notifications.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-audit-log-browser.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-barangay-settings.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-households.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-mount-transition.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/audit-notifications.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/payments.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/scrollbar.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/supabase/client.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/lib/supabase/server.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/src/proxy.ts",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/tsconfig.json",
+      "unchanged": true
+    },
+    {
+      "file": "apps/admin-web/vercel.json",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/package.json",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/announcement-categories.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/document-catalog-shape.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/drive-types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/id-verification.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/incident-categories.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/official-roles.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/priority-weights.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/theme-colors.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/theme-fonts.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/constants/waste-types.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/index.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/agency-sla.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/agency-sla.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/auth-fetch.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/auth-fetch.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/format.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/format.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/geocode.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/google-profile.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/haversine.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/haversine.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/id-evidence.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/id-evidence.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/osrm.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/osrm.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/point-in-polygon.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/point-in-polygon.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/request-status.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-auth.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-auth.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-submission.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/resident-submission.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/service-catalog.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/service-catalog.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/service-foundations.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/service-tracking.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/service-tracking.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/lib/supabase-client.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/about-us.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/admin-audit-log.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/announcement.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/announcement.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/auth.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/document-type.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/document-type.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration-result.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/emergency-information.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/emergency-qr.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/evacuation-center.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/faq.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/household.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-map.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-report.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-report.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/payment.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/payment.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/request-form.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/request-form.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/settings.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/site-content.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/staff.test.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/staff.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/schemas/waste-management.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/types/database.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/types/domain.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/types/map-bridge.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/src/types/service-foundations.ts",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/tsconfig.json",
+      "unchanged": true
+    },
+    {
+      "file": "packages/shared/vitest.config.ts",
+      "unchanged": true
+    }
+  ],
+  "provenance": [
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-api-results.json",
+      "sha256": "b7b32015499153f323f11d1e7d6ab8f5f2a3a60bc56f72a3e73a3fe3aff7c968",
+      "passed": true,
+      "assertions": 42,
+      "timestamp": "2026-10-11T08:20:56.863Z"
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-query-edges.json",
+      "sha256": "8c986996e636a3fa8fbc24b1b407a96fd3c15bc93fb71e06290f1dfbcf02b96c",
+      "passed": true,
+      "assertions": 11,
+      "timestamp": null
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-browser-results.json",
+      "sha256": "c29a7b824b31ade0106339e764925c9cd6e0402d1dd5721a62141eb52977618c",
+      "passed": true,
+      "assertions": null,
+      "timestamp": "2026-10-11T07:45:03.135Z"
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-interaction-attempt3.json",
+      "sha256": "7280d60addd8bba34bde97f12947025af1d6ab59bf7132f3f9c2112492ba2562",
+      "passed": false,
+      "assertions": 22,
+      "timestamp": "2026-10-11T07:59:25.568Z"
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-interaction-results.json",
+      "sha256": "d494b813ac521e1f5bf5706dc3dd1705817f96fef060cf654ef61254d27d3713",
+      "passed": true,
+      "assertions": 8,
+      "timestamp": "2026-10-11T08:12:44.437Z"
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-subscription-results.json",
+      "sha256": "a3f816fa573a2bdd74910cfb36e9c74ed058bde7215abb745e880cf8f9b68c2b",
+      "passed": true,
+      "assertions": 5,
+      "timestamp": null
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-route-permissions.json",
+      "sha256": "ca01f6223fff3fc2c97924cd6fee9ece75f677a0cf318c29ea4915b3da2f9446",
+      "passed": true,
+      "assertions": 2,
+      "timestamp": null
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-completion.json",
+      "sha256": "056e18db236329d2425dd1979cb595ef12c8d338bb484c70496b0e1f3ffca9c5",
+      "passed": null,
+      "assertions": null,
+      "timestamp": "2026-10-11T08:30:02.197Z"
+    },
+    {
+      "file": "plans/evidence/admin-table-phase0/runtime-cleanup.json",
+      "sha256": "edc5e993d862f53ff001188f4e12a29ea3e94e943490eed90b7e851ca47eb868",
+      "passed": null,
+      "assertions": null,
+      "timestamp": "2026-10-11T08:30:32.807Z"
+    }
+  ],
+  "historicalCounts": {
+    "authenticatedApiAssertions": 42,
+    "queryEdgeAssertions": 11,
+    "renderedScreens": 8,
+    "browserInteractionAssertions": 30,
+    "realTableSubscriptionChecks": 5,
+    "browserPermissionChecks": 2
+  },
+  "historicalEvidenceBoundary": "Prior isolated runtime observations retained with byte-identical indexed source, admin/shared and migration files; no fresh authenticated/browser/Realtime or hosted acceptance run. Hosted catalog captures are historical, not proof of current hosted state.",
+  "noResourcesCreated": true
+}

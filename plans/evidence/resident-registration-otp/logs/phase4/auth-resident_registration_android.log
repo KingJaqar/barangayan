@@ -1,0 +1,6 @@
+Local Phase 2 Auth/PostgREST integration started
+PASS real OTP session, details -> password, REST snapshot parity and stale-write rollback
+PASS concurrent same-user snapshots: one commit, one conflict
+PASS actual password creation, retained verified session, restored session/status and exact credential confirmation
+PASS no caller identity escalation through completion input
+exit 0

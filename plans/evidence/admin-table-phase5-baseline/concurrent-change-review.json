@@ -1,0 +1,16 @@
+{
+  "reviewedAt": "2026-10-11T10:13:38.495Z",
+  "files": [
+    {
+      "file": "plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md",
+      "sha256": "7aad970e1cf4c8933b945e21d3738a98a75aaf4ee55f6c5a10ae77fdd838ece4"
+    },
+    {
+      "file": "plans/evidence/resident-registration-otp/live-acceptance.md",
+      "sha256": "4bd2fe4f2428ba1c27a923e5b06230bc7db31c22ae0eea197caabab578734a58"
+    }
+  ],
+  "finding": "Non-task registration documents changed after the initial successful preservation check. Inspected current dated scope/status/device matrix text; unrelated to admin tables. This task's writes did not target these files.",
+  "action": "Leave current bytes untouched. Never overwrite baseline hashes or label strict workspace equality as passing.",
+  "acceptance": "Final consistency may pass only for exactly these two inspected document hashes, zero missing files, zero outside additions, and unchanged admin/shared/migration source linkage. New drift must stop finalization."
+}

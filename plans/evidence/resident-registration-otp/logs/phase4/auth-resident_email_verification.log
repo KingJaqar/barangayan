@@ -1,0 +1,2 @@
+PASS local real Auth/Edge/REST: authenticated send, invalid codes, real OTP, protected badge, session/password preservation, idempotency, changed email and deleted caller
+exit 0

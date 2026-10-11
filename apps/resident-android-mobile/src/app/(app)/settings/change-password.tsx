@@ -1,18 +1,23 @@
 import { changePasswordSchema, PASSWORD_COMPLEXITY_REGEX } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { BackHandler, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { GoogleButton } from '@/components/google-button';
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PrimaryButton } from '@/components/primary-button';
+import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
+import { clearGoogleReauthentication, googleReauthentication } from '@/lib/google-auth';
+import { passwordMode, type ReauthenticationState } from '@/lib/sensitive-auth';
+import { authSetupRequests } from '@/lib/setup-request';
 import { supabase } from '@/lib/supabase';
 
 // ─── Live per-field validation ────────────────────────────────────────────────
@@ -44,9 +49,13 @@ function fieldStatus(
 function ResultPopup({
   visible,
   onDismiss,
+  title = 'Password Updated',
+  subtitle = 'Your password has been changed successfully.',
 }: {
   visible: boolean;
   onDismiss: () => void;
+  title?: string;
+  subtitle?: string;
 }) {
   const theme = useTheme();
   const scale = useSharedValue(0.85);
@@ -78,10 +87,10 @@ function ResultPopup({
             <Ionicons name="checkmark" size={30} color={theme.onPrimary} />
           </View>
           <ThemedText type="heading" style={styles.popupTitle}>
-            Password Updated
+            {title}
           </ThemedText>
           <ThemedText type="small" themeColor="textSecondary" style={styles.popupSubtitle}>
-            Your password has been changed successfully.
+            {subtitle}
           </ThemedText>
         </Animated.View>
       </Animated.View>
@@ -89,11 +98,27 @@ function ResultPopup({
   );
 }
 
+// Mode comes from the server-maintained password state: true → change with the
+// current password; null (unknown history) → manage, never "not set"; false → first
+// password, unlocked only by fresh same-account Google authentication.
 export default function ChangePasswordScreen() {
+  const { session, setup } = useAuth();
+  const userId = session?.user.id ?? null;
+  const creating = passwordMode(setup) === 'create_with_google';
+  // Stay on first-password setup for this user after its own success refreshes the
+  // status to passwordSet=true, so its confirmation can finish returning to Settings.
+  const [firstPasswordUser, setFirstPasswordUser] = useState<string | null>(null);
+  useEffect(() => { if (creating && userId) setFirstPasswordUser(userId); }, [creating, userId]);
+  if (userId && (creating || firstPasswordUser === userId)) return <FirstPasswordFromSettings key={userId} />;
+  return <ChangeOrManagePassword />;
+}
+
+function ChangeOrManagePassword() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const { session } = useAuth();
+  const { session, setup, refreshCompletion, setPasswordRecovery, setupRefreshError } = useAuth();
+  const mode = passwordMode(setup);
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -139,7 +164,7 @@ export default function ChangePasswordScreen() {
     try {
       // Supabase's updateUser() doesn't check the old password — re-authenticate first so a
       // stolen/left-open session can't silently take over the account by setting a new one.
-      const { error: reauthError } = await supabase.auth.signInWithPassword({
+      const { data: reauthData, error: reauthError } = await supabase.auth.signInWithPassword({
         email,
         password: result.data.currentPassword,
       });
@@ -154,12 +179,18 @@ export default function ChangePasswordScreen() {
         }
         return;
       }
+      if (reauthData.user?.id !== session?.user.id) {
+        setError('The account changed. Sign in to your own account and try again.');
+        return;
+      }
 
       const { error: updateError } = await supabase.auth.updateUser({ password: result.data.newPassword });
       if (updateError) {
         setError(updateError.message);
         return;
       }
+      // The server observer records this write; refresh so Settings labels follow.
+      void refreshCompletion();
 
       setCurrentPassword('');
       setNewPassword('');
@@ -186,7 +217,7 @@ export default function ChangePasswordScreen() {
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Change Password
+              {mode === 'manage' ? 'Manage Password' : mode === 'recover_only' ? 'Set Password' : 'Change Password'}
             </ThemedText>
           </View>
         </View>
@@ -194,6 +225,20 @@ export default function ChangePasswordScreen() {
         {!session ? (
           <View style={styles.content}>
             <GuestPrompt label="Log in to change your password." />
+          </View>
+        ) : mode === 'loading' || mode === 'error' || mode === 'recover_only' ? (
+          <View style={styles.content}>
+            <ThemedText accessibilityLiveRegion="polite" themeColor="textSecondary">
+              {mode === 'loading'
+                ? 'Checking your password status…'
+                : mode === 'error'
+                  ? 'Your password status could not be loaded. Retry before changing it.'
+                  : 'Your account has no password and no linked Google sign-in to confirm it is you. Use password recovery to set a password through your email.'}
+            </ThemedText>
+            {mode === 'error' ? <PrimaryButton label="Retry" onPress={() => { void refreshCompletion(); }} /> : null}
+            {mode === 'recover_only' ? (
+              <PrimaryButton label="Recover password by email" onPress={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }} />
+            ) : null}
           </View>
         ) : (
           <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -207,10 +252,16 @@ export default function ChangePasswordScreen() {
                   <Ionicons name="shield-checkmark-outline" size={20} color={theme.primary} />
                 </View>
                 <ThemedText themeColor="textSecondary" style={styles.intro}>
-                  Enter your current password, then choose a new one — at least 8 characters,
-                  with an uppercase letter, a number, and a special character.
+                  {mode === 'manage'
+                    ? 'Your account has an existing password we cannot confirm. Enter it to change it, or recover it by email if you do not know it.'
+                    : 'Enter your current password, then choose a new one — at least 8 characters, with an uppercase letter, a number, and a special character.'}
                 </ThemedText>
               </View>
+              {setupRefreshError ? (
+                <ThemedText type="small" accessibilityLiveRegion="polite" themeColor="accentRed">
+                  {setupRefreshError}
+                </ThemedText>
+              ) : null}
 
               <View
                 style={[
@@ -277,12 +328,128 @@ export default function ChangePasswordScreen() {
               <View style={styles.submitBtn}>
                 <PrimaryButton label="Update Password" loading={loading} onPress={handleUpdate} />
               </View>
+              {mode === 'manage' ? (
+                <PrimaryButton
+                  label="Recover password by email"
+                  variant="secondary"
+                  disabled={loading}
+                  onPress={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }}
+                />
+              ) : null}
             </ScrollView>
           </KeyboardAvoidingView>
         )}
       </View>
 
       <ResultPopup visible={showSuccess} onDismiss={() => { setShowSuccess(false); router.back(); }} />
+    </SafeAreaView>
+  );
+}
+
+/** First password from Settings for a passwordless Google resident. The write is
+ * unlocked only by a completed same-user `set_password` Google attempt whose
+ * Auth-recorded oauth sign-in is within the application window; it is rechecked
+ * right before updateUser and consumed afterwards (or when the resident leaves). */
+function FirstPasswordFromSettings() {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+  const { refreshCompletion } = useAuth();
+  const [reauth, setReauth] = useState<ReauthenticationState | 'checking'>('checking');
+  const [draft, setDraft] = useState<ResidentPasswordDraft>({ password: '', confirmPassword: '', uncertain: false });
+  const [notice, setNotice] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const check = useCallback(async () => {
+    try { setReauth(await googleReauthentication('set_password')); }
+    catch { setReauth('none'); }
+  }, []);
+  useFocusEffect(useCallback(() => { void check(); }, [check]));
+
+  function leave() {
+    if (authSetupRequests.busy) { setNotice('A request is still finishing. Please wait before leaving.'); return true; }
+    if (draft.uncertain) { setNotice('Confirm whether your entered password was saved, or use password recovery, before leaving.'); return true; }
+    setDraft({ password: '', confirmPassword: '', uncertain: false });
+    void clearGoogleReauthentication().catch(() => {});
+    router.back();
+    return true;
+  }
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', leave);
+    return () => subscription.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.uncertain]);
+
+  if (reauth === 'fresh') {
+    return (
+      <>
+        <ResidentPasswordStep
+          variant="settings"
+          required={false}
+          draft={draft}
+          onDraftChange={setDraft}
+          beforeWrite={async () => {
+            if ((await googleReauthentication('set_password')) !== 'fresh') {
+              setReauth('expired');
+              throw new Error('Your Google confirmation expired. Confirm with Google again before setting a password.');
+            }
+          }}
+          onSaved={async () => {
+            await clearGoogleReauthentication().catch(() => {});
+            await refreshCompletion();
+            setShowSuccess(true);
+          }}
+          onSkip={() => { leave(); }}
+          onBack={() => { leave(); }}
+        />
+        {notice ? <ThemedText accessibilityLiveRegion="polite" style={{ padding: Spacing.three, backgroundColor: theme.background }}>{notice}</ThemedText> : null}
+        <ResultPopup
+          visible={showSuccess}
+          title="Password Set"
+          subtitle="You can now also sign in with your email and password."
+          onDismiss={() => { setShowSuccess(false); router.dismissTo('/settings'); }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+      <View style={{ flex: 1, backgroundColor: theme.background }}>
+        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+          <Pressable onPress={leave} style={styles.backBtn} accessibilityRole="button" accessibilityLabel="Go back" hitSlop={Spacing.two}>
+            <Ionicons name="chevron-back" size={26} color="#fff" />
+          </Pressable>
+          <View style={styles.headerContent}>
+            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>Set Password</ThemedText>
+          </View>
+        </View>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={[styles.introCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
+            <View style={[styles.introIconWrap, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
+              <Ionicons name="shield-checkmark-outline" size={20} color={theme.primary} />
+            </View>
+            <ThemedText themeColor="textSecondary" style={styles.intro}>
+              Your account does not have a password yet. To protect it, first confirm it is you with the same
+              Google account. You will then have 5 minutes to set your password.
+            </ThemedText>
+          </View>
+          {reauth === 'checking' ? (
+            <ThemedText accessibilityLiveRegion="polite" themeColor="textSecondary">Checking your Google confirmation…</ThemedText>
+          ) : reauth === 'expired' || reauth === 'mismatch' ? (
+            <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed">
+              Your Google confirmation expired or did not match this account. Confirm with Google again.
+            </ThemedText>
+          ) : null}
+          <GoogleButton
+            label="Confirm with Google"
+            intent="reauthenticate"
+            purpose="set_password"
+            disabled={reauth === 'checking'}
+            onComplete={() => { void check(); }}
+          />
+          {notice ? <ThemedText accessibilityLiveRegion="polite">{notice}</ThemedText> : null}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

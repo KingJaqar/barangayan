@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+const input=fs.readFileSync(new URL('./comparison-fixture.sql',import.meta.url),'utf8');
+const result=spawnSync('docker',['exec','-i','supabase_db_barangayan','psql','-U','postgres','-d','postgres','-qAt','-v','ON_ERROR_STOP=1'],{input,encoding:'utf8',timeout:15000,windowsHide:true});
+assert.equal(result.status,0,result.stderr || result.error?.message);
+const evidence=JSON.parse(result.stdout.trim());
+assert.equal(evidence.case_tie,true);assert.equal(evidence.accents_retained,true);
+assert.equal(evidence.timestamp_instants_equal,true);assert.equal(evidence.row_count_identity,true);
+assert.equal(evidence.size_combinations,45);
+assert.deepEqual(evidence.name_ascending.slice(-3),[6,7,8]);
+assert.deepEqual(evidence.name_descending.slice(-3),[6,7,8]);
+assert.equal(evidence.numeric_suffix_values[0].numeric,2);
+assert.equal(evidence.numeric_suffix_values[1].numeric,10);
+assert.equal(evidence.numeric_suffix_values[2].numeric,2);
+fs.writeFileSync(new URL('./comparison-fixture-results.json',import.meta.url),JSON.stringify(evidence,null,2)+'\n');
+console.log('11 independent CTE fixture assertions passed; no application sorting or paging pass is claimed.');

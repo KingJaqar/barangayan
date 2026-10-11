@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "table": "service_requests",
+      "event": "UPDATE",
+      "matchingId": true,
+      "matchingValues": true
+    },
+    {
+      "table": "incidents",
+      "event": "UPDATE",
+      "matchingId": true,
+      "matchingValues": true
+    },
+    {
+      "table": "medical_drives",
+      "event": "UPDATE",
+      "matchingId": true,
+      "matchingValues": true
+    },
+    {
+      "table": "drive_registrations",
+      "event": "UPDATE",
+      "matchingId": true,
+      "matchingValues": true
+    },
+    {
+      "table": "household_members",
+      "event": "UPDATE",
+      "matchingId": true,
+      "matchingValues": true
+    }
+  ],
+  "failures": []
+}

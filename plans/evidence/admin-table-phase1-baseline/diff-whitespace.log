@@ -1,0 +1,10 @@
+warning: in the working copy of 'apps/resident-android-mobile/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/index.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/profile.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(auth)/login.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(auth)/register.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/complete-profile.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/index.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/shared/src/schemas/service-foundations.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/shared/src/types/service-foundations.ts', LF will be replaced by CRLF the next time Git touches it

@@ -1,0 +1,75 @@
+# EAS Build archive rules. When this file exists EAS ignores every .gitignore,
+# so it repeats the root .gitignore and adds local-only tool/worktree/document folders.
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# Supabase env files for apps/mobile (real values) — examples stay committed
+.env
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+.next-*/
+
+# --- local-only folders hidden by .git/info/exclude or tooling ---
+.git/
+.claude/
+.kilo/
+.kilocode/
+.aider*
+.aider-desk/
+.scratch/
+.vscode/
+tmp/
+**/.next/
+**/.vercel/
+**/.turbo/
+**/node_modules/
+**/.expo/
+**/android/
+**/ios/
+design references/
+barangayan project paper/
+plans/
+*.log
+*.docx
+*.pdf

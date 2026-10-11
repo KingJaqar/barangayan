@@ -1,0 +1,4556 @@
+[
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/household_members",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/medical_drives",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/logout",
+    "status": 204
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/logout",
+    "status": 204
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/medical_drives",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/medical_drives",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/drive_registrations",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/household_members",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/household_members",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/logout",
+    "status": 204
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "POST",
+    "path": "/token",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "POST",
+    "path": "/admin_audit_log",
+    "status": 201
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/barangay_officials",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/service_requests",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "HEAD",
+    "path": "/profiles",
+    "status": 206
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/admin_audit_log",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incidents",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/incident_categories",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "auth",
+    "method": "GET",
+    "path": "/user",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/payments",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/service_requests",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/profiles",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "GET",
+    "path": "/document_types",
+    "status": 200
+  },
+  {
+    "type": "rest",
+    "method": "PATCH",
+    "path": "/incidents",
+    "status": 200
+  }
+]

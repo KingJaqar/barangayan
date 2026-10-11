@@ -1,0 +1,37 @@
+{
+  "phase": 1,
+  "status": "complete",
+  "unitTests": 51,
+  "browsers": [
+    {
+      "name": "chrome",
+      "status": "passed",
+      "version": "154.0.8037.99",
+      "groups": 11
+    },
+    {
+      "name": "edge",
+      "status": "unavailable",
+      "groups": 0
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "version": "153.0",
+      "groups": 11
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "version": "26.5",
+      "groups": 11
+    }
+  ],
+  "lint": "passed",
+  "typecheck": "passed",
+  "webpackBuild": "passed",
+  "defaultTurbopackBuild": "failed: font network / child-process startup; cause unproven",
+  "scope": "admin shared foundation and test dependencies only; no routes/migrations/resident UI modified",
+  "cleanup": "browsers and loopback server closed; task-local browser cache/build output retained",
+  "timestamp": "2026-10-11T11:59:38.949Z"
+}

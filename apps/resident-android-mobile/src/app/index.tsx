@@ -1,28 +1,17 @@
 import { Redirect } from 'expo-router';
+import * as Linking from 'expo-linking';
 import { useAuth } from '@/hooks/use-auth';
+import { nativeCallbackPending, setupDestination } from '@/lib/setup-navigation';
 
-// Stub for the app's bare root path ("/"). Expo Router/Linking treats "/" as the app's
-// default launch URL — a fresh cold start (or a dev-client reload with no deep link)
-// resolves to it directly, independent of any in-app navigation. Home used to be exactly
-// that route (a flat (app)/index.tsx), so "/" always resolved. It was moved to
-// (app)/home/index.tsx (path "/home") so Emergency Info could be pushed onto Home's own
-// nested stack while keeping the bottom nav on "Home" — see (app)/home/_layout.tsx.
-// That left "/" itself with no matching screen ("Unmatched Route"), so this file exists
-// purely to forward it into the real Home route. Stack.Protected in the root layout
-// still governs whether (app) or (auth) is actually reachable.
-//
-// Named "index" deliberately, and Home's own directory is named "home" (not "index") —
-// reusing "index" for both this root stub AND the nested Home route caused a route-name
-// collision: router.replace('/index') was resolving back to THIS stub instead of Home's
-// screen, producing an infinite self-redirect that surfaced as "Unmatched Route" right
-// after login/guest-mode. Keep these two names distinct.
 export default function RootIndexRedirect() {
-  const { session, isGuest, isPasswordRecovery } = useAuth();
-  const appReachable = (!!session || isGuest) && !isPasswordRecovery;
-
-  if (appReachable) {
-    return <Redirect href="/home" />;
+  const { session, isGuest, isPasswordRecovery, setupRoute, setup, isLoading, restorationError } = useAuth();
+  // A cold-started Google callback is handed to /auth/callback by the root navigator;
+  // redirecting from here first would drop it on the signed-out entry screen.
+  const nativeUrl = Linking.useLinkingURL();
+  if (isLoading || restorationError || nativeCallbackPending(nativeUrl)) return null;
+  if (isPasswordRecovery) return <Redirect href="/(auth)/forgot-password" />;
+  if (session) {
+    return <Redirect href={setupDestination(setupRoute, setup)} />;
   }
-
-  return <Redirect href="/(auth)/auth-choice" />;
+  return <Redirect href={isGuest ? '/home' : '/(auth)/auth-choice'} />;
 }

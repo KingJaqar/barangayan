@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "role": "resident",
+      "result": "redirected to login; no admin table"
+    },
+    {
+      "role": "removedAdmin",
+      "result": "baseline defect reproduced: removed administrator can render capped Requests table",
+      "rows": 1000
+    }
+  ],
+  "failures": []
+}

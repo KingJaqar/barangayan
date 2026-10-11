@@ -1,0 +1,64 @@
+# Phase 1 database and Auth proof
+
+Tests: 2026-10-08, Asia/Manila; completion record finalized 2026-10-09. Status: **Phase 1 complete**. Local implementation and verification pass; hosted qualification now passes as recorded in [phase1-hosted-auth-proof.md](phase1-hosted-auth-proof.md). Phase 2 has not started.
+
+Candidate: working-tree changes over `a75ee345224ed7f93d57b3e0c4de24e7540ba82c`; migration `0107_resident_account_setup_lifecycle.sql`, SHA-256 `53023cb025fc5faf1e1cb48b3b928b0ecba8bd69681bca9162ee953d5aa55245`. Local PostgreSQL 17.6 / GoTrue v2.197.0 / Supabase CLI 2.118.0 / supabase-js 2.112.1. Qualified hosted test backend: production `pwjbucnyqexiepoinoke`, now through migration 0107 with matching recorded statements. No Android build/device was used; Android UI, web/iOS work and the cancelled usability phase remain untouched.
+
+## Implemented contract
+
+The additive migration creates an RLS-enabled private lifecycle table with no client grants, one record per Auth user, immutable creation origin, tri-state password provenance and observation timestamps. It stores no credential or hash copy. The caller-only status RPC returns exactly `registrationOrigin`, `profileComplete`, nullable `passwordSet`, and `hasGoogleIdentity`. Missing, anonymous, banned, deleted and staff identities fail closed; there is no user/tenant/role argument. Google membership comes from Auth-managed identities.
+
+An email OTP creation marker is a creation-only routing hint, not an authorization claim. Later metadata changes cannot change recorded origin or manufacture password/Google evidence. Existing accounts backfill as legacy: absent hashes are false; all initial nonempty hashes are unknown. Backfill never writes Auth credentials and its conflict handling preserves known origins/password observations on replay. A future server password write/removal changes the provenance atomically with Auth's write, excluding the creation transaction.
+
+The established completion operation still owns tenant assignment, role/deletion protection, optional locations and idempotent profile creation. Its established validation errors retain priority. A common SQL completeness predicate now backs completion, status and service submission guards; shared details validation reuses `profileCompletionSchema`. Parity fixtures cover required/optional values, whitespace, UTF-16 length boundaries, mobile/enums, leap dates and future dates. Shared validation now rejects year zero, which PostgreSQL cannot persist. GPS/location and injected-field checks remain in the established completion operation.
+
+Shared contracts include a strictly parsed RPC reader with a ten-second abort, safe failure messages, string-preserving six-digit code validation, password creation validation, and pure routing decisions. Email-origin requirements survive Google linking; legacy uncertainty preserves existing login/Manage Password behavior; Google setup remains optional; restoration/recovery and status failures take precedence. No Android coordinator/screens were added.
+
+## Auth statement-order investigation
+
+The inspected [v2.197.0 Magic Link implementation](https://github.com/supabase/auth/blob/v2.197.0/internal/api/magic_link.go) creates a random password for a new user before calling signup. [Signup](https://github.com/supabase/auth/blob/v2.197.0/internal/api/signup.go) inserts that hash with the user and, under auto-confirmation, subsequently produces an internal password-grant session. **A password AMR claim therefore does not prove a resident chose a password**, even after the user-creation transaction. Hosted aggregate inspection also found no audit-log rows suitable for backfill; the design uses neither AMR nor audit-log presence as positive legacy evidence.
+
+The [user update](https://github.com/supabase/auth/blob/v2.197.0/internal/api/user.go) and [user model](https://github.com/supabase/auth/blob/v2.197.0/internal/models/user.go) write chosen setup/change/recovery credentials through `auth.users.encrypted_password`. The [password token path](https://github.com/supabase/auth/blob/v2.197.0/internal/api/token.go) may re-encrypt a hash after successful existing-password authentication. These supported-version behaviors bound this observer design: initial hashes remain unknown/unset; later observed Auth credential writes are positive evidence. Privileged imports/rekeys and future Auth changes must be reviewed rather than assumed to represent resident choice. No initial temporary-password change was observed on real resend/verification/refresh in the isolated service.
+
+## Verification records
+
+All commands below ran from the repository root. Local Auth tests use synthetic `@local.test` accounts and capture email locally; they never point at production. Credentials/tokens stay in memory or an ignored, temporary local configuration file and are not logged. The local configuration file was removed after verification.
+
+| ID | Command / check | Result and evidence |
+| --- | --- | --- |
+| P1-REPLAY | `node node_modules/supabase/dist/supabase.js db reset --local --no-seed --yes` | **Passed**: full fresh replay through 0107. `phase1-replay.log`. |
+| P1-DB | `node node_modules/supabase/dist/supabase.js test db --local` | **Passed**: 13 SQL files, 475 assertions. Includes upgrade/backfill fixtures, replay preservation, private privileges, caller isolation, origin spoofing/linking, Google/staff/deleted/anonymous/banned compatibility, missing authoritative state, profile-less completion, tenant isolation and existing submission/map guards. `phase1-database-suite.log`. |
+| P1-SHARED | `npm run test --workspace=@barangayan/shared -- --reporter=dot` | **Passed**: 22 files, 213 tests. Routing, strict response parsing, retry/error mapping, leading-zero codes, validation reuse and bounded abort included. `phase1-shared-tests.log`. |
+| P1-TYPES | `node node_modules/typescript/bin/tsc --project apps/resident-android-mobile/tsconfig.json --noEmit` | **Passed**, exit 0, empty `phase1-mobile-types.log`. The first attempt used the stale `apps/mobile` path and could not run; the actual Android path above passed. |
+| P1-GENERATED | `node node_modules/supabase/dist/supabase.js gen types typescript --local --schema public` | **Passed**: generated no-argument RPC uses `Args: Record<PropertyKey, never>; Returns: Json`. Narrow generated extraction in `packages/shared/src/types/resident-account-setup.database.ts` is intersected with existing database augmentation; private table is not exposed. |
+| P1-AUTH | `node supabase/tests/resident_account_setup.auth.mjs` | **Passed**, actual GoTrue v2.197.0 HTTP requests: OTP creation/resend keep generated hash unset; real issued six-digit OTP verifies; metadata/refresh cannot forge progress; 18 shared/SQL parity fixtures; profile-less completion; concurrent same-user completion and password/profile writes; setup/change/recovery with old/new credential login checks; lifecycle failure rolls back password changes and retains the working credential; Auth-managed Google linking/unlinking preserves profile/origin/password; legacy password login remains usable with unknown provenance; real REST rejects anonymous/other-user arguments/private table reads; earlier JWT rejects deleted-profile setup and incident submission; private observer failure rolls back Auth account creation. `phase1-local-auth.log`. |
+| P1-ADVISORS | `node node_modules/supabase/dist/supabase.js db advisors --local --type security --level warn --fail-on error` | **Passed**, exit 0, no error-level findings. Four existing mutable-search-path warnings concern `sync_service_request_payment_status`, `set_faq_articles_updated_at`, `track_service_request_status`, `guard_request_completion`; none is introduced by 0107. `phase1-advisors.log`; [advisor explanation](https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable). |
+| P1-HOSTED-PREFLIGHT | `node node_modules/supabase/dist/supabase.js db push --linked --dry-run --skip-vault --yes` | **Passed**: only 0107 pending, no seeds/roles/vault update. Hosted readonly privilege checks confirm TRIGGER on Auth users and CREATE in the private schema; no helper-name collision. `phase1-hosted-migration-preflight.log`. |
+| P1-HOSTED | Verify applied 0107 and repeat dedicated-account Auth proof | **Passed on resume**. Initial application was blocked by automatic approval review; after the user's continuation request, CLI found 0107 already applied and did not push SQL. Recorded statements, actual backfill, grants/types and actual new/resend/setup/change/recovery/REST tests pass. All 23 pre-existing credentials preserved; one fresh dedicated alias/profile retained. See hosted proof and `phase1-hosted-migration.log`. |
+| P1-DIFF | `git diff --check` and final source/evidence review | **Passed**. Changes limited to migration, shared contracts/necessary validation parity, focused tests and execution evidence/plan. Pre-existing user plans and Phase 0 changes preserved. |
+
+The initial focused run exposed a changed `invalid_payload` error priority; the wrapper was corrected and all existing tests pass. The initial parity run exposed Unicode whitespace/text-length drift; SQL was aligned with JavaScript trimming and UTF-16 counting. An initial upgrade fixture attempted an owner-only trigger-disable operation; it was replaced with removal of only synthetic lifecycle rows inside the rollback-only test. These were corrected implementation/test issues, not pre-existing application failures.
+
+To reproduce local Auth integration, start the isolated Supabase stack, replay local migrations, then write `node node_modules/supabase/dist/supabase.js status --output json > .env.phase1.local` and run P1-AUTH. This ignored configuration file contains local credentials: never commit/copy it to evidence, and remove it afterward. Do not use the Auth harness against a hosted backend. The fault-injection helper/constraints are local only and are removed in `finally`; they are not in the migration.
+
+## Hosted backfill categories — applied and verified
+
+Fresh readonly aggregate on 2026-10-08 initially projected 23 existing Auth users. On resume, **actual applied backfill matched this review**. No pre-existing email, identifier or hash values are retained.
+
+| Existing category | Count | Verified origin / passwordSet |
+| --- | ---: | --- |
+| Admin, no Google, initial hash present | 4 | legacy / unknown |
+| Admin, Google linked, initial hash present | 1 | legacy / unknown |
+| No profile, no Google, initial hash present | 2 | legacy / unknown |
+| Resident, no Google, initial hash present | 12 | legacy / unknown |
+| Resident, Google, hash absent | 3 | legacy / false |
+| Resident, Google linked, initial hash present | 1 | legacy / unknown |
+| Total | 23 | 20 unknown; 3 false; no assumed true |
+
+Privileged SQL fixture coverage proves backfill preserves credentials and known lifecycle records. Actual production backfill and hosted Auth lifecycle tests now pass. After the bounded hosted test, totals are 24: the above 23 legacy records plus one email_otp record with a positively observed chosen password. Google identity compatibility here exercises Auth-managed database records and RPCs, not a live external Google OAuth exchange; Android/OAuth device qualification belongs to later phases.
+
+## Authentication policy boundary and phase boundary
+
+The local Auth integration directly calls `updateUser({ password })` from an authenticated OTP/recovery session without a current-password check or a newly completed Google exchange. It succeeds under the unchanged policy. Phase 0 recorded both hosted password protections disabled. **Neither this observer nor status RPC enforces fresh Google authentication or a five-minute backend window.** Tracking is not authorization. Phase 3 must implement and qualify same-user/purpose/fresh-attempt application checks, retain current-password verification for existing credentials, and separately test the hosted policy/direct sensitive-action endpoints. A stronger server-enforced window cannot be claimed from AMR, refreshed sessions, or client flags; any required shared Auth policy redesign needs its own supported proof and authorization. Deletion endpoint qualification is still a Phase 3/4 task, not a result of the local deleted-profile guards above.
+
+The prior production-application block is resolved for Phase 1 qualification: the user requested continuation, sequential 0107 was found already applied and verified, and bounded hosted Auth tests passed. Original credentials/data were preserved; no production fault injection was performed. Phase 1 is complete. Phases 2–6 remain Not started; native Google/Settings security behavior, device qualification and release readiness are not implied by this database/shared proof.

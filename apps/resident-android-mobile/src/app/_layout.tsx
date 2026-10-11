@@ -1,4 +1,5 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider, useRouter } from 'expo-router';
+import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { useEffect, type ReactNode } from 'react';
@@ -15,6 +16,11 @@ import { ProfileProvider, useProfile } from '@/hooks/use-profile';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemePreferenceProvider, useThemePreference } from '@/hooks/use-theme-preference';
 import { registerPushToken } from '@/lib/push-notifications';
+import { View } from 'react-native';
+import { PrimaryButton } from '@/components/primary-button';
+import { ThemedText } from '@/components/themed-text';
+import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from '@/lib/setup-navigation';
+import { useTheme } from '@/hooks/use-theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -101,22 +107,36 @@ function ThemedRoot() {
 // overlay stays up until the initial session check resolves, so the app never flashes
 // signed-out content before we actually know the answer.
 function SplashGatedNavigator() {
-  const { isLoading } = useAuth();
+  const { isLoading, restorationError, retryRestoration } = useAuth();
+  const theme = useTheme();
 
   return (
     <>
       <AnimatedSplashOverlay ready={!isLoading} />
-      {!isLoading && <RootNavigator />}
+      {/* Keep the navigation tree mounted so a cold callback survives session
+          restoration. Individual screens wait for Auth before doing any work. */}
+      <RootNavigator />
+      {!isLoading && restorationError ? <View style={{ position: 'absolute', inset: 0, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}><ThemedText accessibilityLiveRegion="polite">{restorationError}</ThemedText><PrimaryButton label="Retry session restoration" onPress={retryRestoration} /></View> : null}
     </>
   );
 }
 
 function RootNavigator() {
-  const { session, isPasswordRecovery, isGuest, isRegistering } = useAuth();
-  // isRegistering holds the resident in (auth) through the brief window where signUp()'s
-  // returned session would otherwise satisfy appReachable and bounce them into (app)
-  // before register.tsx signs that session back out and shows its success modal.
-  const holdInAuthGroup = isPasswordRecovery || isRegistering;
+  const { session, isPasswordRecovery, isGuest, setupRoute, setup, isLoading } = useAuth();
+  const nativeUrl = Linking.useLinkingURL();
+  const router = useRouter();
+  useEffect(() => {
+    // Other/malformed links use the existing Router handling.
+    if (isLoading || !nativeCallbackPending(nativeUrl)) return;
+    // Android may restore the previous task route on process death, and a cold start
+    // into the existing task starts Expo Router at the root. Hand the actual native
+    // callback to its existing validated, deduplicated handler.
+    markNativeCallbackHandedOff(nativeUrl);
+    router.replace('/auth/callback');
+  }, [isLoading, nativeUrl, router]);
+  // Recovery retains its own auth stack; resident setup comes from fresh server
+  // state and creation origin, including after a cold restart or token refresh.
+  const holdInAuthGroup = isPasswordRecovery;
 
   // Deliberately NOT symmetric (authReachable is not just "!appReachable"). Guest
   // browsing ("I'll Sign In Later") needs (app) reachable with no session, AND (auth)
@@ -128,7 +148,7 @@ function RootNavigator() {
   // Recovery flow already relies on, no extra plumbing needed. If this were written as
   // `!appReachable` instead, isGuest would make (auth) permanently unreachable the
   // instant guest mode starts, breaking guest -> login entirely.
-  const appReachable = (!!session || isGuest) && !holdInAuthGroup;
+  const appReachable = !holdInAuthGroup && (session ? setupAllowsApp(setupRoute, setup) : isGuest);
   const authReachable = !session || holdInAuthGroup;
 
   return (
@@ -137,7 +157,10 @@ function RootNavigator() {
           actually reachable below, so it doesn't need its own guard. */}
       <Stack.Screen name="index" />
       <Stack.Screen name="auth/callback" />
-      <Stack.Protected guard={!!session && !holdInAuthGroup}>
+      <Stack.Protected guard={!!session && !holdInAuthGroup && !appReachable}>
+        <Stack.Screen name="account-setup" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && !holdInAuthGroup && appReachable}>
         <Stack.Screen name="complete-profile" />
       </Stack.Protected>
 

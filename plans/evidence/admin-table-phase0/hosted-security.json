@@ -1,0 +1,207 @@
+{
+  "grants": [
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registration_scores",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "INSERT"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "DELETE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "TRUNCATE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "REFERENCES"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "drive_registrations",
+      "privilege_type": "TRIGGER"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "INSERT"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "DELETE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "TRUNCATE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "REFERENCES"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "drive_registrations",
+      "privilege_type": "TRIGGER"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "INSERT"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "DELETE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "TRUNCATE"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "REFERENCES"
+    },
+    {
+      "grantee": "anon",
+      "table_name": "profiles",
+      "privilege_type": "TRIGGER"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "INSERT"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "SELECT"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "UPDATE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "DELETE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "TRUNCATE"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "REFERENCES"
+    },
+    {
+      "grantee": "authenticated",
+      "table_name": "profiles",
+      "privilege_type": "TRIGGER"
+    }
+  ],
+  "functions": [
+    {
+      "nspname": "public",
+      "proname": "current_barangay_id",
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.current_barangay_id()\n RETURNS uuid\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n  select barangay_id from public.profiles where id = auth.uid();\n$function$\n"
+    },
+    {
+      "nspname": "public",
+      "proname": "current_role",
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.\"current_role\"()\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n  select role from public.profiles where id = auth.uid();\n$function$\n"
+    },
+    {
+      "nspname": "public",
+      "proname": "admin_register_for_drive",
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.admin_register_for_drive(p_target_user_id uuid, p_drive_id uuid, p_age integer, p_is_pwd boolean, p_comorbidities text[], p_prior_dose_date date DEFAULT NULL::date)\n RETURNS json\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare\r\n  v_admin_id         uuid    := auth.uid();\r\n  v_admin_barangay_id uuid;\r\n  v_target_barangay_id uuid;\r\n  v_drive            public.medical_drives;\r\n  v_prefix           text;\r\n  v_applicant_number text;\r\n  v_reg              public.drive_registrations;\r\nbegin\r\n  -- Auth + role guard\r\n  if v_admin_id is null then\r\n    raise exception 'Not authenticated' using errcode = 'P0001';\r\n  end if;\r\n\r\n  if not exists(select 1 from public.profiles p where p.id=v_admin_id\n    and p.role='admin' and p.deleted_at is null) then\n    raise exception 'Only admins can register a resident on their behalf' using errcode = 'P0005';\r\n  end if;\r\n\r\n  v_admin_barangay_id := public.current_barangay_id();\r\n\r\n  -- Target must be a resident of the admin's own barangay — an admin from\r\n  -- one barangay must not be able to register a resident of another.\r\n  select barangay_id into v_target_barangay_id\r\n  from public.profiles\r\n  where id = p_target_user_id and role = 'resident';\r\n\r\n  if v_target_barangay_id is null then\r\n    raise exception 'Target resident not found' using errcode = 'P0006';\r\n  end if;\r\n\r\n  if v_target_barangay_id != v_admin_barangay_id then\r\n    raise exception 'Target resident is not in your barangay' using errcode = 'P0007';\r\n  end if;\r\n\r\n  -- Lock drive row so concurrent registrations can't oversell\r\n  select * into v_drive\r\n  from public.medical_drives\r\n  where id = p_drive_id\r\n    and is_active   = true\r\n    and deleted_at is null\r\n  for update;\r\n\r\n  if not found then\r\n    raise exception 'Drive not found or inactive' using errcode = 'P0002';\r\n  end if;\r\n\r\n  if v_drive.barangay_id != v_admin_barangay_id then\r\n    raise exception 'Drive is not in your barangay' using errcode = 'P0008';\r\n  end if;\r\n\r\n  if v_drive.stock_remaining <= 0 then\r\n    raise exception 'No remaining slots for this drive' using errcode = 'P0003';\r\n  end if;\r\n\r\n  -- Duplicate-registration guard\r\n  if exists(\r\n    select 1 from public.drive_registrations\r\n    where drive_id = p_drive_id and user_id = p_target_user_id\r\n  ) then\r\n    raise exception 'Already registered for this drive' using errcode = 'P0004';\r\n  end if;\r\n\r\n  -- Applicant-number prefix by drive type (mirrors register_for_drive)\r\n  v_prefix := case v_drive.type\r\n    when 'vaccination'    then 'VAC'\r\n    when 'maternal_care'  then 'MAT'\r\n    when 'blood_drive'    then 'BLD'\r\n    when 'dental'         then 'DEN'\r\n    when 'optical'        then 'OPT'\r\n    when 'medicine'       then 'MED'\r\n    when 'emergency_kit'  then 'EMK'\r\n    when 'screening'      then 'SCR'\r\n    when 'consultation'   then 'CON'\r\n    when 'minor_surgical' then 'SRG'\r\n    else                       'DRV'\r\n  end;\r\n\r\n  v_applicant_number :=\r\n    v_prefix || '-' ||\r\n    to_char(now(), 'YYYYMMDD') || '-' ||\r\n    lpad((v_drive.stock_total - v_drive.stock_remaining + 1)::text, 4, '0');\r\n\r\n  -- Insert registration under the target resident, not the admin\r\n  insert into public.drive_registrations (\r\n    drive_id, user_id, applicant_number,\r\n    age, is_pwd, comorbidities, prior_dose_date,\r\n    status\r\n  ) values (\r\n    p_drive_id, p_target_user_id, v_applicant_number,\r\n    p_age, p_is_pwd,\r\n    coalesce(p_comorbidities, '{}'), p_prior_dose_date,\r\n    'pending'\r\n  )\r\n  returning * into v_reg;\r\n\r\n  -- Decrement available stock\r\n  update public.medical_drives\r\n  set stock_remaining = stock_remaining - 1\r\n  where id = p_drive_id;\r\n\r\n  return json_build_object(\r\n    'registration_id',  v_reg.id,\r\n    'applicant_number', v_applicant_number,\r\n    'priority_score', (select priority_score from public.drive_registration_scores where registration_id=v_reg.id),\n    'status',           v_reg.status\r\n  );\r\nend;\r\n$function$\n"
+    },
+    {
+      "nspname": "public",
+      "proname": "admin_add_household_member",
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION public.admin_add_household_member(p_profile_id uuid, p_name text, p_relation text, p_role text DEFAULT 'member'::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_member_id uuid := gen_random_uuid();\n  v_profile public.profiles%rowtype;\n  v_members jsonb;\nbegin\n  if auth.uid() is null or public.current_role() is distinct from 'admin' then\n    raise exception 'only authenticated administrators can manage household members';\n  end if;\n\n  select * into v_profile\n    from public.profiles\n    where id = p_profile_id\n      and barangay_id = public.current_barangay_id()\n      and role = 'resident'\n    for update;\n  if not found then\n    raise exception 'Profile % not found in your barangay', p_profile_id;\n  end if;\n\n  v_members := coalesce(v_profile.household_members, '[]'::jsonb);\n  v_members := v_members || jsonb_build_object(\n    'id', v_member_id::text,\n    'name', p_name,\n    'relation', p_relation,\n    'role', p_role\n  );\n\n  update public.profiles set household_members = v_members where id = p_profile_id;\n  return v_member_id;\nend;\n$function$\n"
+    },
+    {
+      "nspname": "barangayan_private",
+      "proname": "guard_drive_registration_edit",
+      "prosecdef": true,
+      "definition": "CREATE OR REPLACE FUNCTION barangayan_private.guard_drive_registration_edit()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nbegin\n if new.id<>old.id or new.drive_id<>old.drive_id or new.user_id<>old.user_id\n or new.applicant_number<>old.applicant_number or new.created_at<>old.created_at then\n  raise exception 'Registration identity is immutable' using errcode='42501';\n end if;\n if (select auth.uid()) is not null and not exists(select 1 from public.profiles p\n  join public.medical_drives d on d.barangay_id=p.barangay_id\n  where p.id=(select auth.uid()) and p.role='admin' and p.deleted_at is null and d.id=old.drive_id)\n and (new.age<>old.age or new.is_pwd<>old.is_pwd or new.comorbidities<>old.comorbidities\n or new.prior_dose_date is distinct from old.prior_dose_date) then\n  raise exception 'Residents may only cancel their pending registration' using errcode='42501';\n end if;\n return new;\nend $function$\n"
+    }
+  ],
+  "publication": [
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "service_requests"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "payments"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "incidents"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "medical_drives"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "drive_registrations"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "household_members"
+    }
+  ]
+}

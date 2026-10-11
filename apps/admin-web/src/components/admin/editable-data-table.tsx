@@ -1,10 +1,12 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 
 import { TableScrollArea } from '@/components/admin/table-scroll-area';
 import { useToast } from '@/components/ui/toast';
 import { Spinner } from '@/components/loading/spinner';
+import { useBrowseViewport } from './table-browse-panel';
+import type { SortDescriptor, SortDirection } from '@/lib/admin-tables/sort-definitions';
 
 // Floor for the last (filler) column under `resizableColumns` — enough room for a small
 // action button or short status label, so it can't be squeezed to invisible by the other
@@ -33,6 +35,8 @@ export interface EditableCellConfig<T> {
 }
 
 export interface EditableDataTableColumn<T> {
+  /** Stable identity; legacy callers continue to use their header as the identity. */
+  id?: string;
   header: string;
   render: (row: T) => ReactNode;
   className?: string;
@@ -55,6 +59,9 @@ export interface EditableDataTableColumn<T> {
   overflow?: 'hidden' | 'visible';
 }
 
+function columnId<T>(col: EditableDataTableColumn<T>) { return col.id ?? col.header; }
+export interface TableEditHandle { settle: () => Promise<boolean>; cancel: () => void }
+
 function resolveEdit<T>(col: EditableDataTableColumn<T>, row: T): EditableCellConfig<T> | undefined {
   if (!col.edit) return undefined;
   return typeof col.edit === 'function' ? col.edit(row) : col.edit;
@@ -75,6 +82,10 @@ function fromDatetimeLocal(local: string): string | null {
 }
 
 interface EditableDataTableProps<T> {
+  sorting?: { descriptor: SortDescriptor; direction: SortDirection; choices: readonly SortDescriptor[];
+    onChange: (key: string, direction: SortDirection) => void };
+  editHandleRef?: RefObject<TableEditHandle | null>;
+  onEditingChange?: (editing: boolean) => void;
   columns: EditableDataTableColumn<T>[];
   rows: T[];
   rowKey: (row: T) => string;
@@ -113,12 +124,29 @@ export function EditableDataTable<T>({
   density = 'default',
   tableMinWidth,
   cellOverflow = 'hidden',
+  sorting,
+  editHandleRef,
+  onEditingChange,
 }: EditableDataTableProps<T>) {
+  const { bounded } = useBrowseViewport();
   const toast = useToast();
   const [editing, setEditing] = useState<{ row: string; col: string } | null>(null);
   const [draft, setDraft] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
+  const savePromise = useRef<Promise<boolean> | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const editSnapshot = useRef<{ row: T; col: EditableDataTableColumn<T> } | null>(null);
+  const editTrigger = useRef<HTMLElement | null>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const resizeCleanup = useRef<(() => void) | null>(null);
+  const focusFrame = useRef(0);
+  const mounted = useRef(true);
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; resizeCleanup.current?.(); cancelAnimationFrame(focusFrame.current); };
+  }, []);
+  useEffect(() => { onEditingChange?.(editing !== null); }, [editing, onEditingChange]);
 
   // ── Resizable columns (opt-in) ────────────────────────────────────────────
   // Each header's width starts at its natural auto-layout size (measured right after
@@ -140,12 +168,12 @@ export function EditableDataTable<T>({
       let changed = false;
       const next = { ...prev };
       for (const col of pinnedColumns) {
-        if (next[col.header] === undefined) {
-          const measuredWidth = col.initialWidth ?? thRefs.current[col.header]?.getBoundingClientRect().width;
+        if (next[columnId(col)] === undefined) {
+          const measuredWidth = col.initialWidth ?? thRefs.current[columnId(col)]?.getBoundingClientRect().width;
           const paddedWidth = measuredWidth ? Math.round(measuredWidth * COLUMN_WIDTH_PADDING) : undefined;
           const width = paddedWidth && col.minWidth !== undefined ? Math.max(col.minWidth, paddedWidth) : paddedWidth;
           if (width) {
-            next[col.header] = width;
+            next[columnId(col)] = width;
             changed = true;
           }
         }
@@ -158,8 +186,9 @@ export function EditableDataTable<T>({
   function startColumnResize(e: React.MouseEvent, header: string) {
     e.preventDefault();
     e.stopPropagation();
+    resizeCleanup.current?.();
     const startX = e.clientX;
-    const column = columns.find((col) => col.header === header);
+    const column = columns.find((col) => columnId(col) === header);
     const minWidth = column?.minWidth ?? 60;
     const startWidth = colWidths[header] ?? thRefs.current[header]?.getBoundingClientRect().width ?? Math.max(120, minWidth);
 
@@ -170,32 +199,55 @@ export function EditableDataTable<T>({
     function onUp() {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
+      resizeCleanup.current = null;
     }
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
+    resizeCleanup.current = onUp;
   }
 
-  const columnsMeasured = resizableColumns && pinnedColumns.every((col) => colWidths[col.header] !== undefined);
+  const columnsMeasured = resizableColumns && pinnedColumns.every((col) => colWidths[columnId(col)] !== undefined);
   const headerPadding = density === 'compact' ? 'px-3 py-2.5' : 'px-5 py-3.5';
   const cellPadding = density === 'compact' ? 'px-3 py-2.5' : 'px-5 py-3.5';
 
   function startEdit(row: T, col: EditableDataTableColumn<T>) {
-    if (savingRef.current) return;
+    if (savingRef.current || (bounded && editing)) return;
     const edit = resolveEdit(col, row);
     if (!edit || (edit.canEdit && !edit.canEdit(row))) return;
-    setEditing({ row: rowKey(row), col: col.header });
+    setEditing({ row: rowKey(row), col: columnId(col) });
+    editSnapshot.current = { row, col };
+    setSaveError(null);
     const raw = String(edit.getValue(row));
     setDraft(edit.type === 'datetime' ? toDatetimeLocal(raw) : raw);
   }
 
   function cancelEdit() {
+    if (savingRef.current) return;
     setEditing(null);
     setDraft('');
+    setSaveError(null);
+    editSnapshot.current = null;
+    if (bounded) {
+      cancelAnimationFrame(focusFrame.current);
+      focusFrame.current = requestAnimationFrame(() => {
+      if (editTrigger.current?.isConnected) editTrigger.current.focus();
+      else tableRef.current?.closest<HTMLElement>('[role=region]')?.focus();
+      });
+    }
   }
 
-  async function commitEdit(row: T, col: EditableDataTableColumn<T>, draftOverride?: string) {
+  function commitEdit(row: T, col: EditableDataTableColumn<T>, draftOverride?: string): Promise<boolean> {
+    if (savePromise.current) return savePromise.current;
+    const promise = performCommit(row, col, draftOverride);
+    savePromise.current = promise;
+    void promise.finally(() => { if (savePromise.current === promise) savePromise.current = null; });
+    return promise;
+  }
+
+  async function performCommit(row: T, col: EditableDataTableColumn<T>, draftOverride?: string): Promise<boolean> {
+    row = editSnapshot.current?.row ?? row;
     const edit = resolveEdit(col, row);
-    if (!edit || savingRef.current) return;
+    if (!edit || savingRef.current) return false;
 
     let value: string | number = draftOverride ?? draft;
     if (edit.type === 'number') {
@@ -204,7 +256,8 @@ export function EditableDataTable<T>({
       const iso = fromDatetimeLocal(draft);
       if (!iso) {
         toast.showError('Enter a valid date and time.');
-        return;
+        setSaveError('Enter a valid date and time.');
+        return false;
       }
       value = iso;
     }
@@ -218,20 +271,34 @@ export function EditableDataTable<T>({
       error = cause instanceof Error ? cause.message : 'The update could not be completed.';
     } finally {
       savingRef.current = false;
-      setSaving(false);
+      if (mounted.current) setSaving(false);
     }
+    if (!mounted.current) return false;
     if (error) {
       toast.showError(`Update failed: ${error}`);
-      cancelEdit();
-      return;
+      if (bounded) setSaveError(error); else cancelEdit();
+      return false;
     }
-    setEditing(null);
-    setDraft('');
+    cancelEdit();
+    return true;
   }
+
+  useLayoutEffect(() => {
+    if (!editHandleRef) return;
+    editHandleRef.current = {
+      settle: async () => {
+        const snapshot = editSnapshot.current;
+        return snapshot ? commitEdit(snapshot.row, snapshot.col) : true;
+      },
+      cancel: cancelEdit,
+    };
+    return () => { editHandleRef.current = null; };
+  });
 
   return (
     <TableScrollArea>
       <table
+        ref={tableRef}
         // w-full only kicks in once the pinned columns are measured and the table is on
         // fixed layout — applying it during the brief unmeasured auto-layout pass would
         // stretch the very widths startColumnResize is trying to capture as "natural".
@@ -245,9 +312,9 @@ export function EditableDataTable<T>({
           <colgroup>
             {columns.map((col) => (
               <col
-                key={col.header}
+                key={columnId(col)}
                 style={{
-                  ...(colWidths[col.header] ? { width: colWidths[col.header] } : {}),
+                  ...(colWidths[columnId(col)] ? { width: colWidths[columnId(col)] } : {}),
                   ...(col.minWidth ? { minWidth: col.minWidth } : {}),
                 }}
               />
@@ -262,9 +329,11 @@ export function EditableDataTable<T>({
           <tr>
             {columns.map((col, colIndex) => (
               <th
-                key={col.header}
+                scope="col"
+                aria-sort={sorting?.descriptor.columnId === columnId(col) ? (sorting.direction === 'asc' ? 'ascending' : 'descending') : undefined}
+                key={columnId(col)}
                 ref={(el) => {
-                  thRefs.current[col.header] = el;
+                  thRefs.current[columnId(col)] = el;
                 }}
                 // The last (filler) column gets a floor so it can never be squeezed to
                 // invisible by the other columns' pinned/initial widths adding up to more
@@ -280,12 +349,32 @@ export function EditableDataTable<T>({
                   thickBorders && colIndex < columns.length - 1 ? 'border-r-2 border-zinc-300 dark:border-zinc-600' : ''
                 }`}
               >
-                <span className="block truncate" title={col.header}>
-                  {col.header}
-                </span>
+                {sorting?.choices.some(sort => sort.columnId === columnId(col)) ? (
+                  <button type="button" onClick={async () => {
+                    const sort = sorting.choices.find(item => item.columnId === columnId(col))!;
+                    const snapshot = editSnapshot.current;
+                    if (snapshot && !await commitEdit(snapshot.row, snapshot.col)) return;
+                    const next = sorting.descriptor.key === sort.key
+                      ? sort.directions.find(dir => dir !== sorting.direction) ?? sorting.direction : sort.initialDirection;
+                    sorting.onChange(sort.key, next);
+                  }}>{col.header}</button>
+                ) : <span className="block truncate" title={col.header}>{col.header}</span>}
                 {resizableColumns && (
                   <div
-                    onMouseDown={(e) => startColumnResize(e, col.header)}
+                    role={bounded ? 'separator' : undefined}
+                    tabIndex={bounded ? 0 : undefined}
+                    aria-label={bounded ? `Resize ${col.header}` : undefined}
+                    aria-orientation={bounded ? 'vertical' : undefined}
+                    aria-valuenow={bounded ? Math.round(colWidths[columnId(col)] ?? col.initialWidth ?? 120) : undefined}
+                    aria-valuemin={bounded ? col.minWidth ?? 60 : undefined}
+                    onKeyDown={bounded ? (event) => {
+                      if (!['ArrowLeft', 'ArrowRight', 'Home'].includes(event.key)) return;
+                      event.preventDefault(); event.stopPropagation();
+                      const min = col.minWidth ?? 60;
+                      const delta = (event.key === 'ArrowLeft' ? -1 : 1) * (event.shiftKey ? 50 : 10);
+                      setColWidths(prev => ({ ...prev, [columnId(col)]: event.key === 'Home' ? min : Math.max(min, (prev[columnId(col)] ?? 120) + delta) }));
+                    } : undefined}
+                    onMouseDown={(e) => startColumnResize(e, columnId(col))}
                     title="Drag to resize"
                     className="absolute inset-y-0 right-0 w-1.5 cursor-col-resize select-none hover:bg-[var(--accent)]/40 active:bg-[var(--accent)]"
                   />
@@ -312,13 +401,21 @@ export function EditableDataTable<T>({
                 }`}
               >
                 {columns.map((col, colIndex) => {
-                  const isEditing = editing?.row === rowKey(row) && editing?.col === col.header;
+                  const isEditing = editing?.row === rowKey(row) && editing?.col === columnId(col);
                   const edit = resolveEdit(col, row);
                   const editable = !!edit && (!edit.canEdit || edit.canEdit(row));
 
                   return (
                     <td
-                      key={col.header}
+                      tabIndex={bounded && !isEditing && (editable || onRowClick) ? 0 : undefined}
+                      aria-label={bounded && editable && !isEditing ? `${col.header}: press Enter to edit` : undefined}
+                      onKeyDown={bounded ? event => {
+                        if (event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return;
+                        event.preventDefault();
+                        if (editable) { editTrigger.current = event.currentTarget; startEdit(row, col); }
+                        else onRowClick?.(row);
+                      } : undefined}
+                      key={columnId(col)}
                       style={{
                         minWidth:
                           Math.max(
@@ -344,16 +441,20 @@ export function EditableDataTable<T>({
                       onClick={(e) => {
                         if (editable) {
                           e.stopPropagation();
+                          editTrigger.current = e.currentTarget;
                           startEdit(row, col);
                         } else if (onRowClick) {
                           onRowClick(row);
                         }
                       }}
                     >
-                      {isEditing && edit ? (
+                      {isEditing && edit ? <div onClick={event => event.stopPropagation()}>
+                        {saveError && <div role="alert" className="text-sm text-red-600">{saveError}</div>}
+                        {(
                         edit.type === 'select' ? (
                           <div className="space-y-1">
                             <select
+                              aria-label={`Edit ${col.header}`}
                               autoFocus
                               value={draft}
                               disabled={saving}
@@ -363,8 +464,9 @@ export function EditableDataTable<T>({
                                 setDraft(nextDraft);
                                 if (edit.commitOnChange) void commitEdit(row, col, nextDraft);
                               }}
-                              onBlur={() => {
-                                if (!edit.commitOnChange) void commitEdit(row, col);
+                              onBlur={(event) => {
+                                if (event.relatedTarget instanceof Node && event.currentTarget.parentElement?.parentElement?.contains(event.relatedTarget)) return;
+                                if (!saveError && !edit.commitOnChange) void commitEdit(editSnapshot.current?.row ?? row, col);
                               }}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !edit.commitOnChange) void commitEdit(row, col);
@@ -387,6 +489,7 @@ export function EditableDataTable<T>({
                           </div>
                         ) : (
                           <input
+                            aria-label={`Edit ${col.header}`}
                             autoFocus
                             type={
                               edit.type === 'number'
@@ -400,7 +503,10 @@ export function EditableDataTable<T>({
                             value={draft}
                             disabled={saving}
                             onChange={(e) => setDraft(e.target.value)}
-                            onBlur={() => commitEdit(row, col)}
+                            onBlur={(event) => {
+                              if (event.relatedTarget instanceof Node && event.currentTarget.parentElement?.contains(event.relatedTarget)) return;
+                              if (!saveError) void commitEdit(editSnapshot.current?.row ?? row, col);
+                            }}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') commitEdit(row, col);
                               if (e.key === 'Escape') cancelEdit();
@@ -409,7 +515,12 @@ export function EditableDataTable<T>({
                             className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800"
                           />
                         )
-                      ) : (
+                        )}
+                        {bounded && <div className="flex gap-2">
+                          <button type="button" disabled={saving} onClick={() => void commitEdit(editSnapshot.current?.row ?? row, col)}>{saveError ? 'Retry save' : 'Save'}</button>
+                          <button type="button" disabled={saving} onClick={cancelEdit}>Cancel edit</button>
+                        </div>}
+                      </div> : (
                         col.render(row)
                       )}
                     </td>

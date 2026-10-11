@@ -1,0 +1,14 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run --reporter=dot
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+·····················································································································································································································
+
+ Test Files  22 passed (22)
+      Tests  213 passed (213)
+   Start at  19:08:26
+   Duration  3.49s (transform 2.80s, setup 0ms, collect 13.93s, tests 544ms, environment 7ms, prepare 17.14s)
+

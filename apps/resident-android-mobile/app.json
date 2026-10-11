@@ -14,6 +14,8 @@
       }
     },
     "android": {
+      "package": "com.barangayan.resident",
+      "versionCode": 3,
       "icon": "./assets/logo/barangayan-logo-1024.png",
       "predictiveBackGestureEnabled": false
     },
@@ -36,6 +38,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3ff53b52-c50e-4bdb-811a-ccd94cd74f54"
+      }
+    },
+    "owner": "alex123superman"
   }
 }

@@ -1,0 +1,11 @@
+PASS P4-OTP-1/P4-ABUSE-1 send captured a real six-digit code; an immediate resend is rejected 429 by Auth (max_frequency), mapped to wait/retry, and sends nothing
+PASS P4-OTP-2 malformed and wrong codes are rejected by Auth with no session or status access; mapped to correct-code/resend guidance
+PASS P4-OTP-3 resend: previous code rejected, latest verifies the same user, consumed code cannot be replayed; verification does not invent a password
+PASS P4-OTP-4 a code older than the configured expiry is rejected otp_expired and mapped to request-a-new-code
+PASS P4-DB-1 real-JWT REST incident/document inserts and the register_for_drive RPC are rejected without a profile and with a partial profile (resident_profile_completion_required); the same requests succeed after completion; direct drive_registrations inserts are always rejected
+PASS P4-EMAIL-1 OTP for an existing completed account reaches the same user/profile, cannot relabel origin by metadata, and preserves the chosen password
+PASS P4-INV-1 staff invitation: invite creates a passwordless legacy record, acceptance + password write is observed, staff stays outside resident setup, and the route rollback (deleteUser) leaves no orphaned lifecycle row
+PASS P4-ABUSE-2 35 guessed codes rejected without a session (statuses {"403":35}); local IP rate-limit header configured: false — hosted verification throttling remains a Phase 5 check
+NOTE local fixture retained (500); disposable local database only
+PASS Phase 4 local Auth/Mailpit/REST integration complete; no codes, passwords, tokens or keys emitted
+exit 0

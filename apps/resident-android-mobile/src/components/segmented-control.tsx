@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useMemo, useState, useEffect, type ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -14,6 +15,7 @@ import { useTheme } from '@/hooks/use-theme';
 export interface SegmentOption<Key extends string> {
   key: Key;
   label: string;
+  icon?: ComponentProps<typeof Ionicons>['name'];
 }
 
 export interface SegmentedControlProps<Key extends string> {
@@ -100,15 +102,24 @@ export function SegmentedControl<Key extends string>({
             accessibilityLabel={segment.label}
             accessibilityState={{ selected: isActive }}>
             <View style={styles.segment}>
-              <ThemedText
-                type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
-                themeColor={isActive ? undefined : 'textSecondary'}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.65}
-                style={[styles.label, isActive ? activeTextStyle : undefined]}>
-                {segment.label}
-              </ThemedText>
+              {segment.icon ? (
+                <Ionicons
+                  name={segment.icon}
+                  size={22}
+                  color={isActive ? activeTextStyle.color : theme.textSecondary}
+                  accessible={false}
+                />
+              ) : (
+                <ThemedText
+                  type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
+                  themeColor={isActive ? undefined : 'textSecondary'}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.65}
+                  style={[styles.label, isActive ? activeTextStyle : undefined]}>
+                  {segment.label}
+                </ThemedText>
+              )}
             </View>
           </Pressable>
         );

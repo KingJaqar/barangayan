@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-10-11T07:41:50.047Z",
+  "passed": false,
+  "browser": "154.0.8037.99",
+  "screens": [],
+  "errors": [
+    {
+      "name": "TimeoutError",
+      "message": "page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboard\" until \"load\"\n  navigated to \"http://127.0.0.1:3140/login\"\n============================================================"
+    }
+  ],
+  "networkFailures": []
+}

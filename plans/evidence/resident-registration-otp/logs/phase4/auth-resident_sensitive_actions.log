@@ -1,0 +1,5 @@
+PASS SA-1 amr records the sign-in method/time; refresh keeps it; a new sign-in issues a new session and time
+PASS SA-2 server accepts a direct updateUser password write from a refreshed, non-reauthenticated session (secure_password_change=false); lifecycle records it
+PASS SA-3 anonymous delete 401; caller-only deletion from a refreshed session 200 (no server fresh-auth check); target body ignored; ban blocks sign-in; earlier-JWT retry status 401
+PASS local fixtures cleaned (the deleted/banned fixture stays as anonymized history)
+exit 0

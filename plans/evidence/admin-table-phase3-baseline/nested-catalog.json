@@ -1,0 +1,1095 @@
+{
+  "checkedAt": "2026-10-11T09:26:34.644Z",
+  "boundary": "Fresh local metadata only; no RPC execution or current hosted comparison.",
+  "columns": [
+    {
+      "data_type": "uuid",
+      "table_name": "admin_audit_log",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "admin_audit_log",
+      "column_name": "barangay_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "admin_audit_log",
+      "column_name": "admin_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "admin_audit_log",
+      "column_name": "action",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "admin_audit_log",
+      "column_name": "entity_type",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "admin_audit_log",
+      "column_name": "entity_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "admin_audit_log",
+      "column_name": "entity_label",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "admin_audit_log",
+      "column_name": "changes",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "admin_audit_log",
+      "column_name": "metadata",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "admin_audit_log",
+      "column_name": "is_read",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "admin_audit_log",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "document_types",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "document_types",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "document_types",
+      "column_name": "name",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "document_types",
+      "column_name": "description",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "document_types",
+      "column_name": "fee_centavos",
+      "is_nullable": "NO",
+      "column_default": "0"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "document_types",
+      "column_name": "processing_target_hours",
+      "is_nullable": "NO",
+      "column_default": "24"
+    },
+    {
+      "data_type": "ARRAY",
+      "table_name": "document_types",
+      "column_name": "requirements",
+      "is_nullable": "NO",
+      "column_default": "'{}'::text[]"
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "document_types",
+      "column_name": "is_active",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "document_types",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "document_types",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "document_types",
+      "column_name": "contract_version",
+      "is_nullable": "NO",
+      "column_default": "1"
+    },
+    {
+      "data_type": "text",
+      "table_name": "document_types",
+      "column_name": "service_kind",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "document_types",
+      "column_name": "charter",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "document_types",
+      "column_name": "purposes",
+      "is_nullable": "NO",
+      "column_default": "'[]'::jsonb"
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "document_types",
+      "column_name": "requirement_rules",
+      "is_nullable": "NO",
+      "column_default": "'{}'::jsonb"
+    },
+    {
+      "data_type": "text",
+      "table_name": "document_types",
+      "column_name": "pricing_mode",
+      "is_nullable": "NO",
+      "column_default": "'fixed'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "document_types",
+      "column_name": "processing_target_minutes",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "id_submissions",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "id_submissions",
+      "column_name": "resident_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "id_submissions",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "id_submissions",
+      "column_name": "version",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "id_type",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "front_path",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "back_path",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "id_submissions",
+      "column_name": "submitted_at",
+      "is_nullable": "NO",
+      "column_default": "clock_timestamp()"
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "decision",
+      "is_nullable": "NO",
+      "column_default": "'pending'::text"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "id_submissions",
+      "column_name": "reviewed_by",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "id_submissions",
+      "column_name": "reviewed_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "rejection_reason",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "id_submissions",
+      "column_name": "evidence_origin",
+      "is_nullable": "NO",
+      "column_default": "'resident_upload'::text"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "request_attachments",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "request_attachments",
+      "column_name": "request_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "request_attachments",
+      "column_name": "resident_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "request_attachments",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "request_attachments",
+      "column_name": "requirement_code",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "request_attachments",
+      "column_name": "object_path",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "request_attachments",
+      "column_name": "mime_type",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "request_attachments",
+      "column_name": "size_bytes",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "request_attachments",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "clock_timestamp()"
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents upload own id docs",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'id-documents'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'id-documents'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents read own id docs",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'id-documents'::text) AND (\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM service_requests sr\n  WHERE ((sr.id_document_path = objects.name) AND (sr.barangay_id = current_barangay_id())))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "admins read barangay id docs",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents upload incident photos",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'incident-photos'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(bucket_id = 'incident-photos'::text)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "objects",
+      "policyname": "anyone reads incident photos",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'incident-photos'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents delete own incident photos",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents upload own avatar",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'profile-photos'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((bucket_id = 'profile-photos'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents update own avatar",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'profile-photos'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents delete own avatar",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(bucket_id = 'profile-photos'::text)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "objects",
+      "policyname": "avatars are publicly readable",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'id-documents'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text) AND ((storage.foldername(name))[2] IS DISTINCT FROM 'versions'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents delete own id docs",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "admins upload site-content",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'site-content'::text) AND (\"current_role\"() = 'admin'::text) AND ((storage.foldername(name))[1] = (current_barangay_id())::text))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(bucket_id = 'site-content'::text)",
+      "roles": [
+        "anon"
+      ],
+      "tablename": "objects",
+      "policyname": "public read site-content",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(bucket_id = 'site-content'::text)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "authenticated read site-content",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((bucket_id = 'site-content'::text) AND (\"current_role\"() = 'admin'::text) AND ((storage.foldername(name))[1] = (current_barangay_id())::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "admins delete site-content",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "(bucket_id <> 'id-documents'::text)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "ID evidence cannot be deleted by clients",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'id-documents'::text) AND (\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM profiles p\n  WHERE ((p.role = 'resident'::text) AND (p.barangay_id = current_barangay_id()) AND (objects.name = ANY (p.id_photo_urls))))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "admins read barangay profile id docs",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'id-documents'::text) AND (\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM id_submissions s\n  WHERE (((objects.name = s.front_path) OR (objects.name = s.back_path)) AND (s.barangay_id = current_barangay_id())))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "tenant administrators read ID version evidence",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents upload private supporting files",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'request-attachments'::text) AND (\"current_role\"() = 'resident'::text) AND ((storage.foldername(name))[1] = (( SELECT auth.uid() AS uid))::text) AND (name ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}/[^/]+$'::text) AND (EXISTS ( SELECT 1\n   FROM profiles p\n  WHERE ((p.id = auth.uid()) AND (p.deleted_at IS NULL)))))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'request-attachments'::text) AND ((storage.foldername(name))[1] = (( SELECT auth.uid() AS uid))::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "owners read private supporting files",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((bucket_id = 'request-attachments'::text) AND (\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM request_attachments a\n  WHERE ((a.object_path = objects.name) AND (a.barangay_id = current_barangay_id())))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "tenant administrators read attached supporting files",
+      "schemaname": "storage",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((bucket_id = 'id-documents'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text) AND ((storage.foldername(name))[2] IS DISTINCT FROM 'versions'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "residents update own id docs",
+      "schemaname": "storage",
+      "with_check": "((bucket_id = 'id-documents'::text) AND ((storage.foldername(name))[1] = (auth.uid())::text) AND ((storage.foldername(name))[2] IS DISTINCT FROM 'versions'::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(bucket_id <> 'id-documents'::text)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "objects",
+      "policyname": "ID evidence cannot be overwritten",
+      "schemaname": "storage",
+      "with_check": "(bucket_id <> 'id-documents'::text)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((barangay_id = current_barangay_id()) AND (is_active = true))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "document_types",
+      "policyname": "residents can read their own barangay's active document types",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(is_active = true)",
+      "roles": [
+        "anon"
+      ],
+      "tablename": "document_types",
+      "policyname": "anyone can read active document types",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "document_types",
+      "policyname": "admins can manage document types in their barangay",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND is_active AND (deleted_at IS NULL))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "document_types",
+      "policyname": "incomplete accounts browse active documents",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "admin_audit_log",
+      "policyname": "admins can insert own barangay audit log",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "admin_audit_log",
+      "policyname": "admins can update own barangay audit log",
+      "schemaname": "public",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (EXISTS ( SELECT 1\n   FROM profiles p\n  WHERE ((p.id = ( SELECT auth.uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL)))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "admin_audit_log",
+      "policyname": "admins can read own barangay audit log",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((resident_id = ( SELECT auth.uid() AS uid)) OR ((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id())))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "request_attachments",
+      "policyname": "owner and tenant administrator read request attachments",
+      "schemaname": "public",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((resident_id = ( SELECT auth.uid() AS uid)) OR ((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id())))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "id_submissions",
+      "policyname": "owner and tenant administrator read ID versions",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "functions": [
+    {
+      "proname": "admin_add_household_member",
+      "arguments": "p_profile_id uuid, p_name text, p_relation text, p_role text",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.admin_add_household_member(p_profile_id uuid, p_name text, p_relation text, p_role text DEFAULT 'member'::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare\r\n  v_member_id uuid := gen_random_uuid();\r\n  v_profile public.profiles%rowtype;\r\n  v_members jsonb;\r\nbegin\r\n  if auth.uid() is null or public.current_role() is distinct from 'admin' then\r\n    raise exception 'only authenticated administrators can manage household members';\r\n  end if;\r\n\r\n  select * into v_profile\r\n    from public.profiles\r\n    where id = p_profile_id\r\n      and barangay_id = public.current_barangay_id()\r\n      and role = 'resident'\r\n    for update;\r\n  if not found then\r\n    raise exception 'Profile % not found in your barangay', p_profile_id;\r\n  end if;\r\n\r\n  v_members := coalesce(v_profile.household_members, '[]'::jsonb);\r\n  v_members := v_members || jsonb_build_object(\r\n    'id', v_member_id::text,\r\n    'name', p_name,\r\n    'relation', p_relation,\r\n    'role', p_role\r\n  );\r\n\r\n  update public.profiles set household_members = v_members where id = p_profile_id;\r\n  return v_member_id;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "admin_register_for_drive",
+      "arguments": "p_target_user_id uuid, p_drive_id uuid, p_age integer, p_is_pwd boolean, p_comorbidities text[], p_prior_dose_date date",
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.admin_register_for_drive(p_target_user_id uuid, p_drive_id uuid, p_age integer, p_is_pwd boolean, p_comorbidities text[], p_prior_dose_date date DEFAULT NULL::date)\n RETURNS json\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare\r\n  v_admin_id         uuid    := auth.uid();\r\n  v_admin_barangay_id uuid;\r\n  v_target_barangay_id uuid;\r\n  v_drive            public.medical_drives;\r\n  v_prefix           text;\r\n  v_applicant_number text;\r\n  v_reg              public.drive_registrations;\r\nbegin\r\n  -- Auth + role guard\r\n  if v_admin_id is null then\r\n    raise exception 'Not authenticated' using errcode = 'P0001';\r\n  end if;\r\n\r\n  if not exists(select 1 from public.profiles p where p.id=v_admin_id\n    and p.role='admin' and p.deleted_at is null) then\n    raise exception 'Only admins can register a resident on their behalf' using errcode = 'P0005';\r\n  end if;\r\n\r\n  v_admin_barangay_id := public.current_barangay_id();\r\n\r\n  -- Target must be a resident of the admin's own barangay — an admin from\r\n  -- one barangay must not be able to register a resident of another.\r\n  select barangay_id into v_target_barangay_id\r\n  from public.profiles\r\n  where id = p_target_user_id and role = 'resident';\r\n\r\n  if v_target_barangay_id is null then\r\n    raise exception 'Target resident not found' using errcode = 'P0006';\r\n  end if;\r\n\r\n  if v_target_barangay_id != v_admin_barangay_id then\r\n    raise exception 'Target resident is not in your barangay' using errcode = 'P0007';\r\n  end if;\r\n\r\n  -- Lock drive row so concurrent registrations can't oversell\r\n  select * into v_drive\r\n  from public.medical_drives\r\n  where id = p_drive_id\r\n    and is_active   = true\r\n    and deleted_at is null\r\n  for update;\r\n\r\n  if not found then\r\n    raise exception 'Drive not found or inactive' using errcode = 'P0002';\r\n  end if;\r\n\r\n  if v_drive.barangay_id != v_admin_barangay_id then\r\n    raise exception 'Drive is not in your barangay' using errcode = 'P0008';\r\n  end if;\r\n\r\n  if v_drive.stock_remaining <= 0 then\r\n    raise exception 'No remaining slots for this drive' using errcode = 'P0003';\r\n  end if;\r\n\r\n  -- Duplicate-registration guard\r\n  if exists(\r\n    select 1 from public.drive_registrations\r\n    where drive_id = p_drive_id and user_id = p_target_user_id\r\n  ) then\r\n    raise exception 'Already registered for this drive' using errcode = 'P0004';\r\n  end if;\r\n\r\n  -- Applicant-number prefix by drive type (mirrors register_for_drive)\r\n  v_prefix := case v_drive.type\r\n    when 'vaccination'    then 'VAC'\r\n    when 'maternal_care'  then 'MAT'\r\n    when 'blood_drive'    then 'BLD'\r\n    when 'dental'         then 'DEN'\r\n    when 'optical'        then 'OPT'\r\n    when 'medicine'       then 'MED'\r\n    when 'emergency_kit'  then 'EMK'\r\n    when 'screening'      then 'SCR'\r\n    when 'consultation'   then 'CON'\r\n    when 'minor_surgical' then 'SRG'\r\n    else                       'DRV'\r\n  end;\r\n\r\n  v_applicant_number :=\r\n    v_prefix || '-' ||\r\n    to_char(now(), 'YYYYMMDD') || '-' ||\r\n    lpad((v_drive.stock_total - v_drive.stock_remaining + 1)::text, 4, '0');\r\n\r\n  -- Insert registration under the target resident, not the admin\r\n  insert into public.drive_registrations (\r\n    drive_id, user_id, applicant_number,\r\n    age, is_pwd, comorbidities, prior_dose_date,\r\n    status\r\n  ) values (\r\n    p_drive_id, p_target_user_id, v_applicant_number,\r\n    p_age, p_is_pwd,\r\n    coalesce(p_comorbidities, '{}'), p_prior_dose_date,\r\n    'pending'\r\n  )\r\n  returning * into v_reg;\r\n\r\n  -- Decrement available stock\r\n  update public.medical_drives\r\n  set stock_remaining = stock_remaining - 1\r\n  where id = p_drive_id;\r\n\r\n  return json_build_object(\r\n    'registration_id',  v_reg.id,\r\n    'applicant_number', v_applicant_number,\r\n    'priority_score', (select priority_score from public.drive_registration_scores where registration_id=v_reg.id),\n    'status',           v_reg.status\r\n  );\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "begin_processing_request",
+      "arguments": "request_id uuid",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.begin_processing_request(request_id uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\nbegin\r\n  if public.current_role() != 'admin' then\r\n    raise exception 'forbidden';\r\n  end if;\r\n\r\n  update public.service_requests\r\n  set status = 'in_progress'\r\n  where id = request_id\r\n    and barangay_id = public.current_barangay_id()\r\n    and status = 'submitted';\r\n\r\n  if not found then\r\n    raise exception 'invalid_transition';\r\n  end if;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "cancel_service_request",
+      "arguments": "p_request_id uuid, p_note text",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.cancel_service_request(p_request_id uuid, p_note text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare\r\n  v_barangay_id uuid;\r\nbegin\r\n  if public.current_role() != 'admin' then\r\n    raise exception 'only admins can cancel a request';\r\n  end if;\r\n\r\n  select barangay_id into v_barangay_id\r\n    from public.service_requests\r\n    where id = p_request_id;\r\n\r\n  if v_barangay_id is null or v_barangay_id != public.current_barangay_id() then\r\n    raise exception 'request not found in your barangay';\r\n  end if;\r\n\r\n  perform set_config('barangayan.status_note', coalesce(p_note, ''), true);\r\n\r\n  update public.service_requests\r\n    set status = 'cancelled'\r\n    where id = p_request_id;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "complete_service_request",
+      "arguments": "p_request_id uuid",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.complete_service_request(p_request_id uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare\r\n  v_barangay_id uuid;\r\n  v_status text;\r\nbegin\r\n  if public.current_role() != 'admin' then\r\n    raise exception 'only admins can complete a request';\r\n  end if;\r\n\r\n  select barangay_id, status\r\n    into v_barangay_id, v_status\r\n    from public.service_requests\r\n    where id = p_request_id;\r\n\r\n  if v_barangay_id is null or v_barangay_id != public.current_barangay_id() then\r\n    raise exception 'request not found in your barangay';\r\n  end if;\r\n\r\n  if v_status != 'ready_for_pickup' then\r\n    raise exception 'only requests ready for pickup can be marked completed';\r\n  end if;\r\n\r\n  perform set_config('barangayan.status_note', 'Marked as completed', true);\r\n  perform set_config('barangayan.allow_request_completion', 'true', true);\r\n\r\n  update public.service_requests\r\n    set status = 'completed'\r\n    where id = p_request_id;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "current_barangay_id",
+      "arguments": "",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.current_barangay_id()\n RETURNS uuid\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\n  select barangay_id from public.profiles where id = auth.uid();\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "current_role",
+      "arguments": "",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.\"current_role\"()\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\n  select role from public.profiles where id = auth.uid();\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "mark_request_ready_for_pickup",
+      "arguments": "p_request_id uuid",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.mark_request_ready_for_pickup(p_request_id uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare\r\n  v_barangay_id uuid;\r\n  v_status text;\r\nbegin\r\n  if public.current_role() != 'admin' then\r\n    raise exception 'only admins can mark a request ready for pickup';\r\n  end if;\r\n\r\n  select barangay_id, status\r\n    into v_barangay_id, v_status\r\n    from public.service_requests\r\n    where id = p_request_id;\r\n\r\n  if v_barangay_id is null or v_barangay_id != public.current_barangay_id() then\r\n    raise exception 'request not found in your barangay';\r\n  end if;\r\n\r\n  if v_status != 'in_progress' then\r\n    raise exception 'only processing requests can be marked ready for pickup';\r\n  end if;\r\n\r\n  perform set_config('barangayan.status_note', 'Marked as ready for pickup', true);\r\n\r\n  update public.service_requests\r\n    set status = 'ready_for_pickup'\r\n    where id = p_request_id;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "proname": "service_request_sla_tracking",
+      "arguments": "p_request_id uuid",
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.service_request_sla_tracking(p_request_id uuid)\n RETURNS jsonb\n LANGUAGE sql\n SET search_path TO ''\nAS $function$\n select jsonb_build_object('request',to_jsonb(r),'pauses',coalesce((select jsonb_agg(to_jsonb(p) order by p.started_at)\n from public.service_request_pauses p where p.request_id=r.id),'[]'::jsonb),'evaluated_at',clock_timestamp())\n from public.service_requests r where r.id=p_request_id and r.deleted_at is null;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "proname": "service_sla_report_rows",
+      "arguments": "",
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.service_sla_report_rows()\n RETURNS jsonb\n LANGUAGE sql\n SET search_path TO ''\nAS $function$\n select barangayan_private.service_sla_report_rows();\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "proname": "update_incident_status",
+      "arguments": "p_incident_id uuid, p_status text",
+      "proconfig": [
+        "search_path=public"
+      ],
+      "definition": "CREATE OR REPLACE FUNCTION public.update_incident_status(p_incident_id uuid, p_status text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare\r\n  v_current_status text;\r\n  v_barangay_id    uuid;\r\n  v_allowed        boolean := false;\r\nbegin\r\n  if public.current_role() != 'admin' then\r\n    raise exception 'only admins can update incident status';\r\n  end if;\r\n\r\n  if p_status not in ('open', 'in_progress', 'resolved', 'withdrawn', 'unresolved') then\r\n    raise exception 'invalid status: %', p_status;\r\n  end if;\r\n\r\n  select status, barangay_id\r\n    into v_current_status, v_barangay_id\r\n    from public.incidents\r\n    where id = p_incident_id and deleted_at is null;\r\n\r\n  if v_barangay_id is null then\r\n    raise exception 'incident not found';\r\n  end if;\r\n\r\n  if v_barangay_id != public.current_barangay_id() then\r\n    raise exception 'incident is not in your barangay';\r\n  end if;\r\n\r\n  -- No-op if already at the target status.\r\n  if v_current_status = p_status then\r\n    return;\r\n  end if;\r\n\r\n  if v_current_status = 'open' and p_status in ('in_progress', 'unresolved') then\r\n    v_allowed := true;\r\n  elsif v_current_status = 'in_progress' and p_status in ('resolved', 'unresolved') then\r\n    v_allowed := true;\r\n  end if;\r\n\r\n  if not v_allowed then\r\n    raise exception 'cannot move incident from % to %', v_current_status, p_status;\r\n  end if;\r\n\r\n  update public.incidents\r\n    set status = p_status\r\n    where id = p_incident_id;\r\nend;\r\n$function$\n",
+      "security_definer": true
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "id_submissions_back_path_key",
+      "definition": "UNIQUE (back_path)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_resident_id_version_key",
+      "definition": "UNIQUE (resident_id, version)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_id_resident_id_barangay_id_key",
+      "definition": "UNIQUE (id, resident_id, barangay_id)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_resident_id_fkey",
+      "definition": "FOREIGN KEY (resident_id) REFERENCES profiles(id)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_reviewed_by_fkey",
+      "definition": "FOREIGN KEY (reviewed_by) REFERENCES profiles(id)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "document_types_fee_centavos_check",
+      "definition": "CHECK ((fee_centavos >= 0))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_processing_target_hours_check",
+      "definition": "CHECK ((processing_target_hours > 0))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_barangay_id_name_key",
+      "definition": "UNIQUE (barangay_id, name)",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "admin_audit_log_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "admin_audit_log"
+    },
+    {
+      "conname": "admin_audit_log_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "admin_audit_log"
+    },
+    {
+      "conname": "admin_audit_log_admin_id_fkey",
+      "definition": "FOREIGN KEY (admin_id) REFERENCES auth.users(id)",
+      "table_name": "admin_audit_log"
+    },
+    {
+      "conname": "document_types_contract_version_check",
+      "definition": "CHECK ((contract_version = ANY (ARRAY[1, 2])))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_pricing_mode_check",
+      "definition": "CHECK ((pricing_mode = ANY (ARRAY['fixed'::text, 'assessment'::text, 'per_page'::text])))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_processing_target_minutes_check",
+      "definition": "CHECK ((processing_target_minutes > 0))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "document_types_v2_config",
+      "definition": "CHECK (((contract_version = 1) OR ((service_kind IS NOT NULL) AND (charter IS NOT NULL) AND (processing_target_minutes IS NOT NULL) AND (jsonb_typeof(purposes) = 'array'::text) AND (jsonb_array_length(purposes) > 0) AND (jsonb_typeof(requirement_rules) = 'object'::text))))",
+      "table_name": "document_types"
+    },
+    {
+      "conname": "id_submissions_version_check",
+      "definition": "CHECK ((version > 0))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_id_type_check",
+      "definition": "CHECK (((length(btrim(id_type)) >= 1) AND (length(btrim(id_type)) <= 200)))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_decision_check",
+      "definition": "CHECK ((decision = ANY (ARRAY['pending'::text, 'verified'::text, 'verification_failed'::text, 'revoked'::text])))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_check",
+      "definition": "CHECK ((front_path <> back_path))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_front_path_key",
+      "definition": "UNIQUE (front_path)",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "request_attachments_requirement_code_check",
+      "definition": "CHECK ((requirement_code = ANY (ARRAY['dti'::text, 'hoa'::text, 'lessor'::text, 'other'::text])))",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_mime_type_check",
+      "definition": "CHECK ((mime_type = ANY (ARRAY['image/jpeg'::text, 'image/png'::text, 'image/webp'::text, 'application/pdf'::text])))",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_size_bytes_check",
+      "definition": "CHECK (((size_bytes >= 1) AND (size_bytes <= 5242880)))",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_object_path_key",
+      "definition": "UNIQUE (object_path)",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_request_id_fkey",
+      "definition": "FOREIGN KEY (request_id) REFERENCES service_requests(id)",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_resident_id_fkey",
+      "definition": "FOREIGN KEY (resident_id) REFERENCES profiles(id)",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "request_attachments_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "request_attachments"
+    },
+    {
+      "conname": "id_submissions_evidence_origin_check",
+      "definition": "CHECK ((evidence_origin = ANY (ARRAY['resident_upload'::text, 'legacy_approval'::text, 'legacy_pending'::text])))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "id_submissions_review_provenance",
+      "definition": "CHECK ((((decision = 'pending'::text) AND (reviewed_by IS NULL) AND (reviewed_at IS NULL) AND (rejection_reason IS NULL)) OR ((decision <> 'pending'::text) AND (reviewed_by IS NOT NULL) AND (reviewed_at IS NOT NULL) AND ((decision = 'verified'::text) OR ((length(btrim(rejection_reason)) >= 1) AND (length(btrim(rejection_reason)) <= 1000)))) OR ((evidence_origin = 'legacy_approval'::text) AND (decision = 'verified'::text) AND (reviewed_by IS NULL) AND (reviewed_at IS NULL) AND (rejection_reason IS NULL))))",
+      "table_name": "id_submissions"
+    },
+    {
+      "conname": "document_types_service_kind_check",
+      "definition": "CHECK ((service_kind = ANY (ARRAY['business'::text, 'indigency'::text, 'first_time_job_seeker'::text, 'certified_true_copy'::text, 'general'::text])))",
+      "table_name": "document_types"
+    }
+  ],
+  "publications": [
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "about_us",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "admin_audit_log",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "announcement_reads",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "announcements",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "developer_profiles",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "document_types",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "drive_registrations",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "emergency_information",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "emergency_qr_content",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "evacuation_center_checkins",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "evacuation_center_qr_codes",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "faq_articles",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "household_members",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "incident_confirmations",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "incidents",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "medical_drives",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "payments",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "service_requests",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "site_content",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "waste_collection_schedules",
+      "schemaname": "public"
+    },
+    {
+      "pubname": "supabase_realtime",
+      "tablename": "waste_zones",
+      "schemaname": "public"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-11T11:41:27.866Z",
+  "browsers": [
+    {
+      "name": "chrome",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing",
+        "keyboard scrolling, boundary containment and Tab escape"
+      ],
+      "status": "failed",
+      "version": "154.0.8037.99",
+      "error": "locator.inputValue: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Direction', { exact: true })\u001b[22m\n\n    at C:\\Users\\User\\barangayan\\apps\\admin-web\\tests\\table-browse\\browser.mjs:126:70\n    at async check (C:\\Users\\User\\barangayan\\apps\\admin-web\\tests\\table-browse\\browser.mjs:57:40)\n    at async exercise (C:\\Users\\User\\barangayan\\apps\\admin-web\\tests\\table-browse\\browser.mjs:119:3)\n    at async file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:206:47"
+    },
+    {
+      "name": "edge",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Chromium distribution 'msedge' is not found at C:\\Users\\User\\AppData\\Local\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "name": "firefox",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Executable doesn't exist at C:\\Users\\User\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe"
+    },
+    {
+      "name": "webkit",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Executable doesn't exist at C:\\Users\\User\\AppData\\Local\\ms-playwright\\webkit-2336\\Playwright.exe"
+    }
+  ],
+  "limitations": [
+    "Synthetic component fixtures, not authenticated admin routes or database adapters.",
+    "Native physical input, OS overlay scrollbar settings and manual screen-reader verification were not available."
+  ]
+}

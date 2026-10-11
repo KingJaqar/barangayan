@@ -1,0 +1,8 @@
+{
+  "name": "typecheck",
+  "status": 0,
+  "error": null,
+  "elapsedMs": 16791,
+  "timeoutMs": 60000,
+  "retries": 0
+}

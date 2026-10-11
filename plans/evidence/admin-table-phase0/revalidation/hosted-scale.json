@@ -1,0 +1,23 @@
+{
+  "exact_counts": {
+    "drives": 13,
+    "members": 6,
+    "payments": 55,
+    "profiles": 28,
+    "requests": 69,
+    "incidents": 30,
+    "officials": 5,
+    "registrations": 10
+  },
+  "tenant_scale": {
+    "drives_max": 13,
+    "profiles_max": 28,
+    "requests_max": 69
+  },
+  "reference_shapes": {
+    "canonical": 69,
+    "noncanonical": 0
+  },
+  "cancelled_registrations": 0,
+  "drives_without_registrations": 6
+}

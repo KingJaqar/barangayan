@@ -1,0 +1,27 @@
+{
+  "files": [
+    "apps/admin-web/src/app/(admin)/incident-reports/types.ts",
+    "apps/admin-web/src/app/(admin)/layout.tsx",
+    "apps/admin-web/src/app/(admin)/loading.tsx",
+    "apps/admin-web/src/app/(admin)/requests/[requestId]/loading.tsx",
+    "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+    "apps/admin-web/src/app/(admin)/requests/page.tsx",
+    "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+    "apps/admin-web/src/app/(admin)/requests/types.ts",
+    "apps/admin-web/src/app/(admin)/residents/page.tsx",
+    "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+    "apps/admin-web/src/app/(admin)/residents/types.ts",
+    "apps/admin-web/src/app/(admin)/staff/page.tsx",
+    "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+    "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+    "apps/admin-web/src/app/(admin)/staff/types.ts",
+    "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+    "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx"
+  ],
+  "status": 0,
+  "error": null,
+  "elapsedMs": 20846,
+  "timeoutMs": 45000,
+  "retries": 0,
+  "boundary": "One sequential smaller-workload follow-up; original timeouts retained, cause unproven."
+}

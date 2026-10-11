@@ -50,6 +50,7 @@ import {
   X,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -213,11 +214,7 @@ function CardHeading({ icon, children }: { icon: React.ReactNode; children: Reac
 
 // ─── Email verification ─────────────────────────────────────────────────────
 
-/**
- * Non-functional per spec — no email-verification API exists yet anywhere in this
- * codebase (see EmailVerifyBanner's own comment). Clicking "Verify Email" just tells
- * the resident it's not available instead of pretending to send anything.
- */
+/** Protected email-code flow lives in Settings; residents never write badges. */
 function EmailVerifyStatus({ status }: { status: string | null }) {
   const verified = status === 'verified';
   return (
@@ -230,12 +227,11 @@ function EmailVerifyStatus({ status }: { status: string | null }) {
         {verified ? 'Email verified' : 'Email not verified'}
       </span>
       {!verified ? (
-        <button
-          type="button"
-          onClick={() => toast('Email verification isn’t available yet. Check back soon.')}
+        <Link
+          href="/settings/email-verification"
           className="flex shrink-0 items-center gap-1 rounded-full border border-[var(--accent)]/40 px-2.5 py-1 text-xs font-semibold text-[var(--accent)] transition-colors hover:bg-[var(--accent-tint)]">
           <MailCheck size={12} /> Verify Email
-        </button>
+        </Link>
       ) : null}
     </div>
   );

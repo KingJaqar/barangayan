@@ -1,0 +1,38 @@
+{
+  "localHostedAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "hostedHistoricalAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": true,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "readPoliciesMatch": true,
+  "policyDifferences": {
+    "onlyInHosted": [
+      {
+        "cmd": "INSERT",
+        "qual": null,
+        "roles": [
+          "authenticated"
+        ],
+        "tablename": "payments",
+        "policyname": "residents can create a payment on their own request",
+        "with_check": "((barangay_id = current_barangay_id()) AND (EXISTS ( SELECT 1\n   FROM service_requests sr\n  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid())))))"
+      }
+    ],
+    "onlyInLocal": []
+  },
+  "freshHostedCapture": true,
+  "boundary": "Metadata comparison only; no authenticated acceptance."
+}

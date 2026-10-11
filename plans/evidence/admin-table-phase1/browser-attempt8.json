@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-10-11T11:46:19.473Z",
+  "browsers": [
+    {
+      "name": "chrome",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing",
+        "keyboard scrolling, boundary containment and Tab escape",
+        "keyboard resize and toolbar/header sort agreement without false aria-sort",
+        "failed save retains draft, blocks navigation, Retry/Cancel and focus restoration",
+        "rapid search/control commits one query, Back cancels pending debounce, no scroll reset",
+        "pending actions are inert; error Retry preserves URL and announces committed range",
+        "narrow/short/200%/400% equivalent widths, sidebar, dark and forced colors",
+        "repeated mounts and active resize unmount clean observers and drag listeners"
+      ],
+      "status": "passed",
+      "version": "154.0.8037.99"
+    },
+    {
+      "name": "edge",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Chromium distribution 'msedge' is not found at C:\\Users\\User\\AppData\\Local\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "name": "firefox",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range"
+      ],
+      "status": "failed",
+      "version": "153.0",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   1000,\n    0,\n-   0\n  ]\n\n    at file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:105:12\n    at async check (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:63:40)\n    at async exercise (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:99:3)\n    at async file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:216:47"
+    },
+    {
+      "name": "webkit",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range"
+      ],
+      "status": "failed",
+      "version": "26.5",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   1000,\n    0,\n-   0\n  ]\n\n    at file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:105:12\n    at async check (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:63:40)\n    at async exercise (file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:99:3)\n    at async file:///C:/Users/User/barangayan/apps/admin-web/tests/table-browse/browser.mjs:216:47"
+    }
+  ],
+  "limitations": [
+    "Synthetic component fixtures, not authenticated admin routes or database adapters.",
+    "Native physical input, OS overlay scrollbar settings and manual screen-reader verification were not available."
+  ]
+}

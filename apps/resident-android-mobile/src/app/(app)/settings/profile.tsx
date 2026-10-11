@@ -1,4 +1,3 @@
-import { ResidentActionGate } from '@/components/resident-action-gate';
 /**
  * Resident Profile screen — pixel-accurate rebuild of the design file.
  *
@@ -863,8 +862,12 @@ function ChoiceListModal<T extends string>({
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
+// Authentication-only: residents (e.g. Google sign-ups who skipped details) must be
+// able to open Profile to complete it. The Settings stack's session guard and the
+// guest prompt below cover signed-out access; submission screens keep the
+// profile-completion ResidentActionGate.
 export default function ProfileScreen() {
-  return <ResidentActionGate><ProfileScreenContent /></ResidentActionGate>;
+  return <ProfileScreenContent />;
 }
 
 function ProfileScreenContent() {
@@ -875,7 +878,7 @@ function ProfileScreenContent() {
   const idFocusDone = useRef(false);
   const idSectionY = useRef<number | null>(null);
   const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { session } = useAuth();
+  const { session, refreshCompletion } = useAuth();
   const { profile, isLoading, refetch } = useProfile();
   const focusIdSection = useCallback(() => {
     if (focus !== 'id' || !profile || isLoading || idFocusDone.current) return;
@@ -1297,6 +1300,9 @@ function ProfileScreenContent() {
       showToast(updateErr.message, 'error');
       return;
     }
+    // Details are committed; server-derived completeness drives the Settings
+    // "Personal details incomplete" warning even if ID publication below fails.
+    void refreshCompletion();
     if (evidenceChanged && nextIdType && idFrontPath && idBackPath) {
       const signature = JSON.stringify([nextIdType, idFrontPath, idBackPath]);
       if (publication.current?.signature !== signature) publication.current = { signature, id: genId() };

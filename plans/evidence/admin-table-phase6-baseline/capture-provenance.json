@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-10-11T10:23:10.222Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "method": "Supabase connector execute_sql",
+  "queries": [
+    "hosted-schema-query.sql",
+    "hosted-scale-query.sql",
+    "nested-catalog.sql"
+  ],
+  "transaction": "BEGIN READ ONLY; SET LOCAL statement_timeout=8000ms; SELECT; COMMIT",
+  "automaticRetries": 0,
+  "boundary": "Current metadata and aggregate counts only. No authenticated end-user API/browser acceptance or production writes."
+}

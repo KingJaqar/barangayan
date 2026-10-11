@@ -1,0 +1,241 @@
+{
+  "timestamp": "2026-10-11T08:12:44.437Z",
+  "passed": true,
+  "checks": [
+    {
+      "label": "Actual incident Realtime event refreshes table props"
+    },
+    {
+      "label": "Baseline defect: open selected detail keeps its pre-refresh snapshot",
+      "selected": "Incident details: Fixture Incident 1505 refreshed again",
+      "refreshedTitle": "Fixture Incident 1505 refreshed"
+    },
+    {
+      "label": "Rapid search typing commits final debounced query"
+    },
+    {
+      "label": "Back restores prior search input"
+    },
+    {
+      "label": "Forward restores committed search input"
+    },
+    {
+      "label": "Final URL and row membership survive an older delayed RSC response"
+    },
+    {
+      "label": "Incident channel sends leave on client route unmount"
+    },
+    {
+      "label": "Removed incident topic delivers no callback or table refresh during bounded post-unmount mutation",
+      "observationMs": 2500,
+      "refreshes": 0,
+      "serverMetadataRows": 0,
+      "metrics": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-dscr66vdlf",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin-incidents-dscr66vdlf"
+          }
+        ],
+        "activeTopics": [
+          "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+        ]
+      }
+    }
+  ],
+  "observations": [
+    {
+      "label": "Realtime protocol",
+      "events": {
+        "events": [
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+            "status": "ok"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-xadmnqex45"
+          },
+          {
+            "direction": "out",
+            "event": "phx_leave",
+            "topic": "realtime:admin-incidents-xadmnqex45"
+          },
+          {
+            "direction": "out",
+            "event": "phx_join",
+            "topic": "realtime:admin-incidents-xadmnqex45"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-xadmnqex45",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_reply",
+            "topic": "realtime:admin-incidents-xadmnqex45",
+            "status": "ok"
+          },
+          {
+            "direction": "in",
+            "event": "phx_close",
+            "topic": "realtime:admin-incidents-xadmnqex45"
+          },
+          {
+            "direction": "in",
+            "event": "system",
+            "topic": "realtime:admin-incidents-xadmnqex45",
+            "status": "ok"
+          }
+        ],
+        "activeTopics": [
+          "realtime:admin_audit_log:10000000-0000-4000-8000-000000000001",
+          "realtime:admin-incidents-xadmnqex45"
+        ]
+      }
+    },
+    {
+      "label": "Server subscription metadata",
+      "note": "Rows may remain while shared Header socket is connected; database metadata alone does not prove an active callback. Full client close is checked separately."
+    }
+  ],
+  "failures": [],
+  "pageErrors": []
+}

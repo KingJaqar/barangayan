@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-10-11T08:30:32.807Z",
+  "removed": [
+    "barangayan-admin-phase0-realtime",
+    "barangayan-admin-phase0-auth",
+    "barangayan-admin-phase0-rest",
+    "barangayan-admin-phase0-db"
+  ],
+  "networkRemoved": true,
+  "privateCredentialsRemoved": true,
+  "remainingOwnedContainers": "",
+  "previewRemoved": true,
+  "stoppedPreviewProcessIds": [
+    22476,
+    41668,
+    7456
+  ],
+  "remainingOwnedPreviewProcesses": 0,
+  "remainingTaskPortListeners": 0
+}

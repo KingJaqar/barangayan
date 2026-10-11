@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-10-11T10:26:23.051Z",
+  "stage": "Requested Phase 6 baseline only",
+  "passed": false,
+  "noApplicationWrites": true,
+  "resourcesCreated": false,
+  "syntax": [
+    {
+      "file": "audit.mjs",
+      "status": 0
+    },
+    {
+      "file": "checks.mjs",
+      "status": 0
+    },
+    {
+      "file": "field-contracts.mjs",
+      "status": 0
+    },
+    {
+      "file": "finalize.mjs",
+      "status": 0
+    },
+    {
+      "file": "fixtures.mjs",
+      "status": 0
+    },
+    {
+      "file": "focused-lint.mjs",
+      "status": 0
+    },
+    {
+      "file": "inventory.mjs",
+      "status": 0
+    },
+    {
+      "file": "lint-small.mjs",
+      "status": 0
+    },
+    {
+      "file": "local-read.mjs",
+      "status": 0
+    },
+    {
+      "file": "nested-catalog.mjs",
+      "status": 0
+    },
+    {
+      "file": "verify.mjs",
+      "status": 0
+    }
+  ],
+  "failure": "node:internal/modules/run_main:107\r\n    triggerUncaughtException(\r\n    ^\r\n\r\nAssertionError [ERR_ASSERTION]: Preserve unrelated work; investigate external changes without resetting\r\n+ actual - expected\r\n\r\n  {\r\n    addedOutsideScope: [],\r\n+   changed: [\r\n+     'apps/resident-android-mobile/app.json',\r\n+     'apps/resident-android-mobile/src/app/_layout.tsx',\r\n+     'apps/resident-android-mobile/src/app/index.tsx',\r\n+     'apps/resident-android-mobile/src/lib/setup-navigation.test.ts',\r\n+     'apps/resident-android-mobile/src/lib/setup-navigation.ts'\r\n+   ],\r\n-   changed: [],\r\n    missing: []\r\n  }\r\n\r\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase6-baseline/audit.mjs:62:10\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\r\n  generatedMessage: false,\r\n  code: 'ERR_ASSERTION',\r\n  actual: {\r\n    changed: [\r\n      'apps/resident-android-mobile/app.json',\r\n      'apps/resident-android-mobile/src/app/_layout.tsx',\r\n      'apps/resident-android-mobile/src/app/index.tsx',\r\n      'apps/resident-android-mobile/src/lib/setup-navigation.test.ts',\r\n      'apps/resident-android-mobile/src/lib/setup-navigation.ts'\r\n    ],\r\n    missing: [],\r\n    addedOutsideScope: []\r\n  },\r\n  expected: { changed: [], missing: [], addedOutsideScope: [] },\r\n  operator: 'deepStrictEqual',\r\n  diff: 'simple'\r\n}\r\n\r\nNode.js v24.13.1\r\n\n\n1 !== 0\n"
+}

@@ -1,4 +1,5 @@
 import type { Json } from './database';
+import type { ResidentAccountSetupFunctions } from './resident-account-setup.database';
 
 export type CatalogFoundationFields = {
   contract_version: number;
@@ -92,7 +93,7 @@ export type FoundationTables = {
   ]>;
 };
 type FoundationOperation = { Args: { p_input: Json }; Returns: string };
-export type FoundationFunctions = {
+export type FoundationFunctions = ResidentAccountSetupFunctions & {
   incomplete_profile_browsing_barangay: { Args: Record<string, never>; Returns: string | null };
   service_request_sla_tracking: { Args: { p_request_id: string }; Returns: Json };
   service_request_sla_metrics: { Args: { p_request_id: string; p_at?: string }; Returns: Json };

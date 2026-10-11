@@ -1,0 +1,8 @@
+{
+  "files": 66,
+  "status": null,
+  "error": "ETIMEDOUT",
+  "elapsedMs": 60043,
+  "timeoutMs": 60000,
+  "boundary": "Focused affected source lint; whole-package timeout remains recorded."
+}

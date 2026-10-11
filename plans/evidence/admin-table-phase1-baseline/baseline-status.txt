@@ -1,0 +1,76 @@
+ M apps/resident-android-mobile/package.json
+ M apps/resident-android-mobile/src/app/(app)/reports/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/profile.tsx
+ M apps/resident-android-mobile/src/app/(auth)/login.tsx
+ M apps/resident-android-mobile/src/app/(auth)/register.tsx
+ M apps/resident-android-mobile/src/app/_layout.tsx
+ M apps/resident-android-mobile/src/app/auth/callback.tsx
+ M apps/resident-android-mobile/src/app/complete-profile.tsx
+ M apps/resident-android-mobile/src/app/index.tsx
+ M apps/resident-android-mobile/src/components/google-button.tsx
+ M apps/resident-android-mobile/src/components/registration-map.tsx
+ M apps/resident-android-mobile/src/components/segmented-control.tsx
+ M apps/resident-android-mobile/src/hooks/use-auth.tsx
+ M apps/resident-android-mobile/src/lib/google-auth.ts
+ M apps/resident-android-mobile/src/lib/supabase.ts
+ M apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx
+ M apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx
+ M package-lock.json
+ M packages/shared/src/index.ts
+ M packages/shared/src/schemas/service-foundations.ts
+ M packages/shared/src/types/service-foundations.ts
+ M plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md
+ M supabase/config.toml
+?? apps/resident-android-mobile/app.config.js
+?? apps/resident-android-mobile/scripts/prepare-phase2-native.mjs
+?? apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx
+?? apps/resident-android-mobile/src/app/account-setup.tsx
+?? apps/resident-android-mobile/src/components/resident-details-form.tsx
+?? apps/resident-android-mobile/src/components/resident-password-step.tsx
+?? apps/resident-android-mobile/src/lib/auth-cleanup.test.ts
+?? apps/resident-android-mobile/src/lib/google-auth-flow.test.ts
+?? apps/resident-android-mobile/src/lib/google-auth-flow.ts
+?? apps/resident-android-mobile/src/lib/google-auth.test.ts
+?? apps/resident-android-mobile/src/lib/native-pkce-crypto.ts
+?? apps/resident-android-mobile/src/lib/pkce-crypto.test.ts
+?? apps/resident-android-mobile/src/lib/pkce-crypto.ts
+?? apps/resident-android-mobile/src/lib/sensitive-auth.test.ts
+?? apps/resident-android-mobile/src/lib/sensitive-auth.ts
+?? apps/resident-android-mobile/src/lib/setup-navigation.test.ts
+?? apps/resident-android-mobile/src/lib/setup-navigation.ts
+?? apps/resident-android-mobile/src/lib/setup-refresh.test.ts
+?? apps/resident-android-mobile/src/lib/setup-refresh.ts
+?? apps/resident-android-mobile/src/lib/setup-request.test.ts
+?? apps/resident-android-mobile/src/lib/setup-request.ts
+?? apps/resident-android-mobile/vitest.config.ts
+?? apps/resident-web/src/app/(resident)/settings/email-verification/
+?? baseline-android-tests.log
+?? packages/shared/src/lib/resident-account-setup.test.ts
+?? packages/shared/src/lib/resident-account-setup.ts
+?? packages/shared/src/lib/resident-email-verification-client.test.ts
+?? packages/shared/src/lib/resident-email-verification.test.ts
+?? packages/shared/src/lib/resident-email-verification.ts
+?? packages/shared/src/types/resident-account-setup.database.ts
+?? plans/Admin_Web_Table_Browsing_Sorting_Pagination_and_Filters_Implementation_Plan.md
+?? plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md
+?? plans/evidence/admin-table-phase0/
+?? plans/evidence/admin-table-phase1-baseline/
+?? plans/evidence/resident-registration-otp/
+?? supabase/functions/verify-resident-email/
+?? supabase/migrations/0107_resident_account_setup_lifecycle.sql
+?? supabase/migrations/0108_resident_profile_completion_conflict_guard.sql
+?? supabase/migrations/0109_invalidate_changed_profile_email_verification.sql
+?? supabase/tests/resident_account_setup.auth.mjs
+?? supabase/tests/resident_account_setup.hosted.mjs
+?? supabase/tests/resident_account_setup.test.sql
+?? supabase/tests/resident_email_verification.auth.mjs
+?? supabase/tests/resident_email_verification.test.sql
+?? supabase/tests/resident_profile_conflict.test.sql
+?? supabase/tests/resident_registration_android.auth.mjs
+?? supabase/tests/resident_registration_android.hosted.mjs
+?? supabase/tests/resident_registration_phase4.auth.mjs
+?? supabase/tests/resident_registration_upgrade.rehearsal.mjs
+?? supabase/tests/resident_sensitive_actions.auth.mjs

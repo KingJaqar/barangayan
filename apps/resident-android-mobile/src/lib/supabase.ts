@@ -1,3 +1,4 @@
+import './native-pkce-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSupabaseClient } from '@barangayan/shared';
 

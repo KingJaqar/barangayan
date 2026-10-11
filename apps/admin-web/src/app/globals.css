@@ -224,3 +224,29 @@ main {
   left: auto;
   right: 12px;
 }
+
+/* Browsing is opt-in: legacy table callers keep their unbounded viewport. */
+.table-browse-panel, .table-browse-scroll { min-width: 0; max-width: 100%; }
+.table-browse-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.table-browse-panel > * { min-width: 0; max-width: 100%; }
+.table-browse-controls, .table-browse-pagination, .table-browse-segments,
+.table-browse-column-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.table-browse-controls label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 100%; }
+.table-browse-panel input, .table-browse-panel select { min-width: 0; max-width: 100%; }
+.table-browse-panel button, .table-browse-panel select, .table-browse-panel input {
+  border: 1px solid #71717a; border-radius: 6px; padding: 4px 8px;
+}
+.table-browse-panel button:disabled, .table-browse-panel select:disabled { opacity: .5; }
+.table-browse-segments button[aria-pressed=true] { background: var(--accent); color: white; }
+.table-browse-viewport { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scroll-padding-top: 48px; }
+.table-browse-strip { overscroll-behavior: contain; }
+.table-browse-viewport table { border-collapse: separate; border-spacing: 0; }
+.table-browse-viewport th { position: sticky; top: 0; z-index: 2; background: #fafafa; }
+.dark .table-browse-viewport th { background: #27272a; }
+.table-browse-panel :focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: -2px; }
+.table-browse-column-controls { justify-content: space-between; }
+@media (forced-colors: active) {
+  .table-browse-panel :focus-visible { outline-color: Highlight; }
+  .table-browse-viewport th { background: Canvas; }
+  .table-browse-segments button[aria-pressed=true] { border: 2px solid Highlight; }
+}

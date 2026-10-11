@@ -9,13 +9,13 @@ import { PrimaryButton } from './primary-button';
 import { ThemedText } from './themed-text';
 import { useTheme } from '@/hooks/use-theme';
 
-export function RegistrationMap({ boundary, onConfirm }: { boundary: Polygon | MultiPolygon | null; onConfirm: (value: { gps: LatLng | null; home: LatLng | null }) => void }) {
+export function RegistrationMap({ boundary, onConfirm, initialValue }: { boundary: Polygon | MultiPolygon | null; onConfirm: (value: { gps: LatLng | null; home: LatLng | null }) => void; initialValue?: { gps: LatLng | null; home: LatLng | null } }) {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
-  const [gps, setGps] = useState<LatLng | null>(null);
-  const [home, setHome] = useState<LatLng | null>(null);
+  const [gps, setGps] = useState<LatLng | null>(initialValue?.gps ?? null);
+  const [home, setHome] = useState<LatLng | null>(initialValue?.home ?? null);
   const [pinAddress, setPinAddress] = useState<{ point: LatLng; address: string | null } | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(!!initialValue?.home);
   const [error, setError] = useState<string | null>(null);
   const [mapError, setMapError] = useState(false);
   const [locating, setLocating] = useState(false);

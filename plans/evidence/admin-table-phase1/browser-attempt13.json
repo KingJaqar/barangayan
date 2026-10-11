@@ -1,0 +1,182 @@
+{
+  "timestamp": "2026-10-11T11:54:01.380Z",
+  "browsers": [
+    {
+      "name": "chrome",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing",
+        "keyboard scrolling, boundary containment and Tab escape",
+        "keyboard resize and toolbar/header sort agreement without false aria-sort",
+        "failed save retains draft, blocks navigation, Retry/Cancel and focus restoration",
+        "rapid search/control commits one query, Back cancels pending debounce, no scroll reset",
+        "pending actions are inert; error Retry preserves URL and announces committed range",
+        "narrow/short/200%/400% equivalent widths, sidebar, dark and forced colors",
+        "repeated mounts and active resize unmount clean observers and drag listeners"
+      ],
+      "status": "passed",
+      "version": "154.0.8037.99",
+      "boundaryGeometry": {
+        "point": {
+          "x": 16,
+          "y": 183,
+          "width": 1168,
+          "height": 615
+        },
+        "viewport": {
+          "width": 1200,
+          "height": 900
+        },
+        "style": "contain"
+      },
+      "listenerCleanup": {
+        "initial": {
+          "popstate": 2,
+          "resize": 2,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "actual": {
+          "popstate": 1,
+          "resize": 0,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "details": {
+          "popstate": [
+            "function changed() {\n    for (const listener of listeners) listener();\n  }"
+          ],
+          "resize": [],
+          "mousemove": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ],
+          "mouseup": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ]
+        }
+      }
+    },
+    {
+      "name": "edge",
+      "checks": [],
+      "status": "unavailable",
+      "reason": "browserType.launch: Chromium distribution 'msedge' is not found at C:\\Users\\User\\AppData\\Local\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "name": "firefox",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing",
+        "keyboard scrolling, boundary containment and Tab escape",
+        "keyboard resize and toolbar/header sort agreement without false aria-sort",
+        "failed save retains draft, blocks navigation, Retry/Cancel and focus restoration",
+        "rapid search/control commits one query, Back cancels pending debounce, no scroll reset",
+        "pending actions are inert; error Retry preserves URL and announces committed range",
+        "narrow/short/200%/400% equivalent widths, sidebar, dark and forced colors",
+        "repeated mounts and active resize unmount clean observers and drag listeners"
+      ],
+      "status": "passed",
+      "version": "153.0",
+      "boundaryGeometry": {
+        "point": {
+          "x": 16,
+          "y": 181,
+          "width": 1168,
+          "height": 617
+        },
+        "viewport": {
+          "width": 1200,
+          "height": 900
+        },
+        "style": "contain"
+      },
+      "listenerCleanup": {
+        "initial": {
+          "popstate": 2,
+          "resize": 2,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "actual": {
+          "popstate": 1,
+          "resize": 0,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "details": {
+          "popstate": [
+            "function changed() {\n    for (const listener of listeners) listener();\n  }"
+          ],
+          "resize": [],
+          "mousemove": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ],
+          "mouseup": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ]
+        }
+      }
+    },
+    {
+      "name": "webkit",
+      "checks": [
+        "empty/partial pages and all 45 size/count combinations",
+        "bounded layout, last row/column, sticky aligned headers and exact mirror range",
+        "ten wheel boundary inputs on both axes and horizontal-strip vertical routing",
+        "keyboard scrolling, boundary containment and Tab escape",
+        "keyboard resize and toolbar/header sort agreement without false aria-sort",
+        "failed save retains draft, blocks navigation, Retry/Cancel and focus restoration",
+        "rapid search/control commits one query, Back cancels pending debounce, no scroll reset",
+        "pending actions are inert; error Retry preserves URL and announces committed range",
+        "narrow/short/200%/400% equivalent widths, sidebar, dark and forced colors",
+        "repeated mounts and active resize unmount clean observers and drag listeners"
+      ],
+      "status": "passed",
+      "version": "26.5",
+      "boundaryGeometry": {
+        "point": {
+          "x": 16,
+          "y": 192,
+          "width": 1168,
+          "height": 602
+        },
+        "viewport": {
+          "width": 1200,
+          "height": 900
+        }
+      },
+      "listenerCleanup": {
+        "initial": {
+          "popstate": 2,
+          "resize": 2,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "actual": {
+          "popstate": 1,
+          "resize": 0,
+          "mousemove": 1,
+          "mouseup": 1
+        },
+        "details": {
+          "popstate": [
+            "function changed() {\n    for (const listener of listeners) listener();\n  }"
+          ],
+          "resize": [],
+          "mousemove": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ],
+          "mouseup": [
+            "(event) => {\n      var _a;\n      return (_a = this._hitTargetInterceptor) == null ? void 0 : _a.call(this, event);\n    }"
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic component fixtures, not authenticated admin routes or database adapters.",
+    "Native physical input, OS overlay scrollbar settings and manual screen-reader verification were not available."
+  ]
+}

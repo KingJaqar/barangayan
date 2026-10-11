@@ -1,0 +1,181 @@
+{
+  "timestamp": "2026-10-11T08:20:56.863Z",
+  "passed": true,
+  "checks": [
+    {
+      "label": "admin: real password session"
+    },
+    {
+      "label": "foreignAdmin: real password session"
+    },
+    {
+      "label": "resident: real password session"
+    },
+    {
+      "label": "removedAdmin: real password session"
+    },
+    {
+      "label": "Synthetic sentinel retained by actual profile triggers",
+      "actual": "Beyond Cap Needle Ω"
+    },
+    {
+      "label": "requests: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "requests: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "transactions: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "transactions: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "directory: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "directory: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "incidents: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "incidents: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "health: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "health: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "applicants: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "applicants: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "households: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "households: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "staff: default cap differs from exact complete total",
+      "returned": 1000,
+      "count": 1505
+    },
+    {
+      "label": "staff: concatenated bounded API pages equal independent fixture IDs",
+      "pages": 16,
+      "rows": 1505
+    },
+    {
+      "label": "Related empty-embed OR finds resident sentinel beyond unfiltered cap",
+      "query": "empty r/d embeds with top-level OR",
+      "count": 1
+    },
+    {
+      "label": "Related document filtering counts all 1,505 matching requests"
+    },
+    {
+      "label": "Transaction nested spread parent order matches independent SQL",
+      "rows": 100
+    },
+    {
+      "label": "Protected score sorting under active administrator session"
+    },
+    {
+      "label": "Inner score membership excludes missing score and retains missing-profile registration"
+    },
+    {
+      "label": "Missing-profile fixture is genuinely absent"
+    },
+    {
+      "label": "Left incident joins retain null reporter/category"
+    },
+    {
+      "label": "Native registration aggregate is disabled in representative REST configuration",
+      "code": "PGRST123"
+    },
+    {
+      "label": "Applicant direct profile embed lacks a real FK",
+      "code": "PGRST200"
+    },
+    {
+      "label": "foreignAdmin: cannot read tenant A protected scores"
+    },
+    {
+      "label": "resident: cannot read tenant A protected scores"
+    },
+    {
+      "label": "removedAdmin: cannot read tenant A protected scores"
+    },
+    {
+      "label": "foreignAdmin: service_requests excludes tenant A",
+      "count": 0
+    },
+    {
+      "label": "foreignAdmin: payments excludes tenant A",
+      "count": 0
+    },
+    {
+      "label": "foreignAdmin: incidents excludes tenant A",
+      "count": 0
+    },
+    {
+      "label": "foreignAdmin: household_members excludes tenant A",
+      "count": 0
+    },
+    {
+      "label": "foreignAdmin: barangay_officials excludes tenant A",
+      "count": 1
+    },
+    {
+      "label": "Baseline defect: admin can read active foreign Health drive"
+    },
+    {
+      "label": "Baseline defect: soft-deleted admin retains request read access",
+      "count": 1505
+    },
+    {
+      "label": "Resident incident update affects zero unauthorized rows"
+    },
+    {
+      "label": "Resident cannot write protected score"
+    }
+  ],
+  "limitations": [
+    "Health requires explicit caller tenant scope; current public SELECT policy admits active foreign drives.",
+    "current_role/current_barangay_id omit deleted_at; some browse reads still admit removed admin. Protected scores reject it separately."
+  ],
+  "failures": []
+}

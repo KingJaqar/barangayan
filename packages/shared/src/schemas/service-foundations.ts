@@ -81,7 +81,8 @@ export function submissionSchemaForCatalog(catalog: z.infer<typeof serviceCatalo
 export const profileCompletionSchema = z.object({
   firstName: text(200).regex(NAME_REGEX), lastName: text(200).regex(NAME_REGEX), middleName: optionalText(200), suffix: optionalText(50),
   houseNo: text(200), street: text(500), sex: z.enum(SEXES), employmentStatus: z.enum(EMPLOYMENT_STATUSES), occupation: optionalText(200),
-  mobileNumber: z.string().regex(MOBILE_NUMBER_REGEX), birthDate: z.string().date(),
+  mobileNumber: z.string().regex(MOBILE_NUMBER_REGEX), birthDate: z.string().date()
+    .refine(value => !value.startsWith('0000-'), 'Birth date must use a valid calendar year'),
   location: z.object({
     gps: z.object({ lat: z.number().finite().min(-90).max(90), lng: z.number().finite().min(-180).max(180) }).strict().nullable(),
     home: z.object({ lat: z.number().finite().min(-90).max(90), lng: z.number().finite().min(-180).max(180) }).strict().nullable(),

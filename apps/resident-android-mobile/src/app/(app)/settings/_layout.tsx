@@ -1,23 +1,30 @@
 import { Stack } from 'expo-router';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function SettingsLayout() {
+  const { session } = useAuth();
+
   return (
     <Stack>
       {/* index.tsx builds its own colored header (matching the reference screenshot) —
           the native Stack header would otherwise show a stray "index" title above it. */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="profile"
-        options={{ headerShown: false, animation: 'slide_from_right' }}
-      />
-      <Stack.Screen
-        name="change-password"
-        options={{ headerShown: false, animation: 'slide_from_right' }}
-      />
-      <Stack.Screen
-        name="location-verification"
-        options={{ headerShown: false, animation: 'slide_from_right' }}
-      />
+      {/* Logout removes account routes from history and returns to the guest overview. */}
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="email-verification" options={{ headerShown: false, animation: 'slide_from_right' }} />
+        <Stack.Screen
+          name="profile"
+          options={{ headerShown: false, animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
+          name="change-password"
+          options={{ headerShown: false, animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
+          name="location-verification"
+          options={{ headerShown: false, animation: 'slide_from_right' }}
+        />
+      </Stack.Protected>
       <Stack.Screen
         name="help"
         options={{ headerShown: false, animation: 'slide_from_right' }}

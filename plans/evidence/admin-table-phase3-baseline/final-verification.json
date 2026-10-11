@@ -1,0 +1,196 @@
+{
+  "checkedAt": "2026-10-11T09:31:01.032Z",
+  "baselineContractGateComplete": true,
+  "fixtureTests": 49,
+  "fixtureFailures": 0,
+  "independentSQLValueChecks": 11,
+  "indexedSourceFiles": 68,
+  "activeIndexEntries": 638,
+  "unchangedAdminSharedFiles": 257,
+  "unchangedHistoricalMigrations": 107,
+  "fieldDefinitions": 170,
+  "supplementalColumns": 50,
+  "supplementalFunctions": 11,
+  "syntax": [
+    {
+      "file": "audit.mjs",
+      "status": 0
+    },
+    {
+      "file": "checks.mjs",
+      "status": 0
+    },
+    {
+      "file": "field-contracts.mjs",
+      "status": 0
+    },
+    {
+      "file": "finalize.mjs",
+      "status": 0
+    },
+    {
+      "file": "fixtures.mjs",
+      "status": 0
+    },
+    {
+      "file": "focused-lint.mjs",
+      "status": 0
+    },
+    {
+      "file": "inventory.mjs",
+      "status": 0
+    },
+    {
+      "file": "local-read.mjs",
+      "status": 0
+    },
+    {
+      "file": "nested-catalog.mjs",
+      "status": 0
+    },
+    {
+      "file": "verify.mjs",
+      "status": 0
+    }
+  ],
+  "results": [
+    {
+      "name": "fixtures",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 3424,
+      "timeoutMs": 35000,
+      "retries": 0
+    },
+    {
+      "name": "typecheck",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 20523,
+      "timeoutMs": 60000,
+      "retries": 0
+    },
+    {
+      "name": "lint",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 30105,
+      "timeoutMs": 65000,
+      "retries": 0
+    },
+    {
+      "name": "local",
+      "status": 0,
+      "error": null,
+      "elapsedMs": 753,
+      "timeoutMs": 35000,
+      "retries": 0
+    }
+  ],
+  "focusedLint": {
+    "files": 66,
+    "status": 0,
+    "error": null,
+    "elapsedMs": 29962,
+    "timeoutMs": 60000,
+    "boundary": "Focused affected source lint; whole-package timeout remains recorded."
+  },
+  "schemaAlignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": true,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "readPoliciesMatchRetainedHosted": true,
+  "policyDifferences": {
+    "onlyInRetainedHosted": [
+      {
+        "cmd": "INSERT",
+        "qual": null,
+        "roles": [
+          "authenticated"
+        ],
+        "tablename": "payments",
+        "policyname": "residents can create a payment on their own request",
+        "with_check": "((barangay_id = current_barangay_id()) AND (EXISTS ( SELECT 1\n   FROM service_requests sr\n  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid())))))"
+      }
+    ],
+    "onlyInFreshLocal": []
+  },
+  "scope": {
+    "baselineFiles": 3275,
+    "exactWorkspaceEquality": false,
+    "status": 1,
+    "changed": [
+      "apps/resident-android-mobile/app.json"
+    ],
+    "addedOutsideScope": [
+      "apps/resident-android-mobile/eas.json"
+    ],
+    "missing": [
+      "apps/resident-android-mobile/scripts/prepare-release-native.mjs"
+    ],
+    "interpretation": "Concurrent resident Android app configuration change, release-helper removal and EAS configuration addition observed and preserved; this task only wrote the plan and this evidence directory. No claim of full workspace equality."
+  },
+  "trackedWhitespaceStatus": 0,
+  "artifactHashes": {
+    "audit.mjs": "f3bb2831e357a72eb2f062c6cc9982082c5573956766c592d0f02f4375402b41",
+    "baseline-status.txt": "663429ad6000da883d5ba4f522d715f24d81332d65106d10075f263a66baa501",
+    "baseline.json": "c3d509e00794445c78678f72d63b25f0e7b60229b177ee8c10b1d904aa82a329",
+    "checks.mjs": "3a86b71fc85a6ed4019252a189473de51296e236dbb59b47dab12fd6a9d24abb",
+    "comparison-fixture-results.json": "58e84f682475299e8f2de98ad354d4744a0016f244e6443683f1b0f9227ce191",
+    "comparison-fixture.sql": "3c355f412b85ed97329dacbc556886e02496ac70c6e6591c8c2851f7e8de0c96",
+    "diff-whitespace.log": "b0ac7ac2773fafbe1989c3d17d618489ae85b563c1d8c69d15a94f875bb02aad",
+    "field-contracts.json": "39e71dc3f1675c7c977d34be5c653a4d82df4eb8bece8deff29ee9ca4de0386a",
+    "field-contracts.mjs": "63b666ec5a2a042ceaae128608d59dc07ef8962845a40d3080cf4e49d04e19db",
+    "finalize.mjs": "a19f863125a7118374c3fec24ede60556c7c53dc617d53f6b77e4a12ed14cf54",
+    "fixtures-result.json": "add3ea32c82e4ad18528938524dc66445e306065deb663f818d50751a5f90b3b",
+    "fixtures.log": "ac0e18040bc6f656e3b3e7b135bc26d4b43777c96c8bbd38c57d19568ee99ba4",
+    "fixtures.mjs": "ef284c9df0ebc28743fef2d265dcdd56ee223078755e91155dc95d711e89b272",
+    "focused-lint.json": "cf48faeb8a1d0296eb2b8a96356e1ddbbb391242be7326bb568974cc59b4fc63",
+    "focused-lint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "focused-lint.mjs": "9dd69bcde8e59cfe4defb27b638eda83d6de63f8aff7cfb0d5669b8c54045dc0",
+    "inventory.mjs": "ea84c58a97dd5e1332b7fed6a31d490e39a803e222d60c6f2cdbd92f1cbe1116",
+    "lint-result.json": "5e45a80e8825e397f9dc618a33400ed923386db690c40c9db87ee3a5d958e3a6",
+    "lint.log": "1ed5f840879f442586d7138e334d01e309a9aba599e2c6fb34313717b83bb7c3",
+    "local-attempt1-catalog-approved.log": "f89815d4595407c5445b5cd4bec5a3d3279f8c9d3f4c7f63b9455a24fbbeeeed",
+    "local-attempt1-result.json": "dd197e484b5beb4d9a29112a96d0adf648c0dc5386a7ed9590f417f77025f994",
+    "local-attempt1.log": "c99db9418d0b9652cf9d093eb0ecf6795eb50467bb747788a5c77024d925d243",
+    "local-catalog-approved.log": "e987177c5208d4f5a3d5fecfae2513ab93b2e54a038cfa182f6715707ae30835",
+    "local-read.mjs": "161327ebd53fec3fab2e2fcb0dc76c08dac0a3b54821f4f60a125b313468a825",
+    "local-result.json": "752a365348380241e4ecb36d182af098db9e1106f132b204a779f74ddb3f2e2e",
+    "local-schema.json": "ec6532e404edc1c74eab33a85fba95c644663e03cd68bdfd9e017d032656ba7a",
+    "local.log": "854d3f4c85319840c4cbe46b2d636f3152cad3d2c31c13c7fb5ace3b730e1827",
+    "nested-catalog.json": "9f5f79b679ae2d38346bb96d97dce04d08fc68520c97616c47f176de55248d67",
+    "nested-catalog.log": "a9942d7b7a331375808d663c45fd20f8c3c1757596312d2e500d5edc25106f96",
+    "nested-catalog.mjs": "e7c71e9123ceeef5c4c5100a917cd2bee3c7200d83cf9d1c2502c570dff67095",
+    "nested-catalog.sql": "79a4155e59ef92e9f11c5c2e51a66a6b676a8b3441b4f1051eb4d752cf5f91a6",
+    "README.md": "c30689777a457fbb794682ae2f1059128d1664c515859aecfa5e59239c12dab8",
+    "schema-alignment.json": "1e6e00808305fed93eaac3234097821bdcb4ba5ce01454db018a82717833d954",
+    "scope-and-provenance.json": "d50bbf76dbc1b8b0f40050436b3b2af239587a8e4dd0dc89680b5fe19197c1d5",
+    "scope-attempt1.json": "f74db63e2cff1227e23ca88cba7efb761d8e565c9e1ce8c16e5053c0c549bf4b",
+    "scope-final-attempt1.json": "9f611361f94165bf923e58d4442864c9b1d34a96782584de08ea5286550df9bb",
+    "scope-final-attempt1.log": "f89000b21b081d155f1955f58db7ecf02fbd612cfdca9d5ea6bfb54d4bcb98a3",
+    "scope-final.log": "f89000b21b081d155f1955f58db7ecf02fbd612cfdca9d5ea6bfb54d4bcb98a3",
+    "source-inventory.json": "7228db1c7c833db51ce8bc1c7d7215513fee112ebe001bddcc22b8f969871d83",
+    "sql-comparison.log": "432a131bcdb11ac18617ff42d95e86758ca08c5c443718257f8c70e4b1236293",
+    "typecheck-result.json": "320463fdc960fad5781a154240a862cc5273773c32a9715eaff46a9995e79d77",
+    "typecheck.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "verify.mjs": "ff77ccd6f27a701c48dbe79145942bb75025daa24324a73fcd8730a10d14a566"
+  },
+  "resourcesCreated": [],
+  "temporaryObjectsCreated": [],
+  "applicationChangesByThisTask": [],
+  "freshHostedAuthenticatedBrowserRealtimeChecks": false,
+  "retainedRuntimeReportHashesMatchPriorAudit": true,
+  "explicitLocalReadRetries": 1,
+  "limitations": [
+    "Retained hosted catalog/runtime observations are historical.",
+    "No fresh authenticated browser/Realtime check; current hosted state is unknown.",
+    "Whole-package lint/build, physical input, cross-browser/accessibility and large-data benchmarks were not run.",
+    "Fixtures simulate API predicates/cap; they do not execute RLS, SQL joins or application pagination."
+  ]
+}

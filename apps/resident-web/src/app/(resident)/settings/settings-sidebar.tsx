@@ -11,6 +11,7 @@ import {
   LogIn,
   LogOut,
   MapPin,
+  MailCheck,
   Palette,
   Trash2,
   User,
@@ -47,6 +48,7 @@ const NAV_GROUPS: NavGroup[] = [
     guestAccessible: false,
     items: [
       { href: '/settings/profile', icon: User, label: 'Profile' },
+      { href: '/settings/email-verification', icon: MailCheck, label: 'Email Verification' },
       { href: '/settings/location-verification', icon: MapPin, label: 'Location Verification' },
       { href: '/settings/change-password', icon: KeyRound, label: 'Change Password' },
       { href: '/settings/notifications', icon: Bell, label: 'Notifications' },

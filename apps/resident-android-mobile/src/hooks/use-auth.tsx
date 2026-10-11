@@ -1,160 +1,196 @@
 import type { Session } from '@supabase/supabase-js';
-import { ensureGoogleResidentProfile, needsResidentProfile } from '@barangayan/shared';
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-
-import { supabase } from '@/lib/supabase';
+import { ensureGoogleResidentProfile, getResidentAccountSetupStatus, residentSetupRoute, residentSetupFailure, type ResidentSetupIntent, type ResidentSetupLoad, type ResidentSetupRoute } from '@barangayan/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import { SetupRequestGate, SetupOwner, authSetupRequests, profileSetupRequests } from '@/lib/setup-request';
+import { pendingGoogleAuth } from '@/lib/google-auth';
+import { isBackgroundRefresh, refreshFailureOutcome, type OwnedSetup } from '@/lib/setup-refresh';
 
+const INTENT_KEY = 'resident-setup-intent-v1';
+const RECOVERY_KEY = 'resident-recovery-intent-v1';
+const intents: ResidentSetupIntent[] = ['sign_in', 'email_signup', 'google_signup', 'resume_profile', 'google_details_saved', 'settings_profile', 'settings_password'];
 interface AuthContextValue {
   session: Session | null;
   needsCompletion: boolean | null;
   completionError: string | null;
+  /** A failed refresh over an earlier server-confirmed status; that status is kept. */
+  setupRefreshError: string | null;
   refreshCompletion: () => Promise<void>;
-  /** True until the initial getSession() check resolves — keep the splash screen up
-   * during this window so signed-in/signed-out never flashes the wrong screen first. */
   isLoading: boolean;
-  /**
-   * Supabase's recovery OTP verification establishes a REAL session (so updateUser can
-   * be called), which would otherwise satisfy Stack.Protected's guard={!!session} and
-   * bounce the user straight into the main app before they've set a new password. Set
-   * this true right when entering the recovery flow (forgot-password.tsx) and false once
-   * reset-password.tsx's updateUser succeeds — the root navigator's guard checks both.
-   */
+  restorationError: string | null;
+  retryRestoration: () => void;
   isPasswordRecovery: boolean;
   setPasswordRecovery: (value: boolean) => void;
-  /**
-   * "I'll Sign In Later" on the Auth Choice screen — lets Stack.Protected's guard admit
-   * (app) with no real session, for real read-only browsing (Announcements, the Documents
-   * catalog; see the 0005 migration's anon RLS policies). Cleared implicitly once a real
-   * session exists (nothing should ever check isGuest in isolation, only alongside
-   * !!session) — logging in from Settings just makes the same tabs show real personal
-   * data, no redirect dance.
-   */
   isGuest: boolean;
   setGuest: (value: boolean) => void;
-  /**
-   * signUp() returns a live session immediately (Confirm Email is disabled), which would
-   * otherwise satisfy Stack.Protected's guard={!!session} and bounce the new resident
-   * straight into (app) before register.tsx gets a chance to sign that session back out
-   * and show its "Account Created" modal. Set this true right before calling signUp() and
-   * false once the post-signup signOut() settles — same pattern as isPasswordRecovery.
-   */
-  isRegistering: boolean;
-  setRegistering: (value: boolean) => void;
-  /**
-   * Settings > Logout. Flips into Guest Mode instead of bouncing the user back to the
-   * Onboarding welcome screen — signs out, then sets isGuest so Stack.Protected's
-   * appReachable (session || isGuest) stays true throughout and (app) never unmounts.
-   * The caller (Settings) stays on its current screen; only the session-gated content
-   * within it switches to the guest view.
-   */
+  setup: ResidentSetupLoad;
+  setupRoute: ResidentSetupRoute;
+  setSetupIntent: (intent: ResidentSetupIntent, expectedUserId?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
-
-const AuthContext = createContext<AuthContextValue>({
-  session: null,
-  needsCompletion: null,
-  completionError: null,
-  refreshCompletion: async () => {},
-  isLoading: true,
-  isPasswordRecovery: false,
-  setPasswordRecovery: () => {},
-  isGuest: false,
-  setGuest: () => {},
-  isRegistering: false,
-  setRegistering: () => {},
-  logout: async () => {},
-});
+const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [completion, setCompletion] = useState<{ userId: string; needed: boolean } | null>(null);
-  const [completionError, setCompletionError] = useState<string | null>(null);
-  async function refreshCompletion() {
-    if (!session) return;
-    await ensureGoogleResidentProfile(supabase, session.user);
-    const needed = await needsResidentProfile(supabase, session.user.id);
-    setCompletion({ userId: session.user.id, needed }); setCompletionError(null);
-  }
-  useEffect(() => {
-    let active = true;
-    if (session) void ensureGoogleResidentProfile(supabase, session.user).then(() => needsResidentProfile(supabase, session.user.id)).then(needed => {
-      if (active) { setCompletion({ userId: session.user.id, needed }); setCompletionError(null); }
-    }).catch(cause => { if (active) setCompletionError(cause.message); });
-    return () => { active = false; };
-  }, [session]);
+  const sessionRef = useRef<Session | null>(null);
+  const ownership = useRef(new SetupOwner());
   const [isLoading, setIsLoading] = useState(true);
-  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-  const [isGuest, setIsGuest] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getSession()
-      .then(({ data }) => {
-        setSession(data.session);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, newSession) => {
-      setSession(newSession);
-      // Belt-and-suspenders alongside the manual set in forgot-password.tsx.
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsPasswordRecovery(true);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+  const [restorationError, setRestorationError] = useState<string | null>(null);
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  const [isPasswordRecovery, setRecovery] = useState(false);
+  const [isGuest, setGuest] = useState(false);
+  const [intent, setIntent] = useState<ResidentSetupIntent>('sign_in');
+  const intentRef = useRef<ResidentSetupIntent>('sign_in');
+  const [actor, setActor] = useState<'resident' | 'staff' | 'blocked'>('resident');
+  const [ownedSetup, setOwnedSetupState] = useState<OwnedSetup>(null);
+  const ownedSetupRef = useRef<OwnedSetup>(null);
+  const setOwnedSetup = useCallback((value: OwnedSetup) => { ownedSetupRef.current = value; setOwnedSetupState(value); }, []);
+  const [refreshFailure, setRefreshFailure] = useState<{ uid: string; message: string } | null>(null);
+  const rerunStatus = useRef(false);
+  const statusGate = useRef(new SetupRequestGate());
+  const restoreGate = useRef(new SetupRequestGate());
+  const setup: ResidentSetupLoad = session && ownedSetup?.uid === session.user.id ? ownedSetup.value : { state: 'loading' };
+  const setPasswordRecovery = useCallback((value: boolean) => {
+    setRecovery(value);
+    const uid = sessionRef.current?.user.id;
+    if (!value) void AsyncStorage.removeItem(RECOVERY_KEY).catch(() => {});
+    else if (uid) void AsyncStorage.setItem(RECOVERY_KEY, JSON.stringify({ uid, until: Date.now() + 3_600_000 })).catch(() => {});
   }, []);
 
-  async function logout() {
-    // Set isGuest before awaiting signOut so appReachable (session || isGuest) never dips
-    // to false in the gap while the signOut network round-trip is in flight — otherwise
-    // Stack.Protected would briefly consider (app) unreachable and bounce the user to
-    // (auth) instead of leaving them on their current Settings screen.
-    setIsGuest(true);
-    const previousId = session?.user.id;
-    setSession(null);
-    setCompletion(null); setCompletionError(null);
-    await AsyncStorage.multiRemove(['emergency_cache_resident_profile', ...(previousId ? [`resident_profile_v2:${previousId}`] : [])]).catch(() => {});
+  const setSetupIntent = useCallback(async (value: ResidentSetupIntent, expectedUserId?: string) => {
+    if (expectedUserId && sessionRef.current?.user.id !== expectedUserId) throw new Error('The account changed. Please start this action again.');
+    intentRef.current = value; setIntent(value);
+    const uid = sessionRef.current?.user.id;
+    if (uid) await AsyncStorage.setItem(INTENT_KEY, JSON.stringify({ uid, intent: value }));
+  }, []);
+
+  const refreshCompletion = useCallback(async function refreshCurrentCompletion() {
+    const current = sessionRef.current;
+    if (!current) return;
+    const uid = current.user.id, ticket = ownership.current.ticket();
+    const owns = () => ticket() && sessionRef.current?.user.id === uid;
+    // A refresh requested mid-flight (e.g. right after a save) runs again afterwards,
+    // so a read that started before the write cannot leave a stale warning.
+    if (statusGate.current.busy) { rerunStatus.current = true; return; }
+    // Background refresh: keep this user's server-confirmed status while reloading, so
+    // Settings is not unmounted by a transient loading state; never downgrade it on error.
+    const background = isBackgroundRefresh(ownedSetupRef.current, uid);
+    if (!background) setOwnedSetup({ uid, value: { state: 'loading' } });
     try {
-      // signOut()'s server round-trip revokes the refresh token, but a caller showing a
-      // blocking "Logging out..." indicator must never be stuck behind it forever if the
-      // network stalls — race it against a timeout. Either way the user is already local
-      // Guest Mode (isGuest, above) by the time this settles; a stalled revoke just means
-      // the old refresh token dies later server-side (on its own expiry) instead of
-      // immediately, not that anything in this app stays signed in.
-      await supabase.auth.signOut({ scope: 'local' });
-    } catch (error) {
-      console.warn('supabase.auth.signOut() failed (already switched to local Guest Mode):', error);
+      const value = await statusGate.current.run(async () => {
+        const pendingGoogle = await pendingGoogleAuth();
+        if (pendingGoogle?.phase === 'exchanging' && pendingGoogle.expectedUserId && pendingGoogle.expectedUserId !== uid) {
+          // Auth emits the exchanged session before the callback owner check.
+          // Do not provision or admit that unintended account in the meantime.
+          throw { code: '42501' };
+        }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10_000);
+        try {
+          const { data: profile, error } = await supabase.from('profiles').select('role,deleted_at').eq('id', uid).abortSignal(controller.signal).maybeSingle();
+          if (error) throw error;
+          if (profile?.deleted_at) throw { code: '42501' };
+          if (profile && profile.role !== 'resident') return { actor: 'staff' as const, status: null };
+          await ensureGoogleResidentProfile(supabase, current.user);
+          return { actor: 'resident' as const, status: await getResidentAccountSetupStatus(supabase) };
+        } finally {
+          clearTimeout(timer);
+          if (sessionRef.current && sessionRef.current.user.id !== uid) setTimeout(() => { void refreshCurrentCompletion(); }, 0);
+        }
+      });
+      if (!owns()) return;
+      setActor(value.actor); setRefreshFailure(null);
+      if (value.status) setOwnedSetup({ uid, value: { state: 'ready', status: value.status } });
+    } catch (cause) {
+      if (owns()) {
+        const failure = residentSetupFailure(cause as { code?: string; name?: string });
+        // Deleted/forbidden accounts never keep earlier access through a background read.
+        const outcome = refreshFailureOutcome(background, failure);
+        if (outcome.type === 'keep_status') setRefreshFailure({ uid, message: outcome.message });
+        else { setActor('resident'); setOwnedSetup({ uid, value: { state: 'error', failure } }); }
+      }
+    } finally {
+      if (rerunStatus.current && !statusGate.current.busy) { rerunStatus.current = false; if (owns()) setTimeout(() => { void refreshCurrentCompletion(); }, 0); }
     }
+  }, [setOwnedSetup]);
+
+  useEffect(() => {
+    let active = true, eventRevision = 0;
+    const scope = ownership.current;
+    const install = (next: Session | null) => {
+      const previousId = sessionRef.current?.user.id;
+      if (previousId !== next?.user.id) {
+        scope.invalidate(); setOwnedSetup(null); setActor('resident'); setRefreshFailure(null); rerunStatus.current = false;
+        if (previousId) { intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false); }
+      }
+      sessionRef.current = next; setSession(next);
+    };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, next) => {
+      // No network/storage awaits in the SDK's Auth callback (it holds its lock).
+      eventRevision++; install(next);
+      if (event === 'PASSWORD_RECOVERY') setPasswordRecovery(true);
+    });
+    const revision = eventRevision;
+    void restoreGate.current.run(async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      const raw = await AsyncStorage.getItem(INTENT_KEY);
+      const recoveryRaw = await AsyncStorage.getItem(RECOVERY_KEY);
+      const pendingGoogle = await pendingGoogleAuth();
+      if (active && revision === eventRevision) install(data.session);
+      let restored: { uid?: string; intent?: ResidentSetupIntent } | null = null;
+      try { restored = raw ? JSON.parse(raw) : null; } catch { /* Ignore corrupt non-secret intent, never session state. */ }
+      if (active && restored?.uid === sessionRef.current?.user.id && restored?.intent && intents.includes(restored.intent)) {
+        intentRef.current = restored.intent; setIntent(restored.intent);
+      } else if (active && pendingGoogle?.userId === sessionRef.current?.user.id && pendingGoogle?.intent === 'sign_up') {
+        intentRef.current = 'google_signup'; setIntent('google_signup');
+      }
+      try {
+        const recovery = recoveryRaw ? JSON.parse(recoveryRaw) : null;
+        if (active && recovery?.uid === sessionRef.current?.user.id && recovery.until > Date.now() && recovery.until <= Date.now() + 3_600_000) setRecovery(true);
+      } catch { /* Invalid recovery hint never establishes an Auth session. */ }
+    }).then(() => { if (active) { setRestorationError(null); setIsLoading(false); } })
+      .catch(() => { if (active) { setRestorationError('Unable to restore your session. Check your connection and retry.'); setIsLoading(false); } });
+    return () => { active = false; scope.invalidate(); subscription.unsubscribe(); };
+  }, [restoreAttempt, setPasswordRecovery, setOwnedSetup]);
+
+  const userId = session?.user.id;
+  useEffect(() => {
+    if (!userId || isLoading || restorationError) return;
+    // Token refresh changes the Session object, not ownership. No repeated RPC on it.
+    void AsyncStorage.setItem(INTENT_KEY, JSON.stringify({ uid: userId, intent: intentRef.current })).catch(() => {});
+    void refreshCompletion();
+  }, [userId, isLoading, restorationError, refreshCompletion]);
+  useEffect(() => {
+    if (userId && isPasswordRecovery) void AsyncStorage.setItem(RECOVERY_KEY, JSON.stringify({ uid: userId, until: Date.now() + 3_600_000 })).catch(() => {});
+  }, [userId, isPasswordRecovery]);
+
+  async function logout() {
+    if (authSetupRequests.busy || profileSetupRequests.busy) return;
+    try {
+      await authSetupRequests.run(async () => {
+        ownership.current.invalidate(); const previousId = sessionRef.current?.user.id;
+        sessionRef.current = null; setSession(null); setOwnedSetup(null); setRefreshFailure(null);
+        intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false); setGuest(true);
+        await AsyncStorage.multiRemove([INTENT_KEY, RECOVERY_KEY, 'resident-google-pkce-v2', 'emergency_cache_resident_profile', ...(previousId ? [`resident_profile_v2:${previousId}`] : [])]).catch(() => {});
+        const { error } = await supabase.auth.signOut({ scope: 'local' });
+        if (error) throw error;
+      });
+    }
+    catch { setRestorationError('Sign-out could not be confirmed. Retry session restoration before signing in again.'); }
   }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        session,
-        needsCompletion: session ? (completion?.userId === session.user.id ? completion.needed : null) : false,
-        completionError,
-        refreshCompletion,
-        isLoading,
-        isPasswordRecovery,
-        setPasswordRecovery: setIsPasswordRecovery,
-        isGuest,
-        setGuest: setIsGuest,
-        isRegistering,
-        setRegistering: setIsRegistering,
-        logout,
-      }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const setupRoute = residentSetupRoute({ session: isLoading || restorationError ? 'restoring' : session ? 'authenticated' : 'signed_out', intent, recovery: isPasswordRecovery, guest: !session && isGuest, actor, setup });
+  return <AuthContext.Provider value={{ session, setup, setupRoute, setSetupIntent,
+    needsCompletion: !session ? false : setup.state === 'ready' ? !setup.status.profileComplete : actor === 'staff' ? false : null,
+    completionError: setup.state === 'error' ? setup.failure.message : null,
+    setupRefreshError: session && refreshFailure?.uid === session.user.id ? refreshFailure.message : null,
+    refreshCompletion, isLoading, restorationError,
+    retryRestoration: () => { setIsLoading(true); setRestoreAttempt(value => value + 1); },
+    isPasswordRecovery, setPasswordRecovery, isGuest, setGuest, logout }}>{children}</AuthContext.Provider>;
 }
-
 export function useAuth() {
-  return useContext(AuthContext);
+  const value = useContext(AuthContext);
+  if (!value) throw new Error('useAuth requires AuthProvider');
+  return value;
 }

@@ -1,0 +1,72 @@
+[
+  {
+    "name": "syntax-audit.mjs",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 111,
+    "timeoutMs": 10000
+  },
+  {
+    "name": "syntax-checks.mjs",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 100,
+    "timeoutMs": 10000
+  },
+  {
+    "name": "syntax-fixtures.mjs",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 103,
+    "timeoutMs": 10000
+  },
+  {
+    "name": "syntax-inventory.mjs",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 108,
+    "timeoutMs": 10000
+  },
+  {
+    "name": "syntax-verify.mjs",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 106,
+    "timeoutMs": 10000
+  },
+  {
+    "name": "fixtures",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 2441,
+    "timeoutMs": 30000
+  },
+  {
+    "name": "admin-typecheck",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 17317,
+    "timeoutMs": 60000
+  },
+  {
+    "name": "admin-lint",
+    "status": null,
+    "error": "ETIMEDOUT",
+    "elapsedMs": 60033,
+    "timeoutMs": 60000
+  },
+  {
+    "name": "local-catalog",
+    "status": 1,
+    "error": null,
+    "elapsedMs": 205,
+    "timeoutMs": 15000
+  },
+  {
+    "name": "diff-whitespace",
+    "status": 0,
+    "error": null,
+    "elapsedMs": 247,
+    "timeoutMs": 15000
+  }
+]

@@ -1,0 +1,22 @@
+Connecting to local database...
+/Users/User/barangayan/supabase/tests/admin_document_type_creation.test.sql ...... ok
+/Users/User/barangayan/supabase/tests/administrator_scores.test.sql .............. ok
+/Users/User/barangayan/supabase/tests/agency_sla.test.sql ........................ ok
+/Users/User/barangayan/supabase/tests/catalog_staff_workflows.test.sql ........... ok
+/Users/User/barangayan/supabase/tests/deferred_profile_completion.test.sql ....... ok
+/Users/User/barangayan/supabase/tests/document_charter_forms.test.sql ............ ok
+/Users/User/barangayan/supabase/tests/google_minimal_profiles.test.sql ........... ok
+/Users/User/barangayan/supabase/tests/registration_maps_auth.test.sql ............ ok
+/Users/User/barangayan/supabase/tests/resident_account_setup.test.sql ............ ok
+/Users/User/barangayan/supabase/tests/resident_email_verification.test.sql ....... ok
+/Users/User/barangayan/supabase/tests/resident_ios_tenant_write_guards.test.sql .. ok
+/Users/User/barangayan/supabase/tests/resident_profile_conflict.test.sql ......... ok
+/Users/User/barangayan/supabase/tests/rls_isolation.test.sql ..................... ok
+/Users/User/barangayan/supabase/tests/service_foundations.test.sql ............... ok
+/Users/User/barangayan/supabase/tests/trusted_evidence_locality.test.sql ......... ok
+All tests successful.
+Files=15, Tests=504,  3 wallclock secs ( 0.17 usr  0.06 sys +  0.24 cusr  0.18 csys =  0.65 CPU)
+Result: PASS
+A new version of Supabase CLI is available: v2.120.0 (currently installed v2.118.0)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+exit 0
