@@ -1,0 +1,12 @@
+locator.selectOption: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for locator('form').filter({ has: getByRole('button', { name: 'Create Incident', exact: true }) }).getByLabel('Reporter', { exact: true })[22m
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:262:66
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:254:9 {
+  log: [
+    "  - waiting for locator('form').filter({ has: getByRole('button', { name: 'Create Incident', exact: true }) }).getByLabel('Reporter', { exact: true })"
+  ],
+  name: 'TimeoutError'
+}

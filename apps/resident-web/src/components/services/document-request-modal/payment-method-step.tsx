@@ -8,11 +8,12 @@
  */
 
 import { formatCentavosAsPHP, type PaymentMethod } from '@barangayan/shared';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { PAYMENT_METHOD_OPTIONS, PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
+import { beginAttempt, notify } from '@/lib/notify';
+import { paymentMethodFailure } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export function PaymentMethodStep({
@@ -31,6 +32,7 @@ export function PaymentMethodStep({
   const [selected, setSelected] = useState<PaymentMethod>('pickup');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const busy = useRef(false);
 
   const totalDue = feeCentavos;
   const isQrphBlocked = selected === 'qrph' && !PAYMENT_SETTLEMENT_READY;
@@ -39,29 +41,42 @@ export function PaymentMethodStep({
   const availableOptions = PAYMENT_METHOD_OPTIONS.filter((opt) => opt.key !== 'qrph' || totalDue >= 100);
 
   async function handleContinue() {
-    if (isQrphBlocked) return;
+    // Synchronous guard — a second activation before React re-renders must not send a
+    // second write.
+    if (isQrphBlocked || busy.current) return;
+    busy.current = true;
+    const attempt = beginAttempt('payment-method');
+    const chosen = selected;
     setSubmitting(true);
     setError(null);
-
-    // A plain .update() here would be silently swallowed by RLS — service_requests has
-    // no resident UPDATE policy (status transitions are admin-only). This RPC lets a
-    // resident set *only* payment_method on rows they own, without opening a broad
-    // UPDATE policy on the whole table — confirmed by reading migration 0082, which
-    // scopes the update with `where id = p_request_id and resident_id = auth.uid()`.
-    const supabase = createSupabaseBrowserClient();
-    const { error: rpcError } = await supabase.rpc('set_service_request_payment_method', {
-      p_request_id: requestId,
-      p_method: selected,
-    });
-    setSubmitting(false);
-
-    if (rpcError) {
-      setError(rpcError.message);
-      return;
+    try {
+      // A plain .update() here would be silently swallowed by RLS — service_requests has
+      // no resident UPDATE policy (status transitions are admin-only). This RPC lets a
+      // resident set *only* payment_method on rows they own, without opening a broad
+      // UPDATE policy on the whole table — confirmed by reading migration 0082, which
+      // scopes the update with `where id = p_request_id and resident_id = auth.uid()`.
+      const supabase = createSupabaseBrowserClient();
+      const { error: rpcError, status } = await supabase.rpc('set_service_request_payment_method', {
+        p_request_id: requestId,
+        p_method: chosen,
+      });
+      if (rpcError) {
+        const failure = paymentMethodFailure(rpcError, status);
+        setError(failure.message);
+        notify[failure.uncertain ? 'warning' : 'error'](failure.title, { id: attempt });
+        return;
+      }
+      // The next step is the confirmation, so there is no success toast — and the
+      // request itself was submitted in the previous step, not here.
+      onMethodChosen(chosen);
+    } catch {
+      const failure = paymentMethodFailure({ message: '' }, 0);
+      setError(failure.message);
+      notify.warning(failure.title, { id: attempt });
+    } finally {
+      busy.current = false;
+      setSubmitting(false);
     }
-
-    toast.success('Request submitted.');
-    onMethodChosen(selected);
   }
 
   return (
@@ -93,6 +108,8 @@ export function PaymentMethodStep({
             <button
               key={option.key}
               type="button"
+              disabled={submitting}
+              aria-pressed={isSelected}
               onClick={() => setSelected(option.key)}
               className={`flex items-center gap-3 rounded-2xl border-2 bg-card p-4 text-left transition-colors ${
                 isSelected ? 'border-primary' : 'border-transparent hover:border-border'
@@ -130,9 +147,10 @@ export function PaymentMethodStep({
         </div>
       ) : null}
 
-      {error ? <p className="text-sm text-status-error">{error}</p> : null}
+      {/* Persistent guidance; the matching toast carries the announcement. */}
+      {error ? <p data-slot="payment-method-error" className="text-sm text-status-error">{error}</p> : null}
 
-      <Button size="lg" loading={submitting} disabled={isQrphBlocked} onClick={handleContinue}>
+      <Button size="lg" loading={submitting} loadingLabel="Saving your choice…" disabled={isQrphBlocked} onClick={handleContinue}>
         Continue
       </Button>
     </div>

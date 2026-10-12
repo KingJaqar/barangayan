@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "An ordinary signed-in session cannot bypass reset-code verification",
+    "The hosted Auth service issues a six-digit recovery OTP",
+    "Wrong code rejected; real recovery OTP accepted for the same account",
+    "The actual mobile recovery implementation updates the verified password",
+    "Old password no longer signs in; new password signs in to the same resident"
+  ],
+  "cleanup": true
+}

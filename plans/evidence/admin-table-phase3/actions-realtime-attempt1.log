@@ -1,0 +1,12 @@
+locator.click: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('tbody tr td').nth(6).getByRole('button', { name: 'Cancel', exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:41:61
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:11:32)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/actions-realtime.mjs:34:2 {
+  log: [
+    "  - waiting for locator('tbody tr td').nth(6).getByRole('button', { name: 'Cancel', exact: true })"
+  ],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,26 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: requests defaults, ranges, sort controls, scrolling and responsive access",
+      "message": "The expression evaluated to a falsy value:\n\n  assert.ok(!(await page.locator('.table-browse-pagination').first().innerText()).includes('of 0\\n'))\n"
+    },
+    {
+      "label": "run",
+      "message": "The expression evaluated to a falsy value:\n\n  assert.ok(!(await page.locator('.table-browse-pagination').first().innerText()).includes('of 0\\n'))\n"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": []
+}

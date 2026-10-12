@@ -1,0 +1,316 @@
+
+> @barangayan/web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx
+  274:20  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:274:20
+  272 |   ];
+  273 |
+> 274 |   return <div ref={detail.container} className="min-w-0">
+      |                    ^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  275 |     <ProfileTableSummary name="households" summary={summary} onRetry={browse.refresh} />
+  276 |     <div>{optionsError && <div role="alert">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}</div>
+  277 |     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddMemberForm residents={residents} barangayId={barangayId} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/refs
+  293:6   error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:293:6
+  291 |         resizableColumns density="compact" tableMinWidth={1280} cellOverflow="hidden" />
+  292 |     </ProfileTablePanel>
+> 293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+      |      ^^^^^^^^^^^^^^^ Cannot access ref value during render
+  294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+  295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  296 |     </TableDetailDialog>}                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/refs
+  293:6   error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:293:6
+  291 |         resizableColumns density="compact" tableMinWidth={1280} cellOverflow="hidden" />
+  292 |     </ProfileTablePanel>
+> 293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+      |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 296 |     </TableDetailDialog>}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  297 |
+  298 |   </div>;
+  299 | }  react-hooks/refs
+  293:86  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:293:86
+  291 |         resizableColumns density="compact" tableMinWidth={1280} cellOverflow="hidden" />
+  292 |     </ProfileTablePanel>
+> 293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+      |                                                                                      ^^^^^^^^^^^^ Cannot access ref value during render
+  294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+  295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  296 |     </TableDetailDialog>}                                                                                                                                                                                                                                                                                                                                                     react-hooks/refs
+  294:8   error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:294:8
+  292 |     </ProfileTablePanel>
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+> 294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+      |        ^^^^^^^^^^^^^ Cannot access ref value during render
+  295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  296 |     </TableDetailDialog>}
+  297 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/refs
+  294:60  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:294:60
+  292 |     </ProfileTablePanel>
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+> 294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+      |                                                            ^^^^^^^^^^^^^^^ Cannot access ref value during render
+  295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  296 |     </TableDetailDialog>}
+  297 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/refs
+  294:86  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:294:86
+  292 |     </ProfileTablePanel>
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+> 294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+      |                                                                                      ^^^^^^^^^^^^ Cannot access ref value during render
+  295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  296 |     </TableDetailDialog>}
+  297 |                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/refs
+  295:37  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:295:37
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+  294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+> 295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                     ^^^^^^^^^^^^^ Cannot access ref value during render
+  296 |     </TableDetailDialog>}
+  297 |
+  298 |   </div>;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/refs
+  295:61  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:295:61
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+  294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+> 295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                                             ^^^^^^^^^^^^ Cannot access ref value during render
+  296 |     </TableDetailDialog>}
+  297 |
+  298 |   </div>;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/refs
+  295:84  error    Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\households-residents\households-table.tsx:295:84
+  293 |     {detail.selected && <TableDetailDialog label="Household member details" onClose={detail.close}>
+  294 |       {detail.status === 'ready' ? <MemberDetailModal row={detail.selected} onClose={detail.close} onDelete={removeMember} />
+> 295 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                                                                    ^^^^^^^^^^^^ Cannot access ref value during render
+  296 |     </TableDetailDialog>}
+  297 |
+  298 |   </div>;                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/refs
+  301:26  warning  'barangayId' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx
+  605:20   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:605:20
+  603 |   ];
+  604 |
+> 605 |   return <div ref={detail.container} className="min-w-0">
+      |                    ^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  606 |     <ProfileTableSummary name="residents" summary={summary} onRetry={browse.refresh} />
+  607 |     
+  608 |     {addOpen && <fieldset disabled={browse.pending}><AddResidentForm onCreated={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/refs
+  624:6    error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:624:6
+  622 |         resizableColumns density="compact" tableMinWidth={2840} cellOverflow="hidden" />
+  623 |     </ProfileTablePanel>
+> 624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+      |      ^^^^^^^^^^^^^^^ Cannot access ref value during render
+  625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/refs
+  624:6    error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:624:6
+  622 |         resizableColumns density="compact" tableMinWidth={2840} cellOverflow="hidden" />
+  623 |     </ProfileTablePanel>
+> 624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+      |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 627 |     </TableDetailDialog>}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed.
+  629 |       <TableScrollArea>
+  630 |         <table  react-hooks/refs
+  624:78   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:624:78
+  622 |         resizableColumns density="compact" tableMinWidth={2840} cellOverflow="hidden" />
+  623 |     </ProfileTablePanel>
+> 624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+      |                                                                              ^^^^^^^^^^^^ Cannot access ref value during render
+  625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/refs
+  625:8    error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:625:8
+  623 |     </ProfileTablePanel>
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      |        ^^^^^^^^^^^^^ Cannot access ref value during render
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/refs
+  625:62   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:625:62
+  623 |     </ProfileTablePanel>
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      |                                                              ^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/refs
+  625:83   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:625:83
+  623 |     </ProfileTablePanel>
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/refs
+  625:121  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:625:121
+  623 |     </ProfileTablePanel>
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      |                                                                                                                         ^^^^^^^^^^^^^^^ Cannot access ref value during render
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/refs
+  625:147  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:625:147
+  623 |     </ProfileTablePanel>
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+> 625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+      |                                                                                                                                                   ^^^^^^^^^^^^ Cannot access ref value during render
+  626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/refs
+  626:37   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:626:37
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+  625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+> 626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                     ^^^^^^^^^^^^^ Cannot access ref value during render
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed.
+  629 |       <TableScrollArea>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/refs
+  626:61   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:626:61
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+  625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+> 626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                                             ^^^^^^^^^^^^ Cannot access ref value during render
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed.
+  629 |       <TableScrollArea>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/refs
+  626:84   error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\residents\resident-directory.tsx:626:84
+  624 |     {detail.selected && <TableDetailDialog label="Resident details" onClose={detail.close}>
+  625 |       {detail.status === 'ready' ? <ResidentDetailModal key={detail.selected.id + detail.selected.updated_at} resident={detail.selected} onClose={detail.close} onIdStatusChange={browse.refresh} />
+> 626 |         : <TableDetailState status={detail.status} onClose={detail.close} onRetry={detail.retry} />}
+      |                                                                                    ^^^^^^^^^^^^ Cannot access ref value during render
+  627 |     </TableDetailDialog>}
+  628 |       {/* Legacy table markup kept here temporarily while this change is reviewed.
+  629 |       <TableScrollArea>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/refs
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\staff\staff-table.tsx
+  23:21  warning  'Tab' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-profile-table-detail.ts
+  43:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-profile-table-detail.ts:43:5
+  41 |     const timeout = setTimeout(() => controller.abort(), 15000);
+  42 |     let current = true;
+> 43 |     setStatus('loading');
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  44 |     const db = createSupabaseBrowserClient() as unknown as SupabaseClient<AdminBrowseDatabase>;
+  45 |     void (async () => {
+  46 |       try {  react-hooks/set-state-in-effect
+
+✖ 25 problems (23 errors, 2 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint

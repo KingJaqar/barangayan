@@ -1,0 +1,20 @@
+▲ Next.js 16.3.0 (webpack)
+- Local:         http://127.0.0.1:3140
+- Network:       http://127.0.0.1:3140
+✓ Ready in 1318ms
+✓ Running next.config.ts took 114ms
+
+○ Compiling /login ...
+ GET /login 200 in 18.4s (next.js: 16.7s, proxy.ts: 1091ms, application-code: 624ms)
+ POST /login 200 in 504ms (next.js: 16ms, proxy.ts: 134ms, application-code: 353ms)
+  └─ ƒ logAdminLogin() in 142ms ..//src/actions/admin-audit-actions.ts
+○ Compiling /dashboard ...
+ GET /dashboard 200 in 5.2s (next.js: 4.3s, proxy.ts: 140ms, application-code: 794ms)
+ GET /dashboard 200 in 454ms (next.js: 7ms, proxy.ts: 93ms, application-code: 354ms)
+ GET /dashboard 200 in 350ms (next.js: 7ms, proxy.ts: 183ms, application-code: 160ms)
+ GET /requests 200 in 2.5s (next.js: 1602ms, proxy.ts: 83ms, application-code: 855ms)
+ GET /requests?dir=asc&page=2&pageSize=10&sort=reference&tab=active 200 in 366ms (next.js: 6ms, proxy.ts: 87ms, application-code: 272ms)
+ GET /requests?dir=asc&page=1&pageSize=10&q=Beyond+Cap+Needle&sort=reference&tab=active 200 in 415ms (next.js: 7ms, proxy.ts: 75ms, application-code: 333ms)
+ GET /transactions 200 in 2.4s (next.js: 1541ms, proxy.ts: 92ms, application-code: 794ms)
+ GET /transactions?dir=desc&page=2&pageSize=10&sort=created&tab=all 200 in 364ms (next.js: 7ms, proxy.ts: 81ms, application-code: 275ms)
+ GET /transactions?dir=desc&page=1&pageSize=10&q=Beyond+Cap+Needle&sort=created&tab=all 200 in 871ms (next.js: 6ms, proxy.ts: 71ms, application-code: 793ms)

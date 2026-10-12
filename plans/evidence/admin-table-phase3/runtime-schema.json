@@ -1,0 +1,2577 @@
+{
+  "rls": [
+    {
+      "relname": "barangay_officials",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "drive_registration_scores",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "drive_registrations",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "household_members",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "incident_categories",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "incidents",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "medical_drives",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "payments",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "profiles",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "service_requests",
+      "relrowsecurity": true
+    }
+  ],
+  "columns": [
+    {
+      "data_type": "uuid",
+      "table_name": "barangay_officials",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "barangay_officials",
+      "column_name": "profile_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "barangay_officials",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "barangay_officials",
+      "column_name": "official_role",
+      "is_nullable": "NO",
+      "column_default": "'staff'::text"
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "barangay_officials",
+      "column_name": "is_active",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "data_type": "date",
+      "table_name": "barangay_officials",
+      "column_name": "date_hired",
+      "is_nullable": "NO",
+      "column_default": "CURRENT_DATE"
+    },
+    {
+      "data_type": "text",
+      "table_name": "barangay_officials",
+      "column_name": "notes",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "barangay_officials",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "barangay_officials",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "barangay_officials",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "drive_registration_scores",
+      "column_name": "registration_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "numeric",
+      "table_name": "drive_registration_scores",
+      "column_name": "priority_score",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "drive_registrations",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "drive_registrations",
+      "column_name": "drive_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "drive_registrations",
+      "column_name": "user_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "drive_registrations",
+      "column_name": "applicant_number",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "drive_registrations",
+      "column_name": "age",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "drive_registrations",
+      "column_name": "is_pwd",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "ARRAY",
+      "table_name": "drive_registrations",
+      "column_name": "comorbidities",
+      "is_nullable": "NO",
+      "column_default": "'{}'::text[]"
+    },
+    {
+      "data_type": "date",
+      "table_name": "drive_registrations",
+      "column_name": "prior_dose_date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "USER-DEFINED",
+      "table_name": "drive_registrations",
+      "column_name": "status",
+      "is_nullable": "NO",
+      "column_default": "'pending'::drive_registration_status"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "drive_registrations",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "drive_registrations",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "household_members",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "household_members",
+      "column_name": "profile_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "household_members",
+      "column_name": "name",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "household_members",
+      "column_name": "relation",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "household_members",
+      "column_name": "role",
+      "is_nullable": "NO",
+      "column_default": "'member'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "household_members",
+      "column_name": "avatar_url",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "household_members",
+      "column_name": "is_checked_in",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "household_members",
+      "column_name": "checked_in_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "household_members",
+      "column_name": "checked_in_center_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "household_members",
+      "column_name": "checked_in_center_name",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "household_members",
+      "column_name": "sort_order",
+      "is_nullable": "NO",
+      "column_default": "0"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "household_members",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "household_members",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incident_categories",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incident_categories",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incident_categories",
+      "column_name": "name",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incident_categories",
+      "column_name": "color",
+      "is_nullable": "NO",
+      "column_default": "'#6B7280'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "incident_categories",
+      "column_name": "icon",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "incident_categories",
+      "column_name": "is_trash_related",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "incident_categories",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incidents",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incidents",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incidents",
+      "column_name": "reporter_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incidents",
+      "column_name": "category_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incidents",
+      "column_name": "title",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incidents",
+      "column_name": "description",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "incidents",
+      "column_name": "location",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "ARRAY",
+      "table_name": "incidents",
+      "column_name": "photo_urls",
+      "is_nullable": "NO",
+      "column_default": "'{}'::text[]"
+    },
+    {
+      "data_type": "text",
+      "table_name": "incidents",
+      "column_name": "status",
+      "is_nullable": "NO",
+      "column_default": "'open'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "incidents",
+      "column_name": "confirmation_count",
+      "is_nullable": "NO",
+      "column_default": "0"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "incidents",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "incidents",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "incidents",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "incidents",
+      "column_name": "zone_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "incidents",
+      "column_name": "resolved_read_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incidents",
+      "column_name": "address",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "incidents",
+      "column_name": "specific_area_details",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "medical_drives",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "medical_drives",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "medical_drives",
+      "column_name": "title",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "USER-DEFINED",
+      "table_name": "medical_drives",
+      "column_name": "type",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "date",
+      "table_name": "medical_drives",
+      "column_name": "drive_date",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "time without time zone",
+      "table_name": "medical_drives",
+      "column_name": "time_start",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "time without time zone",
+      "table_name": "medical_drives",
+      "column_name": "time_end",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "medical_drives",
+      "column_name": "location",
+      "is_nullable": "NO",
+      "column_default": "'Barangay Health Center'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "medical_drives",
+      "column_name": "eligible_criteria",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "medical_drives",
+      "column_name": "stock_label",
+      "is_nullable": "NO",
+      "column_default": "'Remaining Slots'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "medical_drives",
+      "column_name": "stock_unit",
+      "is_nullable": "NO",
+      "column_default": "'slots'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "medical_drives",
+      "column_name": "stock_total",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "medical_drives",
+      "column_name": "stock_remaining",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "medical_drives",
+      "column_name": "is_active",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "medical_drives",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "medical_drives",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "medical_drives",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "service_request_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "method",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "payments",
+      "column_name": "amount_centavos",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "status",
+      "is_nullable": "NO",
+      "column_default": "'pending'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "paymongo_source_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "paid_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "collected_by",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "paymongo_payment_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "refund_status",
+      "is_nullable": "NO",
+      "column_default": "'none'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "payments",
+      "column_name": "refund_amount_centavos",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "refund_reason",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "refunded_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "refunded_by",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "payments",
+      "column_name": "document_fee_centavos",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "paymongo_payment_intent_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "refund_transfer_link",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "payments",
+      "column_name": "qr_image_url",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "payments",
+      "column_name": "expires_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "payments",
+      "column_name": "qrph_creation_key",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "role",
+      "is_nullable": "NO",
+      "column_default": "'resident'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "full_name",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "mobile_number",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "home_address",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "theme_preference",
+      "is_nullable": "NO",
+      "column_default": "'system'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "accent_color",
+      "is_nullable": "NO",
+      "column_default": "'#0F6E5B'::text"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "email_verification_status",
+      "is_nullable": "NO",
+      "column_default": "'unavailable'::text"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "email_verification_requested_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "email_verified_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "date",
+      "table_name": "profiles",
+      "column_name": "birth_date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "email",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "profiles",
+      "column_name": "household_members",
+      "is_nullable": "NO",
+      "column_default": "'[]'::jsonb"
+    },
+    {
+      "data_type": "ARRAY",
+      "table_name": "profiles",
+      "column_name": "id_photo_urls",
+      "is_nullable": "NO",
+      "column_default": "'{}'::text[]"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "id_type",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "avatar_url",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "id_verification_status",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "profiles",
+      "column_name": "push_notifications_enabled",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "data_type": "ARRAY",
+      "table_name": "profiles",
+      "column_name": "custom_accent_colors",
+      "is_nullable": "NO",
+      "column_default": "'{}'::text[]"
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "font_preference",
+      "is_nullable": "NO",
+      "column_default": "'system'::text"
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "profiles",
+      "column_name": "location_verified",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "profiles",
+      "column_name": "registration_location",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "last_data_export_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "first_name",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "last_name",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "middle_name",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "suffix",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "house_no",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "street",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "city",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "sex",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "employment_status",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "occupation",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "profiles",
+      "column_name": "verified_location",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "location_verified_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "verified_location_address",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "profiles",
+      "column_name": "province",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "profiles",
+      "column_name": "profile_completed_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "column_name": "current_id_submission_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "profiles",
+      "column_name": "approved_id_submission_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "profiles",
+      "column_name": "id_repair_required",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "profiles",
+      "column_name": "registration_home_location",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "id",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "barangay_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "resident_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "document_type_id",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "reference_number",
+      "is_nullable": "NO",
+      "column_default": "((('REQ-'::text || to_char(now(), 'YYYY'::text)) || '-'::text) || lpad((nextval('service_request_ref_seq'::regclass))::text, 5, '0'::text))"
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "requester_notes",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "status",
+      "is_nullable": "NO",
+      "column_default": "'submitted'::text"
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "payment_status",
+      "is_nullable": "NO",
+      "column_default": "'pending'::text"
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "service_requests",
+      "column_name": "status_history",
+      "is_nullable": "NO",
+      "column_default": "'[]'::jsonb"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "created_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "updated_at",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "payment_method",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "deleted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "id_document_path",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "service_requests",
+      "column_name": "contract_version",
+      "is_nullable": "NO",
+      "column_default": "1"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "idempotency_key",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "service_requests",
+      "column_name": "submission_payload",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "purpose_code",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "purpose_label",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "purpose_explanation",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "jsonb",
+      "table_name": "service_requests",
+      "column_name": "supporting_details",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "approved_id_submission_id",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "requirements_review_state",
+      "is_nullable": "NO",
+      "column_default": "'legacy'::text"
+    },
+    {
+      "data_type": "boolean",
+      "table_name": "service_requests",
+      "column_name": "personal_appearance_required",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "personal_appearance_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "pricing_mode_snapshot",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "fee_assessment_state",
+      "is_nullable": "NO",
+      "column_default": "'legacy'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "service_requests",
+      "column_name": "assessed_amount_centavos",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "fee_basis",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "fee_assessed_by",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "fee_assessed_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "service_requests",
+      "column_name": "billable_pages",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "timing_model",
+      "is_nullable": "NO",
+      "column_default": "'legacy_hours'::text"
+    },
+    {
+      "data_type": "integer",
+      "table_name": "service_requests",
+      "column_name": "target_minutes_snapshot",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "sla_state",
+      "is_nullable": "NO",
+      "column_default": "'legacy'::text"
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "accepted_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "ready_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "released_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "cancelled_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "integer",
+      "table_name": "service_requests",
+      "column_name": "legacy_fee_centavos",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "eligibility_state",
+      "is_nullable": "NO",
+      "column_default": "'pending'::text"
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "requirements_reviewed_by",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "timestamp with time zone",
+      "table_name": "service_requests",
+      "column_name": "requirements_reviewed_at",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "text",
+      "table_name": "service_requests",
+      "column_name": "requirements_review_note",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "data_type": "uuid",
+      "table_name": "service_requests",
+      "column_name": "personal_appearance_recorded_by",
+      "is_nullable": "YES",
+      "column_default": null
+    }
+  ],
+  "indexes": [
+    {
+      "indexdef": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)",
+      "indexname": "profiles_pkey",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE INDEX profiles_approved_submission_idx ON public.profiles USING btree (approved_id_submission_id)",
+      "indexname": "profiles_approved_submission_idx",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE INDEX profiles_barangay_id_idx ON public.profiles USING btree (barangay_id)",
+      "indexname": "profiles_barangay_id_idx",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE INDEX profiles_current_submission_idx ON public.profiles USING btree (current_id_submission_id)",
+      "indexname": "profiles_current_submission_idx",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE INDEX profiles_deleted_at_idx ON public.profiles USING btree (deleted_at) WHERE (deleted_at IS NULL)",
+      "indexname": "profiles_deleted_at_idx",
+      "tablename": "profiles"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX barangay_officials_pkey ON public.barangay_officials USING btree (id)",
+      "indexname": "barangay_officials_pkey",
+      "tablename": "barangay_officials"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX barangay_officials_profile_id_key ON public.barangay_officials USING btree (profile_id)",
+      "indexname": "barangay_officials_profile_id_key",
+      "tablename": "barangay_officials"
+    },
+    {
+      "indexdef": "CREATE INDEX barangay_officials_barangay_id_idx ON public.barangay_officials USING btree (barangay_id)",
+      "indexname": "barangay_officials_barangay_id_idx",
+      "tablename": "barangay_officials"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX drive_registration_scores_pkey ON public.drive_registration_scores USING btree (registration_id)",
+      "indexname": "drive_registration_scores_pkey",
+      "tablename": "drive_registration_scores"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX drive_registrations_drive_id_user_id_key ON public.drive_registrations USING btree (drive_id, user_id)",
+      "indexname": "drive_registrations_drive_id_user_id_key",
+      "tablename": "drive_registrations"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX drive_registrations_pkey ON public.drive_registrations USING btree (id)",
+      "indexname": "drive_registrations_pkey",
+      "tablename": "drive_registrations"
+    },
+    {
+      "indexdef": "CREATE INDEX drive_registrations_drive_idx ON public.drive_registrations USING btree (drive_id)",
+      "indexname": "drive_registrations_drive_idx",
+      "tablename": "drive_registrations"
+    },
+    {
+      "indexdef": "CREATE INDEX drive_registrations_user_idx ON public.drive_registrations USING btree (user_id)",
+      "indexname": "drive_registrations_user_idx",
+      "tablename": "drive_registrations"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX household_members_pkey ON public.household_members USING btree (id)",
+      "indexname": "household_members_pkey",
+      "tablename": "household_members"
+    },
+    {
+      "indexdef": "CREATE INDEX household_members_center_idx ON public.household_members USING btree (checked_in_center_id)",
+      "indexname": "household_members_center_idx",
+      "tablename": "household_members"
+    },
+    {
+      "indexdef": "CREATE INDEX household_members_profile_idx ON public.household_members USING btree (profile_id)",
+      "indexname": "household_members_profile_idx",
+      "tablename": "household_members"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX payments_pkey ON public.payments USING btree (id)",
+      "indexname": "payments_pkey",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE INDEX payments_barangay_id_idx ON public.payments USING btree (barangay_id)",
+      "indexname": "payments_barangay_id_idx",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE INDEX payments_collected_by_idx ON public.payments USING btree (collected_by)",
+      "indexname": "payments_collected_by_idx",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX payments_qrph_creation_key_uidx ON public.payments USING btree (qrph_creation_key) WHERE ((method = 'qrph'::text) AND (qrph_creation_key IS NOT NULL))",
+      "indexname": "payments_qrph_creation_key_uidx",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE INDEX payments_refunded_by_idx ON public.payments USING btree (refunded_by)",
+      "indexname": "payments_refunded_by_idx",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE INDEX payments_service_request_id_idx ON public.payments USING btree (service_request_id)",
+      "indexname": "payments_service_request_id_idx",
+      "tablename": "payments"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX medical_drives_pkey ON public.medical_drives USING btree (id)",
+      "indexname": "medical_drives_pkey",
+      "tablename": "medical_drives"
+    },
+    {
+      "indexdef": "CREATE INDEX medical_drives_bgy_date_idx ON public.medical_drives USING btree (barangay_id, drive_date) WHERE ((deleted_at IS NULL) AND (is_active = true))",
+      "indexname": "medical_drives_bgy_date_idx",
+      "tablename": "medical_drives"
+    },
+    {
+      "indexdef": "CREATE INDEX medical_drives_date_idx ON public.medical_drives USING btree (drive_date) WHERE (deleted_at IS NULL)",
+      "indexname": "medical_drives_date_idx",
+      "tablename": "medical_drives"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX service_requests_pkey ON public.service_requests USING btree (id)",
+      "indexname": "service_requests_pkey",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX service_requests_reference_number_key ON public.service_requests USING btree (reference_number)",
+      "indexname": "service_requests_reference_number_key",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX service_requests_approved_submission_idx ON public.service_requests USING btree (approved_id_submission_id)",
+      "indexname": "service_requests_approved_submission_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX service_requests_barangay_id_idx ON public.service_requests USING btree (barangay_id)",
+      "indexname": "service_requests_barangay_id_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX service_requests_document_type_id_idx ON public.service_requests USING btree (document_type_id)",
+      "indexname": "service_requests_document_type_id_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX service_requests_owner_idempotency_idx ON public.service_requests USING btree (resident_id, idempotency_key) WHERE (idempotency_key IS NOT NULL)",
+      "indexname": "service_requests_owner_idempotency_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX service_requests_resident_id_idx ON public.service_requests USING btree (resident_id)",
+      "indexname": "service_requests_resident_id_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX admin_requests_reference_asc_idx ON public.service_requests USING btree (barangay_id, admin_table_keys.reference_key(reference_number) COLLATE \"C\", id) WHERE (deleted_at IS NULL)",
+      "indexname": "admin_requests_reference_asc_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE INDEX admin_requests_reference_desc_idx ON public.service_requests USING btree (barangay_id, admin_table_keys.reference_key(reference_number) COLLATE \"C\" DESC NULLS LAST, id) WHERE (deleted_at IS NULL)",
+      "indexname": "admin_requests_reference_desc_idx",
+      "tablename": "service_requests"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX incidents_pkey ON public.incidents USING btree (id)",
+      "indexname": "incidents_pkey",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_barangay_id_idx ON public.incidents USING btree (barangay_id)",
+      "indexname": "incidents_barangay_id_idx",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_category_id_idx ON public.incidents USING btree (category_id)",
+      "indexname": "incidents_category_id_idx",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_deleted_at_idx ON public.incidents USING btree (deleted_at) WHERE (deleted_at IS NULL)",
+      "indexname": "incidents_deleted_at_idx",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_reporter_id_idx ON public.incidents USING btree (reporter_id)",
+      "indexname": "incidents_reporter_id_idx",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_status_idx ON public.incidents USING btree (status)",
+      "indexname": "incidents_status_idx",
+      "tablename": "incidents"
+    },
+    {
+      "indexdef": "CREATE INDEX incidents_zone_id_idx ON public.incidents USING btree (zone_id) WHERE (zone_id IS NOT NULL)",
+      "indexname": "incidents_zone_id_idx",
+      "tablename": "incidents"
+    }
+  ],
+  "version": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "policies": [
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "policyname": "admins can create resident profiles in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> auth.uid()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "policyname": "admins can update admin profiles in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "policyname": "admins can update resident profiles in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "policyname": "residents can create their own profile",
+      "with_check": "(auth.uid() = id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(auth.uid() = id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "policyname": "residents can read their own profile",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "(auth.uid() = id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "profiles",
+      "policyname": "residents can update their own profile",
+      "with_check": "(auth.uid() = id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (role = 'admin'::text))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "policyname": "admins can read admin profiles in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)) AND (role = 'resident'::text) AND (deleted_at IS NULL))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "policyname": "admins can read residents in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "DELETE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "barangay_officials",
+      "policyname": "admins delete barangay officials in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "barangay_officials",
+      "policyname": "admins insert barangay officials in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "barangay_officials",
+      "policyname": "admins update barangay officials in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "barangay_officials",
+      "policyname": "admins read barangay officials in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM ((profiles p\n     JOIN medical_drives d ON ((d.barangay_id = p.barangay_id)))\n     JOIN drive_registrations r ON ((r.drive_id = d.id)))\n  WHERE ((p.id = ( SELECT auth.uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL) AND (r.id = drive_registration_scores.registration_id))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "drive_registration_scores",
+      "policyname": "administrators read same tenant scores",
+      "with_check": null
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM medical_drives d\n  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "drive_registrations",
+      "policyname": "admins update drive registrations",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM medical_drives d\n  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((auth.uid() = user_id) AND (status = 'pending'::drive_registration_status))",
+      "roles": [
+        "public"
+      ],
+      "tablename": "drive_registrations",
+      "policyname": "drive_registrations_own_cancel",
+      "with_check": "(status = 'cancelled'::drive_registration_status)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(auth.uid() = user_id)",
+      "roles": [
+        "public"
+      ],
+      "tablename": "drive_registrations",
+      "policyname": "drive_registrations_own_read",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (EXISTS ( SELECT 1\n   FROM medical_drives d\n  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = ( SELECT current_barangay_id() AS current_barangay_id))))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "drive_registrations",
+      "policyname": "admins read drive registrations",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = current_barangay_id()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "policyname": "admins manage barangay household members",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = current_barangay_id()))))"
+    },
+    {
+      "cmd": "ALL",
+      "qual": "(profile_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "policyname": "residents manage own household",
+      "with_check": "(profile_id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n   FROM profiles\n  WHERE (profiles.barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "household_members",
+      "policyname": "admins read barangay household",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "payments",
+      "policyname": "admins can create payments in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "payments",
+      "policyname": "admins can update payments in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(EXISTS ( SELECT 1\n   FROM service_requests sr\n  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid()))))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "payments",
+      "policyname": "residents can read payments on their own requests",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "payments",
+      "policyname": "admins can read all payments in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incident_categories",
+      "policyname": "admins manage categories",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(barangay_id = ( SELECT current_barangay_id() AS current_barangay_id))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incident_categories",
+      "policyname": "residents read own barangay categories",
+      "with_check": null
+    },
+    {
+      "cmd": "ALL",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "medical_drives",
+      "policyname": "admins manage medical drives",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((is_active = true) AND (deleted_at IS NULL))",
+      "roles": [
+        "public"
+      ],
+      "tablename": "medical_drives",
+      "policyname": "medical_drives_public_read",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "medical_drives",
+      "policyname": "admins read all medical drives",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "service_requests",
+      "policyname": "admins can create requests in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "service_requests",
+      "policyname": "admins can update requests in their barangay",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(resident_id = auth.uid())",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "service_requests",
+      "policyname": "residents can read their own service requests",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "service_requests",
+      "policyname": "residents can create their own service requests",
+      "with_check": "((resident_id = auth.uid()) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((( SELECT \"current_role\"() AS \"current_role\") = 'admin'::text) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "service_requests",
+      "policyname": "admins can read all requests in their barangay",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "admins insert incidents",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "admins manage incidents",
+      "with_check": "((\"current_role\"() = 'admin'::text) AND (barangay_id = current_barangay_id()))"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(deleted_at IS NULL)",
+      "roles": [
+        "anon"
+      ],
+      "tablename": "incidents",
+      "policyname": "guest read barangay incidents",
+      "with_check": null
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND (deleted_at IS NULL))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "incomplete accounts browse public incidents",
+      "with_check": null
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "residents insert incidents",
+      "with_check": "((barangay_id = current_barangay_id()) AND (reporter_id = auth.uid()))"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((reporter_id = auth.uid()) AND (status = 'resolved'::text) AND (deleted_at IS NULL))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "residents mark own resolved incident read",
+      "with_check": "(reporter_id = auth.uid())"
+    },
+    {
+      "cmd": "UPDATE",
+      "qual": "((reporter_id = auth.uid()) AND (status = 'open'::text) AND (deleted_at IS NULL) AND (created_at > (now() - '24:00:00'::interval)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "residents soft-delete own open incident",
+      "with_check": "(reporter_id = auth.uid())"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "((deleted_at IS NULL) AND (barangay_id = ( SELECT current_barangay_id() AS current_barangay_id)))",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "incidents",
+      "policyname": "residents read own barangay incidents",
+      "with_check": null
+    }
+  ],
+  "collations": [
+    {
+      "collname": "C",
+      "collprovider": "c",
+      "collisdeterministic": true
+    },
+    {
+      "collname": "C.utf8",
+      "collprovider": "c",
+      "collisdeterministic": true
+    },
+    {
+      "collname": "und-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true
+    }
+  ],
+  "migrations": [
+    "0001",
+    "0002",
+    "0003",
+    "0004",
+    "0005",
+    "0006",
+    "0007",
+    "0008",
+    "0009",
+    "0010",
+    "0011",
+    "0012",
+    "0013",
+    "0014",
+    "0015",
+    "0017",
+    "0018",
+    "0019",
+    "0020",
+    "0021",
+    "0022",
+    "0023",
+    "0024",
+    "0025",
+    "0026",
+    "0027",
+    "0029",
+    "0030",
+    "0031",
+    "0032",
+    "0033",
+    "0034",
+    "0035",
+    "0036",
+    "0037",
+    "0038",
+    "0039",
+    "0040",
+    "0041",
+    "0042",
+    "0043",
+    "0044",
+    "0045",
+    "0046",
+    "0047",
+    "0048",
+    "0049",
+    "0050",
+    "0051",
+    "0052",
+    "0053",
+    "0054",
+    "0055",
+    "0056",
+    "0057",
+    "0058",
+    "0059",
+    "0060",
+    "0061",
+    "0062",
+    "0063",
+    "0064",
+    "0065",
+    "0066",
+    "0067",
+    "0068",
+    "0069",
+    "0070",
+    "0071",
+    "0072",
+    "0073",
+    "0074",
+    "0075",
+    "0076",
+    "0077",
+    "0078",
+    "0079",
+    "0080",
+    "0081",
+    "0082",
+    "0083",
+    "0084",
+    "0085",
+    "0086",
+    "0087",
+    "0088",
+    "0089",
+    "0090",
+    "0091",
+    "0092",
+    "0093",
+    "0094",
+    "0095",
+    "0096",
+    "0097",
+    "0098",
+    "0099",
+    "0100",
+    "0101",
+    "0102",
+    "0103",
+    "0104",
+    "0105",
+    "0106",
+    "0107",
+    "0108",
+    "0109"
+  ],
+  "constraints": [
+    {
+      "conname": "agency_sla_clock_shape",
+      "definition": "CHECK (((timing_model <> 'agency_minutes_v1'::text) OR (((accepted_at IS NULL) OR (accepted_at >= created_at)) AND ((ready_at IS NULL) OR ((accepted_at IS NOT NULL) AND (ready_at >= accepted_at))) AND ((released_at IS NULL) OR ((ready_at IS NOT NULL) AND (released_at >= ready_at))) AND ((cancelled_at IS NULL) OR (cancelled_at >= COALESCE(ready_at, accepted_at, created_at))) AND (((sla_state = 'pre_processing'::text) AND (accepted_at IS NULL) AND (ready_at IS NULL) AND (released_at IS NULL) AND (cancelled_at IS NULL)) OR ((sla_state = ANY (ARRAY['running'::text, 'paused'::text])) AND (accepted_at IS NOT NULL) AND (ready_at IS NULL) AND (released_at IS NULL) AND (cancelled_at IS NULL)) OR ((sla_state = 'ready'::text) AND (ready_at IS NOT NULL) AND (released_at IS NULL) AND (cancelled_at IS NULL)) OR ((sla_state = 'released'::text) AND (released_at IS NOT NULL) AND (cancelled_at IS NULL)) OR ((sla_state = 'cancelled'::text) AND (cancelled_at IS NOT NULL) AND (released_at IS NULL))))))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "barangay_officials_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id) ON DELETE CASCADE",
+      "table_name": "barangay_officials"
+    },
+    {
+      "conname": "barangay_officials_official_role_check",
+      "definition": "CHECK ((official_role = ANY (ARRAY['admin'::text, 'staff'::text, 'barangay_captain'::text, 'kagawad'::text, 'sk_chairman'::text, 'secretary'::text, 'treasurer'::text, 'health_worker'::text, 'tanod'::text, 'clerk'::text])))",
+      "table_name": "barangay_officials"
+    },
+    {
+      "conname": "barangay_officials_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "barangay_officials"
+    },
+    {
+      "conname": "barangay_officials_profile_id_fkey",
+      "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE",
+      "table_name": "barangay_officials"
+    },
+    {
+      "conname": "barangay_officials_profile_id_key",
+      "definition": "UNIQUE (profile_id)",
+      "table_name": "barangay_officials"
+    },
+    {
+      "conname": "drive_registration_scores_pkey",
+      "definition": "PRIMARY KEY (registration_id)",
+      "table_name": "drive_registration_scores"
+    },
+    {
+      "conname": "drive_registration_scores_registration_id_fkey",
+      "definition": "FOREIGN KEY (registration_id) REFERENCES drive_registrations(id) ON DELETE CASCADE",
+      "table_name": "drive_registration_scores"
+    },
+    {
+      "conname": "drive_registrations_age_check",
+      "definition": "CHECK (((age >= 0) AND (age <= 130)))",
+      "table_name": "drive_registrations"
+    },
+    {
+      "conname": "drive_registrations_drive_id_fkey",
+      "definition": "FOREIGN KEY (drive_id) REFERENCES medical_drives(id)",
+      "table_name": "drive_registrations"
+    },
+    {
+      "conname": "drive_registrations_drive_id_user_id_key",
+      "definition": "UNIQUE (drive_id, user_id)",
+      "table_name": "drive_registrations"
+    },
+    {
+      "conname": "drive_registrations_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "drive_registrations"
+    },
+    {
+      "conname": "drive_registrations_user_id_fkey",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id)",
+      "table_name": "drive_registrations"
+    },
+    {
+      "conname": "household_members_checked_in_center_id_fkey",
+      "definition": "FOREIGN KEY (checked_in_center_id) REFERENCES evacuation_centers(id) ON DELETE SET NULL",
+      "table_name": "household_members"
+    },
+    {
+      "conname": "household_members_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "household_members"
+    },
+    {
+      "conname": "household_members_profile_id_fkey",
+      "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE",
+      "table_name": "household_members"
+    },
+    {
+      "conname": "incidents_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id) ON DELETE CASCADE",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "incidents_category_id_fkey",
+      "definition": "FOREIGN KEY (category_id) REFERENCES incident_categories(id) ON DELETE SET NULL",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "incidents_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "incidents_reporter_id_fkey",
+      "definition": "FOREIGN KEY (reporter_id) REFERENCES profiles(id) ON DELETE SET NULL",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "incidents_status_check",
+      "definition": "CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'resolved'::text, 'withdrawn'::text, 'unresolved'::text])))",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "incidents_zone_id_fkey",
+      "definition": "FOREIGN KEY (zone_id) REFERENCES waste_zones(id) ON DELETE SET NULL",
+      "table_name": "incidents"
+    },
+    {
+      "conname": "medical_drives_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "medical_drives"
+    },
+    {
+      "conname": "medical_drives_check",
+      "definition": "CHECK (((stock_remaining >= 0) AND (stock_remaining <= stock_total)))",
+      "table_name": "medical_drives"
+    },
+    {
+      "conname": "medical_drives_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "medical_drives"
+    },
+    {
+      "conname": "medical_drives_stock_total_check",
+      "definition": "CHECK ((stock_total > 0))",
+      "table_name": "medical_drives"
+    },
+    {
+      "conname": "payments_amount_centavos_check",
+      "definition": "CHECK ((amount_centavos >= 0))",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_collected_by_fkey",
+      "definition": "FOREIGN KEY (collected_by) REFERENCES profiles(id)",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_method_check",
+      "definition": "CHECK ((method = ANY (ARRAY['pickup'::text, 'qrph'::text])))",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_refund_amount_centavos_check",
+      "definition": "CHECK ((refund_amount_centavos >= 0))",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_refund_status_check",
+      "definition": "CHECK ((refund_status = ANY (ARRAY['none'::text, 'pending'::text, 'processing'::text, 'refunding'::text, 'refunded'::text, 'failed'::text])))",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_refunded_by_fkey",
+      "definition": "FOREIGN KEY (refunded_by) REFERENCES profiles(id)",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_service_request_id_fkey",
+      "definition": "FOREIGN KEY (service_request_id) REFERENCES service_requests(id)",
+      "table_name": "payments"
+    },
+    {
+      "conname": "payments_status_check",
+      "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'paid'::text, 'failed'::text, 'expired'::text, 'cancelled'::text, 'refunded'::text])))",
+      "table_name": "payments"
+    },
+    {
+      "conname": "profiles_approved_id_submission_fkey",
+      "definition": "FOREIGN KEY (approved_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_current_id_submission_fkey",
+      "definition": "FOREIGN KEY (current_id_submission_id, id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_custom_accent_colors_check",
+      "definition": "CHECK (((array_length(custom_accent_colors, 1) IS NULL) OR (array_length(custom_accent_colors, 1) <= 10)))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_email_verification_status_check",
+      "definition": "CHECK ((email_verification_status = ANY (ARRAY['unavailable'::text, 'unverified'::text, 'pending'::text, 'verified'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_employment_status_check",
+      "definition": "CHECK ((employment_status = ANY (ARRAY['employed'::text, 'unemployed'::text, 'student'::text, 'self_employed'::text, 'retired'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_font_preference_check",
+      "definition": "CHECK ((font_preference = ANY (ARRAY['system'::text, 'inter'::text, 'arial'::text, 'helvetica'::text, 'segoe-ui'::text, 'verdana'::text, 'tahoma'::text, 'trebuchet-ms'::text, 'georgia'::text, 'times-new-roman'::text, 'garamond'::text, 'courier-new'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_id_fkey",
+      "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_id_verification_status_check",
+      "definition": "CHECK ((id_verification_status = ANY (ARRAY['pending'::text, 'verified'::text, 'verification_failed'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_role_check",
+      "definition": "CHECK ((role = ANY (ARRAY['resident'::text, 'admin'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_sex_check",
+      "definition": "CHECK ((sex = ANY (ARRAY['male'::text, 'female'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "profiles_theme_preference_check",
+      "definition": "CHECK ((theme_preference = ANY (ARRAY['light'::text, 'dark'::text, 'system'::text])))",
+      "table_name": "profiles"
+    },
+    {
+      "conname": "request_review_audit",
+      "definition": "CHECK ((((requirements_reviewed_by IS NULL) AND (requirements_reviewed_at IS NULL) AND (requirements_review_note IS NULL)) OR ((requirements_reviewed_by IS NOT NULL) AND (requirements_reviewed_at IS NOT NULL) AND (requirements_review_note IS NOT NULL))))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_approved_submission_fkey",
+      "definition": "FOREIGN KEY (approved_id_submission_id, resident_id, barangay_id) REFERENCES id_submissions(id, resident_id, barangay_id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_assessed_amount_centavos_check",
+      "definition": "CHECK ((assessed_amount_centavos >= 0))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_assessment_shape",
+      "definition": "CHECK (((fee_assessment_state = 'legacy'::text) OR ((fee_assessment_state = 'pending'::text) AND (assessed_amount_centavos IS NULL) AND (fee_basis IS NULL) AND (fee_assessed_by IS NULL) AND (fee_assessed_at IS NULL)) OR ((fee_assessment_state = ANY (ARRAY['assessed'::text, 'waived'::text])) AND (assessed_amount_centavos IS NOT NULL) AND (fee_basis IS NOT NULL) AND (fee_assessed_at IS NOT NULL) AND ((fee_assessment_state <> 'waived'::text) OR (assessed_amount_centavos = 0)))))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_barangay_id_fkey",
+      "definition": "FOREIGN KEY (barangay_id) REFERENCES barangays(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_billable_pages_check",
+      "definition": "CHECK ((billable_pages > 0))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_contract_version_check",
+      "definition": "CHECK ((contract_version = ANY (ARRAY[1, 2])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_document_type_id_fkey",
+      "definition": "FOREIGN KEY (document_type_id) REFERENCES document_types(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_eligibility_state_check",
+      "definition": "CHECK ((eligibility_state = ANY (ARRAY['pending'::text, 'eligible'::text, 'ineligible'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_fee_assessed_by_fkey",
+      "definition": "FOREIGN KEY (fee_assessed_by) REFERENCES profiles(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_fee_assessment_state_check",
+      "definition": "CHECK ((fee_assessment_state = ANY (ARRAY['legacy'::text, 'pending'::text, 'assessed'::text, 'waived'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_legacy_fee_centavos_check",
+      "definition": "CHECK ((legacy_fee_centavos >= 0))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_legacy_foundations",
+      "definition": "CHECK (((contract_version = 2) OR ((idempotency_key IS NULL) AND (submission_payload IS NULL) AND (approved_id_submission_id IS NULL) AND (purpose_code IS NULL) AND (purpose_label IS NULL) AND (purpose_explanation IS NULL) AND (supporting_details IS NULL) AND (fee_assessment_state = 'legacy'::text) AND (assessed_amount_centavos IS NULL) AND (pricing_mode_snapshot IS NULL) AND (timing_model = 'legacy_hours'::text) AND (target_minutes_snapshot IS NULL) AND (sla_state = 'legacy'::text) AND (requirements_review_state = 'legacy'::text) AND (NOT personal_appearance_required) AND (personal_appearance_at IS NULL) AND (fee_basis IS NULL) AND (fee_assessed_by IS NULL) AND (fee_assessed_at IS NULL) AND (billable_pages IS NULL) AND (accepted_at IS NULL) AND (ready_at IS NULL) AND (released_at IS NULL) AND (cancelled_at IS NULL))))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_payment_method_check",
+      "definition": "CHECK ((payment_method = ANY (ARRAY['pickup'::text, 'qrph'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_payment_status_check",
+      "definition": "CHECK ((payment_status = ANY (ARRAY['pending'::text, 'paid'::text, 'waived'::text, 'refunded'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_personal_appearance_recorded_by_fkey",
+      "definition": "FOREIGN KEY (personal_appearance_recorded_by) REFERENCES profiles(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_pkey",
+      "definition": "PRIMARY KEY (id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_pricing_mode_snapshot_check",
+      "definition": "CHECK ((pricing_mode_snapshot = ANY (ARRAY['fixed'::text, 'assessment'::text, 'per_page'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_purpose_explanation_check",
+      "definition": "CHECK ((length(purpose_explanation) <= 1000))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_reference_number_key",
+      "definition": "UNIQUE (reference_number)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_requirements_review_note_check",
+      "definition": "CHECK (((length(btrim(requirements_review_note)) >= 1) AND (length(btrim(requirements_review_note)) <= 1000)))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_requirements_review_state_check",
+      "definition": "CHECK ((requirements_review_state = ANY (ARRAY['legacy'::text, 'pending'::text, 'complete'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_requirements_reviewed_by_fkey",
+      "definition": "FOREIGN KEY (requirements_reviewed_by) REFERENCES profiles(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_resident_id_fkey",
+      "definition": "FOREIGN KEY (resident_id) REFERENCES profiles(id)",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_sla_state_check",
+      "definition": "CHECK ((sla_state = ANY (ARRAY['legacy'::text, 'pre_processing'::text, 'running'::text, 'paused'::text, 'ready'::text, 'released'::text, 'cancelled'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_status_check",
+      "definition": "CHECK ((status = ANY (ARRAY['submitted'::text, 'in_progress'::text, 'ready_for_pickup'::text, 'completed'::text, 'cancelled'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_target_minutes_snapshot_check",
+      "definition": "CHECK ((target_minutes_snapshot > 0))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_timing_model_check",
+      "definition": "CHECK ((timing_model = ANY (ARRAY['legacy_hours'::text, 'agency_minutes_v1'::text])))",
+      "table_name": "service_requests"
+    },
+    {
+      "conname": "service_requests_v2_shape",
+      "definition": "CHECK (((contract_version = 1) OR ((idempotency_key IS NOT NULL) AND (submission_payload IS NOT NULL) AND (approved_id_submission_id IS NOT NULL) AND (purpose_code IS NOT NULL) AND (purpose_label IS NOT NULL) AND (supporting_details IS NOT NULL) AND (timing_model = 'agency_minutes_v1'::text) AND (target_minutes_snapshot IS NOT NULL) AND (sla_state <> 'legacy'::text) AND (fee_assessment_state <> 'legacy'::text) AND (requirements_review_state <> 'legacy'::text) AND (pricing_mode_snapshot IS NOT NULL))))",
+      "table_name": "service_requests"
+    }
+  ],
+  "scale_estimates": [
+    {
+      "relname": "profiles",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "barangay_officials",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "drive_registration_scores",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "drive_registrations",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "household_members",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "incidents",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "medical_drives",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "payments",
+      "n_live_tup": 0
+    },
+    {
+      "relname": "service_requests",
+      "n_live_tup": 0
+    }
+  ],
+  "api_max_rows_setting": null
+}

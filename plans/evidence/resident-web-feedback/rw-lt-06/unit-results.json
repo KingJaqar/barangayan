@@ -1,0 +1,207 @@
+{
+  "phase": "RW-LT-06",
+  "ranAt": "2026-10-12T10:06:00.726Z",
+  "modules": [
+    "lib/service-feedback.ts",
+    "lib/notify.ts"
+  ],
+  "summary": {
+    "pass": 5,
+    "fail": 0
+  },
+  "results": [
+    {
+      "id": "no-answer-classification",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "status 0 → no answer": {
+          "ok": true
+        },
+        "fetch TypeError → no answer": {
+          "ok": true
+        },
+        "AbortError → no answer": {
+          "ok": true
+        },
+        "FunctionsFetchError → no answer": {
+          "ok": true
+        },
+        "postgrest transport failure (empty code) → no answer": {
+          "ok": true
+        },
+        "storage-wrapped TypeError → no answer": {
+          "ok": true
+        },
+        "server answer with a code is NOT no-answer": {
+          "ok": true
+        },
+        "HTTP error from an Edge Function is NOT no-answer": {
+          "ok": true
+        },
+        "missing-row classification is structural": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "submission-failure-wording",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "validation stays inline (no toast title)": {
+          "ok": true
+        },
+        "lost submit response → unconfirmed, says retry unchanged does not duplicate and points to My Requests": {
+          "ok": true,
+          "detail": {
+            "kind": "unconfirmed",
+            "title": "We couldn't confirm your request.",
+            "message": "We couldn't confirm that your request was received. It may already be submitted. Submit again to recover it — it won't create a duplicate — or check My Requests before starting another."
+          }
+        },
+        "rejected submit with a bare token → plain wording, never the token": {
+          "ok": true,
+          "detail": {
+            "kind": "rejected",
+            "title": "Couldn't submit your request.",
+            "message": "We couldn't submit your request. Please check your details, then try again."
+          }
+        },
+        "mapped service message passes through": {
+          "ok": true
+        },
+        "upload failure never shows provider text and says files are kept": {
+          "ok": true,
+          "detail": {
+            "kind": "rejected",
+            "title": "Couldn't upload your file.",
+            "message": "We couldn't reach the server while uploading. Your details and files are kept here — check your connection, then submit again."
+          }
+        },
+        "session problem classified": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "payment-and-pickup-wording",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "pickup lost response → uncertain, retry creates no second record": {
+          "ok": true
+        },
+        "pickup active online payment → guidance": {
+          "ok": true
+        },
+        "pickup unknown token → generic, never the token": {
+          "ok": true
+        },
+        "method lost response → uncertain, says nothing was charged": {
+          "ok": true
+        },
+        "method refused → not uncertain, plain": {
+          "ok": true
+        },
+        "cancel refused: function-written text passes through": {
+          "ok": true
+        },
+        "cancel token → generic description": {
+          "ok": true
+        },
+        "cancel lost response → uncertain, says check status first": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "payment-event-dedup-by-attempt-and-state",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "poll + Realtime observing the same paid transition → one toast": {
+          "ok": true,
+          "detail": [
+            {
+              "kind": "success",
+              "title": "Payment received.",
+              "id": "rwn-1"
+            },
+            {
+              "kind": "warning",
+              "title": "This QR code has expired.",
+              "id": "rwn-2"
+            },
+            {
+              "kind": "success",
+              "title": "Payment received.",
+              "id": "rwn-3"
+            },
+            {
+              "kind": "success",
+              "title": "QR PH payment cancelled.",
+              "id": "rwn-4"
+            },
+            {
+              "kind": "success",
+              "title": "QR PH payment cancelled.",
+              "id": "rwn-5"
+            },
+            {
+              "kind": "success",
+              "title": "Payment received.",
+              "id": "rwn-6"
+            }
+          ]
+        },
+        "a different terminal state of the same attempt is a different event": {
+          "ok": true
+        },
+        "a new payment attempt notifies again": {
+          "ok": true
+        },
+        "a deliberate second cancel with identical text still notifies": {
+          "ok": true
+        },
+        "an outcome that belongs to a previous account is suppressed": {
+          "ok": true
+        },
+        "event IDs are scoped to the session (same attempt id under another account is its own event)": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "ownership-and-contracts",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "RW-LT-06 modules use the notify adapter, not Sonner": {
+          "ok": true
+        },
+        "payment-method step no longer announces \"Request submitted.\"": {
+          "ok": true
+        },
+        "create-payment-source still sends only the request id (amount derived server-side)": {
+          "ok": true
+        },
+        "poll interval and cancel race guard preserved": {
+          "ok": true
+        },
+        "paid toast uses an event ID from payment attempt + terminal state": {
+          "ok": true
+        },
+        "cancel path never announces cancellation for the paid outcome": {
+          "ok": true
+        },
+        "receipt retry is a select only (no function/rpc call in the success step)": {
+          "ok": true
+        },
+        "submission still goes through the idempotent attempt": {
+          "ok": true
+        }
+      }
+    }
+  ]
+}

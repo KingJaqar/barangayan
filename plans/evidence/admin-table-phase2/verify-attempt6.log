@@ -1,0 +1,21 @@
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"status":"error","code":"query-failed","message":"Could not count table results. Retry this query."}
+
+'error' !== 'success'
+
+    at ok (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/verify.mjs:68:28)
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/verify.mjs:85:27
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'error',
+  expected: 'success',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

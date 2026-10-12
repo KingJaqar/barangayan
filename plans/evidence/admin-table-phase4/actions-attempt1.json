@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "failed directory edit retains same draft, blocks navigation and retries/audits",
+      "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(audit.data.length)\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:156:192\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:23:9)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:150:9"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

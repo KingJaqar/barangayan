@@ -2,8 +2,8 @@
 
 import type { LatLng, MapMarker, Tables } from '@barangayan/shared';
 import { haversineDistanceMeters, sortByDistanceFrom } from '@barangayan/shared';
-import { useCallback, useEffect, useState } from 'react';
 
+import { useScopedRead } from '@/hooks/use-scoped-read';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export type EvacuationCenterRow = Tables<'evacuation_centers'>;
@@ -28,46 +28,29 @@ export function useEvacuationCenters(options: { barangayId: string | null; userP
   centers: EvacuationCenterWithDistance[];
   markers: MapMarker[];
   isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
+  isReady: boolean;
   error: string | null;
   refetch: () => void;
 } {
   const { barangayId, userPosition } = options;
 
-  const [rawCenters, setRawCenters] = useState<EvacuationCenterRow[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const doFetch = useCallback(() => {
-    setIsLoading(true);
-    setError(null);
+  // Read state is scoped by barangay with newest-request-wins (see use-scoped-read.ts);
+  // `isLoading` keeps its meaning (any fetch in flight) while `isInitialLoading` /
+  // `isRefreshing` / `isReady` let consumers tell a failed read from an empty one.
+  const read = useScopedRead<EvacuationCenterRow[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
-
     let query = supabase
       .from('evacuation_centers')
       .select('*')
       .eq('is_active', true)
       .is('deleted_at', null)
       .order('name', { ascending: true });
-
-    if (barangayId) {
-      query = query.eq('barangay_id', barangayId);
-    }
-
-    query.then(({ data, error: qErr }) => {
-      if (qErr) {
-        setError(qErr.message);
-      } else {
-        setRawCenters((data ?? []) as EvacuationCenterRow[]);
-      }
-      setIsLoading(false);
-    });
-  }, [barangayId]);
-
-  useEffect(() => {
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
-    // react-hooks/set-state-in-effect.
-    Promise.resolve().then(() => doFetch());
-  }, [doFetch]);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+    return query.then(({ data, error }) => ({ data: (data ?? []) as EvacuationCenterRow[], error }));
+  });
+  const rawCenters = read.data ?? [];
 
   const parsedCenters: EvacuationCenterWithDistance[] = rawCenters
     .filter((c) => {
@@ -88,5 +71,14 @@ export function useEvacuationCenters(options: { barangayId: string | null; userP
 
   const markers: MapMarker[] = centers.map((c) => ({ id: c.id, position: c.position, kind: 'evacuation', label: c.name }));
 
-  return { centers, markers, isLoading, error, refetch: doFetch };
+  return {
+    centers,
+    markers,
+    isLoading: read.isLoading,
+    isInitialLoading: read.isInitialLoading,
+    isRefreshing: read.isRefreshing,
+    isReady: read.isReady,
+    error: read.error,
+    refetch: read.refetch,
+  };
 }

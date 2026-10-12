@@ -74,9 +74,7 @@ export default function SettingsScreen() {
   const [deleteNotice, setDeleteNotice] = useState<string | null>(null);
 
   async function handleLogout() {
-    // Stays on this screen the whole time — logout() flips into Guest Mode instead of
-    // returning to Onboarding, so this just re-renders with the guest view once it
-    // resolves (see useAuth's logout for why isGuest is set before the signOut await).
+    // Auth removes the signed-in stack and opens Log In after logout.
     setIsLoggingOut(true);
     await logout();
     setIsLoggingOut(false);
@@ -350,11 +348,14 @@ export default function SettingsScreen() {
                 <SettingsIcon name="mail" />
                 <View style={styles.rowText}>
                   <ThemedText>Email Verification</ThemedText>
-                  <ThemedText type="small" themeColor="textSecondary">
-                    {profile?.email_verification_status === 'verified'
-                      ? 'Your email is verified ✓'
-                      : 'Verify Your Email'}
-                  </ThemedText>
+                  {profile?.email_verification_status === 'verified' ? (
+                    <View style={styles.verifiedStatus} accessibilityLabel="Your email is verified">
+                      <Ionicons name="checkmark-circle" size={16} color={theme.accentGreen} />
+                      <ThemedText type="smallBold" style={{ color: theme.accentGreen }}>Verified</ThemedText>
+                    </View>
+                  ) : (
+                    <ThemedText type="small" themeColor="textSecondary">Verify Your Email</ThemedText>
+                  )}
                 </View>
                 <Chevron />
               </Pressable>
@@ -707,6 +708,11 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     gap: Spacing.half,
+  },
+  verifiedStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.one,
   },
   rowLabel: {
     flex: 1,

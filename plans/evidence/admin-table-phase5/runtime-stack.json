@@ -1,0 +1,29 @@
+{
+  "createdAt": "2026-10-11T23:41:20.880Z",
+  "owner": "admin-table-phase5-01a12d51",
+  "names": [
+    "barangayan-admin-phase5-db",
+    "barangayan-admin-phase5-rest",
+    "barangayan-admin-phase5-auth",
+    "barangayan-admin-phase5-realtime"
+  ],
+  "network": "barangayan-admin-phase5",
+  "images": {
+    "db": "public.ecr.aws/supabase/postgres:17.6.1.155",
+    "rest": "public.ecr.aws/supabase/postgrest:v14.5",
+    "auth": "public.ecr.aws/supabase/gotrue:v2.197.0",
+    "realtime": "public.ecr.aws/supabase/realtime:v2.135.3"
+  },
+  "highestMigration": "0109",
+  "copiedAccountRows": 0,
+  "alignment": {
+    "columns": true,
+    "constraints": true,
+    "indexes": false,
+    "policies": false,
+    "rls": true,
+    "collations": true,
+    "migrations": true
+  },
+  "note": "Schema-only source copy plus infrastructure migration metadata; no application/source user data. Fresh signing keys; loopback ports only."
+}

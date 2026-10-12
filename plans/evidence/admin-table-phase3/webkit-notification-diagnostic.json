@@ -1,0 +1,72 @@
+{
+  "stages": [
+    "Authenticated untouched dashboard",
+    "Three untouched dashboard loads",
+    "Requests navigation"
+  ],
+  "errors": [],
+  "console": [],
+  "responses": [
+    {
+      "stage": "login",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "login",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "unchanged dashboard",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "pilot",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    },
+    {
+      "stage": "pilot",
+      "status": 200,
+      "origin": "http://127.0.0.1:3140",
+      "allowOrigin": "http://127.0.0.1:3140"
+    }
+  ],
+  "failures": []
+}

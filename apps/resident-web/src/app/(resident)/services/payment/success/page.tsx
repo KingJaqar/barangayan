@@ -2,6 +2,7 @@ import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
+import { ReadFailure } from '@/components/shared/read-failure';
 import { Button } from '@/components/ui/button';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -23,7 +24,9 @@ export default async function PaymentSuccessPage({
   const { data: payment, error } = await client.from('payments')
     .select('*, service_requests!inner(reference_number, resident_id)').eq('service_request_id', requestId ?? '')
     .eq('service_requests.resident_id', user.id).eq('status', 'paid').order('created_at', { ascending: false }).limit(1).maybeSingle();
-  if (error || !payment) return <div role="alert"><p>No confirmed payment receipt is available for this request.</p><Link href={requestId ? `/services/payment/${requestId}` : '/services/requests'}>Return to request payment</Link></div>;
+  // A failed read is not "no receipt": retrying re-reads only; it never creates a payment.
+  if (error) return <div className="mx-auto max-w-xl"><ReadFailure message="We couldn't load your payment receipt. If you already paid, don't pay again." /></div>;
+  if (!payment) return <div role="alert"><p>No confirmed payment receipt is available for this request.</p><Link href={requestId ? `/services/payment/${requestId}` : '/services/requests'}>Return to request payment</Link></div>;
   const amountCentavos = payment.amount_centavos;
   const paidAt = payment.paid_at ?? payment.created_at;
   const refNumber = payment.service_requests?.reference_number;

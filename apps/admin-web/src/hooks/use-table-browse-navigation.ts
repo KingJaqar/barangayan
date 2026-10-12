@@ -38,6 +38,8 @@ export function useTableBrowseNavigation(config: BrowseConfig, settleEdit?: () =
     window.addEventListener('popstate', onHistory);
     return () => window.removeEventListener('popstate', onHistory);
   }, [cancelDebounce]);
+  // Also cancel when an intermediate navigation effect has no cleanup of its own.
+  useEffect(() => cancelDebounce, [cancelDebounce]);
   async function commit(change: BrowseChange) {
     cancelDebounce();
     const version = generation.current;

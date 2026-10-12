@@ -215,3 +215,200 @@ main {
   left: auto;
   right: 12px;
 }
+
+/* ─── Loading and motion primitives (resident-web feedback plan RW-LT-01) ───
+ * Tokens mirror src/lib/motion.ts. `rw-hint` hides decorative pending visuals for the
+ * first 120 ms so fast operations never flash; labels, disabled state, and aria-busy
+ * are set by the owning control immediately. */
+:root {
+  --motion-hint-delay: 120ms;
+  --motion-hint-fade: 150ms;
+  --motion-spin: 800ms;
+  --motion-pulse: 1.6s;
+  --motion-reveal: 200ms;
+  --motion-reveal-distance: 6px;
+  --motion-drawer-in: 240ms;
+  --motion-drawer-out: 180ms;
+  --motion-dialog-in: 180ms;
+  --motion-dialog-out: 140ms;
+  --skeleton: color-mix(in srgb, var(--foreground) 9%, var(--background));
+}
+.dark {
+  --skeleton: color-mix(in srgb, var(--foreground) 13%, var(--background));
+}
+
+@keyframes rw-hint-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rw-hint-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes rw-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+@keyframes rw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rw-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-distance));
+  }
+}
+
+.rw-hint {
+  animation: rw-hint-in var(--motion-hint-fade) ease-out var(--motion-hint-delay) both;
+}
+.rw-hint-out {
+  animation: rw-hint-out var(--motion-hint-fade) ease-out var(--motion-hint-delay) both;
+}
+.rw-spinner {
+  animation: rw-spin var(--motion-spin) linear infinite;
+}
+.rw-skeleton,
+.rw-skeleton-static {
+  background-color: var(--skeleton);
+}
+.rw-skeleton {
+  animation:
+    rw-hint-in var(--motion-hint-fade) ease-out var(--motion-hint-delay) both,
+    rw-pulse var(--motion-pulse) ease-in-out calc(var(--motion-hint-delay) + var(--motion-hint-fade)) infinite;
+}
+.rw-skeleton-static {
+  animation: rw-hint-in var(--motion-hint-fade) ease-out var(--motion-hint-delay) both;
+}
+.rw-reveal {
+  animation: rw-reveal var(--motion-reveal) ease-out var(--rw-reveal-delay, 0ms) both;
+}
+/* Navigation pending hint (components/shell/link-pending-hint.tsx, RW-LT-03): always
+ * rendered at a fixed size, invisible until its link has been pending for 120 ms. */
+.rw-link-hint {
+  opacity: 0;
+}
+.rw-link-hint[data-pending] {
+  animation:
+    rw-hint-in var(--motion-hint-fade) ease-out var(--motion-hint-delay) both,
+    rw-pulse var(--motion-pulse) ease-in-out calc(var(--motion-hint-delay) + var(--motion-hint-fade)) infinite;
+}
+
+/* Reduced motion: static skeletons and pending symbols, no movement or stagger, and
+ * instant scrolling. Decorative visuals still wait 120 ms, but appear without a fade.
+ * These unlayered rules override Tailwind/tw-animate utilities (which are layered),
+ * covering placeholders not yet migrated to the primitives above. */
+@media (prefers-reduced-motion: reduce) {
+  .rw-hint,
+  .rw-skeleton,
+  .rw-skeleton-static,
+  .rw-link-hint[data-pending] {
+    animation: rw-hint-in 0s linear var(--motion-hint-delay) both;
+  }
+  .rw-hint-out {
+    animation: rw-hint-out 0s linear var(--motion-hint-delay) both;
+  }
+  .rw-spinner,
+  .rw-reveal,
+  .animate-spin,
+  .animate-pulse,
+  .animate-ping,
+  .animate-bounce,
+  .shimmer {
+    animation: none;
+  }
+  .animate-in,
+  .animate-out,
+  [class*='animate-in'],
+  [class*='animate-out'] {
+    --tw-enter-translate-x: 0;
+    --tw-enter-translate-y: 0;
+    --tw-enter-scale: 1;
+    --tw-enter-rotate: 0;
+    --tw-exit-translate-x: 0;
+    --tw-exit-translate-y: 0;
+    --tw-exit-scale: 1;
+    --tw-exit-rotate: 0;
+  }
+  html,
+  .scroll-smooth {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Toasts (resident-web feedback plan RW-LT-02; host: components/ui/sonner.tsx) ───
+ * Sonner keeps its own enter/exit motion and reduced-motion handling. These rules add
+ * semantic icon colors that stay readable with any accent, a 28 px dismiss control
+ * with a 44 px hit area inside the toast, wrapping for long text, and pointer access
+ * while a Radix modal sets `pointer-events: none` on <body>. Selectors are raised
+ * above Sonner's injected theme rules on purpose. */
+:root {
+  --toast-success: var(--status-success);
+  --toast-warning: var(--status-warning);
+  --toast-error: var(--status-error);
+  --toast-info: #1d4ed8;
+}
+.dark {
+  --toast-success: #4ade80;
+  --toast-warning: #fb923c;
+  --toast-error: #f87171;
+  --toast-info: #60a5fa;
+}
+[data-sonner-toaster] [data-sonner-toast][data-visible='true'] {
+  pointer-events: auto;
+}
+[data-sonner-toaster][data-theme] [data-sonner-toast][data-styled='true'] {
+  padding-right: 52px;
+  align-items: flex-start;
+}
+[data-sonner-toaster] [data-sonner-toast] [data-title],
+[data-sonner-toaster] [data-sonner-toast] [data-description] {
+  overflow-wrap: anywhere;
+}
+[data-sonner-toaster] [data-sonner-toast] [data-description] {
+  color: color-mix(in srgb, var(--foreground) 72%, var(--background));
+}
+[data-sonner-toaster] [data-sonner-toast][data-type='success'] [data-icon] { color: var(--toast-success); }
+[data-sonner-toaster] [data-sonner-toast][data-type='warning'] [data-icon] { color: var(--toast-warning); }
+[data-sonner-toaster] [data-sonner-toast][data-type='error'] [data-icon] { color: var(--toast-error); }
+[data-sonner-toaster] [data-sonner-toast][data-type='info'] [data-icon] { color: var(--toast-info); }
+[data-sonner-toaster][data-theme] [data-sonner-toast][data-styled] [data-close-button] {
+  left: auto;
+  right: 12px;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--muted-foreground);
+}
+[data-sonner-toaster][data-theme] [data-sonner-toast][data-styled] [data-close-button]:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+}
+[data-sonner-toaster][data-theme] [data-sonner-toast][data-styled] [data-close-button]:focus-visible {
+  outline: 2px solid var(--ring, var(--accent));
+  outline-offset: 1px;
+}
+[data-sonner-toaster] [data-sonner-toast] [data-close-button] svg {
+  width: 14px;
+  height: 14px;
+}
+[data-sonner-toaster] [data-sonner-toast] [data-close-button]::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}

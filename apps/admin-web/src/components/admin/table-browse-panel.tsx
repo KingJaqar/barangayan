@@ -17,11 +17,17 @@ export function TableBrowsePanel({ label, controls, pagination, children, pendin
   return <section aria-label={label} className="table-browse-panel" aria-busy={pending}>
     <div data-browse-controls>{controls}</div>
     <ViewportContext.Provider value={{ bounded: true, label, resetKey: queryIdentity }}>
-      {error ? <div role="alert">{error} {onRetry && <button type="button" onClick={onRetry}>Retry</button>}</div>
-        : <div inert={pending || undefined}>{children}</div>}
+      {error ? <div role="alert" className="table-browse-error">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+          strokeWidth="2.25" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 8v4m0 4h.01" /></svg><span>{error}</span>
+        {onRetry && <button type="button" onClick={onRetry}>Retry</button>}</div>
+        : <div className="table-browse-body" data-pending={pending || undefined} inert={pending || undefined}>
+          <div className="table-browse-progress" aria-hidden="true" />
+          {children}
+        </div>}
     </ViewportContext.Provider>
     <div data-browse-footer>{!error && pagination}</div>
     <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">{lastAnnouncement}</div>
-    {pending && <span className="text-sm text-zinc-500">Updating results…</span>}
+    {pending && <span className="sr-only">Updating results…</span>}
   </section>;
 }

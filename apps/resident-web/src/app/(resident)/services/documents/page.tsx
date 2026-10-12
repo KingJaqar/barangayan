@@ -1,3 +1,4 @@
+import { ReadFailure } from '@/components/shared/read-failure';
 import { DocumentsList } from '@/components/services/documents-list';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -18,7 +19,7 @@ export default async function DocumentsPage() {
   const supabase = await createSupabaseServerClient();
   const { user } = await getOptionalUser();
 
-  const { data: documentTypes } = await supabase
+  const { data: documentTypes, error } = await supabase
     .from('document_types')
     .select('*')
     .eq('is_active', true)
@@ -31,7 +32,12 @@ export default async function DocumentsPage() {
         <p className="text-sm text-muted-foreground">Browse the documents your barangay can issue, and what each one requires.</p>
       </div>
 
-      <DocumentsList documentTypes={documentTypes ?? []} isAuthenticated={user !== null} />
+      {/* A failed read is not an empty catalog. */}
+      {error ? (
+        <ReadFailure message="We couldn't load the document catalog." />
+      ) : (
+        <DocumentsList documentTypes={documentTypes ?? []} isAuthenticated={user !== null} />
+      )}
     </div>
   );
 }

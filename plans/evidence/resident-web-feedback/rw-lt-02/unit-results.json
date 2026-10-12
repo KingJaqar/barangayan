@@ -1,0 +1,187 @@
+{
+  "phase": "RW-LT-02",
+  "ranAt": "2026-10-12T11:10:33.605Z",
+  "module": "apps/resident-web/src/lib/notify.ts",
+  "summary": {
+    "pass": 8,
+    "fail": 0
+  },
+  "results": [
+    {
+      "id": "durations-by-kind",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "success/info 4 s, warning 6 s, error 8 s": {
+          "ok": true,
+          "detail": [
+            [
+              "success",
+              4000
+            ],
+            [
+              "info",
+              4000
+            ],
+            [
+              "warning",
+              6000
+            ],
+            [
+              "error",
+              8000
+            ]
+          ]
+        },
+        "description passed through": {
+          "ok": true
+        },
+        "adapter class on every toast": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "repeated-callback-same-attempt",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "one terminal toast per attempt": {
+          "ok": true,
+          "detail": {
+            "first": "rwn-1",
+            "second": null,
+            "third": null
+          }
+        }
+      }
+    },
+    {
+      "id": "deliberate-second-attempt-notifies",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "identical text from a new attempt still notifies": {
+          "ok": true
+        },
+        "distinct Sonner toast ids": {
+          "ok": true
+        },
+        "calls without an operation id are never suppressed": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "event-id-overlapping-observers",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "same event notifies once; a different attempt/state notifies": {
+          "ok": true
+        },
+        "event id includes the session key": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "session-change-clears-and-suppresses",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "first session report does not dismiss": {
+          "ok": true
+        },
+        "previous session's adapter toast dismissed": {
+          "ok": true,
+          "detail": [
+            "rwn-1"
+          ]
+        },
+        "previous session's pending attempt suppressed": {
+          "ok": true
+        },
+        "same session re-report is a no-op": {
+          "ok": true
+        },
+        "keepOnSessionChange toast survives; others dismissed": {
+          "ok": true,
+          "detail": {
+            "kept": "rwn-2",
+            "dismissedB": [
+              "rwn-3"
+            ]
+          }
+        },
+        "account A outcome never reaches account B": {
+          "ok": true
+        },
+        "new account notifies normally": {
+          "ok": true
+        },
+        "event ids differ per account": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "bounded-bookkeeping",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "bookkeeping is bounded (oldest of >200 tracked ids evicted)": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "focus-hold-and-release",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "host maps a toast element to its adapter id": {
+          "ok": true
+        },
+        "direct Sonner toasts are not mapped": {
+          "ok": true
+        },
+        "hold → Infinity once, release → full duration once, same toast and text": {
+          "ok": true,
+          "detail": [
+            {
+              "id": "rwn-1",
+              "duration": "Infinity",
+              "title": "Login failed"
+            },
+            {
+              "id": "rwn-1",
+              "duration": "8000",
+              "title": "Login failed"
+            }
+          ]
+        },
+        "closed toasts leave bookkeeping": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "ownership-sonner-imports",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "migrated pilot no longer imports Sonner": {
+          "ok": true,
+          "detail": 11
+        },
+        "adapter owns no fetch/mutation/interception": {
+          "ok": true
+        },
+        "read pilots emit no toast (policy: local loading/error only)": {
+          "ok": true
+        }
+      }
+    }
+  ]
+}

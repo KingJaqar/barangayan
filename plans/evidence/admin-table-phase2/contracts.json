@@ -1,0 +1,451 @@
+{
+  "requests": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "fields": [
+      "status",
+      "doc"
+    ],
+    "sorts": [
+      {
+        "key": "reference",
+        "category": "reference"
+      },
+      {
+        "key": "resident",
+        "category": "text"
+      },
+      {
+        "key": "document",
+        "category": "text"
+      },
+      {
+        "key": "status",
+        "category": "text"
+      },
+      {
+        "key": "payment_status",
+        "category": "text"
+      },
+      {
+        "key": "submitted",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "submitted",
+      "processing",
+      "pickup",
+      "completed",
+      "cancelled"
+    ]
+  },
+  "transactions": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3"
+    ],
+    "fields": [
+      "status",
+      "method",
+      "amount"
+    ],
+    "sorts": [
+      {
+        "key": "created",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      },
+      {
+        "key": "reference",
+        "category": "reference"
+      },
+      {
+        "key": "resident",
+        "category": "text"
+      },
+      {
+        "key": "document",
+        "category": "text"
+      },
+      {
+        "key": "method",
+        "category": "text"
+      },
+      {
+        "key": "status",
+        "category": "text"
+      },
+      {
+        "key": "amount",
+        "category": "number"
+      },
+      {
+        "key": "paid",
+        "category": "date"
+      },
+      {
+        "key": "refund",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "cash",
+      "qrph",
+      "pending"
+    ]
+  },
+  "residents": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3",
+      "x4",
+      "x5",
+      "x6",
+      "x7",
+      "x8",
+      "x9",
+      "x10",
+      "x11"
+    ],
+    "fields": [
+      "email_verified",
+      "with_id",
+      "id_status",
+      "household_count"
+    ],
+    "sorts": [
+      {
+        "key": "name",
+        "category": "text"
+      },
+      {
+        "key": "first_name",
+        "category": "text"
+      },
+      {
+        "key": "last_name",
+        "category": "text"
+      },
+      {
+        "key": "email",
+        "category": "text"
+      },
+      {
+        "key": "email_verification",
+        "category": "text"
+      },
+      {
+        "key": "id_status",
+        "category": "text"
+      },
+      {
+        "key": "joined",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "total",
+      "verified",
+      "unverified",
+      "withId",
+      "withoutId",
+      "idPending",
+      "idVerified",
+      "idFailed",
+      "householdMembers"
+    ]
+  },
+  "incidents": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3",
+      "x4"
+    ],
+    "fields": [
+      "status",
+      "category"
+    ],
+    "sorts": [
+      {
+        "key": "submitted",
+        "category": "date"
+      },
+      {
+        "key": "title",
+        "category": "text"
+      },
+      {
+        "key": "category",
+        "category": "text"
+      },
+      {
+        "key": "reporter",
+        "category": "text"
+      },
+      {
+        "key": "status",
+        "category": "text"
+      },
+      {
+        "key": "confirmations",
+        "category": "number"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "open",
+      "in_progress",
+      "resolved",
+      "withdrawn",
+      "unresolved",
+      "total"
+    ]
+  },
+  "health": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3"
+    ],
+    "fields": [
+      "type",
+      "active",
+      "drive_date"
+    ],
+    "sorts": [
+      {
+        "key": "created",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      },
+      {
+        "key": "title",
+        "category": "text"
+      },
+      {
+        "key": "category",
+        "category": "text"
+      },
+      {
+        "key": "drive_date",
+        "category": "date"
+      },
+      {
+        "key": "active",
+        "category": "boolean"
+      },
+      {
+        "key": "registrations",
+        "category": "number"
+      },
+      {
+        "key": "stock",
+        "category": "number"
+      }
+    ],
+    "summaryKeys": [
+      "total",
+      "upcoming",
+      "today",
+      "past",
+      "inactive",
+      "registrations"
+    ]
+  },
+  "applicants": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "fields": [
+      "status",
+      "type",
+      "pwd"
+    ],
+    "sorts": [
+      {
+        "key": "registered",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      },
+      {
+        "key": "number",
+        "category": "reference"
+      },
+      {
+        "key": "resident",
+        "category": "text"
+      },
+      {
+        "key": "drive",
+        "category": "text"
+      },
+      {
+        "key": "category",
+        "category": "text"
+      },
+      {
+        "key": "status",
+        "category": "text"
+      },
+      {
+        "key": "age",
+        "category": "number"
+      },
+      {
+        "key": "priority",
+        "category": "number"
+      },
+      {
+        "key": "drive_date",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "pending",
+      "confirmed",
+      "attended",
+      "cancelled",
+      "total",
+      "pwd"
+    ]
+  },
+  "households": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3"
+    ],
+    "fields": [
+      "checked_in",
+      "relation"
+    ],
+    "sorts": [
+      {
+        "key": "name",
+        "category": "text"
+      },
+      {
+        "key": "head",
+        "category": "text"
+      },
+      {
+        "key": "relation",
+        "category": "text"
+      },
+      {
+        "key": "role",
+        "category": "text"
+      },
+      {
+        "key": "checked_in",
+        "category": "boolean"
+      },
+      {
+        "key": "center",
+        "category": "text"
+      },
+      {
+        "key": "added",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      },
+      {
+        "key": "check_in_date",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "total",
+      "checked_in",
+      "not_checked_in",
+      "spouse",
+      "child",
+      "parent",
+      "other"
+    ]
+  },
+  "staff": {
+    "searchColumns": [
+      "x0",
+      "x1",
+      "x2",
+      "x3",
+      "x4"
+    ],
+    "fields": [
+      "role"
+    ],
+    "sorts": [
+      {
+        "key": "name",
+        "category": "text"
+      },
+      {
+        "key": "role",
+        "category": "text"
+      },
+      {
+        "key": "email",
+        "category": "text"
+      },
+      {
+        "key": "hired",
+        "category": "date"
+      },
+      {
+        "key": "created",
+        "category": "date"
+      },
+      {
+        "key": "modified",
+        "category": "date"
+      },
+      {
+        "key": "profile_modified",
+        "category": "date"
+      }
+    ],
+    "summaryKeys": [
+      "total",
+      "admin",
+      "staff"
+    ]
+  }
+}

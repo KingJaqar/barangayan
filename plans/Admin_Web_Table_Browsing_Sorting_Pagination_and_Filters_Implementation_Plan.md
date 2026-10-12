@@ -1,8 +1,8 @@
 # Admin Web Table Browsing, Sorting, Pagination, and Filters
 
-**Status:** **Phase 0 — Baseline and contract verification and Phase 1 — Shared frontend foundation are COMPLETE.** The current execution request implements only section 4's Phase 1; verified results and limitations are recorded in section 14 and `plans/evidence/admin-table-phase1/README.md`. Shared browsing is opt-in. The eight route integrations, database-query work and Phases 2–6 remain unstarted. Sections 6–13 retain baseline audit history; their earlier baseline-only scope restrictions do not override this execution request. Unrelated resident/shared/OTP changes are preserved; no migration, deployment, production-data or resident Android UI change was made.
+**Status:** **Phases 0–5 are COMPLETE.** Phase 5 integrates Incident Reports, Health and Medical Applicants with the shared foundation and server adapters; section 18 records authenticated browsing, aggregates, actions, details, Realtime, permissions and verification results. **Open owner decision:** a pre-existing incident-removal RLS defect (proposed fix: migration `0113`, not yet authorized or created) is tracked with the shared layout-shift observation under Phase 6's carried-forward items. Migrations 0110–0112 remain release prerequisites and were applied only to disposable fixtures; Phase 5 added none. Phase 6 remains unstarted. Sections 6–17 retain historical evidence. No deployment, production-data or resident Android UI change is authorized by this execution.
 
-**Original inspection:** 2026-10-08, Asia/Manila. **Saved revision:** 2026-10-11, Asia/Manila.
+**Original inspection:** 2026-10-08, Asia/Manila. **Saved revision:** 2026-10-12, Asia/Manila.
 
 **Evidence:** Original inspection findings are revalidated and corrected by section 6 and [Phase 0 evidence](C:/Users/User/barangayan/plans/evidence/admin-table-phase0/README.md). Static source, mocked-page tests, local read-only SQL fixtures, hosted catalog reads, and zero-row anon API probes are distinguished from authenticated/browser verification.
 
@@ -445,76 +445,76 @@ Fixture-based component/browser tests prove full row/column reachability, aligne
 
 ### Phase 2 — Data-query correctness
 
-**Current execution restriction:** NOT STARTED. The current execution request is limited to Phase 1. Historical baseline-only runs remain in sections 7–13; section 14 records the completed shared foundation. This later phase has not been implemented.
+**Execution status (2026-10-11): COMPLETE.** Server adapters, invoker read projections and measured read-performance prerequisites pass the section 15 acceptance checks. Route integration remains Phases 3–5.
 
 **Dependency:** Phase 0 contracts; integrates with Phase 1 interfaces.
 
 **Work**
 
-- Implement server-only adapters using existing queries wherever sufficient.
-- Move complete filtering and ordering before pagination.
-- Implement exact totals, bounded page correction, and independent summaries.
-- Add only necessary read helpers and measured indexes.
-- Preserve joined membership, tenant access, score privacy, and literal search semantics.
-- Verify missing values, numeric references, label ordering, and stable ties.
+- [x] Implement server-only adapters using existing queries wherever sufficient.
+- [x] Move complete filtering and ordering before pagination.
+- [x] Implement exact totals, bounded page correction, and independent summaries.
+- [x] Add only necessary read helpers and measured indexes.
+- [x] Preserve joined membership, tenant access, score privacy, and literal search semantics.
+- [x] Verify missing values, numeric references, label ordering, and stable ties.
 
 **Completion gate**
 
-A 1,505-record fixture is completely searchable and pageable. Combined unchanged pages match the independently expected ordering. Counts and page membership are correct; authorization and query-performance evidence pass.
+A 1,505-record fixture is completely searchable and pageable. Combined unchanged pages match the independently expected ordering. Counts and page membership are correct; authorization and query-performance evidence pass. **Verified:** all 132 sort/direction runs, five sizes, 33 filter combinations, permissions and summary checks pass. All nine representative 10k-row adapter/API benchmarks meet 500ms p95 (44.75–476.82ms). See section 15 for scope and limits.
 
 ### Phase 3 — Requests and Transactions
 
-**Current execution restriction:** NOT STARTED. The current execution request is limited to Phase 1. Historical baseline-only runs remain in sections 7–13; section 14 records the completed shared foundation. This later phase has not been implemented.
+**Execution status (2026-10-12): COMPLETE for this phase's two-route integration gate.** Section 16 and the [Phase 3 evidence](C:/Users/User/barangayan/plans/evidence/admin-table-phase3/README.md) record the implemented flows and executed checks. Production release and the remaining routes remain outside this request.
 
 **Dependency:** Phases 1 and 2.
 
 **Work**
 
-- Integrate both wide tables as the initial production-flow pilot.
-- Apply Reference ascending and payment Date created descending.
-- Move Requests All first while retaining Active.
-- Preserve request contract guards, v2 review, payment restrictions, refunds, lookups, audit logging, and refresh behavior.
-- Introduce explicit query failures and retry states.
+- [x] Integrate both wide tables as the initial production-flow pilot.
+- [x] Apply Reference ascending and payment Date created descending.
+- [x] Move Requests All first while retaining Active.
+- [x] Preserve request contract guards, v2 review, payment restrictions, refunds, lookups, audit logging, and refresh behavior.
+- [x] Introduce explicit query failures and retry states.
 
 **Completion gate**
 
-Defaults, global related searches, reference ordering, pagination, persistent horizontal access, rapid navigation, and existing row actions pass end-to-end.
+Defaults, global related searches, reference ordering, pagination, persistent horizontal access, rapid navigation, and existing row actions pass end-to-end. **Verified:** both 1,505-row routes, all 34 sort/direction combinations, five sizes, independent errors/retries, action/creation/archive flows, draft failure/retry, actual Realtime deferral and ten mount cycles pass. Chrome/Firefox/WebKit integrated pilot checks, eight route permission cases, 65 unit tests, full admin lint, typecheck and webpack build pass. External refund submission is mocked; release/environment limitations remain explicit in section 16.
 
 ### Phase 4 — Directory, Households, and Staff
 
-**Current execution restriction:** NOT STARTED. The current execution request is limited to Phase 1. Historical baseline-only runs remain in sections 7–13; section 14 records the completed shared foundation. This later phase has not been implemented.
+**Execution status (2026-10-12): COMPLETE for this phase’s three-route integration gate.** Section 17 and the [Phase 4 evidence](C:/Users/User/barangayan/plans/evidence/admin-table-phase4/README.md) record implemented flows and executed verification. Later phases remain unstarted.
 
-**Dependency:** Successful Phase 3 pilot.
+**Dependency:** Successful Phase 3 pilot — satisfied by section 16.
 
 **Work**
 
-- Integrate name-based sorting and additional supported fields.
-- Add required modification-date projections.
-- Preserve directory JSON household counts and normalized member rows as separate concepts.
-- Implement stable selected-detail identity and focus restoration.
-- Preserve member check-in cleanup and every staff self-edit/removal guard.
+- [x] Integrate name-based sorting and additional supported fields.
+- [x] Add required modification-date projections and DTO/mutation-return alignment.
+- [x] Preserve directory JSON household counts and normalized member rows as separate concepts.
+- [x] Implement stable selected-detail identity and focus restoration.
+- [x] Preserve member check-in cleanup and every staff self-edit/removal guard.
 
 **Completion gate**
 
-Long, mixed-case, missing, and duplicate names sort correctly across pages. Detail selection remains tied to the same ID. Search, ID review, member actions, and staff permissions remain correct.
+Long, mixed-case, missing, and duplicate name fields sort correctly across pages. Detail selection remains tied to the same ID. Search, ID review, member actions, and staff permissions remain correct. **Verified:** all 48 advertised sort/direction combinations, complete concatenated pages on the three 1,500+ row routes, five sizes, combined filters, summaries, beyond-cap search/options, errors/retries and one page correction pass. Stable details, failed drafts, ID verification/revocation/history/audits, member creation/removal/check-in cleanup, staff guards, actual Realtime deferral and ten mount cycles pass. Chrome/Firefox/WebKit, 12 route permission cases, 33 shared browser fixture groups, 65 unit tests, full admin lint, typecheck and webpack production build pass. Storage images/signing are synthetic; release/environment limitations remain explicit in section 17.
 
 ### Phase 5 — Incidents, Health, and Applicants
 
-**Current execution restriction:** NOT STARTED. The current execution request is limited to Phase 1. Historical baseline-only runs remain in sections 7–13; section 14 records the completed shared foundation. This later phase has not been implemented.
+**Execution status (2026-10-12): COMPLETE for this phase’s three-route integration gate.** Section 18 and the [Phase 5 evidence](C:/Users/User/barangayan/plans/evidence/admin-table-phase5/README.md) record implemented flows and executed verification. Phase 6 remains unstarted.
 
-**Dependency:** Phases 1 and 2; shared pilot corrections from Phases 3–4.
+**Dependency:** Phases 1 and 2; shared pilot corrections from Phases 3–4 — satisfied by sections 14–17.
 
 **Work**
 
-- Apply Submitted and Registered defaults to their verified creation fields.
-- Change Health's default to creation date descending while retaining separate Drive date sorting.
-- Move All first in Incident and Health without changing initial selection.
-- Add complete registration aggregates and global applicant name sorting.
-- Preserve score privacy, inner-score membership, drive buckets, registration actions, and existing subscriptions.
+- [x] Apply Submitted and Registered defaults to their verified creation fields.
+- [x] Change Health's default to creation date descending while retaining separate Drive date sorting.
+- [x] Move All first in Incident and Health without changing initial selection.
+- [x] Add complete registration aggregates and global applicant name sorting.
+- [x] Preserve score privacy, inner-score membership, drive buckets, registration actions, and existing subscriptions.
 
 **Completion gate**
 
-Date meanings are correct throughout controls, queries, cells, and details. Today remains included in Upcoming. Counts, aggregate sorts, protected scores, and nested Applicants browsing pass end-to-end.
+Date meanings are correct throughout controls, queries, cells, and details. Today remains included in Upcoming. Counts, aggregate sorts, protected scores, and nested Applicants browsing pass end-to-end. **Verified:** all 50 advertised sort/direction combinations and complete unchanged concatenations on the three routes; five sizes, combined filters, independent summaries, Today ⊂ Upcoming, >1,000 and zero registration aggregates, missing-score exclusion, global resident-name order, errors/retries and one page correction. Creation, status, active-state, registration RPC and cancellation actions, failed drafts, detail dates and revalidation, actual Realtime deferral and ten mount cycles pass. Chrome/Firefox/WebKit, 12 route and 18 query permission cases, 33 shared fixture groups, 68 unit tests, full admin lint, typecheck and webpack production build pass. Incident removal is blocked by a pre-existing RLS defect recorded in section 18; it is not a Phase 5 regression.
 
 ### Phase 6 — Production verification and release preparation
 
@@ -530,10 +530,16 @@ Date meanings are correct throughout controls, queries, cells, and details. Toda
 - Record evidence and unresolved environment limitations.
 - Prepare migration-first deployment when read dependencies exist, compatible old-client behavior, and admin-build rollback.
 - Define release monitoring for query errors, invalid-page corrections, failed mutations, and slow browse requests using existing observability.
+- Carry forward the open items from section 18 (below).
+
+**Open items carried forward from Phase 5 (2026-10-12)**
+
+- [ ] **Owner decision required — incident removal RLS defect.** Administrators cannot soft-delete incidents: the only administrator-reachable `incidents` SELECT policy (migrations 0022/0025) requires `deleted_at IS NULL`, so the UPDATE fails with `42501`, and Realtime withholds soft-delete events from administrators. This predates this plan and is not a Phase 5 regression. **Proposed fix, not authorized or created:** next sequential migration (currently `0113_admin_read_deleted_incidents.sql`; recheck the highest prefix first) adding an administrator SELECT policy on `incidents` scoped to the active admin's own barangay without a deletion filter, mirroring `admins read all medical drives`. It would also need verification that resident/anon/foreign-admin visibility is unchanged, admin removal persists and audits, Realtime delivers the event, and the existing browse views still exclude deleted rows. Until the owner decides, incident removal remains a known failing action, recorded in this release's evidence.
+- [ ] **Shared table layout shift.** Every integrated route first renders with `table-layout: auto` and switches to measured `fixed` layout after hydration, widening columns once (for example Incident Reports 1,787 → 2,257px). Layout is stable afterwards and actions remain reachable. Decide during release verification whether the initial geometry should match the settled geometry. Any change belongs to the shared Phase 1 components and must rerun all eight routes' browser checks.
 
 **Completion gate**
 
-All acceptance criteria below pass with recorded evidence. Missing physical-browser/input coverage is marked unverified and completed before claiming that coverage. No production-readiness claim is based solely on static inspection.
+All acceptance criteria below pass with recorded evidence. Open items above are either resolved with evidence or explicitly accepted by the owner as release limitations. Missing physical-browser/input coverage is marked unverified and completed before claiming that coverage. No production-readiness claim is based solely on static inspection.
 
 Deploy additive read dependencies before the consuming admin build. Roll back the admin build if needed; do not destructively revert historical migrations. Removing unused read additions requires a later dependency-checked sequential migration.
 
@@ -1177,3 +1183,90 @@ The restricted local Docker read initially failed on named-pipe access. Its fail
 - [x] Test tooling is declared and repeatable. The lockfile's Phase 1 dependency delta affects only the admin package and Playwright entries; unrelated entries are preserved. No resident UI, shared resident contract, migration, database write, account/container creation, deployment or later-phase route integration. Fixture browsers/server are closed; ignored browser cache/build output are retained for repeat checks.
 
 **Implementation blockers: none for the shared fixture completion gate. Remaining release-verification limitations:** Edge is not installed; physical wheel/trackpad/OS scrollbar behavior, native Safari/browser zoom and manual screen-reader checks were unavailable. Responsive tests cover 1200×900, 600×450 and 300×225 plus CSS zoom 2/4, sidebar, dark and forced colors. These are not substitutes for manual release verification. Authenticated live-route/dashboard and eight-screen data/security/Realtime acceptance remain later-phase work. Current Phase 1 completion does not assert production readiness or integrated sorting/pagination on the eight routes.
+
+
+## 15. Phase 2 — Data-query correctness execution — 2026-10-11
+
+**Status: COMPLETE for the section 4 Phase 2 gate.** Evidence: [Phase 2 README](C:/Users/User/barangayan/plans/evidence/admin-table-phase2/README.md), results.json, filters.json, security.json, performance-final.json and final check logs. This execution supersedes historical baseline-only restrictions for Phase 2. Later phases remain unstarted.
+
+Server-only adapters and local descriptors support all eight tables. Migration 0110 supplies invoker read projections, independent summaries, normalized and numeric comparison keys, nullable related membership and active-admin tenant gates. Migration 0111 caches existing SELECT-policy session lookups without changing their predicates or ALL/write policies and adds only the two measured Requests reference indexes. No resident DTO, stored reference, write action or production route was changed. The adapter fetches a globally ordered/count-bounded ID page, then bounded payloads with the same filters. One correction is permitted; changed results and independent query failures remain explicit errors under a shared deadline.
+
+### Verified completion checklist
+
+- [x] Reviewed exact Expo v57 docs, applicable AGENTS, installed Next guidance, plan dependencies, baseline contracts and repository state before coding. Initially clean; unrelated Android/OTP changes appeared concurrently and were preserved.
+- [x] All 66 sorts in both directions compose to independently expected full fixture order. Five page sizes, exact counts/membership, correction, empty results, related search beyond 1,000 and literal punctuation pass. Each response is bounded to at most 100 rows. Applicants has 1,506 members because a deliberate extra nullable-profile registration retains its score; the other tables have 1,505.
+- [x] Thirty-three combined filter checks pass with independent summary invariance. Health totals include cancelled registrations and missing-score registrations; zero registrations and nullable joins are retained.
+- [x] Resident, other-tenant admin, removed admin and anon permission checks pass; resident score read is empty. All 16 views are invoker secured with read-only grants, helpers are private invokers, underlying RLS remains enabled, SELECT predicates remain equivalent, ALL/write policies are unchanged.
+- [x] Warm representative 10k tenant benchmark passes for default, deep reference, joined resident/reporter/score/head, substring, aggregate and label reads: nine p95 values from 44.75 to 476.82ms, 20 samples after two warmups per candidate, loopback, DB/REST each limited to two CPUs. Full adapter/API measurement includes exact count and payload retrieval. Earlier failures and measured remedies are retained in evidence.
+- [x] Sixty unit tests, affected-file lint, admin typecheck and final webpack production build pass.
+- [x] Temporary owned database/REST services, network and private credentials removed; cleanup.json reports no remaining task resources.
+
+**Phase 2 blockers: none. Remaining integration/release limitations:** migrations are not deployed to source or hosted databases; hosted advisors were not run. Browser route/action/Realtime integration belongs to Phases 3–5 and was not started. UI committed-result timing, manual accessibility/input checks, other network profiles and 100k deep-page evaluation remain later release verification. Representative fixture performance does not establish universal production latency. This work does not implement the cancelled resident Android audit.
+
+## 16. Phase 3 — Requests and Transactions execution — 2026-10-12
+
+**Status: COMPLETE for the section 4 Phase 3 integration gate.** Evidence: [Phase 3 README](C:/Users/User/barangayan/plans/evidence/admin-table-phase3/README.md), `final-verification.json`, `scope.json` and the individual reports linked there. Earlier execution restrictions are historical; Phases 4–6 remain unstarted.
+
+Both pilot routes now use the Phase 2 bounded authoritative server adapters and the Phase 1 opt-in controls, bounded sticky table and pagination. No local array sorting/filtering remains in either pilot. Requests defaults to Reference ascending and Active, with All first; Transactions defaults to Date created descending and All. Complete action options are independent batched reads under one deadline, while the existing latest-100 transaction reference suggestions remain a separate action lookup. Timestamp cells use Asia/Manila.
+
+### Verified completion checklist
+
+- [x] Read root/admin instructions, exact Expo v57 reference, installed Next navigation guidance, plan context/dependencies and dirty repository before code. Phases 1–2 were already satisfied; both route integrations were outstanding. Unrelated Android/OTP work and concurrent additions were preserved.
+- [x] Connected five page sizes, global search/filter/sort, stable column IDs, persistent horizontal access, bounded sticky scrolling, exact ranges/empty states and one authoritative page correction. Chrome executes all **34** pilot sort/direction combinations against database results before paging; unchanged concatenated pages cover all **1,505** records on each route without gaps or duplicates. Related-name search reaches the row beyond the 1,000-row transport cap. Retained Phase 2 comparator/permission/10k benchmark evidence remains unchanged.
+- [x] Delayed rapid search/sort/direction changes merge atomically, reset page 1 and commit the latest query; history cancels pending search. Table, summary and option failures remain independent and retry preserves the full query. Lookup-dependent actions are disabled on option failure, with explicit retry.
+- [x] Failed saves retain the same record's draft and block navigation; Retry persists/audits the same record and reconciles membership. Real request lifecycle changes, v1 editors, v2 review navigation and guards, request creation for a resident beyond the cap, transaction creation/centavo edit, paid-amount guard, refund submission/retry/claim links and archive pass. Audit and confirmation reads use the actual fixture; provider submission is mocked and no PayMongo endpoint was contacted.
+- [x] Three actual request `postgres_changes` events produce **zero** refreshes while editing and **one** after cancel, without losing draft identity. Ten client route mount cycles retain one request subscription and baseline table observers. Navigation settles edits and pending rows remain inert; refreshes are coalesced with a finite deadline.
+- [x] Chrome **154.0.8037.99**, Firefox **153.0** and WebKit **26.5** pass integrated defaults, sizes/ranges, controls, scrolling/resizing, narrow layout, beyond-cap search and empty results. The final Firefox/WebKit repeat has no uncaught errors. Eight authenticated permission cases pass across both routes: anon/resident/removed admin redirect, foreign admin sees only its own tenant.
+- [x] Warm control-to-committed-result p95 meets 1.5 seconds for the recorded local profile: **658.26ms Requests**, **706.54ms Transactions**, ten samples per route, loopback/unthrottled development preview, 1,505 rows each and DB/REST limited to two CPUs each. This is not a universal production latency claim.
+- [x] **65 unit tests**, full admin lint, admin typecheck and final **webpack production build** pass. Final source/snapshot, script syntax, whitespace, prerequisite preservation and cleanup checks are recorded in the Phase 3 evidence.
+- [x] Added sequential migration **0112_admin_reference_index_writer_permissions.sql** after rechecking highest prefix 0111. Actual service-role writes through 0111's expression indexes demonstrated missing execution permissions. Only usage of the helper schema and execution of its two pure comparison functions are granted to the existing writer; anon remains denied, no view/table grants or RLS policies change. Verified in the task-owned fixture. Existing 0110/0111 and Phase 2 files remain byte-identical.
+- [x] Owned preview processes, four fixture containers, network and generated private credentials removed. No source/hosted migration application, deployment, source user/data write, resident UI change or later-phase implementation. Existing unrelated work is preserved; `scope.json` records concurrent drift separately from owned edits.
+
+**Phase 3 implementation blockers: none. Remaining release/environment limits:** migrations **0110–0112** must precede the consuming admin deployment in Phase 6; they were applied only to disposable fixtures. Hosted advisors/acceptance, external refund-provider integration, native Safari/Edge, physical input/OS scrollbar settings, native zoom, manual screen-reader checks, other network profiles and 100k deep-page benchmarks remain unverified release work.
+
+Earlier failed attempts remain intact. Incorrect test locators, invalid synthetic v2/refund restoration values and a Windows screenshot overwrite failure were corrected; affected groups were rerun. Completed positive groups from stopped reports are identified individually rather than declaring those whole attempts passed. Early WebKit runs passed table behavior but reported a shared-header background notification access-control error after login/navigation. An unchanged-dashboard/Requests diagnostic showed ten successful notification responses and no errors; awaiting the initial read before navigation yielded a passing browser repeat. The exact earlier cause remains unproven; no notification code was changed. Firefox retained one navigation-aborted background notification read without an uncaught error. These limits do not invalidate the verified pilot integration gate or establish production readiness.
+
+## 17. Phase 4 — Directory, Households, and Staff execution — 2026-10-12
+
+**Status: COMPLETE for the section 4 Phase 4 integration gate.** Evidence: [Phase 4 README](C:/Users/User/barangayan/plans/evidence/admin-table-phase4/README.md), `final-verification.json`, `scope.json` and the individual reports linked there. Historical baseline-only restrictions do not govern this execution. Phases 5–6 remain unstarted.
+
+The three routes now use bounded authoritative Phase 2 adapters and the Phase 1 controls. Name ascending and All remain explicit defaults. All 24 supported sort fields work in both directions before paging; no local array sorting/filtering remains. Independent complete summaries, five exact sizes, visible labels, sticky headers, persistent horizontal controls, pending-row protection and query-preserving retries are connected to real server navigation. Required resident action options are independent complete batched reads. Directory/member DTOs and mutation projections include modification dates; existing views already supplied them, so no migration was required.
+
+### Verified completion checklist
+
+- [x] Read applicable instructions, exact Expo v57 and installed Next data/navigation guidance before code; inspected plan context, Phase 3 prerequisite, existing source and dirty repository. No dependency installation or delegation. The immutable baseline records 3,731 existing files; concurrent unrelated drift is recorded separately and preserved.
+- [x] All **48** sort/direction combinations match database order before pagination. Complete unchanged concatenations on the three routes have no gaps or duplicate IDs. Mixed case, accents, blank/duplicate/long names and missing structured-name fields are represented; retained Phase 2 comparator/permission/10k evidence remains unchanged. Chrome, Firefox and WebKit pass integrated defaults, sizes/ranges, scrolling/resizing, narrow layout, beyond-cap search and empty results. Trimmed search and allowlisted filters retain their contracts.
+- [x] Combined filters retain independent exact summaries. Table/summary/options failures remain separate and Retry preserves the full query. Delayed rapid changes merge, reset page 1 and settle the latest query; Back cancels pending search. An invalid page is corrected once. Real removals reduce a 23-row result from page 3 to page 2; seven matches at size 100 render seven rows.
+- [x] Details revalidate by ID independently of page/search membership, preserve identity off-page and distinguish failed reads from confirmed unavailability. Actual deletion produces a recoverable unavailable state. Native modal keyboard/focus behavior passes; mouse/keyboard triggers restore correctly, with Search as the fallback for missing rows. Long titles wrap within a scrollable header at short heights. Directory JSON count **2** remains distinct from the same resident's **1** normalized member row.
+- [x] A failed directory save retains its same-record draft and blocks navigation; Retry persists and audits it. Actual member creation using a resident beyond the cap, member removal, check-in-off timestamp/center ID/name cleanup and staff profile/role changes/removal pass. Every current-user editable-cell/removal guard remains effective. ID verification and revocation execute the real RPC, request-history read and audits; evidence signing/image responses are synthetic. Existing invitation endpoints remain unchanged; provider delivery was not tested.
+- [x] Three actual household `postgres_changes` events cause **zero** refreshes during an edit and **one** after cancel. Selected-member refresh/error/deletion behavior passes. Ten client route mount cycles retain one household subscription and one table ResizeObserver/MutationObserver each. All **12** route permission cases pass: anon/resident/removed-admin rejection and foreign-tenant isolation across three routes.
+- [x] Warm control-to-committed-result p95 is **642.58ms Directory**, **774.37ms Households**, **610.58ms Staff**: ten samples per route, loopback/unthrottled development preview, approximately 1,500 records per route, database/REST two CPUs each. This meets 1.5 seconds for this profile and does not establish universal or production latency.
+- [x] **65 unit tests**, full admin lint, admin typecheck and final **webpack production build** pass. The final shared browser fixture repeat passes **33** groups on Chrome **154.0.8037.99**, Firefox **153.0** and WebKit **26.5**. The short-window check demonstrated that the old 48px bound could leave only the sticky header visible; the scoped shared correction measures a compact header/row/scrollbar budget without stretching short tables. Dashboard/unbounded compatibility, boundaries and cleanup pass.
+- [x] Owned preview processes, four fixture containers, network and private credentials removed. Migrations **0110–0112** and later-route source remain unchanged. No source/hosted data write, deployment, resident UI change or later-phase implementation. Final source/snapshot, syntax, whitespace and preservation checks are recorded in the Phase 4 evidence.
+
+**Phase 4 implementation blockers: none. Remaining release/environment limits:** migrations **0110–0112** must precede the consuming deployment in Phase 6; they were applied only to disposable fixtures. Hosted acceptance/advisors, invitation provider delivery, real storage delivery, native Safari/Edge, physical inputs/OS scrollbar settings, native zoom, manual screen-reader checks, other network profiles and 100k deep-page benchmarks remain unverified release work.
+
+Failed attempts remain intact. Initial detail-state null access, short-window action obstruction and long-title clipping were fixed and affected checks rerun. Split-name, empty-table, column-index and structured-name test locators were corrected; an asynchronous audit assertion was replaced with bounded observation. The baseline fixture's normalized member was removed by the existing add-member RPC's JSON synchronization; the Realtime test uses a dedicated synthetic member. Observer baseline capture now waits for registration. Earlier partial reports contribute only their explicitly completed positive groups, never whole-report success. Final post-verification source cleanup removes trailing whitespace only. No production-readiness or bug-free claim is made.
+
+## 18. Phase 5 — Incidents, Health, and Applicants execution — 2026-10-12
+
+**Status: COMPLETE for the section 4 Phase 5 integration gate.** Evidence: [Phase 5 README](C:/Users/User/barangayan/plans/evidence/admin-table-phase5/README.md), `scope.json` and the individual reports linked there. Route integration was implemented in an earlier session of this request; this execution ran the outstanding acceptance groups and final checks against that unchanged source. Historical baseline-only restrictions (section 11) do not govern this execution. Phase 6 remains unstarted.
+
+The three routes use bounded authoritative Phase 2 adapters and the Phase 1 controls. Incident Reports defaults to Submitted (`incidents.created_at`) descending with Open; Health to Date created (`medical_drives.created_at`) descending with Upcoming, keeping Drive date a separate sort; Medical Applicants to Registered (`drive_registrations.created_at`) descending with All. All is first on Incident and Health. No local array sorting/filtering remains. Registration counts are complete aggregates including cancelled and missing-score registrations; resident names join before paging; scores remain administrator-only with inner-score membership. Detail dialogs label and display the same creation fields. No migration or dependency was added; the highest prefix remains `0112`.
+
+### Verified completion checklist
+
+- [x] Read root/admin instructions, exact Expo v57 reference, plan context/dependencies and the dirty repository before continuing. Phases 1–4 were satisfied and the three route integrations already existed; Chrome browsing and the Firefox/WebKit matrix had passed, while flows, actions, Realtime, timing, final static checks, plan/evidence records and cleanup were outstanding. Concurrent unrelated resident-web work was preserved.
+- [x] All **50** sort/direction combinations match database order before pagination; complete unchanged concatenations have no gaps or duplicate IDs. Five sizes, exact ranges, empty state without an invalid page label, keyboard scrolling/Tab escape, resizing, narrow layout and beyond-cap trimmed search pass on Chrome **154.0.8037.99**, Firefox **153.0** and WebKit **26.5**.
+- [x] Combined filters keep independent complete summaries. Health Today is a subset of Upcoming and combines with category. A drive with more than 1,000 registrations and a zero-registration drive render their database counts. Missing-score registrations are excluded; missing-profile registrations are retained with a blank resident; resident-name order is global. Table, summary and option failures stay separate and Retry preserves the query. Delayed rapid controls merge into one page-1 query, Back cancels pending search, an invalid page is corrected once, and 23 rows render at size 100.
+- [x] Real incident and drive creation, guided incident status changes, drive active edits and drive removal persist and audit. Failed inline drafts block navigation, keep identity and retry/persist/audit on all three routes. Complete resident lookup beyond the cap and own-tenant-only drives feed the real registration RPC, which stores a score; status change and cancellation persist. Detail dialogs show Submitted / Date created / Registered at from `created_at`, retain failed modal drafts, revalidate after save and restore focus.
+- [x] Three actual `postgres_changes` events per route cause **zero** refreshes during an edit and **one** after cancel. Selected details revalidate off-page and distinguish failed reads from confirmed unavailability. Ten client mount cycles keep one channel and one table ResizeObserver/MutationObserver per route. All **12** route permission cases and **18** query security cases pass, including zero exposed protected scores.
+- [x] Warm control-to-committed-result p95 is **634.54ms Incidents**, **690.44ms Health**, **745.99ms Applicants**: ten samples per route, loopback/unthrottled development preview, about 1,500 rows per route. This meets 1.5 seconds for this profile only.
+- [x] **68 unit tests**, full admin lint, admin typecheck and webpack production build pass on the final source. The shared browser fixture passes **33** groups across Chrome, Firefox and WebKit.
+- [x] Owned preview/proxy stopped; four fixture containers, network and private credentials removed. One-off codemod scripts previously left in ignored `dist/` were moved to the evidence `codemods/` folder as provenance. Scope review finds only concurrent resident-web files outside the Phase 5 allowance; no resident Android, shared package, migration or deployment change.
+
+**Pre-existing defect requiring an owner decision:** administrators cannot remove incidents. The only administrator-reachable `incidents` SELECT policy (migrations 0022/0025) requires `deleted_at IS NULL`, so the soft-delete UPDATE fails with `42501` regardless of `RETURNING`. The removal query is identical to `HEAD`; the UI surfaces the error, keeps the row and writes no delete audit, which the acceptance test asserts. The same gap withholds Realtime events for incidents soft-deleted elsewhere; open details revalidate on the next committed query. Medical drives are unaffected. Section 6 records that permission gaps are findings, not authorization to change security, so no policy migration was created. The decision and proposed `0113` fix are tracked as an open item under Phase 6.
+
+**Phase 5 implementation blockers: none. Remaining release/environment limits:** migrations **0110–0112** must precede deployment in Phase 6. Hosted acceptance/advisors, native Safari/Edge, physical inputs/OS scrollbar settings, native zoom, manual screen-reader checks, other network profiles and 100k deep-page benchmarks remain unverified. Every integrated route switches from auto to measured fixed table layout after hydration, widening columns once; this shared Phase 1 behavior is recorded for Phase 6 and left unchanged.
+
+Failed attempts remain intact. All corrections in this execution were test-only: a hard-coded registration count, label-wrapped form controls, uppercase dialog labels, an unawaited post-save revalidation, an Incident needle that also matches the reporter name, waiting for settled table geometry, and the RLS behaviours above. No production-readiness or bug-free claim is made.

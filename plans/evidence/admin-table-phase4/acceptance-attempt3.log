@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok((await page.locator('tbody').innerText()).includes(needle))
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:84:18
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:65:49 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

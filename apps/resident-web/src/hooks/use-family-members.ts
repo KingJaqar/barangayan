@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
+import { useScopedRead } from '@/hooks/use-scoped-read';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export type HouseholdMember = {
@@ -11,14 +12,30 @@ export type HouseholdMember = {
   role?: string;
 };
 
+/**
+ * Why the latest write did not succeed (see `lastWriteFailure`):
+ * - `rejected`: the service answered with an error, so the roster was not changed.
+ * - `unconfirmed`: no answer arrived (connection lost/aborted/thrown), so the write may or
+ *   may not have been applied. Callers must say so and never retry automatically.
+ * - `busy`: another write from this hook was still in flight; nothing was sent.
+ */
+export type HouseholdWriteFailure = 'rejected' | 'unconfirmed' | 'busy';
+
 type UseFamilyMembersResult = {
   members: HouseholdMember[];
   isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
+  isReady: boolean;
+  /** The current profile's latest *read* failure (write failures use `lastWriteFailure`). */
   error: string | null;
-  refetch: () => Promise<void>;
+  refetch: () => void;
   addMember: (member: { name: string; relation: string; role?: string }) => Promise<HouseholdMember | null>;
   updateMember: (id: string, updates: Partial<Omit<HouseholdMember, 'id'>>) => Promise<HouseholdMember | null>;
   removeMember: (id: string) => Promise<boolean>;
+  /** Failure kind of the most recent write, or null if it succeeded. Read it right after
+   * awaiting a mutation that returned null/false. */
+  lastWriteFailure: () => HouseholdWriteFailure | null;
 };
 
 /** RFC-4122 v4 UUID — the household_members table's `id` column is a real `uuid`, and
@@ -50,62 +67,69 @@ function genId(): string {
  * `is_checked_in` — see use-qr-checkins.ts) stays correctly synced via the existing
  * trigger. A future Phase 5 read-only applicant picker should read this same jsonb
  * column (or this hook) rather than reintroducing a second, divergent source.
+ *
+ * Feedback plan RW-LT-05: the read is scoped by profile with newest-request-wins and a
+ * failed read keeps any loaded roster instead of replacing it with an empty list. The
+ * mutation return contracts are unchanged (member | null / boolean, where null/false
+ * means the write did not succeed); `lastWriteFailure()` additionally says whether it was
+ * rejected or could not be confirmed. Writes are serialised: the roster is rewritten as a
+ * whole array, so an overlapping write would silently drop the other one's change.
  */
 export function useFamilyMembers(profileId: string | null): UseFamilyMembersResult {
-  const [members, setMembers] = useState<HouseholdMember[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchMembers = useCallback(async () => {
-    if (!profileId) {
-      setMembers([]);
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
+  const read = useScopedRead<HouseholdMember[]>(profileId ?? '', async () => {
+    if (!profileId) return { data: [], error: null };
     const supabase = createSupabaseBrowserClient();
-    const { data, error: qErr } = await supabase.from('profiles').select('household_members').eq('id', profileId).single();
+    const { data, error } = await supabase.from('profiles').select('household_members').eq('id', profileId).single();
+    if (error) return { data: null, error };
+    const raw = data?.household_members;
+    const normalized: HouseholdMember[] = Array.isArray(raw)
+      ? (raw as Record<string, unknown>[]).map((m) => ({
+          id: String(m.id ?? genId()),
+          name: String(m.name ?? 'Unknown'),
+          relation: String(m.relation ?? ''),
+          role: m.role ? String(m.role) : undefined,
+        }))
+      : [];
+    return { data: normalized, error: null };
+  });
+  const { data, setData } = read;
+  const members = useMemo(() => data ?? [], [data]);
 
-    if (qErr) {
-      setError(qErr.message);
-      setMembers([]);
-    } else {
-      const raw = data?.household_members;
-      const normalized: HouseholdMember[] = Array.isArray(raw)
-        ? (raw as Record<string, unknown>[]).map((m) => ({
-            id: String(m.id ?? genId()),
-            name: String(m.name ?? 'Unknown'),
-            relation: String(m.relation ?? ''),
-            role: m.role ? String(m.role) : undefined,
-          }))
-        : [];
-      setMembers(normalized);
-    }
-    setIsLoading(false);
-  }, [profileId]);
-
-  useEffect(() => {
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
-    // react-hooks/set-state-in-effect.
-    Promise.resolve().then(() => fetchMembers());
-  }, [fetchMembers]);
+  const writingRef = useRef(false);
+  const failureRef = useRef<HouseholdWriteFailure | null>(null);
 
   const persistMembers = useCallback(
     async (next: HouseholdMember[]): Promise<boolean> => {
-      if (!profileId) return false;
-      const supabase = createSupabaseBrowserClient();
-      const payload = next.map((m) => ({ id: m.id, name: m.name, relation: m.relation, ...(m.role ? { role: m.role } : {}) }));
-      const { error: upErr } = await supabase.from('profiles').update({ household_members: payload }).eq('id', profileId);
-
-      if (upErr) {
-        setError(upErr.message);
+      if (!profileId) {
+        failureRef.current = 'rejected';
         return false;
       }
-      setMembers(next);
-      return true;
+      if (writingRef.current) {
+        failureRef.current = 'busy';
+        return false;
+      }
+      writingRef.current = true;
+      failureRef.current = null;
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const payload = next.map((m) => ({ id: m.id, name: m.name, relation: m.relation, ...(m.role ? { role: m.role } : {}) }));
+        const { error, status } = await supabase.from('profiles').update({ household_members: payload }).eq('id', profileId);
+        if (error) {
+          // Status 0 means no HTTP answer arrived (postgrest-js reports a failed/aborted
+          // fetch that way), so the write may have been applied.
+          failureRef.current = status === 0 ? 'unconfirmed' : 'rejected';
+          return false;
+        }
+        setData(next);
+        return true;
+      } catch {
+        failureRef.current = 'unconfirmed';
+        return false;
+      } finally {
+        writingRef.current = false;
+      }
     },
-    [profileId],
+    [profileId, setData],
   );
 
   const addMember = useCallback(
@@ -140,5 +164,19 @@ export function useFamilyMembers(profileId: string | null): UseFamilyMembersResu
     [members, persistMembers],
   );
 
-  return { members, isLoading, error, refetch: fetchMembers, addMember, updateMember, removeMember };
+  const lastWriteFailure = useCallback(() => failureRef.current, []);
+
+  return {
+    members,
+    isLoading: read.isLoading,
+    isInitialLoading: read.isInitialLoading,
+    isRefreshing: read.isRefreshing,
+    isReady: read.isReady,
+    error: read.error,
+    refetch: read.refetch,
+    addMember,
+    updateMember,
+    removeMember,
+    lastWriteFailure,
+  };
 }

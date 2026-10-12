@@ -4,11 +4,12 @@ import { evacuationCenterQrPayloadSchema } from '@barangayan/shared';
 import { Download, MapPin, Share2 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
 
+import { InlineReadError } from '@/components/shared/inline-read-error';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { EvacuationCenterWithDistance } from '@/hooks/use-evacuation-centers';
+import { beginAttempt, notify } from '@/lib/notify';
 
 /**
  * Web port of qr-show-modal.tsx — lets a resident pick an evacuation center and display
@@ -17,8 +18,26 @@ import type { EvacuationCenterWithDistance } from '@/hooks/use-evacuation-center
  * [C-012]. Download uses the underlying <canvas> directly (QRCodeCanvas) instead of
  * react-native-view-shot, which has no web equivalent.
  */
-export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boolean; onClose: () => void; centers: EvacuationCenterWithDistance[]; barangayId: string | null }) {
+export function QrShowDialog({
+  open,
+  onClose,
+  centers,
+  barangayId,
+  centersStatus = 'ready',
+  onRetryCenters,
+}: {
+  open: boolean;
+  onClose: () => void;
+  centers: EvacuationCenterWithDistance[];
+  barangayId: string | null;
+  /** State of the centers read behind `centers`, so a failed or pending read is never
+   * shown as "No evacuation centers found". */
+  centersStatus?: 'loading' | 'error' | 'ready';
+  onRetryCenters?: () => void;
+}) {
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const sharingRef = useRef(false);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,26 +65,55 @@ export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boo
   const qrValue = parsed?.success ? JSON.stringify(parsed.data) : '';
 
   function handleDownload() {
+    const attempt = beginAttempt('qr-download');
     const canvas = canvasWrapperRef.current?.querySelector('canvas');
-    if (!canvas) return;
-    const link = document.createElement('a');
-    link.download = `evacuation-center-qr-${selectedCenter?.name.replace(/\s+/g, '-').toLowerCase() ?? 'code'}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    if (!canvas) {
+      notify.error("Couldn't prepare the QR image.", { id: attempt, description: 'Close this window and open it again.' });
+      return;
+    }
+    try {
+      const link = document.createElement('a');
+      link.download = `evacuation-center-qr-${selectedCenter?.name.replace(/\s+/g, '-').toLowerCase() ?? 'code'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      // The browser starts the download; whether it was saved is up to the browser.
+      notify.success('Download started.', { id: attempt });
+    } catch {
+      notify.error("Couldn't download the QR image.", { id: attempt, description: 'You can show this screen to center staff instead.' });
+    }
   }
 
   async function handleShare() {
-    if (!qrValue) return;
-    const shareText = `Evacuation Center Check-in QR\n\n${qrValue}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Evacuation Center QR Code', text: shareText });
-      } catch {
-        // user cancelled — no-op
+    if (!qrValue || sharingRef.current) return;
+    sharingRef.current = true;
+    setSharing(true);
+    const attempt = beginAttempt('qr-share');
+    const shareText = `Evacuation Center Check-in QR
+
+${qrValue}`;
+    try {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'Evacuation Center QR Code', text: shareText });
+          return; // the system share sheet reports its own result
+        } catch (thrown) {
+          // The resident dismissed the share sheet: nothing to report.
+          if (thrown instanceof DOMException && thrown.name === 'AbortError') return;
+          // Sharing is unavailable here; fall back to copying.
+        }
       }
-    } else {
-      await navigator.clipboard.writeText(shareText);
-      toast.success('Copied to clipboard.');
+      try {
+        await navigator.clipboard.writeText(shareText);
+        notify.success('Copied to clipboard.', { id: attempt });
+      } catch {
+        notify.error("Couldn't copy to the clipboard.", {
+          id: attempt,
+          description: 'Your browser blocked clipboard access. Use Download, or show this screen to center staff.',
+        });
+      }
+    } finally {
+      sharingRef.current = false;
+      setSharing(false);
     }
   }
 
@@ -78,11 +126,19 @@ export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boo
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
+          {centersStatus === 'error' && centers.length === 0 && onRetryCenters ? (
+            <InlineReadError message="We couldn't load the evacuation centers." onRetry={onRetryCenters} />
+          ) : null}
+
           <select
+            aria-label="Evacuation center"
+            disabled={centers.length === 0}
             value={selectedCenterId ?? ''}
             onChange={(e) => setSelectedCenterId(e.target.value)}
             className="h-11 rounded-lg border border-input bg-white px-3.5 text-sm text-black outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 dark:bg-zinc-900 dark:text-white [&>option]:bg-white [&>option]:text-black dark:[&>option]:bg-zinc-900 dark:[&>option]:text-white">
-            {centers.length === 0 ? <option value="">No evacuation centers found</option> : null}
+            {centers.length === 0 ? (
+              <option value="">{centersStatus === 'loading' ? 'Loading evacuation centers…' : centersStatus === 'error' ? 'Evacuation centers unavailable' : 'No evacuation centers found'}</option>
+            ) : null}
             {centers.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -98,7 +154,9 @@ export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boo
 
           <div ref={canvasWrapperRef} className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border border-border bg-white p-3">
             {!selectedCenter ? (
-              <p className="text-center text-xs text-muted-foreground">Select a center to generate a QR code</p>
+              <p className="text-center text-xs text-muted-foreground">
+                {centersStatus === 'loading' ? 'Loading evacuation centers…' : centersStatus === 'error' ? 'Evacuation centers could not be loaded' : 'Select a center to generate a QR code'}
+              </p>
             ) : !qrValue ? (
               <p className="text-center text-xs text-muted-foreground">Unable to generate QR code</p>
             ) : (
@@ -107,7 +165,7 @@ export function QrShowDialog({ open, onClose, centers, barangayId }: { open: boo
           </div>
 
           <div className="flex gap-2">
-            <Button type="button" variant="outline" className="flex-1" disabled={!qrValue} onClick={handleShare}>
+            <Button type="button" variant="outline" className="flex-1" disabled={!qrValue} loading={sharing} loadingLabel="Sharing…" onClick={handleShare}>
               <Share2 size={16} /> Share
             </Button>
             <Button type="button" variant="outline" className="flex-1" disabled={!qrValue} onClick={handleDownload}>

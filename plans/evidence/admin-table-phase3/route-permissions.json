@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "user": "anon",
+      "route": "requests",
+      "result": "redirected to login"
+    },
+    {
+      "user": "anon",
+      "route": "transactions",
+      "result": "redirected to login"
+    },
+    {
+      "user": "resident",
+      "route": "requests",
+      "result": "redirected to login"
+    },
+    {
+      "user": "resident",
+      "route": "transactions",
+      "result": "redirected to login"
+    },
+    {
+      "user": "removedAdmin",
+      "route": "requests",
+      "result": "redirected to login"
+    },
+    {
+      "user": "removedAdmin",
+      "route": "transactions",
+      "result": "redirected to login"
+    },
+    {
+      "user": "foreignAdmin",
+      "route": "requests",
+      "result": "only own tenant; zero matching rows"
+    },
+    {
+      "user": "foreignAdmin",
+      "route": "transactions",
+      "result": "only own tenant; zero matching rows"
+    }
+  ]
+}

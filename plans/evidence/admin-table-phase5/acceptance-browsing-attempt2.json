@@ -1,0 +1,27 @@
+{
+  "passed": false,
+  "mode": "browsing",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: incidents defaults, sizes, ranges, dates, keyboard, containment and search"
+  ],
+  "failures": [
+    {
+      "label": "chrome: health defaults, sizes, ranges, dates, keyboard, containment and search",
+      "message": "page.waitForURL: Timeout 15000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://127.0.0.1:3140/health?dir=desc&page=151&pageSize=10&sort=created&tab=all\"\n  navigated to \"http://127.0.0.1:3140/health?dir=desc&page=151&pageSize=10&sort=created&tab=all\"\n============================================================\n    at change (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:44:120)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:99:13\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:81:55"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ],
+  "failure": "page.waitForURL: Timeout 15000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://127.0.0.1:3140/health?dir=desc&page=151&pageSize=10&sort=created&tab=all\"\n  navigated to \"http://127.0.0.1:3140/health?dir=desc&page=151&pageSize=10&sort=created&tab=all\"\n============================================================\n    at change (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:44:120)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:99:13\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:81:55"
+}

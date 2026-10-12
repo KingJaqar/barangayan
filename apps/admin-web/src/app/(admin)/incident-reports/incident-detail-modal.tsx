@@ -1,16 +1,16 @@
 'use client';
 
-import { formatDateTime } from '@barangayan/shared';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
+import { useEffect, useRef, useState } from 'react';
 
+import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { IncidentActions } from './incident-actions';
 import { IncidentStatusPill } from './incident-table';
-import type { IncidentRow } from './page';
+import type { IncidentRow } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 /** Full-detail modal — photos, description, location, reporter contact, and the same
@@ -19,8 +19,10 @@ import { LoadingButtonContent } from '@/components/loading/loading-button-conten
  * Current Status, and Submission Date are all edited inline in the table itself (click any
  * cell), so this modal focuses on the long-form fields plus a read-only summary of the rest.
  * Closes on Escape or backdrop click. */
-export function IncidentDetailModal({ incident, onClose }: { incident: IncidentRow; onClose: () => void }) {
-  const router = useRouter();
+export function IncidentDetailModal({ incident, onClose, onChanged, onEditingChange, detailStatus, onRetry }: {
+  incident: IncidentRow; onClose: () => void; onChanged: () => void; onEditingChange: (editing: boolean) => void;
+  detailStatus: 'loading' | 'ready' | 'error' | 'unavailable'; onRetry: () => void;
+}) {
   const toast = useToast();
   const [activePhoto, setActivePhoto] = useState(0);
   const [editing, setEditing] = useState(false);
@@ -29,23 +31,24 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
   const [address, setAddress] = useState(incident.address ?? '');
   const [specificAreaDetails, setSpecificAreaDetails] = useState(incident.specific_area_details ?? '');
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
 
   useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+    onEditingChange(editing);
+    return () => onEditingChange(false);
+  }, [editing, onEditingChange]);
 
   async function saveDetails() {
+    if (savingRef.current) return;
     if (!title.trim()) {
       toast.showError('Title cannot be empty.');
       return;
     }
+    savingRef.current = true;
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
+    let result;
+    try { result = await supabase
       .from('incidents')
       .update({
         title: title.trim(),
@@ -53,10 +56,15 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
         address: address.trim() || null,
         specific_area_details: specificAreaDetails.trim() || null,
       })
-      .eq('id', incident.id);
-    setSaving(false);
-    if (error) {
-      toast.showError(`Failed to save: ${error.message}`);
+      .eq('id', incident.id).select('id').maybeSingle();
+    } catch (cause) {
+      savingRef.current = false; setSaving(false);
+      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`); return;
+    }
+    savingRef.current = false; setSaving(false);
+    const { error, data: updated } = result;
+    if (error || !updated) {
+      toast.showError(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`);
       return;
     }
 
@@ -83,7 +91,7 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
 
     toast.showSuccess('Incident details updated.');
     setEditing(false);
-    router.refresh();
+    onChanged();
   }
 
   const cat = incident.incident_categories;
@@ -96,24 +104,22 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
     'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Incident details: ${incident.title}`}>
+    <TableDetailDialog label={`Incident details: ${incident.title}`}
+      preventClose={saving} onClose={() => { if (!savingRef.current) onClose(); }}>
+      {detailStatus !== 'ready' && !editing ? <TableDetailState status={detailStatus} onClose={onClose} onRetry={onRetry} /> :
       <div
         onClick={(e) => e.stopPropagation()}
         className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-zinc-900">
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-black/10 px-6 py-4 dark:border-white/10">
-          <div className="flex-1">
+        <div className="flex max-h-[40vh] shrink-0 items-start justify-between gap-3 overflow-y-auto border-b border-black/10 px-6 py-4 dark:border-white/10">
+          <div className="min-w-0 flex-1 break-words [overflow-wrap:anywhere]">
             {!editing ? (
               <h2 className="text-lg font-bold leading-snug">{incident.title}</h2>
             ) : (
               <input
                 autoFocus
+                aria-label="Incident title"
                 className={inputClass}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -136,6 +142,7 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
           </div>
           <button
             onClick={onClose}
+            disabled={saving}
             aria-label="Close"
             className="rounded-full p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800">
             ✕
@@ -143,7 +150,7 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto break-words [overflow-wrap:anywhere] px-6 py-4">
           {/* Photos */}
           {photos.length > 0 && (
             <div className="mb-4">
@@ -206,21 +213,21 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
                   className={`${inputClass} min-h-24 resize-y`}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Description"
+                  aria-label="Description" placeholder="Description"
                 />
                 <input
                   className={inputClass}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   maxLength={300}
-                  placeholder="Address"
+                  aria-label="Address" placeholder="Address"
                 />
                 <input
                   className={inputClass}
                   value={specificAreaDetails}
                   onChange={(e) => setSpecificAreaDetails(e.target.value)}
                   maxLength={300}
-                  placeholder="Specific area details (e.g. near the blue gate)"
+                  aria-label="Specific area details" placeholder="Specific area details (e.g. near the blue gate)"
                 />
                 <div className="flex gap-2">
                   <button
@@ -312,10 +319,10 @@ export function IncidentDetailModal({ incident, onClose }: { incident: IncidentR
         </div>
 
         {/* Footer actions */}
-        <div className="border-t border-black/10 px-6 py-4 dark:border-white/10">
-          <IncidentActions incidentId={incident.id} status={incident.status} incidentTitle={incident.title} incidentDescription={incident.description} variant="full" />
-        </div>
-      </div>
-    </div>
+        <fieldset disabled={editing || saving} className="shrink-0 border-t border-black/10 px-6 py-4 dark:border-white/10">
+          <IncidentActions incidentId={incident.id} status={incident.status} incidentTitle={incident.title} incidentDescription={incident.description} variant="full" onChanged={onChanged} />
+        </fieldset>
+      </div>}
+    </TableDetailDialog>
   );
 }

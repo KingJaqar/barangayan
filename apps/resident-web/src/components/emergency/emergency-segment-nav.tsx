@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { LinkPendingHint } from '@/components/shell/link-pending-hint';
+
 const SEGMENTS = [
   { href: '/emergency', label: 'Hub', exact: true },
   { href: '/emergency/centers', label: 'Centers', exact: false },
@@ -38,6 +40,7 @@ export function EmergencySegmentNav() {
               />
             ) : null}
             <span className={`relative ${active ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>{label}</span>
+            <LinkPendingHint className="bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 text-primary" />
           </Link>
         );
       })}

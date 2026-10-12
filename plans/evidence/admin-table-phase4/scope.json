@@ -1,0 +1,366 @@
+{
+  "baselineFiles": 3731,
+  "taskChanges": [
+    {
+      "file": "plans/Admin_Web_Table_Browsing_Sorting_Pagination_and_Filters_Implementation_Plan.md",
+      "before": "f12f738dde3fb71028e5622c22e1fa74aba64c495726677e9081b02130da2a4a",
+      "after": "32f59d77bc96d34acb9707c17366ef48ca1f0b6beae70e6880f8c7f7b6c76019"
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-pilot-table-browse.ts",
+      "before": "b1185afdf779dbced96e026da55deb16cc9fe2aed9a467f1eaa967ea4aa1e369",
+      "after": "779e77709936e306c93e066fdd54b4d5f334eb2399b19377f8303cf2f31028e8"
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/table-scroll-area.tsx",
+      "before": "92f9f0b9e8bfce44dda98216fa8774fddddf4ea1783f9fa6b895b1e3dffb9c24",
+      "after": "30f19cb161f874e62828a8b07e61dd7ab9fd688472057e39f65da073faf33ec9"
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/editable-data-table.tsx",
+      "before": "40d3afce1ea3a37b3cf7e1aebe1883cb58b75c149b98046b8af7c6b1886c60ac",
+      "after": "de60cbfc8cc735d373780969e1cea2bcc6fee83b525c382091e1829563e7751e"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "before": "c7217fcc671bcb22270704747e53ca20c5d85828bdd84307ae7daa2b396ced7d",
+      "after": "a1f1c6af9fe0fe2f449d3906a011d009cb02057dc4b7a8d8ec0fad2703ecdc5c"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "before": "95ec561245e1182f2a986e8f800186c11e28f1149224fd5089aa73a9e892bf0a",
+      "after": "41de5fb2f45118555b7b3e4eaa9ff7ace4c7e84320971512b8c6754001c6490d"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "before": "2aa807f62d51c386eddb11e1d07368b02222ee05b214051ed876b58515b163b0",
+      "after": "0e773ef846fffae16719c199b76097bf7ba98ed8a8ccbee92eca47cbca3eeb2d"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/types.ts",
+      "before": "1fd77fde7b86ffabee749ea37d0e31325399837547f1b889c95b8ae0724fd084",
+      "after": "0bf6595a05e8d0948a3e7abc122a9d0634235baed85a980256597062de01e715"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+      "before": "49f6164bb1abafe99a2d6ba7fac5209ca589fdaab8e127c248484d16b2ad8ce7",
+      "after": "35b6e19253ddd8a5e9300597a03d257fe072129ad0e7ae14e56233955d4a3d9f"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+      "before": "608651446e282496e1b3d82f597d459a488b299c085a31d7a9f44e113f92cef8",
+      "after": "0d394a9f8d51c03e1593ff30ce167f7d88bb50201fee9784b98f694415362812"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/staff/page.tsx",
+      "before": "4b8f54c85717ce9c61ed7109af9b6f9b4321bb16bebdd1079ae6e3e6019b4c3c",
+      "after": "b461bef6896b69e17ecf6110bb632d2c81887bce15f2956540aa98240e4a39b3"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/types.ts",
+      "before": "2022aa4e0c4efd46a0f15b08965bae8228ade805462c3298393f183b7aff289c",
+      "after": "c102cfa1b4eaf1c328e324004a5fc4f521a1db6228f9f4f90d763a69ea7abaaa"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+      "before": "8c576ce30cced85bcaa4eebc098f91cc8afb07801968da8592b7212795904fb3",
+      "after": "93e77879fc6ef9369280abfa8a9a9ed4ba14a6f56d5399c97a5a411ff557ceea"
+    },
+    {
+      "file": "apps/admin-web/src/app/(admin)/residents/page.tsx",
+      "before": "e1654c8f17d56b05ca7a40cbd01a68812baf57ed85b9863174f9ed34de1150da",
+      "after": "289d51c90f81720010dc76c394bd2cccdddd7200b87ee849f5d3ba8f3d409be7"
+    }
+  ],
+  "newFiles": [
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/login-pending-1440.png",
+      "taskOwned": false,
+      "hash": "5490c6c25466dd1909af7503fcb41c27453fc945776dd90b6bd12d8e51a61fd9"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/list-taking-longer-1440.png",
+      "taskOwned": false,
+      "hash": "e6f3b4e2d8b75654291ea760f0f4bef9be4b9f886cbf8cf6f65a0ce5a79de3e6"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/list-skeleton-dark-1440.png",
+      "taskOwned": false,
+      "hash": "17c3fefe2beeec364eb647c2b24bcd7b1d8bf3a5b45b8018c1b16cdcc402ff15"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/list-skeleton-360.png",
+      "taskOwned": false,
+      "hash": "9fad96724c65dfbd378e355b1fa4f745b77428875c67f3a3ae6b17dea5c7adbf"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/forgot-pending-1440.png",
+      "taskOwned": false,
+      "hash": "23073bbe8a441707685691a0279930720aba11ebba61538f1135f412d0abbdb8"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/screens/drawer-pending-1440.png",
+      "taskOwned": false,
+      "hash": "a5f9861a020f19cb0d6bc85cfc2d99bf665cfacd2615d487751e995f1be21c0a"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/run-1/results.json",
+      "taskOwned": false,
+      "hash": "292a59d4d847ec45a19ff302b123589cf41aeeb881e93be84ce2798295c92164"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/record.md",
+      "taskOwned": false,
+      "hash": "c4e5571b0eee595bdd85840cbf2704935b35d2e01c3b224c5a5652860c32a594"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/inventory.json",
+      "taskOwned": false,
+      "hash": "bac26ac749326e44fb635e67c5d3a225dbb1b40cc4da23175056a2eeeb7521a9"
+    },
+    {
+      "file": "apps/resident-web/src/lib/motion.ts",
+      "taskOwned": false,
+      "hash": "8d5473321d4534bcfaebee2db737dfa45edc4686cab68dd2a2b6a91723c516eb"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/checks/typecheck.txt",
+      "taskOwned": false,
+      "hash": "28d3b9e880a77975493dc7e359144c0295a4f694cfe0af4f928c22307bc5c320"
+    },
+    {
+      "file": "apps/admin-web/src/lib/admin-tables/profile-config.ts",
+      "taskOwned": true,
+      "hash": "376f157b609538beea0b727f5ec1e0c5f73bf343c09525c1675dbc39243f537f"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/checks/lint.txt",
+      "taskOwned": false,
+      "hash": "39668aa02f604e01faf5157969d11bc02074fd2cb9b4f2d814934effbf018a7a"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/checks/build.txt",
+      "taskOwned": false,
+      "hash": "0f8f9d513967b2e075ee665b7b7c305ceebad5f3537942467492b92d97544399"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/loading.tsx",
+      "taskOwned": false,
+      "hash": "5eb5fc678bd5a32a577d28004e615858039ce8ad5c8aaef190095c62241ac98f"
+    },
+    {
+      "file": "apps/admin-web/src/hooks/use-profile-table-detail.ts",
+      "taskOwned": true,
+      "hash": "ac997d26ecbac03403a9f14e1f95270eb2a8872ba5309f1f36cf7a932f7b3dca"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/page-skeleton.tsx",
+      "taskOwned": false,
+      "hash": "101ebb5fab896c6df3ace0e21f08206c7a957221ae4aaa1a0039904ff0351c12"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/motion-provider.tsx",
+      "taskOwned": false,
+      "hash": "11fb4fc75bd303168061274385741e3f1d07ec519c4ee6defdf299bb2658a90e"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/loading-status.tsx",
+      "taskOwned": false,
+      "hash": "f036d277a1d380faaf56647770aede2af2a782e9e23a2382fc3e8227569500cd"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-requests-1440.png",
+      "taskOwned": false,
+      "hash": "91627ab15dd7573c96fb98df75ece7a51637350230923f60f4f58ac406ceba86"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-reports-1440.png",
+      "taskOwned": false,
+      "hash": "b72b9926c05f98eb7007b773af47f0c14e48599e906a563f6746a2bab1985df5"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-receipt-1440.png",
+      "taskOwned": false,
+      "hash": "b04b947d4728941159bd1fa5fd25aed2be7ae2914a18268382406b015176cb68"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-profile-1440.png",
+      "taskOwned": false,
+      "hash": "f8539f4d2b7d6f6fc87985e29d7b44412945c0852fa7c72d2a0921675361d195"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-home-360.png",
+      "taskOwned": false,
+      "hash": "d9385f3556a47d1e4ae832d9ed7f84b81000cc33e1351f5f1c967993d1b00c74"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-home-1440.png",
+      "taskOwned": false,
+      "hash": "28d0fa97fcd77faafcf81f20eeaf1f9cf2ab35744bcfec7ffbd2f9c1aff5b643"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/resident-family-1440.png",
+      "taskOwned": false,
+      "hash": "6c7b9fe5c9a066d120833738a9573bc5e2dcfd42542b625ab3240cd0c67b91a2"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/payment-qr-mocked-receipt-refused.png",
+      "taskOwned": false,
+      "hash": "b6bba16e21edb0c36f4ddef9c4d1d90dad315d52a29640c5dcc35403b41d30eb"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/payment-qr-mocked-pending.png",
+      "taskOwned": false,
+      "hash": "fecb212ac13a2b4a5ba988841de66169827ec6547899d362cbc8d138e791e3ee"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/incomplete-home-1440.png",
+      "taskOwned": false,
+      "hash": "891590b4090a194e928b46d32f792ca54b571387b70316071d0c932f1b773d31"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/guest-login-1440.png",
+      "taskOwned": false,
+      "hash": "dc3082589e412666e5ab571b453a8b67e0b40ad5085495008c4ff3148e2f162e"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/guest-home-360.png",
+      "taskOwned": false,
+      "hash": "5d97c79e228b8bacb69ce4b9c23bdc537a7ef83ef4c5a965d92bf52d76b3ac53"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/guest-home-1440.png",
+      "taskOwned": false,
+      "hash": "ca3fe39e9fcc3c715efbe8ac1b0f49657bb02ca5606c9a9298a64c5b444ecd2a"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/error-read-announcements.png",
+      "taskOwned": false,
+      "hash": "cb6c7966063ebab562c0064e569e69ab27e5904aaddfa9836ef8dbb17edaeb21"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/empty-requests-1440.png",
+      "taskOwned": false,
+      "hash": "9b7d54c4f473fd17c920c157ff21c7a0028e2144a2074287bf791e4f0ed46654"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/defect-d14-cancel-failure.png",
+      "taskOwned": false,
+      "hash": "0ed13c06e94108a3691e1a697a75295669e1ae92eb665a878f0f6bfc6ad95cc8"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/defect-d08-obsolete-drive.png",
+      "taskOwned": false,
+      "hash": "62ddd2d6b595ec9e82727c2491aabf178ca95782e97c3811ad85443b3d422b4f"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/defect-d03-drawer-skeleton.png",
+      "taskOwned": false,
+      "hash": "68bff4d83516a8322af695dc5f8d836f855c4b5039f1c457a5e136420a0d3448"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/defect-d02-family-dialog.png",
+      "taskOwned": false,
+      "hash": "464676aa196d387b073c455d05edec1de614e1901637cac2a0d7f9dc8e6526b7"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/screens/defect-d01-household-false-success.png",
+      "taskOwned": false,
+      "hash": "43e6150c9093b2fb9341e8a926d2b03fb6af55cd6c200caa126a82258d99cb2a"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-01/baseline-regression/results.json",
+      "taskOwned": false,
+      "hash": "516c5bd5363b565f1b22c63b413deb349764bc85ec8f928aedefcffede370249"
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/table-detail-dialog.tsx",
+      "taskOwned": true,
+      "hash": "fe142e517e06ed1b50c03118e319d8d4a237e0e1d820244546f8c8f1bdc48b91"
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "taskOwned": true,
+      "hash": "c1bcfcda7dc4c910efe601c2fa54bb5c63b98fb095275684585fef46c937c101"
+    },
+    {
+      "file": "apps/admin-web/src/components/admin/profile-table-panel.tsx",
+      "taskOwned": true,
+      "hash": "b15910227ef5dbc1259fb00ac55e779f26d8717a3cdce46b486b68754c56b799"
+    }
+  ],
+  "concurrentDrift": [
+    {
+      "file": "plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md",
+      "before": "82871578e505d911e91aa1760251488b529eda0e566693159dfed0f8ded203c5",
+      "after": "c93899b37297b16201f6340a9f77a0105efa54dea2086ed220cac95e211dba9b"
+    },
+    {
+      "file": "scripts/resident-web-feedback-regression.cjs",
+      "before": "8aee06a97fc3dcfa96bc2e3b3bd4ff5d23412fba0756a172d0850fa29fdc68f8",
+      "after": "2692ac5cf4a4f0f504f868e507f558a4c9b463ebdfb50be1fc2d9ba65f982e4d"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-00/coverage.md",
+      "before": "7984d79af0357c90d858de0dafa111a1ef263487e3713782ff112554e95eaba4",
+      "after": "6ae1757b18aec73021b3d51c7329537cad211d4e621ee82295f236b1476ad44f"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/rw-lt-00/coverage.json",
+      "before": "95c5fd03f854e38b0fc820646fd04479402cac8f8ddee604bd92af5df39d602d",
+      "after": "6cbffeb0871255b04bcbb05278756e4987cc8cef544c35bbc5317b8c39dc1418"
+    },
+    {
+      "file": "plans/evidence/resident-web-feedback/README.md",
+      "before": "76d0d7366b80ddbf7e0593b78365f6ce0fc43956701eff8c1d15aafe023fd75f",
+      "after": "7a1a429b38f45ab4d88651a82596c41956b74d4e4396c80a7eed48c3194a8315"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/button.tsx",
+      "before": "a9dbadf803cefdef8c14af0cbbe004a9d940a56df618a691614e0e1256922582",
+      "after": "99d944b10a27d49bbb620a2fa9bd2fd98154dc4aee0204a5a9694010db346d65"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/bottom-tab-bar.tsx",
+      "before": "4035258f4d78ea1dc16df32b6b2014154715db4663a7bdd3016e82b041870cf8",
+      "after": "22486bca11352e3fd257a2fff82ce348e8610bb4c43a714897409686633ec19d"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/fade-in.tsx",
+      "before": "2f786f4ea49679922e29f472a15e1172e87b1ba3e463eae35ecde0ae2f6ccd47",
+      "after": "855181fb54f61f6e53b0c9c44a7e22a8b941c3bee9f836c7d219a841d33ad47f"
+    },
+    {
+      "file": "apps/resident-web/src/app/layout.tsx",
+      "before": "9e421ef7fbdb172fd9b515f8cc1c9b44afb2a4a951101fbfb219dc8cdf2244bb",
+      "after": "e51f95f02ba1cbdb58bf8a0bd36462f2962835be4e4a129462721466a34d3074"
+    },
+    {
+      "file": "apps/resident-web/src/app/globals.css",
+      "before": "19dee6dbfa23361350a1ef69e2117d445369523951243de68804206c0aabb256",
+      "after": "71cb7b918d2396e0f202830d320849a4753b1ac7962a0714403c5b03a3f6ebf4"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/horizontal-center-picker.tsx",
+      "before": "2c457c1378ebc36844ff75e4775ef5708939bf2cfde7c43a415a43a6d11d9e20",
+      "after": "0dfe11c7bc9708abfac5ad654d733dbd077dd2f14c1e578ad69feaea7bbede25"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx",
+      "before": "b5728a60c0a6ec112d46d571b32143f1bf7b5e2fa9d49309defe4ba136ff9960",
+      "after": "7675a0d22eec1c12f34f7232139096f2f423cb08d2e27e3340c3e69c12abaab6"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx",
+      "before": "d89ba4dde3d344f83a8b7565ef697ccc17c0a8c1161d49268f78758b55f45fac",
+      "after": "6cfb53c18a32dac4af1a4256e3a542ff8d70e94938c88f70333b6b975a39a378"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/login/page.tsx",
+      "before": "77d151d643c3cc2f3c01aa0b21ffc0d203971f921e7b1bd59efbaf41e9e7dd59",
+      "after": "c4848e3186613daf616d960b261df2608e4c05cc3b2b6209a1c2341bbb181efd"
+    }
+  ],
+  "missing": [],
+  "note": "Concurrent changes/additions outside this task were preserved and recorded. The immutable baseline is unchanged; strict whole-workspace equality is not claimed. Final post-verification source edits only remove trailing whitespace in two Staff files."
+}

@@ -1,0 +1,2154 @@
+{
+  "run": "run-1",
+  "phase": "RW-LT-04",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-12T05:01:27.953Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321",
+    "realtime": "local Realtime unavailable; Realtime events use the in-browser protocol 2.0.0 stand-in (mockRealtime)",
+    "providers": "Auth refusals/transport failures and OAuth/sign-up/profile-completion successes are fulfilled in the browser; the password-recovery journey uses the real local Auth with a disposable synthetic account (OTP obtained through the local admin API and never recorded)",
+    "recoveryAccountRemoved": true
+  },
+  "scenarios": [
+    {
+      "id": "login-failure-classification",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "network-abort: inline message classified correctly": {
+          "ok": true,
+          "detail": [
+            "We couldn't reach the server. Check your connection, then try again."
+          ]
+        },
+        "network-abort: one toast, controls usable, no raw provider text": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Login failed\nCouldn't reach the server. Check your connection."
+            ],
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Log In"
+            }
+          }
+        },
+        "network failure is not reported as wrong credentials": {
+          "ok": true,
+          "detail": [
+            "We couldn't reach the server. Check your connection, then try again."
+          ]
+        },
+        "invalid-credentials: inline message classified correctly": {
+          "ok": true,
+          "detail": [
+            "Incorrect email or password."
+          ]
+        },
+        "invalid-credentials: one toast, controls usable, no raw provider text": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Login failed\nCheck your email and password."
+            ],
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Log In"
+            }
+          }
+        },
+        "rate-limited: inline message classified correctly": {
+          "ok": true,
+          "detail": [
+            "Too many attempts. Please wait a moment, then try again."
+          ]
+        },
+        "rate-limited: one toast, controls usable, no raw provider text": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Login failed\nToo many attempts. Wait a moment, then try again."
+            ],
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Log In"
+            }
+          }
+        },
+        "service-error: inline message classified correctly": {
+          "ok": true,
+          "detail": [
+            "This service is having trouble right now. Please try again shortly."
+          ]
+        },
+        "service-error: one toast, controls usable, no raw provider text": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Login failed\nThe sign-in service is having trouble. Try again shortly."
+            ],
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Log In"
+            }
+          }
+        }
+      },
+      "observations": {
+        "cases": [
+          {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/login",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Log In"
+              },
+              "inline": [
+                "We couldn't reach the server. Check your connection, then try again."
+              ],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              "Login failed\nCouldn't reach the server. Check your connection."
+            ]
+          },
+          {
+            "name": "invalid-credentials",
+            "calls": 1,
+            "state": {
+              "path": "/login",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Log In"
+              },
+              "inline": [
+                "Incorrect email or password."
+              ],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              "Login failed\nCheck your email and password."
+            ]
+          },
+          {
+            "name": "rate-limited",
+            "calls": 1,
+            "state": {
+              "path": "/login",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Log In"
+              },
+              "inline": [
+                "Too many attempts. Please wait a moment, then try again."
+              ],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              "Login failed\nToo many attempts. Wait a moment, then try again."
+            ]
+          },
+          {
+            "name": "service-error",
+            "calls": 1,
+            "state": {
+              "path": "/login",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Log In"
+              },
+              "inline": [
+                "This service is having trouble right now. Please try again shortly."
+              ],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              "Login failed\nThe sign-in service is having trouble. Try again shortly."
+            ]
+          }
+        ]
+      },
+      "requests": {
+        "total": 37,
+        "document": 1,
+        "rsc": 6,
+        "script": 20,
+        "rest": 0,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "login-activation-and-destinations",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "repeated Enter/click/submit while pending → 1 request, 1 toast": {
+          "ok": true,
+          "detail": {
+            "requests": 1,
+            "during": {
+              "path": "/login",
+              "search": "",
+              "button": {
+                "disabled": true,
+                "busy": "true",
+                "text": "Logging in…"
+              },
+              "inline": [],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 1
+          }
+        },
+        "pending immediately: disabled, aria-busy, \"Logging in…\"": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Logging in…"
+          }
+        },
+        "profile-check failure: stays on /login with usable controls and one error": {
+          "ok": true,
+          "detail": {
+            "path": "/login",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Log In"
+            },
+            "inline": [
+              "You're logged in, but we couldn't load your profile. Check your connection, then try again."
+            ],
+            "alerts": [],
+            "active": "password",
+            "overflowX": false,
+            "rawProviderText": false,
+            "toasts": [
+              "Couldn't finish logging in\nYour profile didn't load. Try again."
+            ]
+          }
+        },
+        "retry after recovery follows the existing first-login destination (/onboarding)": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "repeated": {
+          "requests": 1,
+          "during": {
+            "path": "/login",
+            "search": "",
+            "button": {
+              "disabled": true,
+              "busy": "true",
+              "text": "Logging in…"
+            },
+            "inline": [],
+            "alerts": [],
+            "active": "password",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toasts": 1
+        },
+        "profileCheckFailure": {
+          "path": "/login",
+          "search": "",
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Log In"
+          },
+          "inline": [
+            "You're logged in, but we couldn't load your profile. Check your connection, then try again."
+          ],
+          "alerts": [],
+          "active": "password",
+          "overflowX": false,
+          "rawProviderText": false,
+          "toasts": [
+            "Couldn't finish logging in\nYour profile didn't load. Try again."
+          ]
+        },
+        "retryDestination": "/onboarding"
+      },
+      "requests": {
+        "total": 45,
+        "document": 1,
+        "rsc": 11,
+        "script": 21,
+        "rest": 2,
+        "auth": 3,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 7
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "login-destinations-preserved",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "first login on this browser → /onboarding": {
+          "ok": true,
+          "detail": {
+            "path": "/onboarding",
+            "search": "",
+            "subtitle": "Log in to continue to your account."
+          }
+        },
+        "onboarded resident with ?next=/reports → /reports": {
+          "ok": true,
+          "detail": {
+            "path": "/reports",
+            "search": "",
+            "subtitle": "Log in to continue where you left off."
+          }
+        },
+        "?next shows \"continue where you left off\"; plain /login keeps its copy": {
+          "ok": true
+        },
+        "profile-completion-required resident → /home (browse) and /complete-profile for resident actions": {
+          "ok": true,
+          "detail": {
+            "path": "/home",
+            "search": "",
+            "subtitle": "Log in to continue to your account."
+          }
+        },
+        "profile-completion-required resident with ?next=/reports/new → /complete-profile": {
+          "ok": true,
+          "detail": {
+            "path": "/complete-profile",
+            "search": "?next=%2Freports%2Fnew",
+            "subtitle": "Log in to continue where you left off."
+          }
+        }
+      },
+      "observations": {
+        "populatedFirst": {
+          "path": "/onboarding",
+          "search": "",
+          "subtitle": "Log in to continue to your account."
+        },
+        "populatedNext": {
+          "path": "/reports",
+          "search": "",
+          "subtitle": "Log in to continue where you left off."
+        },
+        "incompleteHome": {
+          "path": "/home",
+          "search": "",
+          "subtitle": "Log in to continue to your account."
+        },
+        "incompleteAction": {
+          "path": "/complete-profile",
+          "search": "?next=%2Freports%2Fnew",
+          "subtitle": "Log in to continue where you left off."
+        }
+      },
+      "requests": {
+        "total": 0,
+        "document": 0,
+        "rsc": 0,
+        "script": 0,
+        "rest": 0,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 0
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "google-oauth-initiation",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "pending: disabled, busy, \"Connecting to Google…\" status; no success toast": {
+          "ok": true,
+          "detail": {
+            "pending": {
+              "disabled": true,
+              "busy": "true",
+              "status": [
+                "Connecting to Google…"
+              ]
+            },
+            "toastsBeforeLeave": [],
+            "authorizeRequests": 1
+          }
+        },
+        "Back from the provider: button usable again, no sign-in claim": {
+          "ok": true,
+          "detail": {
+            "path": "/login",
+            "disabled": false,
+            "busy": "false",
+            "restoredFromCache": "back_forward",
+            "toasts": []
+          }
+        }
+      },
+      "observations": {
+        "initiation": {
+          "pending": {
+            "disabled": true,
+            "busy": "true",
+            "status": [
+              "Connecting to Google…"
+            ]
+          },
+          "toastsBeforeLeave": [],
+          "authorizeRequests": 1
+        },
+        "back": {
+          "path": "/login",
+          "disabled": false,
+          "busy": "false",
+          "restoredFromCache": "back_forward",
+          "toasts": []
+        }
+      },
+      "requests": {
+        "total": 67,
+        "document": 2,
+        "rsc": 12,
+        "script": 40,
+        "rest": 0,
+        "auth": 1,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "forgot-password-outcomes",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "network-abort: one warning toast, inline guidance, usable, no raw text, one request": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": [
+              {
+                "text": "Couldn't confirm the code was sent\nCheck your email before requesting another code.",
+                "type": "warning",
+                "visible": "true",
+                "removed": "false",
+                "top": -77,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 96,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": -28.719505310058594,
+                  "label": "Close toast"
+                },
+                "opacity": 0.0350799,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ],
+            "state": {
+              "path": "/forgot-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Send Reset Code"
+              },
+              "inline": [
+                "We couldn't confirm that a reset code was sent. Check your email first; if nothing arrives in a few minutes, try again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            }
+          }
+        },
+        "rate-limited: one error toast, inline guidance, usable, no raw text, one request": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": [
+              {
+                "text": "Couldn't send reset code\nToo many requests. Wait a few minutes.",
+                "type": "error",
+                "visible": "true",
+                "removed": "false",
+                "top": -58,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": -19.632965087890625,
+                  "label": "Close toast"
+                },
+                "opacity": 0.0347797,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ],
+            "state": {
+              "path": "/forgot-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Send Reset Code"
+              },
+              "inline": [
+                "Too many code requests. Please wait a few minutes before requesting another code."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            }
+          }
+        },
+        "confirmed send → /verify-otp with the email; the screen states where it was sent; no success toast": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "pending": {
+              "disabled": true,
+              "busy": "true",
+              "text": "Sending code…"
+            },
+            "url": "/verify-otp?email=rwfb-recovery-check%40test.local",
+            "toasts": [],
+            "confirmation": "We've sent a 6-digit code to\nrw••••@test.local"
+          }
+        },
+        "pending label \"Sending code…\" until the next screen replaces it": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Sending code…"
+          }
+        }
+      },
+      "observations": {
+        "cases": [
+          {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/forgot-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Send Reset Code"
+              },
+              "inline": [
+                "We couldn't confirm that a reset code was sent. Check your email first; if nothing arrives in a few minutes, try again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't confirm the code was sent\nCheck your email before requesting another code.",
+                "type": "warning",
+                "visible": "true",
+                "removed": "false",
+                "top": -77,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 96,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": -28.719505310058594,
+                  "label": "Close toast"
+                },
+                "opacity": 0.0350799,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          },
+          {
+            "name": "rate-limited",
+            "calls": 1,
+            "state": {
+              "path": "/forgot-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Send Reset Code"
+              },
+              "inline": [
+                "Too many code requests. Please wait a few minutes before requesting another code."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't send reset code\nToo many requests. Wait a few minutes.",
+                "type": "error",
+                "visible": "true",
+                "removed": "false",
+                "top": -58,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": -19.632965087890625,
+                  "label": "Close toast"
+                },
+                "opacity": 0.0347797,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          }
+        ],
+        "success": {
+          "calls": 1,
+          "pending": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Sending code…"
+          },
+          "url": "/verify-otp?email=rwfb-recovery-check%40test.local",
+          "toasts": [],
+          "confirmation": "We've sent a 6-digit code to\nrw••••@test.local"
+        }
+      },
+      "requests": {
+        "total": 27,
+        "document": 1,
+        "rsc": 3,
+        "script": 16,
+        "rest": 0,
+        "auth": 3,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 4
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 429 (Too Many Requests)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "recovery-code-and-reset",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "code input has an accessible name": {
+          "ok": true
+        },
+        "expired-code: inline guidance, one toast, one request, usable, no raw text": {
+          "ok": true,
+          "detail": {
+            "name": "expired-code",
+            "calls": 1,
+            "state": {
+              "path": "/verify-otp",
+              "search": "?email=rwfb-lt04-recovery%40test.local",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Verify"
+              },
+              "inline": [
+                "That code is invalid or has expired. Check the code, or request a new one."
+              ],
+              "alerts": [],
+              "active": "6-digit reset code",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 1
+          }
+        },
+        "network-abort: inline guidance, one toast, one request, usable, no raw text": {
+          "ok": true,
+          "detail": {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/verify-otp",
+              "search": "?email=rwfb-lt04-recovery%40test.local",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Verify"
+              },
+              "inline": [
+                "We couldn't reach the server. Check your connection, then try again."
+              ],
+              "alerts": [],
+              "active": "6-digit reset code",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 1
+          }
+        },
+        "resend lost response: one request, warning (not failure), retry still possible": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "state": {
+              "path": "/verify-otp",
+              "search": "?email=rwfb-lt04-recovery%40test.local",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Verify"
+              },
+              "inline": [
+                "We couldn't confirm that a new code was sent. Check your email before requesting another one."
+              ],
+              "alerts": [],
+              "active": "6-digit reset code",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toastType": "warning",
+            "resendVisible": true
+          }
+        },
+        "resend confirmed: one \"New code sent\" success and the cooldown restarts": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "cooldown": true
+          }
+        },
+        "invalid input: inline field errors, focus moves to the first invalid field, no toast, no request": {
+          "ok": true,
+          "detail": {
+            "state": {
+              "path": "/reset-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Update Password"
+              },
+              "inline": [
+                "Password must be at least 8 characters",
+                "Passwords don't match"
+              ],
+              "alerts": [],
+              "active": "password",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 0,
+            "updateCalls": 0,
+            "invalid": "true"
+          }
+        },
+        "lost update response: \"couldn't confirm\" warning, stays usable, inputs kept": {
+          "ok": true,
+          "detail": {
+            "state": {
+              "path": "/reset-password",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Update Password"
+              },
+              "inline": [
+                "We couldn't confirm that your password was changed. Check your connection, then try again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toastType": "warning"
+          }
+        },
+        "deliberate retry → one \"Password updated\" success on /home (2 PUTs total: the lost one and the retry)": {
+          "ok": true,
+          "detail": {
+            "path": "/home",
+            "toasts": [
+              "Password updated",
+              "Couldn't confirm the password change\nCheck your connection, then try again."
+            ],
+            "puts": 2
+          }
+        },
+        "the updated password signs in on local Auth": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "codeInputName": "6-digit reset code",
+        "verifyFailures": [
+          {
+            "name": "expired-code",
+            "calls": 1,
+            "state": {
+              "path": "/verify-otp",
+              "search": "?email=rwfb-lt04-recovery%40test.local",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Verify"
+              },
+              "inline": [
+                "That code is invalid or has expired. Check the code, or request a new one."
+              ],
+              "alerts": [],
+              "active": "6-digit reset code",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 1
+          },
+          {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/verify-otp",
+              "search": "?email=rwfb-lt04-recovery%40test.local",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Verify"
+              },
+              "inline": [
+                "We couldn't reach the server. Check your connection, then try again."
+              ],
+              "alerts": [],
+              "active": "6-digit reset code",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 1
+          }
+        ],
+        "resendUnconfirmed": {
+          "calls": 1,
+          "state": {
+            "path": "/verify-otp",
+            "search": "?email=rwfb-lt04-recovery%40test.local",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Verify"
+            },
+            "inline": [
+              "We couldn't confirm that a new code was sent. Check your email before requesting another one."
+            ],
+            "alerts": [],
+            "active": "6-digit reset code",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toastType": "warning",
+          "resendVisible": true
+        },
+        "resendConfirmed": {
+          "calls": 1,
+          "cooldown": true
+        },
+        "verifiedDestination": "/reset-password",
+        "validation": {
+          "state": {
+            "path": "/reset-password",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Update Password"
+            },
+            "inline": [
+              "Password must be at least 8 characters",
+              "Passwords don't match"
+            ],
+            "alerts": [],
+            "active": "password",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toasts": 0,
+          "updateCalls": 0,
+          "invalid": "true"
+        },
+        "unconfirmed": {
+          "state": {
+            "path": "/reset-password",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Update Password"
+            },
+            "inline": [
+              "We couldn't confirm that your password was changed. Check your connection, then try again."
+            ],
+            "alerts": [],
+            "active": "BODY",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toastType": "warning"
+        },
+        "success": {
+          "path": "/home",
+          "toasts": [
+            "Password updated",
+            "Couldn't confirm the password change\nCheck your connection, then try again."
+          ],
+          "puts": 2
+        }
+      },
+      "requests": {
+        "total": 38,
+        "document": 1,
+        "rsc": 3,
+        "script": 21,
+        "rest": 0,
+        "auth": 7,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "register-outcomes",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "empty submit: inline field errors, focus on First Name, no toast, no request": {
+          "ok": true,
+          "detail": {
+            "state": {
+              "path": "/register",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Create Account"
+              },
+              "inline": [
+                "First name must contain letters only",
+                "Last name must contain letters only",
+                "Select your sex",
+                "Date of birth is required",
+                "Enter a valid email address",
+                "Required",
+                "House No. is required",
+                "Street is required",
+                "Select employment status",
+                "Password must include an uppercase letter, a number, and a special character"
+              ],
+              "alerts": [],
+              "active": "firstName",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": 0,
+            "signupCalls": 0
+          }
+        },
+        "lost sign-up response: unconfirmed wording + \"try logging in\" guidance, no automatic retry, inputs kept": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "state": {
+              "path": "/register",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Create Account"
+              },
+              "inline": [
+                "We couldn't confirm whether your account was created. Before registering again, try logging in with this email."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toast": {
+              "text": "Couldn't confirm your account was created\nTry logging in with this email before registering again.",
+              "type": "warning",
+              "visible": "true",
+              "removed": "false",
+              "top": -80,
+              "left": 520,
+              "right": 920,
+              "width": 400,
+              "height": 96,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 893,
+                "cy": -31.638954162597656,
+                "label": "Close toast"
+              },
+              "opacity": 0.00472818,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            },
+            "kept": "rwfb-lt04-register@test.local"
+          }
+        },
+        "existing email: field error on Email with focus, one error toast, no raw provider text": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "state": {
+              "path": "/register",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Create Account"
+              },
+              "inline": [
+                "An account with this email already exists. Log in instead, or use a different email."
+              ],
+              "alerts": [],
+              "active": "email",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "emailInvalid": "false"
+          }
+        },
+        "confirmed sign-up: success dialog, local sign-out, no toast": {
+          "ok": true,
+          "detail": {
+            "signup": 1,
+            "logout": 1,
+            "toasts": [],
+            "loginEmail": "rwfb-lt04-register@test.local"
+          }
+        },
+        "Proceed to Login keeps the existing ?email= destination": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "validation": {
+          "state": {
+            "path": "/register",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Create Account"
+            },
+            "inline": [
+              "First name must contain letters only",
+              "Last name must contain letters only",
+              "Select your sex",
+              "Date of birth is required",
+              "Enter a valid email address",
+              "Required",
+              "House No. is required",
+              "Street is required",
+              "Select employment status",
+              "Password must include an uppercase letter, a number, and a special character"
+            ],
+            "alerts": [],
+            "active": "firstName",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toasts": 0,
+          "signupCalls": 0
+        },
+        "unconfirmed": {
+          "calls": 1,
+          "state": {
+            "path": "/register",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Create Account"
+            },
+            "inline": [
+              "We couldn't confirm whether your account was created. Before registering again, try logging in with this email."
+            ],
+            "alerts": [],
+            "active": "BODY",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "toast": {
+            "text": "Couldn't confirm your account was created\nTry logging in with this email before registering again.",
+            "type": "warning",
+            "visible": "true",
+            "removed": "false",
+            "top": -80,
+            "left": 520,
+            "right": 920,
+            "width": 400,
+            "height": 96,
+            "close": {
+              "width": 28,
+              "height": 28,
+              "cx": 893,
+              "cy": -31.638954162597656,
+              "label": "Close toast"
+            },
+            "opacity": 0.00472818,
+            "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+          },
+          "kept": "rwfb-lt04-register@test.local"
+        },
+        "exists": {
+          "calls": 1,
+          "state": {
+            "path": "/register",
+            "search": "",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Create Account"
+            },
+            "inline": [
+              "An account with this email already exists. Log in instead, or use a different email."
+            ],
+            "alerts": [],
+            "active": "email",
+            "overflowX": false,
+            "rawProviderText": false
+          },
+          "emailInvalid": "false"
+        },
+        "success": {
+          "signup": 1,
+          "logout": 1,
+          "toasts": [],
+          "loginEmail": "rwfb-lt04-register@test.local"
+        }
+      },
+      "requests": {
+        "total": 60,
+        "document": 1,
+        "rsc": 5,
+        "script": 25,
+        "rest": 2,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 23
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "complete-profile-outcomes",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "network-abort: one request, one warning toast, mapped message, inputs kept, no raw token": {
+          "ok": true,
+          "detail": {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/complete-profile",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Complete Profile"
+              },
+              "inline": [
+                "We couldn't confirm that your profile was saved. Check your connection, then submit again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't confirm your profile was saved\nCheck your connection, then submit again.",
+                "type": "warning",
+                "visible": "true",
+                "removed": "false",
+                "top": 2,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": 39.94218444824219,
+                  "label": "Close toast"
+                },
+                "opacity": 0.812587,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          }
+        },
+        "invalid-fields: one request, one error toast, mapped message, inputs kept, no raw token": {
+          "ok": true,
+          "detail": {
+            "name": "invalid-fields",
+            "calls": 1,
+            "state": {
+              "path": "/complete-profile",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Complete Profile"
+              },
+              "inline": [
+                "Some required details are missing or invalid. Review the form, then try again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't save your profile\nSee the message above the buttons.",
+                "type": "error",
+                "visible": "true",
+                "removed": "false",
+                "top": -1,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": 37.52029323577881,
+                  "label": "Close toast"
+                },
+                "opacity": 0.780967,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          }
+        },
+        "Sign out: pending \"Signing out…\", one local-scope logout, then /login": {
+          "ok": true,
+          "detail": {
+            "pending": {
+              "text": "Signing out…",
+              "disabled": true,
+              "busy": "true"
+            },
+            "calls": 1,
+            "scope": [
+              "local"
+            ]
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "cases": [
+          {
+            "name": "network-abort",
+            "calls": 1,
+            "state": {
+              "path": "/complete-profile",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Complete Profile"
+              },
+              "inline": [
+                "We couldn't confirm that your profile was saved. Check your connection, then submit again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't confirm your profile was saved\nCheck your connection, then submit again.",
+                "type": "warning",
+                "visible": "true",
+                "removed": "false",
+                "top": 2,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": 39.94218444824219,
+                  "label": "Close toast"
+                },
+                "opacity": 0.812587,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          },
+          {
+            "name": "invalid-fields",
+            "calls": 1,
+            "state": {
+              "path": "/complete-profile",
+              "search": "",
+              "button": {
+                "disabled": false,
+                "busy": null,
+                "text": "Complete Profile"
+              },
+              "inline": [
+                "Some required details are missing or invalid. Review the form, then try again."
+              ],
+              "alerts": [],
+              "active": "BODY",
+              "overflowX": false,
+              "rawProviderText": false
+            },
+            "toasts": [
+              {
+                "text": "Couldn't save your profile\nSee the message above the buttons.",
+                "type": "error",
+                "visible": "true",
+                "removed": "false",
+                "top": -1,
+                "left": 520,
+                "right": 920,
+                "width": 400,
+                "height": 77,
+                "close": {
+                  "width": 28,
+                  "height": 28,
+                  "cx": 893,
+                  "cy": 37.52029323577881,
+                  "label": "Close toast"
+                },
+                "opacity": 0.780967,
+                "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+              }
+            ]
+          }
+        ],
+        "signOut": {
+          "pending": {
+            "text": "Signing out…",
+            "disabled": true,
+            "busy": "true"
+          },
+          "calls": 1,
+          "scope": [
+            "local"
+          ]
+        }
+      },
+      "requests": {
+        "total": 89,
+        "document": 2,
+        "rsc": 13,
+        "script": 42,
+        "rest": 6,
+        "auth": 3,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 23
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "logout-header-outcomes",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "expired-session simulation applied": {
+          "ok": true
+        },
+        "over 10 s: still pending, \"Taking longer than usual\" shown and announced, no failure claimed": {
+          "ok": true,
+          "detail": {
+            "hint": true,
+            "status": "Logging out… Taking longer than usual.",
+            "busy": "true",
+            "toasts": 0
+          }
+        },
+        "failure: one \"Couldn't log out\" error, still signed in on the same page, preferences kept, button usable": {
+          "ok": true,
+          "detail": {
+            "path": "/announcements",
+            "accent": "#7c3aed",
+            "button": {
+              "disabled": false,
+              "busy": null
+            },
+            "refreshAttempts": 8,
+            "logoutCalls": 0,
+            "toasts": [
+              "Couldn't log out\nYou are still logged in. Check your connection, then try again."
+            ]
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "name": "Log out",
+        "slow": {
+          "hint": true,
+          "status": "Logging out… Taking longer than usual.",
+          "busy": "true",
+          "toasts": 0
+        },
+        "failed": {
+          "path": "/announcements",
+          "accent": "#7c3aed",
+          "button": {
+            "disabled": false,
+            "busy": null
+          },
+          "refreshAttempts": 8,
+          "logoutCalls": 0,
+          "toasts": [
+            "Couldn't log out\nYou are still logged in. Check your connection, then try again."
+          ]
+        }
+      },
+      "requests": {
+        "total": 108,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 9,
+        "auth": 10,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "logout-local-only-warning",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "pending immediately (disabled, aria-busy, named), repeated click ignored": {
+          "ok": true,
+          "detail": {
+            "pending": {
+              "disabled": true,
+              "busy": "true",
+              "name": "Log out"
+            },
+            "calls": 1
+          }
+        },
+        "unconfirmed revoke: on /login with one warning that kept across the session change; preferences reset": {
+          "ok": true,
+          "detail": {
+            "logoutCalls": 1,
+            "accent": null,
+            "toasts": [
+              {
+                "text": "Logged out on this browser\nWe couldn't reach the server to end your other sessions. Devices that were already logged in may stay logged in.",
+                "type": "warning"
+              }
+            ]
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "pending": {
+          "disabled": true,
+          "busy": "true",
+          "name": "Log out"
+        },
+        "localOnly": {
+          "logoutCalls": 1,
+          "accent": null,
+          "toasts": [
+            {
+              "text": "Logged out on this browser\nWe couldn't reach the server to end your other sessions. Devices that were already logged in may stay logged in.",
+              "type": "warning"
+            }
+          ]
+        }
+      },
+      "requests": {
+        "total": 121,
+        "document": 2,
+        "rsc": 41,
+        "script": 47,
+        "rest": 9,
+        "auth": 3,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "logout-success-header-and-sidebar",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "header: one logout request, /login, preferences reset, no toast": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "accent": null,
+            "toasts": []
+          }
+        },
+        "settings sidebar: same flow, one logout request, /login, no toast": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": []
+          }
+        },
+        "signed out: gated route still goes to /login?next=…": {
+          "ok": true,
+          "detail": "/login?next=%2Fservices%2Frequests"
+        },
+        "360 px sidebar logout keeps the accessible name \"Log out\"; no overflow": {
+          "ok": true,
+          "detail": {
+            "name": "Log out",
+            "width": 46,
+            "overflowX": false
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "header": {
+          "calls": 1,
+          "accent": null,
+          "toasts": []
+        },
+        "sidebarName": "Log out",
+        "sidebar": {
+          "calls": 1,
+          "toasts": []
+        },
+        "afterLogoutGated": "/login?next=%2Fservices%2Frequests",
+        "sidebar360": {
+          "name": "Log out",
+          "width": 46,
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 280,
+        "document": 5,
+        "rsc": 110,
+        "script": 105,
+        "rest": 12,
+        "auth": 6,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 42
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "session-ended-other-tab",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "watching tab: exactly one \"You've been logged out\" info; routing unchanged": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              {
+                "text": "You've been logged out\nYour session ended. Log in again to continue.",
+                "type": "info"
+              }
+            ],
+            "path": "/announcements"
+          }
+        },
+        "initiating tab: no session-ended toast (its own sign-out)": {
+          "ok": true,
+          "detail": {
+            "toasts": []
+          }
+        },
+        "next navigation follows the existing guest redirect": {
+          "ok": true,
+          "detail": "/login"
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "watcher": {
+          "toasts": [
+            {
+              "text": "You've been logged out\nYour session ended. Log in again to continue.",
+              "type": "info"
+            }
+          ],
+          "path": "/announcements"
+        },
+        "initiator": {
+          "toasts": []
+        },
+        "nextNavigation": "/login"
+      },
+      "requests": {
+        "total": 164,
+        "document": 4,
+        "rsc": 47,
+        "script": 80,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 22
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "onboarding-quiet-appearance",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "accent/theme picks: immediate preview (pressed + stored), zero toasts": {
+          "ok": true,
+          "detail": {
+            "accentsClicked": 3,
+            "pressed": 1,
+            "accentStored": "#7C3AED",
+            "quiet": true
+          }
+        },
+        "Continue → /home (existing destination)": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "choices": {
+          "accentsClicked": 3,
+          "pressed": 1,
+          "accentStored": "#7C3AED",
+          "quiet": true
+        }
+      },
+      "requests": {
+        "total": 46,
+        "document": 1,
+        "rsc": 12,
+        "script": 21,
+        "rest": 2,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 8
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "home-read-failures",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "guest: latest-announcement failure shows a retryable notice": {
+          "ok": true,
+          "detail": {
+            "notice": true
+          }
+        },
+        "resident: failed reads show notices with Try again, not \"No requests/reports yet\"; no toast": {
+          "ok": true,
+          "detail": {
+            "requests": true,
+            "reports": true,
+            "falseEmpty": false,
+            "retryButtons": 3
+          }
+        },
+        "retry while failing: pending (\"Trying again…\"), settles to the notice again, no writes": {
+          "ok": true,
+          "detail": {
+            "pending": 1,
+            "stillFailing": true,
+            "writes": 0
+          }
+        },
+        "after the service returns, Try again restores the real content": {
+          "ok": true,
+          "detail": {
+            "synthetic": true
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "guest": {
+          "notice": true
+        },
+        "resident": {
+          "requests": true,
+          "reports": true,
+          "falseEmpty": false,
+          "retryButtons": 3
+        },
+        "toasts": 0,
+        "retryPending": 1,
+        "stillFailing": true,
+        "restRecovered": true,
+        "recovered": {
+          "synthetic": true
+        }
+      },
+      "requests": {
+        "total": 171,
+        "document": 2,
+        "rsc": 88,
+        "script": 47,
+        "rest": 17,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 15
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "announcements-quiet-updates",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "10 Realtime announcement/unread events → zero toasts, cards kept, no skeleton": {
+          "ok": true,
+          "detail": {
+            "pushed": 15,
+            "quiet": true,
+            "cards": 3,
+            "skeletons": 0
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "burst": {
+          "pushed": 15,
+          "quiet": true,
+          "cards": 3,
+          "skeletons": 0
+        }
+      },
+      "requests": {
+        "total": 128,
+        "document": 2,
+        "rsc": 34,
+        "script": 43,
+        "rest": 34,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "announcement-detail-dialog",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "dialog: modal, named by the announcement title, focus moved inside, no fetch on open": {
+          "ok": true,
+          "detail": {
+            "modal": "true",
+            "title": "Synthetic water interruption",
+            "focusInside": true,
+            "overflowX": false
+          }
+        },
+        "motion: slide-up observed and settled within the 240 ms drawer timing": {
+          "ok": true,
+          "detail": {
+            "moving": 5
+          }
+        },
+        "Tab stays inside the dialog": {
+          "ok": true
+        },
+        "Escape closes; controls inert during exit; focus returns to the card": {
+          "ok": true,
+          "detail": {
+            "exitInert": true,
+            "focus": "View announcement: Synthetic water interruption"
+          }
+        },
+        "backdrop click closes": {
+          "ok": true
+        },
+        "no toast from opening/closing details": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "open": {
+          "modal": "true",
+          "title": "Synthetic water interruption",
+          "focusInside": true,
+          "overflowX": false
+        },
+        "moving": 5,
+        "fetchesOnOpen": 0,
+        "trapped": true,
+        "exitInert": true,
+        "focusReturned": "View announcement: Synthetic water interruption"
+      },
+      "requests": {
+        "total": 100,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "announcement-detail-dialog-reduced-360",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "dialog: modal, named by the announcement title, focus moved inside, no fetch on open": {
+          "ok": true,
+          "detail": {
+            "modal": "true",
+            "title": "Synthetic water interruption",
+            "focusInside": true,
+            "overflowX": false
+          }
+        },
+        "reduced motion: no slide transform; 360 px no overflow": {
+          "ok": true,
+          "detail": {
+            "moving": 0,
+            "overflowX": false
+          }
+        },
+        "Tab stays inside the dialog": {
+          "ok": true
+        },
+        "Escape closes; controls inert during exit; focus returns to the card": {
+          "ok": true,
+          "detail": {
+            "exitInert": true,
+            "focus": "View announcement: Synthetic water interruption"
+          }
+        },
+        "backdrop click closes": {
+          "ok": true
+        },
+        "no toast from opening/closing details": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "open": {
+          "modal": "true",
+          "title": "Synthetic water interruption",
+          "focusInside": true,
+          "overflowX": false
+        },
+        "moving": 0,
+        "fetchesOnOpen": 0,
+        "trapped": true,
+        "exitInert": true,
+        "focusReturned": "View announcement: Synthetic water interruption"
+      },
+      "requests": {
+        "total": 96,
+        "document": 2,
+        "rsc": 28,
+        "script": 42,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "auth-static-and-narrow",
+      "phase": "RW-LT-04",
+      "status": "pass",
+      "checks": {
+        "/auth/error: alert copy and return links unchanged": {
+          "ok": true,
+          "detail": {
+            "alert": "The request was cancelled, expired, or could not be verified. Check your connection and start sign-in again. Your existing account has been preserved.",
+            "links": [
+              "/login",
+              "/settings/profile"
+            ]
+          }
+        },
+        "/login?authError keeps the Google failure notice": {
+          "ok": true,
+          "detail": "Google sign-in was cancelled, expired, or failed. Please try again."
+        },
+        "320 px: inline error + toast within gutters, no horizontal overflow": {
+          "ok": true,
+          "detail": {
+            "overflowX": false,
+            "toast": {
+              "text": "Login failed\nCouldn't reach the server. Check your connection.",
+              "type": "error",
+              "visible": "true",
+              "removed": "false",
+              "top": -80,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 96,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 277,
+                "cy": -31.64874267578125,
+                "label": "Close toast"
+              },
+              "opacity": 0.00462649,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          }
+        }
+      },
+      "observations": {
+        "authError": {
+          "alert": "The request was cancelled, expired, or could not be verified. Check your connection and start sign-in again. Your existing account has been preserved.",
+          "links": [
+            "/login",
+            "/settings/profile"
+          ]
+        },
+        "authErrorNotice": "Google sign-in was cancelled, expired, or failed. Please try again.",
+        "narrow": {
+          "overflowX": false
+        },
+        "toast": {
+          "text": "Login failed\nCouldn't reach the server. Check your connection.",
+          "type": "error",
+          "visible": "true",
+          "removed": "false",
+          "top": -80,
+          "left": 16,
+          "right": 304,
+          "width": 288,
+          "height": 96,
+          "close": {
+            "width": 28,
+            "height": 28,
+            "cx": 277,
+            "cy": -31.64874267578125,
+            "label": "Close toast"
+          },
+          "opacity": 0.00462649,
+          "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+        }
+      },
+      "requests": {
+        "total": 61,
+        "document": 2,
+        "rsc": 10,
+        "script": 40,
+        "rest": 0,
+        "auth": 1,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 8
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-12T05:05:10.220Z",
+  "summary": {
+    "pass": 18,
+    "fail": 0,
+    "error": 0
+  }
+}

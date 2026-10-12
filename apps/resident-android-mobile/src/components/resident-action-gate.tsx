@@ -2,16 +2,25 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, usePathname, useRouter } from 'expo-router';
 import { useAuth } from '@/hooks/use-auth';
+import { GuestAuthCalloutScreen } from './guest-auth-callout-screen';
 import { PrimaryButton } from './primary-button';
 import { ThemedText } from './themed-text';
 
-/** Keep public screens available; block mounting submission forms until checked. */
+/** Block mounting submission forms until the resident is signed in and their profile is checked. */
 export function ResidentActionGate({ children }: { children: ReactNode }) {
   const { session, needsCompletion, completionError, refreshCompletion } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const params = useLocalSearchParams();
-  if (!session || needsCompletion === false) return children;
+  if (!session) {
+    return <GuestAuthCalloutScreen
+      title="Log In Required"
+      tabName="this service"
+      message="You need to log in before you can submit reports, requests, or registrations."
+      description="Guests can still browse public information."
+    />;
+  }
+  if (needsCompletion === false) return children;
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     if (typeof value === 'string') query.set(key, value);

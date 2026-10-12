@@ -1,0 +1,6 @@
+Passed: chrome: JSON household counts remain independent of normalized members
+Passed: chrome: long-name details stay contained and keyboard focus returns to the trigger
+Passed: firefox: JSON household counts remain independent of normalized members
+Passed: firefox: long-name details stay contained and keyboard focus returns to the trigger
+Passed: webkit: JSON household counts remain independent of normalized members
+Passed: webkit: long-name details stay contained and keyboard focus returns to the trigger

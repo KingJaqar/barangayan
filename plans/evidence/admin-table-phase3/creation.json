@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "checks": [
+    "Complete options permit request creation for a resident beyond the API cap; archive refreshes exact membership"
+  ],
+  "errors": [],
+  "timings": [],
+  "refreshes": null,
+  "leaks": [],
+  "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form').getByRole('button', { name: 'Create Transaction', exact: true })\u001b[22m\n"
+}

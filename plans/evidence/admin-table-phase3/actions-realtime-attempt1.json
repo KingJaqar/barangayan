@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "checks": [],
+  "errors": [],
+  "timings": [],
+  "refreshes": null,
+  "leaks": [],
+  "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('tbody tr td').nth(6).getByRole('button', { name: 'Cancel', exact: true })\u001b[22m\n"
+}

@@ -1,0 +1,1 @@
+{"created":["barangayan-admin-phase3-db","barangayan-admin-phase3-rest","barangayan-admin-phase3-auth","barangayan-admin-phase3-realtime"],"highestMigration":"0109","alignment":{"columns":true,"constraints":true,"indexes":false,"policies":false,"rls":true,"collations":true,"migrations":true}}

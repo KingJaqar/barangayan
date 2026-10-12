@@ -1,0 +1,54 @@
+
+> @barangayan/web@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 90ms
+
+  Creating an optimized production build ...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 1/3...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 1/3...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 2/3...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 2/3...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 3/3...
+getaddrinfo ENOTFOUND fonts.googleapis.com
+
+Retrying 3/3...
+Error: getaddrinfo ENOTFOUND fonts.googleapis.com
+    at ignore-listed frames {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'fonts.googleapis.com'
+}
+Error: getaddrinfo ENOTFOUND fonts.googleapis.com
+    at ignore-listed frames {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'fonts.googleapis.com'
+}
+Failed to compile.
+
+Error: EPERM: operation not permitted, mkdir 'C:\Users\User\barangayan\apps\admin-web\.next\server\app\(admin)\services\sla'
+
+
+> Build failed because of webpack errors
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c next build --webpack

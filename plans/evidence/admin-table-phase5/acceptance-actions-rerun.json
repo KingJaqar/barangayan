@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "mode": "actions",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "native detail dialogs keep IDs, dates and drafts; real modal saves revalidate; Escape restores focus"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

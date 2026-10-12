@@ -1,0 +1,204 @@
+{
+  "passed": false,
+  "checks": [
+    "ten route mount cycles preserve one household channel and baseline table observers",
+    "thirty warm committed-result timings meet the recorded loopback target"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "route": "residents",
+      "ms": 642.5819999999985
+    },
+    {
+      "route": "residents",
+      "ms": 556.2163
+    },
+    {
+      "route": "residents",
+      "ms": 484.8639000000003
+    },
+    {
+      "route": "residents",
+      "ms": 609.9883000000009
+    },
+    {
+      "route": "residents",
+      "ms": 538.4614999999976
+    },
+    {
+      "route": "residents",
+      "ms": 593.5336000000025
+    },
+    {
+      "route": "residents",
+      "ms": 552.8346999999994
+    },
+    {
+      "route": "residents",
+      "ms": 520.4543999999987
+    },
+    {
+      "route": "residents",
+      "ms": 522.7497000000003
+    },
+    {
+      "route": "residents",
+      "ms": 531.1068999999989
+    },
+    {
+      "route": "households-residents",
+      "ms": 774.3728999999985
+    },
+    {
+      "route": "households-residents",
+      "ms": 656.6563999999998
+    },
+    {
+      "route": "households-residents",
+      "ms": 632.8004000000001
+    },
+    {
+      "route": "households-residents",
+      "ms": 605.0802000000003
+    },
+    {
+      "route": "households-residents",
+      "ms": 611.540399999998
+    },
+    {
+      "route": "households-residents",
+      "ms": 602.5136999999995
+    },
+    {
+      "route": "households-residents",
+      "ms": 602.2947999999997
+    },
+    {
+      "route": "households-residents",
+      "ms": 595.3626000000004
+    },
+    {
+      "route": "households-residents",
+      "ms": 606.0381999999954
+    },
+    {
+      "route": "households-residents",
+      "ms": 609.6756000000023
+    },
+    {
+      "route": "staff",
+      "ms": 610.5796999999948
+    },
+    {
+      "route": "staff",
+      "ms": 490.98689999999624
+    },
+    {
+      "route": "staff",
+      "ms": 508.33890000000247
+    },
+    {
+      "route": "staff",
+      "ms": 447.5083000000013
+    },
+    {
+      "route": "staff",
+      "ms": 458.3833999999988
+    },
+    {
+      "route": "staff",
+      "ms": 481.4331999999995
+    },
+    {
+      "route": "staff",
+      "ms": 495.5037999999986
+    },
+    {
+      "route": "staff",
+      "ms": 499.2260000000024
+    },
+    {
+      "route": "staff",
+      "ms": 462.5278000000035
+    },
+    {
+      "route": "staff",
+      "ms": 389.4495999999999
+    }
+  ],
+  "mounts": [
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    }
+  ],
+  "refreshes": null,
+  "failure": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'View resident alpha duplicate', exact: true })\u001b[22m\n\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\detail-realtime.mjs:100:157\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\detail-realtime.mjs:13:3)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:90:3"
+}

@@ -1,0 +1,939 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Existing policy semantics must remain unchanged
++ actual - expected
+... Skipped lines
+
+  [
+    {
+      check: null,
+      cmd: 'DELETE',
+      policy: 'admins delete barangay officials in their barangay',
+...
+        '     JOIN drive_registrations r ON ((r.drive_id = d.id)))\n' +
++       "  WHERE ((p.id = ( SELECT uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL) AND (r.id = drive_registration_scores.registration_id))))",
+-       "  WHERE ((p.id = ( SELECT auth.uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL) AND (r.id = drive_registration_scores.registration_id))))",
+      roles: [
+        'authenticated'
+      ],
+      table: 'drive_registration_scores'
+    },
+...
+      policy: 'drive_registrations_own_cancel',
++     qual: "((uid() = user_id) AND (status = 'pending'::drive_registration_status))",
+-     qual: "((auth.uid() = user_id) AND (status = 'pending'::drive_registration_status))",
+      roles: [
+        'public'
+      ],
+      table: 'drive_registrations'
+    },
+...
+      policy: 'drive_registrations_own_read',
++     qual: '(uid() = user_id)',
+-     qual: '(auth.uid() = user_id)',
+      roles: [
+        'public'
+      ],
+      table: 'drive_registrations'
+    },
+...
+    {
++     check: '(profile_id = uid())',
+-     check: '(profile_id = auth.uid())',
+      cmd: 'ALL',
+      policy: 'residents manage own household',
++     qual: '(profile_id = uid())',
+-     qual: '(profile_id = auth.uid())',
+      roles: [
+        'authenticated'
+      ],
+      table: 'household_members'
+    },
+...
+    {
++     check: '((barangay_id = current_barangay_id()) AND (reporter_id = uid()))',
+-     check: '((barangay_id = current_barangay_id()) AND (reporter_id = auth.uid()))',
+      cmd: 'INSERT',
+      policy: 'residents insert incidents',
+      qual: null,
+      roles: [
+        'authenticated'
+...
+    {
++     check: '(reporter_id = uid())',
+-     check: '(reporter_id = auth.uid())',
+      cmd: 'UPDATE',
+      policy: 'residents mark own resolved incident read',
++     qual: "((reporter_id = uid()) AND (status = 'resolved'::text) AND (deleted_at IS NULL))",
+-     qual: "((reporter_id = auth.uid()) AND (status = 'resolved'::text) AND (deleted_at IS NULL))",
+      roles: [
+        'authenticated'
+      ],
+      table: 'incidents'
+    },
+...
+    {
++     check: '(reporter_id = uid())',
+-     check: '(reporter_id = auth.uid())',
+      cmd: 'UPDATE',
+      policy: 'residents soft-delete own open incident',
++     qual: "((reporter_id = uid()) AND (status = 'open'::text) AND (deleted_at IS NULL) AND (created_at > (now() - '24:00:00'::interval)))",
+-     qual: "((reporter_id = auth.uid()) AND (status = 'open'::text) AND (deleted_at IS NULL) AND (created_at > (now() - '24:00:00'::interval)))",
+      roles: [
+        'authenticated'
+      ],
+      table: 'incidents'
+    },
+...
+        '   FROM service_requests sr\n' +
++       '  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = uid()))))',
+-       '  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid()))))',
+      roles: [
+        'authenticated'
+      ],
+      table: 'payments'
+    },
+...
+      policy: 'admins can update admin profiles in their barangay',
++     qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> uid()))`,
+-     qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> auth.uid()))`,
+      roles: [
+        'authenticated'
+      ],
+      table: 'profiles'
+    },
+...
+    {
++     check: '(uid() = id)',
+-     check: '(auth.uid() = id)',
+      cmd: 'INSERT',
+      policy: 'residents can create their own profile',
+      qual: null,
+      roles: [
+        'public'
+...
+      policy: 'residents can read their own profile',
++     qual: '(uid() = id)',
+-     qual: '(auth.uid() = id)',
+      roles: [
+        'public'
+      ],
+      table: 'profiles'
+    },
+    {
++     check: '(uid() = id)',
+-     check: '(auth.uid() = id)',
+      cmd: 'UPDATE',
+      policy: 'residents can update their own profile',
++     qual: '(uid() = id)',
+-     qual: '(auth.uid() = id)',
+      roles: [
+        'public'
+      ],
+      table: 'profiles'
+    },
+...
+    {
++     check: '((resident_id = uid()) AND (barangay_id = current_barangay_id()))',
+-     check: '((resident_id = auth.uid()) AND (barangay_id = current_barangay_id()))',
+      cmd: 'INSERT',
+      policy: 'residents can create their own service requests',
+      qual: null,
+      roles: [
+        'authenticated'
+...
+      policy: 'residents can read their own service requests',
++     qual: '(resident_id = uid())',
+-     qual: '(resident_id = auth.uid())',
+      roles: [
+        'authenticated'
+      ],
+      table: 'service_requests'
+    }
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/security.mjs:15:52 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      table: 'barangay_officials',
+      policy: 'admins delete barangay officials in their barangay',
+      cmd: 'DELETE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins insert barangay officials in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins read barangay officials in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins update barangay officials in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'document_types',
+      policy: 'admins can manage document types in their barangay',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'document_types',
+      policy: 'anyone can read active document types',
+      cmd: 'SELECT',
+      roles: [ 'anon' ],
+      qual: '(is_active = true)',
+      check: null
+    },
+    {
+      table: 'document_types',
+      policy: 'incomplete accounts browse active documents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND is_active AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'document_types',
+      policy: "residents can read their own barangay's active document types",
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = current_barangay_id()) AND (is_active = true))',
+      check: null
+    },
+    {
+      table: 'drive_registration_scores',
+      policy: 'administrators read same tenant scores',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(EXISTS ( SELECT 1\n' +
+        '   FROM ((profiles p\n' +
+        '     JOIN medical_drives d ON ((d.barangay_id = p.barangay_id)))\n' +
+        '     JOIN drive_registrations r ON ((r.drive_id = d.id)))\n' +
+        "  WHERE ((p.id = ( SELECT uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL) AND (r.id = drive_registration_scores.registration_id))))",
+      check: null
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'admins read drive registrations',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))',
+      check: null
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'admins update drive registrations',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))',
+      check: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))'
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'drive_registrations_own_cancel',
+      cmd: 'UPDATE',
+      roles: [ 'public' ],
+      qual: "((uid() = user_id) AND (status = 'pending'::drive_registration_status))",
+      check: "(status = 'cancelled'::drive_registration_status)"
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'drive_registrations_own_read',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '(uid() = user_id)',
+      check: null
+    },
+    {
+      table: 'household_members',
+      policy: 'admins manage barangay household members',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))',
+      check: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))'
+    },
+    {
+      table: 'household_members',
+      policy: 'admins read barangay household',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))',
+      check: null
+    },
+    {
+      table: 'household_members',
+      policy: 'residents manage own household',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: '(profile_id = uid())',
+      check: '(profile_id = uid())'
+    },
+    {
+      table: 'incident_categories',
+      policy: 'admins manage categories',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incident_categories',
+      policy: 'residents read own barangay categories',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(barangay_id = current_barangay_id())',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'admins insert incidents',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incidents',
+      policy: 'admins manage incidents',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incidents',
+      policy: 'guest read barangay incidents',
+      cmd: 'SELECT',
+      roles: [ 'anon' ],
+      qual: '(deleted_at IS NULL)',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'incomplete accounts browse public incidents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'residents insert incidents',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: '((barangay_id = current_barangay_id()) AND (reporter_id = uid()))'
+    },
+    {
+      table: 'incidents',
+      policy: 'residents mark own resolved incident read',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: "((reporter_id = uid()) AND (status = 'resolved'::text) AND (deleted_at IS NULL))",
+      check: '(reporter_id = uid())'
+    },
+    {
+      table: 'incidents',
+      policy: 'residents read own barangay incidents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((deleted_at IS NULL) AND (barangay_id = current_barangay_id()))',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'residents soft-delete own open incident',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: "((reporter_id = uid()) AND (status = 'open'::text) AND (deleted_at IS NULL) AND (created_at > (now() - '24:00:00'::interval)))",
+      check: '(reporter_id = uid())'
+    },
+    {
+      table: 'medical_drives',
+      policy: 'admins manage medical drives',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'medical_drives',
+      policy: 'admins read all medical drives',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'medical_drives',
+      policy: 'medical_drives_public_read',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '((is_active = true) AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'payments',
+      policy: 'admins can create payments in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'payments',
+      policy: 'admins can read all payments in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'payments',
+      policy: 'admins can update payments in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'payments',
+      policy: 'residents can read payments on their own requests',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(EXISTS ( SELECT 1\n' +
+        '   FROM service_requests sr\n' +
+        '  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = uid()))))',
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can create resident profiles in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can read admin profiles in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))`,
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can read residents in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text) AND (deleted_at IS NULL))`,
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can update admin profiles in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> uid()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can update resident profiles in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can create their own profile',
+      cmd: 'INSERT',
+      roles: [ 'public' ],
+      qual: null,
+      check: '(uid() = id)'
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can read their own profile',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '(uid() = id)',
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can update their own profile',
+      cmd: 'UPDATE',
+      roles: [ 'public' ],
+      qual: '(uid() = id)',
+      check: '(uid() = id)'
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can create requests in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can read all requests in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can update requests in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'service_requests',
+      policy: 'residents can create their own service requests',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: '((resident_id = uid()) AND (barangay_id = current_barangay_id()))'
+    },
+    {
+      table: 'service_requests',
+      policy: 'residents can read their own service requests',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(resident_id = uid())',
+      check: null
+    }
+  ],
+  expected: [
+    {
+      table: 'barangay_officials',
+      policy: 'admins delete barangay officials in their barangay',
+      cmd: 'DELETE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins insert barangay officials in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins read barangay officials in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'barangay_officials',
+      policy: 'admins update barangay officials in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'document_types',
+      policy: 'admins can manage document types in their barangay',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'document_types',
+      policy: 'anyone can read active document types',
+      cmd: 'SELECT',
+      roles: [ 'anon' ],
+      qual: '(is_active = true)',
+      check: null
+    },
+    {
+      table: 'document_types',
+      policy: 'incomplete accounts browse active documents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND is_active AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'document_types',
+      policy: "residents can read their own barangay's active document types",
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = current_barangay_id()) AND (is_active = true))',
+      check: null
+    },
+    {
+      table: 'drive_registration_scores',
+      policy: 'administrators read same tenant scores',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(EXISTS ( SELECT 1\n' +
+        '   FROM ((profiles p\n' +
+        '     JOIN medical_drives d ON ((d.barangay_id = p.barangay_id)))\n' +
+        '     JOIN drive_registrations r ON ((r.drive_id = d.id)))\n' +
+        "  WHERE ((p.id = ( SELECT auth.uid() AS uid)) AND (p.role = 'admin'::text) AND (p.deleted_at IS NULL) AND (r.id = drive_registration_scores.registration_id))))",
+      check: null
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'admins read drive registrations',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))',
+      check: null
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'admins update drive registrations',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))',
+      check: `(("current_role"() = 'admin'::text) AND (EXISTS ( SELECT 1\n` +
+        '   FROM medical_drives d\n' +
+        '  WHERE ((d.id = drive_registrations.drive_id) AND (d.barangay_id = current_barangay_id())))))'
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'drive_registrations_own_cancel',
+      cmd: 'UPDATE',
+      roles: [ 'public' ],
+      qual: "((auth.uid() = user_id) AND (status = 'pending'::drive_registration_status))",
+      check: "(status = 'cancelled'::drive_registration_status)"
+    },
+    {
+      table: 'drive_registrations',
+      policy: 'drive_registrations_own_read',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '(auth.uid() = user_id)',
+      check: null
+    },
+    {
+      table: 'household_members',
+      policy: 'admins manage barangay household members',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))',
+      check: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))'
+    },
+    {
+      table: 'household_members',
+      policy: 'admins read barangay household',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (profile_id IN ( SELECT profiles.id\n` +
+        '   FROM profiles\n' +
+        '  WHERE (profiles.barangay_id = current_barangay_id()))))',
+      check: null
+    },
+    {
+      table: 'household_members',
+      policy: 'residents manage own household',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: '(profile_id = auth.uid())',
+      check: '(profile_id = auth.uid())'
+    },
+    {
+      table: 'incident_categories',
+      policy: 'admins manage categories',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incident_categories',
+      policy: 'residents read own barangay categories',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(barangay_id = current_barangay_id())',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'admins insert incidents',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incidents',
+      policy: 'admins manage incidents',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'incidents',
+      policy: 'guest read barangay incidents',
+      cmd: 'SELECT',
+      roles: [ 'anon' ],
+      qual: '(deleted_at IS NULL)',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'incomplete accounts browse public incidents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((barangay_id = ( SELECT incomplete_profile_browsing_barangay() AS incomplete_profile_browsing_barangay)) AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'residents insert incidents',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: '((barangay_id = current_barangay_id()) AND (reporter_id = auth.uid()))'
+    },
+    {
+      table: 'incidents',
+      policy: 'residents mark own resolved incident read',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: "((reporter_id = auth.uid()) AND (status = 'resolved'::text) AND (deleted_at IS NULL))",
+      check: '(reporter_id = auth.uid())'
+    },
+    {
+      table: 'incidents',
+      policy: 'residents read own barangay incidents',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '((deleted_at IS NULL) AND (barangay_id = current_barangay_id()))',
+      check: null
+    },
+    {
+      table: 'incidents',
+      policy: 'residents soft-delete own open incident',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: "((reporter_id = auth.uid()) AND (status = 'open'::text) AND (deleted_at IS NULL) AND (created_at > (now() - '24:00:00'::interval)))",
+      check: '(reporter_id = auth.uid())'
+    },
+    {
+      table: 'medical_drives',
+      policy: 'admins manage medical drives',
+      cmd: 'ALL',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'medical_drives',
+      policy: 'admins read all medical drives',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'medical_drives',
+      policy: 'medical_drives_public_read',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '((is_active = true) AND (deleted_at IS NULL))',
+      check: null
+    },
+    {
+      table: 'payments',
+      policy: 'admins can create payments in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'payments',
+      policy: 'admins can read all payments in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'payments',
+      policy: 'admins can update payments in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'payments',
+      policy: 'residents can read payments on their own requests',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(EXISTS ( SELECT 1\n' +
+        '   FROM service_requests sr\n' +
+        '  WHERE ((sr.id = payments.service_request_id) AND (sr.resident_id = auth.uid()))))',
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can create resident profiles in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can read admin profiles in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))`,
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can read residents in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text) AND (deleted_at IS NULL))`,
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can update admin profiles in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text) AND (id <> auth.uid()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'admin'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'admins can update resident profiles in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()) AND (role = 'resident'::text))`
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can create their own profile',
+      cmd: 'INSERT',
+      roles: [ 'public' ],
+      qual: null,
+      check: '(auth.uid() = id)'
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can read their own profile',
+      cmd: 'SELECT',
+      roles: [ 'public' ],
+      qual: '(auth.uid() = id)',
+      check: null
+    },
+    {
+      table: 'profiles',
+      policy: 'residents can update their own profile',
+      cmd: 'UPDATE',
+      roles: [ 'public' ],
+      qual: '(auth.uid() = id)',
+      check: '(auth.uid() = id)'
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can create requests in their barangay',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can read all requests in their barangay',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: null
+    },
+    {
+      table: 'service_requests',
+      policy: 'admins can update requests in their barangay',
+      cmd: 'UPDATE',
+      roles: [ 'authenticated' ],
+      qual: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`,
+      check: `(("current_role"() = 'admin'::text) AND (barangay_id = current_barangay_id()))`
+    },
+    {
+      table: 'service_requests',
+      policy: 'residents can create their own service requests',
+      cmd: 'INSERT',
+      roles: [ 'authenticated' ],
+      qual: null,
+      check: '((resident_id = auth.uid()) AND (barangay_id = current_barangay_id()))'
+    },
+    {
+      table: 'service_requests',
+      policy: 'residents can read their own service requests',
+      cmd: 'SELECT',
+      roles: [ 'authenticated' ],
+      qual: '(resident_id = auth.uid())',
+      check: null
+    }
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+      "message": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    '20000000-0000-4000-8000-000000000001',\n    '20000000-0000-4000-8000-000000000004',\n    '20000000-0000-4000-8000-000000000007',\n+   null,\n+   null,\n+   null,\n+   null,\n+   null,\n+   null,\n+   null\n-   '20000000-0000-4000-8000-000000000010',\n-   '20000000-0000-4000-8000-000000000013',\n-   '20000000-0000-4000-8000-000000000016',\n-   '20000000-0000-4000-8000-000000000019',\n-   '20000000-0000-4000-8000-000000000022',\n-   '20000000-0000-4000-8000-000000000025',\n-   '20000000-0000-4000-8000-000000000028'\n  ]\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:61:98\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:59:49"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

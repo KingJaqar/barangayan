@@ -1,8 +1,9 @@
 'use client';
 
 import type { Tables } from '@barangayan/shared';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
+import { useScopedRead } from '@/hooks/use-scoped-read';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
@@ -12,23 +13,23 @@ export type EmergencyGuideline = Tables<'emergency_information'>;
  * Web port of apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts
  * [C-013]. Offline caching (AsyncStorage + the 6s seed-data fallback) is dropped —
  * offline support is an explicit non-goal for resident-web (plan §9/§14 Phase 7).
+ *
+ * Read state (feedback plan RW-LT-05): scoped by barangay with newest-request-wins
+ * (see use-scoped-read.ts). `isLoading` keeps its meaning (any fetch in flight, including a
+ * Realtime refetch); `isInitialLoading` / `isRefreshing` / `isReady` let consumers keep a
+ * loaded list visible during a refresh and tell a failed read from an empty one.
  */
 export function useEmergencyGuidelines(barangayId: string | null): {
   guidelines: EmergencyGuideline[];
   isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
+  isReady: boolean;
   error: string | null;
   refetch: () => void;
 } {
-  const [guidelines, setGuidelines] = useState<EmergencyGuideline[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const cancelledRef = useRef(false);
-
-  const doFetch = useCallback(() => {
-    setIsLoading(true);
-    setError(null);
+  const read = useScopedRead<EmergencyGuideline[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
-
     let query = supabase
       .from('emergency_information')
       .select('*')
@@ -36,28 +37,12 @@ export function useEmergencyGuidelines(barangayId: string | null): {
       .eq('is_active', true)
       .is('deleted_at', null)
       .order('sort_order', { ascending: true });
-
-    if (barangayId) {
-      query = query.eq('barangay_id', barangayId);
-    }
-
-    query.then(({ data, error: qErr }) => {
-      if (cancelledRef.current) return;
-      if (qErr) {
-        setError(qErr.message);
-      } else {
-        setGuidelines((data ?? []) as EmergencyGuideline[]);
-      }
-      setIsLoading(false);
-    });
-  }, [barangayId]);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+    return query.then(({ data, error }) => ({ data: (data ?? []) as EmergencyGuideline[], error }));
+  });
+  const { refetch } = read;
 
   useEffect(() => {
-    cancelledRef.current = false;
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
-    // react-hooks/set-state-in-effect.
-    Promise.resolve().then(() => doFetch());
-
     const supabase = createSupabaseBrowserClient();
     const channel = supabase
       .channel(uniqueChannelName(`emergency-guidelines:${barangayId ?? 'all'}`))
@@ -69,17 +54,21 @@ export function useEmergencyGuidelines(barangayId: string | null): {
           table: 'emergency_information',
           filter: barangayId ? `barangay_id=eq.${barangayId}` : undefined,
         },
-        () => {
-          if (!cancelledRef.current) doFetch();
-        },
+        () => refetch(),
       )
       .subscribe();
-
     return () => {
-      cancelledRef.current = true;
       supabase.removeChannel(channel);
     };
-  }, [doFetch, barangayId]);
+  }, [barangayId, refetch]);
 
-  return { guidelines, isLoading, error, refetch: doFetch };
+  return {
+    guidelines: read.data ?? [],
+    isLoading: read.isLoading,
+    isInitialLoading: read.isInitialLoading,
+    isRefreshing: read.isRefreshing,
+    isReady: read.isReady,
+    error: read.error,
+    refetch,
+  };
 }

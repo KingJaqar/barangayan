@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AUTH_MESSAGES, authFailureKind } from '@/lib/auth/auth-feedback';
+import { beginAttempt, notify } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 /**
@@ -21,23 +22,46 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const busy = useRef(false);
 
   async function handleSend(event: React.FormEvent) {
     event.preventDefault();
+    if (busy.current) return;
+    busy.current = true;
     setError(null);
     setLoading(true);
+    const attempt = beginAttempt('send-reset-code');
 
-    const supabase = createSupabaseBrowserClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email);
-    setLoading(false);
+    let resetError: unknown = null;
+    try {
+      ({ error: resetError } = await createSupabaseBrowserClient().auth.resetPasswordForEmail(email));
+    } catch (cause) {
+      resetError = cause;
+    }
 
     if (resetError) {
-      setError(resetError.message);
-      toast.error(`Could not send reset code: ${resetError.message}`);
+      busy.current = false;
+      setLoading(false);
+      const kind = authFailureKind(resetError);
+      if (kind === 'connection') {
+        // The request may have reached Auth before the connection dropped.
+        setError("We couldn't confirm that a reset code was sent. Check your email first; if nothing arrives in a few minutes, try again.");
+        notify.warning("Couldn't confirm the code was sent", { id: attempt, description: 'Check your email before requesting another code.' });
+      } else if (kind === 'rate-limit') {
+        setError('Too many code requests. Please wait a few minutes before requesting another code.');
+        notify.error("Couldn't send reset code", { id: attempt, description: 'Too many requests. Wait a few minutes.' });
+      } else if (kind === 'service') {
+        setError(AUTH_MESSAGES.service);
+        notify.error("Couldn't send reset code", { id: attempt, description: 'Try again shortly.' });
+      } else {
+        setError("We couldn't send a reset code. Check the email address, then try again.");
+        notify.error("Couldn't send reset code", { id: attempt, description: 'Check the email address.' });
+      }
       return;
     }
 
-    toast.success('Reset code sent — check your email.');
+    // The code-entry screen states where the code was sent, so no success toast. Stay
+    // pending until it replaces this screen.
     router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
   }
 
@@ -60,7 +84,7 @@ export default function ForgotPasswordPage() {
 
         {error ? <p className="mb-3 text-sm text-destructive">{error}</p> : null}
 
-        <Button type="submit" size="lg" loading={loading} className="w-full">
+        <Button type="submit" size="lg" loading={loading} loadingLabel="Sending code…" className="w-full">
           Send Reset Code
         </Button>
       </form>

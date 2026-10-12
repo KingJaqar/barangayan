@@ -1,0 +1,8 @@
+page.waitForFunction: Timeout 15000ms exceeded.
+    at range (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:62:47)
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:277:19
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:256:9 {
+  log: [],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,18 @@
+
+> @barangayan/web@0.1.0 typecheck
+> tsc --noEmit
+
+src/app/(admin)/requests/page.tsx(32,20): error TS2322: Type '{ result: { readonly status: "error"; readonly code: "query-failed" | "results-changed" | "access-denied"; readonly message: string; } | QueryOutcome<BrowseResult<ServiceRequest>>; ... 5 more ...; barangayId: string; }' is not assignable to type 'IntrinsicAttributes & { requests: ServiceRequest[]; residents: Resident[]; documentTypes: DocumentTypeOption[]; barangayId: string; tab: Tab; q: string; doc: string; }'.
+  Property 'result' does not exist on type 'IntrinsicAttributes & { requests: ServiceRequest[]; residents: Resident[]; documentTypes: DocumentTypeOption[]; barangayId: string; tab: Tab; q: string; doc: string; }'.
+src/app/(admin)/transactions/page.tsx(30,24): error TS2322: Type '{ result: { readonly status: "error"; readonly code: "query-failed" | "results-changed" | "access-denied"; readonly message: string; } | QueryOutcome<BrowseResult<Payment>>; ... 7 more ...; optionsError: string | null; }' is not assignable to type 'IntrinsicAttributes & { payments: Payment[]; barangayId: string; referenceOptions: string[]; admins: AdminOption[]; residents: ResidentOption[]; documentTypes: DocumentTypeOption[]; tab: Tab; method: string; q: string; }'.
+  Property 'result' does not exist on type 'IntrinsicAttributes & { payments: Payment[]; barangayId: string; referenceOptions: string[]; admins: AdminOption[]; residents: ResidentOption[]; documentTypes: DocumentTypeOption[]; tab: Tab; method: string; q: string; }'.
+src/lib/admin-tables/queries/pilot-options.ts(19,13): error TS2345: Argument of type '"barangay_id"' is not assignable to parameter of type '"barangay_id" extends keyof (FoundationTables & { about_us: { Row: { address: string | null; barangay_id: string; contact_email: string | null; contact_phone: string | null; ... 11 more ...; vision: string; }; Insert: { ...; }; Update: { ...; }; Relationships: [...]; }; ... 26 more ...; waste_zones: { ...; }; })[T][...'.
+src/lib/admin-tables/queries/pilot-options.ts(20,58): error TS2345: Argument of type '"role"' is not assignable to parameter of type '"role" extends keyof (FoundationTables & { about_us: { Row: { address: string | null; barangay_id: string; contact_email: string | null; contact_phone: string | null; ... 11 more ...; vision: string; }; Insert: { ...; }; Update: { ...; }; Relationships: [...]; }; ... 26 more ...; waste_zones: { ...; }; })[T]["Row"] ...'.
+src/lib/admin-tables/queries/pilot-options.ts(21,70): error TS2345: Argument of type '"is_active"' is not assignable to parameter of type '"is_active" extends keyof (FoundationTables & { about_us: { Row: { address: string | null; barangay_id: string; contact_email: string | null; contact_phone: string | null; ... 11 more ...; vision: string; }; Insert: { ...; }; Update: { ...; }; Relationships: [...]; }; ... 26 more ...; waste_zones: { ...; }; })[T]["R...'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

@@ -1,0 +1,27 @@
+{
+  "passed": false,
+  "mode": "flows",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "combined filters preserve independent complete summaries, Health Today is included in Upcoming"
+  ],
+  "failures": [
+    {
+      "label": "registration aggregates include cancelled and missing-score registrations; Applicants retains inner-score membership and name sorting",
+      "message": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'👥\\n1' !== '👥 0'\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:206:18\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:201:9"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ],
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'👥\\n1' !== '👥 0'\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:206:18\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:201:9"
+}

@@ -16,7 +16,20 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { DocumentType } from './types';
 
-export function DetailsStep({ doc, isAuthenticated, onRequest }: { doc: DocumentType; isAuthenticated: boolean; onRequest: () => void }) {
+export function DetailsStep({
+  doc,
+  isAuthenticated,
+  requesting = false,
+  requestError = null,
+  onRequest,
+}: {
+  doc: DocumentType;
+  isAuthenticated: boolean;
+  /** True while the account/profile check behind "Request This Document" is running. */
+  requesting?: boolean;
+  requestError?: string | null;
+  onRequest: () => void;
+}) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-4">
@@ -65,9 +78,21 @@ export function DetailsStep({ doc, isAuthenticated, onRequest }: { doc: Document
 
       <ServiceCharter doc={doc}/>
       {isAuthenticated ? (
-        <Button size="lg" className="w-full sm:w-auto sm:self-start" onClick={onRequest}>
-          Request This Document
-        </Button>
+        <>
+          {requestError ? (
+            <p role="alert" data-slot="request-check-error" className="text-sm text-status-error">
+              {requestError}
+            </p>
+          ) : null}
+          <Button
+            size="lg"
+            className="w-full sm:w-auto sm:self-start"
+            loading={requesting}
+            loadingLabel="Checking your account…"
+            onClick={onRequest}>
+            Request This Document
+          </Button>
+        </>
       ) : (
         <Button asChild size="lg" className="w-full sm:w-auto sm:self-start">
           <Link href="/login">Log In to Request</Link>

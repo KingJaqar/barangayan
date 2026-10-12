@@ -1,0 +1,15 @@
+Passed: Actual request Realtime events defer during an edit and reconcile a burst without losing draft identity
+Passed: Ten client route mount cycles leave one request subscription and table observer counts at baseline
+Passed: Warm loopback control-to-committed-results timings are recorded for both pilot routes
+locator.fill: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('form').getByLabel('Reference', { exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:64:51
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:11:135)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/actions-realtime.mjs:62:2 {
+  log: [
+    "  - waiting for locator('form').getByLabel('Reference', { exact: true })"
+  ],
+  name: 'TimeoutError'
+}

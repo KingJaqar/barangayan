@@ -14,6 +14,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
 
@@ -50,6 +51,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: #0a0a0a;
   --foreground: #ededed;
   --accent-tint: color-mix(in srgb, var(--accent) 20%, black);
@@ -225,28 +227,218 @@ main {
   right: 12px;
 }
 
-/* Browsing is opt-in: legacy table callers keep their unbounded viewport. */
-.table-browse-panel, .table-browse-scroll { min-width: 0; max-width: 100%; }
-.table-browse-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-.table-browse-panel > * { min-width: 0; max-width: 100%; }
-.table-browse-controls, .table-browse-pagination, .table-browse-segments,
-.table-browse-column-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
-.table-browse-controls label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 100%; }
-.table-browse-panel input, .table-browse-panel select { min-width: 0; max-width: 100%; }
-.table-browse-panel button, .table-browse-panel select, .table-browse-panel input {
-  border: 1px solid #71717a; border-radius: 6px; padding: 4px 8px;
+/* ─── Native form controls: follow the class-based theme everywhere ───
+ * color-scheme (above) makes the browser draw the open <select> list, date pickers and
+ * scrollbars in the right theme; the explicit colors cover engines that ignore it. */
+@layer base {
+  select { background-color: var(--background); color: var(--foreground); }
+  select option, select optgroup { background-color: var(--background); color: var(--foreground); }
+  .dark select { background-color: #18181b; }
+  .dark select option, .dark select optgroup { background-color: #18181b; color: #ededed; }
+  select:disabled { color: color-mix(in srgb, var(--foreground) 55%, transparent); }
 }
-.table-browse-panel button:disabled, .table-browse-panel select:disabled { opacity: .5; }
-.table-browse-segments button[aria-pressed=true] { background: var(--accent); color: white; }
+
+/* Browsing is opt-in: legacy table callers keep their unbounded viewport.
+ * Standard layout: 1 title+summary (outside), 2 search, 3 sort/direction/category,
+ * 4 status filters, 5 table + pagination. */
+.table-browse-panel, .table-browse-scroll { min-width: 0; max-width: 100%; }
+.table-browse-panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.table-browse-panel > * { min-width: 0; max-width: 100%; }
+.table-browse-controls { display: grid; gap: 12px; min-width: 0; }
+.table-browse-section, .table-browse-pagination, .table-browse-segments {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }
+.table-browse-section label, .table-browse-field { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 100%; }
+.table-browse-search input { width: min(100%, 24rem); }
+.table-browse-actions { margin-left: auto; }
+.table-browse-panel input, .table-browse-panel select { min-width: 0; max-width: 100%; }
+/* Table body keeps the legacy control look; chrome (controls/footer/error) uses the --ab-* primitives below. */
+.table-browse-body :is(button, select, input) { border: 1px solid #71717a; border-radius: 6px; padding: 4px 8px; }
+.table-browse-body button:disabled, .table-browse-body select:disabled { opacity: .5; }
 .table-browse-viewport { overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scroll-padding-top: 48px; }
 .table-browse-strip { overscroll-behavior: contain; }
 .table-browse-viewport table { border-collapse: separate; border-spacing: 0; }
 .table-browse-viewport th { position: sticky; top: 0; z-index: 2; background: #fafafa; }
 .dark .table-browse-viewport th { background: #27272a; }
-.table-browse-panel :focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: -2px; }
-.table-browse-column-controls { justify-content: space-between; }
-@media (forced-colors: active) {
-  .table-browse-panel :focus-visible { outline-color: Highlight; }
-  .table-browse-viewport th { background: Canvas; }
-  .table-browse-segments button[aria-pressed=true] { border: 2px solid Highlight; }
+.table-browse-body :focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: -2px; }
+
+/* Loading state: short fade of the table body plus a thin indeterminate bar.
+ * Both start after 120ms so instant updates never flash. */
+.table-browse-body { position: relative; transition: opacity 160ms ease-out; }
+.table-browse-body[data-pending] { opacity: .55; transition-delay: 120ms; }
+.table-browse-progress {
+  position: absolute; inset: 0 0 auto 0; height: 2px; overflow: hidden; z-index: 3;
+  opacity: 0; pointer-events: none; transition: opacity 120ms ease-out;
 }
+.table-browse-progress::after {
+  content: ''; position: absolute; inset: 0; width: 40%; background: var(--accent);
+  transform: translateX(-100%);
+}
+.table-browse-body[data-pending] .table-browse-progress { opacity: 1; transition-delay: 120ms; }
+.table-browse-body[data-pending] .table-browse-progress::after { animation: table-browse-progress 1s ease-in-out infinite; }
+@keyframes table-browse-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .table-browse-body { transition: none; }
+  .table-browse-body[data-pending] .table-browse-progress::after { animation: none; transform: none; width: 100%; }
+}
+@media (forced-colors: active) {
+  .table-browse-panel :focus-visible, .ab-field:focus-visible, .ab-pill:focus-visible, .ab-btn:focus-visible,
+  .ab-icon-btn:focus-visible { outline-color: Highlight; }
+  .table-browse-viewport th { background: Canvas; }
+  .table-browse-segments button[aria-pressed=true] { border-color: Highlight; border-width: 2px; }
+}
+
+/* ─── Airbnb-style primitives (--ab-*) ────────────────────────────────────
+ * Neutral tokens + a few shared classes. Brand colour stays the per-user --accent.
+ * Motion is transform/opacity only, one easing token, off under reduced motion. */
+:root {
+  --ab-text: #222222; --ab-muted: #6a6a6a; --ab-line: #dddddd; --ab-surface: #ffffff;
+  --ab-fill: #f7f7f7; --ab-fill-hover: #f2f2f2;
+  --ab-shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.06);
+  --ab-shadow-2: 0 4px 12px rgba(0,0,0,.12);
+  --ab-ease: cubic-bezier(.2, 0, 0, 1); --ab-dur: 160ms;
+  --ab-r-pill: 999px; --ab-r-card: 16px; --ab-r-field: 12px;
+  /* accent pulled toward text so a pale user accent still gives a >=3:1 underline/ring */
+  --ab-accent-line: color-mix(in srgb, var(--accent) 75%, var(--ab-text));
+}
+.dark {
+  --ab-text: #f5f5f5; --ab-muted: #a1a1aa; --ab-line: #3f3f46; --ab-surface: #18181b;
+  --ab-fill: #27272a; --ab-fill-hover: #323238;
+  --ab-shadow-1: 0 1px 2px rgba(0,0,0,.5); --ab-shadow-2: 0 4px 14px rgba(0,0,0,.6);
+}
+
+/* Shared shape: the primitives and the table chrome (controls / footer / error panel). */
+.ab-field, .ab-pill, .ab-btn, .ab-icon-btn,
+.table-browse-panel :is([data-browse-controls], [data-browse-footer]) :is(button, select, input),
+.table-browse-panel > [role=alert] button {
+  box-sizing: border-box; font: inherit; color: var(--ab-text); background-color: var(--ab-surface);
+  border: 1px solid var(--ab-line); transition: transform 80ms var(--ab-ease);
+}
+.ab-field, .table-browse-panel :is([data-browse-controls], [data-browse-footer]) :is(select, input) {
+  min-height: 44px; padding: 0 12px; border-radius: var(--ab-r-field);
+}
+.ab-pill, .ab-btn, .table-browse-panel :is([data-browse-controls], [data-browse-footer]) button,
+.table-browse-panel > [role=alert] button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px;
+  padding: 0 16px; border-radius: var(--ab-r-pill); font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.ab-pill { box-shadow: var(--ab-shadow-1); border-color: transparent; }
+.ab-btn-primary { background-color: var(--accent); border-color: var(--accent); color: #fff; }
+.ab-icon-btn {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0;
+  border-radius: 50%; border-color: transparent; background-color: var(--ab-fill); cursor: pointer;
+}
+.ab-card { background: var(--ab-surface); color: var(--ab-text); border-radius: var(--ab-r-card); box-shadow: var(--ab-shadow-1); }
+.ab-card-lift { transition: transform var(--ab-dur) var(--ab-ease); }
+.ab-label { font-size: 12px; font-weight: 500; color: var(--ab-muted); }
+.ab-muted { color: var(--ab-muted); }
+
+/* Native select keeps its popup/keyboard behaviour; only the chevron is custom. */
+.ab-field:is(select), .table-browse-panel :is([data-browse-controls], [data-browse-footer]) select {
+  appearance: none; padding-right: 36px; text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6a6a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+
+/* State matrix: hover = fill OR shadow (never both); focus ring never removed; press scale; disabled. */
+.ab-field:focus-visible, .ab-pill:focus-visible, .ab-btn:focus-visible, .ab-icon-btn:focus-visible,
+.table-browse-panel :is([data-browse-controls], [data-browse-footer]) :focus-visible,
+.table-browse-panel > [role=alert] button:focus-visible { outline: 2px solid var(--accent, #2563eb); outline-offset: 2px; }
+.ab-btn:active:not(:disabled), .ab-pill:active:not(:disabled), .ab-icon-btn:active:not(:disabled),
+.table-browse-panel :is([data-browse-controls], [data-browse-footer]) button:active:not(:disabled),
+.table-browse-panel > [role=alert] button:active:not(:disabled) { transform: scale(.97); }
+.ab-field:disabled, .ab-pill:disabled, .ab-btn:disabled, .ab-icon-btn:disabled,
+.table-browse-panel :is([data-browse-controls], [data-browse-footer]) :is(button, select, input):disabled {
+  opacity: .45; cursor: not-allowed; }
+@media (hover: hover) {
+  .ab-field:hover:not(:disabled), .ab-btn:hover:not(:disabled), .ab-icon-btn:hover:not(:disabled),
+  .table-browse-panel :is([data-browse-controls], [data-browse-footer]) :is(button, select):hover:not(:disabled),
+  .table-browse-panel > [role=alert] button:hover:not(:disabled) { background-color: var(--ab-fill-hover); }
+  .ab-pill:hover:not(:disabled) { box-shadow: var(--ab-shadow-2); }
+  .ab-btn-primary:hover:not(:disabled) { background-color: var(--accent-strong); }
+  .ab-card-lift:hover { transform: translateY(-2px); }
+}
+/* Section 4: filter rail (pill tabs, solid accent on the active one) + accent Add CTA. */
+.table-browse-panel .table-browse-segments {
+  flex-wrap: nowrap; gap: 4px 20px; max-width: calc(100% + 12px); margin-left: -12px; padding: 0 12px;
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12px, #000 calc(100% - 12px), transparent);
+}
+.table-browse-segments::-webkit-scrollbar { display: none; }
+.table-browse-panel .table-browse-segments { gap: 8px; padding-block: 4px; }
+/* Tabs read as pills: hairline-bordered fill when idle, solid accent with white text when active. */
+.table-browse-panel .table-browse-segments button {
+  flex: none; min-height: 40px; padding: 0 16px; border: 1px solid var(--ab-line); border-radius: var(--ab-r-pill);
+  background-color: var(--ab-fill); color: var(--ab-text); font-size: 14px; font-weight: 500;
+}
+.table-browse-panel .table-browse-segments button[aria-pressed=true] {
+  background-color: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; box-shadow: var(--ab-shadow-1);
+}
+.table-browse-panel .table-browse-segments button:focus-visible { outline-offset: 2px; }
+.table-browse-panel .table-browse-actions button { background-color: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+@media (hover: hover) {
+  .table-browse-panel .table-browse-segments button:hover:not(:disabled):not([aria-pressed=true]) { background-color: var(--ab-fill-hover); }
+  .table-browse-panel .table-browse-segments button[aria-pressed=true]:hover:not(:disabled) { background-color: var(--accent-strong); }
+  .table-browse-panel .table-browse-actions button:hover:not(:disabled) { background-color: var(--accent-strong); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-field, .ab-pill, .ab-btn, .ab-icon-btn, .ab-card-lift,
+  .table-browse-panel :is([data-browse-controls], [data-browse-footer]) :is(button, select, input) { transition: none; }
+  .ab-btn:active, .ab-pill:active, .ab-icon-btn:active, .ab-card-lift:hover,
+  .table-browse-panel :is([data-browse-controls], [data-browse-footer]) button:active { transform: none; }
+}
+
+/* Sections 2-3: search pill + sort capsule (CSS only; focus ring via :has(:focus-visible), no JS). */
+.table-browse-panel .table-browse-search label { position: relative; display: block; width: min(100%, 32rem); }
+.table-browse-panel .table-browse-search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--ab-muted); pointer-events: none; }
+.table-browse-panel .table-browse-controls .table-browse-search input {
+  width: 100%; min-height: 48px; padding: 0 16px 0 46px; border-radius: var(--ab-r-pill);
+  border-color: transparent; box-shadow: var(--ab-shadow-1); transition: box-shadow var(--ab-dur) var(--ab-ease);
+}
+.table-browse-panel .table-browse-search input::placeholder { color: var(--ab-muted); }
+.table-browse-panel .table-browse-search label:has(input:focus-visible) { outline: 2px solid var(--ab-accent-line); outline-offset: 2px; border-radius: var(--ab-r-pill); }
+.table-browse-panel .table-browse-controls .table-browse-search input:focus-visible { outline: none; box-shadow: var(--ab-shadow-2); }
+.table-browse-panel .table-browse-controls [data-section=sort] {
+  display: flex; flex-wrap: wrap; gap: 0; overflow: hidden; max-width: 56rem; background: var(--ab-surface);
+  border: 1px solid var(--ab-line); border-radius: var(--ab-r-card); box-shadow: var(--ab-shadow-1);
+}
+.table-browse-panel .table-browse-controls [data-section=sort]:has(:focus-visible) { outline: 2px solid var(--ab-accent-line); outline-offset: 2px; }
+.table-browse-panel [data-section=sort] .table-browse-field {
+  flex: 1 1 11rem; min-width: 0; flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px;
+  padding: 8px 16px; font-size: 12px; font-weight: 500; line-height: 16px; color: var(--ab-muted);
+  box-shadow: -1px 0 0 0 var(--ab-line), 0 -1px 0 0 var(--ab-line);
+}
+.table-browse-panel .table-browse-controls [data-section=sort] :is(select, input) {
+  width: 100%; min-height: 24px; padding: 0 28px 0 0; border: 0; border-radius: 0; background-color: transparent;
+  box-shadow: none; font-size: 14px; font-weight: 400; color: var(--ab-text); background-position: right 0 center;
+}
+.table-browse-panel .table-browse-controls [data-section=sort] :is(select, input):focus-visible { outline: none; }
+@media (hover: hover) {
+  .table-browse-panel [data-section=sort] .table-browse-field:hover:not(:has(:disabled)) { background-color: var(--ab-fill-hover); }
+  .table-browse-panel .table-browse-controls [data-section=sort] select:hover:not(:disabled) { background-color: transparent; }
+}
+.table-browse-panel .table-browse-search input[type=search] { -webkit-appearance: none; appearance: none; }
+
+/* Section 5: footer chrome (circular pager, page size, loading bar, error panel). */
+.table-browse-panel .table-browse-pagination { justify-content: space-between; gap: 8px 16px; font-size: 14px; }
+.table-browse-page-size { display: inline-flex; align-items: center; gap: 8px; }
+.table-browse-pager { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.table-browse-pager > span { padding: 0 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.table-browse-panel .table-browse-pager button {
+  width: 40px; min-height: 40px; padding: 0; border-radius: 50%; border-color: transparent; background-color: var(--ab-fill); }
+@media (max-width: 479.98px) { .table-browse-pager button[data-edge] { display: none; } }
+.table-browse-progress::after { border-radius: var(--ab-r-pill); }
+.table-browse-panel > .table-browse-error {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px; font-size: 14px;
+  border: 1px solid transparent; border-radius: var(--ab-r-card); background: #fef2f2; color: #991b1b; }
+.dark .table-browse-panel > .table-browse-error { background: rgb(69 10 10 / .4); color: #fecaca; }
+.table-browse-error > svg { flex: none; }
+.table-browse-error > span { flex: 1; min-width: 0; }
+
+/* Section 6: inline Add forms. Ghost = Cancel next to the accent submit pill. */
+.ab-btn-ghost { background-color: transparent; border-color: transparent; }
+@media (hover: hover) { .ab-btn-ghost:hover:not(:disabled) { background-color: var(--ab-fill-hover); } }
+.ab-field[readonly] { background-color: var(--ab-fill); color: var(--ab-muted); cursor: default; }

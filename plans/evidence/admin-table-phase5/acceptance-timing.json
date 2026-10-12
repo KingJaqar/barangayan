@@ -1,0 +1,146 @@
+{
+  "passed": true,
+  "mode": "timing",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "30 warm control-to-committed-result samples meet recorded loopback p95 target"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [
+    {
+      "name": "incidents",
+      "ms": 634.5382
+    },
+    {
+      "name": "incidents",
+      "ms": 564.0266000000001
+    },
+    {
+      "name": "incidents",
+      "ms": 502.41659999999956
+    },
+    {
+      "name": "incidents",
+      "ms": 521.2666999999992
+    },
+    {
+      "name": "incidents",
+      "ms": 475.34249999999975
+    },
+    {
+      "name": "incidents",
+      "ms": 536.5450999999994
+    },
+    {
+      "name": "incidents",
+      "ms": 546.4750999999997
+    },
+    {
+      "name": "incidents",
+      "ms": 557.5601999999999
+    },
+    {
+      "name": "incidents",
+      "ms": 532.7024000000001
+    },
+    {
+      "name": "incidents",
+      "ms": 518.4574000000011
+    },
+    {
+      "name": "health",
+      "ms": 690.4423999999999
+    },
+    {
+      "name": "health",
+      "ms": 552.3755000000001
+    },
+    {
+      "name": "health",
+      "ms": 558.1967999999997
+    },
+    {
+      "name": "health",
+      "ms": 574.8286000000007
+    },
+    {
+      "name": "health",
+      "ms": 573.4055000000008
+    },
+    {
+      "name": "health",
+      "ms": 562.3487999999998
+    },
+    {
+      "name": "health",
+      "ms": 461.6887999999999
+    },
+    {
+      "name": "health",
+      "ms": 413.03039999999964
+    },
+    {
+      "name": "health",
+      "ms": 349.4480000000003
+    },
+    {
+      "name": "health",
+      "ms": 439.03159999999843
+    },
+    {
+      "name": "applicants",
+      "ms": 709.8629000000001
+    },
+    {
+      "name": "applicants",
+      "ms": 712.4988999999987
+    },
+    {
+      "name": "applicants",
+      "ms": 716.3983999999982
+    },
+    {
+      "name": "applicants",
+      "ms": 745.9879000000001
+    },
+    {
+      "name": "applicants",
+      "ms": 701.5819999999985
+    },
+    {
+      "name": "applicants",
+      "ms": 579.4632999999994
+    },
+    {
+      "name": "applicants",
+      "ms": 587.2929000000004
+    },
+    {
+      "name": "applicants",
+      "ms": 642.295900000001
+    },
+    {
+      "name": "applicants",
+      "ms": 626.9084000000003
+    },
+    {
+      "name": "applicants",
+      "ms": 674.9366999999984
+    }
+  ],
+  "facts": {
+    "incidentsP95ms": 634.5382,
+    "healthP95ms": 690.4423999999999,
+    "applicantsP95ms": 745.9879000000001
+  },
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "passed": true,
+  "checks": [
+    "Actual request Realtime events defer during an edit and reconcile a burst without losing draft identity",
+    "Ten client route mount cycles leave one request subscription and table observer counts at baseline",
+    "Warm loopback control-to-committed-results timings are recorded for both pilot routes"
+  ],
+  "errors": [],
+  "timings": [
+    {
+      "route": "requests",
+      "ms": 658.2612000000008
+    },
+    {
+      "route": "requests",
+      "ms": 506.1768000000011
+    },
+    {
+      "route": "requests",
+      "ms": 463.3819000000003
+    },
+    {
+      "route": "requests",
+      "ms": 480.04149999999936
+    },
+    {
+      "route": "requests",
+      "ms": 509.6172000000006
+    },
+    {
+      "route": "requests",
+      "ms": 507.35069999999905
+    },
+    {
+      "route": "requests",
+      "ms": 514.3701999999976
+    },
+    {
+      "route": "requests",
+      "ms": 514.3733000000029
+    },
+    {
+      "route": "requests",
+      "ms": 523.869200000001
+    },
+    {
+      "route": "requests",
+      "ms": 570.3243999999977
+    },
+    {
+      "route": "transactions",
+      "ms": 706.5381000000016
+    },
+    {
+      "route": "transactions",
+      "ms": 514.7959999999985
+    },
+    {
+      "route": "transactions",
+      "ms": 511.8582000000024
+    },
+    {
+      "route": "transactions",
+      "ms": 507.1867999999995
+    },
+    {
+      "route": "transactions",
+      "ms": 535.2334999999985
+    },
+    {
+      "route": "transactions",
+      "ms": 503.107600000003
+    },
+    {
+      "route": "transactions",
+      "ms": 530.664499999999
+    },
+    {
+      "route": "transactions",
+      "ms": 510.922300000002
+    },
+    {
+      "route": "transactions",
+      "ms": 551.4965000000011
+    },
+    {
+      "route": "transactions",
+      "ms": 497.72580000000016
+    }
+  ],
+  "refreshes": {
+    "whileEditing": 0,
+    "afterRelease": 1,
+    "events": 3
+  },
+  "leaks": [
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    }
+  ]
+}

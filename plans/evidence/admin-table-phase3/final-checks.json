@@ -1,0 +1,51 @@
+{
+  "recordedAt": "2026-10-11T22:15:25.8736691Z",
+  "evidenceScriptSyntax": [
+    {
+      "file": "acceptance.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "actions-realtime.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "finalize.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "reset-action-fixture.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "route-permissions.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-seed.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-serve.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "runtime-stack.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "smoke.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "webkit-notification-diagnostic.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "writer-permissions.mjs",
+      "exitCode": 0
+    }
+  ],
+  "whitespaceExitCode": 0,
+  "finalizationExitCode": 0
+}

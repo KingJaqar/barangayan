@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { isNoAnswer } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export type PaymentStatus = 'idle' | 'loading' | 'pending' | 'paid' | 'expired' | 'cancelled' | 'error';
@@ -14,6 +15,17 @@ export interface PaymongoSource {
 }
 
 const POLL_INTERVAL_MS = 5000;
+
+/**
+ * How a cancel attempt ended, for the screen that owns the notification:
+ * - `cancelled`: the server confirmed the attempt is cancelled (or already expired).
+ * - `paid`: the payment completed first — follow the paid outcome, never announce a cancellation.
+ * - `rejected`: the server answered with a refusal; polling resumed.
+ * - `unconfirmed`: no answer arrived; the cancel may or may not have applied. Polling resumed
+ *   and will observe whichever state the server holds.
+ * - `ignored`: nothing to cancel (not pending, or a cancel is already running).
+ */
+export type CancelOutcome = 'cancelled' | 'paid' | 'rejected' | 'unconfirmed' | 'ignored';
 
 /**
  * Near-verbatim port of apps/resident-android-mobile/src/hooks/use-paymongo-source.ts
@@ -39,6 +51,9 @@ export function usePaymongoSource(requestId: string) {
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
+  // True while the most recent status check could not reach the server. A display
+  // condition only — never evidence that the payment failed or was not received.
+  const [statusCheckFailed, setStatusCheckFailed] = useState(false);
   // Unique per hook instance — the resume check in create-payment-source deliberately
   // hands back the SAME paymentId across screen opens, so a `payment-${paymentId}` topic
   // collides whenever two QR screens are alive at once (e.g. back/forward navigation).
@@ -131,11 +146,20 @@ export function usePaymongoSource(requestId: string) {
       // the 'cancelled' status the user just triggered.
       if (cancelledRef.current) return;
 
-      const { data } = await supabase.functions.invoke('check-payment-status', {
-        body: { paymentId: source.paymentId },
-      });
+      let data: { status?: string } | null = null;
+      let failed = false;
+      try {
+        const result = await supabase.functions.invoke('check-payment-status', {
+          body: { paymentId: source.paymentId },
+        });
+        data = result.data;
+        failed = !!result.error;
+      } catch {
+        failed = true;
+      }
 
       if (cancelledRef.current) return;
+      setStatusCheckFailed(failed);
 
       if (data?.status === 'paid') {
         if (pollingRef.current) clearInterval(pollingRef.current);
@@ -184,19 +208,30 @@ export function usePaymongoSource(requestId: string) {
    * voids the PaymentIntent on PayMongo's side). No-ops outside 'pending' — nothing to
    * cancel once it's settled, expired, or already cancelled.
    */
-  async function cancelPayment(): Promise<{ ok: boolean; error?: string }> {
-    if (!source || status !== 'pending' || cancelling) return { ok: false };
+  async function cancelPayment(): Promise<{ ok: boolean; error?: string; outcome: CancelOutcome }> {
+    if (!source || status !== 'pending' || cancelling) return { ok: false, outcome: 'ignored' };
+
+    const UNCONFIRMED =
+      "We couldn't confirm whether the payment was cancelled. The QR code may still be valid, and we're still checking its status.";
 
     // Set immediately — before the async call — so any in-flight poll or Realtime
     // callback that resolves during the cancel request knows not to override status.
     cancelledRef.current = true;
     setCancelling(true);
+    setErrorMessage(null);
     try {
       const { data, error } = await supabase.functions.invoke('cancel-payment', {
         body: { paymentId: source.paymentId },
       });
 
       if (error) {
+        if (isNoAnswer(error)) {
+          // The request may have reached PayMongo. Keep watching: the next poll or
+          // Realtime event reports whichever state the server holds.
+          setErrorMessage(UNCONFIRMED);
+          cancelledRef.current = false;
+          return { ok: false, error: UNCONFIRMED, outcome: 'unconfirmed' };
+        }
         let message: string | undefined;
         const context = (error as { context?: Response }).context;
         if (context && typeof context.json === 'function') {
@@ -205,35 +240,37 @@ export function usePaymongoSource(requestId: string) {
             const parsed = (body as { error?: unknown })?.error;
             if (typeof parsed === 'string') message = parsed;
           } catch {
-            // Body wasn't JSON — fall through without a specific message.
+            // Body wasn't JSON — fall through to the generic message.
           }
         }
-        if (message) setErrorMessage(message);
+        message ??= 'Could not cancel the payment. Please try again.';
+        setErrorMessage(message);
         cancelledRef.current = false; // cancel failed — let polling resume
-        return { ok: false, error: message };
+        return { ok: false, error: message, outcome: 'rejected' };
       }
 
       if (data?.status === 'cancelled' || data?.status === 'expired') {
         if (pollingRef.current) clearInterval(pollingRef.current);
         setStatus('cancelled');
-        return { ok: true };
+        return { ok: true, outcome: 'cancelled' };
       }
       if (data?.status === 'paid') {
         // Lost the race — payment actually went through moments ago.
         setStatus('paid');
-        return { ok: false, error: 'This payment already went through.' };
+        return { ok: false, error: 'This payment already went through.', outcome: 'paid' };
       }
-      cancelledRef.current = false; // unexpected response — let polling resume
-      return { ok: false };
-    } catch {
       const message = 'Could not cancel the payment. Please try again.';
       setErrorMessage(message);
+      cancelledRef.current = false; // unexpected response — let polling resume
+      return { ok: false, error: message, outcome: 'rejected' };
+    } catch {
+      setErrorMessage(UNCONFIRMED);
       cancelledRef.current = false; // cancel failed — let polling resume
-      return { ok: false, error: message };
+      return { ok: false, error: UNCONFIRMED, outcome: 'unconfirmed' };
     } finally {
       setCancelling(false);
     }
   }
 
-  return { source, status, errorMessage, cancelPayment, cancelling };
+  return { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed };
 }

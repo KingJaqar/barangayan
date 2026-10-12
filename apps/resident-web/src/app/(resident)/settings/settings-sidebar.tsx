@@ -20,7 +20,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
-import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
+import { LinkPendingHint } from '@/components/shell/link-pending-hint';
+import { LoadingStatus, PendingText } from '@/components/shared/loading-status';
+import { Spinner } from '@/components/ui/loading';
+import { useSignOut } from '@/hooks/use-sign-out';
 
 interface NavItem {
   href: string;
@@ -79,9 +82,7 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 interface SettingsSidebarProps {
-  /** Server action wired to a <form>, rendered as the trailing "Log out" row. */
-  logoutAction: () => void | Promise<void>;
-  /** Drives the green-check/yellow-! badge on the Profile row (email_verification_status === 'verified'). */
+  /** Drives the green-check/yellow-! badge on the Email Verification row. */
   emailVerified: boolean;
   /** Drives the same badge on the Location Verification row (profiles.verified_location is set). */
   locationVerified: boolean;
@@ -91,34 +92,26 @@ interface SettingsSidebarProps {
 }
 
 /**
- * Left-hand navigation for /settings — deliberately reuses admin-web's SidebarNav
- * (apps/admin-web/src/components/admin/sidebar-nav.tsx) styling verbatim: same
- * 285px width, same 49px/rounded-2xl/13px-bold rows, same accent-filled active pill
- * + shadow, same size-5/1.75-stroke icons, same group-title treatment. The one
- * structural difference is unavoidable: admin's <aside> is edge-to-edge in a
- * dedicated app shell with its own `overflow-y-auto`, while this sidebar lives
- * inset inside resident-web's shared page shell (site header + max-width content),
- * so it's a bordered panel (all four sides, rounded) instead of a border-r cut
- * against the viewport edge, and stays in view via `sticky` rather than an
- * independent scroll region. Below `lg` there's no room for a fixed 285px column,
- * so it collapses to an icon-only horizontal strip instead.
+ * Settings navigation with a quiet gray surface and white selected rows.
+ * Its independent scroll region remains mounted between settings pages.
+ * Below `lg`, navigation uses the existing icon-only horizontal strip.
  */
-export function SettingsSidebar({ logoutAction, emailVerified, locationVerified, isAuthenticated }: SettingsSidebarProps) {
+export function SettingsSidebar({ emailVerified, locationVerified, isAuthenticated }: SettingsSidebarProps) {
   const pathname = usePathname();
-  const resetPreferences = useResetPreferencesOnLogout();
+  const { signOut, pending: signingOut } = useSignOut();
   const visibleGroups = isAuthenticated ? NAV_GROUPS : NAV_GROUPS.filter((g) => g.guestAccessible);
 
   return (
-    <aside aria-label="Settings" className="shrink-0 lg:w-[285px]">
+    <aside aria-label="Settings" className="shrink-0 lg:h-full lg:min-h-0 lg:w-[285px]">
       <div
-        className="flex gap-1 overflow-x-auto rounded-2xl border border-[#e5e7eb] bg-white p-2 dark:border-zinc-800 dark:bg-zinc-950 lg:sticky lg:top-6 lg:flex-col lg:gap-[16px] lg:overflow-visible lg:p-[13px] lg:py-[26px]">
+        className="flex gap-1 overflow-x-auto rounded-[20px] border border-black/[0.04] bg-[#f4f4f3] p-2 dark:border-white/[0.06] dark:bg-zinc-900 lg:h-full lg:flex-col lg:gap-6 lg:overflow-x-hidden lg:overflow-y-auto lg:overscroll-contain lg:p-3 lg:py-5 lg:[scrollbar-gutter:stable] lg:[scrollbar-width:thin]">
         <nav className="flex gap-1 lg:contents" aria-label="Settings">
           {visibleGroups.map((group) => (
-            <div key={group.title} className="contents lg:flex lg:flex-col lg:gap-[6px]">
-              <p className="hidden px-[6px] text-[13px] font-medium leading-5 text-[#1d2635] lg:block dark:text-zinc-300">
+            <div key={group.title} className="contents lg:flex lg:shrink-0 lg:flex-col lg:gap-2">
+              <p className="hidden px-3 text-[11px] font-medium leading-5 tracking-[0.02em] text-zinc-500 lg:block dark:text-zinc-400">
                 {group.title}
               </p>
-              <div className="contents lg:flex lg:flex-col lg:gap-[4px]">
+              <div className="contents lg:flex lg:flex-col lg:gap-1">
                 {group.items.map((item) => {
                   const active = pathname === item.href || pathname?.startsWith(`${item.href}/`);
                   return (
@@ -130,7 +123,7 @@ export function SettingsSidebar({ logoutAction, emailVerified, locationVerified,
                       active={!!active}
                       destructive={item.destructive}
                       badge={
-                        item.href === '/settings/profile'
+                        item.href === '/settings/email-verification'
                           ? emailVerified
                             ? 'verified'
                             : 'unverified'
@@ -148,31 +141,41 @@ export function SettingsSidebar({ logoutAction, emailVerified, locationVerified,
           ))}
         </nav>
 
-        <div className="my-1 hidden h-px shrink-0 bg-[#e5e7eb] lg:block dark:bg-zinc-800" />
+        <div className="hidden h-px shrink-0 bg-black/[0.06] lg:mt-auto lg:block dark:bg-white/[0.08]" />
 
         <InfoRow icon={BookOpen} label="App Version" value="1.0.0" />
         {isAuthenticated ? (
-          <form action={logoutAction} className="contents">
-            <button
-              type="submit"
-              // Clears theme/accent/font before the form's server action signs the
-              // resident out — see use-reset-preferences.ts's doc comment for why
-              // (otherwise guest mode inherits this resident's appearance). Runs
-              // synchronously on click, ahead of the form's own navigation.
-              onClick={() => resetPreferences()}
-              className="flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl px-[13px] text-left text-[13px] font-bold text-[#df2d2d] transition-colors hover:bg-red-50 dark:hover:bg-red-950/30">
-              <LogOut className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
-              <span className="hidden lg:inline">Log out</span>
-            </button>
-          </form>
+          // Same sign-out as the header (useSignOut): preferences reset and /login only
+          // after the sign-out succeeds; a failure keeps the resident here with one error.
+          <button
+            type="button"
+            onClick={() => void signOut()}
+            disabled={signingOut}
+            aria-busy={signingOut || undefined}
+            // The text label is hidden below lg, so the name can't depend on it.
+            aria-label={signingOut ? 'Logging out…' : 'Log out'}
+            className="flex h-11 shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 text-left text-[13px] font-medium text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 disabled:pointer-events-none dark:text-red-400 dark:hover:bg-red-950/30">
+            <span className="relative flex size-5 shrink-0 items-center justify-center">
+              <LogOut aria-hidden className={`size-5 ${signingOut ? 'rw-hint-out' : ''}`} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+              {signingOut ? (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Spinner />
+                </span>
+              ) : null}
+            </span>
+            <span aria-hidden className="hidden lg:inline">
+              {signingOut ? <PendingText label="Logging out…" slowLabel="Still logging out…" /> : 'Log out'}
+            </span>
+          </button>
         ) : (
           <Link
             href="/login"
-            className="flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl bg-[var(--accent)] px-[13px] text-[13px] font-bold text-white shadow-[0_1px_2px_var(--accent-shadow)] transition-opacity hover:opacity-90">
+            className="flex h-11 shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 text-[13px] font-medium text-zinc-700 transition-colors hover:bg-white/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] dark:text-zinc-200 dark:hover:bg-zinc-800">
             <LogIn className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
             <span className="hidden lg:inline">Log In</span>
           </Link>
         )}
+        {isAuthenticated ? <LoadingStatus active={signingOut} label="Logging out…" className="sr-only" /> : null}
       </div>
     </aside>
   );
@@ -194,42 +197,47 @@ function NavRow({
   badge?: 'verified' | 'unverified';
 }) {
   const activeClasses = destructive
-    ? 'bg-red-50 text-[#df2d2d] dark:bg-red-950/30 dark:text-red-400'
-    : 'bg-[var(--accent)] text-white shadow-[0_1px_2px_var(--accent-shadow)]';
+    ? 'bg-white text-red-600 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] dark:bg-zinc-800 dark:text-red-400 dark:ring-white/[0.06]'
+    : 'bg-white text-zinc-950 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] dark:bg-zinc-800 dark:text-white dark:ring-white/[0.06]';
   const idleClasses = destructive
-    ? 'text-[#df2d2d] hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20'
-    : 'text-[#151b2b] hover:bg-[#f3f5f7] dark:text-zinc-100 dark:hover:bg-zinc-900';
+    ? 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20'
+    : 'text-zinc-600 hover:bg-white/70 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800/70 dark:hover:text-white';
 
   return (
     <Link
       href={href}
+      scroll={false}
+      aria-label={label}
+      title={label}
       aria-current={active ? 'page' : undefined}
-      className={`flex h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl px-[13px] text-[13px] font-bold transition-colors ${
+      className={`relative flex h-11 shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
         active ? activeClasses : idleClasses
       }`}>
       <span className="relative shrink-0">
-        <Icon className="size-5" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
-        {badge ? (
+        <Icon aria-hidden className="size-5 lg:size-[18px]" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+      </span>
+      <span className="hidden flex-1 truncate lg:inline">{label}</span>
+      {badge ? (
           <span
             title={badge === 'verified' ? 'Verified' : 'Not verified'}
-            className={`absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-black leading-none text-white ring-2 ring-white dark:ring-zinc-900 ${
-              badge === 'verified' ? 'bg-green-500' : 'bg-amber-400'
+            aria-label={badge === 'verified' ? 'Verified' : 'Not verified'}
+            className={`absolute left-6 top-1 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold leading-none ring-2 ring-[#f4f4f3] lg:static lg:size-4 lg:ring-0 dark:ring-zinc-900 ${
+              badge === 'verified' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
             }`}>
             {badge === 'verified' ? '✓' : '!'}
           </span>
         ) : null}
-      </span>
-      <span className="hidden flex-1 truncate lg:inline">{label}</span>
+      <LinkPendingHint className="bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2" />
     </Link>
   );
 }
 
 function InfoRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: ReactNode }) {
   return (
-    <div className="hidden h-[49px] shrink-0 items-center gap-[13px] whitespace-nowrap rounded-2xl px-[13px] text-[13px] font-medium text-zinc-500 lg:flex dark:text-zinc-400">
-      <Icon className="size-5 shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+    <div className="hidden h-9 shrink-0 items-center gap-3 whitespace-nowrap px-3 text-xs font-normal text-zinc-500 lg:flex dark:text-zinc-400">
+      <Icon aria-hidden className="size-[18px] shrink-0" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
       <span className="flex-1">{label}</span>
-      <span className="text-xs font-medium">{value}</span>
+      <span className="rounded-md bg-black/[0.04] px-1.5 py-0.5 text-[10px] font-medium dark:bg-white/[0.06]">{value}</span>
     </div>
   );
 }

@@ -29,10 +29,23 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
+import { useSignOut } from '@/hooks/use-sign-out';
+import { AUTH_MESSAGES, authErrorCode, authFailureKind, isBreachedPassword, profileCompletionFailure } from '@/lib/auth/auth-feedback';
+import { signOutBrowser } from '@/lib/auth/sign-out';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 
 const SEX_LABELS: Record<Sex, string> = { male: 'Male', female: 'Female' };
+
+// Outcome copy. A request whose answer was lost may still have completed, so those
+// outcomes are "couldn't confirm", never a definite failure.
+const UNCONFIRMED_SIGN_UP = "We couldn't confirm whether your account was created. Before registering again, try logging in with this email.";
+const UNCONFIRMED_SIGN_UP_TITLE = "Couldn't confirm your account was created";
+const UNCONFIRMED_PROFILE = "We couldn't confirm that your profile was saved. Check your connection, then submit again.";
+const UNCONFIRMED_PROFILE_TITLE = "Couldn't confirm your profile was saved";
+const SIGN_UP_FAILED_TITLE = "Couldn't create your account";
+const SIGN_UP_REJECTED = "We couldn't create your account. Check your details, then try again.";
 
 const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
   employed: 'Employed',
@@ -108,18 +121,21 @@ function FieldStatus({ error, success }: { error?: string; success?: string }) {
 }
 
 function ChoiceChips<T extends string>({
+  field,
   options,
   labels,
   active,
   onChange,
 }: {
+  /** Form field name, so a failed submit can move focus to this group. */
+  field: string;
   options: readonly T[];
   labels: Record<T, string>;
   active: T | null;
   onChange: (value: T) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div data-field={field} className="flex flex-wrap gap-2">
       {options.map((option) => {
         const isActive = active === option;
         return (
@@ -149,6 +165,16 @@ function SectionHeading({ icon: Icon, title }: { icon: LucideIcon; title: string
       <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{title}</h2>
     </div>
   );
+}
+
+// Visual order of the validated fields, so a failed submit focuses the first one.
+const FIELD_ORDER = ['firstName', 'lastName', 'middleName', 'suffix', 'sex', 'birthDate', 'email', 'mobileNumber', 'houseNo', 'street', 'employmentStatus', 'occupation', 'password', 'confirmPassword'];
+
+function focusFirstInvalid(errors: Record<string, string>) {
+  const field = FIELD_ORDER.find((name) => errors[name]);
+  if (!field) return;
+  const target = document.getElementById(field) ?? document.querySelector<HTMLElement>(`[data-field="${field}"] button`);
+  target?.focus();
 }
 
 /**
@@ -187,6 +213,9 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
   const [barangay, setBarangay] = useState<{ id: string; name: string; city: string; province: string; boundary: Polygon | MultiPolygon | null } | null>(null);
   const [localityError, setLocalityError] = useState<string | null>(null);
   const [localityAttempt, setLocalityAttempt] = useState(0);
+  const [prefillError, setPrefillError] = useState<string | null>(null);
+  const [prefillAttempt, setPrefillAttempt] = useState(0);
+  const { signOut, pending: signingOut } = useSignOut('local');
   const [registrationLocation, setRegistrationLocation] = useState<{ gps: { lat: number; lng: number } | null; home: { lat: number; lng: number } | null }>({ gps: null, home: null });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
@@ -212,14 +241,24 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
 
   useEffect(() => {
     let active = true;
-    const client = createSupabaseBrowserClient();
-    void registrationLocality(client).then(data => {
+    void registrationLocality(createSupabaseBrowserClient()).then(data => {
       if (active) { setBarangay({ ...data, boundary: data.boundary as Polygon | MultiPolygon | null }); setLocalityError(null); }
-    }).catch(cause => { if (active) setLocalityError(cause.message); });
-    if (completing) void client.auth.getUser().then(async ({ data: { user } }) => {
+    }).catch(cause => { if (active) setLocalityError(cause instanceof Error ? cause.message : 'Registration locality unavailable. Please retry.'); });
+    return () => { active = false; };
+  }, [localityAttempt]);
+
+  // Separate from the locality read, so retrying one never re-applies the other over
+  // what the resident has already typed.
+  useEffect(() => {
+    if (!completing) return;
+    let active = true;
+    const client = createSupabaseBrowserClient();
+    void client.auth.getUser().then(async ({ data: { user } }) => {
       if (!user || !active) return;
-      const { data: profile } = await client.from('profiles').select('*').eq('id', user.id).maybeSingle();
+      const { data: profile, error: profileError } = await client.from('profiles').select('*').eq('id', user.id).maybeSingle();
+      if (profileError) throw profileError;
       if (!active) return;
+      setPrefillError(null);
       const names = residentNamePrefill(user.user_metadata, profile);
       setFirstName(current => current || names.firstName);
       setLastName(current => current || names.lastName);
@@ -230,9 +269,9 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         setSex(profile.sex as Sex | null); setEmploymentStatus(profile.employment_status as EmploymentStatus | null);
         setOccupation(profile.occupation ?? ''); setBirthDate(profile.birth_date ?? '');
       }
-    }).catch(() => { if (active) setError('Unable to load your profile. Check your connection and retry.'); });
+    }).catch(() => { if (active) setPrefillError('Unable to load your saved details. Check your connection, then try again.'); });
     return () => { active = false; };
-  }, [completing, localityAttempt]);
+  }, [completing, prefillAttempt]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -274,18 +313,32 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         errors[String(issue.path[0])] = issue.message;
       }
       setFieldErrors(errors);
+      // Inline field messages only (no toast); focus the first field that needs work.
+      focusFirstInvalid(errors);
       return;
     }
 
     submitting.current = true;
     setLoading(true);
+    const attempt = beginAttempt(completing ? 'complete-profile' : 'register');
     let signUpSucceeded = false;
+    let navigating = false;
     try {
       const supabase = createSupabaseBrowserClient();
       if (completing) {
         if (!profileResult.success) return;
-        const { error: completionError } = await serviceFoundationOperations(supabase).completeProfile({ ...profileResult.data, location: registrationLocation });
-        if (completionError) { setError(completionError.message); return; }
+        const { error: completionError, status } = await serviceFoundationOperations(supabase).completeProfile({ ...profileResult.data, location: registrationLocation });
+        if (completionError) {
+          const failure = profileCompletionFailure(completionError, status);
+          setError(failure.message);
+          if (failure.uncertain) notify.warning(UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' });
+          else notify.error("Couldn't save your profile", { id: attempt, description: 'See the message above the buttons.' });
+          return;
+        }
+        // Same account, so the outcome stays visible on the destination. Stay pending
+        // until it replaces this screen.
+        navigating = true;
+        notify.success('Profile saved', { id: attempt });
         router.replace(safeResidentRedirect(new URLSearchParams(window.location.search).get('next'))); router.refresh();
         return;
       }
@@ -320,7 +373,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
       });
 
       if (signUpError) {
-        setError(signUpError.message);
+        reportSignUpFailure(signUpError, attempt);
         return;
       }
 
@@ -331,20 +384,64 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         return;
       }
 
+      // The account exists from here on, whatever the local sign-out below reports.
+      signUpSucceeded = true;
       // Local scope only — clears this device's session without revoking tokens
       // elsewhere. The resident must go through Login explicitly afterward.
-      await supabase.auth.signOut({ scope: 'local' });
-      signUpSucceeded = true;
+      await signOutBrowser('local');
     } catch {
-      setError("Could not save your account. Check your connection and retry.");
+      // No answer came back, so the write may or may not have completed.
+      if (completing) {
+        setError(UNCONFIRMED_PROFILE);
+        notify.warning(UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' });
+      } else {
+        setError(UNCONFIRMED_SIGN_UP);
+        notify.warning(UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' });
+      }
     } finally {
-      submitting.current = false;
-      setLoading(false);
+      if (!navigating) {
+        submitting.current = false;
+        setLoading(false);
+      }
       if (signUpSucceeded && result.success) {
         setSuccessEmail(result.data.email);
         setShowSuccessModal(true);
       }
     }
+  }
+
+  function reportSignUpFailure(signUpError: unknown, attempt: OperationId) {
+    const kind = authFailureKind(signUpError);
+    const code = authErrorCode(signUpError);
+    if (kind === 'connection') {
+      setError(UNCONFIRMED_SIGN_UP);
+      notify.warning(UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' });
+      return;
+    }
+    if (kind === 'rate-limit' || kind === 'service') {
+      setError(kind === 'rate-limit' ? AUTH_MESSAGES.rateLimit : AUTH_MESSAGES.service);
+      notify.error(SIGN_UP_FAILED_TITLE, { id: attempt, description: 'Try again shortly.' });
+      return;
+    }
+    if (code === 'user_already_exists' || code === 'email_exists') {
+      setFieldErrors({ email: 'An account with this email already exists.' });
+      setError('An account with this email already exists. Log in instead, or use a different email.');
+      focusFirstInvalid({ email: 'exists' });
+    } else if (code === 'weak_password') {
+      const message = isBreachedPassword(signUpError) ? 'This password has appeared in a data breach. Choose a different one.' : 'Choose a stronger password.';
+      setFieldErrors({ password: message });
+      setError(message);
+      focusFirstInvalid({ password: message });
+    } else if (code === 'email_address_invalid') {
+      setFieldErrors({ email: 'Enter a valid email address' });
+      setError('Enter a valid email address.');
+      focusFirstInvalid({ email: 'invalid' });
+    } else if (code === 'signup_disabled') {
+      setError('Registration is currently unavailable. Please try again later.');
+    } else {
+      setError(SIGN_UP_REJECTED);
+    }
+    notify.error(SIGN_UP_FAILED_TITLE, { id: attempt, description: 'See the message above the buttons.' });
   }
 
   function goToLogin() {
@@ -436,7 +533,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
                 Sex
                 <RequiredMark />
               </Label>
-              <ChoiceChips options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
+              <ChoiceChips field="sex" options={SEXES} labels={SEX_LABELS} active={sex} onChange={setSex} />
               {fieldErrors.sex ? <FieldStatus error={fieldErrors.sex} /> : sex ? <FieldStatus success=" " /> : null}
             </div>
             <div className="flex flex-col gap-1.5">
@@ -534,6 +631,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
               <RequiredMark />
             </Label>
             <ChoiceChips
+              field="employmentStatus"
               options={EMPLOYMENT_STATUSES}
               labels={EMPLOYMENT_STATUS_LABELS}
               active={employmentStatus}
@@ -603,15 +701,16 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
 
         </>}
         <RegistrationMap boundary={barangay?.boundary ?? null} onConfirm={setRegistrationLocation} />
-        {localityError && <><p role="alert">{localityError}</p><Button type="button" onClick={() => setLocalityAttempt(value => value + 1)}>Retry locality</Button></>}
+        {localityError && <><p role="alert">{localityError}</p><Button type="button" onClick={() => { setLocalityError(null); setLocalityAttempt(value => value + 1); }}>Retry locality</Button></>}
+        {prefillError && <><p role="alert">{prefillError}</p><Button type="button" onClick={() => { setPrefillError(null); setPrefillAttempt(value => value + 1); }}>Reload saved details</Button></>}
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
         <div className="flex flex-col items-center gap-3">
-          {completing && <Button type="button" variant="secondary" onClick={async () => { await createSupabaseBrowserClient().auth.signOut({ scope: 'local' }); router.replace('/login'); router.refresh(); }}>Sign out</Button>}
-          <Button type="submit" size="lg" loading={loading} className="w-full">
+          {completing && <Button type="button" variant="secondary" loading={signingOut} loadingLabel="Signing out…" disabled={loading} onClick={() => void signOut()}>Sign out</Button>}
+          <Button type="submit" size="lg" loading={loading} loadingLabel={completing ? 'Saving…' : 'Creating account…'} disabled={signingOut} className="w-full">
             {completing ? "Complete Profile" : "Create Account"}
           </Button>
-          {completing && <Button type="button" variant="secondary" className="w-full" onClick={() => { router.replace('/home'); router.refresh(); }}>Skip for now — browse information</Button>}
+          {completing && <Button type="button" variant="secondary" className="w-full" disabled={loading || signingOut} onClick={() => { router.replace('/home'); router.refresh(); }}>Skip for now — browse information</Button>}
           {!completing && <div className="w-full"><GoogleButton label="Sign up with Google" /></div>}
           <p className="text-sm text-muted-foreground">
             Already have an account?{' '}

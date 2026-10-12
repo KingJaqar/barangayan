@@ -1,0 +1,2846 @@
+{
+  "schema": 1,
+  "plan": "plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md",
+  "phase": "RW-LT-00",
+  "inspected": "2026-10-11",
+  "basis": "Static inspection of apps/resident-web/src at the RW-LT-00 baseline (no resident-web working-tree changes present). Runtime observations are recorded separately in baseline/results.json; entries say 'verify' where only a runtime check can settle the behavior.",
+  "legend": {
+    "phase": "Single owning feature phase. RW-LT-01/02 pilots are integrations into entries owned here; ownership is not duplicated.",
+    "initial/refresh/error/empty": "Current (baseline) treatment, not the target treatment.",
+    "outcomeOwner": "Where terminal feedback is produced today."
+  },
+  "routes": [
+    {
+      "file": "app/layout.tsx",
+      "route": "(root layout)",
+      "kind": "layout",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "Theme/accent/font/motion providers + single Sonner <Toaster/> (refined RW-LT-02)",
+      "loadIdentity": "none",
+      "initial": "app/loading.tsx: neutral fallback (no shell/account shapes) for waits in the (resident)/(auth) layouts; label after 120 ms",
+      "refresh": "n/a",
+      "error": "app/error.tsx: neutral inline recovery (RouteError) for failures in the group layouts; retry() refresh, Go to Home",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "Toaster host: top-center, measured header clearance, ≤3 visible, 400 px, durations via lib/notify.ts; screens own outcomes",
+      "recovery": "retry() (route refresh, no write replay) or Go to Home",
+      "notes": "Root loading/error added in RW-LT-03. Hard loads now stream, so layout/page redirect() and notFound() arrive in-stream (document status 200, client redirect / noindex 404 view) instead of 307/404; destinations unchanged (rw-lt-03 guest-fallback-and-redirects, auth-fallback-and-signed-in-redirect, inaccessible-record-not-found)."
+    },
+    {
+      "file": "app/page.tsx",
+      "route": "/",
+      "kind": "page",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "server redirect",
+      "loadIdentity": "none",
+      "initial": "redirect('/home')",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "n/a",
+      "notes": "No async UI; redirect only."
+    },
+    {
+      "file": "app/(auth)/layout.tsx",
+      "route": "(auth group)",
+      "kind": "layout",
+      "access": "guest (+3 authenticated exemptions)",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "server getUser() + x-pathname",
+      "loadIdentity": "session",
+      "initial": "Layout session read covered by app/loading.tsx; (auth)/loading.tsx centered form-card fallback below it",
+      "refresh": "n/a",
+      "error": "(auth)/error.tsx: inline recovery without resident shell; Go to Log In; existing /auth/error and ?authError routing unchanged",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "redirect('/home') when signed in",
+      "notes": "Auth group fallback/error boundary must sit below this layout."
+    },
+    {
+      "file": "app/(resident)/layout.tsx",
+      "route": "(resident group)",
+      "kind": "layout",
+      "access": "guest + resident",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "getOptionalUser(); UnreadCountsProvider; ResidentShell",
+      "loadIdentity": "user id",
+      "initial": "Layout session read covered by app/loading.tsx; (resident)/loading.tsx list fallback inside the persistent shell; route-specific: home, maps (steady map viewport), maps/directory, maps/preparedness, settings, emergency/health/services segments",
+      "refresh": "Unread counts via 3 Realtime channels (quiet)",
+      "error": "(resident)/error.tsx: inline recovery inside the shell (nav stays usable); retry() refresh, Go to Home",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "retry() / Go to Home",
+      "notes": "Shell logout handled under RW-LT-04 (A-AUTH-11)."
+    },
+    {
+      "file": "app/(resident)/emergency/layout.tsx",
+      "route": "(emergency segment)",
+      "kind": "layout",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "EmergencySegmentNav",
+      "loadIdentity": "none",
+      "initial": "Segment loading.tsx below the persistent segment nav/sidebar (\"Loading emergency information…\")",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "Loading emergency information…; useLinkStatus hints on segment links",
+      "outcomeOwner": "none",
+      "recovery": "n/a"
+    },
+    {
+      "file": "app/(resident)/health/layout.tsx",
+      "route": "(health segment)",
+      "kind": "layout",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "HealthSegmentNav",
+      "loadIdentity": "none",
+      "initial": "Segment loading.tsx below the persistent segment nav/sidebar (\"Loading health services…\")",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "Loading health services…; useLinkStatus hints on segment links",
+      "outcomeOwner": "none",
+      "recovery": "n/a"
+    },
+    {
+      "file": "app/(resident)/services/layout.tsx",
+      "route": "(services segment)",
+      "kind": "layout",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "getOptionalUser(); ServicesSegmentNav; ServicesVerification",
+      "loadIdentity": "user id",
+      "initial": "Segment loading.tsx below the persistent segment nav/sidebar (\"Loading services…\")",
+      "refresh": "n/a",
+      "error": "Unhandled -> Next default",
+      "empty": "n/a",
+      "pendingLabel": "Loading services…; useLinkStatus hints on segment links",
+      "outcomeOwner": "none",
+      "recovery": "n/a"
+    },
+    {
+      "file": "app/(resident)/settings/layout.tsx",
+      "route": "(settings segment)",
+      "kind": "layout",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-03",
+      "stateOwner": "getUser + profile verification flags; SettingsSidebar; server-action logout",
+      "loadIdentity": "user id",
+      "initial": "Segment loading.tsx below the persistent segment nav/sidebar (\"Loading settings…\")",
+      "refresh": "n/a",
+      "error": "Profile read error -> flags default false (badge shows unverified)",
+      "empty": "n/a",
+      "pendingLabel": "Loading settings…; useLinkStatus hints on segment links",
+      "outcomeOwner": "none",
+      "recovery": "n/a",
+      "notes": "Sidebar logout action is A-AUTH-12 (RW-LT-04)."
+    },
+    {
+      "file": "app/auth/callback/route.ts",
+      "route": "/auth/callback",
+      "kind": "route-handler",
+      "access": "OAuth return",
+      "render": "server",
+      "phase": "RW-LT-04",
+      "stateOwner": "route handler",
+      "loadIdentity": "single PKCE code",
+      "initial": "n/a (redirect)",
+      "refresh": "n/a",
+      "error": "Redirect /auth/error (no-store)",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "destination page",
+      "recovery": "/auth/error links",
+      "notes": "RW-LT-04: unchanged by design (server redirect handler; failures already redirect to /auth/error). Existing auth routing preserved; live OAuth provider flow pending."
+    },
+    {
+      "file": "app/auth/email-change/route.ts",
+      "route": "/auth/email-change",
+      "kind": "route-handler",
+      "access": "resident (email-change confirmation link)",
+      "render": "server",
+      "phase": "RW-LT-08",
+      "stateOwner": "route handler",
+      "loadIdentity": "email-change confirmation code",
+      "initial": "n/a (redirect)",
+      "refresh": "n/a",
+      "error": "Redirect /settings/email-verification?emailChangeError=1 (no-store)",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "destination page (settings/email-verification)",
+      "recovery": "Destination page",
+      "notes": "Added by concurrent account work after the RW-LT-00 inventory (first seen during RW-LT-06). Server redirect handler: no loader/toast needed; destination-page feedback is reviewed in RW-LT-08."
+    },
+    {
+      "file": "app/auth/error/page.tsx",
+      "route": "/auth/error",
+      "kind": "page",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-04",
+      "stateOwner": "static",
+      "loadIdentity": "none",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "role=alert copy",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "page",
+      "recovery": "Return to login / profile links",
+      "notes": "RW-LT-04: unchanged; static role=alert copy and return links verified (auth-static-and-narrow). No async."
+    },
+    {
+      "file": "app/(auth)/login/page.tsx",
+      "route": "/login",
+      "kind": "page",
+      "access": "guest",
+      "render": "client",
+      "phase": "RW-LT-04",
+      "stateOwner": "local loading/error",
+      "loadIdentity": "none",
+      "initial": "Static form (Suspense for searchParams); ?next= shows \"continue where you left off\"",
+      "refresh": "n/a",
+      "error": "Classified by Auth result: connection / rate-limit / service / rejected; inline persistent message + one toast; profile-check failure keeps the signed-in session with retry",
+      "empty": "n/a",
+      "pendingLabel": "\"Logging in…\" (aria-busy, disabled immediately); synchronous activation guard; stays pending until the destination replaces the screen",
+      "outcomeOwner": "page (inline + notify.error per attempt)",
+      "recovery": "Retry submit; network failure no longer reported as wrong credentials",
+      "actions": [
+        "A-AUTH-01",
+        "A-AUTH-02"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (login-failure-classification, login-activation-and-destinations, login-destinations-preserved)."
+    },
+    {
+      "file": "app/(auth)/register/page.tsx",
+      "route": "/register",
+      "kind": "page",
+      "access": "guest",
+      "render": "server shell + client form",
+      "phase": "RW-LT-04",
+      "stateOwner": "RegisterForm",
+      "loadIdentity": "registration locality",
+      "initial": "Locality/profile load inside form",
+      "refresh": "n/a",
+      "error": "Inline field errors with focus on the first invalid field (no toast); Auth refusals mapped to field/plain copy; lost sign-up response → \"couldn't confirm, try logging in\" warning, never auto-retried",
+      "empty": "n/a",
+      "pendingLabel": "\"Creating account…\"; synchronous guard (existing)",
+      "outcomeOwner": "form (inline + notify) / existing success dialog",
+      "recovery": "Retry; log in with the email before registering again",
+      "actions": [
+        "A-AUTH-03",
+        "A-AUTH-04"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (register-outcomes)."
+    },
+    {
+      "file": "app/(auth)/complete-profile/page.tsx",
+      "route": "/complete-profile",
+      "kind": "page",
+      "access": "authenticated",
+      "render": "server + client form",
+      "phase": "RW-LT-04",
+      "stateOwner": "RegisterForm completing",
+      "loadIdentity": "user id",
+      "initial": "Server getUser then form loads profile",
+      "refresh": "n/a",
+      "error": "complete_resident_profile errors mapped to plain copy; transport failure → unconfirmed warning; saved-details read failure has its own \"Reload saved details\" retry",
+      "empty": "n/a",
+      "pendingLabel": "\"Saving…\" / \"Signing out…\"; Skip and Sign out disabled while saving",
+      "outcomeOwner": "form (inline + notify) / useSignOut (scope local, unchanged)",
+      "recovery": "Retry / Sign out / Skip",
+      "actions": [
+        "A-AUTH-03",
+        "A-AUTH-05"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (complete-profile-outcomes)."
+    },
+    {
+      "file": "app/(auth)/forgot-password/page.tsx",
+      "route": "/forgot-password",
+      "kind": "page",
+      "access": "guest",
+      "render": "client",
+      "phase": "RW-LT-04",
+      "stateOwner": "local loading",
+      "loadIdentity": "none",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "Lost response → \"couldn't confirm the code was sent\" warning (check email first); rate-limit/service/rejected mapped; no raw provider text",
+      "empty": "n/a",
+      "pendingLabel": "\"Sending code…\"; synchronous guard",
+      "outcomeOwner": "page (inline + notify; the /verify-otp screen confirms the send, so no success toast)",
+      "recovery": "Retry; check email first when unconfirmed",
+      "actions": [
+        "A-AUTH-06"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (forgot-password-outcomes)."
+    },
+    {
+      "file": "app/(auth)/verify-otp/page.tsx",
+      "route": "/verify-otp",
+      "kind": "page",
+      "access": "guest",
+      "render": "client",
+      "phase": "RW-LT-04",
+      "stateOwner": "local loading + resend cooldown timer",
+      "loadIdentity": "email query param",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "expired/invalid vs connection vs rate-limit mapped; thrown failures handled; code input has an accessible name",
+      "empty": "n/a",
+      "pendingLabel": "\"Verifying…\"; Resend shows \"Resending…\"; synchronous guards; cooldown timer unchanged (45 s)",
+      "outcomeOwner": "page (inline + notify.error/warning; resend success notify.success)",
+      "recovery": "Resend code / retry",
+      "actions": [
+        "A-AUTH-07",
+        "A-AUTH-08"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (recovery-code-and-reset)."
+    },
+    {
+      "file": "app/(auth)/reset-password/page.tsx",
+      "route": "/reset-password",
+      "kind": "page",
+      "access": "recovery session",
+      "render": "client",
+      "phase": "RW-LT-04",
+      "stateOwner": "local loading",
+      "loadIdentity": "session",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "Inline field errors with focus on the first invalid field; same_password/weak_password mapped to the field; ended session links to a new code; lost response → \"couldn't confirm\" warning",
+      "empty": "n/a",
+      "pendingLabel": "\"Updating…\"; synchronous guard",
+      "outcomeOwner": "page (inline + notify; success toast persists onto /home)",
+      "recovery": "Retry / Request a new code",
+      "actions": [
+        "A-AUTH-09"
+      ],
+      "notes": "RW-LT-04 migrated. Evidence: rw-lt-04/run-1/results.json (recovery-code-and-reset)."
+    },
+    {
+      "file": "app/(auth)/onboarding/page.tsx",
+      "route": "/onboarding",
+      "kind": "page",
+      "access": "authenticated",
+      "render": "client",
+      "phase": "RW-LT-04",
+      "stateOwner": "local steps + accent preview",
+      "loadIdentity": "user id",
+      "initial": "Static steps",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none (accent/theme picks preview immediately; no toast)",
+      "recovery": "n/a",
+      "actions": [
+        "A-AUTH-10"
+      ],
+      "notes": "RW-LT-04 migrated (D-12 for onboarding). Evidence: rw-lt-04/run-1/results.json (onboarding-quiet-appearance)."
+    },
+    {
+      "file": "app/(resident)/home/page.tsx",
+      "route": "/home",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server",
+      "phase": "RW-LT-04",
+      "stateOwner": "server Promise.all (requests, reports, latest announcement, email status)",
+      "loadIdentity": "user id / barangay",
+      "initial": "Blocks on server reads; no route fallback",
+      "refresh": "n/a (server)",
+      "error": "Each server read error is kept: recent requests/reports and the latest announcement show a retryable notice (router.refresh, read-only) instead of the empty copy; the email banner stays hidden on failure",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "Try again (read-only refresh) / Reload",
+      "actions": [
+        "A-HOME-01"
+      ],
+      "notes": "RW-LT-04 migrated (D-07 for home). Initial load is covered by (resident)/home/loading.tsx. Evidence: rw-lt-04/run-1/results.json (home-read-failures)."
+    },
+    {
+      "file": "app/(resident)/announcements/page.tsx",
+      "route": "/announcements",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client feed",
+      "phase": "RW-LT-04",
+      "stateOwner": "useAnnouncements",
+      "loadIdentity": "barangay id (+client category filter)",
+      "initial": "Skeleton + \"Loading announcements…\" only until the first result for the current filter (isInitialLoading)",
+      "refresh": "Realtime refetch keeps the loaded list (same identity, incl. empty) with a quiet 120 ms-delayed \"Updating\" hint; no entrance replay; obsolete responses dropped (generation guard)",
+      "error": "Initial failure: plain-language alert + Try again; refresh failure: list kept + polite stale-data warning + Try again",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none (Realtime events, read/unread changes stay quiet; verified with 10 events → 0 toasts)",
+      "recovery": "Retry",
+      "actions": [
+        "A-ANN-01",
+        "A-ANN-02",
+        "A-ANN-03"
+      ],
+      "notes": "RW-LT-03 read-state pilot; RW-LT-04 verified quiet updates and migrated the details dialog (Radix modal: focus trap, Escape, focus return, title name, 240/180 ms drawer timing, inert while exiting). Evidence: rw-lt-04/run-1/results.json (announcements-quiet-updates, announcement-detail-dialog*)."
+    },
+    {
+      "file": "app/(resident)/emergency/page.tsx",
+      "route": "/emergency",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client hub",
+      "phase": "RW-LT-05",
+      "stateOwner": "useEmergencyGuidelines + useEmergencyHotlines",
+      "loadIdentity": "barangay id",
+      "initial": "Inline loading text",
+      "refresh": "Realtime refetch toggles isLoading",
+      "error": "Hook errors ignored -> 'No guidelines/hotlines available.'",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-EMG-01"
+      ]
+    },
+    {
+      "file": "app/(resident)/emergency/centers/page.tsx",
+      "route": "/emergency/centers",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-05",
+      "stateOwner": "useEvacuationCenters + geolocation + Leaflet map",
+      "loadIdentity": "barangay id",
+      "initial": "Loading placeholder",
+      "refresh": "none",
+      "error": "Inline error",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-EMG-02"
+      ]
+    },
+    {
+      "file": "app/(resident)/emergency/scan/page.tsx",
+      "route": "/emergency/scan",
+      "kind": "page",
+      "access": "resident (AuthGate for guest)",
+      "render": "server + client",
+      "phase": "RW-LT-05",
+      "stateOwner": "useEmergencyQrContent; scanner/upload dialogs",
+      "loadIdentity": "barangay id",
+      "initial": "Inline loading",
+      "refresh": "Realtime",
+      "error": "Inline",
+      "empty": "verify",
+      "pendingLabel": "Scanner states starting/scanning/processing",
+      "outcomeOwner": "dialog toasts",
+      "recovery": "Upload fallback",
+      "actions": [
+        "A-EMG-04",
+        "A-EMG-05",
+        "A-EMG-06",
+        "A-EMG-07"
+      ]
+    },
+    {
+      "file": "app/(resident)/emergency/family/page.tsx",
+      "route": "/emergency/family",
+      "kind": "page",
+      "access": "resident (AuthGate for guest)",
+      "render": "server + client",
+      "phase": "RW-LT-05",
+      "stateOwner": "useFamilyMembers",
+      "loadIdentity": "profile id",
+      "initial": "'Loading family members…' text only when list empty",
+      "refresh": "Manual refetch only",
+      "error": "Hook error ignored -> 'No family members added yet.'",
+      "empty": "Inline empty + Add",
+      "pendingLabel": "Dialog button loading (cleared synchronously)",
+      "outcomeOwner": "consumer toast on failure only",
+      "recovery": "none",
+      "actions": [
+        "A-EMG-08",
+        "A-EMG-09",
+        "A-EMG-10",
+        "A-EMG-11"
+      ]
+    },
+    {
+      "file": "app/(resident)/emergency/alerts/page.tsx",
+      "route": "/emergency/alerts",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-05",
+      "stateOwner": "useAnnouncements(category emergency)",
+      "loadIdentity": "barangay id",
+      "initial": "Inline loading",
+      "refresh": "Realtime refetch toggles isLoading",
+      "error": "Inline",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-EMG-03"
+      ]
+    },
+    {
+      "file": "app/(resident)/maps/page.tsx",
+      "route": "/maps",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + dynamic client map",
+      "phase": "RW-LT-05",
+      "stateOwner": "server reads + MapClientWrapper dynamic import",
+      "loadIdentity": "barangay id",
+      "initial": "Fixed-size pulse placeholder while map code loads",
+      "refresh": "n/a",
+      "error": "Server query errors -> empty categories (by design per comment)",
+      "empty": "Map without markers",
+      "pendingLabel": "none",
+      "outcomeOwner": "LocateButton toasts",
+      "recovery": "Manual pan/search",
+      "actions": [
+        "A-MAP-01",
+        "A-MAP-02",
+        "A-MAP-03"
+      ]
+    },
+    {
+      "file": "app/(resident)/maps/directory/page.tsx",
+      "route": "/maps/directory",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-05",
+      "stateOwner": "useEmergencyHotlines",
+      "loadIdentity": "barangay id",
+      "initial": "Inline loading",
+      "refresh": "Realtime",
+      "error": "Inline",
+      "empty": "Inline empty copy",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-MAP-04"
+      ]
+    },
+    {
+      "file": "app/(resident)/maps/preparedness/page.tsx",
+      "route": "/maps/preparedness",
+      "kind": "page",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-05",
+      "stateOwner": "static PreparednessGuide",
+      "loadIdentity": "none",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "n/a",
+      "noAsync": true
+    },
+    {
+      "file": "app/(resident)/services/page.tsx",
+      "route": "/services",
+      "kind": "page",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-06",
+      "stateOwner": "redirect",
+      "loadIdentity": "none",
+      "initial": "redirect('/services/documents')",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "n/a",
+      "noAsync": true,
+      "notes": "RW-LT-06: redirect only; no loader/toast needed."
+    },
+    {
+      "file": "app/(resident)/services/documents/page.tsx",
+      "route": "/services/documents",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client list/modal",
+      "phase": "RW-LT-06",
+      "stateOwner": "server document_types read; DocumentRequestModal",
+      "loadIdentity": "barangay",
+      "initial": "Route fallback \"Loading services…\"; modal service read: skeleton + one polite \"Loading service…\"",
+      "refresh": "n/a",
+      "error": "Catalog read failure → ReadFailure notice with read-only Try again (never \"No document types\"); modal read: error + Retry / unavailable + Back",
+      "empty": "Inline",
+      "pendingLabel": "Modal: \"Checking your account…\" on Request This Document; slide-in drawer shell (same as request drawer)",
+      "outcomeOwner": "modal steps (explicit views); no toast for ordinary navigation",
+      "recovery": "Try again (router.refresh) / Retry loading service",
+      "actions": [
+        "A-SVC-01",
+        "A-SVC-03",
+        "A-SVC-04"
+      ],
+      "notes": "RW-LT-06: server read failure no longer a false empty (D-07); modal keeps an already-loaded service on a failed re-read and ignores obsolete responses. Evidence: rw-lt-06/run-2/results.json (catalog-modal-read-states, catalog-rapid-selection-obsolete-response, request-check-pending-and-failure, server-read-failures)."
+    },
+    {
+      "file": "app/(resident)/services/[documentId]/page.tsx",
+      "route": "/services/[documentId]",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server",
+      "phase": "RW-LT-06",
+      "stateOwner": "server read",
+      "loadIdentity": "document id",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "Read failure → ReadFailure (not 404); missing/inaccessible → notFound()",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "Default 404",
+      "actions": [
+        "A-SVC-02"
+      ],
+      "notes": "RW-LT-06: failed read is distinguished from a missing record (PGRST116). Route fallback \"Loading service…\". Evidence: rw-lt-06/run-2/results.json (server-read-failures, route-fallbacks)."
+    },
+    {
+      "file": "app/(resident)/services/requests/page.tsx",
+      "route": "/services/requests",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client list/drawer",
+      "phase": "RW-LT-06",
+      "stateOwner": "server read; RequestsList; RequestDrawer",
+      "loadIdentity": "user id + tab",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "Read failure → ReadFailure with Try again (never \"You haven't submitted any requests\"); drawer unavailable/error states (RW-LT-03)",
+      "empty": "Inline empty",
+      "pendingLabel": "Drawer: \"Loading request…\"; ?tab= links show a useLinkStatus hint while the navigation blocks",
+      "outcomeOwner": "RequestTracking toasts",
+      "recovery": "Reload",
+      "actions": [
+        "A-SVC-07",
+        "A-SVC-09",
+        "A-SVC-10",
+        "A-SVC-11"
+      ],
+      "notes": "RW-LT-06: list FadeIn bounded to six; ?open= with a failed list still opens the drawer. Evidence: rw-lt-06/run-2/results.json (requests-list-and-drawer, server-read-failures)."
+    },
+    {
+      "file": "app/(resident)/services/requests/[requestId]/page.tsx",
+      "route": "/services/requests/[requestId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client tracking",
+      "phase": "RW-LT-06",
+      "stateOwner": "server read; RequestTracking realtime",
+      "loadIdentity": "request id + resident",
+      "initial": "Route fallback \"Loading request…\" (detail skeleton)",
+      "refresh": "Realtime refetch",
+      "error": "Read failure → ReadFailure; missing → notFound(); quiet Realtime refresh failures keep the last request",
+      "empty": "n/a",
+      "pendingLabel": "Cancel buttons \"Cancelling…\" with synchronous repeat guard; Pay Now \"Opening payment…\"",
+      "outcomeOwner": "RequestTracking (notify adapter, one attempt ID per cancel)",
+      "recovery": "ReadFailure Try again; unconfirmed outcomes re-read the request read-only",
+      "actions": [
+        "A-SVC-10",
+        "A-SVC-11",
+        "A-SVC-12",
+        "A-SVC-13"
+      ],
+      "notes": "RW-LT-06: cancel outcomes confirmed/refused/lost; payment completing during cancellation follows the paid outcome. Evidence: rw-lt-06/run-2/results.json (tracking-cancel-request-outcomes, tracking-cancel-payment-outcomes)."
+    },
+    {
+      "file": "app/(resident)/services/requests/new/[documentId]/page.tsx",
+      "route": "/services/requests/new/[documentId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-06",
+      "stateOwner": "ResidentServiceForm",
+      "loadIdentity": "user id + document id",
+      "initial": "Route fallback \"Loading request form…\" (form skeleton)",
+      "refresh": "Realtime/focus (verify)",
+      "error": "Read failure → ReadFailure; missing → notFound(); submit: validation inline, refused/lost/upload failures → one toast + persistent guidance",
+      "empty": "n/a",
+      "pendingLabel": "Real stage labels: \"Uploading your ID…\" → \"Submitting your request…\" (no percentage)",
+      "outcomeOwner": "ResidentServiceForm (notify adapter); success = explicit payment view (no toast)",
+      "recovery": "Retry unchanged (idempotent attempt) or Open My Requests",
+      "actions": [
+        "A-SVC-05",
+        "A-SVC-06"
+      ],
+      "notes": "RW-LT-06: Evidence: rw-lt-06/run-2/results.json (request-form-outcomes, request-form-upload-stages)."
+    },
+    {
+      "file": "app/(resident)/services/logs/page.tsx",
+      "route": "/services/logs",
+      "kind": "page",
+      "access": "resident",
+      "render": "server",
+      "phase": "RW-LT-06",
+      "stateOwner": "server read",
+      "loadIdentity": "user id",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "Read failure → ReadFailure with Try again (never \"No activity yet\")",
+      "empty": "Inline",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "Reload",
+      "actions": [
+        "A-SVC-08"
+      ],
+      "notes": "RW-LT-06: Evidence: rw-lt-06/run-2/results.json (server-read-failures)."
+    },
+    {
+      "file": "app/(resident)/services/payment/[requestId]/page.tsx",
+      "route": "/services/payment/[requestId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client journey",
+      "phase": "RW-LT-06",
+      "stateOwner": "RequestPaymentJourney (10 s interval + focus refresh)",
+      "loadIdentity": "request id",
+      "initial": "Route fallback \"Loading payment…\"; journey skeleton + one polite \"Loading request and fee assessment…\"",
+      "refresh": "10 s poll + focus refresh (unchanged) via useScopedRead: failed refresh keeps the assessment with a warning + Try again",
+      "error": "Initial failure → InlineReadError + retry; missing → notFound(); read failure of the guard read → ReadFailure",
+      "empty": "Awaiting fee assessment view",
+      "pendingLabel": "\"Saving your choice…\" on Continue",
+      "outcomeOwner": "PaymentMethodStep (refused/lost → one toast + persistent guidance; success → next step, no toast)",
+      "recovery": "Retry",
+      "actions": [
+        "A-SVC-14",
+        "A-SVC-15",
+        "A-SVC-16"
+      ],
+      "notes": "RW-LT-06: D-04 payment-method step, D-06 payment journey. Evidence: rw-lt-06/run-2/results.json (payment-method-and-pickup, payment-journey-refresh-failure-retains-content)."
+    },
+    {
+      "file": "app/(resident)/services/payment/pickup/[requestId]/page.tsx",
+      "route": "/services/payment/pickup/[requestId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client",
+      "phase": "RW-LT-06",
+      "stateOwner": "PickupConfirmation -> RequestPaymentJourney initialStep=\"pickup\" -> PickupStep",
+      "loadIdentity": "request id",
+      "initial": "Journey loading text",
+      "refresh": "10 s poll",
+      "error": "Persistent inline alert (token-free wording); lost response says retry creates no second record",
+      "empty": "n/a",
+      "pendingLabel": "LoadingStatus \"Recording your pickup payment…\"; Retry control",
+      "outcomeOwner": "PickupStep (is its own confirmation view; no toast)",
+      "recovery": "verify",
+      "actions": [
+        "A-SVC-16"
+      ],
+      "notes": "RW-LT-06: D-13 — start_pickup_payment verified idempotent (migration 0098 pickup_payment; one pickup row after repeated mounts/reloads); mount write guarded to once per mounted request. Evidence: rw-lt-06/run-2/results.json (payment-method-and-pickup, pickup-failure-and-retry)."
+    },
+    {
+      "file": "app/(resident)/services/payment/qrph/[requestId]/page.tsx",
+      "route": "/services/payment/qrph/[requestId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client",
+      "phase": "RW-LT-06",
+      "stateOwner": "RequestPaymentJourney initialStep=\"qrph\" -> QrphStep (usePaymongoSource: create, 5 s poll, Realtime, cancel guard)",
+      "loadIdentity": "request id / payment id",
+      "initial": "Steady 256 px placeholder frame + one polite \"Generating your QR code…\" outside the frame (no layout shift)",
+      "refresh": "5 s poll + Realtime (quiet)",
+      "error": "Inline message + Go Back",
+      "empty": "n/a",
+      "pendingLabel": "Cancel \"Cancelling…\"",
+      "outcomeOwner": "QrphStep: \"Payment received.\" once per payment attempt (event ID account+attempt+state); confirmed expiry warning once; cancellation success only when confirmed",
+      "recovery": "Persistent payment guidance (cancel refused/unconfirmed, status checks failing, expiry time passed) + Go Back / View My Request",
+      "actions": [
+        "A-SVC-14",
+        "A-SVC-17",
+        "A-SVC-18",
+        "A-SVC-20",
+        "A-SVC-21"
+      ],
+      "notes": "RW-LT-06: D-14 fixed. Evidence: rw-lt-06/run-2/results.json (qr-*, receipt-*, account-change-suppresses-payment-outcome)."
+    },
+    {
+      "file": "app/(resident)/services/payment/success/page.tsx",
+      "route": "/services/payment/success",
+      "kind": "page",
+      "access": "resident",
+      "render": "server",
+      "phase": "RW-LT-06",
+      "stateOwner": "server read of confirmed paid payment owned by resident",
+      "loadIdentity": "requestId + resident",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "Read failure → ReadFailure (\"don't pay again\"); no paid row → existing \"No confirmed payment receipt…\" alert",
+      "empty": "same as error",
+      "pendingLabel": "none",
+      "outcomeOwner": "page",
+      "recovery": "Return to request payment",
+      "actions": [
+        "A-SVC-19"
+      ],
+      "notes": "RW-LT-06: confirmed paid-row ownership check unchanged; revisit shows no toast. Evidence: rw-lt-06/run-2/results.json (receipt-read-only-retry-and-revisit, server-read-failures)."
+    },
+    {
+      "file": "app/(resident)/reports/page.tsx",
+      "route": "/reports",
+      "kind": "page",
+      "access": "resident (AuthGate for guest)",
+      "render": "server + client tabs/drawer",
+      "phase": "RW-LT-07",
+      "stateOwner": "useMyIncidents per tab (remount on tab change); IncidentDrawer",
+      "loadIdentity": "user id + status tab",
+      "initial": "Skeleton",
+      "refresh": "Realtime refetch sets isLoading=true -> list replaced by skeleton",
+      "error": "Inline ErrorState + Retry",
+      "empty": "Inline per tab",
+      "pendingLabel": "Drawer skeleton",
+      "outcomeOwner": "drawer withdraw toast",
+      "recovery": "Retry",
+      "actions": [
+        "A-RPT-01",
+        "A-RPT-02",
+        "A-RPT-04",
+        "A-RPT-08"
+      ]
+    },
+    {
+      "file": "app/(resident)/reports/new/page.tsx",
+      "route": "/reports/new",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-07",
+      "stateOwner": "NewReportForm",
+      "loadIdentity": "user id",
+      "initial": "Categories load silently",
+      "refresh": "n/a",
+      "error": "Category read error ignored (empty picker)",
+      "empty": "verify",
+      "pendingLabel": "Submit loading",
+      "outcomeOwner": "form toast then /reports",
+      "recovery": "Retry submit",
+      "actions": [
+        "A-RPT-05",
+        "A-RPT-06",
+        "A-RPT-07"
+      ]
+    },
+    {
+      "file": "app/(resident)/reports/[incidentId]/page.tsx",
+      "route": "/reports/[incidentId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client detail",
+      "phase": "RW-LT-07",
+      "stateOwner": "server read scoped to reporter; IncidentDetail realtime",
+      "loadIdentity": "incident id + reporter",
+      "initial": "Blocks on server read",
+      "refresh": "Realtime",
+      "error": "notFound() when missing/inaccessible",
+      "empty": "n/a",
+      "pendingLabel": "Withdraw loading",
+      "outcomeOwner": "detail toasts",
+      "recovery": "Default 404",
+      "actions": [
+        "A-RPT-03",
+        "A-RPT-04"
+      ]
+    },
+    {
+      "file": "app/(resident)/health/page.tsx",
+      "route": "/health",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-07",
+      "stateOwner": "useMedicalDrives (date + type filter); RegisterDrawer",
+      "loadIdentity": "selected date + type filter",
+      "initial": "Inline loading",
+      "refresh": "Realtime on any medical_drives UPDATE",
+      "error": "Inline error box (no retry)",
+      "empty": "Inline per date/filter",
+      "pendingLabel": "Drawer skeleton",
+      "outcomeOwner": "ApplicantForm confirmation view",
+      "recovery": "Pick another date",
+      "actions": [
+        "A-HLT-01",
+        "A-HLT-02",
+        "A-HLT-03"
+      ]
+    },
+    {
+      "file": "app/(resident)/health/my-registrations/page.tsx",
+      "route": "/health/my-registrations",
+      "kind": "page",
+      "access": "resident (AuthGate for guest)",
+      "render": "server + client",
+      "phase": "RW-LT-07",
+      "stateOwner": "useMedicalDrives(myRegistrations); RegistrationDrawer",
+      "loadIdentity": "user id",
+      "initial": "Inline loading",
+      "refresh": "Realtime",
+      "error": "Read error ignored -> 'No registrations yet' (false empty)",
+      "empty": "Inline",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-HLT-04",
+        "A-HLT-05"
+      ]
+    },
+    {
+      "file": "app/(resident)/health/register/[driveId]/page.tsx",
+      "route": "/health/register/[driveId]",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-07",
+      "stateOwner": "server drive read; ApplicantForm",
+      "loadIdentity": "drive id + user",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "notFound() when missing",
+      "empty": "n/a",
+      "pendingLabel": "Submit loading",
+      "outcomeOwner": "ApplicantForm confirmation view",
+      "recovery": "Default 404",
+      "actions": [
+        "A-HLT-03",
+        "A-HLT-06"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/page.tsx",
+      "route": "/settings",
+      "kind": "page",
+      "access": "all",
+      "render": "server",
+      "phase": "RW-LT-08",
+      "stateOwner": "redirect",
+      "loadIdentity": "user",
+      "initial": "redirect to first settings page",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "n/a",
+      "noAsync": true
+    },
+    {
+      "file": "app/(resident)/settings/profile/page.tsx",
+      "route": "/settings/profile",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-08",
+      "stateOwner": "useProfile (scope guard, focus + Realtime refetch); useFamilyMembers",
+      "loadIdentity": "user id",
+      "initial": "verify",
+      "refresh": "Focus + Realtime",
+      "error": "verify",
+      "empty": "n/a",
+      "pendingLabel": "Per-section saving flags",
+      "outcomeOwner": "profile-form toasts (16 call sites)",
+      "recovery": "Inline field errors",
+      "actions": [
+        "A-SET-01",
+        "A-SET-02",
+        "A-SET-03",
+        "A-SET-04",
+        "A-SET-05"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/change-password/page.tsx",
+      "route": "/settings/change-password",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-08",
+      "stateOwner": "local",
+      "loadIdentity": "user",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "Inline + toasts",
+      "empty": "n/a",
+      "pendingLabel": "Submit loading",
+      "outcomeOwner": "form toast then /settings",
+      "recovery": "Retry",
+      "actions": [
+        "A-SET-06"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/delete-account/page.tsx",
+      "route": "/settings/delete-account",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-08",
+      "stateOwner": "local",
+      "loadIdentity": "user",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "Inline",
+      "empty": "n/a",
+      "pendingLabel": "Submit loading",
+      "outcomeOwner": "toast then /login",
+      "recovery": "Retry",
+      "actions": [
+        "A-SET-07"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/download-data/page.tsx",
+      "route": "/settings/download-data",
+      "kind": "page",
+      "access": "no server gate (client page)",
+      "render": "client",
+      "phase": "RW-LT-08",
+      "stateOwner": "local exporting flag",
+      "loadIdentity": "session",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "toast.error",
+      "empty": "n/a",
+      "pendingLabel": "Button loading per format",
+      "outcomeOwner": "page toasts",
+      "recovery": "Retry",
+      "actions": [
+        "A-SET-08",
+        "A-SET-09"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/email-verification/page.tsx",
+      "route": "/settings/email-verification",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client form",
+      "phase": "RW-LT-08",
+      "stateOwner": "VerificationForm (busy ref, active ref)",
+      "loadIdentity": "user id",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "Inline message",
+      "empty": "n/a",
+      "pendingLabel": "Button loading",
+      "outcomeOwner": "inline",
+      "recovery": "Retry",
+      "actions": [
+        "A-SET-11"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/location-verification/page.tsx",
+      "route": "/settings/location-verification",
+      "kind": "page",
+      "access": "resident",
+      "render": "server + client map form",
+      "phase": "RW-LT-08",
+      "stateOwner": "LocationVerificationForm + dynamic map",
+      "loadIdentity": "user id",
+      "initial": "Map wrapper loading placeholder",
+      "refresh": "n/a",
+      "error": "toasts",
+      "empty": "n/a",
+      "pendingLabel": "Save loading",
+      "outcomeOwner": "form toasts",
+      "recovery": "Drag pin manually",
+      "actions": [
+        "A-SET-10"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/notifications/page.tsx",
+      "route": "/settings/notifications",
+      "kind": "page",
+      "access": "no server gate (client page)",
+      "render": "client",
+      "phase": "RW-LT-08",
+      "stateOwner": "local useState only (not persisted)",
+      "loadIdentity": "none",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "n/a",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "toast per toggle",
+      "recovery": "n/a",
+      "actions": [
+        "A-SET-12"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/theme/page.tsx",
+      "route": "/settings/theme",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client form",
+      "phase": "RW-LT-08",
+      "stateOwner": "Theme/accent/font controllers; persistToDb",
+      "loadIdentity": "user id",
+      "initial": "Static",
+      "refresh": "n/a",
+      "error": "toast.error on persist failure",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "theme-form",
+      "recovery": "Retry selection",
+      "actions": [
+        "A-SET-13",
+        "A-SET-18"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/help/page.tsx",
+      "route": "/settings/help",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-08",
+      "stateOwner": "useFaqArticles; ArticleDrawer",
+      "loadIdentity": "barangay id + category",
+      "initial": "Skeleton",
+      "refresh": "Realtime toggles isLoading",
+      "error": "Inline + Retry",
+      "empty": "Inline per category",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "Retry",
+      "actions": [
+        "A-SET-14"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/help/[articleId]/page.tsx",
+      "route": "/settings/help/[articleId]",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server",
+      "phase": "RW-LT-08",
+      "stateOwner": "server read",
+      "loadIdentity": "article id",
+      "initial": "Blocks on server read",
+      "refresh": "n/a",
+      "error": "verify (notFound path)",
+      "empty": "n/a",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "Back link",
+      "actions": [
+        "A-SET-15"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/about/page.tsx",
+      "route": "/settings/about",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-08",
+      "stateOwner": "useAboutUs",
+      "loadIdentity": "barangay id",
+      "initial": "Skeleton",
+      "refresh": "Realtime",
+      "error": "Hook error ignored (renders as no content)",
+      "empty": "verify",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-SET-16"
+      ]
+    },
+    {
+      "file": "app/(resident)/settings/terms-privacy/page.tsx",
+      "route": "/settings/terms-privacy",
+      "kind": "page",
+      "access": "guest + resident",
+      "render": "server + client",
+      "phase": "RW-LT-08",
+      "stateOwner": "useSiteContent",
+      "loadIdentity": "barangay id",
+      "initial": "Skeleton",
+      "refresh": "Realtime",
+      "error": "Hook error ignored (renders as no content)",
+      "empty": "verify",
+      "pendingLabel": "none",
+      "outcomeOwner": "none",
+      "recovery": "none",
+      "actions": [
+        "A-SET-17"
+      ]
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "S-SHELL",
+      "file": "components/shell/resident-shell.tsx",
+      "kind": "shell",
+      "phase": "RW-LT-03",
+      "notes": "Header/main/bottom bar; header registers the toast anchor (RW-LT-03). RW-LT-04: logout uses useSignOut (pending, error, slow hint)."
+    },
+    {
+      "id": "S-TOPNAV",
+      "file": "components/shell/top-nav.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "Framer Motion active pill; candidate useLinkStatus host. RW-LT-03: fixed-size, aria-hidden useLinkStatus hint (absolute, 120 ms delay, static under reduced motion); active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-BOTTOMNAV",
+      "file": "components/shell/bottom-tab-bar.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "Badges from unread counts (quiet). RW-LT-03: fixed-size, aria-hidden useLinkStatus hint (absolute, 120 ms delay, static under reduced motion); active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-BELL",
+      "file": "components/shell/notification-bell.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "Badge only; no toast on change."
+    },
+    {
+      "id": "S-SEG-EMG",
+      "file": "components/emergency/emergency-segment-nav.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "RW-LT-03: fixed-size, aria-hidden useLinkStatus hint (absolute, 120 ms delay, static under reduced motion); active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-SEG-HLT",
+      "file": "components/health/health-segment-nav.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "RW-LT-03: fixed-size, aria-hidden useLinkStatus hint (absolute, 120 ms delay, static under reduced motion); active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-SEG-SVC",
+      "file": "components/services/services-segment-nav.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "RW-LT-03: fixed-size, aria-hidden useLinkStatus hint (absolute, 120 ms delay, static under reduced motion); active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-SETTINGS-NAV",
+      "file": "app/(resident)/settings/settings-sidebar.tsx",
+      "kind": "navigation",
+      "phase": "RW-LT-03",
+      "notes": "Nav rows RW-LT-03. RW-LT-04: logout row uses useSignOut (server action removed). RW-LT-03: fixed-size, aria-hidden useLinkStatus hint; active styles, hrefs, prefetch, modifier clicks unchanged."
+    },
+    {
+      "id": "S-REQ-DRAWER",
+      "file": "app/(resident)/services/requests/request-drawer.tsx",
+      "kind": "drawer",
+      "phase": "RW-LT-06",
+      "notes": "RW-LT-03 read-state pilot done: explicit loading/ready/unavailable/error, read-only retry, stale-selection guard (D-03 settled for this drawer). Remaining request-journey work RW-LT-06."
+    },
+    {
+      "id": "S-INC-DRAWER",
+      "file": "components/reports/incident-drawer.tsx",
+      "kind": "drawer",
+      "phase": "RW-LT-07",
+      "notes": "D-03."
+    },
+    {
+      "id": "S-REG-DRAWER",
+      "file": "components/health/register-drawer.tsx",
+      "kind": "drawer",
+      "phase": "RW-LT-07",
+      "notes": "D-03."
+    },
+    {
+      "id": "S-REGDETAIL-DRAWER",
+      "file": "components/health/registration-drawer.tsx",
+      "kind": "drawer",
+      "phase": "RW-LT-07",
+      "notes": "Receives the row from the list; no async."
+    },
+    {
+      "id": "S-ARTICLE-DRAWER",
+      "file": "app/(resident)/settings/help/article-drawer.tsx",
+      "kind": "drawer",
+      "phase": "RW-LT-08",
+      "notes": "Receives the article; no async."
+    },
+    {
+      "id": "S-ANN-MODAL",
+      "file": "components/reports/announcement-modal.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-04",
+      "notes": "RW-LT-04: Radix modal dialog; focus trap, Escape/backdrop close, focus returns to the opening card, named by the title, inert while exiting, shared drawer timing, instant under reduced motion. Props only; no async."
+    },
+    {
+      "id": "S-DOC-MODAL",
+      "file": "components/services/document-request-modal/document-request-modal.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-06",
+      "notes": "RW-LT-06: restored to the request-drawer shell (framer-motion slide with the shared drawer tokens, icon title, X close, stage bar); read states, account-check pending, onOpenAnimationComplete hand-off preserved. Evidence: rw-lt-06/run-2/results.json"
+    },
+    {
+      "id": "S-FAMILY-DIALOG",
+      "file": "components/emergency/family-member-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-05",
+      "notes": "D-02 contract change (Promise<boolean>) with both consumers."
+    },
+    {
+      "id": "S-HH-QR-DIALOG",
+      "file": "components/emergency/household-qr-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-05"
+    },
+    {
+      "id": "S-QR-SCANNER",
+      "file": "components/emergency/qr-scanner-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-05"
+    },
+    {
+      "id": "S-QR-SHOW",
+      "file": "components/emergency/qr-show-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-05"
+    },
+    {
+      "id": "S-CONFIRM",
+      "file": "components/shared/confirm-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-06",
+      "notes": "RW-LT-06: consumers verified (cancel payment/request never reject). Shared component unchanged; report-withdraw consumer reviewed in RW-LT-07."
+    },
+    {
+      "id": "S-BIRTHDAY",
+      "file": "components/birthday-calendar-modal.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-08",
+      "notes": "Date picker; no data async."
+    },
+    {
+      "id": "S-COLOR-PICKER",
+      "file": "components/theme/color-picker-popover.tsx",
+      "kind": "popover",
+      "phase": "RW-LT-08",
+      "notes": "EyeDropper promise; immediate preview."
+    },
+    {
+      "id": "S-UNUSED-QRPH",
+      "file": "app/(resident)/services/payment/qrph/[requestId]/qrph-payment.tsx",
+      "kind": "unused module",
+      "phase": "RW-LT-06",
+      "notes": "RW-LT-06: confirmed still unused (no import in any route/component); not migrated and not removed — outside this plan."
+    },
+    {
+      "id": "S-FORGOT-PASSWORD-DIALOG",
+      "file": "app/(resident)/settings/change-password/forgot-password-dialog.tsx",
+      "kind": "dialog",
+      "phase": "RW-LT-08",
+      "notes": "New file introduced by another Claude session's concurrent change-password work while RW-LT-05 was running; not part of this plan's phases until RW-LT-08 reviews it (account/password settings). Untouched by RW-LT-05."
+    }
+  ],
+  "actions": [
+    {
+      "id": "A-AUTH-01",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/login/page.tsx",
+      "action": "Email/password sign-in",
+      "contract": "signInWithPassword {data,error}; classified by authFailureKind (error type/status/code); thrown failures handled",
+      "pending": "\"Logging in…\"; ref guard; released on every failure path",
+      "outcome": "inline persistent message + one notify.error per attempt; redirect on success unchanged",
+      "gaps": "none open; live provider sign-in not exercised beyond local Auth",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-AUTH-02",
+      "phase": "RW-LT-04",
+      "file": "components/auth/google-button.tsx",
+      "action": "Google OAuth initiation / identity link",
+      "contract": "{data.url,error}",
+      "pending": "busy ref + loading + \"Connecting to Google…\" status; released on catch and on bfcache restore (pageshow persisted)",
+      "outcome": "inline error; success = browser redirect; never reports a completed sign-in",
+      "gaps": "live Google provider pending (sandbox/manual)"
+    },
+    {
+      "id": "A-AUTH-03",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/register/register-form.tsx",
+      "action": "Registration / profile completion submit",
+      "contract": "try/catch/finally",
+      "pending": "\"Creating account…\" / \"Saving…\"; ref guard",
+      "outcome": "inline field errors with focus; Auth refusals mapped; lost response → unconfirmed warning (no auto-retry); success dialog / navigation unchanged",
+      "gaps": "none open"
+    },
+    {
+      "id": "A-AUTH-04",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/register/register-form.tsx",
+      "action": "Registration locality + existing profile load",
+      "contract": "promise .catch with active guard",
+      "pending": "locality and saved-details reads are separate effects, each with its own inline error + retry",
+      "outcome": "inline",
+      "gaps": "none open"
+    },
+    {
+      "id": "A-AUTH-05",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/register/register-form.tsx",
+      "action": "Complete-profile 'Sign out'",
+      "contract": "useSignOut(scope local): outcome signed-out | local-only | failed from the stored session",
+      "pending": "\"Signing out…\"; other buttons disabled",
+      "outcome": "navigation to /login only after sign-out; failure keeps the page with one error",
+      "gaps": "none open",
+      "defects": [
+        "D-05"
+      ]
+    },
+    {
+      "id": "A-AUTH-06",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/forgot-password/page.tsx",
+      "action": "Send reset code",
+      "contract": "resetPasswordForEmail {error}",
+      "pending": "\"Sending code…\"; ref guard",
+      "outcome": "inline + notify (warning when unconfirmed); next screen confirms the send",
+      "gaps": "none open",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-AUTH-07",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/verify-otp/page.tsx",
+      "action": "Verify recovery OTP",
+      "contract": "verifyOtp {error}",
+      "pending": "\"Verifying…\"; ref guard",
+      "outcome": "mapped inline + notify; no raw provider text",
+      "gaps": "none open",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-AUTH-08",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/verify-otp/page.tsx",
+      "action": "Resend OTP",
+      "contract": "{error}",
+      "pending": "\"Resending…\"; ref guard; cooldown unchanged",
+      "outcome": "notify.success on confirmed send; warning when unconfirmed; cooldown not restarted on failure",
+      "gaps": "none open"
+    },
+    {
+      "id": "A-AUTH-09",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/reset-password/page.tsx",
+      "action": "Set new password",
+      "contract": "updateUser {error}",
+      "pending": "\"Updating…\"; ref guard",
+      "outcome": "inline field errors/focus; mapped failures; unconfirmed warning on lost response; success toast on /home",
+      "gaps": "none open",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-AUTH-10",
+      "phase": "RW-LT-04",
+      "file": "app/(auth)/onboarding/page.tsx",
+      "action": "Onboarding accent selection / finish",
+      "contract": "local preference + router.replace",
+      "pending": "none",
+      "outcome": "none: immediate preview, no toast per accent pick",
+      "gaps": "none open",
+      "defects": [
+        "D-12"
+      ]
+    },
+    {
+      "id": "A-AUTH-11",
+      "phase": "RW-LT-04",
+      "file": "components/shell/resident-shell.tsx",
+      "action": "Header logout",
+      "contract": "useSignOut(): signOutBrowser() outcome; preferences reset only after the browser is signed out",
+      "pending": "aria-busy + 120 ms spinner, \"Taking longer than usual…\" after 10 s, polite \"Logging out…\" status",
+      "outcome": "/login on success (no toast); one error and the session kept on failure; one warning kept across the session change when the revoke was not confirmed",
+      "gaps": "none open",
+      "defects": [
+        "D-05"
+      ]
+    },
+    {
+      "id": "A-AUTH-12",
+      "phase": "RW-LT-04",
+      "file": "app/(resident)/settings/settings-sidebar.tsx",
+      "action": "Settings sidebar logout (same useSignOut flow; the server action in settings/layout.tsx was removed)",
+      "contract": "useSignOut()",
+      "pending": "aria-busy, spinner, \"Logging out…\" / \"Still logging out…\", polite status; name kept below lg",
+      "outcome": "same as A-AUTH-11",
+      "gaps": "none open",
+      "defects": [
+        "D-05"
+      ]
+    },
+    {
+      "id": "A-HOME-01",
+      "phase": "RW-LT-04",
+      "file": "app/(resident)/home/page.tsx",
+      "action": "Home summary reads",
+      "contract": "server Promise.all; each read error is kept",
+      "pending": "(resident)/home/loading.tsx on navigation",
+      "outcome": "retryable ReadFailure notices instead of empty copy",
+      "gaps": "none open",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-ANN-01",
+      "phase": "RW-LT-04",
+      "file": "hooks/use-announcements.ts",
+      "action": "Announcement feed read + Realtime refetch",
+      "contract": "{announcements,isLoading,error,refetch}; cancelledRef reset per effect (obsolete response can land after identity change)",
+      "pending": "isLoading true on every refetch",
+      "outcome": "none",
+      "gaps": "refresh replaces content with skeleton",
+      "defects": [
+        "D-06",
+        "D-08"
+      ]
+    },
+    {
+      "id": "A-ANN-02",
+      "phase": "RW-LT-04",
+      "file": "hooks/use-unread-counts.tsx",
+      "action": "Mark announcement(s)/incidents read/unread",
+      "contract": "Promise<void>; write errors ignored",
+      "pending": "none",
+      "outcome": "quiet badge update",
+      "gaps": "Failed mark-read write is not surfaced (quiet by policy); verified quiet: no toast on Realtime events or Mark all read"
+    },
+    {
+      "id": "A-ANN-03",
+      "phase": "RW-LT-04",
+      "file": "components/reports/announcement-modal.tsx",
+      "action": "Open announcement details",
+      "contract": "props only",
+      "pending": "none",
+      "outcome": "Radix modal dialog; no fetch on open",
+      "gaps": "none open",
+      "noAsync": true
+    },
+    {
+      "id": "A-EMG-01",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/hub-content.tsx",
+      "action": "Guidelines + hotlines read",
+      "contract": "hooks expose error; consumer ignores it",
+      "pending": "inline text",
+      "outcome": "none",
+      "gaps": "false empty on failure",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-EMG-02",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/centers-content.tsx",
+      "action": "Evacuation centers read + user location",
+      "contract": "useEvacuationCenters (no stale/unmount guard)",
+      "pending": "inline",
+      "outcome": "none",
+      "gaps": "obsolete response possible on barangay change",
+      "defects": [
+        "D-08"
+      ]
+    },
+    {
+      "id": "A-EMG-03",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/alerts-content.tsx",
+      "action": "Emergency alerts read",
+      "contract": "useAnnouncements(category)",
+      "pending": "inline",
+      "outcome": "none",
+      "gaps": "refresh toggles loading",
+      "defects": [
+        "D-06"
+      ]
+    },
+    {
+      "id": "A-EMG-04",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/scan-content.tsx",
+      "action": "Scan instructional content read",
+      "contract": "useEmergencyQrContent",
+      "pending": "inline",
+      "outcome": "none",
+      "gaps": "none beyond D-06"
+    },
+    {
+      "id": "A-EMG-05",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/qr-scanner-dialog.tsx",
+      "action": "Camera QR scan + check-in",
+      "contract": "checkIn -> row|null; updateHouseholdStatus -> boolean",
+      "pending": "state machine starting/scanning/processing/denied",
+      "outcome": "toasts",
+      "gaps": "partial success emits warning AND success; html5-qrcode dynamic import outside try (stuck 'starting' on chunk failure)",
+      "defects": [
+        "D-09",
+        "D-10"
+      ]
+    },
+    {
+      "id": "A-EMG-06",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/qr-upload-fallback.tsx",
+      "action": "QR image upload decode + check-in",
+      "contract": "same as A-EMG-05",
+      "pending": "busy with finally",
+      "outcome": "toasts",
+      "gaps": "partial success emits warning AND success",
+      "defects": [
+        "D-09"
+      ]
+    },
+    {
+      "id": "A-EMG-07",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/qr-show-dialog.tsx",
+      "action": "Share / copy center QR",
+      "contract": "navigator.share / clipboard.writeText",
+      "pending": "none",
+      "outcome": "toast after clipboard resolves",
+      "gaps": "clipboard rejection unhandled (no message, unhandled rejection)",
+      "defects": [
+        "D-11"
+      ]
+    },
+    {
+      "id": "A-EMG-08",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/household-qr-dialog.tsx",
+      "action": "Generate household QR (Edge Function)",
+      "contract": "fetch blob; failed flag",
+      "pending": "loading",
+      "outcome": "inline failed state",
+      "gaps": "getSession() outside try; object URL created after cancel is not revoked",
+      "defects": [
+        "D-10"
+      ]
+    },
+    {
+      "id": "A-EMG-09",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/family-content.tsx",
+      "action": "Household roster read",
+      "contract": "useFamilyMembers {members,isLoading,error}",
+      "pending": "text when empty",
+      "outcome": "none",
+      "gaps": "error ignored -> false empty",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-EMG-10",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/family-member-dialog.tsx",
+      "action": "Add/update household member",
+      "contract": "onSave typed void; consumer awaits hook (member|null)",
+      "pending": "submitting set and cleared synchronously",
+      "outcome": "consumer toast.error only on failure; dialog already closed",
+      "gaps": "dialog closes before write completes; inputs lost on failure",
+      "defects": [
+        "D-02"
+      ]
+    },
+    {
+      "id": "A-EMG-11",
+      "phase": "RW-LT-05",
+      "file": "components/emergency/family-member-dialog.tsx",
+      "action": "Remove household member",
+      "contract": "onDelete typed void; not awaited",
+      "pending": "none",
+      "outcome": "dialog closes immediately",
+      "gaps": "no pending; closes before result",
+      "defects": [
+        "D-02"
+      ]
+    },
+    {
+      "id": "A-MAP-01",
+      "phase": "RW-LT-05",
+      "file": "components/maps/map-client-wrapper.tsx",
+      "action": "Map code + data load",
+      "contract": "next/dynamic loading placeholder (fixed size)",
+      "pending": "pulse placeholder",
+      "outcome": "none",
+      "gaps": "verify server read errors"
+    },
+    {
+      "id": "A-MAP-02",
+      "phase": "RW-LT-05",
+      "file": "components/maps/locate-button.tsx",
+      "action": "Locate me (geolocation)",
+      "contract": "getCurrentPosition callbacks",
+      "pending": "locating flag",
+      "outcome": "toast.error unsupported/denied",
+      "gaps": "verify timeout/unavailable branches"
+    },
+    {
+      "id": "A-MAP-03",
+      "phase": "RW-LT-05",
+      "file": "components/maps/map-search-bar.tsx",
+      "action": "Map search",
+      "contract": "local filter (verify)",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "verify"
+    },
+    {
+      "id": "A-MAP-04",
+      "phase": "RW-LT-05",
+      "file": "components/maps/directory-content.tsx",
+      "action": "Directory hotlines read",
+      "contract": "useEmergencyHotlines",
+      "pending": "inline",
+      "outcome": "none",
+      "gaps": "none beyond D-06"
+    },
+    {
+      "id": "A-SVC-01",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/documents/page.tsx",
+      "action": "Catalog read",
+      "contract": "server; error discarded",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "RW-LT-06: fixed — ReadFailure notice; never a false empty",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-SVC-02",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/[documentId]/page.tsx",
+      "action": "Document detail read",
+      "contract": "server; notFound()",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "no not-found.tsx (default 404)"
+    },
+    {
+      "id": "A-SVC-03",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/document-request-modal.tsx",
+      "action": "Request document (auth/profile gate)",
+      "contract": "try/catch/finally",
+      "pending": "verify",
+      "outcome": "navigation or inline error",
+      "gaps": "RW-LT-06: account check pending \"Checking your account…\", single flight, inline failure separate from service-load retry"
+    },
+    {
+      "id": "A-SVC-04",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/document-request-modal.tsx",
+      "action": "Modal service load",
+      "contract": "inline error 'Could not load this service. Retry.'",
+      "pending": "verify",
+      "outcome": "inline",
+      "gaps": "RW-LT-06: skeleton + polite status; error + Retry; unavailable + Back; stale selection ignored"
+    },
+    {
+      "id": "A-SVC-05",
+      "phase": "RW-LT-06",
+      "file": "components/services/resident-service-form.tsx",
+      "action": "Service form load (profile/ID evidence)",
+      "contract": "generation ref guard; try/catch/finally",
+      "pending": "loading",
+      "outcome": "inline",
+      "gaps": "existing request-scoping helper to reuse"
+    },
+    {
+      "id": "A-SVC-06",
+      "phase": "RW-LT-06",
+      "file": "components/services/resident-service-form.tsx",
+      "action": "Service request submit with uploads",
+      "contract": "attempt.submit; try/catch/finally",
+      "pending": "submitting",
+      "outcome": "inline error / navigation",
+      "gaps": "RW-LT-06: stage labels, idempotent retry, lost response → unconfirmed wording, validation inline only, one toast per failed attempt; success toast only if the form was closed mid-submit",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-SVC-07",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/requests/page.tsx",
+      "action": "Request list read",
+      "contract": "server; error discarded",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "RW-LT-06: fixed — ReadFailure notice; never a false empty",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-SVC-08",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/logs/page.tsx",
+      "action": "Service logs read",
+      "contract": "server",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "RW-LT-06: ReadFailure notice"
+    },
+    {
+      "id": "A-SVC-09",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/requests/request-drawer.tsx",
+      "action": "Request drawer read",
+      "contract": ".single() data only; error ignored",
+      "pending": "skeleton while loading || !request",
+      "outcome": "none",
+      "gaps": "missing/error/inaccessible -> perpetual skeleton",
+      "defects": [
+        "D-03"
+      ]
+    },
+    {
+      "id": "A-SVC-10",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/requests/[requestId]/request-tracking.tsx",
+      "action": "Cancel pending QR PH payment",
+      "contract": "cancel-payment {status}",
+      "pending": "cancellingPayment",
+      "outcome": "toast success/info/error",
+      "gaps": "RW-LT-06: confirmed/refused/lost/paid outcomes via notify; synchronous guard; paid wins the race"
+    },
+    {
+      "id": "A-SVC-11",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/requests/[requestId]/request-tracking.tsx",
+      "action": "Cancel service request",
+      "contract": "rpc cancel_own_service_request {error}",
+      "pending": "cancellingRequest",
+      "outcome": "toast success/error (raw message)",
+      "gaps": "RW-LT-06: function-written messages pass through, tokens become generic; lost response → unconfirmed + read-only re-read"
+    },
+    {
+      "id": "A-SVC-12",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/requests/[requestId]/request-tracking.tsx",
+      "action": "Tracking Realtime refresh",
+      "contract": ".then data only",
+      "pending": "none",
+      "outcome": "quiet",
+      "gaps": "RW-LT-06: quiet refresh keeps last request; thrown/failed reads no longer unhandled or erase a known pending payment"
+    },
+    {
+      "id": "A-SVC-13",
+      "phase": "RW-LT-06",
+      "file": "components/services/agency-sla-status.tsx",
+      "action": "Processing clock read",
+      "contract": "abortSignal + timeout + inFlight guard",
+      "pending": "loading",
+      "outcome": "inline 'Processing clock unavailable. Please retry.'",
+      "gaps": "RW-LT-06: a failed refresh keeps the last valid clock marked out of date; loading announced on the tracking page"
+    },
+    {
+      "id": "A-SVC-14",
+      "phase": "RW-LT-06",
+      "file": "components/services/request-payment-journey.tsx",
+      "action": "Fee assessment read (10 s interval + focus)",
+      "contract": "{data,error}; error replaces whole view",
+      "pending": "status text",
+      "outcome": "inline",
+      "gaps": "RW-LT-06: fixed via useScopedRead — refresh failure keeps content (D-06); background paid refresh no longer swaps the QR/receipt step",
+      "defects": [
+        "D-06"
+      ]
+    },
+    {
+      "id": "A-SVC-15",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/payment-method-step.tsx",
+      "action": "Choose payment method",
+      "contract": "rpc set_service_request_payment_method {error}",
+      "pending": "submitting",
+      "outcome": "inline error / toast.success('Request submitted.')",
+      "gaps": "RW-LT-06: fixed — no \"Request submitted.\" success claim, thrown/lost responses handled, repeat guard (D-04)",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-SVC-16",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/pickup-step.tsx",
+      "action": "Start pickup payment (runs on mount)",
+      "contract": "rpc start_pickup_payment {error}",
+      "pending": "Done disabled until saved",
+      "outcome": "inline",
+      "gaps": "RW-LT-06: idempotent write verified; once per mount; Retry control; token-free wording (D-13)",
+      "defects": [
+        "D-13"
+      ]
+    },
+    {
+      "id": "A-SVC-17",
+      "phase": "RW-LT-06",
+      "file": "hooks/use-paymongo-source.ts",
+      "action": "QR PH create + poll + Realtime",
+      "contract": "status idle/loading/pending/paid/expired/cancelled/error; cancelledRef race guard",
+      "pending": "fixed-height spinner box",
+      "outcome": "paid -> 900 ms then QrphStep.onPaid -> SuccessStep confirmed-receipt read; no toast",
+      "gaps": "RW-LT-06: polling interval, cancel race guard and resume untouched; poll errors caught (statusCheckFailed display flag); cancel outcome contract added (cancelled/paid/rejected/unconfirmed)"
+    },
+    {
+      "id": "A-SVC-18",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/qrph-step.tsx",
+      "action": "Cancel QR PH attempt (QrphStep; shared by modal and standalone route)",
+      "contract": "cancelPayment {ok,error}",
+      "pending": "cancelling",
+      "outcome": "ok -> onCancelled; failure -> hook sets errorMessage, but QrphStep renders it only in the \"error\" status while status stays \"pending\"",
+      "gaps": "RW-LT-06: fixed — refused/unconfirmed cancel is toasted and kept as persistent guidance in the pending view (D-14)",
+      "defects": [
+        "D-14"
+      ]
+    },
+    {
+      "id": "A-SVC-19",
+      "phase": "RW-LT-06",
+      "file": "app/(resident)/services/payment/success/page.tsx",
+      "action": "Confirmed receipt read",
+      "contract": "server; resident-owned paid payment only",
+      "pending": "none",
+      "outcome": "receipt or alert",
+      "gaps": "RW-LT-06: failed read ≠ no receipt; ownership/paid check unchanged"
+    },
+    {
+      "id": "A-SVC-20",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/success-step.tsx",
+      "action": "Modal receipt read",
+      "contract": "error flag",
+      "pending": "verify",
+      "outcome": "inline",
+      "gaps": "RW-LT-06: ready / not-confirmed / error states; Retry receipt is a select only; thrown reads settle"
+    },
+    {
+      "id": "A-SVC-21",
+      "phase": "RW-LT-06",
+      "file": "components/services/document-request-modal/qrph-step.tsx",
+      "action": "QR PH paid transition to receipt step",
+      "contract": "usePaymongoSource status; onPaid after 900 ms",
+      "pending": "\"Payment received\" interim copy",
+      "outcome": "SuccessStep",
+      "gaps": "RW-LT-06: 900 ms beat preserved; one \"Payment received.\" per payment attempt; no toast for revisits",
+      "defects": []
+    },
+    {
+      "id": "A-SVC-22",
+      "phase": "RW-LT-06",
+      "file": "components/shared/confirm-dialog.tsx",
+      "action": "Confirm destructive action",
+      "contract": "await onConfirm in try/finally",
+      "pending": "busy",
+      "outcome": "consumer",
+      "gaps": "RW-LT-06: services consumers (cancel request/payment) never reject; shared dialog unchanged. Report-withdraw consumer remains RW-LT-07"
+    },
+    {
+      "id": "A-RPT-01",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/my-reports-tabs.tsx",
+      "action": "My reports list per tab",
+      "contract": "useMyIncidents; remount per tab",
+      "pending": "skeleton",
+      "outcome": "none",
+      "gaps": "Realtime refetch replaces list with skeleton",
+      "defects": [
+        "D-06"
+      ]
+    },
+    {
+      "id": "A-RPT-02",
+      "phase": "RW-LT-07",
+      "file": "components/reports/incident-drawer.tsx",
+      "action": "Incident drawer read",
+      "contract": "getUser then .single(); errors ignored",
+      "pending": "skeleton while !incident",
+      "outcome": "none",
+      "gaps": "missing/inaccessible/error/no-session -> perpetual skeleton",
+      "defects": [
+        "D-03"
+      ]
+    },
+    {
+      "id": "A-RPT-03",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/[incidentId]/incident-detail.tsx",
+      "action": "Incident detail Realtime refresh",
+      "contract": "verify",
+      "pending": "none",
+      "outcome": "quiet",
+      "gaps": "verify"
+    },
+    {
+      "id": "A-RPT-04",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/[incidentId]/incident-detail.tsx",
+      "action": "Withdraw report",
+      "contract": "rpc withdraw_incident {error}",
+      "pending": "loading",
+      "outcome": "toast success/error (raw message)",
+      "gaps": "no try/catch for thrown failure",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-RPT-05",
+      "phase": "RW-LT-07",
+      "file": "hooks/use-incident-categories.ts",
+      "action": "Incident categories read",
+      "contract": "{categories,isLoading}; error dropped",
+      "pending": "none shown",
+      "outcome": "none",
+      "gaps": "failure renders an empty picker without explanation",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-RPT-06",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/new/new-report-form.tsx",
+      "action": "Use my location + reverse geocode",
+      "contract": "geolocation callbacks; promise finally",
+      "pending": "addressLoading",
+      "outcome": "inline error",
+      "gaps": "verify manual alternative copy"
+    },
+    {
+      "id": "A-RPT-07",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/new/new-report-form.tsx",
+      "action": "Photo upload + report submit",
+      "contract": "uploads then insert {error}",
+      "pending": "submitting",
+      "outcome": "toast success + replace('/reports')",
+      "gaps": "no try/catch around getUser/upload/insert (thrown failure leaves submitting); getUser null returns silently",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-RPT-08",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/reports/[incidentId]/incident-detail.tsx",
+      "action": "Mark incident read/unread",
+      "contract": "useUnreadCounts; errors ignored",
+      "pending": "none",
+      "outcome": "quiet",
+      "gaps": "record only"
+    },
+    {
+      "id": "A-HLT-01",
+      "phase": "RW-LT-07",
+      "file": "hooks/use-medical-drives.ts",
+      "action": "Drives by date/type + month event dots",
+      "contract": "fetchDrives has no generation guard; month events ignore errors",
+      "pending": "loadingDrives",
+      "outcome": "none",
+      "gaps": "rapid date/type changes can show an obsolete selection's drives",
+      "defects": [
+        "D-08"
+      ]
+    },
+    {
+      "id": "A-HLT-02",
+      "phase": "RW-LT-07",
+      "file": "components/health/register-drawer.tsx",
+      "action": "Register drawer read (drive + profile)",
+      "contract": "Promise.all; returns early when either is null",
+      "pending": "skeleton while !data",
+      "outcome": "none",
+      "gaps": "missing/inactive drive or error -> perpetual skeleton",
+      "defects": [
+        "D-03"
+      ]
+    },
+    {
+      "id": "A-HLT-03",
+      "phase": "RW-LT-07",
+      "file": "components/health/applicant-form.tsx",
+      "action": "Register for drive",
+      "contract": "registerForDrive throws on error; returns parsed result",
+      "pending": "submitting (try/finally)",
+      "outcome": "confirmation view (applicant number)",
+      "gaps": "verify error copy; preserve backend eligibility/stock"
+    },
+    {
+      "id": "A-HLT-04",
+      "phase": "RW-LT-07",
+      "file": "components/health/my-registrations-content.tsx",
+      "action": "My registrations read",
+      "contract": "error dropped in hook",
+      "pending": "inline",
+      "outcome": "none",
+      "gaps": "false empty",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-HLT-05",
+      "phase": "RW-LT-07",
+      "file": "components/health/registration-drawer.tsx",
+      "action": "Registration details",
+      "contract": "props only",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "none",
+      "noAsync": true
+    },
+    {
+      "id": "A-HLT-06",
+      "phase": "RW-LT-07",
+      "file": "app/(resident)/health/register/[driveId]/page.tsx",
+      "action": "Standalone register page read",
+      "contract": "server; notFound()",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "default 404"
+    },
+    {
+      "id": "A-SET-01",
+      "phase": "RW-LT-08",
+      "file": "hooks/use-profile.ts",
+      "action": "Profile read (focus + Realtime)",
+      "contract": "AccountRequestScope ticket guard; profile null on error",
+      "pending": "isLoading true on every focus/Realtime refetch",
+      "outcome": "none",
+      "gaps": "verify whether consumers hide content during refresh"
+    },
+    {
+      "id": "A-SET-02",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/profile/profile-form.tsx",
+      "action": "Profile details save",
+      "contract": "{error}",
+      "pending": "saving",
+      "outcome": "toast success/error; 'Please fix the highlighted fields.' toast duplicates inline validation",
+      "gaps": "duplicate validation toast",
+      "defects": [
+        "D-12"
+      ]
+    },
+    {
+      "id": "A-SET-03",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/profile/profile-form.tsx",
+      "action": "Avatar upload",
+      "contract": "storage upload + profile update",
+      "pending": "uploading flag",
+      "outcome": "toasts",
+      "gaps": "verify thrown path"
+    },
+    {
+      "id": "A-SET-04",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/profile/profile-form.tsx",
+      "action": "ID verification upload/save",
+      "contract": "uploads + publish",
+      "pending": "saving",
+      "outcome": "toasts",
+      "gaps": "verify"
+    },
+    {
+      "id": "A-SET-05",
+      "phase": "RW-LT-05",
+      "file": "app/(resident)/settings/profile/profile-form.tsx",
+      "action": "Profile household add/update/remove",
+      "contract": "hook returns member|null / boolean; results ignored",
+      "pending": "dialog (D-02)",
+      "outcome": "toast.success unconditionally",
+      "gaps": "false success on failed write",
+      "defects": [
+        "D-01",
+        "D-02"
+      ],
+      "notes": "Contract repair is RW-LT-05 (plan: update both FamilyMemberDialog consumers together); remaining profile presentation RW-LT-08."
+    },
+    {
+      "id": "A-SET-06",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/change-password/change-password-form.tsx",
+      "action": "Change password",
+      "contract": "reauth + updateUser; try/catch/finally",
+      "pending": "submitting",
+      "outcome": "toasts + push",
+      "gaps": "raw provider message in toast"
+    },
+    {
+      "id": "A-SET-07",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/delete-account/delete-account-form.tsx",
+      "action": "Delete account",
+      "contract": "reauth + Edge Function + signOut; try/catch/finally",
+      "pending": "submitting",
+      "outcome": "inline error / toast + /login",
+      "gaps": "signOut result ignored after deletion (verify)"
+    },
+    {
+      "id": "A-SET-08",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/download-data/page.tsx",
+      "action": "JSON export",
+      "contract": "Edge Function then anchor download",
+      "pending": "exporting",
+      "outcome": "toast 'Your data was downloaded as JSON.'",
+      "gaps": "claims download completed (policy: 'Download started')",
+      "defects": [
+        "D-11"
+      ]
+    },
+    {
+      "id": "A-SET-09",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/download-data/page.tsx",
+      "action": "PDF export (print preview)",
+      "contract": "window.open AFTER awaited Edge Function",
+      "pending": "exporting",
+      "outcome": "no success message; popup-blocked toast",
+      "gaps": "popup opened outside the user gesture (likely blocked); no 'Print preview opened'",
+      "defects": [
+        "D-11"
+      ]
+    },
+    {
+      "id": "A-SET-10",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/location-verification/location-verification-form.tsx",
+      "action": "Detect location + save verified location",
+      "contract": "{error}",
+      "pending": "saving",
+      "outcome": "toasts",
+      "gaps": "save has no try/catch",
+      "defects": [
+        "D-04"
+      ]
+    },
+    {
+      "id": "A-SET-11",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/email-verification/verification-form.tsx",
+      "action": "Send / verify email code",
+      "contract": "busy ref + active ref; try/catch/finally",
+      "pending": "loading",
+      "outcome": "inline message",
+      "gaps": "none observed statically"
+    },
+    {
+      "id": "A-SET-12",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/notifications/page.tsx",
+      "action": "Email/SMS notification toggles",
+      "contract": "local state only, not persisted",
+      "pending": "none",
+      "outcome": "toast per toggle ('… enabled/disabled')",
+      "gaps": "implies a saved preference that does not exist",
+      "defects": [
+        "D-12"
+      ]
+    },
+    {
+      "id": "A-SET-13",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/theme/theme-form.tsx",
+      "action": "Theme/accent/font persistence",
+      "contract": "persistToDb {error}",
+      "pending": "none (immediate preview)",
+      "outcome": "toast.error on failure only",
+      "gaps": "verify no success spam"
+    },
+    {
+      "id": "A-SET-14",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/help/help-center-client.tsx",
+      "action": "FAQ read + article drawer",
+      "contract": "useFaqArticles",
+      "pending": "skeleton",
+      "outcome": "none",
+      "gaps": "D-06 refresh",
+      "defects": [
+        "D-06"
+      ]
+    },
+    {
+      "id": "A-SET-15",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/help/[articleId]/page.tsx",
+      "action": "Help article read",
+      "contract": "server",
+      "pending": "none",
+      "outcome": "none",
+      "gaps": "verify missing article"
+    },
+    {
+      "id": "A-SET-16",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/about/about-client.tsx",
+      "action": "About read",
+      "contract": "error not consumed",
+      "pending": "skeleton",
+      "outcome": "none",
+      "gaps": "failure looks like empty content",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-SET-17",
+      "phase": "RW-LT-08",
+      "file": "app/(resident)/settings/terms-privacy/terms-privacy-client.tsx",
+      "action": "Terms/privacy read",
+      "contract": "error not consumed",
+      "pending": "skeleton",
+      "outcome": "none",
+      "gaps": "failure looks like empty content",
+      "defects": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "A-SET-18",
+      "phase": "RW-LT-08",
+      "file": "components/theme/color-picker-popover.tsx",
+      "action": "EyeDropper colour pick",
+      "contract": "promise; catch",
+      "pending": "none",
+      "outcome": "immediate preview",
+      "gaps": "none"
+    }
+  ],
+  "defects": [
+    {
+      "id": "D-01",
+      "phase": "RW-LT-05",
+      "severity": "major",
+      "summary": "Profile household handlers toast success unconditionally; failed writes report 'Member added/updated/removed.'",
+      "files": [
+        "app/(resident)/settings/profile/profile-form.tsx:779-798"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:defect-household-false-success (PATCH profiles -> 500 on /settings/profile, add member)",
+      "plan": "§3 concrete fix 1",
+      "status": "Fixed in RW-LT-05: profile household handlers use the write result; rejected writes keep the editor open with one error, never success (rw-lt-05/run-1/results.json: profile-household-no-false-success; baseline defect-household-false-success reproduced=false)."
+    },
+    {
+      "id": "D-02",
+      "phase": "RW-LT-05",
+      "severity": "major",
+      "summary": "FamilyMemberDialog calls onSave/onDelete without awaiting, clears submitting synchronously and closes immediately; failed saves lose input.",
+      "files": [
+        "components/emergency/family-member-dialog.tsx:44-50,97-104"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:defect-family-dialog-closes (PATCH profiles -> 500 on /emergency/family)",
+      "plan": "§3 concrete fix 2",
+      "status": "Fixed in RW-LT-05: FamilyMemberDialog save/remove return Promise<boolean>, are awaited, keep inputs/dialog on false or rejection, and both consumers were updated together (rw-lt-05/run-1/results.json: family-dialog-contract; baseline defect-family-dialog-closes reproduced=false)."
+    },
+    {
+      "id": "D-03",
+      "phase": "RW-LT-06 (request) / RW-LT-07 (incident, register)",
+      "severity": "major",
+      "summary": "Request, incident, and register drawers render the skeleton whenever the record is null, so missing, inaccessible, errored, or signed-out loads never settle.",
+      "files": [
+        "app/(resident)/services/requests/request-drawer.tsx:57-74,113",
+        "components/reports/incident-drawer.tsx:59-78,118",
+        "components/health/register-drawer.tsx:86-101,145"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:defect-drawer-perpetual-skeleton (service_requests single -> 500; skeleton still present after 5 s)",
+      "plan": "§3 concrete fix 3",
+      "status": "Request drawer fixed in RW-LT-03 and re-verified in RW-LT-06 (rw-lt-06/run-2: requests-list-and-drawer, catalog-modal-read-states for the request modal); incident and register drawers remain open for RW-LT-07."
+    },
+    {
+      "id": "D-04",
+      "phase": "RW-LT-04 / 06 / 07 / 08 per action",
+      "severity": "major",
+      "summary": "Several mutations lack try/catch so a thrown rejection can leave pending stuck (forgot/verify/reset password, payment-method continue, report submit/withdraw, location save). Login: runtime abort did NOT leave pending stuck, but the network failure is misreported as \"Incorrect email or password.\"",
+      "files": [
+        "app/(auth)/login/page.tsx:45-70",
+        "app/(auth)/forgot-password/page.tsx:25-42",
+        "app/(auth)/verify-otp/page.tsx:39-55",
+        "app/(auth)/reset-password/page.tsx:28-57",
+        "components/services/document-request-modal/payment-method-step.tsx:41-64",
+        "app/(resident)/reports/new/new-report-form.tsx:156-216",
+        "app/(resident)/reports/[incidentId]/incident-detail.tsx:197-207",
+        "app/(resident)/settings/location-verification/location-verification-form.tsx:136-158"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:auth-network-abort (login: pending released, misclassified message); remaining entries are static findings to reproduce in their owning phases",
+      "plan": "§3 concrete fixes 4, 8",
+      "status": "Login/forgot/verify/reset/registration fixed in RW-LT-04; payment-method step fixed in RW-LT-06 (rw-lt-06/run-2: payment-method-and-pickup); report submit/withdraw (RW-LT-07) and location save (RW-LT-08) remain open."
+    },
+    {
+      "id": "D-05",
+      "phase": "RW-LT-04",
+      "severity": "major",
+      "summary": "Logout paths (header, settings sidebar server action, complete-profile sign-out) have no pending state, ignore signOut errors, and reset preferences before sign-out is confirmed.",
+      "files": [
+        "components/shell/resident-shell.tsx:32-40",
+        "app/(resident)/settings/layout.tsx:7-12",
+        "app/(resident)/settings/settings-sidebar.tsx:155-166",
+        "app/(auth)/register/register-form.tsx:610"
+      ],
+      "reproduction": "static; RW-LT-04 adds the regression scenario",
+      "plan": "§3 concrete fix 5",
+      "status": "Fixed in RW-LT-04: header, settings sidebar and complete-profile sign-out share useSignOut (pending, returned/thrown errors, reset only after sign-out) — rw-lt-04/run-1/results.json (logout-*, complete-profile-outcomes)."
+    },
+    {
+      "id": "D-06",
+      "phase": "per owning action",
+      "severity": "minor",
+      "summary": "Background refresh (Realtime/focus/poll) sets isLoading=true and consumers swap valid content for skeletons; payment journey replaces content with an error on a failed background refresh.",
+      "files": [
+        "hooks/use-announcements.ts:32",
+        "hooks/use-my-incidents.ts:59",
+        "hooks/use-faq-articles.ts:31",
+        "components/services/request-payment-journey.tsx:29-62"
+      ],
+      "reproduction": "static; observable by triggering a Realtime change while viewing /announcements",
+      "plan": "§3 reads: background refresh",
+      "status": "Announcements (RW-LT-03), emergency reads (RW-LT-05), payment journey fixed in RW-LT-06 (payment-journey-refresh-failure-retains-content); my-incidents and FAQ remain with RW-LT-07/08."
+    },
+    {
+      "id": "D-07",
+      "phase": "per owning action",
+      "severity": "major",
+      "summary": "Read failures render as successful empty states (home summaries, catalog, request list, guidelines/hotlines, household roster, my registrations, incident categories, about, terms).",
+      "files": [
+        "app/(resident)/home/page.tsx:34",
+        "app/(resident)/services/documents/page.tsx:34",
+        "app/(resident)/services/requests/page.tsx:50",
+        "components/emergency/hub-content.tsx:15-16",
+        "components/emergency/family-content.tsx:24",
+        "hooks/use-medical-drives.ts:119",
+        "hooks/use-incident-categories.ts:30",
+        "app/(resident)/settings/about/about-client.tsx:61",
+        "app/(resident)/settings/terms-privacy/terms-privacy-client.tsx:77"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:defect-false-empty-household (profiles select -> 500 on /emergency/family shows 'No family members added yet.')",
+      "plan": "§3 reads: initial failure",
+      "status": "Home summaries fixed in RW-LT-04 (home-read-failures); the other false-empty reads remain with their owning phases. Emergency hub, alerts, centers, scan instructions, directory, Show-QR centers and household roster fixed in RW-LT-05 (rw-lt-05/run-1/results.json); remaining false-empty reads stay with their owning phases. Service catalog, request list, activity log, tracking, payment and receipt reads fixed in RW-LT-06 (rw-lt-06/run-2: server-read-failures)."
+    },
+    {
+      "id": "D-08",
+      "phase": "per owning action",
+      "severity": "minor",
+      "summary": "Obsolete responses can replace a newer identity: cancelledRef is reset at each effect start (announcements, emergency QR content), and drives/centers/site-content/about/faq hooks have no generation guard.",
+      "files": [
+        "hooks/use-announcements.ts:53",
+        "hooks/use-medical-drives.ts:47-75",
+        "hooks/use-evacuation-centers.ts:56",
+        "hooks/use-site-content.ts:38"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:obsolete-drive-date (first date's response delayed past a second date selection)",
+      "plan": "§3 reads: identity change",
+      "status": "useAnnouncements fixed in RW-LT-03 (generation guard); drives/centers/site-content/about/faq/emergency QR remain with their owning phases (baseline obsolete-drive-date still reproduces). Guidelines, hotlines, emergency QR content, evacuation centers and household roster fixed in RW-LT-05 via hooks/use-scoped-read.ts (newest-request-wins, identity-scoped); drives/site-content/about/faq remain with their owning phases. Service modal selection fixed in RW-LT-06 (catalog-rapid-selection-obsolete-response)."
+    },
+    {
+      "id": "D-09",
+      "phase": "RW-LT-05",
+      "severity": "major",
+      "summary": "Check-in partial success emits a warning followed by a success toast (contradictory outcomes).",
+      "files": [
+        "components/emergency/qr-scanner-dialog.tsx:86-90",
+        "components/emergency/qr-upload-fallback.tsx:54-58"
+      ],
+      "reproduction": "static (requires a valid center QR + failing household_members update); RW-LT-05 adds the scenario",
+      "plan": "§3 concrete fix 6",
+      "status": "Fixed in RW-LT-05: one terminal notification per check-in (recorded / partial warning / failed / unconfirmed) via lib/qr-checkin.ts (rw-lt-05/run-1/results.json: qr-upload-checkin-outcomes; rw-lt-05/unit-results.json)."
+    },
+    {
+      "id": "D-10",
+      "phase": "RW-LT-05",
+      "severity": "minor",
+      "summary": "Scanner dynamic import and household-QR getSession run outside try blocks (stuck 'starting'/loading on failure); late object URL not revoked.",
+      "files": [
+        "components/emergency/qr-scanner-dialog.tsx:31-35",
+        "components/emergency/household-qr-dialog.tsx:26-55"
+      ],
+      "reproduction": "static",
+      "plan": "§3 concrete fix 6",
+      "status": "Fixed in RW-LT-05: reader import inside the guarded start, a camera that starts after close is stopped, household-QR session/fetch inside try with revoked late object URLs (rw-lt-05/run-1/results.json: scanner-*, household-qr-states)."
+    },
+    {
+      "id": "D-11",
+      "phase": "RW-LT-05 (clipboard) / RW-LT-08 (export)",
+      "severity": "minor",
+      "summary": "Clipboard rejection unhandled; JSON export claims 'downloaded'; PDF popup opened after an await (outside the user gesture) with no 'Print preview opened' outcome.",
+      "files": [
+        "components/emergency/qr-show-dialog.tsx:66-69",
+        "app/(resident)/settings/download-data/page.tsx:48-62"
+      ],
+      "reproduction": "static",
+      "plan": "§3 concrete fix 7",
+      "status": "Clipboard part fixed in RW-LT-05 (rejection reports one error, success only after the promise resolves; rw-lt-05/run-1/results.json: qr-show-share-copy-download). JSON export / PDF popup remain for RW-LT-08."
+    },
+    {
+      "id": "D-12",
+      "phase": "RW-LT-04 / RW-LT-08",
+      "severity": "minor",
+      "summary": "Toast policy violations: toast per onboarding accent pick, toast per notification toggle implying persistence of a non-persisted setting, validation toast duplicating inline errors.",
+      "files": [
+        "app/(auth)/onboarding/page.tsx:106",
+        "app/(resident)/settings/notifications/page.tsx:18-23",
+        "app/(resident)/settings/profile/profile-form.tsx:946"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:notification-toggle-toast",
+      "plan": "§4 toast policy",
+      "status": "Onboarding accent toast removed in RW-LT-04 (onboarding-quiet-appearance); notification toggle and profile validation toast remain for RW-LT-08."
+    },
+    {
+      "id": "D-13",
+      "phase": "RW-LT-06",
+      "severity": "minor",
+      "summary": "Pickup step performs the start_pickup_payment write from a mount effect (re-runs on remount/Strict Mode); no retry control on failure.",
+      "files": [
+        "components/services/document-request-modal/pickup-step.tsx:35-46"
+      ],
+      "reproduction": "static; idempotency of start_pickup_payment to be verified in RW-LT-06 without backend change",
+      "plan": "§3 mutations",
+      "status": "Fixed in RW-LT-06 without a backend change: start_pickup_payment is idempotent (migration 0098); the step guards the on-mount write and has a Retry control (rw-lt-06/run-2: payment-method-and-pickup, pickup-failure-and-retry)."
+    },
+    {
+      "id": "D-14",
+      "phase": "RW-LT-06",
+      "severity": "major",
+      "summary": "QR PH cancel failure is silent: errorMessage is only rendered in the 'error' status while status remains 'pending'.",
+      "files": [
+        "components/services/document-request-modal/qrph-step.tsx:83-86",
+        "hooks/use-paymongo-source.ts:389-438"
+      ],
+      "reproduction": "baseline scenario rw-lt-00:defect-qr-cancel-failure-silent (mocked cancel-payment 500; no message or toast, still on QR step)",
+      "plan": "§3 payment invariants",
+      "status": "Fixed in RW-LT-06: refused and unconfirmed cancellations are announced once and kept as persistent guidance in the pending view (rw-lt-06/run-2: qr-cancel-failure-and-guidance)."
+    }
+  ],
+  "phaseVerification": [
+    {
+      "phase": "RW-LT-01",
+      "ref": "shared",
+      "file": "components/ui/loading.tsx; components/shared/loading-status.tsx; components/shared/page-skeleton.tsx; components/shared/fade-in.tsx; lib/motion.ts; app/globals.css",
+      "treatment": "Spinner/Skeleton/PendingHint (server-compatible), LoadingStatus + useTakingLonger (client), six PageSkeleton compositions (consumed by RW-LT-03 route fallbacks), CSS FadeIn with bounded stagger, motion tokens, global reduced-motion CSS",
+      "evidence": "rw-lt-01/run-1/results.json"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "shared",
+      "file": "components/ui/button.tsx",
+      "treatment": "loadingLabel with reserved width and single accessible name; no-label loading keeps content/name and cross-fades to a centered spinner after 120 ms; aria-busy; asChild Slot branch unchanged",
+      "evidence": "rw-lt-01/run-1/results.json (form-submit-login-label, text-button-no-label-spinner, aschild-navigation-buttons); rw-lt-01/baseline-regression/results.json"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "(root layout)",
+      "file": "app/layout.tsx; components/shared/motion-provider.tsx",
+      "treatment": "MotionConfig reducedMotion=\"user\" for existing Framer Motion components",
+      "evidence": "rw-lt-01/run-1/results.json (reduced-motion-static)"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "S-BOTTOMNAV",
+      "file": "components/shell/bottom-tab-bar.tsx; components/emergency/horizontal-center-picker.tsx",
+      "treatment": "Programmatic scrolling instant under reduced motion (preferredScrollBehavior); no other change",
+      "evidence": "static (typecheck/lint); route sweeps in rw-lt-01/baseline-regression"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "/announcements (pilot list; owner RW-LT-04)",
+      "file": "app/(resident)/announcements/announcements-feed.tsx",
+      "treatment": "Skeleton primitive, LoadingStatus \"Loading announcements…\" after the aria-busy region, bounded FadeIn stagger. Hook contract unchanged; Realtime refresh still swaps to skeleton (D-06) and therefore replays the card entrance until RW-LT-04 retains refresh content",
+      "evidence": "rw-lt-01/run-1/results.json (list-* scenarios, reduced-motion-static, mobile-360-no-overflow)"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "A-AUTH-01 (pilot form submit; owner RW-LT-04)",
+      "file": "app/(auth)/login/page.tsx",
+      "treatment": "loadingLabel \"Logging in…\" only; sign-in contract, messages, toast, and redirects unchanged (D-04 misclassification remains for RW-LT-04)",
+      "evidence": "rw-lt-01/run-1/results.json (form-submit-login-label)"
+    },
+    {
+      "phase": "RW-LT-01",
+      "ref": "S-REQ-DRAWER (pilot drawer; owner RW-LT-06, read-state RW-LT-03)",
+      "file": "app/(resident)/services/requests/request-drawer.tsx",
+      "treatment": "Skeleton primitive, LoadingStatus \"Loading request…\", aria-busy, 240/180 ms tween drawer tokens. Fetch contract unchanged; D-03 (null treated as pending) still reproduces and is settled by RW-LT-03",
+      "evidence": "rw-lt-01/run-1/results.json (drawer-pilot: d03StillReproduces=true)"
+    },
+    {
+      "phase": "RW-LT-02",
+      "ref": "shared",
+      "file": "lib/notify.ts",
+      "treatment": "Notification adapter: success/error/warning/info with 4/4/6/8 s durations, optional description, beginAttempt()/eventId() operation IDs, one terminal toast per ID, bounded (200) session-scoped bookkeeping, session change dismisses adapter toasts and suppresses previous-session outcomes (keepOnSessionChange for sign-out/deletion outcomes). No fetch, mutation, retry, or error interception",
+      "evidence": "rw-lt-02/unit-results.json (8/8); rw-lt-02/run-1/results.json"
+    },
+    {
+      "phase": "RW-LT-02",
+      "ref": "(root layout) host",
+      "file": "components/ui/sonner.tsx; app/globals.css",
+      "treatment": "Single host refined: top-center, header bottom + 12 px via ResizeObserver on [data-toast-anchor] (16 px + safe area on auth pages), 16 px safe-area gutters, 400 px width, 3 visible, close button (28 px, 44 px hit area), active theme + app font, pauseWhenPageIsHidden, keyboard-focus pause for adapter toasts, toast-originated Radix outside events cancelled so toasts never close an open dialog, pointer access under modal body lock, semantic icon colors light/dark, long-text wrapping",
+      "evidence": "rw-lt-02/run-1/results.json (all scenarios)"
+    },
+    {
+      "phase": "RW-LT-02",
+      "ref": "(resident group), (auth group), S-SHELL",
+      "file": "app/(resident)/layout.tsx; app/(auth)/layout.tsx; components/shared/notification-session.tsx; components/shell/resident-shell.tsx",
+      "treatment": "<NotificationSession userId> reports the account from each layout's existing auth read (no new request); shell header marked data-toast-anchor. Auth/redirect logic unchanged",
+      "evidence": "rw-lt-02/run-1/results.json (session-change-clears-previous-toast, resident-header-clearance-*); rw-lt-02/baseline-regression/results.json (route outcomes and request counts identical)"
+    },
+    {
+      "phase": "RW-LT-02",
+      "ref": "A-AUTH-01 (pilot form submit; owner RW-LT-04)",
+      "file": "app/(auth)/login/page.tsx",
+      "treatment": "Direct Sonner call replaced by notify.error(\"Login failed\", description) tied to a per-submit attempt ID; inline message kept as persistent guidance without a second live announcement. D-04 misclassification unchanged (RW-LT-04)",
+      "evidence": "rw-lt-02/run-1/results.json (auth-toast-outcome-placement-duration, pause-hover-focus-hidden-keyboard)"
+    },
+    {
+      "phase": "RW-LT-02",
+      "ref": "/announcements, S-REQ-DRAWER (read pilots)",
+      "file": "app/(resident)/announcements/announcements-feed.tsx; app/(resident)/services/requests/request-drawer.tsx",
+      "treatment": "Outcome policy confirmed: reads (first load, error, retry, drawer load) stay local with no toast; no code change needed",
+      "evidence": "rw-lt-02/run-1/results.json (read-pilots-stay-quiet)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "(root layout), (resident group), (auth group)",
+      "file": "app/loading.tsx; app/error.tsx; app/(resident)/loading.tsx; app/(resident)/error.tsx; app/(auth)/loading.tsx; app/(auth)/error.tsx; components/shared/route-error.tsx",
+      "treatment": "Neutral root fallback/error; resident group fallback + error inside the shell; auth fallback + error without the shell. RouteError: role=alert copy, retry() inside a transition (\"Trying again…\", disabled while pending, one refresh per activation), safe return link, digest reference, no raw message",
+      "evidence": "rw-lt-03/run-2/results.json (nav-fallback-resident-group, guest-fallback-and-redirects, auth-fallback-and-signed-in-redirect, error-boundary-resident-retry, error-boundary-auth-retry)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "route-specific fallbacks",
+      "file": "app/(resident)/{home,maps,maps/directory,maps/preparedness,settings,emergency,health,services}/loading.tsx",
+      "treatment": "PageSkeleton home/map/list/settings compositions; Next picks the deepest prefetched boundary, so each shows directly with no double flash; segment navs and settings sidebar stay visible",
+      "evidence": "rw-lt-03/run-2/results.json (nav-route-specific-variants, nav-fast-no-flash)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "S-TOPNAV, S-BOTTOMNAV, S-SEG-EMG, S-SEG-HLT, S-SEG-SVC, S-SETTINGS-NAV, /services/requests tabs",
+      "file": "components/shell/link-pending-hint.tsx; app/globals.css; nav components",
+      "treatment": "useLinkStatus hint (always rendered, absolute, aria-hidden, 120 ms delay, static under reduced motion)",
+      "evidence": "rw-lt-03/run-2/results.json (link-hint-blocking-navigation, modifier-click-and-prefetch, rapid-link-selection, reduced-motion-and-360)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "/announcements (pilot list)",
+      "file": "hooks/use-announcements.ts; app/(resident)/announcements/announcements-feed.tsx",
+      "treatment": "Identity-keyed results, generation guard, isInitialLoading/isRefreshing/isReady added (isLoading/error preserved for alerts-content); retained refresh content, quiet Updating hint, refresh-failure warning, plain-language initial error, entrance only for first-result cards",
+      "evidence": "rw-lt-03/run-2/results.json (list-read-states; Realtime via in-browser stand-in)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "S-REQ-DRAWER (pilot drawer)",
+      "file": "app/(resident)/services/requests/request-drawer.tsx",
+      "treatment": "Loading / ready / unavailable (PGRST116 or no row; no access details) / error (returned or thrown) with read-only retry; reads keyed by request id so selection changes never flash or restore another record",
+      "evidence": "rw-lt-03/run-2/results.json (drawer-read-states)"
+    },
+    {
+      "phase": "RW-LT-03",
+      "ref": "(root layout) host, S-SHELL",
+      "file": "components/ui/sonner.tsx; components/shell/resident-shell.tsx",
+      "treatment": "Toast anchor registered by the header ref (toastAnchorRef) instead of a per-pathname lookup, fixing header clearance when the shell streams in after the root fallback",
+      "evidence": "rw-lt-02/rerun-after-rw-lt-03/results.json (resident-header-clearance-*)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "shared",
+      "file": "lib/auth/auth-feedback.ts; lib/auth/sign-out.ts; hooks/use-sign-out.ts",
+      "treatment": "authFailureKind classifies Auth results by type/status/code (never message text); profileCompletionFailure maps the fixed RPC tokens; signOutBrowser reports signed-out / local-only / failed from the stored session; useSignOut owns pending, guard, error, preference reset and navigation. No retries; scopes unchanged",
+      "evidence": "rw-lt-04/run-1/results.json"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "(resident) and (auth) groups",
+      "file": "components/shared/notification-session.tsx",
+      "treatment": "Local onAuthStateChange listener (no request): an unexpected SIGNED_OUT clears the previous account's toasts and shows one \"You've been logged out\" notice; the tab's own sign-out is excluded. Routing unchanged",
+      "evidence": "rw-lt-04/run-1/results.json (session-ended-other-tab)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "A-AUTH-01, /login",
+      "file": "app/(auth)/login/page.tsx",
+      "treatment": "Result classification (D-04), synchronous activation guard, thrown-failure handling, profile-check failure keeps the session with a retry; destinations unchanged",
+      "evidence": "rw-lt-04/run-1/results.json (login-*)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "A-AUTH-06..09",
+      "file": "app/(auth)/{forgot-password,verify-otp,reset-password}/page.tsx",
+      "treatment": "Awaited, guarded, mapped outcomes; unconfirmed wording for lost responses; first-invalid-field focus; no raw provider text",
+      "evidence": "rw-lt-04/run-1/results.json (forgot-password-outcomes, recovery-code-and-reset)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "A-AUTH-03..05, A-AUTH-11, A-AUTH-12",
+      "file": "app/(auth)/register/register-form.tsx; components/shell/resident-shell.tsx; app/(resident)/settings/{settings-sidebar,layout}.tsx; app/(resident)/settings/delete-account/delete-account-form.tsx",
+      "treatment": "Registration/profile-completion outcomes, split locality/prefill loads, focus on the first invalid field; all logout controls on useSignOut (settings server action removed); delete-account sign-out marked intentional",
+      "evidence": "rw-lt-04/run-1/results.json"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "A-AUTH-02",
+      "file": "components/auth/google-button.tsx",
+      "treatment": "Shared Spinner; pending released when the page is restored from the back/forward cache; no completed-sign-in claim",
+      "evidence": "rw-lt-04/run-1/results.json (google-oauth-initiation)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "A-AUTH-10",
+      "file": "app/(auth)/onboarding/page.tsx",
+      "treatment": "Accent toast removed (D-12); profile-name read failures stay quiet",
+      "evidence": "rw-lt-04/run-1/results.json (onboarding-quiet-appearance)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "/home (A-HOME-01)",
+      "file": "app/(resident)/home/page.tsx; components/shared/read-failure.tsx",
+      "treatment": "Read errors kept and shown as retryable notices (read-only router.refresh) instead of empty copy (D-07)",
+      "evidence": "rw-lt-04/run-1/results.json (home-read-failures)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "S-ANN-MODAL",
+      "file": "components/reports/announcement-modal.tsx",
+      "treatment": "Radix modal dialog with shared drawer timing, focus return, inert exit",
+      "evidence": "rw-lt-04/run-1/results.json (announcement-detail-dialog*)"
+    },
+    {
+      "phase": "RW-LT-04",
+      "ref": "earlier-phase scenarios",
+      "file": "scripts/resident-web-feedback-regression.cjs",
+      "treatment": "rw-lt-01 text-button-no-label-spinner now probes the registration \"Detect My Location\" button and rw-lt-02 long-text-320 uses the rate-limit toast, because forgot-password no longer shows raw provider text or a no-label button (intentional behavior change)",
+      "evidence": "rw-lt-01/rerun-after-rw-lt-04/results.json; rw-lt-02/rerun-after-rw-lt-04/results.json"
+    },
+    {
+      "phase": "RW-LT-05",
+      "ref": "A-EMG-01, A-EMG-03, A-EMG-04, A-MAP-04, A-EMG-09",
+      "file": "components/emergency/{hub,alerts,scan,family}-content.tsx; components/maps/directory-content.tsx; hooks/use-scoped-read.ts + 5 data hooks",
+      "treatment": "Identity-scoped readiness (initial/ready/empty/refreshing/error), retained same-identity content with a stale warning, read-only Try again, matching skeletons with one polite label; urgent content has no entrance motion",
+      "evidence": "rw-lt-05/run-1/results.json (hub-read-states, alerts-read-states, scan-read-states, family-read-failure-not-empty, directory-and-preparedness)"
+    },
+    {
+      "phase": "RW-LT-05",
+      "ref": "A-EMG-02, A-MAP-01..03",
+      "file": "components/emergency/centers-content.tsx, centers-map*.tsx; components/maps/{locate-button,map-canvas,map-client-wrapper}.tsx",
+      "treatment": "Centers read states, location status/retry, route request guard + truthful route note; steady map placeholders; locate controls with one guidance notification and double-activation guard",
+      "evidence": "rw-lt-05/run-1/results.json (centers-*, maps-*, locate-unsupported)"
+    },
+    {
+      "phase": "RW-LT-05",
+      "ref": "A-EMG-05, A-EMG-06, A-EMG-07, A-EMG-08",
+      "file": "components/emergency/{qr-scanner-dialog,qr-upload-fallback,qr-show-dialog,household-qr-dialog}.tsx; lib/qr-checkin.ts; hooks/use-qr-checkins.ts",
+      "treatment": "Single check-in outcome, camera guidance + retry/close, camera release on close, clipboard/download wording, household QR fixed-size states with retry",
+      "evidence": "rw-lt-05/run-1/results.json (qr-*, scanner-*, household-qr-states); rw-lt-05/unit-results.json"
+    },
+    {
+      "phase": "RW-LT-05",
+      "ref": "A-EMG-10, A-EMG-11, A-SET-05",
+      "file": "components/emergency/family-member-dialog.tsx, family-content.tsx; app/(resident)/settings/profile/profile-form.tsx (HouseholdSection); hooks/use-family-members.ts; lib/household-feedback.ts",
+      "treatment": "Promise<boolean> dialog contract, serialised writes, unconfirmed-outcome wording with read-only re-check, one notification per attempt",
+      "evidence": "rw-lt-05/run-1/results.json (family-dialog-contract, profile-household-no-false-success)"
+    },
+    {
+      "phase": "RW-LT-05",
+      "ref": "shared dialog motion",
+      "file": "components/ui/dialog.tsx; app/globals.css",
+      "treatment": "Dialog 180/140 ms from the shared tokens; reduced-motion CSS now also covers Tailwind variant classes (data-[state=open]:animate-in)",
+      "evidence": "rw-lt-05/run-1/results.json (dialog-motion-normal, dialog-motion-reduced)"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "shared",
+      "file": "lib/service-feedback.ts; hooks/use-paymongo-source.ts",
+      "treatment": "Structural no-answer classification (status 0 / empty code / FunctionsFetchError / AbortError), submission/pickup/payment-method/cancel wording; payment hook gains cancel outcomes and a status-check display flag without touching its polling interval, cancel race guard, resume or Realtime wiring",
+      "evidence": "rw-lt-06/unit-results.json; rw-lt-06/run-2/results.json"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "A-SVC-03, A-SVC-04, S-DOC-MODAL",
+      "file": "components/services/document-request-modal/{document-request-modal,details-step}.tsx; components/services/documents-list.tsx",
+      "treatment": "Drawer shell restored to the request-drawer pattern; identity-scoped read (ready/unavailable/error), obsolete-response guard, account-check pending; bounded card entrance",
+      "evidence": "rw-lt-06/run-2/results.json"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "A-SVC-06",
+      "file": "components/services/resident-service-form.tsx",
+      "treatment": "Stage labels, validation inline only, refused/lost/upload failures → one toast + persistent guidance, idempotent retry, closed-mid-submit success toast",
+      "evidence": "rw-lt-06/run-2/results.json"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "A-SVC-10, A-SVC-11, A-SVC-12, A-SVC-13",
+      "file": "app/(resident)/services/requests/[requestId]/request-tracking.tsx; components/services/agency-sla-status.tsx",
+      "treatment": "Cancel request/payment outcomes via notify with attempt IDs; paid wins the race; quiet refresh failures keep the last request",
+      "evidence": "rw-lt-06/run-2/results.json"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "A-SVC-14..21",
+      "file": "components/services/request-payment-journey.tsx; document-request-modal/{payment-method,pickup,qrph,success}-step.tsx",
+      "treatment": "useScopedRead journey with retained refresh content; method/pickup outcomes; QR geometry; paid/expired once per attempt; persistent payment guidance; read-only receipt retry",
+      "evidence": "rw-lt-06/run-2/results.json"
+    },
+    {
+      "phase": "RW-LT-06",
+      "ref": "routes (server reads)",
+      "file": "app/(resident)/services/**/page.tsx; loading.tsx variants",
+      "treatment": "ReadFailure for failed server reads (never false empty or 404); route-specific loading.tsx for detail/form/payment",
+      "evidence": "rw-lt-06/run-2/results.json"
+    }
+  ]
+}

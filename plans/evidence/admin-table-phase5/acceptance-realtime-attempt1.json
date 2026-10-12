@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "mode": "realtime",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "actual Realtime bursts defer drafts, reconcile once and revalidate selected details off-page on all three routes",
+      "message": "page.waitForFunction: Timeout 15000ms exceeded.\n    at range (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:67:47)\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:359:19\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:23:88)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:342:9"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "facts": {
+    "incidentsBurst": {
+      "events": 3,
+      "refreshes": 1
+    }
+  },
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ],
+  "failure": "page.waitForFunction: Timeout 15000ms exceeded.\n    at range (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:67:47)\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:359:19\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:23:88)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:342:9"
+}

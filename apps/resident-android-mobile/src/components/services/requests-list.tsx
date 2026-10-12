@@ -10,14 +10,12 @@ import {
   type Tables,
 } from '@barangayan/shared';
 import { Link } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
-import { PlaceholderPanel } from '@/components/placeholder-panel';
-import { PrimaryButton } from '@/components/primary-button';
 import { ProgressBar } from '@/components/progress-bar';
-import { SegmentedControl } from '@/components/segmented-control';
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getDocumentIcon } from '@/constants/document-icons';
@@ -55,7 +53,58 @@ function matchesFilter(status: string, filter: Filter): boolean {
   return status === 'completed' || status === 'cancelled';
 }
 
-export function RequestsList() {
+/** Horizontally scrolling filter chips — a label never gets clipped or squeezed. */
+function FilterChips<Key extends string>({
+  options,
+  activeKey,
+  onChange,
+}: {
+  options: { key: Key; label: string }[];
+  activeKey: Key;
+  onChange: (key: Key) => void;
+}) {
+  const theme = useTheme();
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.chipRow}>
+      {options.map((option) => {
+        const isActive = option.key === activeKey;
+        return (
+          <Pressable
+            key={option.key}
+            onPress={() => onChange(option.key)}
+            accessibilityRole="tab"
+            accessibilityLabel={option.label}
+            accessibilityState={{ selected: isActive }}
+            style={({ pressed }) => [
+              styles.chip,
+              isActive
+                ? { backgroundColor: theme.primary, borderColor: theme.primary }
+                : { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
+              pressed && styles.pressed,
+            ]}>
+            <ThemedText
+              type="smallBold"
+              style={{ color: isActive ? theme.onPrimary : theme.text }}>
+              {option.label}
+            </ThemedText>
+          </Pressable>
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+export function RequestsList({
+  header,
+  contentContainerStyle,
+}: {
+  /** Rendered above the title; scrolls away, leaving the filter chips pinned. */
+  header?: ReactNode;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+}) {
   const { session } = useAuth();
   const theme = useTheme();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
@@ -136,16 +185,24 @@ export function RequestsList() {
 
   if (!session) {
     return (
-      <View style={styles.container}>
-        <GuestPrompt label="Log in to see your requests." />
-      </View>
+      <ScrollView contentContainerStyle={contentContainerStyle}>
+        {header}
+        <View style={styles.guest}>
+          <GuestPrompt label="Log in to see your requests." />
+        </View>
+      </ScrollView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    // Children: 0 header, 1 title, 2 filters (pinned), 3 content.
+    <ScrollView
+      stickyHeaderIndices={[2]}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[contentContainerStyle, styles.container]}>
+      <View>{header}</View>
       <View style={styles.header}>
-        <ThemedText type="subtitle" style={{ color: theme.primary }}>
+        <ThemedText type="heading" style={styles.title}>
           My Requests
         </ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
@@ -153,41 +210,42 @@ export function RequestsList() {
         </ThemedText>
       </View>
 
-      <SegmentedControl
-        segments={[
-          { key: 'all', label: 'All' },
-          { key: 'active', label: 'Active' },
-          { key: 'pickup', label: 'Pickup' },
-          { key: 'history', label: 'History' },
-        ]}
-        activeKey={filter}
-        onChange={handleFilterChange}
-        variant="outline"
-      />
-
-      {filter === 'active' ? (
-        <SegmentedControl
-          segments={[
+      <View style={[styles.filters, { backgroundColor: theme.background }]}>
+        <FilterChips
+          options={[
             { key: 'all', label: 'All' },
-            { key: 'pending_payment', label: 'Pending Payment' },
-            { key: 'paid', label: 'Paid' },
-            { key: 'processing', label: 'Processing' },
+            { key: 'active', label: 'Active' },
+            { key: 'pickup', label: 'Pickup' },
+            { key: 'history', label: 'History' },
           ]}
-          activeKey={activeSubFilter}
-          onChange={setActiveSubFilter}
-          variant="outline"
+          activeKey={filter}
+          onChange={handleFilterChange}
         />
-      ) : null}
+
+        {filter === 'active' ? (
+          <FilterChips
+            options={[
+              { key: 'all', label: 'All' },
+              { key: 'pending_payment', label: 'Pending Payment' },
+              { key: 'paid', label: 'Paid' },
+              { key: 'processing', label: 'Processing' },
+            ]}
+            activeKey={activeSubFilter}
+            onChange={setActiveSubFilter}
+          />
+        ) : null}
+      </View>
 
       {error ? (
-        <View style={styles.list}>
-          <ThemedText accessibilityRole="alert">{error}</ThemedText>
-          <PrimaryButton label="Retry requests" onPress={() => setRetry(value => value + 1)} />
-        </View>
+        <ServicesErrorState message={error} retryLabel="Retry requests" onRetry={() => setRetry(value => value + 1)} />
       ) : requests === null ? (
-        <PlaceholderPanel label="Loading your requests…" />
+        <ServicesListSkeleton rows={3} />
       ) : filtered.length === 0 ? (
-        <PlaceholderPanel label="No requests in this filter yet." />
+        <ServicesEmptyState
+          icon="file-tray-outline"
+          title="No requests here yet"
+          message="Requests you submit will show up in this filter."
+        />
       ) : (
         <View style={styles.list}>
           {filtered.map((request) => {
@@ -195,24 +253,32 @@ export function RequestsList() {
             const config = statusConfig(residentStatus);
             return (
               <Link key={request.id} href={`/services/requests/${request.id}`} asChild>
-                <Pressable>
-                  <ThemedView style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={request.document_types?.name ?? 'Document Request'}
+                  style={({ pressed }) => pressed && styles.pressed}>
+                  <ThemedView
+                    style={[
+                      styles.card,
+                      { borderColor: theme.backgroundSelected, shadowColor: theme.text },
+                    ]}>
                     <View style={styles.cardTop}>
-                      <View style={[styles.iconCircle, { backgroundColor: `${config.color}26` }]}>
+                      <View style={[styles.iconTile, { backgroundColor: `${config.color}1F` }]}>
                         <Ionicons
                           name={getDocumentIcon(request.document_types?.name ?? '')}
-                          size={20}
+                          size={26}
                           color={config.color}
                         />
                       </View>
                       <View style={styles.cardInfo}>
-                        <ThemedText type="smallBold">
+                        <ThemedText type="smallBold" style={styles.cardTitle} numberOfLines={2}>
                           {request.document_types?.name ?? 'Document Request'}
                         </ThemedText>
                         <ThemedText type="small" themeColor="textSecondary">
                           Req ID: #{request.reference_number} • {formatDate(request.created_at)}
                         </ThemedText>
                       </View>
+                      <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
                     </View>
 
                     <View
@@ -222,11 +288,11 @@ export function RequestsList() {
                       ]}>
                       <Ionicons
                         name={config.icon}
-                        size={12}
+                        size={14}
                         color={config.solid ? theme.onPrimary : config.color}
                       />
                       <ThemedText
-                        type="small"
+                        type="smallBold"
                         style={{ color: config.solid ? theme.onPrimary : config.color }}>
                         {RESIDENT_STATUS_LABEL[residentStatus]}
                       </ThemedText>
@@ -269,49 +335,86 @@ export function RequestsList() {
           })}
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: Spacing.three,
     gap: Spacing.three,
   },
+  guest: {
+    padding: 20,
+  },
   header: {
+    paddingHorizontal: 20,
     gap: Spacing.half,
   },
-  list: {
+  title: {
+    fontSize: 24,
+    lineHeight: 30,
+  },
+  filters: {
+    gap: Spacing.two,
+    paddingVertical: Spacing.two,
+  },
+  chipRow: {
+    paddingHorizontal: 20,
     gap: Spacing.two,
   },
-  card: {
+  chip: {
+    minHeight: 40,
+    paddingHorizontal: Spacing.three,
+    borderRadius: 20,
     borderWidth: 1,
-    borderRadius: Spacing.three,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  list: {
+    paddingHorizontal: 20,
+    gap: Spacing.three,
+  },
+  card: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 20,
     padding: Spacing.three,
-    gap: Spacing.two,
+    gap: Spacing.three,
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  pressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.99 }],
   },
   cardTop: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.three,
   },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  iconTile: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardInfo: {
     flex: 1,
+    minWidth: 0,
     gap: Spacing.half,
+  },
+  cardTitle: {
+    fontSize: 16,
+    lineHeight: 22,
   },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.one,
-    paddingHorizontal: Spacing.two,
-    paddingVertical: Spacing.half,
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: Spacing.four,
     alignSelf: 'flex-start',
   },

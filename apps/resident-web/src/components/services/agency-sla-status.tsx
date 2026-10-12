@@ -31,12 +31,16 @@ export function AgencySlaStatus({ requestId, compact = false }: { requestId: str
     const timer = setInterval(() => setTick(performance.now()), 1000);
     return () => { active = false; pending?.abort(); clearInterval(refresh); clearInterval(timer); };
   }, [requestId, retry]);
-  if (error) return <span role="alert" className="block text-sm">{error}{!compact ? <button className="ml-2 underline" onClick={() => setRetry(v => v+1)}>Retry</button> : null}</span>;
-  if (!snapshot || snapshot.receivedRequestId !== requestId || snapshot.request.created_at === undefined) return <span className="block text-sm">Loading processing clock…</span>;
+  const hasSnapshot = !!snapshot && snapshot.receivedRequestId === requestId && snapshot.request.created_at !== undefined;
+  // A failed refresh keeps the last valid clock for this request (marked out of date);
+  // only a clock that never loaded is replaced by the error.
+  if (error && !hasSnapshot) return <span role="alert" className="block text-sm">{error}{!compact ? <button className="ml-2 underline" onClick={() => setRetry(v => v+1)}>Retry</button> : null}</span>;
+  if (!snapshot || !hasSnapshot) return <span role={compact ? undefined : 'status'} className="block text-sm">Loading processing clock…</span>;
   const r = snapshot.request;
   if (r.timing_model !== 'agency_minutes_v1') return <span className="block text-xs">Previous timing model · original processing estimate retained</span>;
   const value = calculateAgencySla(r, snapshot.pauses, projectSlaTime(snapshot.evaluated_at, Math.max(0,tick-snapshot.receivedAt)));
   return <div className={compact ? 'text-xs' : 'my-4 rounded-xl border p-4 text-sm'}>
+    {error ? <p data-slot="sla-stale" className="text-status-warning">Couldn&apos;t refresh — this may be out of date.{!compact ? <button className="ml-2 underline" onClick={() => setRetry(v => v+1)}>Retry</button> : null}</p> : null}
     <p className="font-semibold">{AGENCY_SLA_LABEL[value.position]}</p>
     {value.waitingReason ? <p>Waiting for resident: {value.waitingReason} · SLA position retained</p> : null}
     <p>Agency processing: {formatSlaDuration(value.agencySeconds)} / {r.target_minutes_snapshot} minutes</p>

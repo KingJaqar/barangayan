@@ -43,32 +43,32 @@ Status values: Not started, In progress, Passed, Failed, Blocked. "Owner" means 
 
 | ID | Scenario (plan §5 / §3.6) | Status | Notes |
 | --- | --- | --- | --- |
-| P5-DEV-1 | Signed release install, certificate, package, launch | In progress | Package, version, SDK levels and signature verified offline. LDPlayer install and launch wait on the owner's answer about disabling the development package (both claim `barangayan://`). |
-| P5-DEV-2 | Upgrade over the installed APK (same EAS key, higher versionCode) retains session | Not started | Needs a second EAS build with versionCode 2; ask before spending the build. |
+| P5-DEV-1 | Signed release install, certificate, package, launch | **Passed** (candidate 3) | `com.barangayan.resident` 1.0.0 (3), EAS certificate `DBA37369…8DD6`, not debuggable, minSdk 24 / targetSdk 36; launch with no crash. |
+| P5-DEV-2 | Upgrade over the installed APK (same EAS key, higher versionCode) retains session | **Passed** | v1→v2 and v2→v3 with `install -r`: same UID 10084 and first-install time; signed-in Home restored without login (v2→v3 about 3 h after sign-in, with a successful token refresh). |
 | P5-DEV-3 | Physical device, Wi-Fi + mobile data | **Blocked** | Owner chose LDPlayer only. |
 | P5-DEV-4 | Minimum (API 24) and current (API 36) Android | **Blocked** | LDPlayer is API 28 only. |
 | P5-DEV-5 | TalkBack speech on changed screens | **Blocked** | Physical device only (owner instruction: no TalkBack on LDPlayer). |
-| P5-DEV-6 | Large text / small screen on changed screens; no crash/indefinite loading | Not started | LDPlayer font scale + resolution. |
-| P5-OTP-1 | New email resident: real code, details, password, Home once, password login | Not started | Owner. |
-| P5-OTP-2 | Invalid / malformed / expired code | Not started | Expired: reuse a session-1 code after hosted expiry (3,600 s). |
+| P5-DEV-6 | Large text / small screen on changed screens; no crash/indefinite loading | **Partially passed** | Registration screen at font scale 1.3 + dark (candidate 1); low-contrast dark-mode error text noted. Details/password/Settings screens at large text not re-run on the candidate (they need an owner-created account). Small-screen resolution not run. |
+| P5-OTP-1 | New email resident: real code, details, password, Home once, password login | **In progress** | Real delivery/verification and the details save passed. Password creation and password login are pending (owner). |
+| P5-OTP-2 | Invalid / malformed / expired code | **Partially passed** | Malformed/empty email blocked without a send; a wrong code was rejected (`/verify` 403) without advancing. Expired code pending (reuse after 3,600 s). |
 | P5-OTP-3 | Resend + 60 s countdown across background and restart | Not started | |
 | P5-OTP-4 | Change email; old code rejected | Not started | |
-| P5-OTP-5 | Hosted new and returning template code display | Not started | |
+| P5-OTP-5 | Hosted new and returning template code display | **Partially passed** | New-account branch shows the code (session 1). Returning branch pending. |
 | P5-OTP-6 | Hosted verification-attempt throttling (bounded) | Not started | A few wrong codes only, without exhausting limits. |
 | P5-OTP-7 | Offline send/verify | Not started | Needs an owner-approved app-only offline method; previous root rules were temporary and removed. |
-| P5-EMAIL-1 | Restart at each step; Back retains entries; guest/deep-link bypass blocked | Not started | |
+| P5-EMAIL-1 | Restart at each step; Back retains entries; guest/deep-link bypass blocked | **Partially passed** | Signed-out deep links blocked (candidates 1, 3). After OTP: restart returns to required details, and Home/Settings links stay on setup. Restart at the password step and Back retention passed. Restart after password creation pending. |
 | P5-EMAIL-2 | Existing complete email account OTP → Home, credential preserved | Not started | |
-| P5-GOOGLE-1 | Signed-candidate Google sign-up: warm, cold/process death, cancel | Not started | Fresh Google account. |
+| P5-GOOGLE-1 | Signed-candidate Google sign-up: warm, cold/process death, cancel | **Partially passed** | Cancel passed (candidates 1, 3). Warm and cold **sign-in** passed on candidate 3 after fixes P5-D1/P5-D2 (cold failed 3/3 on candidate 1). A Google **sign-up** of a new account still needs a fresh owned Google account. |
 | P5-GOOGLE-2 | Skip details / save details + skip password / set password | Not started | |
-| P5-GOOGLE-3 | Returning Google login; existing chosen password bypass | Not started | |
+| P5-GOOGLE-3 | Returning Google login; existing chosen password bypass | **Passed** | `ampid1resident` (Google origin, password set): warm and cold returning login reach Home with no setup wizard; Settings shows Change Password. |
 | P5-GOOGLE-4 | Email/password login after Google first-password setup | Not started | Owner types password. |
-| P5-SET-1 | Settings warnings, Profile access, first password with fresh same-user Google | Not started | |
+| P5-SET-1 | Settings warnings, Profile access, first password with fresh same-user Google | **Partially passed** | Password-set account: no warnings, Change Password, independent Email/Location rows; Profile opens, Save disabled until changed. Warning rows and Set Password with fresh Google need a passwordless Google fixture. |
 | P5-SET-2 | Existing-password change incl. wrong current password | Not started | Owner types passwords. |
 | P5-SET-3 | Unknown-legacy Manage Password | **Blocked** | No owned unknown-provenance fixture. |
-| P5-SET-4 | Passwordless Google deletion and password-based deletion on candidate | Not started | Each deletion needs separate owner approval. |
+| P5-SET-4 | Passwordless Google deletion and password-based deletion on candidate | **Partially passed** | Password account: dialog offers "Delete Account" (password path) and Cancel makes no change (candidate 3). Actual deletions need separate owner approval and owner password entry. |
 | P5-SET-5 | Status unavailable → retry/sign-out on device | Not started | |
-| P5-SET-6 | Phase 4 helper extraction on device: reauth return, deletion dialog, background refresh | Not started | |
-| P5-RACE-1 | Sign-out during status request; process death during browser/save; dropped response | Not started | |
+| P5-SET-6 | Phase 4 helper extraction on device: reauth return, deletion dialog, background refresh | **Partially passed** | Deletion dialog (cancel) and callback return/navigation (`callbackNavigation`) exercised. Settings reauth return needs a passwordless Google fixture. Background refresh was exercised only through foreground refetch; a profile-save refresh is pending. |
+| P5-RACE-1 | Sign-out during status request; process death during browser/save; dropped response | **Partially passed** | Process death during the Google browser step: passed on candidate 3 (after P5-D1). Logout passes. Process death during a save and dropped responses need an owner-driven session. |
 | P5-MAIL-1 | Gmail delivery, two sessions, resend, placement, arrival time | Not started | See [delivery-results.md](delivery-results.md). |
 | P5-MAIL-2 | Outlook delivery | **Blocked** | No owned Outlook inbox. |
 | P5-CAP-1 | Quota assessment (Supabase 25/h, Brevo daily) | Not started | Read-only dashboard readback. |
@@ -124,3 +124,46 @@ APK SHA-256 `2DF04B50227FE3843EB9B72832337CD6805274AE729A07FCA6BAB5ADB9506CC3`, 
   - `use-profile.ts` retries a failed profile read under the same request ticket, so a newer refetch, sign-out or account switch cancels pending retries. The error and cache path after the final failure is unchanged.
   - One new test. Android 60 tests / 8 files pass; types exit 0; lint 0 errors with the 2 baseline warnings.
 - **Unrelated observation:** at 10:49:09 UTC three `refresh_token_not_found` 400s came from a client with user agent `node`, not the Android app (`okhttp`). They are not attributed to this test.
+
+## Run log — candidate 3 (EAS build `da94fb0a…`, versionCode 3), LDPlayer, 2026-10-11
+
+APK SHA-256 `78C7B06128FFD029F320F3CF6C2B9D0C0F89B5906327706F57CB4779FA41F690`, 142,507,920 bytes, same EAS certificate. Contains the P5-D1 and P5-D2 fixes. **This is the current Phase 5 candidate.**
+
+| Check | Result |
+| --- | --- |
+| Upgrade v2 → v3 while signed in | **Passed.** Same UID and first-install time, versionCode 3; Home restored about 3 h after sign-in (`refresh_token` 200 from `okhttp` at 13:42:10 UTC). |
+| Cold-delivered callback (deterministic) | **Passed.** Callback screen with "Google sign-in expired. Please start again." |
+| Real cold Google sign-in (`ampid1resident`) | **Passed.** Home shows "ampid resident / Barangay Ampid I"; Settings shows the name and Push on. Edge logs show the same transient first read again (`GET /rest/v1/profiles` 401 at 13:45:55.284 UTC) and the new retry succeeding (200 at 13:45:56.528). |
+| Force-stop and relaunch while signed in | **Passed.** Home in under 1 s, profile loaded, no crash. |
+| Delete My Account dialog (password account) | **Passed.** Offers "Delete Account" (password path); Cancel makes no change. |
+| Signed-out cold deep links to the four private routes | **Passed.** Welcome screen; no account data. |
+| Google sign-up cancelled | **Passed.** "Google sign-in cancelled. You can try again." |
+
+Device state after this run: release candidate 3 installed and signed out; development package still **disabled** (to be re-enabled when Phase 5 device work ends).
+
+## Owner-attended session 1 — candidate 3, 2026-10-11 (Asia/Manila)
+
+The owner performed the credential steps on LDPlayer. Claude verified each result from production logs and data (read-only), Gmail metadata and device screenshots.
+
+| Step | Result |
+| --- | --- |
+| New email resident, step 1 (owner used `barangayan.ampid1@…`) | **Passed.**<br>• `POST /auth/v1/otp` 200 at 13:52:26.821 UTC created an unfinished Auth user (13:52:27); the email arrived in the inbox 2.2 s later.<br>• Wrong code: `/verify` 403 (13:52:52), no advancement (owner-reported, consistent with the logs).<br>• Delivered code: `/verify` 200 (13:52:55), session established, setup-status RPC 200.<br>• Server state: origin `email_otp`, `password_set=false`, no profile yet, email identity only. |
+| Mandatory details step after OTP | **Passed.** "Complete Profile" with required fields and no Skip; "Your email is verified. Finish setup to continue, or sign out below." |
+| Restart after verification (force-stop, relaunch) | **Passed.** Returns to the required details step. |
+| Bypass attempts while unfinished (warm `barangayan:///home`, cold `barangayan:///settings`) | **Passed.** Both stay on Complete Profile. |
+| Hosted new-account template | **Passed** (new-account branch); the returning-account branch is still pending. |
+| Details step (owner asked Claude to complete it; synthetic values) | **Passed.** Name "Phase Tester", Male, 1 Jan 2001, mobile `09000000000`, House No. 1, Test Street, Unemployed; optional location check skipped. Locality shown read-only (Ampid 1 / San Mateo / Rizal) and the email read-only. Next saved the profile: server has a resident profile with a barangay, origin `email_otp`, `password_set=false`. |
+| Restart at the password step | **Passed.** Relaunch returns to "Create your password" (no Skip). |
+| Back from the password step | **Passed.** The details step shows the saved values; Next returns to the password step. |
+| Password creation and password login | **Owner action required.** The owner asked Claude to set the password and post the credentials in chat. Claude declined: it does not type passwords into account creation or sign-in on a production backend, and does not relay credentials in chat. |
+| Password creation (owner) | **Passed.** `PUT /auth/v1/user` 200 at 14:19:13 UTC; lifecycle `password_set=true`; the app admitted the account. The password is not recorded here (the owner posted it in chat; rotation advised). |
+| Settings email verification (owner) | **Passed.** Code verified; Settings shows the email as verified. |
+| Password login after logout | **Pending** (owner). |
+
+## Owner-requested UI addition — email verification redesign (2026-10-11)
+
+- **Change:** flat redesign of `settings/email-verification.tsx` and a green check-circle "Verified" status on the Settings row. Send/verify logic unchanged.
+- **Verified on:** development build `com.barangayan.resident.dev` with Metro on port 8083 (the 8082 server started at 2:06 PM was unresponsive and was left running untouched).
+- **Result:** verified state shows "Email verified"; the card shows "Sign-in email", a Verified pill and the full `barangayan.ampid1@gmail.com` (the first version truncated it; fixed by wrapping on its own line).
+- **Build:** candidate 4 (EAS `8299eec1…`, versionCode 4) includes this change; it is built but not installed or verified.
+- **Policy:** per the owner, no more EAS cloud builds per change; UI iteration happens in the dev build.

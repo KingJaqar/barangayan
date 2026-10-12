@@ -1,10 +1,19 @@
 'use client';
 
-import { formatDateTime, type Tables } from '@barangayan/shared';
+import type { Tables } from '@barangayan/shared';
+import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
 import { Eye, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
+import { OperationsTableSummary } from '@/components/admin/operations-table-summary';
+import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
+import { operationsConfig } from '@/lib/admin-tables/operations-config';
+import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
@@ -13,9 +22,10 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { IncidentActions } from './incident-actions';
 import { IncidentDetailModal } from './incident-detail-modal';
-import type { IncidentRow } from './page';
-import { TABS, type Tab } from './types';
+import type { IncidentRow } from './types';
+import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 interface CategoryOption {
   id: string;
@@ -61,14 +71,13 @@ function AddIncidentForm({
   categories,
   residents,
   barangayId,
-  onClose,
+  onClose, onChanged,
 }: {
   categories: CategoryOption[];
   residents: ResidentOption[];
   barangayId: string;
-  onClose: () => void;
+  onClose: () => void; onChanged: () => void;
 }) {
-  const router = useRouter();
   const toast = useToast();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -137,16 +146,13 @@ function AddIncidentForm({
     setStatus('open');
     setSubmittedAt(currentDateTimeLocal());
     onClose();
-    router.refresh();
+    onChanged();
   }
-
-  const inputClass =
-    'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-3"
+      className={`${formContainerClass} mb-6 grid-cols-1 sm:grid-cols-3`}
     >
       <label className="text-sm sm:col-span-3">
         <span className="mb-1 block font-medium">Title</span>
@@ -216,11 +222,11 @@ function AddIncidentForm({
         <button
           type="submit"
           disabled={submitting || !title.trim()}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Incident</LoadingButtonContent>
         </button>
-        <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
+        <button type="button" onClick={onClose} className={cancelButtonClass}>
           Cancel
         </button>
       </div>
@@ -233,98 +239,27 @@ function AddIncidentForm({
  * screen's EditableDataTable). Click the Incident cell to open the full-detail modal (photos,
  * location, and a form for the free-text fields: title, description). Status/remove action
  * buttons stop click propagation so they don't also open the modal. */
-export function IncidentTable({
-  rows,
-  categories,
-  residents,
-  barangayId,
-  tab,
-  category,
-  q,
-}: {
-  rows: IncidentRow[];
-  categories: CategoryOption[];
-  residents: ResidentOption[];
+export function IncidentTable({ result, summary, requestedState, barangayId, categories, residents, optionsError }: {
+  result: QueryOutcome<BrowseResult<IncidentRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   barangayId: string;
-  tab: Tab;
-  category: string;
-  q: string;
+  categories: CategoryOption[]; residents: ResidentOption[]; optionsError: string | null;
 }) {
-  const router = useRouter();
   const toast = useToast();
-  const [selected, setSelected] = useState<IncidentRow | null>(null);
-  const [submittedOrder, setSubmittedOrder] = useState<'asc' | 'desc'>('desc');
+  const params = useSearchParams();
+  const category = params.get('category') ?? '';
+  const config = useMemo(() => operationsConfig('incidents', [category, ...categories.map(option => option.id)]), [category, categories]);
+  const browse = useConfiguredTableBrowse(config, requestedState, result, true);
+  const { state, value } = browse;
+  const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
+  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<IncidentRow>('incidents', result, browse.settle);
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/category around for the debounced search effect below, without
-  // making that effect re-fire (and re-push a redundant URL) whenever tab/category change
-  // on their own — those already navigate immediately through their own handlers.
-  const tabRef = useRef(tab);
-  const categoryRef = useRef(category);
-  useEffect(() => {
-    tabRef.current = tab;
-    categoryRef.current = category;
-  }, [tab, category]);
-
-  function navigate(next: { tab?: string; category?: string; q?: string }) {
-    const nextQ = next.q ?? q;
-    const nextCategory = next.category ?? category;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextCategory ? { category: nextCategory } : {}),
-    });
-    router.push(`/incident-reports?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after the
-  // user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(categoryRef.current ? { category: categoryRef.current } : {}),
-      });
-      router.push(`/incident-reports?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
-  const sortedRows = [...rows].sort((a, b) => {
-    const diff = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    return submittedOrder === 'asc' ? diff : -diff;
-  });
-  // Unique per mount: removeChannel() is async, so a remount (StrictMode's double-invoked
-  // effects in dev, or a route change back to this page) would otherwise call
-  // supabase.channel('admin-incidents') while the previous channel is still subscribed,
-  // get that same channel back, and throw on .on() — the same failure the mobile
-  // useMyIncidents hook hit.
-  const [channelName] = useState(() => `admin-incidents-${Math.random().toString(36).slice(2)}`);
-
+  const [channelName] = useState(() => 'admin-incidents-' + Math.random().toString(36).slice(2));
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    const channel = supabase
-      .channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents' }, () => router.refresh())
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [router, channelName]);
+    const channel = supabase.channel(channelName)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents' }, browse.refresh).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [channelName, browse.refresh]);
 
   async function updateField(incident: IncidentRow, patch: Partial<Tables<'incidents'>>) {
     // Skip the log (but still write the update) when nothing actually changed — avoids a
@@ -360,11 +295,12 @@ export function IncidentTable({
       entityLabel: updated.title,
       changes: { before, after },
     }).catch(() => {});
-    router.refresh();
+    browse.refresh();
     return { error: null };
   }
 
   async function removeIncident(incident: IncidentRow) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('incidents')
@@ -390,12 +326,12 @@ export function IncidentTable({
     }).catch(() => {});
 
     toast.showSuccess('Incident removed.');
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<IncidentRow>[] = [
     {
-      header: 'Incident',
+      id: 'title', header: 'Incident',
       initialWidth: 280,
       minWidth: 230,
       wrap: 'break-word',
@@ -420,7 +356,7 @@ export function IncidentTable({
       // modal's form rather than a cramped inline text cell.
     },
     {
-      header: 'Category',
+      id: 'category', header: 'Category',
       initialWidth: 160,
       minWidth: 130,
       wrap: 'nowrap',
@@ -437,6 +373,7 @@ export function IncidentTable({
         ),
       edit: {
         type: 'select',
+        canEdit: () => !optionsError,
         options: [{ value: '', label: 'Uncategorized' }, ...categories.map((c) => ({ value: c.id, label: c.name }))],
         getValue: (r) => r.category_id ?? '',
         onSave: (r, value) => updateField(r, { category_id: String(value) || null }),
@@ -444,7 +381,7 @@ export function IncidentTable({
       },
     },
     {
-      header: 'Reporter',
+      id: 'reporter', header: 'Reporter',
       initialWidth: 210,
       minWidth: 180,
       wrap: 'break-word',
@@ -459,6 +396,7 @@ export function IncidentTable({
         ),
       edit: {
         type: 'select',
+        canEdit: () => !optionsError,
         options: [{ value: '', label: 'Anonymous / Walk-in' }, ...residents.map((res) => ({ value: res.id, label: res.full_name }))],
         getValue: (r) => r.reporter_id ?? '',
         onSave: (r, value) => updateField(r, { reporter_id: String(value) || null }),
@@ -535,7 +473,7 @@ export function IncidentTable({
       },
     },
     {
-      header: 'Confirmed',
+      id: 'confirmations', header: 'Confirmed',
       initialWidth: 112,
       minWidth: 100,
       wrap: 'nowrap',
@@ -560,7 +498,7 @@ export function IncidentTable({
       },
     },
     {
-      header: 'Status',
+      id: 'status', header: 'Status',
       initialWidth: 140,
       minWidth: 130,
       wrap: 'nowrap',
@@ -576,7 +514,7 @@ export function IncidentTable({
       },
     },
     {
-      header: 'Submitted',
+      id: 'submitted', header: 'Submitted',
       initialWidth: 170,
       minWidth: 160,
       wrap: 'nowrap',
@@ -600,14 +538,14 @@ export function IncidentTable({
         <div className="flex flex-nowrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={() => setSelected(r)}
+            onClick={event => void openDetail(r, event.currentTarget)}
             title="View incident details"
             aria-label={`View incident: ${r.title}`}
             className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
           >
             <Eye aria-hidden="true" className="h-4 w-4" />
           </button>
-          <IncidentActions incidentId={r.id} status={r.status} incidentTitle={r.title} incidentDescription={r.description} variant="compact" />
+          <IncidentActions incidentId={r.id} status={r.status} incidentTitle={r.title} incidentDescription={r.description} variant="compact" onBeforeAction={browse.settle} onChanged={browse.refresh} />
           <ConfirmButton
             label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
             confirmLabel="Remove?"
@@ -621,103 +559,32 @@ export function IncidentTable({
     },
   ];
 
-  return (
-    <>
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setSubmittedOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Submitted {submittedOrder === 'asc' ? '↑' : '↓'}
-          </button>
-
-          <select
-            value={category}
-            onChange={(e) => navigate({ category: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="">All categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search title, description, reporter, email…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            disabled={!barangayId}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            + Add Incident
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented tabs, beneath the sort/filter/search + add row */}
-      <div className="mb-4 flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium ${
-              tab === t.key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-600 dark:text-zinc-300'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && (
-        <AddIncidentForm categories={categories} residents={residents} barangayId={barangayId} onClose={() => setAddOpen(false)} />
-      )}
-
-      {/* Section 6: table display — columns are user-resizable (drag the divider in
-          each header cell) since incident text fields vary a lot in length. */}
-      <EditableDataTable
-        rows={sortedRows}
-        rowKey={(r) => r.id}
+  return <div ref={containerRef}>
+    <OperationsTableSummary name="incidents" summary={summary} onRetry={browse.refresh} />
+    <div>{optionsError && <p role="alert" className="mb-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></p>}</div>
+    {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddIncidentForm categories={categories} residents={residents} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <ProfileTablePanel label="Incident Reports" browse={browse} 
+      category={<label className="table-browse-field">Category
+        <select aria-label="Category" value={state.filters.category} disabled={!!optionsError}
+          onChange={event => void browse.commit({ filters: { category: event.target.value } })}>
+          <option value="">All categories</option>
+          {state.filters.category && !categories.some(option => option.id === state.filters.category) && <option value={state.filters.category}>Selected category</option>}
+          {categories.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
+        </select></label>}
+      filters={<SegmentedFilter label="Incident status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+        value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+      actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+        disabled={browse.pending || !barangayId || !!optionsError}>+ Add Incident</button>}>
+      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No incident reports found."
-        columns={columns}
-        onRowClick={setSelected}
-        resizableColumns
-        pinLastColumn
-        density="compact"
-        tableMinWidth={1710}
-        cellOverflow="hidden"
-      />
-
-      {selected && <IncidentDetailModal incident={selected} onClose={() => setSelected(null)} />}
-    </>
-  );
+        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns pinLastColumn density="compact"
+        tableMinWidth={1710} cellOverflow="hidden"
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
+          onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
+    </ProfileTablePanel>
+    {selectedDetail && <IncidentDetailModal incident={selectedDetail} key={selectedDetail.id}
+      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
+      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+  </div>;
 }

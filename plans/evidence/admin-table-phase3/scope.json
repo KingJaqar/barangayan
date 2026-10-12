@@ -1,0 +1,564 @@
+{
+  "head": "6ae66e1a57effbe702b9c392d3db5057439e8f87",
+  "ownedSource": [
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/page.tsx",
+      "sha256": "D51E7EF7DE6B2DE7C91071F626A45943055363134A7B1B420C30EDB936288DA0",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+      "sha256": "50A94188819B51E5E1DDE11491358148D52AC36B2EBC7C340904F81291D95A28",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/types.ts",
+      "sha256": "F94D2290F18D8C52D826A0C1847E7565EDF9ED57D91BC7578BF109D8FCB84DD7",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+      "sha256": "148585CB3D41975109D37F992D6804212446E704EA694937EBE621F9158AF4F3",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+      "sha256": "12398019A3B2FB57F1FBCAF14911DB33009F9E19C45B6D0BAFD30F98D5835A80",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/request-status-actions.tsx",
+      "sha256": "4327E5FD22CE605A686B582391B1E0AE953B0376858D0100EB3DBBE9061C0DA2",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/pilot-summary.tsx",
+      "sha256": "A0A183BE436E1AB3EAD24D19A01A5F1CC4F4D9FAE4C23CCE4D43D792B0422C02",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-table-browse-navigation.ts",
+      "sha256": "33DF063E7303A62B865D95EC7F386BEBEBD5CFD912B85D2D4E9EF5CE0769D245",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-pilot-table-browse.ts",
+      "sha256": "B1185AFDF779DBCED96E026DA55DEB16CC9FE2AED9A467F1EAA967EA4AA1E369",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/pilot-config.ts",
+      "sha256": "7E548B54DC26C8436D3718EA40066B670C5BB1C1D1F6A881DD68FFF9439657E0",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "sha256": "E14EC728BC1C3B1A02B2B65ACFF3CF692B442C278A01082BD0833E57F52412AD",
+      "previewByteIdentical": true,
+      "previewEquivalentIgnoringTrailingWhitespace": true
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/pilot.test.ts",
+      "sha256": "53088449F7193B7AE7631BAEA01EAA0C18F8134215C815FABAD2AF3BD4F3B73A",
+      "previewByteIdentical": null,
+      "previewEquivalentIgnoringTrailingWhitespace": null
+    },
+    {
+      "path": "supabase/migrations/0112_admin_reference_index_writer_permissions.sql",
+      "sha256": "F19C8A37EDBDA7B85FD09F20C8C0198FFCF03D8B132705132AF28E30DA759AB2",
+      "previewByteIdentical": null,
+      "previewEquivalentIgnoringTrailingWhitespace": null
+    }
+  ],
+  "initialDirtyFilesCompared": 73,
+  "phase2DependenciesIdentical": true,
+  "concurrentUnrelatedDrift": [],
+  "additionalUnrelatedStatusPaths": [
+    "apps/resident-android-mobile/metro.config.js",
+    "plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md",
+    "plans/evidence/resident-web-feedback/README.md",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline-record.md",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/results.json",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/defect-d01-household-false-success.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/defect-d02-family-dialog.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/defect-d03-drawer-skeleton.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/defect-d08-obsolete-drive.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/defect-d14-cancel-failure.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/empty-requests-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/error-read-announcements.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/guest-home-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/guest-home-360.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/guest-login-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/incomplete-home-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/payment-qr-mocked-pending.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/payment-qr-mocked-receipt-refused.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-family-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-home-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-home-360.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-profile-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-receipt-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-reports-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/baseline/screens/resident-requests-1440.png",
+    "plans/evidence/resident-web-feedback/rw-lt-00/checks/build.txt",
+    "plans/evidence/resident-web-feedback/rw-lt-00/checks/lint.txt",
+    "plans/evidence/resident-web-feedback/rw-lt-00/checks/typecheck.txt",
+    "plans/evidence/resident-web-feedback/rw-lt-00/coverage.json",
+    "plans/evidence/resident-web-feedback/rw-lt-00/coverage.md",
+    "plans/evidence/resident-web-feedback/rw-lt-00/fixtures.md",
+    "plans/evidence/resident-web-feedback/rw-lt-00/fixtures/cleanup.json",
+    "plans/evidence/resident-web-feedback/rw-lt-00/fixtures/seed.json",
+    "plans/evidence/resident-web-feedback/rw-lt-00/inventory.json",
+    "scripts/resident-web-feedback-regression.cjs"
+  ],
+  "note": "Initial dirty files were hashed before implementation. Concurrent unrelated drift is recorded, preserved and excluded from Phase 3. This manifest does not claim whole-workspace equality.",
+  "comparisons": [
+    {
+      "path": "apps/resident-android-mobile/app.json",
+      "baselineHash": "DE2A4BCEE6BF2352FA3D24B5387A9EB95F857FC2FAC4D2AB2D6FC662ACB216F5",
+      "currentHash": "DE2A4BCEE6BF2352FA3D24B5387A9EB95F857FC2FAC4D2AB2D6FC662ACB216F5",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "baselineHash": "BB0E695F70D344ADDF411440806F29986F290DD3FE14FDABEEC53513DE596971",
+      "currentHash": "BB0E695F70D344ADDF411440806F29986F290DD3FE14FDABEEC53513DE596971",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "baselineHash": "227A1252F1A2B66CE70EC18AFDC6603821573E9EC23083B1F2C79E8996854E9A",
+      "currentHash": "227A1252F1A2B66CE70EC18AFDC6603821573E9EC23083B1F2C79E8996854E9A",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "baselineHash": "D0239D93C29AB657B65454B3F2FA5D16B4B8C5D0199970B57DF0EB3F6B41844B",
+      "currentHash": "D0239D93C29AB657B65454B3F2FA5D16B4B8C5D0199970B57DF0EB3F6B41844B",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "baselineHash": "B091A600AF19A21967D21FF0437EFD655DD37D1C69B90D398AABC85CA7C68205",
+      "currentHash": "B091A600AF19A21967D21FF0437EFD655DD37D1C69B90D398AABC85CA7C68205",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/center-detail-card.tsx",
+      "baselineHash": "18310F648195B39E8D7FB1DBEF75BA544671F6AC008C00BC9438759A333C8A47",
+      "currentHash": "18310F648195B39E8D7FB1DBEF75BA544671F6AC008C00BC9438759A333C8A47",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/horizontal-center-picker.tsx",
+      "baselineHash": "DFBB9CA2AB37A6C23336B0BC76697511FC201F786BD7C9B8BCB3D10023A2971D",
+      "currentHash": "DFBB9CA2AB37A6C23336B0BC76697511FC201F786BD7C9B8BCB3D10023A2971D",
+      "identical": true
+    },
+    {
+      "path": "apps/resident-android-mobile/src/components/map-view.tsx",
+      "baselineHash": "5B620495AFFB57A7F1529D47857E8952F396FF537A9A50AE1F9B889F72A404CB",
+      "currentHash": "5B620495AFFB57A7F1529D47857E8952F396FF537A9A50AE1F9B889F72A404CB",
+      "identical": true
+    },
+    {
+      "path": "plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md",
+      "baselineHash": "B04BBF69DD9E834E41DDCE8D3E99B1E313A32D33DCF65B90A40B0AD6CEC929B9",
+      "currentHash": "B04BBF69DD9E834E41DDCE8D3E99B1E313A32D33DCF65B90A40B0AD6CEC929B9",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/resident-registration-otp/delivery-results.md",
+      "baselineHash": "F752164DB568641E1D6C31A9D0EDC6B54471265A59CF5B4A5196518D369613F6",
+      "currentHash": "F752164DB568641E1D6C31A9D0EDC6B54471265A59CF5B4A5196518D369613F6",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/resident-registration-otp/live-acceptance.md",
+      "baselineHash": "E0FB79741A60C8648883937610641957AF6CF216C0716F474AA0A56E8C1A0478",
+      "currentHash": "E0FB79741A60C8648883937610641957AF6CF216C0716F474AA0A56E8C1A0478",
+      "identical": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/browse.ts",
+      "baselineHash": "0842077E0CA17BDF41A8D1C0D4AA811381A898DCE76D37FB6246C1923DB6CD54",
+      "currentHash": "0842077E0CA17BDF41A8D1C0D4AA811381A898DCE76D37FB6246C1923DB6CD54",
+      "identical": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/schema.ts",
+      "baselineHash": "3FA16589BE81F1046A3F0DBE3E3D1B80BB9B64177C9CFE894F8E173BED285E60",
+      "currentHash": "3FA16589BE81F1046A3F0DBE3E3D1B80BB9B64177C9CFE894F8E173BED285E60",
+      "identical": true
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "baselineHash": "FFA04583B7FE61DDCD11C1BB07B0A83BC7FC53AC006D07212C45DF74B74107F3",
+      "currentHash": "FFA04583B7FE61DDCD11C1BB07B0A83BC7FC53AC006D07212C45DF74B74107F3",
+      "identical": true
+    },
+    {
+      "path": "apps/admin-web/tests/table-browse/queries.test.ts",
+      "baselineHash": "78FE541376B57974E7B85F56C5313A0EAD789627CF4EAF99426B935586EE19CA",
+      "currentHash": "78FE541376B57974E7B85F56C5313A0EAD789627CF4EAF99426B935586EE19CA",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/README.md",
+      "baselineHash": "76496F4667F529864F94CFCDD47948EB3992479C2BA4AC96D7484A6F10F151C3",
+      "currentHash": "76496F4667F529864F94CFCDD47948EB3992479C2BA4AC96D7484A6F10F151C3",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/build-final.log",
+      "baselineHash": "4A12916AAF1B359C77E19A59E833EEED6A029CC0021C593D938AABAE2B45566F",
+      "currentHash": "4A12916AAF1B359C77E19A59E833EEED6A029CC0021C593D938AABAE2B45566F",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/build.log",
+      "baselineHash": "AEC00D2B5A375A805CE83E1C06D4DC400BF45645EA26120393B6D7D102042092",
+      "currentHash": "AEC00D2B5A375A805CE83E1C06D4DC400BF45645EA26120393B6D7D102042092",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/cleanup.json",
+      "baselineHash": "3CE41272ADB10D947B52926A70DF1554A74C305F78D54F2F5768C7E44E8644DC",
+      "currentHash": "3CE41272ADB10D947B52926A70DF1554A74C305F78D54F2F5768C7E44E8644DC",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/contracts.json",
+      "baselineHash": "8C4A0AC7806C68C07FB566EBF6768B596F777E5B5FB7DA4FC0E8C500C778C5DB",
+      "currentHash": "8C4A0AC7806C68C07FB566EBF6768B596F777E5B5FB7DA4FC0E8C500C778C5DB",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/diagnose.mjs",
+      "baselineHash": "36DBF4C9749F4F3AFCD32FECBDF86F19C55408583D7309478771BF6F4C15005B",
+      "currentHash": "36DBF4C9749F4F3AFCD32FECBDF86F19C55408583D7309478771BF6F4C15005B",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/docs.md",
+      "baselineHash": "46E3427D8A02C910C501FF7D2320536B70622E83CB6F216AFDB6770ACA28DDDE",
+      "currentHash": "46E3427D8A02C910C501FF7D2320536B70622E83CB6F216AFDB6770ACA28DDDE",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/filters.json",
+      "baselineHash": "F3050DCACDC2BBBDE33E9181131D99C139F51A48E93ECD7AF8CA2D16D2969722",
+      "currentHash": "F3050DCACDC2BBBDE33E9181131D99C139F51A48E93ECD7AF8CA2D16D2969722",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/filters.log",
+      "baselineHash": "9FC0B25D5F16F2C3033A4D5BC3B760420AB12623B2BAEE9922248D98AB57E4A1",
+      "currentHash": "9FC0B25D5F16F2C3033A4D5BC3B760420AB12623B2BAEE9922248D98AB57E4A1",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/filters.mjs",
+      "baselineHash": "637BC3A50C62FBB52A7C297F66266CF5AD3ECA79D2862875A1558AE4FDBC5A6E",
+      "currentHash": "637BC3A50C62FBB52A7C297F66266CF5AD3ECA79D2862875A1558AE4FDBC5A6E",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/generate.mjs",
+      "baselineHash": "B7B977E77F8A51A4F9535F68649368FA4F108DA923CC00258FDE75A8B873B436",
+      "currentHash": "B7B977E77F8A51A4F9535F68649368FA4F108DA923CC00258FDE75A8B873B436",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/lint-final.log",
+      "baselineHash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "currentHash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/lint.log",
+      "baselineHash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "currentHash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-after.json",
+      "baselineHash": "D4F8153B828756F62A595B06C4ED9A173251605E6174D349802F3303C92A7759",
+      "currentHash": "D4F8153B828756F62A595B06C4ED9A173251605E6174D349802F3303C92A7759",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-after.log",
+      "baselineHash": "723BC8BF19C3482464197242136151581CFE108BDD7DC8F83C11BD1AF441CBD5",
+      "currentHash": "723BC8BF19C3482464197242136151581CFE108BDD7DC8F83C11BD1AF441CBD5",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-attempt1.log",
+      "baselineHash": "1B2CF857CB4287195D429533703D12CB6DE45A291DC64D66CE3D668EF149FB67",
+      "currentHash": "1B2CF857CB4287195D429533703D12CB6DE45A291DC64D66CE3D668EF149FB67",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-attempt2.log",
+      "baselineHash": "F26C4694BEBC4FE691A8C020D54F361157D7711C3BCB007E936EBC46458B851C",
+      "currentHash": "F26C4694BEBC4FE691A8C020D54F361157D7711C3BCB007E936EBC46458B851C",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-bounded.log",
+      "baselineHash": "344EE9E9694D551ABB8DE292B5B0797831A31952155600E6C2EB36BC14804482",
+      "currentHash": "344EE9E9694D551ABB8DE292B5B0797831A31952155600E6C2EB36BC14804482",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-final.json",
+      "baselineHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "currentHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-final.log",
+      "baselineHash": "311B5CA8A3782A7967AC0655B492EFFAA7297307EB0F92BE9C38666F84AD65D6",
+      "currentHash": "311B5CA8A3782A7967AC0655B492EFFAA7297307EB0F92BE9C38666F84AD65D6",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-first-pass.json",
+      "baselineHash": "D4F8153B828756F62A595B06C4ED9A173251605E6174D349802F3303C92A7759",
+      "currentHash": "D4F8153B828756F62A595B06C4ED9A173251605E6174D349802F3303C92A7759",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance-fresh-schema.json",
+      "baselineHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "currentHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance.json",
+      "baselineHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "currentHash": "29304AE2B48A7164C57BCBED6654B216951C0052C6EC176E2D3B3239C72ED60F",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/performance.mjs",
+      "baselineHash": "F22289AB5EF5362DD873DAA51B7D73AB61208D9775E06B211EA4029540337BDF",
+      "currentHash": "F22289AB5EF5362DD873DAA51B7D73AB61208D9775E06B211EA4029540337BDF",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/plans-before.json",
+      "baselineHash": "92AFFE269F4F1F6261CCDCB785F010163C676CDD85DC26B3FB2E8F83BB1CD575",
+      "currentHash": "92AFFE269F4F1F6261CCDCB785F010163C676CDD85DC26B3FB2E8F83BB1CD575",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/results.json",
+      "baselineHash": "56C803CDE0D2D6D7703575D993105E8E218F91ADF29A4132B6FD5FB26E44C1DA",
+      "currentHash": "56C803CDE0D2D6D7703575D993105E8E218F91ADF29A4132B6FD5FB26E44C1DA",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/runtime.mjs",
+      "baselineHash": "1D5D860A92A1FF0D5288E09EA2880F6B32B87A629633FA703B18C438BF80D8E5",
+      "currentHash": "1D5D860A92A1FF0D5288E09EA2880F6B32B87A629633FA703B18C438BF80D8E5",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/search-probe-final.log",
+      "baselineHash": "1D3B132992C02360A2EC6E39689894DD7A77E623616511CB02460A3880AC090F",
+      "currentHash": "1D3B132992C02360A2EC6E39689894DD7A77E623616511CB02460A3880AC090F",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/search-probe.log",
+      "baselineHash": "8B378369EC1C08E6928DFDF5F6767493DA94037F0EC443B96BB34B031C67FAE9",
+      "currentHash": "8B378369EC1C08E6928DFDF5F6767493DA94037F0EC443B96BB34B031C67FAE9",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/search-probe.mjs",
+      "baselineHash": "A37C37EA5AACF5AA6F434300BADB27527647BAC5607ABE9DFA707AABFCD9AEF0",
+      "currentHash": "A37C37EA5AACF5AA6F434300BADB27527647BAC5607ABE9DFA707AABFCD9AEF0",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/security-final.log",
+      "baselineHash": "5842AFF21AFAC90880D245FCFC415691C22D7A484AF6CBA5447CB1E4A72F574A",
+      "currentHash": "5842AFF21AFAC90880D245FCFC415691C22D7A484AF6CBA5447CB1E4A72F574A",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/security-performance.log",
+      "baselineHash": "988F46E5130183C6CEC86C096B90F6668F7EE1FD00F2D8ADD85F0D6D7AA1C581",
+      "currentHash": "988F46E5130183C6CEC86C096B90F6668F7EE1FD00F2D8ADD85F0D6D7AA1C581",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/security.json",
+      "baselineHash": "B3A178120ED7C6C510E4B77BE0F0C71710BB02242C74D7C54D2C0FDB496D10B2",
+      "currentHash": "B3A178120ED7C6C510E4B77BE0F0C71710BB02242C74D7C54D2C0FDB496D10B2",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/security.log",
+      "baselineHash": "43E29D1250F5CF10E810AFCD11FB09E5E0518A907B74E11F384A0D22E3AB0BC9",
+      "currentHash": "43E29D1250F5CF10E810AFCD11FB09E5E0518A907B74E11F384A0D22E3AB0BC9",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/security.mjs",
+      "baselineHash": "B7B3965064FE59049177D5FBB5384A5651C203E8EC2FB88345F1A8084F45A84E",
+      "currentHash": "B7B3965064FE59049177D5FBB5384A5651C203E8EC2FB88345F1A8084F45A84E",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/sort-progress.json",
+      "baselineHash": "D6EC0B8E7E1969E82B1711482327FFF7B1F27FF9AC9E292FF300CD5A499C45E5",
+      "currentHash": "D6EC0B8E7E1969E82B1711482327FFF7B1F27FF9AC9E292FF300CD5A499C45E5",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/stack.json",
+      "baselineHash": "D2D2842EC300F01B0CFEF04032961D92AB3E1C053B602D1043A836D5BAA49907",
+      "currentHash": "D2D2842EC300F01B0CFEF04032961D92AB3E1C053B602D1043A836D5BAA49907",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/start-attempt2.log",
+      "baselineHash": "497321E420366B247A2786C2EBF6A5308EEB6C3CC3A25FE48C378A366A656781",
+      "currentHash": "497321E420366B247A2786C2EBF6A5308EEB6C3CC3A25FE48C378A366A656781",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/start-attempt3.log",
+      "baselineHash": "41C614C2F441227361C4F8061595589F7BB18C6A2A9AD707A59DE282E97BC9CE",
+      "currentHash": "41C614C2F441227361C4F8061595589F7BB18C6A2A9AD707A59DE282E97BC9CE",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/start-final.log",
+      "baselineHash": "41C614C2F441227361C4F8061595589F7BB18C6A2A9AD707A59DE282E97BC9CE",
+      "currentHash": "41C614C2F441227361C4F8061595589F7BB18C6A2A9AD707A59DE282E97BC9CE",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/typecheck-final.log",
+      "baselineHash": "ABF4A2CAAB86D9D096E9E55274110690E4905F51E3EA8D86DC10A05445909AF0",
+      "currentHash": "ABF4A2CAAB86D9D096E9E55274110690E4905F51E3EA8D86DC10A05445909AF0",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/typecheck.log",
+      "baselineHash": "ABF4A2CAAB86D9D096E9E55274110690E4905F51E3EA8D86DC10A05445909AF0",
+      "currentHash": "ABF4A2CAAB86D9D096E9E55274110690E4905F51E3EA8D86DC10A05445909AF0",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/unit-tests-final.log",
+      "baselineHash": "5C746826B44CB9A65438A488E78F542AC7D47F93A5E53155AF96CBA6A46AFDCA",
+      "currentHash": "5C746826B44CB9A65438A488E78F542AC7D47F93A5E53155AF96CBA6A46AFDCA",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/unit-tests-final2.log",
+      "baselineHash": "5104A5120E3023077757DB217FBD02DA3246497BE3C3B9E643E3BC786C66D289",
+      "currentHash": "5104A5120E3023077757DB217FBD02DA3246497BE3C3B9E643E3BC786C66D289",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/unit-tests-final3.log",
+      "baselineHash": "F4AA8ADFA254867D19F0E87C646F8A791018185DF7A0EE784C1EEF802426125D",
+      "currentHash": "F4AA8ADFA254867D19F0E87C646F8A791018185DF7A0EE784C1EEF802426125D",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/unit-tests.log",
+      "baselineHash": "8D358FD270254A1AF3F166E67136A79D3E5F89EED1B69A7A78F1F6230E34EEC4",
+      "currentHash": "8D358FD270254A1AF3F166E67136A79D3E5F89EED1B69A7A78F1F6230E34EEC4",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt1.log",
+      "baselineHash": "DB43EC80E07040C28DD577AA0276E7B0FFC491F50481C1A00AF6E7D9024DF0CB",
+      "currentHash": "DB43EC80E07040C28DD577AA0276E7B0FFC491F50481C1A00AF6E7D9024DF0CB",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt2.log",
+      "baselineHash": "7EF83748A826601614B4ADBF993943EE559C1E1B103398334E512C10BB6BC720",
+      "currentHash": "7EF83748A826601614B4ADBF993943EE559C1E1B103398334E512C10BB6BC720",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt3.log",
+      "baselineHash": "FAAEDA6C451E21DEE77108382E1B972DFBD2B155666C697235A2F8710677268C",
+      "currentHash": "FAAEDA6C451E21DEE77108382E1B972DFBD2B155666C697235A2F8710677268C",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt4.log",
+      "baselineHash": "B760AE4EAD2DFA1A7382780F9C401F1E031ED55488EAE73BEE02954F94F70E72",
+      "currentHash": "B760AE4EAD2DFA1A7382780F9C401F1E031ED55488EAE73BEE02954F94F70E72",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt5.log",
+      "baselineHash": "5893CD6EE6B33FD26C098BDF3FD766178A79F6B3B00CE79DB3185C1F671AE4FF",
+      "currentHash": "5893CD6EE6B33FD26C098BDF3FD766178A79F6B3B00CE79DB3185C1F671AE4FF",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt6.log",
+      "baselineHash": "9D0B09B02A06B607CBB128BD7926CB7227C592CD5DC26512D4D264A57B44D405",
+      "currentHash": "9D0B09B02A06B607CBB128BD7926CB7227C592CD5DC26512D4D264A57B44D405",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-attempt7.log",
+      "baselineHash": "AA8D4C8AC0FAFEFB0471CAA42C23E45D5C831AB8089E63A809CAF9E0D536A8F0",
+      "currentHash": "AA8D4C8AC0FAFEFB0471CAA42C23E45D5C831AB8089E63A809CAF9E0D536A8F0",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-final.log",
+      "baselineHash": "AE3AFE796F22086BADDA9AE5F2857B61748A20CADED49D619434AE64E3273C93",
+      "currentHash": "AE3AFE796F22086BADDA9AE5F2857B61748A20CADED49D619434AE64E3273C93",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify-targeted.log",
+      "baselineHash": "1D9B418A4D437073108FC45E58CC38948BBE330A9B746211D3E3A65DC971334D",
+      "currentHash": "1D9B418A4D437073108FC45E58CC38948BBE330A9B746211D3E3A65DC971334D",
+      "identical": true
+    },
+    {
+      "path": "plans/evidence/admin-table-phase2/verify.mjs",
+      "baselineHash": "6D173CC820B1C5164D9EEC917655627378BF37E9C29B0527C30B566969C0314D",
+      "currentHash": "6D173CC820B1C5164D9EEC917655627378BF37E9C29B0527C30B566969C0314D",
+      "identical": true
+    },
+    {
+      "path": "supabase/migrations/0110_admin_table_browse_projections.sql",
+      "baselineHash": "C1270164A661639AC1690226D49050D85D5B3D54D019FA7830B94EAF898EF966",
+      "currentHash": "C1270164A661639AC1690226D49050D85D5B3D54D019FA7830B94EAF898EF966",
+      "identical": true
+    },
+    {
+      "path": "supabase/migrations/0111_admin_table_browse_read_performance.sql",
+      "baselineHash": "1531E20FE87D8E38175CFD04039E414D4E7332815D6FED7C7F83B869548BDA1D",
+      "currentHash": "1531E20FE87D8E38175CFD04039E414D4E7332815D6FED7C7F83B869548BDA1D",
+      "identical": true
+    }
+  ]
+}

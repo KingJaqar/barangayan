@@ -1,0 +1,328 @@
+{
+  "checks": [
+    {
+      "name": "requests",
+      "tab": "active",
+      "key": "doc",
+      "value": "30000000-0000-4000-8000-000000000001",
+      "validated": {
+        "tab": "active",
+        "doc": "30000000-0000-4000-8000-000000000001"
+      },
+      "total": 1505
+    },
+    {
+      "name": "requests",
+      "tab": "processing",
+      "validated": {
+        "tab": "processing",
+        "doc": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "requests",
+      "tab": "pickup",
+      "validated": {
+        "tab": "pickup",
+        "doc": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "requests",
+      "tab": "completed",
+      "validated": {
+        "tab": "completed",
+        "doc": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "requests",
+      "tab": "cancelled",
+      "validated": {
+        "tab": "cancelled",
+        "doc": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "transactions",
+      "tab": "pending",
+      "key": "method",
+      "value": "pickup",
+      "validated": {
+        "tab": "pending",
+        "method": "pickup"
+      },
+      "total": 753
+    },
+    {
+      "name": "transactions",
+      "tab": "pending",
+      "key": "method",
+      "value": "qrph",
+      "validated": {
+        "tab": "pending",
+        "method": "qrph"
+      },
+      "total": 752
+    },
+    {
+      "name": "transactions",
+      "tab": "paid",
+      "validated": {
+        "tab": "paid",
+        "method": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "transactions",
+      "tab": "failed",
+      "validated": {
+        "tab": "failed",
+        "method": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "transactions",
+      "tab": "expired",
+      "validated": {
+        "tab": "expired",
+        "method": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "transactions",
+      "tab": "refunded",
+      "validated": {
+        "tab": "refunded",
+        "method": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "residents",
+      "tab": "verified",
+      "validated": {
+        "tab": "verified",
+        "verification": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "residents",
+      "tab": "unverified",
+      "key": "verification",
+      "value": "with_id",
+      "validated": {
+        "tab": "unverified",
+        "verification": "with_id"
+      },
+      "total": 0
+    },
+    {
+      "name": "residents",
+      "tab": "unverified",
+      "key": "verification",
+      "value": "without_id",
+      "validated": {
+        "tab": "unverified",
+        "verification": "without_id"
+      },
+      "total": 1505
+    },
+    {
+      "name": "incidents",
+      "tab": "open",
+      "key": "category",
+      "value": "60000000-0000-4000-8000-000000000001",
+      "validated": {
+        "tab": "open",
+        "category": "60000000-0000-4000-8000-000000000001"
+      },
+      "total": 1504
+    },
+    {
+      "name": "incidents",
+      "tab": "in_progress",
+      "validated": {
+        "tab": "in_progress",
+        "category": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "incidents",
+      "tab": "resolved",
+      "validated": {
+        "tab": "resolved",
+        "category": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "incidents",
+      "tab": "withdrawn",
+      "validated": {
+        "tab": "withdrawn",
+        "category": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "incidents",
+      "tab": "unresolved",
+      "validated": {
+        "tab": "unresolved",
+        "category": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "health",
+      "tab": "upcoming",
+      "key": "type",
+      "value": "consultation",
+      "validated": {
+        "tab": "upcoming",
+        "type": "consultation"
+      },
+      "total": 1505
+    },
+    {
+      "name": "health",
+      "tab": "today",
+      "validated": {
+        "tab": "today",
+        "type": ""
+      },
+      "total": 1505
+    },
+    {
+      "name": "health",
+      "tab": "past",
+      "validated": {
+        "tab": "past",
+        "type": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "health",
+      "tab": "inactive",
+      "validated": {
+        "tab": "inactive",
+        "type": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "applicants",
+      "tab": "pending",
+      "key": "type",
+      "value": "consultation",
+      "validated": {
+        "tab": "pending",
+        "type": "consultation"
+      },
+      "total": 1505
+    },
+    {
+      "name": "applicants",
+      "tab": "confirmed",
+      "validated": {
+        "tab": "confirmed",
+        "type": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "applicants",
+      "tab": "attended",
+      "validated": {
+        "tab": "attended",
+        "type": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "applicants",
+      "tab": "cancelled",
+      "validated": {
+        "tab": "cancelled",
+        "type": ""
+      },
+      "total": 1
+    },
+    {
+      "name": "households",
+      "tab": "checked_in",
+      "validated": {
+        "tab": "checked_in",
+        "relation": ""
+      },
+      "total": 0
+    },
+    {
+      "name": "households",
+      "tab": "not_checked_in",
+      "key": "relation",
+      "value": "child",
+      "validated": {
+        "tab": "not_checked_in",
+        "relation": "child"
+      },
+      "total": 1
+    },
+    {
+      "name": "households",
+      "tab": "all",
+      "key": "relation",
+      "value": "Child",
+      "validated": {
+        "tab": "all",
+        "relation": ""
+      },
+      "total": 1505
+    },
+    {
+      "name": "staff",
+      "tab": "admin",
+      "key": "role",
+      "value": "admin",
+      "validated": {
+        "tab": "admin",
+        "role": "admin"
+      },
+      "total": 502
+    },
+    {
+      "name": "staff",
+      "tab": "staff",
+      "key": "role",
+      "value": "health_worker",
+      "validated": {
+        "tab": "staff",
+        "role": "health_worker"
+      },
+      "total": 501
+    },
+    {
+      "name": "staff",
+      "tab": "staff",
+      "key": "role",
+      "value": "staff",
+      "validated": {
+        "tab": "staff",
+        "role": "staff"
+      },
+      "total": 502
+    }
+  ],
+  "nullableRelationship": true
+}

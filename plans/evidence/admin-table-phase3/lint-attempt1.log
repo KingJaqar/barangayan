@@ -1,0 +1,23 @@
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\requests\requests-table.tsx
+  7:21  warning  'useRef' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\admin-web\src\app\(admin)\transactions\transactions-table.tsx
+  5:10  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-pilot-table-browse.ts
+  28:3  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+C:\Users\User\barangayan\apps\admin-web\src\hooks\use-pilot-table-browse.ts:28:3
+  26 |   const refreshCallback = useRef<() => Promise<void>>(async () => {});
+  27 |   const coordinator = useRef<ReturnType<typeof createRefreshCoordinator> | null>(null);
+> 28 |   refreshCallback.current = () => new Promise<void>((resolve, reject) => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+  29 |     setRefreshError(null);
+  30 |     refreshWait.current = { resolve, reject, started: false };
+  31 |     startRefresh(() => router.refresh());  react-hooks/refs
+
+✖ 3 problems (1 error, 2 warnings)
+

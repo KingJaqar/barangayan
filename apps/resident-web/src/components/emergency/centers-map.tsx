@@ -1,11 +1,11 @@
 'use client';
 
-import type { LatLng } from '@barangayan/shared';
+import type { ConfirmedOrigin, LatLng, LocationFix } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import L from 'leaflet';
 import { ChevronDown, RotateCcw } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { GeoJSON, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
+import { Circle, GeoJSON, MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
 
 import { BoundaryFitButton } from '@/components/maps/boundary-fit-button';
 import { FullscreenSync } from '@/components/maps/fullscreen-sync';
@@ -31,6 +31,13 @@ const centerIcon = createIcon('#10B981');
 const selectedCenterIcon = createIcon('#0F6E5B');
 const userIcon = L.divIcon({
   html: `<div style="width:16px;height:16px;border-radius:9999px;background:#2563EB;border:3px solid white;box-shadow:0 0 0 1px rgba(0,0,0,0.15)"></div>`,
+  className: '',
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+});
+/** A fix awaiting confirmation — not yet the routing origin. */
+const pendingUserIcon = L.divIcon({
+  html: `<div style="width:16px;height:16px;border-radius:9999px;background:#B45309;opacity:0.7;border:3px dashed white;box-shadow:0 0 0 1px rgba(0,0,0,0.15)"></div>`,
   className: '',
   iconSize: [16, 16],
   iconAnchor: [8, 8],
@@ -82,6 +89,36 @@ function FocusOnSelect({ selectedCenter }: { selectedCenter: EvacuationCenterWit
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, selectedCenter?.id, selectedCenter?.position.lat, selectedCenter?.position.lng]);
+
+  return null;
+}
+
+/** After an explicit "Use my location", flies to the fix awaiting confirmation and then to
+ * the accepted origin. Map movement never changes the origin; only the reverse happens. */
+function FollowLocateResult({
+  followRef,
+  origin,
+  pendingFix,
+}: {
+  followRef: { current: boolean };
+  origin: ConfirmedOrigin | null;
+  pendingFix: LocationFix | null;
+}) {
+  const map = useMap();
+  const target = pendingFix ?? origin;
+  const targetLat = target?.lat;
+  const targetLng = target?.lng;
+
+  useEffect(() => {
+    if (!followRef.current || targetLat === undefined || targetLng === undefined) return;
+    // An accepted origin ends the follow; a pending fix may still be replaced by a better one.
+    if (!pendingFix) followRef.current = false;
+    const raf = requestAnimationFrame(() => {
+      map.closePopup();
+      map.flyTo([targetLat, targetLng], Math.max(map.getZoom(), FOCUS_ZOOM), { duration: 0.6 });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [map, followRef, targetLat, targetLng, pendingFix]);
 
   return null;
 }
@@ -145,29 +182,42 @@ function ResetViewButton({
  */
 export function CentersMap({
   centers,
-  userPosition,
-  onUserPositionChange,
+  origin,
+  pendingFix,
+  locating,
+  onLocate,
   selectedCenterId,
   onSelectCenter,
   onShowAll,
   routePoints,
   routeMeta,
+  routeStatus = 'idle',
   boundary,
 }: {
   centers: EvacuationCenterWithDistance[];
-  userPosition: LatLng | null;
-  onUserPositionChange: (position: LatLng) => void;
+  origin: ConfirmedOrigin | null;
+  pendingFix: LocationFix | null;
+  locating: boolean;
+  onLocate: () => void;
   selectedCenterId: string | null;
   onSelectCenter: (id: string) => void;
   onShowAll: () => void;
   routePoints: LatLng[] | null;
   routeMeta: { distanceMeters: number; durationSeconds: number } | null;
+  routeStatus?: 'idle' | 'loading' | 'ready' | 'unavailable';
   boundary: Polygon | MultiPolygon | null;
 }) {
   const [search, setSearch] = useState('');
   const [pickerOpen, setPickerOpen] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(containerRef);
+  const followLocateRef = useRef(false);
+  const userPosition = useMemo<LatLng | null>(() => (origin ? { lat: origin.lat, lng: origin.lng } : null), [origin]);
+
+  function handleLocate() {
+    followLocateRef.current = true;
+    onLocate();
+  }
 
   const visibleCenters = useMemo(() => {
     if (!search.trim()) return centers;
@@ -198,15 +248,42 @@ export function CentersMap({
           <MapFitter points={fitPoints} />
           <FocusOnSelect selectedCenter={selectedCenter} />
           <FullscreenSync isFullscreen={isFullscreen} />
+          <FollowLocateResult followRef={followLocateRef} origin={origin} pendingFix={pendingFix} />
 
           {boundary ? (
             <GeoJSON data={boundary} style={{ color: '#DC2626', weight: 3, opacity: 0.95, fillColor: '#DC2626', fillOpacity: 0.04 }} />
           ) : null}
 
-          {userPosition ? (
-            <Marker position={[userPosition.lat, userPosition.lng]} icon={userIcon}>
-              <Popup>You are here</Popup>
-            </Marker>
+          {origin ? (
+            <>
+              {origin.accuracyMeters ? (
+                <Circle
+                  center={[origin.lat, origin.lng]}
+                  radius={origin.accuracyMeters}
+                  pathOptions={{ color: '#2563EB', weight: 1, fillOpacity: 0.12 }}
+                  interactive={false}
+                />
+              ) : null}
+              <Marker position={[origin.lat, origin.lng]} icon={userIcon}>
+                <Popup>{origin.fixSource === 'last-known' ? 'Your last known location' : 'You are here'}</Popup>
+              </Marker>
+            </>
+          ) : null}
+
+          {pendingFix ? (
+            <>
+              {pendingFix.accuracyMeters ? (
+                <Circle
+                  center={[pendingFix.lat, pendingFix.lng]}
+                  radius={pendingFix.accuracyMeters}
+                  pathOptions={{ color: '#B45309', weight: 1, dashArray: '4 4', fillOpacity: 0.1 }}
+                  interactive={false}
+                />
+              ) : null}
+              <Marker position={[pendingFix.lat, pendingFix.lng]} icon={pendingUserIcon}>
+                <Popup>Location awaiting your confirmation</Popup>
+              </Marker>
+            </>
           ) : null}
 
           {visibleCenters.map((center) => (
@@ -227,7 +304,7 @@ export function CentersMap({
           ) : null}
 
           <MapSearchBar value={search} onChange={setSearch} placeholder="Search evacuation centers…" />
-          <LocateButton onLocated={onUserPositionChange} />
+          <LocateButton onRequest={handleLocate} isLocating={locating} />
           <ResetViewButton boundary={boundary} points={fitPoints} selectedCenter={selectedCenter} />
           <BoundaryFitButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </MapContainer>
@@ -253,10 +330,14 @@ export function CentersMap({
                   <p className="mt-1 text-xs text-muted-foreground">
                     {(routeMeta.distanceMeters / 1000).toFixed(1)} km · ~{Math.round(routeMeta.durationSeconds / 60)} min walking (road route)
                   </p>
-                ) : userPosition ? (
-                  <p className="mt-1 text-xs text-muted-foreground">Fetching walking route…</p>
+                ) : routeStatus === 'loading' ? (
+                  <p role="status" className="mt-1 text-xs text-muted-foreground">Fetching walking route…</p>
+                ) : routeStatus === 'unavailable' ? (
+                  <p role="status" className="mt-1 text-xs text-muted-foreground">
+                    Walking route unavailable right now. The distance shown on the list is a straight-line estimate.
+                  </p>
                 ) : (
-                  <p className="mt-1 text-xs text-muted-foreground">Enable location to see a walking route.</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Set your location to see a walking route.</p>
                 )}
               </div>
             ) : null}

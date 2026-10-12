@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "combined filters/search preserve independent summaries and atomic first-page reset",
+    "rapid delayed navigation, Back cancellation and one invalid-page correction",
+    "independent table, summary and options errors retain full query on retry"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

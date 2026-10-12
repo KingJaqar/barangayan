@@ -1,0 +1,12 @@
+locator.innerText: Error: strict mode violation: locator('.table-browse-pagination') resolved to 2 elements:
+    1) <div class="table-browse-pagination">…</div> aka getByText('Showing 0–0 of 0Rows per page')
+    2) <nav aria-label="Table pages" class="table-browse-pagination">…</nav> aka getByRole('navigation', { name: 'Table pages' })
+
+Call log:
+  - waiting for locator('.table-browse-pagination')
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:114:70
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:81:55 {
+  log: [ "  - waiting for locator('.table-browse-pagination')" ]
+}

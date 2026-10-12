@@ -1,0 +1,89 @@
+{
+  "phase": 4,
+  "complete": true,
+  "verifiedAt": "2026-10-11T23:15:30.145Z",
+  "sourceHead": "6ae66e1a57effbe702b9c392d3db5057439e8f87",
+  "scope": [
+    "Directory",
+    "Households & Residents",
+    "Staff Members"
+  ],
+  "phase5Started": false,
+  "phase6Started": false,
+  "migrationChanges": 0,
+  "hostedWrites": false,
+  "residentUIChanges": false,
+  "static": {
+    "unitTests": 65,
+    "lint": "passed",
+    "typecheck": "passed",
+    "productionBuild": "passed (webpack)",
+    "logs": [
+      "unit-tests-complete.log",
+      "lint-complete.log",
+      "typecheck-complete.log",
+      "build-complete.log",
+      "whitespace-complete.log"
+    ]
+  },
+  "integration": {
+    "globalSortDirections": 48,
+    "completePaging": "passed on all three routes; more than 1500 rows each before action tests",
+    "browsers": [
+      {
+        "engine": "firefox",
+        "version": "153.0"
+      },
+      {
+        "engine": "webkit",
+        "version": "26.5"
+      }
+    ],
+    "routePermissions": 12,
+    "sharedBrowserGroups": 33,
+    "realtime": {
+      "events": 3,
+      "whileEditing": 0,
+      "afterCancel": 1
+    },
+    "mountCycles": 10,
+    "timingsP95Ms": {
+      "residents": 642.5819999999985,
+      "households-residents": 774.3728999999985,
+      "staff": 610.5796999999948
+    },
+    "profile": "loopback/unthrottled development preview; approximately 1500 records per route; database and REST two CPUs each; ten warm samples per route"
+  },
+  "reports": [
+    "acceptance-browsing-partial.json (first five completed groups only)",
+    "acceptance-remaining.json",
+    "acceptance-actions.json",
+    "acceptance-matrix.json",
+    "route-permissions.json",
+    "detail-realtime-attempt2.json (two completed groups only)",
+    "detail-realtime-attempt3.json (two completed groups only)",
+    "detail-realtime.json",
+    "final-flows-attempt1.json (first completed group only)",
+    "final-flows.json",
+    "browser-results.json"
+  ],
+  "cleanup": {
+    "timestamp": "2026-10-11T23:07:10.402Z",
+    "removed": [
+      "barangayan-admin-phase4-realtime",
+      "barangayan-admin-phase4-auth",
+      "barangayan-admin-phase4-rest",
+      "barangayan-admin-phase4-db"
+    ],
+    "networkRemoved": true,
+    "privateCredentialsRemoved": true,
+    "remainingOwnedContainers": ""
+  },
+  "blockers": [],
+  "limitations": [
+    "Migrations 0110–0112 were applied only to disposable fixtures; release remains Phase 6.",
+    "Storage signing/images were synthetic; actual ID review RPC, request history and audit used the fixture.",
+    "Invitation provider delivery, hosted acceptance/advisors, native Safari/Edge, physical inputs/OS scrollbars, native zoom, manual screen readers and 100k deep pages remain unverified release work."
+  ],
+  "note": "Failed reports remain failures. Only explicitly completed positive groups are reused from partial reports. No production-readiness claim."
+}

@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "checks": [],
+  "errors": [],
+  "samples": [],
+  "mounts": [],
+  "refreshes": null,
+  "failure": "locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('tbody tr td').first().locator('input')\u001b[22m\n\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\detail-realtime.mjs:49:130\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\detail-realtime.mjs:11:39)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:46:3"
+}

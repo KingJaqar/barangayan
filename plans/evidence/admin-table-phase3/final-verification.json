@@ -1,0 +1,146 @@
+{
+  "phase": 3,
+  "status": "complete",
+  "recordedAt": "2026-10-11T22:15:53.176Z",
+  "verifiedGroups": [
+    {
+      "source": "acceptance-attempt3.json",
+      "checks": [
+        "chrome: requests defaults, ranges, sort controls, scrolling and responsive access",
+        "chrome: transactions defaults, ranges, sort controls, scrolling and responsive access",
+        "Chrome: every advertised sort in both directions matches the database before paging",
+        "Chrome: concatenated 1505-row pages on both routes have no gaps or duplicate records",
+        "Chrome: delayed rapid changes merge the draft, cancel history debounce and commit only the latest query",
+        "Chrome: query, summary and option failures are independent and retries retain the full query",
+        "Chrome: invalid pages are corrected once, including removal of the last matching row",
+        "Chrome: failed request save retains its draft, blocks navigation, then retries and audits the same record"
+      ],
+      "scope": "Eight completed groups only; full attempt stopped later on an incorrect action locator."
+    },
+    {
+      "source": "acceptance-actions-final.json",
+      "checks": [
+        "Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact",
+        "Chrome: transaction edits, paid amount guard, refund submission/retry/claim link and archive"
+      ]
+    },
+    {
+      "source": "browser-matrix-verified.json",
+      "checks": [
+        "firefox: requests defaults, ranges, sort controls, scrolling and responsive access",
+        "firefox: transactions defaults, ranges, sort controls, scrolling and responsive access",
+        "webkit: requests defaults, ranges, sort controls, scrolling and responsive access",
+        "webkit: transactions defaults, ranges, sort controls, scrolling and responsive access"
+      ]
+    },
+    {
+      "source": "reconciliation-final.json",
+      "checks": [
+        "Actual request Realtime events defer during an edit and reconcile a burst without losing draft identity",
+        "Ten client route mount cycles leave one request subscription and table observer counts at baseline",
+        "Warm loopback control-to-committed-results timings are recorded for both pilot routes"
+      ]
+    },
+    {
+      "source": "creation.json",
+      "checks": [
+        "Complete options permit request creation for a resident beyond the API cap; archive refreshes exact membership"
+      ],
+      "scope": "Completed request creation/archive group only; later transaction locator corrected in separate passing run."
+    },
+    {
+      "source": "transaction-creation.json",
+      "checks": [
+        "Transaction request lookup chooses the latest reference, creates a centavo-accurate ledger row and audits archive"
+      ]
+    },
+    {
+      "source": "route-permissions.json",
+      "cases": [
+        {
+          "user": "anon",
+          "route": "requests",
+          "result": "redirected to login"
+        },
+        {
+          "user": "anon",
+          "route": "transactions",
+          "result": "redirected to login"
+        },
+        {
+          "user": "resident",
+          "route": "requests",
+          "result": "redirected to login"
+        },
+        {
+          "user": "resident",
+          "route": "transactions",
+          "result": "redirected to login"
+        },
+        {
+          "user": "removedAdmin",
+          "route": "requests",
+          "result": "redirected to login"
+        },
+        {
+          "user": "removedAdmin",
+          "route": "transactions",
+          "result": "redirected to login"
+        },
+        {
+          "user": "foreignAdmin",
+          "route": "requests",
+          "result": "only own tenant; zero matching rows"
+        },
+        {
+          "user": "foreignAdmin",
+          "route": "transactions",
+          "result": "only own tenant; zero matching rows"
+        }
+      ]
+    }
+  ],
+  "staticChecks": {
+    "unitTests": 65,
+    "typecheck": "passed",
+    "fullAdminLint": "passed",
+    "productionBuild": "passed (webpack)",
+    "logs": [
+      "unit-tests-final.log",
+      "typecheck-final.log",
+      "full-lint.log",
+      "build-final.log"
+    ]
+  },
+  "timing": {
+    "profile": "Loopback, unthrottled, Next development preview; 1,505 rows per pilot table, DB/REST each two CPUs; warm Next/Previous commits",
+    "requests": {
+      "samples": 10,
+      "p95Ms": 658.26
+    },
+    "transactions": {
+      "samples": 10,
+      "p95Ms": 706.54
+    }
+  },
+  "migration": {
+    "new": "0112_admin_reference_index_writer_permissions.sql",
+    "permissionsVerified": true,
+    "appliedTo": "task-owned fixture only",
+    "deploymentPrerequisites": [
+      "0110",
+      "0111",
+      "0112"
+    ]
+  },
+  "resourcesCleaned": true,
+  "scopeManifest": "scope.json",
+  "finalChecks": "final-checks.json",
+  "limitations": [
+    "No hosted/source migration application or deployment; Phase 6 release remains unstarted.",
+    "Refund provider submission is mocked; confirmation read, guards, UI and audit are real. No PayMongo integration claim.",
+    "Native Safari/Edge, physical input and manual screen-reader checks unavailable; WebKit is engine coverage.",
+    "Earlier WebKit notification access-control errors and a Firefox navigation-aborted background read are retained. Settled browser repeat has no uncaught errors; precise earlier error cause is unproven. Shared notification code is unchanged.",
+    "Core and request-creation evidence uses only completed groups from stopped attempts; corrected action, transaction, Realtime and browser groups have separate passing reports."
+  ]
+}

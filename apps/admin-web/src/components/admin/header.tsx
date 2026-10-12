@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import styles from './admin-navigation.module.css';
 import type { LucideIcon } from 'lucide-react';
 import {
   Bell,
@@ -17,6 +18,7 @@ import {
   MapPin,
   Megaphone,
   Menu,
+  Search,
   QrCode,
   ReceiptText,
   ScrollText,
@@ -74,11 +76,12 @@ interface HeaderProps {
   barangayName: string;
   adminName: string;
   barangayId: string;
+  sidebarCollapsed: boolean;
   onToggleSidebar: () => void;
   onLogout: () => void;
 }
 
-export function Header({ barangayName, adminName, barangayId, onToggleSidebar, onLogout }: HeaderProps) {
+export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, onToggleSidebar, onLogout }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -174,12 +177,12 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
   }
 
   return (
-    <header className="flex items-center gap-4 border-b border-black/10 bg-white px-4 py-3 dark:border-white/10 dark:bg-zinc-950">
-      <button onClick={onToggleSidebar} className="rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800" aria-label="Toggle sidebar">
+    <header className={`flex items-center border-b ${styles.header}`}>
+      <button onClick={onToggleSidebar} className={styles.menuButton} aria-label="Toggle sidebar" aria-expanded={!sidebarCollapsed} aria-controls="admin-sidebar">
         <Menu className="size-5" {...ICON_STROKE} />
       </button>
 
-      <div className="flex items-center gap-2">
+      <div className={styles.brand}>
         <Image
           src="/assets/logo/barangayan-logo-1024.png"
           alt="Barangayan logo"
@@ -189,20 +192,22 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
           priority
         />
         <div>
-          <p className="font-serif text-sm font-bold leading-tight">Barangayan</p>
-          <p className="text-xs leading-tight text-zinc-500">{barangayName} admin</p>
+          <p className={styles.brandName}>Barangayan</p>
+          <p className={styles.brandDetail}>{barangayName} admin</p>
         </div>
       </div>
 
       {section ? (
-        <div className="ml-4 hidden items-center gap-1.5 text-sm font-semibold text-[var(--accent)] md:flex">
+        <div className={`hidden items-center md:flex ${styles.currentSection}`}>
           <section.icon className="size-4" {...ICON_STROKE} />
           <span>{section.label}</span>
         </div>
       ) : null}
 
-      <div className="relative ml-4 flex-1 max-w-xl">
+      <div className={styles.search}>
+        <Search className={styles.searchIcon} aria-hidden="true" />
         <input
+          aria-label="Search residents, requests, and incidents"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search residents, requests, incidents..."
@@ -228,7 +233,8 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
       <div className="relative" ref={notifRef}>
         <button
           onClick={() => setShowNotifications((v) => !v)}
-          className="relative rounded-full p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className={`relative rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 ${styles.bell}`}
+          aria-expanded={showNotifications}
           aria-label="Notifications"
         >
           <Bell className="size-5" {...ICON_STROKE} />
@@ -240,7 +246,7 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
         </button>
 
         {showNotifications ? (
-          <div className="absolute right-0 z-20 mt-2 w-[26rem] rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900">
+          <div className={`absolute right-0 z-20 mt-2 rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900 ${styles.notificationPopover}`}>
             {/* Header */}
             <div className="border-b border-black/10 px-4 py-3 dark:border-white/10">
               <div className="flex items-center justify-between gap-3">
@@ -347,7 +353,9 @@ export function Header({ barangayName, adminName, barangayId, onToggleSidebar, o
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setShowProfileMenu((v) => !v)}
-          className="flex items-center gap-2 rounded-full border border-zinc-200 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800">
+          aria-label="Account menu"
+          aria-expanded={showProfileMenu}
+          className={`flex items-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${styles.profile}`}>
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold dark:bg-zinc-700">
             {adminName.charAt(0).toUpperCase() || 'A'}
           </span>

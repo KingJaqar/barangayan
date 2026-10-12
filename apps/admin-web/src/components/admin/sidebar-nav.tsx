@@ -1,5 +1,7 @@
 'use client';
 
+import styles from './admin-navigation.module.css';
+
 import type { LucideIcon } from 'lucide-react';
 import {
   Building2,
@@ -96,7 +98,7 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
   const isThemePage = pathname === '/theme';
 
   return (
-    <div className="flex items-center gap-[10px] px-[10px] py-[8px]">
+    <div className={`flex items-center ${styles.themeRow}`}>
       <Link
         href="/theme"
         title={collapsed ? 'Theme' : undefined}
@@ -160,14 +162,13 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
 
   return (
     <aside
-      className={`flex min-h-0 shrink-0 flex-col overflow-y-auto border-r border-[#e5e7eb] bg-white py-[26px] transition-[width] duration-200 dark:border-zinc-800 dark:bg-zinc-950 ${
-        collapsed ? 'w-[61px] px-[6px]' : 'w-[285px] px-[13px]'
-      }`}>
+      id="admin-sidebar"
+      className={`flex min-h-0 shrink-0 flex-col overflow-y-auto ${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
       <nav className="flex flex-col gap-[16px]" aria-label="Admin navigation">
         {NAV_GROUPS.map((group, groupIndex) => (
           <div key={group.title} className="space-y-[6px]">
             {!collapsed ? (
-              <p className="px-[6px] text-[13px] font-medium leading-5 text-[#1d2635] dark:text-zinc-300">{group.title}</p>
+              <p className={styles.groupTitle}>{group.title}</p>
             ) : null}
             <div className="space-y-[4px]">
               {group.items.map((item) => {
@@ -181,11 +182,8 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
                     href={item.href}
                     title={collapsed ? item.label : undefined}
                     aria-label={collapsed ? item.label : undefined}
-                    className={`flex h-[49px] items-center gap-[13px] rounded-2xl px-[13px] text-[13px] font-bold transition-colors ${
-                      isActive
-                        ? 'bg-[var(--accent)] text-white shadow-[0_1px_2px_var(--accent-shadow)]'
-                        : 'text-[#151b2b] hover:bg-[#f3f5f7] dark:text-zinc-100 dark:hover:bg-zinc-900'
-                    }`}>
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`flex items-center ${styles.navLink} ${isActive ? styles.active : ''}`}>
                     <LinkPendingIndicator
                       collapsed={collapsed}
                       label={item.label}
@@ -210,7 +208,8 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
           type="button"
           onClick={onLogout}
           title={collapsed ? 'Logout' : undefined}
-          className="flex h-[49px] items-center gap-[13px] rounded-2xl px-[13px] text-left text-[13px] font-bold text-[#df2d2d] transition-colors hover:bg-red-50 dark:hover:bg-red-950/30">
+          aria-label="Logout"
+          className={`flex items-center text-left ${styles.navLink} ${styles.logout}`}>
           <LogOut
             className="size-5 shrink-0"
             strokeWidth={2.5}

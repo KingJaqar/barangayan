@@ -2,14 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { BottomTabBar } from '@/components/shell/bottom-tab-bar';
 import { TopNav } from '@/components/shell/top-nav';
-import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
-import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { LoadingStatus, PendingText } from '@/components/shared/loading-status';
+import { Spinner } from '@/components/ui/loading';
+import { toastAnchorRef } from '@/components/ui/sonner';
+import { useSignOut } from '@/hooks/use-sign-out';
 
 interface ResidentShellProps {
   barangayName: string;
@@ -28,22 +30,13 @@ interface ResidentShellProps {
  * plan's Phase 0 step 4.
  */
 export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthenticated, children }: ResidentShellProps) {
-  const router = useRouter();
-  const resetPreferences = useResetPreferencesOnLogout();
-
-  async function handleLogout() {
-    // Clear theme/accent/font before signing out — see use-reset-preferences.ts's doc
-    // comment for why (otherwise guest mode inherits this resident's appearance).
-    resetPreferences();
-    const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signOut();
-    router.replace('/login');
-    router.refresh();
-  }
+  const { signOut, pending: signingOut } = useSignOut();
+  const pathname = usePathname();
+  const isSettings = pathname === '/settings' || pathname.startsWith('/settings/');
 
   return (
-    <div className="flex min-h-full flex-col">
-      <header className="flex items-center justify-between border-b border-border bg-card px-4 py-3 sm:px-6">
+    <div className={`flex min-h-full flex-col ${isSettings ? 'lg:h-full lg:min-h-0' : ''}`}>
+      <header ref={toastAnchorRef} data-toast-anchor className="flex shrink-0 items-center justify-between border-b border-border bg-card px-4 py-3 sm:px-6">
         <Link href="/home" className="flex items-center gap-3">
           <Image
             src="/assets/logo/barangayan-logo-1024.png"
@@ -73,12 +66,35 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthent
                   {(residentName ?? '?').charAt(0).toUpperCase()}
                 </div>
               )}
+              <span className="relative flex">
               <button
-                onClick={handleLogout}
+                type="button"
+                onClick={() => void signOut()}
+                disabled={signingOut}
+                aria-busy={signingOut || undefined}
+                aria-label="Log out"
                 title="Log out"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive">
-                <LogOut size={16} strokeWidth={1.75} />
+                className="relative flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:pointer-events-none">
+                {/* Pending: the icon cross-fades to a spinner after 120 ms (same as Button). */}
+                <LogOut aria-hidden size={16} strokeWidth={1.75} className={signingOut ? 'rw-hint-out' : undefined} />
+                {signingOut ? (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <Spinner />
+                  </span>
+                ) : null}
               </button>
+              {signingOut ? (
+                <PendingText
+                  label={null}
+                  slowLabel={
+                    <span aria-hidden className="absolute right-0 top-full z-10 mt-1.5 whitespace-nowrap rounded-md border border-border bg-card px-2 py-1 text-xs text-muted-foreground shadow-sm">
+                      Taking longer than usual…
+                    </span>
+                  }
+                />
+              ) : null}
+              </span>
+              <LoadingStatus active={signingOut} label="Logging out…" className="sr-only" />
             </>
           ) : (
             <>
@@ -97,7 +113,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthent
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto bg-background px-4 pb-20 pt-4 sm:px-8 sm:pb-8 sm:pt-6">{children}</main>
+      <main className={`flex-1 overflow-y-auto bg-background px-4 pb-20 pt-4 sm:px-8 sm:pb-8 sm:pt-6 ${isSettings ? 'lg:flex lg:min-h-0 lg:flex-col lg:overflow-hidden' : ''}`}>{children}</main>
 
       {isAuthenticated ? <BottomTabBar /> : null}
     </div>

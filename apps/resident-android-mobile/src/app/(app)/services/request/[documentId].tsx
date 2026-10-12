@@ -270,7 +270,7 @@ function RequestFormContent() {
           ) : null}
         </ScrollView>
 
-        <View style={styles.footer}>
+        <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected }]}>
           <View style={styles.feeRow}>
             <ThemedText type="small">Processing Fee</ThemedText>
             <ThemedText type="smallBold">
@@ -383,6 +383,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     padding: Spacing.four,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 
   /* Loading skeleton */

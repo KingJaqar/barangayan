@@ -1,0 +1,10 @@
+requests/default: p95 44.8ms
+requests/natural deep page: p95 248.2ms
+transactions/joined resident: p95 310.9ms
+residents/substring: p95 267.6ms
+incidents/nullable reporter: p95 109.8ms
+health/aggregate: p95 113.9ms
+applicants/joined score: p95 449.2ms
+households/joined head: p95 476.8ms
+staff/label role: p95 177.6ms
+PASS: all measured warm browse p95 targets <=500ms

@@ -19,12 +19,21 @@ config.resolver.disableHierarchicalLookup = true;
 
 // Local verification tools and web build caches are not mobile source. Watching
 // them can stall Metro while web previews/builds write thousands of generated files.
-const escapedWorkspaceRoot = workspaceRoot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// The file watcher matches these against forward-slash paths even on Windows, so the
+// root and separators must accept both `\` and `/`, and directory patterns must also
+// match the bare directory path (no trailing separator) to stop the watcher walking in.
+const escapedWorkspaceRoot = workspaceRoot
+  .split(/[\\/]/)
+  .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('[\\\\/]');
 const existingBlockList = config.resolver.blockList;
 config.resolver.blockList = [
   ...(Array.isArray(existingBlockList) ? existingBlockList : existingBlockList ? [existingBlockList] : []),
-  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]dist[\\\\/]`),
-  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/](?:\\.next(?:-[^\\\\/]+)?|dist)[\\\\/]`),
+  // Other tools create and delete short-lived refs under .git; if one vanishes while
+  // the fallback (non-Watchman) watcher is attaching, Metro crashes with ENOENT.
+  /[\\/]\.git(?:[\\/]|$)/,
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]dist(?:[\\\\/]|$)`),
+  new RegExp(`^${escapedWorkspaceRoot}[\\\\/]apps[\\\\/][^\\\\/]+[\\\\/](?:\\.next(?:-[^\\\\/]+)?|dist)(?:[\\\\/]|$)`),
 ];
 
 // `disableHierarchicalLookup` stops Metro from walking nested node_modules, so it

@@ -1,0 +1,77 @@
+
+> @barangayan/web@0.1.0 test:tables
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/browse-state.test.ts (51 tests) 27ms
+ ❯ tests/table-browse/queries.test.ts (7 tests | 2 failed) 246ms
+   ✓ server query contracts > validates sort, direction, page sizes, tabs and dynamic IDs without losing literal search 4ms
+   ✓ server query contracts > uses filters and stable global ordering before a bounded inclusive page 28ms
+   × server query contracts > corrects a removed last page exactly once and uses the same deadline 10ms
+     → expected false to be 3 // Object.is equality
+   × server query contracts > stops when concurrent deletion invalidates the corrective read 10ms
+     → expected { status: 'error', …(2) } to match object { status: 'error', …(1) }
+(1 matching property omitted from actual)
+   ✓ server query contracts > does not turn missing counts, truncated rows, failed or timed-out queries into empty success 24ms
+   ✓ server query contracts > renders a real empty result as zero and page one 4ms
+   ✓ server query contracts > uses Manila calendar days and preserves independent column search boundaries 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/table-browse/queries.test.ts > server query contracts > corrects a removed last page exactly once and uses the same deadline
+AssertionError: expected false to be 3 // Object.is equality
+
+- Expected: 
+3
+
++ Received: 
+false
+
+ ❯ tests/table-browse/queries.test.ts:64:58
+     62|     const signal = AbortSignal.timeout(1000);
+     63|     const r = await adapter.browseTable('requests', state({ page: '99'…
+     64|     expect(r.status === 'success' && r.value.state.page).toBe(3);
+       |                                                          ^
+     65|     expect(f.urls).toHaveLength(2); expect(f.signals).toEqual([signal,…
+     66|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/table-browse/queries.test.ts > server query contracts > stops when concurrent deletion invalidates the corrective read
+AssertionError: expected { status: 'error', …(2) } to match object { status: 'error', …(1) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "results-changed",
++   "code": "query-failed",
+    "status": "error",
+  }
+
+ ❯ tests/table-browse/queries.test.ts:70:15
+     68|     const f = scripted([{ status: 416, code: 'PGRST103', total: 23 }, …
+     69|     const r = await adapter.browseTable('requests', state({ page: '99'…
+     70|     expect(r).toMatchObject({ status: 'error', code: 'results-changed'…
+       |               ^
+     71|   });
+     72|   it('does not turn missing counts, truncated rows, failed or timed-ou…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 56 passed (58)
+   Start at  20:17:51
+   Duration  2.67s (transform 240ms, setup 0ms, collect 441ms, tests 273ms, environment 1ms, prepare 2.02s)
+
+npm error Lifecycle script `test:tables` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run --config vitest.config.ts

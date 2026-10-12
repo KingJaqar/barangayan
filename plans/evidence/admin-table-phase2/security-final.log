@@ -1,0 +1,1 @@
+PASS: invoker views, read-only grants, private helpers, equivalent read predicates, unchanged write policies and RLS

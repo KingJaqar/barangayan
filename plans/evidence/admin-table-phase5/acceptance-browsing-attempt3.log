@@ -1,0 +1,14 @@
+page.waitForFunction: TypeError: Cannot read properties of null (reading 'value')
+    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:5:103)
+    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+    at next (eval at evaluate (:311:30), <anonymous>:29:33)
+    at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at ready (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:42:14)
+    at async change (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:50:162)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:110:32
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:98:55 {
+  log: []
+}

@@ -21,6 +21,8 @@ interface RequestStatusActionsProps {
   /** 'compact' renders icon-free small buttons for a table row; 'full' renders the
    * larger buttons used on the request detail page. Same actions either way. */
   variant?: 'compact' | 'full';
+  onBeforeAction?: () => Promise<boolean>;
+  onChanged?: () => void;
 }
 
 /** The buttons that drive the request FSM the 0002 migration deferred to "admin/backend
@@ -33,12 +35,15 @@ export function RequestStatusActions({
   paymentStatus,
   paymentMethod,
   variant = 'full',
+  onBeforeAction,
+  onChanged,
 }: RequestStatusActionsProps) {
   const router = useRouter();
   const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [cancelNote, setCancelNote] = useState('');
   const [showCancelForm, setShowCancelForm] = useState(false);
+  const refresh = onChanged ?? (() => router.refresh());
 
   const btnClass =
     variant === 'compact'
@@ -54,6 +59,7 @@ export function RequestStatusActions({
   }
 
   async function beginProcessing() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     // S0-4: validated submitted -> in_progress transition (barangay + status checked
@@ -83,10 +89,11 @@ export function RequestStatusActions({
       changes: { before: { status }, after: { status: 'in_progress' } },
     }).catch(() => {});
 
-    router.refresh();
+    refresh();
   }
 
   async function completeRequest() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.rpc('complete_service_request', { p_request_id: requestId });
@@ -115,10 +122,11 @@ export function RequestStatusActions({
     }).catch(() => {});
 
     toast.showSuccess('Request marked as completed.');
-    router.refresh();
+    refresh();
   }
 
   async function markReadyForPickup() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.rpc('mark_request_ready_for_pickup', { p_request_id: requestId });
@@ -147,10 +155,11 @@ export function RequestStatusActions({
     }).catch(() => {});
 
     toast.showSuccess('Request marked ready for pickup.');
-    router.refresh();
+    refresh();
   }
 
   async function handleCancel() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     if (!cancelNote.trim()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
@@ -183,10 +192,11 @@ export function RequestStatusActions({
     setShowCancelForm(false);
     setCancelNote('');
     toast.showSuccess('Request cancelled.');
-    router.refresh();
+    refresh();
   }
 
   async function markPaymentCollected() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { error, paymentId, wasCreate } = await markPaymentCollectedRequest(supabase, requestId);
@@ -224,7 +234,7 @@ export function RequestStatusActions({
     }).catch(() => {});
 
     toast.showSuccess('Payment marked as collected.');
-    router.refresh();
+    refresh();
   }
 
   if (status === 'cancelled' || status === 'completed') {

@@ -13,7 +13,7 @@ if (!process.env.PLAYWRIGHT_BROWSERS_PATH && fs.existsSync(taskBrowsers)) proces
 const { chromium, firefox, webkit } = require('playwright');
 const root = path.resolve(import.meta.dirname, '../../../..');
 const app = path.join(root, 'apps/admin-web');
-const evidence = path.join(root, 'plans/evidence/admin-table-phase1');
+const evidence = process.env.TABLE_TEST_EVIDENCE_DIR ?? path.join(root, 'plans/evidence/admin-table-phase1');
 fs.mkdirSync(evidence, { recursive: true });
 const bundle = await build({ entryPoints: [path.join(import.meta.dirname, 'fixture.tsx')], bundle: true, write: false,
   jsx: 'automatic', define: { 'process.env.NODE_ENV': '"development"' },
@@ -84,11 +84,12 @@ async function exercise(browser, result) {
       for (const size of [10, 20, 30, 50, 100]) {
         await page.getByLabel('Rows per page').selectOption(String(size));
         await page.waitForFunction(size => document.querySelector('.table-browse-pagination select')?.value === String(size), size);
-        assert.equal(await body.locator('tbody tr').count(), Math.max(1, Math.min(size, count)));
+        assert.equal(await body.locator('tbody tr:not([data-filler-row])').count(), Math.max(1, Math.min(size, count)));
+        assert.ok(await body.locator('tbody tr').count() >= 10, 'table body always has at least 10 rows');
         if (count > size) await page.getByRole('button', { name: 'Last', exact: true }).click();
         const start = count === 0 ? 0 : (Math.max(1, Math.ceil(count / size)) - 1) * size + 1;
         await page.getByText(`Showing ${start}–${count} of ${count}`, { exact: true }).waitFor();
-        assert.equal(await body.locator('tbody tr').count(), count === 0 ? 1 : count - start + 1);
+        assert.equal(await body.locator('tbody tr:not([data-filler-row])').count(), count === 0 ? 1 : count - start + 1);
         if (count > size) await page.getByRole('button', { name: 'First', exact: true }).click();
       }
     }
@@ -109,7 +110,7 @@ async function exercise(browser, result) {
     assert.ok(data.max > 0, 'wide fixture must overflow internally');
     assert.ok(Math.abs(data.aligned) <= 1); assert.ok(Math.abs(data.mirror - data.max) <= 1);
     assert.ok(Math.abs(data.left - data.topLeft) <= 1);
-    assert.ok(await body.locator('tbody tr').last().isVisible());
+    assert.ok(await body.locator('tbody tr:not([data-filler-row])').last().isVisible());
     assert.equal(await page.locator('#legacy tbody tr').count(), 23);
     assert.equal(await page.locator('#legacy [role=region]').count(), 0);
   });
@@ -208,7 +209,8 @@ async function exercise(browser, result) {
       await page.setViewportSize(viewport); await page.waitForTimeout(80);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       assert.ok(await page.locator('main').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-      await page.getByRole('button', { name: 'Scroll columns right', exact: true }).click();
+      assert.equal(await page.getByRole('button', { name: /Scroll columns/ }).count(), 0);
+      await body.evaluate(el => { el.scrollLeft = 0; el.scrollBy({ left: 120 }); });
       assert.ok(await body.evaluate(el => el.scrollLeft > 0));
     }
     await page.setViewportSize({ width: 1200, height: 900 });
@@ -225,6 +227,7 @@ async function exercise(browser, result) {
     await page.locator('#sidebar').click(); await page.waitForTimeout(80);
     assert.ok(await page.locator('main').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
     await page.evaluate(() => document.documentElement.classList.add('dark'));
+    assert.equal(await page.getByLabel('Sort by').evaluate(el => getComputedStyle(el).colorScheme), 'dark', 'native dropdown lists follow the dark theme');
     assert.equal(await body.locator('th').first().evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(39, 39, 42)');
     await page.emulateMedia({ forcedColors: 'active' }); await body.focus();
     await page.getByRole('region', { name: 'Fixture horizontal scroll', exact: true }).focus();

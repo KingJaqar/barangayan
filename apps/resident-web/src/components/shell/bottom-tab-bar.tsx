@@ -6,7 +6,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { preferredScrollBehavior } from '@/lib/motion';
 
 // Icon mapping confirmed 1:1 against apps/resident-android-mobile/src/components/app-
 // tabs.tsx's TabIcon set (home/clipboard/location/heart/notifications/settings) — see
@@ -72,7 +74,7 @@ export function BottomTabBar() {
   }, []);
 
   function scrollByTab(direction: 'left' | 'right') {
-    scrollerRef.current?.scrollBy({ left: direction === 'left' ? -128 : 128, behavior: 'smooth' });
+    scrollerRef.current?.scrollBy({ left: direction === 'left' ? -128 : 128, behavior: preferredScrollBehavior() });
   }
 
   return (
@@ -118,6 +120,7 @@ export function BottomTabBar() {
                     ) : null}
                   </span>
                   <span className={active ? 'text-primary' : 'text-muted-foreground'}>{label}</span>
+                  <LinkPendingHint className="left-1/2 top-0 h-0.5 w-6 -translate-x-1/2 text-primary" />
                 </Link>
               );
             })}

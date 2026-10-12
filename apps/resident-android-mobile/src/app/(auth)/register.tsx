@@ -2,11 +2,10 @@ import { EMAIL_OTP_REGISTRATION_METADATA, residentEmailStepSchema, residentCodeS
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AppState, BackHandler, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, AppState, BackHandler, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthHeader } from '@/components/auth-header';
 import { GoogleButton } from '@/components/google-button';
-import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { useAuth } from '@/hooks/use-auth';
@@ -94,45 +93,86 @@ export default function RegisterScreen() {
     owner.current.invalidate(); setEmail(''); setCode('');
     void setSetupIntent('sign_in'); router.replace('/(auth)/login');
   }
-  return <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }} edges={['top', 'left', 'right']}>
-    <View style={{ flex: 1, backgroundColor: theme.background }}>
-      <AuthHeader title="Create Account" onBack={back} />
-      <ScrollView contentContainerStyle={{ padding: 24, gap: 16 }} keyboardShouldPersistTaps="handled">
-        <ThemedText type={step === 'email' ? 'title' : 'heading'}>{step === 'email' ? 'Verify your email first' : 'Enter your email code'}</ThemedText>
-        <ThemedText themeColor="textSecondary">{step === 'email' ? 'We will send you a six-digit code. After verification, add your details and create a password.' : `Enter the six-digit code sent to ${email}. Your code expires after one hour.`}</ThemedText>
-        {step === 'email' ? <TextField label="Email Address" accessibilityLabel="Email Address" required autoCapitalize="none" autoComplete="email" keyboardType="email-address" value={email} editable={!loading} onChangeText={setEmail} /> : <TextField label="Email Code" accessibilityLabel="Six-digit email code" required autoComplete="sms-otp" textContentType="oneTimeCode" keyboardType="number-pad" maxLength={6} value={code} editable={!loading} onChangeText={value => setCode(value.replace(/\D/g, ''))} />}
-        {error && <ThemedText accessibilityLiveRegion="polite" themeColor="accentRed">{error}</ThemedText>}
+  return <SafeAreaView style={[styles.screen, { backgroundColor: theme.primary }]} edges={['left', 'right']}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
+    <AuthHeader title="Create Account" onBack={back} />
+    <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+        <View style={styles.intro}>
+          <ThemedText accessibilityRole="header" style={styles.title}>{step === 'email' ? 'Verify your email' : 'Enter your code'}</ThemedText>
+          <ThemedText style={styles.description} themeColor="textSecondary">{step === 'email' ? 'We’ll email you a 6-digit code to get started.' : 'Enter the 6-digit code we sent to'}</ThemedText>
+          {step === 'code' && <ThemedText style={styles.email} selectable>{email}</ThemedText>}
+        </View>
+        <View style={styles.form}>
+        {step === 'email' ? <TextField label="Email address" accessibilityLabel="Email address" autoCapitalize="none" autoCorrect={false} autoComplete="email" keyboardType="email-address" placeholder="name@example.com" returnKeyType="done" onSubmitEditing={send} value={email} editable={!loading} onChangeText={setEmail} style={[styles.input, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} /> : <TextField key="email-code" label="Confirmation code" accessibilityLabel="Six-digit email code" autoComplete="sms-otp" textContentType="oneTimeCode" keyboardType="number-pad" maxLength={6} value={code} editable={!loading} onChangeText={value => setCode(value.replace(/\D/g, ''))} style={[styles.input, styles.codeInput, { backgroundColor: theme.background, borderColor: theme.textSecondary }]} />}
+        {step === 'code' && <ThemedText type="small" style={styles.helper} themeColor="textSecondary">Your code expires in 1 hour.</ThemedText>}
+        {error && <ThemedText type="small" accessibilityLiveRegion="polite" themeColor="accentRed">{error}</ThemedText>}
         {step === 'code' ? <>
-          <PrimaryButton label="Verify and continue" loading={loading} onPress={verify} />
+          <ContinueButton label="Verify and continue" loading={loading} disabled={code.length !== 6} onPress={verify} />
           <View style={styles.secondaryActions}>
             <CodeAction label={seconds ? `Resend in ${seconds}s` : 'Resend code'} disabled={loading || !deadlineReady || seconds > 0} onPress={send} />
             <CodeAction label="Change email" disabled={loading} onPress={back} />
           </View>
+        </> : <>
+          <ContinueButton label={seconds ? `Continue in ${seconds}s` : 'Continue'} loading={loading} disabled={!email.trim() || !deadlineReady || seconds > 0} onPress={send} />
+          <ThemedText type="small" style={styles.helper} themeColor="textSecondary">Next, you’ll add your details and create a password.</ThemedText>
+        </>}
+        </View>
+        {step === 'email' && <>
+          <View style={styles.divider}>
+            <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
+            <ThemedText type="small" themeColor="textSecondary">or</ThemedText>
+            <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
+          </View>
+          <GoogleButton label="Continue with Google" intent="sign_up" disabled={loading} />
           <View style={styles.loginRow}>
             <ThemedText type="small" themeColor="textSecondary">Already have an account?</ThemedText>
             <CodeAction label="Log in" disabled={loading} onPress={openLogin} />
           </View>
-        </> : <>
-          <PrimaryButton label={seconds ? `Send code in ${seconds}s` : 'Send email code'} loading={loading} disabled={loading || !deadlineReady || seconds > 0} onPress={send} />
-          <GoogleButton label="Sign up with Google" intent="sign_up" disabled={loading} />
-          <PrimaryButton label="Already have an account? Log in" variant="secondary" disabled={loading} onPress={openLogin} />
         </>}
       </ScrollView>
+    </KeyboardAvoidingView>
     </View>
   </SafeAreaView>;
+}
+
+function ContinueButton({ label, loading, disabled, onPress }: { label: string; loading: boolean; disabled: boolean; onPress: () => void }) {
+  const theme = useTheme();
+  const unavailable = disabled || loading;
+  return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={{ disabled: unavailable, busy: loading }}
+    disabled={unavailable} onPress={onPress}
+    style={({ pressed }) => [styles.continueButton, { backgroundColor: theme.primary }, unavailable && styles.disabled, pressed && !unavailable && styles.pressed]}>
+    {loading ? <ActivityIndicator color={theme.onPrimary} /> : <ThemedText type="smallBold" style={[styles.buttonLabel, { color: theme.onPrimary }]}>{label}</ThemedText>}
+  </Pressable>;
 }
 
 function CodeAction({ label, disabled, onPress }: { label: string; disabled: boolean; onPress: () => void }) {
   const theme = useTheme();
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
     style={({ pressed }) => [styles.textAction, pressed && !disabled && styles.pressed]}>
-    <ThemedText type="smallBold" style={{ color: disabled ? theme.textSecondary : theme.primary }}>{label}</ThemedText>
+    <ThemedText type="smallBold" style={[styles.link, { color: disabled ? theme.textSecondary : theme.text }]}>{label}</ThemedText>
   </Pressable>;
 }
 
 const styles = StyleSheet.create({
+  screen: { flex: 1 },
+  content: { paddingHorizontal: 24, paddingTop: 32, paddingBottom: 32, width: '100%', maxWidth: 480, alignSelf: 'center' },
+  intro: { gap: 8, marginBottom: 28 },
+  title: { fontSize: 28, lineHeight: 34, fontWeight: '600' },
+  description: { fontSize: 15, lineHeight: 22, fontWeight: '400' },
+  email: { fontSize: 15, lineHeight: 22, fontWeight: '600' },
+  form: { gap: 16 },
+  input: { minHeight: 56, borderRadius: 10, paddingHorizontal: 16, paddingVertical: 14 },
+  codeInput: { textAlign: 'center', fontSize: 24, letterSpacing: 8, fontWeight: '600' },
+  helper: { fontWeight: '400' },
+  continueButton: { minHeight: 52, paddingHorizontal: 16, paddingVertical: 14, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  buttonLabel: { fontSize: 16, lineHeight: 24 },
+  disabled: { opacity: 0.5 },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: 16, marginVertical: 24 },
+  dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },
   secondaryActions: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8 },
-  loginRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4 },
-  textAction: { minHeight: 44, paddingHorizontal: 12, paddingVertical: 8, justifyContent: 'center', borderRadius: 8, flexShrink: 1 },
+  loginRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 20 },
+  textAction: { minHeight: 44, paddingHorizontal: 4, paddingVertical: 10, justifyContent: 'center', borderRadius: 8, flexShrink: 1 },
+  link: { textDecorationLine: 'underline' },
   pressed: { opacity: 0.65 },
 });

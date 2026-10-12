@@ -38,10 +38,9 @@ function Fixture() {
       error={error ? 'Fixture query failed' : null} onRetry={() => setError(false)}
       announcement={`Name ${state.dir}; Showing ${range.start}–${range.end} of ${matches.length}`}
       controls={<TableBrowseControls state={state} sorts={config.sorts} searchDraft={browse.searchDraft}
-        onSearchChange={browse.changeSearch} onChange={browse.commit}>
-        <SegmentedFilter label="Status" value={state.filters.tab} options={[{ value: 'all', label: 'All' }, { value: 'active', label: 'Active' }]}
-          onChange={tab => void browse.commit({ filters: { tab } })} />
-      </TableBrowseControls>}
+        onSearchChange={browse.changeSearch} onChange={browse.commit}
+        filters={<SegmentedFilter label="Status" value={state.filters.tab} options={[{ value: 'all', label: 'All' }, { value: 'active', label: 'Active' }]}
+          onChange={tab => void browse.commit({ filters: { tab } })} />} />}
       pagination={<TablePagination total={matches.length} page={range.page} pageSize={state.pageSize}
         onPageChange={page => void browse.commit({ page })} onPageSizeChange={pageSize => void browse.commit({ pageSize })} />}>
       <EditableDataTable rows={rows} rowKey={row => row.id} editHandleRef={edit} resizableColumns pinLastColumn tableMinWidth={1600}

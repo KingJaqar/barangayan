@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-10-11T16:14:16.477Z",
+  "removed": [
+    "barangayan-admin-phase3-realtime",
+    "barangayan-admin-phase3-auth",
+    "barangayan-admin-phase3-rest",
+    "barangayan-admin-phase3-db"
+  ],
+  "networkRemoved": true,
+  "privateCredentialsRemoved": true,
+  "remainingOwnedContainers": ""
+}

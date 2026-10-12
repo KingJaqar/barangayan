@@ -1,0 +1,4 @@
+Passed: combined filters preserve independent complete summaries, Health Today is included in Upcoming
+Passed: registration aggregates include cancelled and missing-score registrations; Applicants retains inner-score membership and name sorting
+Passed: table, summary and complete-option failures stay separate and Retry retains the query
+Passed: rapid delayed controls merge the search draft; Back cancels debounce; invalid pages correct once; partial sizes stay exact

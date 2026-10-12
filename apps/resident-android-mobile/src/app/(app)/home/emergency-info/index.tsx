@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Platform,
   Pressable,
   ScrollView,
@@ -11,7 +10,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import * as Location from 'expo-location';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
@@ -32,6 +30,8 @@ import { ThemedText } from '@/components/themed-text';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/hooks/use-auth';
+import { GuestAuthCallout } from '@/components/guest-auth-callout';
 import { FamilyContent } from '@/components/family-content';
 import { useEmergencyGuidelines } from '@/hooks/use-emergency-guidelines';
 import { useEmergencyHotlines } from '@/hooks/use-emergency-hotlines';
@@ -43,12 +43,13 @@ import { HotlineRow } from '@/components/hotline-row';
 import { EvacuationCenterCard } from '@/components/evacuation-center-card';
 import { HorizontalCenterPicker, type CenterPickerItem } from '@/components/horizontal-center-picker';
 import { CenterDetailCard } from '@/components/center-detail-card';
-import { Collapsible } from '@/components/ui/collapsible';
-import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapViewHandle } from '@/components/map-view';
+import { LocationStatusCard } from '@/components/location-status-card';
+import { MapView, AMPID_I_SAN_MATEO_CENTER, type MapUserLocation, type MapViewHandle } from '@/components/map-view';
+import { useDeviceLocation } from '@/hooks/use-device-location';
 import { SegmentedControl } from '@/components/segmented-control';
 import { QrGuideContent } from '@/components/qr-guide-content';
 import type { AccordionItem } from '@/components/emergency-accordion';
-import { getWalkingRoute, type LatLng, type MapMarker } from '@barangayan/shared';
+import { getWalkingRoute, type LatLng, type LocationAction, type MapMarker } from '@barangayan/shared';
 
 type EmergencyInfoTab = 'hub' | 'centers' | 'scan' | 'family' | 'alerts';
 
@@ -104,17 +105,23 @@ export default function EmergencyInfoScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { profile } = useProfile();
+  const { session } = useAuth();
+  const isGuest = !session;
   const barangayId = profile?.barangay_id ?? null;
 
   const { guidelines, isLoading: guidelinesLoading } = useEmergencyGuidelines(barangayId);
   const { hotlines, isLoading: hotlinesLoading } = useEmergencyHotlines(barangayId);
   const { items: alerts, loading: alertsLoading, error: alertsError, refetch: refetchAlerts } = useEmergencyAnnouncements();
-  const [userPosition, setUserPosition] = useState<LatLng | null>(null);
-  const { centers, isLoading: centersLoading, error: centersError, refetch: refetchCenters } = useEvacuationCenters({ barangayId, userPosition });
-
   const [tab, setTab] = useState<EmergencyInfoTab>(
     isEmergencyInfoTab(tabParam) ? tabParam : 'hub',
   );
+
+  // The confirmed origin (never the map viewport) is the position used for sorting and
+  // routing. Acquisition runs only while the Centers tab is shown.
+  const location = useDeviceLocation(tab === 'centers');
+  const origin = location.state.origin;
+  const userPosition = useMemo<LatLng | null>(() => (origin ? { lat: origin.lat, lng: origin.lng } : null), [origin]);
+  const { centers, isLoading: centersLoading, error: centersError, refetch: refetchCenters } = useEvacuationCenters({ barangayId, userPosition });
 
   // Sync when navigated back into this screen with a different `tab` param
   // (e.g. tapping a different Maps DRRM card while this screen stays mounted).
@@ -133,7 +140,13 @@ export default function EmergencyInfoScreen() {
   useEffect(() => {
     const index = TABS.findIndex((t) => t.key === tab);
     if (tabWidth > 0) {
-      tabTranslateX.value = withSpring(index * tabWidth, { damping: 18, stiffness: 150 });
+      // Critically damped — same as the List/Map toggle, zero overshoot/bounce.
+      tabTranslateX.value = withSpring(index * tabWidth, {
+        damping: 26,
+        stiffness: 220,
+        mass: 0.8,
+        overshootClamping: true,
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, tabWidth]);
@@ -141,27 +154,6 @@ export default function EmergencyInfoScreen() {
   const tabPillStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: tabTranslateX.value }],
   }));
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') return;
-        const loc = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        });
-        if (!cancelled) {
-          setUserPosition({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-        }
-      } catch {
-        // location unavailable — centers will fall back to alphabetical order
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   function handleChange(next: EmergencyInfoTab) {
     setTab(next);
@@ -225,7 +217,7 @@ export default function EmergencyInfoScreen() {
         })}
       </View>
 
-      {isCenters && centersView === 'map' ? (
+      {isCenters ? (
         <Animated.View
           entering={FadeIn.duration(200)}
           style={styles.mapScreen}>
@@ -240,6 +232,7 @@ export default function EmergencyInfoScreen() {
             nearestFirst={nearestFirst}
             onNearestToggle={setNearestFirst}
             userPosition={userPosition}
+            location={location}
             onFitAll={() => {}}
           />
         </Animated.View>
@@ -248,11 +241,17 @@ export default function EmergencyInfoScreen() {
           entering={FadeIn.duration(200)}
           style={styles.contentContainer}>
           <ScrollView
-            scrollEnabled={!(isCenters && centersView === 'map')}
             style={styles.scrollView}
             contentContainerStyle={[styles.scrollContent, { paddingBottom: Spacing.six }]}
             showsVerticalScrollIndicator={false}>
-            {isScan && <QrGuideContent />}
+            {isScan && (isGuest ? (
+              <GuestLoginRequired
+                icon="qr-code-outline"
+                message="Log in or register an account to use QR scanning and check-in."
+              />
+            ) : (
+              <QrGuideContent />
+            ))}
             {isHub && (
               <HubContent
                 theme={theme}
@@ -261,22 +260,13 @@ export default function EmergencyInfoScreen() {
                 isLoading={guidelinesLoading || hotlinesLoading}
               />
             )}
-            {isCenters && (
-              <CentersContent
-                theme={theme}
-                centers={centers}
-                isLoading={centersLoading}
-                error={centersError}
-                refetch={refetchCenters}
-                view={centersView}
-                onViewChange={setCentersView}
-                nearestFirst={nearestFirst}
-                onNearestToggle={setNearestFirst}
-                userPosition={userPosition}
-                onFitAll={() => {}}
+            {isFamily && (isGuest ? (
+              <GuestLoginRequired
+                message="Log in or register an account to manage your household members and family check-in."
               />
-            )}
-            {isFamily && <FamilyContent />}
+            ) : (
+              <FamilyContent />
+            ))}
             {isAlerts && (
               <AlertsContent
                 theme={theme}
@@ -292,6 +282,14 @@ export default function EmergencyInfoScreen() {
     </View>
     </SafeAreaView>
     </SafeAreaProvider>
+  );
+}
+
+function GuestLoginRequired({ message, icon }: { message: string; icon?: React.ComponentProps<typeof GuestAuthCallout>['icon'] }) {
+  return (
+    <View style={{ minHeight: 420 }}>
+      <GuestAuthCallout tabName="this feature" message={message} icon={icon} />
+    </View>
   );
 }
 
@@ -320,11 +318,11 @@ function AnimatedCenterCard({
   }));
 
   function handlePressIn() {
-    scale.value = withSpring(0.97, { damping: 18, stiffness: 300 });
+    scale.value = withSpring(0.97, { damping: 26, stiffness: 300, overshootClamping: true });
   }
 
   function handlePressOut() {
-    scale.value = withSpring(1, { damping: 18, stiffness: 300 });
+    scale.value = withSpring(1, { damping: 26, stiffness: 300, overshootClamping: true });
   }
 
   return (
@@ -464,6 +462,7 @@ function CentersContent({
   nearestFirst,
   onNearestToggle,
   userPosition,
+  location,
   onFitAll,
 }: {
   theme: ReturnType<typeof useTheme>;
@@ -476,18 +475,22 @@ function CentersContent({
   nearestFirst: boolean;
   onNearestToggle: (v: boolean) => void;
   userPosition: LatLng | null;
+  location: ReturnType<typeof useDeviceLocation>;
   onFitAll?: () => void;
 }) {
   const boundary = useAmpid1Boundary();
   const [searchQuery, setSearchQuery] = useState('');
-  const [locating, setLocating] = useState(false);
+  const locating = location.state.activeRequestId !== null;
+  const origin = location.state.origin;
+  const originRevision = origin?.revision;
+  const pendingFix = location.state.pending?.fix ?? null;
   const [focusCenter, setFocusCenter] = useState<LatLng | null>(null);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
   const [boundaryRefitKey] = useState(0);
   const mapRef = useRef<MapViewHandle>(null);
 
   const cardOpacity = useSharedValue(0);
-  const cardTranslateY = useSharedValue(40);
+  const [cardCenterId, setCardCenterId] = useState<string | null>(null);
 
   const displayCenters = nearestFirst && userPosition
     ? [...centers].sort((a, b) => (a.distanceMeters ?? Infinity) - (b.distanceMeters ?? Infinity))
@@ -515,19 +518,31 @@ function CentersContent({
   const mapCenter = focusCenter ?? AMPID_I_SAN_MATEO_CENTER;
 
   const selectedCenter = selectedCenterId ? centerFromId(selectedCenterId) : null;
-  const mapFocusPosition = selectedCenter
-    ? { lat: selectedCenter.position.lat, lng: selectedCenter.position.lng, zoom: 17 }
-    : undefined;
+  const cardCenter = cardCenterId ? centers.find((c) => c.id === cardCenterId) ?? null : null;
+  const [pickerHeight, setPickerHeight] = useState(0);
+  const selectedLat = selectedCenter?.position.lat;
+  const selectedLng = selectedCenter?.position.lng;
+  // Shift the map center south so the selected pin sits in the open area between the
+  // search bar and the floating card/picker instead of underneath them.
+  const mapFocusPosition = useMemo(() => {
+    if (selectedLat === undefined || selectedLng === undefined) return undefined;
+    const zoom = 17;
+    const overlayHeight = MAP_OVERLAY_BOTTOM + pickerHeight + Spacing.two + DETAIL_CARD_HEIGHT;
+    const offsetPx = Math.max(0, (overlayHeight - (MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT)) / 2);
+    const metersPerPx = (156543.03 * Math.cos((selectedLat * Math.PI) / 180)) / 2 ** zoom;
+    return { lat: selectedLat - (offsetPx * metersPerPx) / 111320, lng: selectedLng, zoom };
+  }, [selectedLat, selectedLng, pickerHeight]);
 
   // Ticket 17 — real road-following route via OSRM, replacing the Haversine-only
   // straight-line estimate. Falls back to the existing straight-line distance/time
   // (already computed by useEvacuationCenters) whenever OSRM is unreachable/times out.
   const [roadRoute, setRoadRoute] = useState<{ distanceMeters: number; durationSeconds: number } | null>(null);
 
-  // Deliberately keyed on primitives (id / lat / lng), not the selectedCenter/userPosition
-  // object references — useEvacuationCenters recomputes a fresh `centers` array (and thus
-  // new object identities) on every render, which would otherwise re-fire this effect
-  // (and re-fetch OSRM) on every unrelated re-render.
+  // Deliberately keyed on primitives (center id / origin revision), not the
+  // selectedCenter/userPosition object references — useEvacuationCenters recomputes a fresh
+  // `centers` array (and thus new object identities) on every render, which would otherwise
+  // re-fire this effect (and re-fetch OSRM) on every unrelated re-render. A route belongs
+  // to one accepted origin revision; a newer origin cancels the older request.
   useEffect(() => {
     setRoadRoute(null);
     const center = selectedCenterId ? centerFromId(selectedCenterId) : null;
@@ -553,11 +568,10 @@ function CentersContent({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCenterId, userPosition?.lat, userPosition?.lng]);
+  }, [selectedCenterId, originRevision]);
 
   const cardAnimatedStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
-    transform: [{ translateY: cardTranslateY.value }],
   }));
 
   const handleMarkerTap = (markerId: string) => {
@@ -569,18 +583,19 @@ function CentersContent({
 
   const selectCenter = (center: ReturnType<typeof useEvacuationCenters>['centers'][number]) => {
     setSelectedCenterId(center.id);
-    setFocusCenter({ lat: center.position.lat, lng: center.position.lng });
-    cardOpacity.value = withTiming(0, { duration: 150 }, () => {
-      cardOpacity.value = withTiming(1, { duration: 300 });
-      cardTranslateY.value = withSpring(0, { damping: 20, stiffness: 200 });
-    });
+    setCardCenterId(center.id);
+    cardOpacity.value = 0;
+    cardOpacity.value = withTiming(1, { duration: 200 });
   };
 
   const handleShowAll = () => {
     setSelectedCenterId(null);
     setSearchQuery('');
-    cardOpacity.value = withTiming(0, { duration: 150 });
-    cardTranslateY.value = withSpring(40, { damping: 20, stiffness: 200 });
+    // Keep the card mounted until the fade-out finishes; an interrupted fade (a new
+    // selection mid-fade) reports finished=false and leaves the card in place.
+    cardOpacity.value = withTiming(0, { duration: 200 }, (finished) => {
+      if (finished) runOnJS(setCardCenterId)(null);
+    });
     mapRef.current?.fitAll();
     onFitAll?.();
   };
@@ -589,26 +604,62 @@ function CentersContent({
     setFocusCenter({ lat: AMPID_I_SAN_MATEO_CENTER.lat, lng: AMPID_I_SAN_MATEO_CENTER.lng });
   };
 
-  const handleLocateMe = async () => {
-    try {
-      setLocating(true);
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert(
-          'Location permission needed',
-          'Enable location access in your device settings to center the map on your position.',
-        );
-        return;
-      }
-      const loc = await Location.getCurrentPositionAsync({});
-      setFocusCenter({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-    } catch {
-      Alert.alert('Unable to get your location', 'Please try again.');
-    } finally {
-      setLocating(false);
+  // "Locate me" updates the shared controller (marker + routing origin), not just the
+  // viewport. The map follows the result of an explicit request only.
+  const locateRequestedRef = useRef(false);
+
+  const handleLocateMe = () => {
+    locateRequestedRef.current = true;
+    location.locate();
+  };
+
+  useEffect(() => {
+    if (!locateRequestedRef.current || !origin) return;
+    locateRequestedRef.current = false;
+    setFocusCenter({ lat: origin.lat, lng: origin.lng });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originRevision]);
+
+  useEffect(() => {
+    if (!locateRequestedRef.current || !pendingFix) return;
+    setFocusCenter({ lat: pendingFix.lat, lng: pendingFix.lng });
+  }, [pendingFix]);
+
+  const handleLocationAction = (action: LocationAction) => {
+    switch (action) {
+      case 'locate':
+      case 'retry':
+        handleLocateMe();
+        break;
+      case 'cancel':
+        location.cancel();
+        break;
+      case 'confirm':
+        location.confirm();
+        break;
+      case 'reject':
+        location.reject();
+        break;
+      case 'open-settings':
+        location.openSettings();
+        break;
     }
   };
 
+  // Show the fix awaiting confirmation if there is one, otherwise the accepted origin.
+  const mapUserLocation = useMemo<MapUserLocation | null>(() => {
+    if (pendingFix) {
+      return { position: { lat: pendingFix.lat, lng: pendingFix.lng }, accuracyMeters: pendingFix.accuracyMeters, pending: true };
+    }
+    if (origin) {
+      return { position: { lat: origin.lat, lng: origin.lng }, accuracyMeters: origin.accuracyMeters, pending: false };
+    }
+    return null;
+  }, [pendingFix, origin]);
+
+  // The toggle reflects `view` immediately; the body below swaps to it only after
+  // fading out, then fades back in, so the header stays put like one screen.
+  const [bodyView, setBodyView] = useState(view);
   const centersViewOpacity = useSharedValue(1);
 
   const centersViewStyle = useAnimatedStyle(() => ({
@@ -616,42 +667,47 @@ function CentersContent({
   }));
 
   useEffect(() => {
-    centersViewOpacity.value = withTiming(1, { duration: 200 });
-  }, [view, centersViewOpacity]);
+    if (view === bodyView) {
+      centersViewOpacity.value = withTiming(1, { duration: 180 });
+      return;
+    }
+    centersViewOpacity.value = withTiming(0, { duration: 120 }, (finished) => {
+      if (finished) runOnJS(setBodyView)(view);
+    });
+  }, [view, bodyView, centersViewOpacity]);
 
   return (
-    <View style={[styles.centersContent, view === 'map' && styles.centersContentMap]}>
-      <View style={styles.sectionControls}>
-        <SegmentedControl
-          segments={[
-            { key: 'list', label: 'List' },
-            { key: 'map', label: 'Map' },
-          ]}
-          activeKey={view}
-          onChange={(key) => onViewChange(key as 'list' | 'map')}
-          activeColor="accentRed"
-        />
-      </View>
-
-      <View style={styles.sectionToolbar}>
-        <ThemedText type="small" themeColor="textSecondary" style={styles.showingText}>
-          Showing {centers.length} Locations
-        </ThemedText>
+    <View style={[styles.centersContent, styles.centersContentMap]}>
+      <View style={styles.sectionControlsRow}>
+        <View style={styles.segmentWrap}>
+          <SegmentedControl
+            segments={[
+              { key: 'list', label: 'List' },
+              { key: 'map', label: 'Map' },
+            ]}
+            activeKey={view}
+            onChange={(key) => onViewChange(key as 'list' | 'map')}
+            activeColor="accentRed"
+          />
+        </View>
         <Pressable
           onPress={() => onNearestToggle(!nearestFirst)}
+          accessibilityRole="button"
+          accessibilityState={{ selected: nearestFirst }}
           style={[
             styles.nearestButton,
-            nearestFirst && { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
+            { borderColor: theme.backgroundSelected },
+            nearestFirst && { backgroundColor: theme.primary, borderColor: theme.primary },
           ]}>
-          <Ionicons name="options-outline" size={16} color={theme.textSecondary} />
-          <ThemedText type="smallBold" themeColor="textSecondary" style={styles.nearestText}>
+          <Ionicons name="swap-vertical" size={16} color={nearestFirst ? theme.onPrimary : theme.textSecondary} />
+          <ThemedText type="smallBold" style={[styles.nearestText, { color: nearestFirst ? theme.onPrimary : theme.textSecondary }]}>
             Nearest
           </ThemedText>
         </Pressable>
       </View>
 
-      <Animated.View style={[centersViewStyle, view === 'map' && { flex: 1 }]}>
-        {view === 'map' ? (
+      <Animated.View style={[centersViewStyle, styles.centersBody]}>
+        {bodyView === 'map' ? (
           <View style={styles.sectionMap}>
             <View style={styles.centersMapContainer}>
             <MapView
@@ -661,9 +717,11 @@ function CentersContent({
               focusPosition={mapFocusPosition}
               boundary={boundary}
               boundaryRefitKey={boundaryRefitKey}
+              userLocation={mapUserLocation}
               kindColors={{ evacuation: '#F59E0B' }}
               style={styles.centersMap}
               onMarkerTap={handleMarkerTap}
+              zoomControlTop={MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT + 10}
             />
 
             <View style={[styles.mapSearchBar, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
@@ -672,7 +730,7 @@ function CentersContent({
                 style={[styles.mapSearchInput, { color: theme.text }]}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                placeholder="Search evacuation centers..."
+                placeholder={`Search ${centers.length} evacuation centers...`}
                 placeholderTextColor={theme.textSecondary}
               />
               {searchQuery.length > 0 && (
@@ -682,26 +740,25 @@ function CentersContent({
               )}
             </View>
 
-            <Pressable
-              style={[styles.mapResetFab, { backgroundColor: theme.backgroundElement }]}
-              onPress={handleResetMap}
-              accessibilityLabel="Reset map to Ampid I">
-              <Ionicons name="map" size={18} color={theme.primary} />
-              <ThemedText style={[styles.mapResetFabText, { color: theme.primary }]}>Maps</ThemedText>
-            </Pressable>
-
-            <Pressable
-              style={[styles.mapYouFab, { backgroundColor: theme.backgroundElement }]}
-              onPress={handleLocateMe}
-              accessibilityLabel="Center map on your location"
-              disabled={locating}>
-              {locating ? (
-                <ActivityIndicator size="small" color={theme.primary} />
-              ) : (
-                <Ionicons name="navigate" size={16} color={theme.primary} />
-              )}
-              <ThemedText style={[styles.mapResetFabText, { color: theme.primary }]}>You</ThemedText>
-            </Pressable>
+            <View style={styles.mapFabColumn}>
+              <Pressable
+                style={[styles.mapFab, { backgroundColor: theme.background }]}
+                onPress={handleLocateMe}
+                accessibilityLabel="Use my location"
+                disabled={locating}>
+                {locating ? (
+                  <ActivityIndicator size="small" color={theme.primary} />
+                ) : (
+                  <Ionicons name="navigate" size={18} color={theme.primary} />
+                )}
+              </Pressable>
+              <Pressable
+                style={[styles.mapFab, { backgroundColor: theme.background }]}
+                onPress={handleResetMap}
+                accessibilityLabel="Reset map to Ampid I">
+                <Ionicons name="locate-outline" size={20} color={theme.primary} />
+              </Pressable>
+            </View>
 
             {isLoading && (
               <View style={[styles.mapOverlayCenter, { backgroundColor: `${theme.background}99` }]} pointerEvents="none">
@@ -736,46 +793,54 @@ function CentersContent({
               </View>
             )}
 
-          </View>
+            {!isLoading && filteredCenters.length > 0 && (
+              <View style={styles.mapBottomOverlay} pointerEvents="box-none">
+                <LocationStatusCard state={location.state} onAction={handleLocationAction} style={styles.mapLocationCard} />
+                {cardCenter ? (
+                  <Animated.View style={[styles.mapDetailWrap, cardAnimatedStyle]}>
+                    <CenterDetailCard
+                      name={cardCenter.name}
+                      address={cardCenter.address ?? 'No address'}
+                      distanceKm={(roadRoute?.distanceMeters ?? cardCenter.distanceMeters ?? 0) / 1000}
+                      walkingTimeMins={
+                        roadRoute
+                          ? Math.max(1, Math.round(roadRoute.durationSeconds / 60))
+                          : (cardCenter.estimatedMinutes ?? 0)
+                      }
+                      isRoadRoute={!!roadRoute}
+                      currentOccupancy={cardCenter.current_occupancy}
+                      capacity={cardCenter.capacity}
+                      onClose={handleShowAll}
+                    />
+                  </Animated.View>
+                ) : null}
 
-          <View style={[styles.mapControlsContainer, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-            <Collapsible title="Evacuation Centers" defaultOpen bare>
-              {selectedCenter ? (
-                <Animated.View style={cardAnimatedStyle}>
-                  <CenterDetailCard
-                    name={selectedCenter.name}
-                    address={selectedCenter.address ?? 'No address'}
-                    distanceKm={(roadRoute?.distanceMeters ?? selectedCenter.distanceMeters ?? 0) / 1000}
-                    walkingTimeMins={
-                      roadRoute
-                        ? Math.max(1, Math.round(roadRoute.durationSeconds / 60))
-                        : (selectedCenter.estimatedMinutes ?? 0)
-                    }
-                    isRoadRoute={!!roadRoute}
-                    currentOccupancy={selectedCenter.current_occupancy}
-                    capacity={selectedCenter.capacity}
+                <View onLayout={(e) => setPickerHeight(Math.round(e.nativeEvent.layout.height))}>
+                  <HorizontalCenterPicker
+                    items={pickerItems}
+                    selectedId={selectedCenterId}
+                    onSelect={(id) => {
+                      const center = centerFromId(id);
+                      if (center) {
+                        selectCenter(center);
+                      }
+                    }}
+                    onShowAll={handleShowAll}
                   />
-                </Animated.View>
-              ) : null}
-
-              <View style={styles.pickerWrapper}>
-                <HorizontalCenterPicker
-                  items={pickerItems}
-                  selectedId={selectedCenterId}
-                  onSelect={(id) => {
-                    const center = centerFromId(id);
-                    if (center) {
-                      selectCenter(center);
-                    }
-                  }}
-                  onShowAll={handleShowAll}
-                />
+                </View>
               </View>
-            </Collapsible>
+            )}
           </View>
         </View>
         ) : (
-          <Animated.View entering={FadeIn.duration(200)} layout={LinearTransition.duration(200)}>
+          <ScrollView
+            style={styles.centersBody}
+            contentContainerStyle={styles.centersListScroll}
+            showsVerticalScrollIndicator={false}>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.showingText}>
+              Showing {centers.length} Locations
+            </ThemedText>
+            <LocationStatusCard state={location.state} onAction={handleLocationAction} />
             <View style={styles.sectionList}>
               {isLoading ? (
                 <View style={styles.skeletonList}>
@@ -806,8 +871,8 @@ function CentersContent({
                   />
                 ))
               )}
-          </View>
-          </Animated.View>
+            </View>
+          </ScrollView>
         )}
       </Animated.View>
     </View>
@@ -890,10 +955,10 @@ function AlertsContent({
       clearTimeout(tooltipTimeout.current);
     }
     setTooltip({ field, message, visible: true });
-    tooltipTranslateY.value = withSpring(0, { damping: 20, stiffness: 150 });
+    tooltipTranslateY.value = withTiming(0, { duration: 200 });
     tooltipOpacity.value = withTiming(1, { duration: 200 });
     tooltipTimeout.current = setTimeout(() => {
-      tooltipTranslateY.value = withSpring(-6, { damping: 20, stiffness: 150 });
+      tooltipTranslateY.value = withTiming(-6, { duration: 200 });
       tooltipOpacity.value = withTiming(0, { duration: 200 }, (finished) => {
         if (finished) {
           runOnJS(setTooltip)({ field: '', message: '', visible: false });
@@ -1226,6 +1291,12 @@ function AlertsContent({
   );
 }
 
+const MAP_SEARCH_TOP = 12;
+const MAP_SEARCH_HEIGHT = 44;
+const MAP_OVERLAY_BOTTOM = 12;
+// Approximate rendered height of CenterDetailCard, used to keep the focused pin clear of it.
+const DETAIL_CARD_HEIGHT = 120;
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -1286,7 +1357,8 @@ const styles = StyleSheet.create({
   mapScreen: {
     flex: 1,
     paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.three,
   },
   scrollContent: {
     paddingHorizontal: Spacing.four,
@@ -1368,22 +1440,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   centersContent: {
-    gap: Spacing.two,
+    gap: Spacing.three,
   },
   centersContentMap: {
     flex: 1,
     minHeight: 0,
   },
-  sectionControls: {},
-  sectionToolbar: {
+  sectionControlsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  sectionMap: {
+    alignItems: 'stretch',
     gap: Spacing.two,
+  },
+  segmentWrap: {
+    flex: 1,
+  },
+  centersBody: {
+    flex: 1,
+  },
+  centersListScroll: {
+    gap: Spacing.three,
+    paddingBottom: Spacing.six,
+  },
+  // Bleeds past mapScreen's side/bottom padding so the map runs edge to edge,
+  // matching the Maps & DRRM Info Hub tab.
+  sectionMap: {
     flex: 1,
     minHeight: 0,
+    marginHorizontal: -Spacing.four,
+    marginBottom: -Spacing.three,
   },
   sectionList: {
     gap: Spacing.three,
@@ -1401,8 +1485,7 @@ const styles = StyleSheet.create({
   },
   centersMapContainer: {
     flex: 1,
-    minHeight: 240,
-    borderRadius: 16,
+    minHeight: 220,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -1414,11 +1497,11 @@ const styles = StyleSheet.create({
   },
   mapSearchBar: {
     position: 'absolute',
-    top: 12,
-    left: 16,
-    right: 16,
-    height: 44,
-    borderRadius: 22,
+    top: MAP_SEARCH_TOP,
+    left: 12,
+    right: 12,
+    height: MAP_SEARCH_HEIGHT,
+    borderRadius: MAP_SEARCH_HEIGHT / 2,
     borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -1442,69 +1525,52 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingVertical: 0,
   },
-  mapResetFab: {
+  mapFabColumn: {
     position: 'absolute',
-    left: 10,
-    top: 66,
-    height: 36,
-    borderRadius: 18,
-    paddingHorizontal: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+    top: MAP_SEARCH_TOP + MAP_SEARCH_HEIGHT + 10,
+    right: 12,
+    gap: Spacing.two,
     zIndex: 10,
+  },
+  mapFab: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.12,
+        shadowOpacity: 0.15,
         shadowRadius: 6,
       },
       android: { elevation: 4 },
     }),
   },
-  mapYouFab: {
+  mapBottomOverlay: {
     position: 'absolute',
-    left: 10,
-    top: 110,
-    height: 36,
-    borderRadius: 18,
-    paddingHorizontal: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+    left: 0,
+    right: 0,
+    bottom: MAP_OVERLAY_BOTTOM,
+    gap: Spacing.two,
     zIndex: 10,
+  },
+  mapLocationCard: {
+    marginHorizontal: 12,
+  },
+  mapDetailWrap: {
+    marginHorizontal: 12,
+    borderRadius: 14,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
       },
-      android: { elevation: 4 },
+      android: { elevation: 5 },
     }),
-  },
-  mapControlsContainer: {
-    borderRadius: 16,
-    borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingTop: 4,
-    paddingBottom: 12,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.06,
-        shadowRadius: 4,
-      },
-      android: { elevation: 1 },
-    }),
-  },
-  pickerWrapper: {},
-  mapResetFabText: {
-    fontSize: 13,
-    fontWeight: '600',
   },
   mapOverlayCenter: {
     position: 'absolute',
@@ -1580,12 +1646,11 @@ const styles = StyleSheet.create({
   nearestButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.two,
-    borderRadius: 20,
+    justifyContent: 'center',
+    gap: 6,
+    borderRadius: Spacing.four,
     borderWidth: 1,
-    borderColor: 'transparent',
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
   },
   nearestText: {
     fontSize: 13,

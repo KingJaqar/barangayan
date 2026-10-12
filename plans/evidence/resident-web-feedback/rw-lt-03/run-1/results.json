@@ -1,0 +1,2409 @@
+{
+  "run": "run-1",
+  "phase": "RW-LT-03",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-12T01:08:05.585Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321",
+    "realtime": "local Realtime unavailable; Realtime-triggered refreshes use an in-browser protocol 2.0.0 stand-in (mockRealtime)"
+  },
+  "scenarios": [
+    {
+      "id": "nav-fallback-resident-group",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "URL commits immediately (fallback is prefetched, navigation not delayed)": {
+          "ok": true,
+          "detail": 6
+        },
+        "resident fallback announced in one polite status region": {
+          "ok": true,
+          "detail": [
+            "status"
+          ]
+        },
+        "decoration hidden for the first 120 ms": {
+          "ok": true,
+          "detail": [
+            [
+              6,
+              0,
+              0
+            ],
+            [
+              65,
+              0,
+              0
+            ]
+          ]
+        },
+        "placeholder visible while slow": {
+          "ok": true
+        },
+        "shell persists, not duplicated (1 header, 1 main)": {
+          "ok": true
+        },
+        "settles to real content with no status or busy region": {
+          "ok": true,
+          "detail": {
+            "url": "/reports",
+            "status": "",
+            "statusRoles": [],
+            "statusVisible": 0,
+            "skeletons": 0,
+            "staticSkeletons": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "mains": 1,
+            "bottomBar": true,
+            "pendingHints": [],
+            "hintCount": 16,
+            "busy": 0,
+            "h1": "My Reports",
+            "alert": "",
+            "infiniteAnimations": 0,
+            "overflowX": false
+          }
+        },
+        "no writes during navigation": {
+          "ok": true,
+          "detail": 0
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "clickToSettledMs": 2688,
+        "timeline": [
+          {
+            "t": 6,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 118,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 0.0123586,
+            "skeletonVisible": 0.0123586,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 171,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 0.533497,
+            "skeletonVisible": 0.533497,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 224,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 0.894044,
+            "skeletonVisible": 0.894044,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 277,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.999957,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 330,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.994349,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 383,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.980176,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 437,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.957006,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 492,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.924772,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 545,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.884056,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 597,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.84031,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 651,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.788864,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 704,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.73646,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 758,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.686865,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 812,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.642713,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 865,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.609024,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 917,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.580959,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 970,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.563157,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1022,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.552481,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1076,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.55018,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1128,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.555229,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1181,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.568942,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1234,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.591724,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1289,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.623615,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1341,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.660589,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1394,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.707312,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1447,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.754759,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1501,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.807146,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1553,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.857423,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1607,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.902393,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1659,
+            "url": "/reports",
+            "status": "Loading page…",
+            "statusVisible": 1,
+            "skeletonVisible": 0.937009,
+            "headers": 1,
+            "h1": null
+          },
+          {
+            "t": 1712,
+            "url": "/reports",
+            "status": "",
+            "statusVisible": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "h1": "My Reports"
+          }
+        ],
+        "ctl": {
+          "nav": [
+            "/reports"
+          ],
+          "mutations": 0
+        }
+      },
+      "requests": {
+        "total": 115,
+        "document": 2,
+        "rsc": 43,
+        "script": 45,
+        "rest": 9,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "nav-route-specific-variants",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "/home → Maps: \"Loading map…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/home",
+            "to": "/maps",
+            "status": "Loading map…",
+            "skeletons": 6,
+            "staticSkeletons": 1,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Maps"
+          }
+        },
+        "Maps: steady (non-pulsing) map viewport": {
+          "ok": true,
+          "detail": 1
+        },
+        "/home → RW Synthetic Clearance: \"Loading services…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/home",
+            "to": "/services/requests/5e0d0000-0000-4000-8000-0000000000e1",
+            "status": "Loading services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "RW Synthetic Clearance"
+          }
+        },
+        "RW Synthetic Clearance: persistent segment/sidebar navigation stays visible": {
+          "ok": true,
+          "detail": true
+        },
+        "/emergency → Evacuation Centers: \"Loading emergency information…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/emergency",
+            "to": "/emergency/centers",
+            "status": "Loading emergency information…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "Evacuation Centers"
+          }
+        },
+        "Evacuation Centers: persistent segment/sidebar navigation stays visible": {
+          "ok": true,
+          "detail": true
+        },
+        "/services/documents → My Requests: \"Loading services…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/services/documents",
+            "to": "/services/requests",
+            "status": "Loading services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "My Requests"
+          }
+        },
+        "My Requests: persistent segment/sidebar navigation stays visible": {
+          "ok": true,
+          "detail": true
+        },
+        "/health → My Registrations: \"Loading health services…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/health",
+            "to": "/health/my-registrations",
+            "status": "Loading health services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "My Registrations"
+          }
+        },
+        "My Registrations: persistent segment/sidebar navigation stays visible": {
+          "ok": true,
+          "detail": true
+        },
+        "/settings/profile → Theme & Appearance: \"Loading settings…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/settings/profile",
+            "to": "/settings/theme",
+            "status": "Loading settings…",
+            "skeletons": 10,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "Theme & Appearance"
+          }
+        },
+        "Theme & Appearance: persistent segment/sidebar navigation stays visible": {
+          "ok": true,
+          "detail": true
+        },
+        "/maps → Directory: \"Loading directory…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/maps",
+            "to": "/maps/directory",
+            "status": "Loading directory…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Directory"
+          }
+        },
+        "/home → Announcements: \"Loading page…\"": {
+          "ok": true,
+          "detail": {
+            "from": "/home",
+            "to": "/announcements",
+            "status": "Loading page…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Announcements"
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "cases": [
+          {
+            "from": "/home",
+            "to": "/maps",
+            "status": "Loading map…",
+            "skeletons": 6,
+            "staticSkeletons": 1,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Maps"
+          },
+          {
+            "from": "/home",
+            "to": "/services/requests/5e0d0000-0000-4000-8000-0000000000e1",
+            "status": "Loading services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "RW Synthetic Clearance"
+          },
+          {
+            "from": "/emergency",
+            "to": "/emergency/centers",
+            "status": "Loading emergency information…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "Evacuation Centers"
+          },
+          {
+            "from": "/services/documents",
+            "to": "/services/requests",
+            "status": "Loading services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "My Requests"
+          },
+          {
+            "from": "/health",
+            "to": "/health/my-registrations",
+            "status": "Loading health services…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "My Registrations"
+          },
+          {
+            "from": "/settings/profile",
+            "to": "/settings/theme",
+            "status": "Loading settings…",
+            "skeletons": 10,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": true,
+            "h1": "Theme & Appearance"
+          },
+          {
+            "from": "/maps",
+            "to": "/maps/directory",
+            "status": "Loading directory…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Directory"
+          },
+          {
+            "from": "/home",
+            "to": "/announcements",
+            "status": "Loading page…",
+            "skeletons": 9,
+            "staticSkeletons": 0,
+            "headers": 1,
+            "keepVisible": null,
+            "h1": "Announcements"
+          }
+        ]
+      },
+      "requests": {
+        "total": 570,
+        "document": 9,
+        "rsc": 239,
+        "script": 208,
+        "rest": 44,
+        "auth": 6,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 64
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "nav-fast-no-flash",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "no decorative flash in the first 120 ms of any navigation": {
+          "ok": true,
+          "detail": [
+            0,
+            0,
+            0
+          ]
+        },
+        "content renders as soon as the response lands (no minimum loader time)": {
+          "ok": true,
+          "detail": [
+            50,
+            145,
+            127
+          ]
+        },
+        "cached back navigation (< 120 ms): no loader flash": {
+          "ok": true,
+          "detail": {
+            "firstContentMs": 19,
+            "rscFetched": false,
+            "maxDecoration": 0,
+            "statusEver": false,
+            "elapsed": 729
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "navs": [
+          {
+            "href": "/reports",
+            "responseMs": 248,
+            "firstContentMs": 298,
+            "contentAfterResponseMs": 50,
+            "decorationBefore100ms": 0,
+            "routeFallbackVisibleMax": 1
+          },
+          {
+            "href": "/announcements",
+            "responseMs": 181,
+            "firstContentMs": 326,
+            "contentAfterResponseMs": 145,
+            "decorationBefore100ms": 0,
+            "routeFallbackVisibleMax": 1
+          },
+          {
+            "href": "/emergency",
+            "responseMs": 191,
+            "firstContentMs": 318,
+            "contentAfterResponseMs": 127,
+            "decorationBefore100ms": 0,
+            "routeFallbackVisibleMax": 1
+          }
+        ],
+        "cachedBack": {
+          "firstContentMs": 19,
+          "rscFetched": false,
+          "maxDecoration": 0,
+          "statusEver": false,
+          "elapsed": 729
+        }
+      },
+      "requests": {
+        "total": 136,
+        "document": 2,
+        "rsc": 54,
+        "script": 47,
+        "rest": 13,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "link-hint-blocking-navigation",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "hint pending while the navigation blocks; current page (tabs) stays": {
+          "ok": true,
+          "detail": 51
+        },
+        "hint invisible for the first 120 ms, visible after": {
+          "ok": true,
+          "detail": [
+            [
+              3,
+              0
+            ],
+            [
+              164,
+              0.461734
+            ],
+            [
+              330,
+              0.994366
+            ],
+            [
+              501,
+              0.919341
+            ],
+            [
+              669,
+              0.773545
+            ],
+            [
+              835,
+              0.625774
+            ],
+            [
+              1005,
+              0.555111
+            ],
+            [
+              1171,
+              0.565715
+            ],
+            [
+              1338,
+              0.658833
+            ],
+            [
+              1504,
+              0.812595
+            ],
+            [
+              1674,
+              0.94757
+            ]
+          ]
+        },
+        "hint is aria-hidden; link name and size unchanged": {
+          "ok": true,
+          "detail": {
+            "before": {
+              "x": 329.71875,
+              "y": 330.5,
+              "width": 71.140625,
+              "height": 32
+            },
+            "during": {
+              "x": 329.71875,
+              "y": 330.5,
+              "width": 71.140625,
+              "height": 32
+            },
+            "name": "Active"
+          }
+        },
+        "settles: URL updated, hint cleared": {
+          "ok": true,
+          "detail": "/services/requests?tab=active"
+        },
+        "top-nav hint never flashes when the fallback commits at once": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "before": {
+          "box": {
+            "x": 329.71875,
+            "y": 330.5,
+            "width": 71.140625,
+            "height": 32
+          },
+          "name": "Active",
+          "ariaHidden": "true"
+        },
+        "timeline": [
+          {
+            "t": 3,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 131,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.188011
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 164,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.461734
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 196,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.722437
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 229,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.912308
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 261,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.999355
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 295,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.998735
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 330,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.994366
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 365,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.985565
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 400,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.975755
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 434,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.959275
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 468,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.94098
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 501,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.919341
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 534,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.894418
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 567,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.86696
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 601,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.837178
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 634,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.805621
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 669,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.773545
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 702,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.741317
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 737,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.706224
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 770,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.676961
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 802,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.649975
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 835,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.625774
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 871,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.604776
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 904,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.587173
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 938,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.573041
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 971,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.562444
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1005,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.555111
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1037,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.551035
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1069,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.550043
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1103,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.552076
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1137,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.557241
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1171,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.565715
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1204,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.577555
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1237,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.592793
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1271,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.611568
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1304,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.633617
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1338,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.658833
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1371,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.686685
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1405,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.716706
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1438,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.748314
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1471,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.780527
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1504,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.812595
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1538,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.843685
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1571,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.873124
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1604,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.900102
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1638,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.924294
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1674,
+            "url": "/services/requests",
+            "pendingHints": [
+              {
+                "href": "/services/requests?tab=active",
+                "opacity": 0.94757
+              }
+            ],
+            "h1": "My Requests"
+          },
+          {
+            "t": 1707,
+            "url": "/services/requests?tab=active",
+            "pendingHints": [],
+            "h1": "My Requests"
+          }
+        ],
+        "topNavPendingSamples": []
+      },
+      "requests": {
+        "total": 117,
+        "document": 2,
+        "rsc": 43,
+        "script": 44,
+        "rest": 10,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 14
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "rapid-link-selection",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "final destination is the last selection": {
+          "ok": true,
+          "detail": {
+            "url": "/health",
+            "status": "",
+            "statusRoles": [],
+            "statusVisible": 0,
+            "skeletons": 0,
+            "staticSkeletons": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "mains": 1,
+            "bottomBar": true,
+            "pendingHints": [],
+            "hintCount": 18,
+            "busy": 0,
+            "h1": "Active Medical Drives",
+            "alert": "",
+            "infiniteAnimations": 0,
+            "overflowX": false
+          }
+        },
+        "the abandoned route never renders after the newer selection": {
+          "ok": true,
+          "detail": [
+            {
+              "t": 16,
+              "url": "/health",
+              "status": "Loading health services…",
+              "h1": null
+            },
+            {
+              "t": 1736,
+              "url": "/health",
+              "status": "",
+              "h1": "Active Medical Drives"
+            }
+          ]
+        },
+        "back returns to a real history entry": {
+          "ok": true,
+          "detail": "/reports"
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "timeline": [
+          {
+            "t": 16,
+            "url": "/health",
+            "status": "Loading health services…",
+            "h1": null
+          },
+          {
+            "t": 1736,
+            "url": "/health",
+            "status": "",
+            "h1": "Active Medical Drives"
+          }
+        ],
+        "afterBack": "/reports"
+      },
+      "requests": {
+        "total": 125,
+        "document": 2,
+        "rsc": 46,
+        "script": 46,
+        "rest": 11,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "back-forward-reload-deeplink",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "back, back, forward restore the right pages": {
+          "ok": true,
+          "detail": [
+            {
+              "url": "/reports",
+              "h1": "My Reports",
+              "status": ""
+            },
+            {
+              "url": "/home",
+              "h1": "Welcome back, RW",
+              "status": ""
+            },
+            {
+              "url": "/reports",
+              "h1": "My Reports",
+              "status": ""
+            }
+          ]
+        },
+        "hard reload renders the page inside the shell": {
+          "ok": true,
+          "detail": {
+            "status": 200,
+            "h1": "My Reports"
+          }
+        },
+        "nested settings deep link renders sidebar and content": {
+          "ok": true,
+          "detail": {
+            "status": 200,
+            "url": "/settings/theme",
+            "h1": "Theme & Appearance",
+            "sidebar": true
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "history": [
+          {
+            "url": "/reports",
+            "h1": "My Reports",
+            "status": ""
+          },
+          {
+            "url": "/home",
+            "h1": "Welcome back, RW",
+            "status": ""
+          },
+          {
+            "url": "/reports",
+            "h1": "My Reports",
+            "status": ""
+          }
+        ],
+        "reload": {
+          "status": 200,
+          "h1": "My Reports"
+        },
+        "deepLink": {
+          "status": 200,
+          "url": "/settings/theme",
+          "h1": "Theme & Appearance",
+          "sidebar": true
+        }
+      },
+      "requests": {
+        "total": 243,
+        "document": 4,
+        "rsc": 99,
+        "script": 90,
+        "rest": 16,
+        "auth": 10,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 24
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "modifier-click-and-prefetch",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "viewport prefetching still runs": {
+          "ok": true,
+          "detail": 29
+        },
+        "Ctrl+click opens a new tab; the current page does not navigate or show a hint": {
+          "ok": true,
+          "detail": {
+            "newTab": "/reports",
+            "current": "/home"
+          }
+        },
+        "nav hrefs unchanged": {
+          "ok": true,
+          "detail": [
+            "/home",
+            "/emergency",
+            "/services",
+            "/maps",
+            "/health",
+            "/reports",
+            "/announcements",
+            "/settings"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "prefetchRequests": 29,
+        "newTab": "/reports",
+        "hrefs": [
+          "/home",
+          "/emergency",
+          "/services",
+          "/maps",
+          "/health",
+          "/reports",
+          "/announcements",
+          "/settings"
+        ]
+      },
+      "requests": {
+        "total": 107,
+        "document": 2,
+        "rsc": 41,
+        "script": 42,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "guest-fallback-and-redirects",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "guest sees the group fallback inside the guest header (no account UI)": {
+          "ok": true,
+          "detail": {
+            "status": "Loading page…",
+            "bottomBar": false,
+            "guestHeader": {
+              "login": 1,
+              "signup": 1,
+              "logout": 0
+            }
+          }
+        },
+        "then guest content": {
+          "ok": true
+        },
+        "gated route still redirects a guest to /login?next=…": {
+          "ok": true,
+          "detail": {
+            "documentStatus": 200,
+            "finalUrl": "/login?next=%2Fservices%2Frequests",
+            "ms": 1108
+          }
+        },
+        "no protected content rendered before the redirect": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "during": {
+          "status": "Loading page…",
+          "bottomBar": false,
+          "guestHeader": {
+            "login": 1,
+            "signup": 1,
+            "logout": 0
+          }
+        },
+        "gatedRedirect": {
+          "documentStatus": 200,
+          "finalUrl": "/login?next=%2Fservices%2Frequests",
+          "ms": 1108
+        }
+      },
+      "requests": {
+        "total": 117,
+        "document": 3,
+        "rsc": 39,
+        "script": 61,
+        "rest": 1,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "auth-fallback-and-signed-in-redirect",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "auth fallback: centered form placeholder, no resident shell": {
+          "ok": true,
+          "detail": {
+            "status": "Loading…",
+            "headers": 0,
+            "skeletons": 7
+          }
+        },
+        "signed-in visit to /login still lands on /home": {
+          "ok": true,
+          "detail": {
+            "documentStatus": 200,
+            "finalUrl": "/home"
+          }
+        }
+      },
+      "observations": {
+        "during": {
+          "status": "Loading…",
+          "headers": 0,
+          "skeletons": 7
+        },
+        "loginDestination": "/home",
+        "signedInLogin": {
+          "documentStatus": 200,
+          "finalUrl": "/home"
+        }
+      },
+      "requests": {
+        "total": 198,
+        "document": 5,
+        "rsc": 55,
+        "script": 98,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 30
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "inaccessible-record-not-found",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "another resident’s records still show the 404 view, noindex, nothing leaked": {
+          "ok": true,
+          "detail": [
+            {
+              "url": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+              "documentStatus": 200,
+              "h1": "404",
+              "robots": [
+                "noindex",
+                "noindex"
+              ],
+              "leaked": false
+            },
+            {
+              "url": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+              "documentStatus": 200,
+              "h1": "404",
+              "robots": [
+                "noindex",
+                "noindex"
+              ],
+              "leaked": false
+            }
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "records": [
+          {
+            "url": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+            "documentStatus": 200,
+            "h1": "404",
+            "robots": [
+              "noindex",
+              "noindex"
+            ],
+            "leaked": false
+          },
+          {
+            "url": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+            "documentStatus": 200,
+            "h1": "404",
+            "robots": [
+              "noindex",
+              "noindex"
+            ],
+            "leaked": false
+          }
+        ]
+      },
+      "requests": {
+        "total": 143,
+        "document": 3,
+        "rsc": 48,
+        "script": 64,
+        "rest": 11,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 15
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "error-boundary-resident-retry",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "render failure shows the inline recovery view inside the shell": {
+          "ok": true,
+          "detail": {
+            "alert": "This page couldn't loadSomething went wrong while showing this page. Check your connection, then try again. Anything you already submitted isn't sent again.",
+            "headers": 1,
+            "nav": true,
+            "toasts": 0
+          }
+        },
+        "no toast for a read/render failure": {
+          "ok": true
+        },
+        "no raw error text shown": {
+          "ok": true
+        },
+        "retry while still failing returns to the recovery view without a loop": {
+          "ok": true,
+          "detail": {
+            "refreshes": 1,
+            "reads": 1
+          }
+        },
+        "retry pending: \"Trying again…\", disabled, busy": {
+          "ok": true,
+          "detail": [
+            {
+              "text": "Trying again…",
+              "disabled": true
+            }
+          ]
+        },
+        "repeated activation → one route refresh; no writes replayed": {
+          "ok": true,
+          "detail": {
+            "pendingButton": [
+              {
+                "text": "Trying again…",
+                "disabled": true
+              }
+            ],
+            "refreshes": 1,
+            "mutations": 0
+          }
+        },
+        "content recovers after retry": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "boundary": {
+          "alert": "This page couldn't loadSomething went wrong while showing this page. Check your connection, then try again. Anything you already submitted isn't sent again.",
+          "headers": 1,
+          "nav": true,
+          "toasts": 0
+        },
+        "persistentRetry": {
+          "refreshes": 1,
+          "reads": 1
+        },
+        "recovery": {
+          "pendingButton": [
+            {
+              "text": "Trying again…",
+              "disabled": true
+            }
+          ],
+          "refreshes": 1,
+          "mutations": 0
+        }
+      },
+      "requests": {
+        "total": 118,
+        "document": 2,
+        "rsc": 47,
+        "script": 42,
+        "rest": 11,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 14
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "RangeError: Invalid time value\n    at h (http://127.0.0.1:3127/_next/static/chunks/246t61uu14618.js:1:2583)\n    at aS (http://127.0.0.1:3127/_next/static/chunks/00y560nhlqb8n.js:1:78284)\n    at o1 (http://127.0.0.1:3127/_next/static/chunks/00y560nhlqb8n.js:1:98577)\n    at id (http://127.0.0.1:3127/_",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "RangeError: Invalid time value\n    at h (http://127.0.0.1:3127/_next/static/chunks/246t61uu14618.js:1:2583)\n    at aS (http://127.0.0.1:3127/_next/static/chunks/00y560nhlqb8n.js:1:78284)\n    at o1 (http://127.0.0.1:3127/_next/static/chunks/00y560nhlqb8n.js:1:98577)\n    at id (http://127.0.0.1:3127/_",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "error-boundary-auth-retry",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "auth boundary: recovery view without the resident shell, safe return to Log In": {
+          "ok": true,
+          "detail": {
+            "alert": "This page couldn't loadSomething went wrong while showing this page. Check your connection, then try again. Anything you already submitted isn't sent again.",
+            "headers": 0,
+            "returnLink": 1
+          }
+        },
+        "retry re-renders the registration form; nothing submitted": {
+          "ok": true,
+          "detail": {
+            "form": 1,
+            "mutations": 0,
+            "alert": ""
+          }
+        }
+      },
+      "observations": {
+        "boundary": {
+          "alert": "This page couldn't loadSomething went wrong while showing this page. Check your connection, then try again. Anything you already submitted isn't sent again.",
+          "headers": 0,
+          "returnLink": 1
+        },
+        "recovered": {
+          "form": 1,
+          "mutations": 0,
+          "alert": ""
+        }
+      },
+      "requests": {
+        "total": 68,
+        "document": 1,
+        "rsc": 7,
+        "script": 24,
+        "rest": 4,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 32
+      },
+      "consoleErrors": [
+        "Error: Minified React error #31; visit https://react.dev/errors/31?args[]=object%20with%20keys%20%7Bsynthetic%7D for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at lU (http://127.0.0.1:3127/_next/static/chunks/00y560nhlqb8n.js:1:68331"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "drawer-read-states",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "slow read: \"Loading request…\" status + aria-busy, then the selected record": {
+          "ok": true,
+          "detail": {
+            "status": "Loading request…",
+            "busy": 1,
+            "readyShowsReference": true
+          }
+        },
+        "returned error settles (no skeleton, no status) into an alert with plain copy": {
+          "ok": true,
+          "detail": {
+            "alert": "We couldn't load this requestCheck your connection, then try again. Nothing about the request was changed.",
+            "skeletons": 0,
+            "status": "",
+            "retryReads": 1,
+            "retryWrites": 0,
+            "toasts": 0,
+            "recoveredReference": true
+          }
+        },
+        "retry repeats the read only (1 GET, 0 writes) and recovers; no toast": {
+          "ok": true,
+          "detail": {
+            "alert": "We couldn't load this requestCheck your connection, then try again. Nothing about the request was changed.",
+            "skeletons": 0,
+            "status": "",
+            "retryReads": 1,
+            "retryWrites": 0,
+            "toasts": 0,
+            "recoveredReference": true
+          }
+        },
+        "missing/inaccessible settles to \"not available\" without access details; Close works; list stays": {
+          "ok": true,
+          "detail": {
+            "alert": "This request isn't availableIt may have been removed, or it can't be opened from this account. Your request list is still shown behind this panel.",
+            "retryOffered": 0,
+            "closed": true,
+            "listVisible": true
+          }
+        },
+        "selection change never flashes or restores the earlier request": {
+          "ok": true,
+          "detail": {
+            "refs": [
+              "REQ-2026-00034",
+              "REQ-2026-00035"
+            ],
+            "showedFirstAfterSecondClick": false,
+            "finalShowsSecond": true
+          }
+        },
+        "closing during a load and reopening settles to the record": {
+          "ok": true,
+          "detail": {
+            "alert": "",
+            "showsReference": true
+          }
+        },
+        "thrown/network failure also settles into the retryable error": {
+          "ok": true,
+          "detail": {
+            "alert": "We couldn't load this requestCheck your connection, then try again. Nothing about the request was changed.",
+            "skeletons": 0,
+            "status": ""
+          }
+        },
+        "no writes at any point": {
+          "ok": true,
+          "detail": 0
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "cardRefs": [
+          "REQ-2026-00034",
+          "REQ-2026-00035"
+        ],
+        "slow": {
+          "status": "Loading request…",
+          "busy": 1,
+          "readyShowsReference": true
+        },
+        "error": {
+          "alert": "We couldn't load this requestCheck your connection, then try again. Nothing about the request was changed.",
+          "skeletons": 0,
+          "status": "",
+          "retryReads": 1,
+          "retryWrites": 0,
+          "toasts": 0,
+          "recoveredReference": true
+        },
+        "unavailable": {
+          "alert": "This request isn't availableIt may have been removed, or it can't be opened from this account. Your request list is still shown behind this panel.",
+          "retryOffered": 0,
+          "closed": true,
+          "listVisible": true
+        },
+        "stale": {
+          "refs": [
+            "REQ-2026-00034",
+            "REQ-2026-00035"
+          ],
+          "showedFirstAfterSecondClick": false,
+          "finalShowsSecond": true
+        },
+        "reopen": {
+          "alert": "",
+          "showsReference": true
+        },
+        "thrown": {
+          "alert": "We couldn't load this requestCheck your connection, then try again. Nothing about the request was changed.",
+          "skeletons": 0,
+          "status": ""
+        }
+      },
+      "requests": {
+        "total": 124,
+        "document": 2,
+        "rsc": 37,
+        "script": 43,
+        "rest": 26,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 406 (Not Acceptable)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: net::ERR_FAILED",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-read-states",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "empty response → meaningful empty state, no loader": {
+          "ok": true,
+          "detail": ""
+        },
+        "initial failure → loader replaced by a plain-language alert (no raw message), no toast": {
+          "ok": true,
+          "detail": {
+            "alert": "We couldn't load announcements. Check your connection, then try again.",
+            "status": "",
+            "skeletons": 0,
+            "toasts": 0
+          }
+        },
+        "retry recovers the list": {
+          "ok": true
+        },
+        "filter change resets readiness (other identity rows hidden, loading shown)": {
+          "ok": true,
+          "detail": {
+            "statusDuringSwitch": "Loading announcements…",
+            "previousRowsDuringSwitch": 0,
+            "generalRowsAfterObsoleteResponse": 0
+          }
+        },
+        "obsolete (slower, earlier filter) response never replaces the current filter": {
+          "ok": true,
+          "detail": {
+            "statusDuringSwitch": "Loading announcements…",
+            "previousRowsDuringSwitch": 0,
+            "generalRowsAfterObsoleteResponse": 0
+          }
+        },
+        "Realtime event triggers one refetch": {
+          "ok": true,
+          "detail": {
+            "pushed": 4,
+            "refetches": 1
+          }
+        },
+        "refresh keeps the same mounted cards: no skeleton, no loading status, no entrance replay": {
+          "ok": true,
+          "detail": [
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": null,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.0417406,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.553548,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.969966,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 1,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": null,
+              "reveals": 0
+            }
+          ]
+        },
+        "quiet \"Updating\" hint appears only after 120 ms, then clears": {
+          "ok": true,
+          "detail": [
+            0,
+            0.0417406,
+            0.553548,
+            0.969966,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "refresh produces no toast": {
+          "ok": true
+        },
+        "refresh failure keeps the list, shows a polite stale-data warning, retry clears it": {
+          "ok": true,
+          "detail": {
+            "cards": 3,
+            "role": "status",
+            "toasts": 0,
+            "cardsAfterRetry": 3
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "initialError": {
+          "alert": "We couldn't load announcements. Check your connection, then try again.",
+          "status": "",
+          "skeletons": 0,
+          "toasts": 0
+        },
+        "identity": {
+          "statusDuringSwitch": "Loading announcements…",
+          "previousRowsDuringSwitch": 0,
+          "generalRowsAfterObsoleteResponse": 0
+        },
+        "refresh": {
+          "pushedChannels": 4,
+          "refetches": 1,
+          "samples": [
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": null,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.0417406,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.553548,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 0.969966,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": 1,
+              "reveals": 0
+            },
+            {
+              "cards": 3,
+              "marked": 3,
+              "skeletons": 0,
+              "status": "",
+              "hintOpacity": null,
+              "reveals": 0
+            }
+          ]
+        },
+        "refreshFailure": {
+          "cards": 3,
+          "role": "status",
+          "toasts": 0,
+          "cardsAfterRetry": 3
+        }
+      },
+      "requests": {
+        "total": 153,
+        "document": 3,
+        "rsc": 46,
+        "script": 63,
+        "rest": 24,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 15
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "reduced-motion-and-360",
+      "phase": "RW-LT-03",
+      "status": "pass",
+      "checks": {
+        "reduced motion: pending hint visible but static (no infinite animation)": {
+          "ok": true,
+          "detail": {
+            "hints": [
+              {
+                "href": "/services/requests?tab=history",
+                "opacity": 1
+              }
+            ],
+            "infinite": 0
+          }
+        },
+        "360 px: bottom bar persists, fallback static, no horizontal overflow": {
+          "ok": true,
+          "detail": {
+            "status": "Loading page…",
+            "infinite": 0,
+            "bottomBar": true,
+            "overflowX": false
+          }
+        },
+        "bottom bar navigation completes": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "fallback": {
+          "status": "Loading page…",
+          "infinite": 0,
+          "bottomBar": true,
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 118,
+        "document": 2,
+        "rsc": 43,
+        "script": 44,
+        "rest": 11,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 14
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-12T01:10:41.881Z",
+  "summary": {
+    "pass": 15,
+    "fail": 0,
+    "error": 0
+  }
+}

@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.innerText: Error: strict mode violation: locator('.table-browse-pagination') resolved to 2 elements:
+    1) <div class="table-browse-pagination">…</div> aka getByText('Showing 0–0 of 0Rows per page')
+    2) <nav aria-label="Table pages" class="table-browse-pagination">…</nav> aka getByRole('navigation', { name: 'Table pages' })
+
+Call log:
+  - waiting for locator('.table-browse-pagination')
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:86:157
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:65:49 {
+  log: [ "  - waiting for locator('.table-browse-pagination')" ]
+}
+
+Node.js v24.13.1

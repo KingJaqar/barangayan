@@ -2,6 +2,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+import { Spinner } from '@/components/ui/loading';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
@@ -35,16 +36,26 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
+  /** Text shown while `loading` (e.g. "Saving…"). The button reserves the wider of the
+   * two labels so it never resizes, and exposes only the visible one to assistive
+   * technology. Ignored for icon-size buttons, which keep their accessible name. */
+  loadingLabel?: string;
 }
+
+const labelCell = 'col-start-1 row-start-1 inline-flex items-center justify-center gap-2';
 
 /**
  * `asChild` renders through Radix's Slot, which requires exactly one element child to
  * merge props onto (it throws "Slot failed to slot onto its children" otherwise) — so
- * the loading-spinner branch below is deliberately real `<button>`-only. Nothing in
- * this app renders an asChild Button as `loading` (asChild is only ever used for plain
- * nav links), so this split costs nothing today.
+ * the loading branches below are deliberately real `<button>`-only. asChild is only
+ * used for plain navigation links, which have no pending state of their own.
+ *
+ * Loading feedback: disabled and aria-busy apply immediately. With `loadingLabel` the
+ * label swaps immediately and its spinner appears after 120 ms. Without it, the content
+ * keeps its place (and the accessible name) and cross-fades to a centered spinner after
+ * 120 ms, so fast operations never flash and the button's size never changes.
  */
-function Button({ className, variant, size, asChild = false, loading, disabled, children, ...props }: ButtonProps) {
+function Button({ className, variant, size, asChild = false, loading = false, loadingLabel, disabled, children, ...props }: ButtonProps) {
   if (asChild) {
     return (
       <Slot data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props}>
@@ -53,14 +64,35 @@ function Button({ className, variant, size, asChild = false, loading, disabled, 
     );
   }
 
+  const swapLabel = loadingLabel && size !== 'icon';
+
   return (
     <button
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), loading && !swapLabel && 'relative')}
       disabled={disabled || loading}
+      aria-busy={loading || undefined}
       {...props}>
-      {loading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" /> : null}
-      {children}
+      {swapLabel ? (
+        <span className="inline-grid">
+          <span className={cn(labelCell, loading && 'invisible')}>{children}</span>
+          <span aria-hidden={!loading} className={cn(labelCell, !loading && 'invisible')}>
+            {/* Mounted only while loading so its 120 ms delay starts with the operation;
+                the idle placeholder keeps the reserved width identical. */}
+            {loading ? <Spinner /> : <span className="size-4 shrink-0" />}
+            {loadingLabel}
+          </span>
+        </span>
+      ) : loading ? (
+        <>
+          <span className="rw-hint-out inline-flex items-center justify-center gap-2">{children}</span>
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Spinner />
+          </span>
+        </>
+      ) : (
+        children
+      )}
     </button>
   );
 }

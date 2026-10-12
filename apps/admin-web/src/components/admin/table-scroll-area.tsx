@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useBrowseViewport } from './table-browse-panel';
+import { BROWSE_ROW_HEIGHT, BROWSE_VISIBLE_ROWS } from './table-browse-layout';
 
 function interactiveTarget(target: EventTarget | null, region: HTMLElement) {
   return target instanceof HTMLElement && target !== region &&
@@ -14,7 +15,7 @@ export function TableScrollArea({ children }: { children: ReactNode }) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const syncFrame = useRef(0);
-  const [geometry, setGeometry] = useState({ track: 0, overflow: false, height: 400 });
+  const [geometry, setGeometry] = useState({ track: 0, overflow: false, fits: true, height: 41 + BROWSE_VISIBLE_ROWS * BROWSE_ROW_HEIGHT });
   useLayoutEffect(() => {
     const body = bodyRef.current, top = topRef.current, root = rootRef.current;
     const table = body?.firstElementChild;
@@ -25,14 +26,19 @@ export function TableScrollArea({ children }: { children: ReactNode }) {
       frame = requestAnimationFrame(() => {
         if (disposed) return;
         const max = Math.max(0, body!.scrollWidth - body!.clientWidth);
-        const footer = root!.closest('.table-browse-panel')?.querySelector('[data-browse-footer]');
-        const anchor = root!.closest('[data-admin-viewport]');
-        const bottom = Math.min(window.visualViewport?.height ?? window.innerHeight,
-          anchor?.getBoundingClientRect().bottom ?? window.innerHeight);
-        const height = Math.max(48, Math.floor(bottom - body!.getBoundingClientRect().top -
-          (footer?.getBoundingClientRect().height ?? 0) - 32));
-        const next = { track: top!.clientWidth + max, overflow: max > 1, height };
-        setGeometry(prev => prev.track === next.track && prev.overflow === next.overflow && prev.height === next.height ? prev : next);
+        // The viewport is always exactly one sticky header plus BROWSE_VISIBLE_ROWS
+        // fixed-height rows, so the table never changes height between pages.
+        const headerHeight = table!.querySelector('thead')?.getBoundingClientRect().height ?? 0;
+        // Rows grow past BROWSE_ROW_HEIGHT when their content wraps (badges, buttons, long text), so the
+        // viewport is header + the measured height of the first 10 rows, never a fixed 10 x 48.
+        let rowsHeight = 0;
+        const bodyRows = table!.querySelectorAll('tbody tr');
+        for (let index = 0; index < BROWSE_VISIBLE_ROWS; index++) rowsHeight += bodyRows[index]?.getBoundingClientRect().height ?? BROWSE_ROW_HEIGHT;
+        const height = Math.ceil(headerHeight + rowsHeight + body!.offsetHeight - body!.clientHeight);
+        // The viewport height is constant; with at most BROWSE_VISIBLE_ROWS data rows nothing needs vertical scrolling.
+        const fits = table!.querySelectorAll('tbody tr:not([data-filler-row])').length <= BROWSE_VISIBLE_ROWS;
+        const next = { track: top!.clientWidth + max, overflow: max > 1, fits, height };
+        setGeometry(prev => prev.track === next.track && prev.overflow === next.overflow && prev.fits === next.fits && prev.height === next.height ? prev : next);
         if (body!.scrollLeft > max) body!.scrollLeft = max;
         if (Math.abs(top!.scrollLeft - body!.scrollLeft) > 0.5) top!.scrollLeft = body!.scrollLeft;
       });
@@ -122,10 +128,6 @@ export function TableScrollArea({ children }: { children: ReactNode }) {
     event.preventDefault(); body.scrollBy({ left, top });
   }
   return <div ref={rootRef} className={bounded ? 'table-browse-scroll' : undefined}>
-    {bounded && geometry.overflow && <div className="table-browse-column-controls" aria-label="Column scrolling">
-      <button type="button" onClick={() => bodyRef.current?.scrollBy({ left: -Math.max(48, bodyRef.current.clientWidth * 0.8) })}>Scroll columns left</button>
-      <button type="button" onClick={() => bodyRef.current?.scrollBy({ left: Math.max(48, bodyRef.current.clientWidth * 0.8) })}>Scroll columns right</button>
-    </div>}
     <div ref={topRef} onScroll={() => sync(true)} onKeyDown={event => keyScroll(event, true)}
       role={bounded ? 'region' : undefined} aria-label={bounded ? `${label} horizontal scroll` : undefined}
       tabIndex={bounded && geometry.overflow ? 0 : undefined}
@@ -136,6 +138,6 @@ export function TableScrollArea({ children }: { children: ReactNode }) {
       role={bounded ? 'region' : undefined} aria-label={bounded ? `${label} rows and columns` : undefined}
       tabIndex={bounded ? 0 : undefined}
       className={`w-full overflow-x-auto rounded-xl border border-black/10 dark:border-white/10 ${bounded ? 'table-browse-viewport' : ''}`}
-      style={bounded ? { maxHeight: geometry.height } : undefined}>{children}</div>
+      style={bounded ? { height: geometry.height, ...(geometry.fits ? { overflowY: 'hidden' as const } : {}) } : undefined}>{children}</div>
   </div>;
 }

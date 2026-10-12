@@ -8,9 +8,10 @@ import {
 } from '@barangayan/shared';
 import { AlertTriangle, ArrowUpRight, Clock, PackageCheck, Users, Wallet } from 'lucide-react';
 
-import { DataTable } from '@/components/admin/data-table';
+import { DashboardTable } from './dashboard-table';
 import { StatusPill } from '@/components/admin/status-pill';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import styles from './dashboard.module.css';
 
 type ServiceRequest = Tables<'service_requests'> & {
   document_types: Pick<Tables<'document_types'>, 'name'> | null;
@@ -23,52 +24,29 @@ type Payment = Tables<'payments'> & {
 
 const STALE_SUBMITTED_HOURS = 48;
 
-type KpiAccent = 'amber' | 'blue' | 'emerald' | 'slate';
-
-const KPI_ACCENTS: Record<KpiAccent, { icon: string; ring: string }> = {
-  amber: { icon: 'bg-amber-500/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400', ring: 'group-hover:border-amber-500/40' },
-  blue: { icon: 'bg-blue-500/10 text-blue-600 dark:bg-blue-400/10 dark:text-blue-400', ring: 'group-hover:border-blue-500/40' },
-  emerald: { icon: 'bg-[var(--accent)]/10 text-[var(--accent)] dark:bg-[var(--accent)]/15', ring: 'group-hover:border-[var(--accent)]/40' },
-  slate: { icon: 'bg-slate-500/10 text-slate-600 dark:bg-slate-400/10 dark:text-slate-400', ring: 'group-hover:border-slate-500/40' },
-};
-
-function KpiCard({
-  label,
-  value,
-  href,
-  icon: Icon,
-  accent,
-}: {
+function KpiCard({ label, value, href, icon: Icon }: {
   label: string;
   value: string | number;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  accent: KpiAccent;
 }) {
-  const { icon: iconClass, ring } = KPI_ACCENTS[accent];
   return (
-    <Link
-      href={href}
-      className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm shadow-black/[0.02] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/50 active:translate-y-0 active:scale-[0.99] dark:border-white/[0.06] dark:bg-zinc-900 dark:shadow-none ${ring}`}>
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-transform duration-200 ease-out group-hover:scale-105 ${iconClass}`}>
-        <Icon className="h-5 w-5" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-xs font-medium tracking-wide text-zinc-500 dark:text-zinc-400">{label}</span>
-        <span className="mt-0.5 block text-xl font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50">{value}</span>
-      </span>
-      <ArrowUpRight className="h-4 w-4 shrink-0 -translate-x-0.5 translate-y-0.5 text-zinc-300 opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 dark:text-zinc-600" />
+    <Link href={href} className={styles.kpi}>
+      <span className={styles.kpiIcon}><Icon className="size-4" /></span>
+      <span className={styles.kpiLabel}>{label}</span>
+      <span className={styles.kpiValue}>{value}</span>
+      <ArrowUpRight className={styles.kpiArrow} aria-hidden="true" />
     </Link>
   );
 }
 
 function KpiSkeleton() {
   return (
-    <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div className={styles.kpis}>
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-3 rounded-2xl border border-black/[0.06] bg-white p-4 dark:border-white/[0.06] dark:bg-zinc-900">
+          className={styles.skeletonCard}>
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
           <div className="min-w-0 flex-1 space-y-2">
             <div className="h-2.5 w-16 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
@@ -101,20 +79,15 @@ function TableSkeleton() {
 
 function PanelCard({ title, viewAllHref, children }: { title: string; viewAllHref: string; children: React.ReactNode }) {
   return (
-    <div>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold tracking-tight text-zinc-700 dark:text-zinc-200">{title}</h2>
-        <Link
-          href={viewAllHref}
-          className="group inline-flex items-center gap-0.5 text-sm font-medium text-[var(--accent)] transition-colors duration-150 hover:text-[#0c5747] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40 rounded-md">
-          View all
-          <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+    <section className={styles.panel} aria-label={title}>
+      <div className={styles.panelHeading}>
+        <h2>{title}</h2>
+        <Link href={viewAllHref} className={styles.viewAll} aria-label={`View all ${title.toLowerCase().replace('recent ', '')}`}>
+          View all <ArrowUpRight className="size-3.5" aria-hidden="true" />
         </Link>
       </div>
-      <div className="overflow-hidden rounded-xl shadow-sm shadow-black/[0.03] transition-shadow duration-200 ease-out hover:shadow-md hover:shadow-black/[0.05] dark:shadow-none">
-        {children}
-      </div>
-    </div>
+      <div className={styles.panelBody}>{children}</div>
+    </section>
   );
 }
 
@@ -124,10 +97,13 @@ function PanelCard({ title, viewAllHref, children }: { title: string; viewAllHre
 // query (e.g. today's collections) never blocks the rest of the page from painting.
 export default function DashboardPage() {
   return (
-    <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Overview of today&apos;s barangay activity.</p>
+    <div className={styles.dashboard}>
+      <div className={styles.heading}>
+        <div>
+          <p className={styles.eyebrow}>Barangay overview</p>
+          <h1>Dashboard</h1>
+          <p>Overview of today&apos;s barangay activity.</p>
+        </div>
       </div>
 
       <Suspense fallback={<KpiSkeleton />}>
@@ -138,7 +114,7 @@ export default function DashboardPage() {
         <NeedsAttention />
       </Suspense>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className={styles.panels}>
         <PanelCard title="Recent Requests" viewAllHref="/requests">
           <Suspense fallback={<TableSkeleton />}>
             <RecentRequests />
@@ -170,11 +146,11 @@ async function KpiCards() {
   const todayTotal = (todayPayments ?? []).reduce((sum, p) => sum + p.amount_centavos, 0);
 
   return (
-    <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-      <KpiCard label="Pending Requests" value={pendingCount ?? 0} href="/requests?tab=active" icon={Clock} accent="amber" />
-      <KpiCard label="Ready for Pickup" value={pickupCount ?? 0} href="/requests?tab=pickup" icon={PackageCheck} accent="blue" />
-      <KpiCard label="Today's Collections" value={formatCentavosAsPHP(todayTotal)} href="/transactions?tab=paid" icon={Wallet} accent="emerald" />
-      <KpiCard label="Registered Residents" value={residentCount ?? 0} href="/residents" icon={Users} accent="slate" />
+    <div className={styles.kpis}>
+      <KpiCard label="Pending Requests" value={pendingCount ?? 0} href="/requests?tab=active" icon={Clock} />
+      <KpiCard label="Ready for Pickup" value={pickupCount ?? 0} href="/requests?tab=pickup" icon={PackageCheck} />
+      <KpiCard label="Today's Collections" value={formatCentavosAsPHP(todayTotal)} href="/transactions?tab=paid" icon={Wallet} />
+      <KpiCard label="Registered Residents" value={residentCount ?? 0} href="/residents" icon={Users} />
     </div>
   );
 }
@@ -189,7 +165,7 @@ async function RecentRequests() {
   const requests = (data ?? []) as unknown as ServiceRequest[];
 
   return (
-    <DataTable
+    <DashboardTable
       rows={requests}
       rowKey={(r) => r.id}
       emptyLabel="No requests yet."
@@ -204,9 +180,8 @@ async function RecentRequests() {
             </Link>
           ),
         },
-        { header: 'Resident', render: (r) => r.profiles?.full_name ?? '—' },
+        { header: 'Resident', render: (r) => <>{r.profiles?.full_name ?? '—'}<span className={styles.secondary}>{formatDateTime(r.created_at)}</span></> },
         { header: 'Status', render: (r) => <StatusPill status={r.status} /> },
-        { header: 'Submitted', render: (r) => formatDateTime(r.created_at) },
       ]}
     />
   );
@@ -222,13 +197,12 @@ async function RecentTransactions() {
   const payments = (data ?? []) as unknown as Payment[];
 
   return (
-    <DataTable
+    <DashboardTable
       rows={payments}
       rowKey={(p) => p.id}
       emptyLabel="No transactions yet."
       columns={[
-        { header: 'Reference', render: (p) => `#${p.service_requests?.reference_number ?? '—'}` },
-        { header: 'Method', render: (p) => (p.method === 'qrph' ? 'QR PH' : 'Pickup') },
+        { header: 'Reference', render: (p) => <>#{p.service_requests?.reference_number ?? '—'}<span className={styles.secondary}>{p.method === 'qrph' ? 'QR PH' : 'Pickup'}</span></> },
         { header: 'Amount', render: (p) => formatCentavosAsPHP(p.amount_centavos) },
         { header: 'Status', render: (p) => <StatusPill status={p.status} /> },
       ]}
@@ -298,27 +272,25 @@ async function NeedsAttention() {
   if (items.length === 0) return null;
 
   return (
-    <div className="mb-6 overflow-hidden rounded-2xl border border-amber-300/50 bg-gradient-to-br from-amber-50 to-amber-50/40 shadow-sm shadow-amber-900/[0.03] dark:border-amber-500/20 dark:from-amber-950/30 dark:to-amber-950/10">
-      <div className="flex items-center gap-2.5 px-4 pt-4">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-400/90 text-amber-950 shadow-sm shadow-amber-900/10 dark:bg-amber-400/80">
-          <AlertTriangle className="h-3.5 w-3.5" strokeWidth={2.5} />
-        </span>
-        <h2 className="text-sm font-semibold tracking-tight text-amber-900 dark:text-amber-200">
-          Needs Attention <span className="font-normal text-amber-700/80 dark:text-amber-400/70">({items.length})</span>
-        </h2>
+    <section className={styles.attention} aria-label="Needs attention">
+      <div className={styles.attentionHeading}>
+        <AlertTriangle className="size-4" aria-hidden="true" />
+        <h2>Needs attention</h2>
+        <span className={styles.attentionCount}>{items.length}</span>
       </div>
-      <ul className="grid grid-cols-1 gap-1 p-2.5 sm:grid-cols-2">
+      <ul className={styles.attentionList}>
         {items.map((item) => (
           <li key={item.id}>
-            <Link
-              href={item.href}
-              className="flex items-baseline gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors duration-150 ease-out hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 dark:hover:bg-amber-400/10">
-              <span className="shrink-0 font-medium text-[var(--accent)]">{item.label}</span>
-              <span className="truncate text-xs text-zinc-600 dark:text-zinc-400">{item.detail}</span>
+            <Link href={item.href} className={styles.attentionLink}>
+              <span className={styles.attentionCopy}>
+                <span className={styles.attentionLabel}>{item.label}</span>
+                <span className={styles.attentionDetail}>{item.detail}</span>
+              </span>
+              <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }

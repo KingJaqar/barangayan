@@ -26,6 +26,11 @@ export type MapBridgeInboundMessage =
   | { type: 'DRAW_ROUTE'; payload: { points: LatLng[] } }
   | { type: 'CLEAR_ROUTE' }
   /**
+   * Draws (or clears, if null) the resident's location marker and accuracy circle.
+   * `pending` marks a fix awaiting confirmation, which is not yet the routing origin.
+   */
+  | { type: 'SET_USER_LOCATION'; payload: { position: LatLng; accuracyMeters: number | null; pending: boolean } | null }
+  /**
    * Toggles the location-picker pin (Incident Reports "pin your location" flow — see
    * location-picker-modal.tsx). When `enabled`, a tap anywhere on the map (or a drag of
    * the existing pin) places/moves a draggable marker at that spot and reports it back

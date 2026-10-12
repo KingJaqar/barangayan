@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: requests defaults, ranges, sort controls, scrolling and responsive access",
+    "chrome: transactions defaults, ranges, sort controls, scrolling and responsive access",
+    "Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact"
+  ],
+  "failures": [
+    {
+      "label": "Chrome: transaction edits, paid amount guard, refund submission/retry/claim link and archive",
+      "message": "locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Claim link', exact: true })\u001b[22m\n"
+    },
+    {
+      "label": "run",
+      "message": "locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: 'Claim link', exact: true })\u001b[22m\n"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": []
+}

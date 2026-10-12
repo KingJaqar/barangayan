@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact",
+    "Chrome: transaction edits, paid amount guard, refund submission/retry/claim link and archive"
+  ],
+  "failures": [],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": []
+}

@@ -1,6 +1,8 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
+import { ReadFailure } from '@/components/shared/read-failure';
+import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { RequestsList } from './requests-list';
@@ -41,7 +43,7 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
   const activeTab: TabKey = TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : 'all';
 
   const supabase = await createSupabaseServerClient();
-  const { data: requests } = await supabase
+  const { data: requests, error: requestsError } = await supabase
     .from('service_requests')
     .select('id, reference_number, status, payment_status, created_at, timing_model, document_types(name, processing_target_hours)')
     .eq('resident_id', user.id)
@@ -68,20 +70,29 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
           <Link
             key={key}
             href={`/services/requests?tab=${key}`}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+            className={`relative shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
               activeTab === key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
             }`}>
             {label}
+            <LinkPendingHint className="bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2" />
           </Link>
         ))}
       </div>
 
-      <RequestsList
-        requests={filtered}
-        emptyMessage={activeTab === 'all' ? "You haven't submitted any requests yet." : 'No requests in this category.'}
-        initialSelectedId={openParam ?? null}
-      />
-      {filtered.length === 0 ? (
+      {requestsError ? (
+        // A failed read is not an empty list; the drawer for ?open= still works on its own.
+        <>
+          <ReadFailure message="We couldn't load your requests." className="mb-4" />
+          <RequestsList requests={[]} emptyMessage="" initialSelectedId={openParam ?? null} hideEmpty />
+        </>
+      ) : (
+        <RequestsList
+          requests={filtered}
+          emptyMessage={activeTab === 'all' ? "You haven't submitted any requests yet." : 'No requests in this category.'}
+          initialSelectedId={openParam ?? null}
+        />
+      )}
+      {!requestsError && filtered.length === 0 ? (
         <Link href="/services/documents" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
           Request your first document
         </Link>

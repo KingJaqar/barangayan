@@ -16,6 +16,7 @@ interface IncidentActionsProps {
    * deleted, since the row itself disappears from the table after this runs. */
   incidentDescription?: string | null;
   variant?: 'compact' | 'full';
+  onBeforeAction?: () => Promise<boolean>; onChanged?: () => void;
 }
 
 // Mirrors the guarded FSM in update_incident_status (0026): open -> in_progress -> resolved,
@@ -32,7 +33,7 @@ const NEXT_STEP: Record<string, { next: string; label: string; color: string } |
 const CAN_MARK_UNRESOLVED = new Set(['open', 'in_progress']);
 
 /** Admin-side status transition buttons for a single incident row/page. */
-export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full' }: IncidentActionsProps) {
+export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full', onBeforeAction, onChanged }: IncidentActionsProps) {
   const router = useRouter();
   const toast  = useToast();
   const [busy, setBusy] = useState(false);
@@ -46,6 +47,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
   const step = NEXT_STEP[status] ?? null;
 
   async function setStatus(next: string, successLabel: string) {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.rpc('update_incident_status', {
@@ -80,10 +82,11 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
     }).catch(() => {});
 
     toast.showSuccess(successLabel);
-    router.refresh();
+    if (onChanged) onChanged(); else router.refresh();
   }
 
   async function softDelete() {
+    if (onBeforeAction && !await onBeforeAction()) return;
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
@@ -112,7 +115,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
     }).catch(() => {});
 
     toast.showSuccess('Incident removed.');
-    router.refresh();
+    if (onChanged) onChanged(); else router.refresh();
   }
 
   return (

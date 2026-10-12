@@ -19,12 +19,17 @@ import {
   type ServiceSubmissionInput,
 } from '@barangayan/shared';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { Button } from '@/components/ui/button';
+import { beginAttempt, notify } from '@/lib/notify';
+import { serviceSubmissionFailure } from '@/lib/service-feedback';
 
 type Client = SupabaseClient<Database>;
 type Requirement = ServiceSubmissionInput['attachments'][number]['requirementCode'];
 const fieldClass = 'w-full rounded-lg border border-input bg-background p-3 text-sm';
-const buttonClass = 'min-h-12 rounded-lg bg-primary px-5 py-3 text-primary-foreground disabled:opacity-50';
 
 /** Fresh approval only: account changes, failed refreshes and stale responses clear it. */
 export function useResidentEvidence(client: Client) {
@@ -217,6 +222,17 @@ export function ResidentServiceForm({
   const busy = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Persistent guidance after a request-level failure (the toast carries the announcement).
+  const [notice, setNotice] = useState<string | null>(null);
+  // Real stage of the running submission (never a fake percentage).
+  const [stage, setStage] = useState<string | null>(null);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const purposeOption = catalog?.purposes.find((option) => option.code === purpose);
   function chooseFile(code: Requirement, file?: File) {
     if (!file) return;
@@ -229,14 +245,21 @@ export function ResidentServiceForm({
       return;
     }
     setError(null);
+    setNotice(null);
     setFiles((previous) => ({ ...previous, [code]: { file, id: createRequestKey() } }));
   }
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (busy.current) return;
     busy.current = true;
+    const attemptId = beginAttempt('service-request');
+    // How far this attempt got, so the failure is described truthfully: before a request
+    // is sent nothing reached the server.
+    let phase: 'validate' | 'upload' | 'submit' = 'validate';
     setSubmitting(true);
+    setStage('Checking your details…');
     setError(null);
+    setNotice(null);
     try {
       if (
         catalog &&
@@ -244,16 +267,20 @@ export function ResidentServiceForm({
       )
         throw new Error('Your profile ID must be verified before submitting.');
       const attachments: ServiceSubmissionInput['attachments'] = [];
-      for (const [code, selected] of Object.entries(files))
-        if (selected)
-          attachments.push(
-            await uploadSupportingEvidence(client, {
-              uploadId: selected.id,
-              requirementCode: code as Requirement,
-              mimeType: selected.file.type,
-              bytes: new Uint8Array(await selected.file.arrayBuffer()),
-            }),
-          );
+      const chosen = Object.entries(files).filter(([, selected]) => selected);
+      for (const [position, [code, selected]] of chosen.entries()) {
+        phase = 'upload';
+        setStage(chosen.length > 1 ? `Uploading file ${position + 1} of ${chosen.length}…` : 'Uploading your file…');
+        attachments.push(
+          await uploadSupportingEvidence(client, {
+            uploadId: selected!.id,
+            requirementCode: code as Requirement,
+            mimeType: selected!.file.type,
+            bytes: new Uint8Array(await selected!.file.arrayBuffer()),
+          }),
+        );
+      }
+      phase = 'validate';
       const value: Omit<ServiceSubmissionInput, 'idempotencyKey'> = {
         documentTypeId: doc.id,
         purposeCode: catalog ? purpose : 'legacy',
@@ -278,6 +305,8 @@ export function ResidentServiceForm({
           legacyId.size > SUPPORTING_FILE_MAX_BYTES
         )
           throw new Error('ID must be JPG, PNG or WEBP up to 5 MB.');
+        phase = 'upload';
+        setStage('Uploading your ID…');
         const {
           data: { user },
         } = await client.auth.getUser();
@@ -296,14 +325,36 @@ export function ResidentServiceForm({
             throw uploadError;
         }
         value.legacyIdPath = legacyPath.current;
+        phase = 'validate';
       }
+      // Client-side checks above ran before any request; from here on the server may have
+      // received the submission. The attempt holds one idempotency key, so retrying an
+      // unchanged form never creates a second request.
+      phase = 'submit';
+      setStage('Submitting your request…');
       const result = await attempt.submit(client, value);
+      // The next view (assessment/payment) is the confirmation. If the form was closed
+      // while this ran, the request was still created — say so once.
+      if (!mounted.current) {
+        notify.success('Request submitted.', { id: attemptId, description: `Reference ${result.reference_number}. Track it in My Requests.` });
+      }
       onSubmitted(result.id, result.reference_number);
     } catch (failure) {
-      setError(residentServiceError(failure));
+      const outcome = serviceSubmissionFailure(failure, phase, residentServiceError(failure));
+      if (outcome.kind === 'validation') {
+        // Inline field/validation message only — no toast.
+        if (mounted.current) setError(outcome.message);
+      } else {
+        if (mounted.current) setNotice(outcome.message);
+        const level = outcome.kind === 'unconfirmed' ? 'warning' : 'error';
+        notify[level](outcome.title ?? 'Could not submit your request.', { id: attemptId });
+      }
     } finally {
       busy.current = false;
-      setSubmitting(false);
+      if (mounted.current) {
+        setSubmitting(false);
+        setStage(null);
+      }
     }
   }
   const upload = (code: Requirement, label: string, required: boolean) => (
@@ -550,13 +601,25 @@ export function ResidentServiceForm({
           {error}
         </p>
       ) : null}
-      <button
+      {notice ? (
+        <p data-slot="submission-guidance" className="rounded-xl border border-status-warning/40 bg-status-warning/10 p-3 text-sm">
+          {notice}{' '}
+          <Link className="font-semibold underline" href="/services/requests">
+            Open My Requests
+          </Link>
+        </p>
+      ) : null}
+      <Button
         type="submit"
-        disabled={submitting || (!!catalog && (approved.loading || !approved.evidence))}
-        className={buttonClass}
+        size="lg"
+        className="w-full rounded-lg"
+        loading={submitting}
+        loadingLabel={stage ?? 'Submitting your request…'}
+        disabled={!!catalog && (approved.loading || !approved.evidence)}
       >
-        {submitting ? 'Submitting…' : 'Submit request'}
-      </button>
+        Submit request
+      </Button>
+      <LoadingStatus active={submitting} label={stage ?? 'Submitting your request…'} />
     </form>
   );
 }

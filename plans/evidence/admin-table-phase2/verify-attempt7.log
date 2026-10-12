@@ -1,0 +1,53 @@
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 199960 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 299940 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 499900 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 999800 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 80 was requested, but there are only 0 rows.","hint":null,"message":"Requested range not satisfiable"}
+requests: all sorts, five sizes, one correction, empty and independent summaries
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 199960 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 299940 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 499900 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 999800 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 80 was requested, but there are only 0 rows.","hint":null,"message":"Requested range not satisfiable"}
+transactions: all sorts, five sizes, one correction, empty and independent summaries
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 199960 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 299940 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 499900 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 999800 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 80 was requested, but there are only 0 rows.","hint":null,"message":"Requested range not satisfiable"}
+residents: all sorts, five sizes, one correction, empty and independent summaries
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 199960 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 299940 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 499900 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 999800 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 80 was requested, but there are only 0 rows.","hint":null,"message":"Requested range not satisfiable"}
+incidents: all sorts, five sizes, one correction, empty and independent summaries
+API failure 416 {"code":"PGRST103","details":"An offset of 99980 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 199960 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 299940 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 499900 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 999800 was requested, but there are only 1505 rows.","hint":null,"message":"Requested range not satisfiable"}
+API failure 416 {"code":"PGRST103","details":"An offset of 80 was requested, but there are only 0 rows.","hint":null,"message":"Requested range not satisfiable"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1507 !== 1506
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/verify.mjs:93:62
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 1507,
+  expected: 1506,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

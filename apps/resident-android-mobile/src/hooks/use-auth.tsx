@@ -24,6 +24,9 @@ interface AuthContextValue {
   setPasswordRecovery: (value: boolean) => void;
   isGuest: boolean;
   setGuest: (value: boolean) => void;
+  signedOutEntry: boolean;
+  logoutNotice: boolean;
+  dismissLogoutNotice: () => void;
   setup: ResidentSetupLoad;
   setupRoute: ResidentSetupRoute;
   setSetupIntent: (intent: ResidentSetupIntent, expectedUserId?: string) => Promise<void>;
@@ -39,7 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [restorationError, setRestorationError] = useState<string | null>(null);
   const [restoreAttempt, setRestoreAttempt] = useState(0);
   const [isPasswordRecovery, setRecovery] = useState(false);
-  const [isGuest, setGuest] = useState(false);
+  const [isGuest, setGuestState] = useState(false);
+  const [signedOutEntry, setSignedOutEntry] = useState(false);
+  const [logoutNotice, setLogoutNotice] = useState(false);
+  const dismissLogoutNotice = useCallback(() => setLogoutNotice(false), []);
+  const setGuest = useCallback((value: boolean) => {
+    setGuestState(value);
+    if (value) { setSignedOutEntry(false); setLogoutNotice(false); }
+  }, []);
   const [intent, setIntent] = useState<ResidentSetupIntent>('sign_in');
   const intentRef = useRef<ResidentSetupIntent>('sign_in');
   const [actor, setActor] = useState<'resident' | 'staff' | 'blocked'>('resident');
@@ -125,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (previousId) { intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false); }
       }
       sessionRef.current = next; setSession(next);
+      if (next) { setGuestState(false); setSignedOutEntry(false); setLogoutNotice(false); }
     };
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, next) => {
       // No network/storage awaits in the SDK's Auth callback (it holds its lock).
@@ -171,12 +182,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await authSetupRequests.run(async () => {
         ownership.current.invalidate(); const previousId = sessionRef.current?.user.id;
+        setSignedOutEntry(true); setLogoutNotice(false); setGuestState(false);
         sessionRef.current = null; setSession(null); setOwnedSetup(null); setRefreshFailure(null);
-        intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false); setGuest(true);
+        intentRef.current = 'sign_in'; setIntent('sign_in'); setPasswordRecovery(false);
         await AsyncStorage.multiRemove([INTENT_KEY, RECOVERY_KEY, 'resident-google-pkce-v2', 'emergency_cache_resident_profile', ...(previousId ? [`resident_profile_v2:${previousId}`] : [])]).catch(() => {});
         const { error } = await supabase.auth.signOut({ scope: 'local' });
         if (error) throw error;
       });
+      setLogoutNotice(true);
     }
     catch { setRestorationError('Sign-out could not be confirmed. Retry session restoration before signing in again.'); }
   }
@@ -187,7 +200,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setupRefreshError: session && refreshFailure?.uid === session.user.id ? refreshFailure.message : null,
     refreshCompletion, isLoading, restorationError,
     retryRestoration: () => { setIsLoading(true); setRestoreAttempt(value => value + 1); },
-    isPasswordRecovery, setPasswordRecovery, isGuest, setGuest, logout }}>{children}</AuthContext.Provider>;
+    isPasswordRecovery, setPasswordRecovery, isGuest, setGuest, signedOutEntry, logoutNotice, dismissLogoutNotice, logout }}>{children}</AuthContext.Provider>;
 }
 export function useAuth() {
   const value = useContext(AuthContext);

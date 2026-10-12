@@ -1,15 +1,15 @@
 'use client';
 
-import { formatDateTime } from '@barangayan/shared';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
+import { useEffect, useRef, useState } from 'react';
 
+import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { DriveTypeBadge, formatDriveDate } from './drive-table';
-import type { DriveRow } from './page';
+import type { DriveRow } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
 /** "HH:MM:SS" (or "HH:MM") -> "8:00 AM" */
@@ -27,8 +27,10 @@ function fmt12h(t: string): string {
  * Active are all edited inline in the table itself (click any cell), so this modal
  * focuses on those and a read-only summary of the rest. Closes on Escape or backdrop
  * click — mirrors incident-reports/incident-detail-modal.tsx. */
-export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose: () => void }) {
-  const router = useRouter();
+export function DriveDetailModal({ drive, onClose, onChanged, onEditingChange, detailStatus, onRetry }: {
+  drive: DriveRow; onClose: () => void; onChanged: () => void; onEditingChange: (editing: boolean) => void;
+  detailStatus: 'loading' | 'ready' | 'error' | 'unavailable'; onRetry: () => void;
+}) {
   const toast = useToast();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(drive.title);
@@ -39,16 +41,15 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
   const [stockLabel, setStockLabel] = useState(drive.stock_label);
   const [stockUnit, setStockUnit] = useState(drive.stock_unit);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
 
   useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+    onEditingChange(editing);
+    return () => onEditingChange(false);
+  }, [editing, onEditingChange]);
 
   async function saveDetails() {
+    if (savingRef.current) return;
     if (!title.trim()) {
       toast.showError('Title cannot be empty.');
       return;
@@ -57,6 +58,7 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
       toast.showError('Eligibility criteria cannot be empty.');
       return;
     }
+    savingRef.current = true;
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
     const newValues = {
@@ -68,10 +70,16 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
       stock_label: stockLabel.trim() || 'Remaining Slots',
       stock_unit: stockUnit.trim() || 'slots',
     };
-    const { error } = await supabase.from('medical_drives').update(newValues).eq('id', drive.id);
-    setSaving(false);
-    if (error) {
-      toast.showError(`Failed to save: ${error.message}`);
+    let result;
+    try { result = await supabase.from('medical_drives').update(newValues).eq('id', drive.id).select('id').maybeSingle(); }
+    catch (cause) {
+      savingRef.current = false; setSaving(false);
+      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`); return;
+    }
+    savingRef.current = false; setSaving(false);
+    const { error, data: updated } = result;
+    if (error || !updated) {
+      toast.showError(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`);
       return;
     }
 
@@ -96,25 +104,22 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
 
     toast.showSuccess('Drive details updated.');
     setEditing(false);
-    router.refresh();
+    onChanged();
   }
 
   const inputClass =
     'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Drive details: ${drive.title}`}>
+    <TableDetailDialog label={`Drive details: ${drive.title}`}
+      preventClose={saving} onClose={() => { if (!savingRef.current) onClose(); }}>
+      {detailStatus !== 'ready' && !editing ? <TableDetailState status={detailStatus} onClose={onClose} onRetry={onRetry} /> :
       <div
         onClick={(e) => e.stopPropagation()}
         className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-zinc-900">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-black/10 px-6 py-4 dark:border-white/10">
-          <div className="flex-1">
+        <div className="flex max-h-[40vh] shrink-0 items-start justify-between gap-3 overflow-y-auto border-b border-black/10 px-6 py-4 dark:border-white/10">
+          <div className="min-w-0 flex-1 break-words [overflow-wrap:anywhere]">
             {!editing ? (
               <h2 className="text-lg font-bold leading-snug">{drive.title}</h2>
             ) : (
@@ -136,6 +141,7 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
           </div>
           <button
             onClick={onClose}
+            disabled={saving}
             aria-label="Close"
             className="rounded-full p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800">
             ✕
@@ -143,7 +149,7 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto break-words [overflow-wrap:anywhere] px-6 py-4">
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between">
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Drive Details</p>
@@ -244,6 +250,8 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
             </p>
           </div>
 
+          <div className="mb-3 text-xs text-zinc-500"><p className="font-semibold uppercase tracking-wide">Date created</p>
+            <p>{formatDateTime(drive.created_at)}</p></div>
           {/* Timeline */}
           <div className="grid grid-cols-2 gap-3 text-xs text-zinc-500">
             <div>
@@ -258,7 +266,7 @@ export function DriveDetailModal({ drive, onClose }: { drive: DriveRow; onClose:
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </div>}
+    </TableDetailDialog>
   );
 }

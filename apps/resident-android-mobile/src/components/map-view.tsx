@@ -89,6 +89,7 @@ const LEAFLET_HTML = `
     var boundaryLayer = L.layerGroup();
     var routeLayer = L.layerGroup();
     var pickerLayer = L.layerGroup();
+    var userLayer = L.layerGroup();
     // The draggable pin placed by SET_PICKER / a picker-mode tap — Incident Reports'
     // "pin your location" flow (location-picker-modal.tsx). Null when no pin is shown.
     var pickerMarker = null;
@@ -199,6 +200,7 @@ const LEAFLET_HTML = `
       boundaryLayer.addTo(map);
       routeLayer.addTo(map);
       pickerLayer.addTo(map);
+      userLayer.addTo(map);
 
       postToRN({ type: 'MAP_READY' });
 
@@ -337,6 +339,25 @@ const LEAFLET_HTML = `
           routeLayer.clearLayers();
           break;
         }
+        case 'SET_USER_LOCATION': {
+          if (!map) break;
+          userLayer.clearLayers();
+          var loc = msg.payload;
+          if (!loc || !loc.position) break;
+          var userLatLng = [loc.position.lat, loc.position.lng];
+          if (typeof loc.accuracyMeters === 'number' && loc.accuracyMeters > 0) {
+            userLayer.addLayer(L.circle(userLatLng, {
+              radius: loc.accuracyMeters,
+              color: loc.pending ? '#B45309' : '#2563EB',
+              weight: 1,
+              fillOpacity: 0.12,
+              dashArray: loc.pending ? '4 4' : null,
+              interactive: false,
+            }));
+          }
+          userLayer.addLayer(L.marker(userLatLng, { icon: makePersonIcon(), opacity: loc.pending ? 0.6 : 1, interactive: false }));
+          break;
+        }
         case 'SET_PICKER': {
           if (!map || !msg.payload) break;
           pickerEnabled = !!msg.payload.enabled;
@@ -362,6 +383,12 @@ export interface FocusPosition {
   lat: number;
   lng: number;
   zoom: number;
+}
+
+export interface MapUserLocation {
+  position: LatLng;
+  accuracyMeters: number | null;
+  pending: boolean;
 }
 
 export interface MapViewProps {
@@ -393,15 +420,28 @@ export interface MapViewProps {
   onPickerMoved?: (position: LatLng) => void;
   /** Fires when a tap/drag landed outside `boundary` and was rejected. */
   onPickerRejected?: (attemptedPosition: LatLng) => void;
+  /** The resident's location marker and accuracy circle; `pending` = awaiting confirmation. */
+  userLocation?: MapUserLocation | null;
   onMarkerTap?: (markerId: string) => void;
   onMapReady?: () => void;
   onMapError?: () => void;
+  /** Overrides the default 158px top clearance of Leaflet's zoom (+/-) control. */
+  zoomControlTop?: number;
   style?: ViewStyle;
+}
+
+function userLocationMessage(location: MapUserLocation | null | undefined): MapBridgeInboundMessage {
+  return {
+    type: 'SET_USER_LOCATION',
+    payload: location
+      ? { position: location.position, accuracyMeters: location.accuracyMeters, pending: location.pending }
+      : null,
+  };
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, onMarkerTap, onMapReady, onMapError, style }, ref) => {
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, style }, ref) => {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
   // Last picker position that passed the boundary check — what an out-of-boundary
@@ -475,6 +515,17 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [picker?.enabled, picker?.position]);
 
+  // Keyed on primitives so an inline object from the caller doesn't resend every render.
+  const userLat = userLocation?.position.lat;
+  const userLng = userLocation?.position.lng;
+  const userAccuracy = userLocation?.accuracyMeters ?? null;
+  const userPending = userLocation?.pending ?? false;
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage(userLocationMessage(userLocation));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLat, userLng, userAccuracy, userPending]);
+
   // Incoming messages from the WebView.
   function handleMessage(event: { nativeEvent: { data: string } }) {
     let msg: MapBridgeOutboundMessage;
@@ -502,6 +553,10 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
         }
         if (picker) {
           sendMessage({ type: 'SET_PICKER', payload: { enabled: picker.enabled, position: picker.position } });
+        }
+        // A map that becomes ready after a fix arrived still receives the latest location.
+        if (userLocation) {
+          sendMessage(userLocationMessage(userLocation));
         }
         break;
       }
@@ -543,6 +598,11 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       style={[styles.webView, style]}
       source={{ html: LEAFLET_HTML }}
       onMessage={handleMessage}
+      injectedJavaScript={
+        zoomControlTop !== undefined
+          ? `(function(){var s=document.createElement('style');s.textContent='.leaflet-top.leaflet-left{margin-top:${Math.round(zoomControlTop)}px !important;}';document.head.appendChild(s);})();true;`
+          : undefined
+      }
       originWhitelist={['*']}
       scrollEnabled={false}
       // Lets Leaflet's own pan/pinch-zoom gestures inside the WebView win the touch

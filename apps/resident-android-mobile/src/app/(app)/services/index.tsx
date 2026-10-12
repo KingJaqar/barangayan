@@ -5,17 +5,14 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Image } from 'expo-image';
-import { SearchBar } from '@/components/search-bar';
-import { SegmentedControl } from '@/components/segmented-control';
 import { DocumentsList } from '@/components/services/documents-list';
 import { LogsList } from '@/components/services/logs-list';
 import { RequestsList } from '@/components/services/requests-list';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Fonts, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -23,6 +20,12 @@ import { useTheme } from '@/hooks/use-theme';
 type ServicesSegment = 'documents' | 'requests' | 'logs';
 
 const VALID_SEGMENTS: ServicesSegment[] = ['documents', 'requests', 'logs'];
+
+const TABS: { key: ServicesSegment; label: string }[] = [
+  { key: 'documents', label: 'Documents' },
+  { key: 'requests', label: 'Requests' },
+  { key: 'logs', label: 'Logs' },
+];
 
 const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
   documents: 'Search documents...',
@@ -50,6 +53,38 @@ export default function ServicesScreen() {
 
   const [segment, setSegment] = useState<ServicesSegment>(initialSegment);
 
+  const statusBlock = (
+    <>
+      <ProfileCompletionBanner />
+      {session && !isLoading && !error && idVerificationState(profile) === 'verified' ? (
+        <View style={[styles.verifiedChip, { backgroundColor: `${theme.primary}1A` }]}>
+          <Ionicons name="shield-checkmark" size={18} color={theme.primary} />
+          <ThemedText type="smallBold" style={{ color: theme.primary }}>
+            Valid ID Verified
+          </ThemedText>
+        </View>
+      ) : null}
+      {session && (isLoading || error || idVerificationState(profile) !== 'verified') ? (
+        <View
+          style={[
+            styles.verifyCard,
+            { backgroundColor: theme.background, borderColor: theme.backgroundSelected, shadowColor: theme.text },
+          ]}>
+          <View style={styles.verifyHeader}>
+            <View style={[styles.verifyIcon, { backgroundColor: `${theme.primary}1F` }]}>
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.primary} />
+            </View>
+            <ThemedText accessibilityRole="alert" style={styles.verifyText}>
+              {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
+            </ThemedText>
+          </View>
+          <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
+          {error ? <PrimaryButton label="Retry verification check" variant="secondary" onPress={refetch} /> : null}
+        </View>
+      ) : null}
+    </>
+  );
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View
@@ -71,41 +106,68 @@ export default function ServicesScreen() {
       </View>
       <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
         <View style={styles.controls}>
-        <SearchBar placeholder={SEARCH_PLACEHOLDER[segment]} />
+          <View
+            style={[
+              styles.search,
+              {
+                backgroundColor: theme.background,
+                borderColor: theme.backgroundSelected,
+                shadowColor: theme.text,
+              },
+            ]}>
+            <Ionicons name="search" size={20} color={theme.text} />
+            <TextInput
+              placeholder={SEARCH_PLACEHOLDER[segment]}
+              placeholderTextColor={theme.textSecondary}
+              accessibilityLabel={SEARCH_PLACEHOLDER[segment]}
+              style={[styles.searchInput, { color: theme.text }]}
+            />
+          </View>
 
-        {session ? (
-          <SegmentedControl
-            segments={[
-              { key: 'documents', label: 'Documents' },
-              { key: 'requests', label: 'Requests' },
-              { key: 'logs', label: 'Logs' },
-            ]}
-            activeKey={segment}
-            onChange={setSegment}
-            variant="outline"
-          />
+          <View style={[styles.tabs, { borderBottomColor: theme.backgroundSelected }]}>
+            {(session ? TABS : TABS.slice(0, 1)).map((tab) => {
+              const isActive = tab.key === segment;
+              return (
+                <Pressable
+                  key={tab.key}
+                  onPress={() => setSegment(tab.key)}
+                  accessibilityRole="tab"
+                  accessibilityLabel={tab.label}
+                  accessibilityState={{ selected: isActive }}
+                  style={[styles.tab, session ? styles.tabFlex : styles.tabGuest]}>
+                  <ThemedText
+                    type="smallBold"
+                    style={[
+                      styles.tabLabel,
+                      { color: isActive ? theme.text : theme.textSecondary },
+                    ]}>
+                    {tab.label}
+                  </ThemedText>
+                  <View
+                    style={[
+                      styles.tabIndicator,
+                      { backgroundColor: isActive ? theme.primary : 'transparent' },
+                    ]}
+                  />
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
+        {session && segment === 'requests' ? (
+          // RequestsList owns its scroller so its filter chips can stay pinned while the
+          // list scrolls; the banner/verification block scrolls away above them.
+          <RequestsList header={statusBlock} contentContainerStyle={styles.scrollContent} />
         ) : (
-          // A single reachable segment doesn't need (or visually match) the generic
-          // SegmentedControl — that component's segments are flex:1/stretch, so one item
-          // would render as a full-width pill, not the compact label the design shows.
-          <ThemedView type="backgroundElement" style={styles.guestTrack}>
-            <View style={[styles.guestPill, { backgroundColor: theme.background }]}>
-              <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                Documents
-              </ThemedText>
-            </View>
-          </ThemedView>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}>
+            {statusBlock}
+            {!session || segment === 'documents' ? <DocumentsList /> : null}
+            {session && segment === 'logs' && <LogsList />}
+          </ScrollView>
         )}
-      </View>
-
-      <ScrollView>
-        <ProfileCompletionBanner />
-        {session && !isLoading && !error && idVerificationState(profile) === 'verified' ? <View style={{ padding: 16 }}><ThemedText type="smallBold">Valid ID Verified</ThemedText></View> : null}
-        {session && (isLoading || error || idVerificationState(profile) !== 'verified') ? <View style={{ padding: 16, gap: 8 }}><ThemedText accessibilityRole="alert">{isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}</ThemedText><PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')}/>{error ? <PrimaryButton label="Retry verification check" variant="secondary" onPress={refetch}/> : null}</View> : null}
-        {!session || segment === 'documents' ? <DocumentsList /> : null}
-        {session && segment === 'requests' && <RequestsList />}
-        {session && segment === 'logs' && <LogsList />}
-      </ScrollView>
 
       {session && segment === 'requests' ? (
         <Pressable
@@ -117,7 +179,10 @@ export default function ServicesScreen() {
           ]}
           accessibilityRole="button"
           accessibilityLabel="Start a new document request">
-          <Ionicons name="add" size={30} color="#FFFFFF" />
+          <Ionicons name="add" size={22} color={theme.onPrimary} />
+          <ThemedText type="smallBold" style={{ color: theme.onPrimary }}>
+            New request
+          </ThemedText>
         </Pressable>
       ) : null}
       </View>
@@ -153,24 +218,104 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   controls: {
-    padding: Spacing.three,
+    paddingHorizontal: 20,
+    paddingTop: Spacing.three,
     gap: Spacing.three,
   },
-  guestTrack: {
-    alignSelf: 'flex-start',
-    borderRadius: Spacing.four,
-    padding: Spacing.half,
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 18,
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
   },
-  guestPill: {
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 0,
+  },
+  tabs: {
+    flexDirection: 'row',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  tab: {
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  tabFlex: {
+    flex: 1,
+  },
+  tabGuest: {
+    paddingHorizontal: Spacing.three,
+  },
+  tabLabel: {
+    fontSize: 15,
+    paddingBottom: Spacing.two,
+  },
+  tabIndicator: {
+    height: 3,
+    alignSelf: 'stretch',
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
+  },
+  scrollContent: {
+    paddingTop: Spacing.three,
+    paddingBottom: 120,
+  },
+  verifiedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
+    alignSelf: 'flex-start',
+    marginHorizontal: 20,
+    marginBottom: Spacing.two,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two,
-    borderRadius: Spacing.three,
+    borderRadius: 20,
+  },
+  verifyCard: {
+    marginHorizontal: 20,
+    marginBottom: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.three,
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  verifyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.three,
+  },
+  verifyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifyText: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
   },
   fab: {
     position: 'absolute',
     right: 20,
-    width: 56,
+    flexDirection: 'row',
+    gap: Spacing.two,
     height: 56,
+    paddingHorizontal: 20,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',

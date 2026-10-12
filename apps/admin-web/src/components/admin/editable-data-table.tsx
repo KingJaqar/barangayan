@@ -1,8 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 
 import { TableScrollArea } from '@/components/admin/table-scroll-area';
+import { BROWSE_ROW_HEIGHT, BROWSE_VISIBLE_ROWS } from '@/components/admin/table-browse-layout';
+import { useSearchParams } from 'next/navigation';
+import { PAGE_SIZES, type PageSize } from '@/lib/admin-tables/browse-state';
 import { useToast } from '@/components/ui/toast';
 import { Spinner } from '@/components/loading/spinner';
 import { useBrowseViewport } from './table-browse-panel';
@@ -38,7 +41,7 @@ export interface EditableDataTableColumn<T> {
   /** Stable identity; legacy callers continue to use their header as the identity. */
   id?: string;
   header: string;
-  render: (row: T) => ReactNode;
+  render: (row: T, rowIndex: number) => ReactNode;
   className?: string;
   /** A plain config applies to every row; a function lets the edit control itself vary
    * per row (e.g. Transactions' Collected By/Source is a select of admins for pickup rows
@@ -59,6 +62,9 @@ export interface EditableDataTableColumn<T> {
   overflow?: 'hidden' | 'visible';
 }
 
+function positive(value: string | null, fallback = 1) {
+  return value && /^[1-9]\d*$/.test(value) && Number.isSafeInteger(Number(value)) ? Number(value) : fallback;
+}
 function columnId<T>(col: EditableDataTableColumn<T>) { return col.id ?? col.header; }
 export interface TableEditHandle { settle: () => Promise<boolean>; cancel: () => void }
 
@@ -90,7 +96,7 @@ interface EditableDataTableProps<T> {
   rows: T[];
   rowKey: (row: T) => string;
   emptyLabel?: string;
-  onRowClick?: (row: T) => void;
+  onRowClick?: (row: T, trigger?: HTMLElement) => void;
   /** Lets the user drag each header's right edge to resize that column, for tables whose
    * cell content varies a lot in length (e.g. Incident Reports' title/description column).
    * Off by default — opt in per table. */
@@ -113,7 +119,7 @@ interface EditableDataTableProps<T> {
  * Escape cancels. Every save path is wired to useToast — this is also how the
  * "silent failure" mutation gap across the admin panel gets closed, by construction. */
 export function EditableDataTable<T>({
-  columns,
+  columns: columnsProp,
   rows,
   rowKey,
   emptyLabel = 'Nothing here yet.',
@@ -129,6 +135,14 @@ export function EditableDataTable<T>({
   onEditingChange,
 }: EditableDataTableProps<T>) {
   const { bounded } = useBrowseViewport();
+  // Browse tables always lead with a running row number that continues across pages: page 2 at
+  // 10 per page starts at 11. The URL is the source of truth for page/pageSize (same parsing as
+  // parseBrowseState), so every screen numbers correctly without per-screen wiring.
+  const params = useSearchParams();
+  const rowOffset = (positive(params.get('page')) - 1) * (PAGE_SIZES.includes(positive(params.get('pageSize'), 10) as PageSize) ? positive(params.get('pageSize'), 10) : 10);
+  const columns = useMemo<EditableDataTableColumn<T>[]>(() => bounded ? [{ id: '__row', header: '#', initialWidth: 64, minWidth: 48,
+    wrap: 'nowrap', className: 'tabular-nums text-zinc-500', render: (_row, index) => rowOffset + index + 1 }, ...columnsProp] : columnsProp,
+    [bounded, columnsProp, rowOffset]);
   const toast = useToast();
   const [editing, setEditing] = useState<{ row: string; col: string } | null>(null);
   const [draft, setDraft] = useState<string>('');
@@ -385,8 +399,8 @@ export function EditableDataTable<T>({
         </thead>
         <tbody>
           {rows.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="px-5 py-8 text-center text-zinc-500">
+            <tr style={bounded ? { height: BROWSE_ROW_HEIGHT } : undefined}>
+              <td colSpan={columns.length} className={`px-5 ${bounded ? 'py-0' : 'py-8'} text-center text-zinc-500`}>
                 {emptyLabel}
               </td>
             </tr>
@@ -394,6 +408,7 @@ export function EditableDataTable<T>({
             rows.map((row, rowIndex) => (
               <tr
                 key={rowKey(row)}
+                style={bounded ? { height: BROWSE_ROW_HEIGHT } : undefined}
                 className={`${
                   thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/5 dark:border-white/5'
                 } last:border-0 ${rowIndex % 2 === 1 ? 'bg-zinc-50/60 dark:bg-zinc-900/20' : ''} ${
@@ -413,7 +428,7 @@ export function EditableDataTable<T>({
                         if (event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return;
                         event.preventDefault();
                         if (editable) { editTrigger.current = event.currentTarget; startEdit(row, col); }
-                        else onRowClick?.(row);
+                        else onRowClick?.(row, event.currentTarget);
                       } : undefined}
                       key={columnId(col)}
                       style={{
@@ -444,7 +459,7 @@ export function EditableDataTable<T>({
                           editTrigger.current = e.currentTarget;
                           startEdit(row, col);
                         } else if (onRowClick) {
-                          onRowClick(row);
+                          onRowClick(row, e.currentTarget);
                         }
                       }}
                     >
@@ -521,7 +536,7 @@ export function EditableDataTable<T>({
                           <button type="button" disabled={saving} onClick={cancelEdit}>Cancel edit</button>
                         </div>}
                       </div> : (
-                        col.render(row)
+                        col.render(row, rowIndex)
                       )}
                     </td>
                   );
@@ -529,6 +544,11 @@ export function EditableDataTable<T>({
               </tr>
             ))
           )}
+          {bounded && Array.from({ length: Math.max(0, BROWSE_VISIBLE_ROWS - Math.max(rows.length, 1)) }, (_, index) =>
+            <tr key={`filler-${index}`} aria-hidden="true" data-filler-row style={{ height: BROWSE_ROW_HEIGHT }}
+              className="border-b border-black/5 last:border-0 dark:border-white/5">
+              <td colSpan={columns.length} />
+            </tr>)}
         </tbody>
       </table>
     </TableScrollArea>

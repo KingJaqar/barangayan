@@ -1,9 +1,9 @@
 import { Redirect, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { BackHandler, View } from 'react-native';
+import { BackHandler } from 'react-native';
+import { AccountSetupStatus } from '@/components/account-setup-status';
 import { ResidentDetailsForm } from '@/components/resident-details-form';
 import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
-import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -15,7 +15,7 @@ export default function AccountSetup() {
   return <OwnedAccountSetup key={session?.user.id ?? 'signed-out'} />;
 }
 function OwnedAccountSetup() {
-  const { session, setupRoute: route, refreshCompletion, setSetupIntent, logout, setPasswordRecovery } = useAuth();
+  const { session, setupRoute: route, refreshCompletion, setSetupIntent, logout, setPasswordRecovery, signedOutEntry } = useAuth();
   const theme = useTheme();
   const router = useRouter();
   const [editingDetails, setEditingDetails] = useState(false);
@@ -43,7 +43,7 @@ function OwnedAccountSetup() {
   async function savedPassword() { await setSetupIntent('sign_in'); await refreshCompletion(); }
   if (route.destination === 'home' || route.destination === 'existing_access') return <Redirect href="/home" />;
   if (route.destination === 'recovery') return <Redirect href="/(auth)/forgot-password" />;
-  if (!session) return <Redirect href="/(auth)/auth-choice" />;
+  if (!session) return <Redirect href={signedOutEntry ? '/(auth)/login' : '/(auth)/auth-choice'} />;
   if (route.destination === 'details' || (editingDetails && route.destination === 'password')) return <>
     <ResidentDetailsForm key={session.user.id} required={route.required} onSaved={savedDetails} onSkip={() => { void skip(); }} onBack={back} />
     {notice && <ThemedText accessibilityLiveRegion="polite" style={{ padding: 16, backgroundColor: theme.background }}>{notice}</ThemedText>}
@@ -52,10 +52,12 @@ function OwnedAccountSetup() {
     <ResidentPasswordStep key={session.user.id} required={route.required} draft={passwordDraft} onDraftChange={setPasswordDraft} onSaved={savedPassword} onSkip={() => { void skip(); }} onBack={back} />
     {notice && <ThemedText accessibilityLiveRegion="polite" style={{ padding: 16, backgroundColor: theme.background }}>{notice}</ThemedText>}
   </>;
-  return <View style={{ flex: 1, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}>
-    <ThemedText accessibilityLiveRegion="polite">{route.destination === 'manage_password' ? 'Your password history cannot be confirmed. Use password recovery to preserve your existing account credential.' : route.destination === 'status_error' ? 'Unable to load account setup. Retry or sign out.' : 'Checking your account setup…'}</ThemedText>
-    {route.destination === 'manage_password' ? <PrimaryButton label="Recover password" onPress={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }} /> : <PrimaryButton label="Retry account check" onPress={() => { void refreshCompletion(); }} />}
-    <PrimaryButton label="Sign out" variant="secondary" onPress={() => { if (busy()) setNotice('A request is still finishing. Please wait before signing out.'); else void logout(); }} />
-    {notice && <ThemedText accessibilityLiveRegion="polite">{notice}</ThemedText>}
-  </View>;
+  return <AccountSetupStatus
+    key={route.destination}
+    state={route.destination === 'manage_password' ? 'recovery' : route.destination === 'status_error' ? 'error' : 'loading'}
+    notice={notice}
+    onRetry={refreshCompletion}
+    onRecover={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }}
+    onSignOut={() => { if (busy()) setNotice('A request is still finishing. Please wait before signing out.'); else void logout(); }}
+  />;
 }

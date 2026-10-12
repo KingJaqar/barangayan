@@ -1,0 +1,141 @@
+ M apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx
+ M apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx
+ M apps/admin-web/src/app/(admin)/health/applicants/page.tsx
+ M apps/admin-web/src/app/(admin)/health/applicants/types.ts
+ M apps/admin-web/src/app/(admin)/health/drive-detail-modal.tsx
+ M apps/admin-web/src/app/(admin)/health/drive-table.tsx
+ M apps/admin-web/src/app/(admin)/health/page.tsx
+ M apps/admin-web/src/app/(admin)/health/types.ts
+ M apps/admin-web/src/app/(admin)/households-residents/households-table.tsx
+ M apps/admin-web/src/app/(admin)/households-residents/page.tsx
+ M apps/admin-web/src/app/(admin)/households-residents/types.ts
+ M apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/page.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/types.ts
+ M apps/admin-web/src/app/(admin)/requests/page.tsx
+ M apps/admin-web/src/app/(admin)/requests/requests-table.tsx
+ M apps/admin-web/src/app/(admin)/requests/types.ts
+ M apps/admin-web/src/app/(admin)/residents/page.tsx
+ M apps/admin-web/src/app/(admin)/residents/resident-directory.tsx
+ M apps/admin-web/src/app/(admin)/residents/types.ts
+ M apps/admin-web/src/app/(admin)/staff/page.tsx
+ M apps/admin-web/src/app/(admin)/staff/staff-form.tsx
+ M apps/admin-web/src/app/(admin)/staff/staff-table.tsx
+ M apps/admin-web/src/app/(admin)/staff/types.ts
+ M apps/admin-web/src/app/(admin)/transactions/page.tsx
+ M apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx
+ M apps/admin-web/src/app/globals.css
+ M apps/admin-web/src/app/resident/profile/profile-form.tsx
+ M apps/admin-web/src/components/admin/editable-data-table.tsx
+ M apps/admin-web/src/components/admin/request-status-actions.tsx
+ M apps/admin-web/src/components/admin/table-browse-controls.tsx
+ M apps/admin-web/src/components/admin/table-browse-panel.tsx
+ M apps/admin-web/src/components/admin/table-pagination.tsx
+ M apps/admin-web/src/components/admin/table-scroll-area.tsx
+ M apps/admin-web/src/hooks/use-table-browse-navigation.ts
+ M apps/admin-web/tests/table-browse/browser.mjs
+ M apps/admin-web/tests/table-browse/fixture.tsx
+ M apps/resident-android-mobile/app.json
+ M apps/resident-android-mobile/metro.config.js
+ M apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/index.tsx
+ M apps/resident-android-mobile/src/components/center-detail-card.tsx
+ M apps/resident-android-mobile/src/components/horizontal-center-picker.tsx
+ M apps/resident-android-mobile/src/components/map-view.tsx
+ M apps/resident-web/src/app/(auth)/forgot-password/page.tsx
+ M apps/resident-web/src/app/(auth)/layout.tsx
+ M apps/resident-web/src/app/(auth)/login/page.tsx
+ M apps/resident-web/src/app/(auth)/onboarding/page.tsx
+ M apps/resident-web/src/app/(auth)/register/register-form.tsx
+ M apps/resident-web/src/app/(auth)/reset-password/page.tsx
+ M apps/resident-web/src/app/(auth)/verify-otp/page.tsx
+ M apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx
+ M apps/resident-web/src/app/(resident)/home/page.tsx
+ M apps/resident-web/src/app/(resident)/layout.tsx
+ M apps/resident-web/src/app/(resident)/services/requests/page.tsx
+ M apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx
+ M apps/resident-web/src/app/(resident)/settings/delete-account/delete-account-form.tsx
+ M apps/resident-web/src/app/(resident)/settings/layout.tsx
+ M apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx
+ M apps/resident-web/src/app/globals.css
+ M apps/resident-web/src/app/layout.tsx
+ M apps/resident-web/src/components/auth/google-button.tsx
+ M apps/resident-web/src/components/emergency/emergency-segment-nav.tsx
+ M apps/resident-web/src/components/emergency/horizontal-center-picker.tsx
+ M apps/resident-web/src/components/health/health-segment-nav.tsx
+ M apps/resident-web/src/components/reports/announcement-modal.tsx
+ M apps/resident-web/src/components/services/services-segment-nav.tsx
+ M apps/resident-web/src/components/shared/fade-in.tsx
+ M apps/resident-web/src/components/shell/bottom-tab-bar.tsx
+ M apps/resident-web/src/components/shell/resident-shell.tsx
+ M apps/resident-web/src/components/shell/top-nav.tsx
+ M apps/resident-web/src/components/ui/button.tsx
+ M apps/resident-web/src/components/ui/sonner.tsx
+ M apps/resident-web/src/hooks/use-announcements.ts
+ M plans/Admin_Web_Table_Browsing_Sorting_Pagination_and_Filters_Implementation_Plan.md
+ M plans/Resident_Registration_Brevo_Supabase_OTP_Execution_Plan.md
+ M plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md
+ M plans/evidence/admin-table-phase1/browser-results.json
+ M plans/evidence/resident-registration-otp/delivery-results.md
+ M plans/evidence/resident-registration-otp/live-acceptance.md
+?? apps/admin-web/src/components/admin/admin-page-header.tsx
+?? apps/admin-web/src/components/admin/operations-table-summary.tsx
+?? apps/admin-web/src/components/admin/pilot-summary.tsx
+?? apps/admin-web/src/components/admin/profile-table-panel.tsx
+?? apps/admin-web/src/components/admin/profile-table-summary.tsx
+?? apps/admin-web/src/components/admin/summary-cards.tsx
+?? apps/admin-web/src/components/admin/table-browse-layout.ts
+?? apps/admin-web/src/components/admin/table-detail-dialog.tsx
+?? apps/admin-web/src/hooks/use-pilot-table-browse.ts
+?? apps/admin-web/src/hooks/use-profile-table-detail.ts
+?? apps/admin-web/src/lib/admin-tables/operations-config.ts
+?? apps/admin-web/src/lib/admin-tables/pilot-config.ts
+?? apps/admin-web/src/lib/admin-tables/profile-config.ts
+?? apps/admin-web/src/lib/admin-tables/queries/
+?? apps/admin-web/src/lib/admin-tables/table-configs.ts
+?? apps/admin-web/tests/table-browse/operations.test.ts
+?? apps/admin-web/tests/table-browse/pilot.test.ts
+?? apps/admin-web/tests/table-browse/queries.test.ts
+?? apps/resident-web/src/app/(auth)/error.tsx
+?? apps/resident-web/src/app/(auth)/loading.tsx
+?? apps/resident-web/src/app/(resident)/emergency/loading.tsx
+?? apps/resident-web/src/app/(resident)/error.tsx
+?? apps/resident-web/src/app/(resident)/health/loading.tsx
+?? apps/resident-web/src/app/(resident)/home/loading.tsx
+?? apps/resident-web/src/app/(resident)/loading.tsx
+?? apps/resident-web/src/app/(resident)/maps/directory/loading.tsx
+?? apps/resident-web/src/app/(resident)/maps/loading.tsx
+?? apps/resident-web/src/app/(resident)/maps/preparedness/loading.tsx
+?? apps/resident-web/src/app/(resident)/services/loading.tsx
+?? apps/resident-web/src/app/(resident)/settings/loading.tsx
+?? apps/resident-web/src/app/error.tsx
+?? apps/resident-web/src/app/loading.tsx
+?? apps/resident-web/src/components/shared/loading-status.tsx
+?? apps/resident-web/src/components/shared/motion-provider.tsx
+?? apps/resident-web/src/components/shared/notification-session.tsx
+?? apps/resident-web/src/components/shared/page-skeleton.tsx
+?? apps/resident-web/src/components/shared/read-failure.tsx
+?? apps/resident-web/src/components/shared/route-error.tsx
+?? apps/resident-web/src/components/shell/link-pending-hint.tsx
+?? apps/resident-web/src/components/ui/loading.tsx
+?? apps/resident-web/src/hooks/use-sign-out.ts
+?? apps/resident-web/src/lib/auth/auth-feedback.ts
+?? apps/resident-web/src/lib/auth/sign-out.ts
+?? apps/resident-web/src/lib/motion.ts
+?? apps/resident-web/src/lib/notify.ts
+?? "plans/Airbnb-style UI refresh for the admin table screens (frontend only, lightweight).md"
+?? plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md
+?? plans/evidence/admin-table-phase2/
+?? plans/evidence/admin-table-phase3/
+?? plans/evidence/admin-table-phase4/
+?? plans/evidence/admin-table-phase5/
+?? plans/evidence/resident-drrm-routing/
+?? plans/evidence/resident-web-feedback/
+?? scripts/resident-web-feedback-regression.cjs
+?? supabase/migrations/0110_admin_table_browse_projections.sql
+?? supabase/migrations/0111_admin_table_browse_read_performance.sql
+?? supabase/migrations/0112_admin_reference_index_writer_permissions.sql

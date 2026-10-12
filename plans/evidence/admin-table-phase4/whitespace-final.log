@@ -1,0 +1,38 @@
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/households-residents/households-table.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/households-residents/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/households-residents/types.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/requests/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/requests/requests-table.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/requests/types.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/residents/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/residents/resident-directory.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/residents/types.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/staff/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/staff/staff-form.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/staff/staff-table.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/staff/types.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/transactions/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/components/admin/request-status-actions.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/components/admin/table-scroll-area.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/admin-web/src/hooks/use-table-browse-navigation.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/app.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/app/(app)/settings/index.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-android-mobile/src/components/center-detail-card.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/(auth)/login/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/globals.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/app/layout.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/components/emergency/horizontal-center-picker.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/components/shared/fade-in.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/components/shell/bottom-tab-bar.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/resident-web/src/components/ui/button.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plans/Admin_Web_Table_Browsing_Sorting_Pagination_and_Filters_Implementation_Plan.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'plans/Resident_Web_Loading_Motion_and_Toast_Implementation_Plan.md', LF will be replaced by CRLF the next time Git touches it
+apps/admin-web/src/app/(admin)/staff/staff-table.tsx:251: trailing whitespace.
++    
+apps/admin-web/src/app/(admin)/staff/staff-table.tsx:268: trailing whitespace.
++    
+apps/admin-web/src/app/(admin)/staff/types.ts:16: new blank line at EOF.

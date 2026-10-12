@@ -40,6 +40,7 @@ export * from './constants/waste-types';
 export * from './lib/supabase-client';
 export * from './lib/haversine';
 export * from './lib/point-in-polygon';
+export * from './lib/device-location';
 export * from './lib/resident-auth';
 export * from './lib/resident-account-setup';
 export * from './lib/resident-email-verification';

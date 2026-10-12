@@ -1,0 +1,2 @@
+Passed: actual Realtime bursts defer drafts, reconcile once and revalidate selected details off-page on all three routes
+Passed: ten client mount cycles maintain one channel and table observers per route

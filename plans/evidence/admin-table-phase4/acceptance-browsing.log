@@ -1,0 +1,23 @@
+Passed: chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results
+Passed: chrome: households defaults, sizes, last page, keyboard, scrolling, resizing and empty results
+Passed: chrome: staff defaults, sizes, last page, keyboard, scrolling, resizing and empty results
+Passed: all 48 advertised sort/direction combinations follow global database order
+Passed: complete unchanged concatenated pages have no gaps or duplicates on all three routes
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.selectOption: Timeout 15000ms exceeded.
+Call log:
+  - waiting for getByLabel('ID presence', { exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:117:84
+    at change (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:43:68)
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:117:19
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\acceptance.mjs:22:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:112:9 {
+  log: [ "  - waiting for getByLabel('ID presence', { exact: true })" ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.13.1

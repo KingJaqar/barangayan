@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "mode": "browsing",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: incidents defaults, sizes, ranges, dates, keyboard, containment and search",
+      "message": "page.waitForFunction: TypeError: Cannot read properties of null (reading 'value')\n    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:5:103)\n    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)\n    at next (eval at evaluate (:311:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:311:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at ready (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:42:14)\n    at async change (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:50:162)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:110:32\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:98:55"
+    }
+  ],
+  "errors": [
+    {
+      "engine": "chrome",
+      "message": "Cannot read properties of null (reading 'value')"
+    }
+  ],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ],
+  "failure": "page.waitForFunction: TypeError: Cannot read properties of null (reading 'value')\n    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:5:103)\n    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)\n    at next (eval at evaluate (:311:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:311:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at ready (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:42:14)\n    at async change (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:50:162)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:110:32\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase5\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:98:55"
+}

@@ -1,0 +1,862 @@
+{
+  "run": "run-1",
+  "phase": "RW-LT-02",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-11T23:53:15.747Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321"
+  },
+  "scenarios": [
+    {
+      "id": "auth-toast-outcome-placement-duration",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "repeated activation → one request, one toast": {
+          "ok": true,
+          "detail": {
+            "requests": 1,
+            "toasts": 1
+          }
+        },
+        "error type, short title + useful description": {
+          "ok": true,
+          "detail": "Login failed\nCheck your email and password."
+        },
+        "auth pages: 16 px top offset, centered, ≤ 400 px wide": {
+          "ok": true,
+          "detail": {
+            "top": 16,
+            "left": 520,
+            "width": 400
+          }
+        },
+        "active theme and app font": {
+          "ok": true,
+          "detail": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          }
+        },
+        "single polite live region, not hidden": {
+          "ok": true
+        },
+        "inline guidance persists without a second live announcement": {
+          "ok": true,
+          "detail": {
+            "inlineAnnounced": false,
+            "liveRegions": 1
+          }
+        },
+        "dismiss control ≥ 24 px with accessible name": {
+          "ok": true,
+          "detail": {
+            "width": 28,
+            "height": 28,
+            "cx": 893,
+            "cy": 54.296875,
+            "label": "Close toast"
+          }
+        },
+        "44 px dismiss hit area": {
+          "ok": true,
+          "detail": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        "focus not stolen": {
+          "ok": true,
+          "detail": "INPUT#password"
+        },
+        "deliberate second attempt notifies again": {
+          "ok": true,
+          "detail": {
+            "toasts": 2,
+            "requests": 2
+          }
+        },
+        "error toast stays ~8 s, then dismisses": {
+          "ok": true,
+          "detail": {
+            "countAt7s": 2,
+            "lifetime": 8012
+          }
+        },
+        "second toast also self-dismisses": {
+          "ok": true,
+          "detail": 8023
+        }
+      },
+      "observations": {
+        "first": {
+          "toasts": [
+            {
+              "text": "Login failed\nCheck your email and password.",
+              "type": "error",
+              "visible": "true",
+              "removed": "false",
+              "top": 16,
+              "left": 520,
+              "right": 920,
+              "width": 400,
+              "height": 77,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 893,
+                "cy": 54.296875,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": null,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "overflowX": false,
+          "active": "BODY#"
+        },
+        "inlineAnnounced": false,
+        "liveRegionsWithOutcome": 1,
+        "hitArea": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "afterSecondAttempt": 2,
+        "activeAfterSecondToast": "INPUT#password",
+        "countAt7s": 2,
+        "firstToastLifetimeMs": 8012,
+        "secondToastLifetimeMs": 8023
+      },
+      "requests": {
+        "total": 28,
+        "document": 1,
+        "rsc": 6,
+        "script": 13,
+        "rest": 0,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "pause-hover-focus-hidden-keyboard",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "hover pauses dismissal; resumes after leave": {
+          "ok": true,
+          "detail": {
+            "hoverAt10s": 1,
+            "afterLeave": 7623
+          }
+        },
+        "keyboard focus pauses dismissal; resumes after blur": {
+          "ok": true,
+          "detail": {
+            "active": "BUTTON#[close]",
+            "focusAt10s": 1,
+            "afterBlur": 8005
+          }
+        },
+        "Enter on the dismiss control closes the toast": {
+          "ok": true
+        },
+        "hidden page pauses dismissal; no burst on return": {
+          "ok": true,
+          "detail": {
+            "hiddenAt10s": 1,
+            "onReturn": 1,
+            "afterVisible": 7729
+          }
+        }
+      },
+      "observations": {
+        "hoverAt10s": 1,
+        "dismissAfterHoverMs": 7623,
+        "activeWhileFocused": "BUTTON#[close]",
+        "focusAt10s": 1,
+        "dismissAfterBlurMs": 8005,
+        "keyboardDismissMs": true,
+        "hiddenAt10s": 1,
+        "onReturn": 1,
+        "dismissAfterVisibleMs": 7729
+      },
+      "requests": {
+        "total": 30,
+        "document": 1,
+        "rsc": 6,
+        "script": 13,
+        "rest": 0,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "session-change-clears-previous-toast",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "existing destination preserved": {
+          "ok": true,
+          "detail": "/onboarding"
+        },
+        "guest-session failure toast cleared once the account session starts": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "observations": {
+        "destination": "/onboarding",
+        "toastsAfterSignIn": []
+      },
+      "requests": {
+        "total": 39,
+        "document": 1,
+        "rsc": 11,
+        "script": 14,
+        "rest": 2,
+        "auth": 3,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 8
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "resident-header-clearance-1440",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "12 px below the measured header": {
+          "ok": true,
+          "detail": {
+            "headerBottom": 58,
+            "top": 70
+          }
+        },
+        "centered, ≤ 400 px": {
+          "ok": true,
+          "detail": {
+            "left": 520,
+            "width": 400
+          }
+        },
+        "theme follows the active mode": {
+          "ok": true,
+          "detail": "light"
+        },
+        "no horizontal overflow": {
+          "ok": true
+        },
+        "no pointer-intercepting container": {
+          "ok": true,
+          "detail": {
+            "beside": "page",
+            "belowInColumn": "page",
+            "farBelow": "page"
+          }
+        },
+        "controls beneath remain interactive": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "state": {
+          "toasts": [
+            {
+              "text": "Email notifications disabled.",
+              "type": null,
+              "visible": "true",
+              "removed": "false",
+              "top": 70,
+              "left": 520,
+              "right": 920,
+              "width": 400,
+              "height": 55,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 893,
+                "cy": 97.5,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": 58,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "overflowX": false,
+          "active": "BUTTON#"
+        },
+        "hits": {
+          "beside": "page",
+          "belowInColumn": "page",
+          "farBelow": "page"
+        },
+        "secondSwitch": "true"
+      },
+      "requests": {
+        "total": 113,
+        "document": 2,
+        "rsc": 57,
+        "script": 31,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "resident-header-clearance-360",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "12 px below the measured header": {
+          "ok": true,
+          "detail": {
+            "headerBottom": 58,
+            "top": 70
+          }
+        },
+        "16 px side gutters on narrow screens": {
+          "ok": true,
+          "detail": {
+            "left": 16,
+            "right": 344
+          }
+        },
+        "theme follows the active mode": {
+          "ok": true,
+          "detail": "light"
+        },
+        "no horizontal overflow": {
+          "ok": true
+        },
+        "no pointer-intercepting container": {
+          "ok": true,
+          "detail": {
+            "beside": "page",
+            "belowInColumn": "page",
+            "farBelow": "page"
+          }
+        },
+        "controls beneath remain interactive": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "state": {
+          "toasts": [
+            {
+              "text": "Email notifications disabled.",
+              "type": null,
+              "visible": "true",
+              "removed": "false",
+              "top": 70,
+              "left": 16,
+              "right": 344,
+              "width": 328,
+              "height": 55,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 317,
+                "cy": 97.5,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": 58,
+          "viewport": {
+            "width": 360,
+            "height": 780
+          },
+          "overflowX": false,
+          "active": "BUTTON#"
+        },
+        "hits": {
+          "beside": "page",
+          "belowInColumn": "page",
+          "farBelow": "page"
+        },
+        "secondSwitch": "true"
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 45,
+        "script": 31,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "resident-header-clearance-dark",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "12 px below the measured header": {
+          "ok": true,
+          "detail": {
+            "headerBottom": 58,
+            "top": 70
+          }
+        },
+        "centered, ≤ 400 px": {
+          "ok": true,
+          "detail": {
+            "left": 520,
+            "width": 400
+          }
+        },
+        "theme follows the active mode": {
+          "ok": true,
+          "detail": "dark"
+        },
+        "no horizontal overflow": {
+          "ok": true
+        },
+        "no pointer-intercepting container": {
+          "ok": true,
+          "detail": {
+            "beside": "page",
+            "belowInColumn": "page",
+            "farBelow": "page"
+          }
+        },
+        "controls beneath remain interactive": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "state": {
+          "toasts": [
+            {
+              "text": "Email notifications disabled.",
+              "type": null,
+              "visible": "true",
+              "removed": "false",
+              "top": 70,
+              "left": 520,
+              "right": 920,
+              "width": 400,
+              "height": 55,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 893,
+                "cy": 97.5,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "dark",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": 58,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "overflowX": false,
+          "active": "BUTTON#"
+        },
+        "hits": {
+          "beside": "page",
+          "belowInColumn": "page",
+          "farBelow": "page"
+        },
+        "secondSwitch": "true"
+      },
+      "requests": {
+        "total": 113,
+        "document": 2,
+        "rsc": 57,
+        "script": 31,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "toast-over-radix-dialog",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "dialog stays open with the toast shown": {
+          "ok": true
+        },
+        "focus stays in the dialog (no focus stealing)": {
+          "ok": true
+        },
+        "live region not aria-hidden/inert under the modal": {
+          "ok": true,
+          "detail": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          }
+        },
+        "toast renders above the overlay and receives pointer input": {
+          "ok": true
+        },
+        "dismissing the toast does not close the dialog": {
+          "ok": true
+        },
+        "Escape still closes the dialog": {
+          "ok": true
+        },
+        "overlay click still closes the dialog": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "state": {
+          "toasts": [
+            {
+              "text": "Copied to clipboard.",
+              "type": "success",
+              "visible": "true",
+              "removed": "false",
+              "top": 70,
+              "left": 520,
+              "right": 920,
+              "width": 400,
+              "height": 55,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 893,
+                "cy": 97.5,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": 58,
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          },
+          "overflowX": false,
+          "active": "BUTTON#"
+        },
+        "focusInDialog": true,
+        "toastOnTop": true,
+        "toastClosed": true
+      },
+      "requests": {
+        "total": 104,
+        "document": 2,
+        "rsc": 44,
+        "script": 33,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "reduced-motion-toast",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "Sonner transitions disabled; toast fully visible at once": {
+          "ok": true,
+          "detail": {
+            "transition": "0s",
+            "opacity": 1,
+            "running": 0
+          }
+        }
+      },
+      "observations": {
+        "toast": {
+          "text": "Login failed\nCheck your email and password.",
+          "type": "error",
+          "visible": "true",
+          "removed": "false",
+          "top": 16,
+          "left": 520,
+          "right": 920,
+          "width": 400,
+          "height": 77,
+          "close": {
+            "width": 28,
+            "height": 28,
+            "cx": 893,
+            "cy": 54.296875,
+            "label": "Close toast"
+          },
+          "opacity": 1,
+          "transition": "0s"
+        },
+        "running": 0
+      },
+      "requests": {
+        "total": 27,
+        "document": 1,
+        "rsc": 6,
+        "script": 13,
+        "rest": 0,
+        "auth": 1,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "long-text-320",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "fits the 320 px viewport with 16 px gutters": {
+          "ok": true,
+          "detail": {
+            "left": 16,
+            "right": 304
+          }
+        },
+        "long text wraps; dismiss control stays inside": {
+          "ok": true,
+          "detail": {
+            "height": 223
+          }
+        },
+        "no horizontal overflow": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "state": {
+          "toasts": [
+            {
+              "text": "Could not send reset code: Synthetic RW feedback failure with a deliberately long provider explanation that must wrap inside the toast without clipping the dismiss control or causing horizontal scrolling on a narrow phone screen.",
+              "type": "error",
+              "visible": "true",
+              "removed": "false",
+              "top": 16,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 223,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 277,
+                "cy": 127.5,
+                "label": "Close toast"
+              },
+              "opacity": 1,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            }
+          ],
+          "liveRegion": {
+            "ariaLive": "polite",
+            "ariaHidden": false,
+            "inert": false
+          },
+          "toaster": {
+            "theme": "light",
+            "fontFamily": "system-ui, Arial, Helvetica, sans-serif",
+            "bodyFont": "system-ui, Arial, Helvetica, sans-serif"
+          },
+          "headerBottom": null,
+          "viewport": {
+            "width": 320,
+            "height": 640
+          },
+          "overflowX": false,
+          "active": "BODY#"
+        }
+      },
+      "requests": {
+        "total": 18,
+        "document": 1,
+        "rsc": 2,
+        "script": 12,
+        "rest": 0,
+        "auth": 1,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 2
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "read-pilots-stay-quiet",
+      "phase": "RW-LT-02",
+      "status": "pass",
+      "checks": {
+        "list read error, retry, and drawer load produce no toast": {
+          "ok": true,
+          "detail": {
+            "loginDestination": "/home",
+            "toastsOnReadError": 0,
+            "toastsOnRetry": 0,
+            "toastsOnDrawer": 0
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "toastsOnReadError": 0,
+        "toastsOnRetry": 0,
+        "toastsOnDrawer": 0
+      },
+      "requests": {
+        "total": 143,
+        "document": 3,
+        "rsc": 57,
+        "script": 45,
+        "rest": 18,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-11T23:54:56.450Z",
+  "summary": {
+    "pass": 10,
+    "fail": 0,
+    "error": 0
+  }
+}

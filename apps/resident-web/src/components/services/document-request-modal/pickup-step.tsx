@@ -6,15 +6,27 @@
  * route it's ported from: there's nothing left to do but close the modal or jump to the
  * full Requests list. `onDone` closes the modal rather than navigating home — the
  * resident is still on /services/documents and can pick another document straight away.
+ *
+ * The pickup record is written once when this step opens. `start_pickup_payment` is
+ * idempotent on the server (it reuses the request's pending/paid pickup payment and only
+ * inserts when none exists — migration 0098 `pickup_payment`), so a remount, Strict Mode
+ * replay, or a deliberate retry after a lost response never creates a second record.
+ * This screen still guards the on-mount call to once per mounted request, reports the
+ * outcome inline (it is its own confirmation view, so no toast), and keeps the Retry
+ * control read-safe.
  */
 
 import { formatCentavosAsPHP } from '@barangayan/shared';
 import { Banknote } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
+import { pickupPaymentFailure } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+
+type PickupState = { status: 'saving' } | { status: 'saved' } | { status: 'failed'; message: string; uncertain: boolean };
 
 export function PickupStep({
   requestId,
@@ -30,19 +42,49 @@ export function PickupStep({
   feeCentavos: number;
   onDone: () => void;
 }) {
-  const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
+  const [state, setState] = useState<PickupState>({ status: 'saving' });
+  const inFlight = useRef(false);
+  const startedFor = useRef<string | null>(null);
+  const active = useRef(true);
+
   const save = useCallback(async () => {
-    setSaved(false);
-    setError(null);
-    const client = createSupabaseBrowserClient();
-    const { error } = await client.rpc('start_pickup_payment', { p_request_id: requestId });
-    if (error) setError(error.message);
-    else setSaved(true);
+    // Repeated activation (or a Strict Mode replay) while a write is in flight is ignored.
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setState({ status: 'saving' });
+    try {
+      const client = createSupabaseBrowserClient();
+      const { error, status } = await client.rpc('start_pickup_payment', { p_request_id: requestId });
+      if (!active.current) return;
+      if (error) {
+        const failure = pickupPaymentFailure(error, status);
+        setState({ status: 'failed', message: failure.message, uncertain: failure.uncertain });
+      } else {
+        setState({ status: 'saved' });
+      }
+    } catch {
+      if (!active.current) return;
+      const failure = pickupPaymentFailure({ message: '' }, 0);
+      setState({ status: 'failed', message: failure.message, uncertain: true });
+    } finally {
+      inFlight.current = false;
+    }
   }, [requestId]);
+
   useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (startedFor.current === requestId) return;
+    startedFor.current = requestId;
     void Promise.resolve().then(save);
-  }, [save]);
+  }, [requestId, save]);
+
+  const saving = state.status === 'saving';
 
   return (
     <div className="flex flex-col gap-4">
@@ -64,15 +106,22 @@ export function PickupStep({
         </p>
       </div>
 
-      {error ? (
-        <div role="alert">
-          <p>{error}</p>
-          <Button onClick={() => void save()}>Retry recording pickup payment</Button>
-        </div>
-      ) : (
-        <p role="status">{saved ? 'Pickup payment recorded.' : 'Recording pickup payment…'}</p>
-      )}
-      <Button size="lg" disabled={!saved} onClick={onDone}>
+      <div aria-busy={saving || undefined} className="min-h-6">
+        {state.status === 'failed' ? (
+          <div role="alert" className="flex flex-col items-start gap-2 text-sm">
+            <p>{state.message}</p>
+            <Button type="button" variant="outline" size="sm" loading={saving} loadingLabel="Recording…" onClick={() => void save()}>
+              Retry recording pickup payment
+            </Button>
+          </div>
+        ) : state.status === 'saved' ? (
+          <p role="status" className="text-sm font-medium">
+            Pickup payment recorded.
+          </p>
+        ) : null}
+        <LoadingStatus active={saving} label="Recording your pickup payment…" />
+      </div>
+      <Button size="lg" disabled={state.status !== 'saved'} onClick={onDone}>
         Done
       </Button>
       {/* ?open= lands on the Requests list with this request's tracking drawer already

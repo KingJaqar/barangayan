@@ -1,0 +1,13 @@
+Passed: firefox: requests defaults, ranges, sort controls, scrolling and responsive access
+Error: UNKNOWN: unknown error, open 'C:\Users\User\barangayan\plans\evidence\admin-table-phase3\firefox-transactions.png'
+    at async open (node:internal/fs/promises:637:25)
+    at async Object.writeFile (node:internal/fs/promises:1239:14)
+    at async _Page.screenshot (C:\Users\User\barangayan\node_modules\playwright-core\lib\coreBundle.js:61393:11)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:73:5
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:16:355)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:51:52 {
+  errno: -4094,
+  code: 'UNKNOWN',
+  syscall: 'open',
+  path: 'C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase3\\firefox-transactions.png'
+}

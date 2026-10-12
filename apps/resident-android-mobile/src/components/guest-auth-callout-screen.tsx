@@ -12,9 +12,11 @@ interface GuestAuthCalloutScreenProps {
   title: string;
   description: string;
   tabName: string;
+  /** Overrides the callout card's default explanation. */
+  message?: string;
 }
 
-export function GuestAuthCalloutScreen({ title, description, tabName }: GuestAuthCalloutScreenProps) {
+export function GuestAuthCalloutScreen({ title, description, tabName, message }: GuestAuthCalloutScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -40,7 +42,7 @@ export function GuestAuthCalloutScreen({ title, description, tabName }: GuestAut
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
-          <GuestAuthCallout tabName={tabName} />
+          <GuestAuthCallout tabName={tabName} message={message} />
           <ThemedText themeColor="textSecondary" style={styles.description}>
             {description}
           </ThemedText>

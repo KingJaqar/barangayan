@@ -8,6 +8,9 @@ import { AuthGate } from '@/components/shared/auth-gate';
 import { QrScannerDialog } from '@/components/emergency/qr-scanner-dialog';
 import { QrShowDialog } from '@/components/emergency/qr-show-dialog';
 import { QrUploadFallback } from '@/components/emergency/qr-upload-fallback';
+import { InlineReadError } from '@/components/shared/inline-read-error';
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { Skeleton } from '@/components/ui/loading';
 import { useEmergencyQrContent } from '@/hooks/use-emergency-qr-content';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { renderIonicon } from '@/lib/ionicon-map';
@@ -16,8 +19,8 @@ import { renderIonicon } from '@/lib/ionicon-map';
  * [C-014] plus Scan/Show entry points [C-011, C-012]. Guests see EmergencyAuthGate
  * instead — see emergency/scan/page.tsx's doc comment. */
 export function ScanContent({ userId, barangayId }: { userId: string | null; barangayId: string | null }) {
-  const { content, isLoading, error } = useEmergencyQrContent(barangayId);
-  const { centers } = useEvacuationCenters({ barangayId });
+  const { content, isInitialLoading, isReady, error, refetch } = useEmergencyQrContent(barangayId);
+  const centersRead = useEvacuationCenters({ barangayId });
   const [showScanner, setShowScanner] = useState(false);
   const [showQr, setShowQr] = useState(false);
 
@@ -42,10 +45,13 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
         <p className="text-sm text-muted-foreground">Follow these quick steps to register your presence securely.</p>
       </div>
 
-      {isLoading ? (
-        <div className="h-24 animate-pulse rounded-2xl bg-muted" />
-      ) : error ? (
-        <p className="text-sm text-muted-foreground">Unable to load instructions.</p>
+      {isInitialLoading ? (
+        <div aria-busy className="flex flex-col gap-3">
+          <Skeleton className="h-24 rounded-2xl" />
+          <Skeleton className="h-40 rounded-2xl" />
+        </div>
+      ) : !isReady ? (
+        <InlineReadError message="We couldn't load the check-in instructions. You can still scan or show a QR code below." onRetry={refetch} />
       ) : (
         <>
           {whyScan ? (
@@ -87,6 +93,15 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
         </>
       )}
 
+      {isReady && error ? (
+        <InlineReadError
+          tone="warning"
+          message="Couldn't update the instructions. Showing the last loaded version."
+          onRetry={refetch}
+        />
+      ) : null}
+      <LoadingStatus active={isInitialLoading} label="Loading check-in instructions…" />
+
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button type="button" className="flex-1" onClick={() => setShowScanner(true)}>
           <QrCode size={20} /> Scan QR
@@ -99,7 +114,11 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
       <QrUploadFallback userId={userId} barangayId={barangayId} userBarangayId={barangayId} />
 
       <QrScannerDialog open={showScanner} onClose={() => setShowScanner(false)} userId={userId} barangayId={barangayId} userBarangayId={barangayId} />
-      <QrShowDialog open={showQr} onClose={() => setShowQr(false)} centers={centers} barangayId={barangayId} />
+      <QrShowDialog open={showQr} onClose={() => setShowQr(false)} centers={centersRead.centers}
+        barangayId={barangayId}
+        centersStatus={centersRead.isInitialLoading ? 'loading' : centersRead.isReady ? 'ready' : 'error'}
+        onRetryCenters={centersRead.refetch}
+      />
     </div>
   );
 }

@@ -1,0 +1,22 @@
+Passed: three actual member Realtime events defer while editing and coalesce after cancel
+Passed: selected member stays the same ID off-page, reloads Realtime changes, handles errors and deletion
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
++   mutation: 1,
++   resize: 1
+-   mutation: 0,
+-   resize: 0
+  }
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:74:223
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:11:39)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:69:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}

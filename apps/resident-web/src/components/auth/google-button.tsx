@@ -1,9 +1,10 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import localFont from 'next/font/local';
 import { safeResidentRedirect } from '@barangayan/shared';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/loading';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 const googleSans = localFont({ src: './google-sans-medium.ttf', weight: '500', style: 'normal', display: 'swap' });
@@ -12,6 +13,18 @@ export function GoogleButton({ label, next = null, link = false }: { label: stri
   const busy = useRef(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Starting OAuth leaves this page for Google. If the resident comes Back and the
+  // browser restores this page from its back/forward cache, release the pending state
+  // instead of showing "Connecting…" forever. Nothing here claims sign-in succeeded.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      busy.current = false;
+      setLoading(false);
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, []);
   async function start() {
     if (busy.current) return;
     busy.current = true; setLoading(true); setError(null);
@@ -37,7 +50,7 @@ export function GoogleButton({ label, next = null, link = false }: { label: stri
         className={`${googleSans.className} grid min-h-12 w-full grid-cols-[18px_1fr_18px] gap-2.5 border-[#747775] bg-white px-3 text-sm font-medium text-[#1f1f1f] hover:bg-[#f8faff] active:bg-[#eef3fc] disabled:opacity-70 focus-visible:ring-[#4285f4]`}>
         <Image src="/google-g.png" alt="" width={200} height={204} sizes="18px" className="h-auto w-[18px] shrink-0" />
         <span>{label}</span>
-        <span aria-hidden="true" className={loading ? 'h-[18px] w-[18px] animate-spin rounded-full border-2 border-[#4285f4] border-t-transparent' : 'h-[18px] w-[18px]'} />
+        <span aria-hidden="true" className="flex h-[18px] w-[18px] items-center justify-center text-[#4285f4]">{loading ? <Spinner className="size-[18px]" /> : null}</span>
       </Button>
       {loading && <p role="status" className="sr-only">Connecting to Google…</p>}
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}

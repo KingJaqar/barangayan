@@ -37,10 +37,11 @@ export function AdminShell({ barangayName, adminName, barangayId, children }: Ad
         barangayName={barangayName}
         adminName={adminName}
         barangayId={barangayId}
+        sidebarCollapsed={collapsed}
         onToggleSidebar={() => setCollapsed((v) => !v)}
         onLogout={handleLogout}
       />
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
         <SidebarNav collapsed={collapsed} onLogout={handleLogout} />
         <main data-admin-viewport className="min-w-0 flex-1 overflow-y-auto overflow-x-auto bg-zinc-50 p-8 dark:bg-black">{children}</main>
       </div>

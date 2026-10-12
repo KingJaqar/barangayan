@@ -176,9 +176,9 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
       </div>
       <label className="text-sm">
         <span className="mb-1 block font-medium">City</span>
-        <input aria-label="City" value={city} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500`} />
+        <input aria-label="City" value={city} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400`} />
       </label>
-      <label className="text-sm"><span className="mb-1 block font-medium">Province</span><input value={profile.province ?? 'Not configured'} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500`} /></label>
+      <label className="text-sm"><span className="mb-1 block font-medium">Province</span><input value={profile.province ?? 'Not configured'} readOnly className={`${inputCls} bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400`} /></label>
 
       {/* Read-only — this is profiles.barangay_id, assigned automatically at
           registration (AGENTS.md §0), not a free-text address component. */}

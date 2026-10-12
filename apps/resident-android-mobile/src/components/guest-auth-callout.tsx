@@ -8,42 +8,60 @@ import { useTheme } from '@/hooks/use-theme';
 
 interface GuestAuthCalloutProps {
   tabName?: string;
+  /** Overrides the default (household-oriented) explanation. */
+  message?: string;
+  /** Overrides the default headline. */
+  title?: string;
+  /** Ionicons name shown in the badge above the headline. */
+  icon?: keyof typeof Ionicons.glyphMap;
+  /** Set false to show only the Log In button. */
+  showRegister?: boolean;
 }
 
-export function GuestAuthCallout({ tabName = 'this section' }: GuestAuthCalloutProps) {
+// Airbnb-style prompt: roomy card, left-aligned bold headline, muted copy and
+// full-width stacked buttons (solid primary above an outlined secondary).
+export function GuestAuthCallout({
+  message = 'Log in or register an account to manage your household members and track family check-in status during emergencies.',
+  title = 'Log in to continue',
+  icon = 'people-outline',
+  showRegister = true,
+}: GuestAuthCalloutProps) {
   const theme = useTheme();
 
   return (
     <View style={styles.wrapper}>
       <View style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-        <View style={[styles.iconCircle, { backgroundColor: theme.backgroundElement }]}>
-          <Ionicons name="people-outline" size={28} color={theme.primary} />
+        <View style={[styles.iconBadge, { backgroundColor: `${theme.primary}1A` }]}>
+          <Ionicons name={icon} size={28} color={theme.primary} />
         </View>
 
-        <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
-          Account Required
-        </ThemedText>
+        <View style={styles.textBlock}>
+          <ThemedText style={[styles.title, { color: theme.text }]}>{title}</ThemedText>
+          <ThemedText themeColor="textSecondary" style={styles.body}>
+            {message}
+          </ThemedText>
+        </View>
 
-        <ThemedText themeColor="textSecondary" style={styles.body}>
-          Log in or register an account to manage your household members and track family check-in status during emergencies.
-        </ThemedText>
-
-        <View style={styles.buttonRow}>
+        <View style={styles.buttonColumn}>
           <Link href="/(auth)/login" asChild>
-            <Pressable style={StyleSheet.flatten([styles.primaryButton, { backgroundColor: theme.primary }])}>
-              <ThemedText style={[styles.primaryButtonText, { color: theme.onPrimary }]}>
-                Log In
-              </ThemedText>
+            <Pressable
+              accessibilityRole="button"
+              android_ripple={{ color: 'rgba(255,255,255,0.25)' }}
+              style={StyleSheet.flatten([styles.button, { backgroundColor: theme.primary }])}>
+              <ThemedText style={[styles.buttonText, { color: theme.onPrimary }]}>Log in</ThemedText>
             </Pressable>
           </Link>
 
-          <Link href="/(auth)/register" asChild>
-            <Pressable style={StyleSheet.flatten([styles.secondaryButton, { borderColor: theme.primary }])}>
-              <ThemedText style={[styles.secondaryButtonText, { color: theme.primary }]}>
-                Create Account
-              </ThemedText>
-            </Pressable>
-          </Link>
+          {showRegister && (
+            <Link href="/(auth)/register" asChild>
+              <Pressable
+                accessibilityRole="button"
+                android_ripple={{ color: 'rgba(0,0,0,0.08)' }}
+                style={StyleSheet.flatten([styles.button, styles.outlined, { borderColor: theme.text }])}>
+                <ThemedText style={[styles.buttonText, { color: theme.text }]}>Create account</ThemedText>
+              </Pressable>
+            </Link>
+          )}
         </View>
       </View>
     </View>
@@ -55,70 +73,60 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: Spacing.five,
+    paddingHorizontal: Spacing.four,
   },
   card: {
     width: '100%',
-    maxWidth: 400,
-    borderRadius: 20,
-    borderWidth: 1,
+    maxWidth: 420,
+    borderRadius: 24,
+    borderWidth: StyleSheet.hairlineWidth,
     padding: Spacing.five,
-    alignItems: 'center',
-    gap: Spacing.four,
+    gap: Spacing.five,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
       },
-      android: { elevation: 3 },
+      android: { elevation: 4 },
     }),
   },
-  iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  iconBadge: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textBlock: {
+    gap: Spacing.two,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
+    lineHeight: 30,
     fontWeight: '700',
-    textAlign: 'center',
+    letterSpacing: -0.3,
   },
   body: {
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: 'center',
+    fontSize: 15,
+    lineHeight: 22,
   },
-  buttonRow: {
-    flexDirection: 'row',
+  buttonColumn: {
     gap: Spacing.three,
-    width: '100%',
   },
-  primaryButton: {
-    flex: 1,
-    paddingVertical: Spacing.three,
-    borderRadius: 14,
+  button: {
+    height: 52,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primaryButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  secondaryButton: {
-    flex: 1,
-    paddingVertical: Spacing.three,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
+  outlined: {
     backgroundColor: 'transparent',
+    borderWidth: 1,
   },
-  secondaryButtonText: {
-    fontSize: 15,
-    fontWeight: '700',
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

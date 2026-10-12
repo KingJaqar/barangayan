@@ -1,10 +1,12 @@
 import { GoogleButton } from '@/components/google-button';
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AuthHeader } from '@/components/auth-header';
+import { GuestBrowseButton } from '@/components/guest-browse-button';
+import { LogoutToast } from '@/components/logout-toast';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
@@ -13,7 +15,8 @@ import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/use-auth';
 import { authSetupRequests, SetupTimeout, SetupOwner } from '@/lib/setup-request';
-import { residentSetupFailure } from '@barangayan/shared';
+import { residentEmailStepSchema } from '@barangayan/shared';
+import { loginErrorMessage } from '@/lib/login-error';
 
 type LoginParams = {
   /** Prefills the email field when coming from the registration flow. */
@@ -25,6 +28,8 @@ export default function LoginScreen() {
   const params = useLocalSearchParams<LoginParams>();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  const compact = height - insets.top - insets.bottom < 640;
   const { setSetupIntent } = useAuth();
   const owner = useRef(new SetupOwner());
   useEffect(() => { const scope = owner.current; return () => scope.invalidate(); }, []);
@@ -37,6 +42,9 @@ export default function LoginScreen() {
 
   async function handleLogin() {
     if (loading) return;
+    const parsedEmail = residentEmailStepSchema.safeParse({ email });
+    if (!parsedEmail.success) { setError('Enter a valid email address.'); return; }
+    if (!password) { setError('Enter your password.'); return; }
     const owns = owner.current.ticket();
     setError(null);
     setLoading(true);
@@ -44,18 +52,18 @@ export default function LoginScreen() {
       await setSetupIntent('sign_in');
       await authSetupRequests.run(async () => {
         if (!owns()) return;
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email: parsedEmail.data.email, password });
         if (signInError) throw signInError;
       });
       if (owns()) setPassword('');
-    } catch (cause) { if (owns()) setError(cause instanceof SetupTimeout ? cause.message : residentSetupFailure(cause as { code?: string; status?: number; name?: string }).message); }
+    } catch (cause) { if (owns()) setError(cause instanceof SetupTimeout ? cause.message : loginErrorMessage(cause)); }
     finally { if (owns()) setLoading(false); }
     // No explicit navigation needed — the session update flows into AuthProvider and
     // Stack.Protected in the root layout routes into (app) automatically.
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['left', 'right']}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
         <AuthHeader title="Log In" onBack={() => { if (authSetupRequests.busy) { setError('Please wait for the earlier sign-in request to finish.'); return; } owner.current.invalidate(); setPassword(''); router.replace('/(auth)/auth-choice'); }} />
 
@@ -63,35 +71,42 @@ export default function LoginScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.kav}>
           <ScrollView
-            contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + Spacing.five }]}
+            contentContainerStyle={[styles.content, { gap: compact ? 6 : 12, paddingTop: compact ? 8 : 16, paddingBottom: insets.bottom + Spacing.one }]}
             keyboardShouldPersistTaps="handled"
+            bounces={false}
+            alwaysBounceVertical={false}
+            overScrollMode="never"
             showsVerticalScrollIndicator={false}>
+            <View style={styles.intro}>
             <ThemedText style={styles.welcomeTitle}>Welcome back</ThemedText>
             <ThemedText themeColor="textSecondary" style={styles.welcomeSubtitle}>
-              Log in to continue to your barangay community.
+              Connect with your barangay.
             </ThemedText>
-
-
-
+            </View>
             <View
               style={[
                 styles.formCard,
+                compact && styles.compactFormCard,
                 { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
               ]}>
               <TextField
                 label="Email"
                 placeholder="you@example.com"
                 autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
                 keyboardType="email-address"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={value => { setEmail(value); setError(null); }}
+                style={styles.input}
               />
               <TextField
                 label="Password"
                 placeholder="Password"
                 secureTextEntry={!isPasswordVisible}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={value => { setPassword(value); setError(null); }}
+                style={styles.input}
                 passwordVisibility={{
                   visible: isPasswordVisible,
                   onToggle: () => setIsPasswordVisible((visible) => !visible),
@@ -99,13 +114,13 @@ export default function LoginScreen() {
               />
 
               {error ? (
-                <ThemedText type="small" themeColor="accentRed">
+                <ThemedText type="small" themeColor="accentRed" accessibilityLiveRegion="polite">
                   {error}
                 </ThemedText>
               ) : null}
 
               <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
-                <ThemedText type="link" style={{ color: theme.primary, fontWeight: '600' }}>
+                <ThemedText type="link" style={{ color: theme.primary, fontWeight: '600', lineHeight: 22 }}>
                   Forgot Password?
                 </ThemedText>
               </Link>
@@ -114,13 +129,6 @@ export default function LoginScreen() {
             <PrimaryButton label="Log In" loading={loading} onPress={handleLogin} />
 
             <GoogleButton label="Sign in with Google" disabled={loading} />
-            <View style={styles.dividerRow}>
-              <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
-              <ThemedText type="small" themeColor="textSecondary">
-                OR
-              </ThemedText>
-              <View style={[styles.dividerLine, { backgroundColor: theme.backgroundSelected }]} />
-            </View>
 
             <View style={styles.footerRow}>
               <ThemedText themeColor="textSecondary" style={styles.footerText}>
@@ -132,8 +140,10 @@ export default function LoginScreen() {
                 Create one
               </ThemedText>
             </View>
+            <GuestBrowseButton disabled={loading} />
           </ScrollView>
         </KeyboardAvoidingView>
+        <LogoutToast />
       </View>
     </SafeAreaView>
   );
@@ -144,33 +154,22 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   kav: { flex: 1 },
   content: {
-    padding: Spacing.four,
-    gap: Spacing.three,
+    paddingHorizontal: Spacing.four,
   },
-  welcomeTitle: { fontSize: 24, fontWeight: '700' },
-  welcomeSubtitle: { fontSize: 14, marginTop: -Spacing.two, lineHeight: 20 },
-  successBanner: {
-    padding: Spacing.three,
-    borderRadius: Spacing.three,
-    borderWidth: 1,
-    gap: Spacing.half,
-  },
+  intro: { gap: 4 },
+  welcomeTitle: { fontSize: 24, lineHeight: 30, fontWeight: '700' },
+  welcomeSubtitle: { fontSize: 14, lineHeight: 20 },
+  input: { minHeight: 44 },
   formCard: {
     borderRadius: 20,
     borderWidth: 1,
-    padding: Spacing.three,
-    gap: Spacing.three,
+    padding: 12,
+    gap: 10,
   },
+  compactFormCard: { padding: 10, gap: 8 },
   forgotLink: {
     alignSelf: 'flex-end',
   },
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    marginTop: Spacing.one,
-  },
-  dividerLine: { flex: 1, height: 1 },
   footerRow: {
     flexDirection: 'row',
     justifyContent: 'center',

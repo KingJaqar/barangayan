@@ -40,6 +40,20 @@ export function EvacuationCenterCard({
   return (
     <div
       onClick={onClick}
+      // Clickable cards are real keyboard targets: focusable, activated with Enter/Space.
+      {...(onClick
+        ? {
+            role: 'button',
+            tabIndex: 0,
+            'aria-pressed': selected,
+            onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
+              if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                onClick();
+              }
+            },
+          }
+        : {})}
       className={`flex flex-col gap-3 rounded-2xl border bg-card p-4 ${onClick ? 'cursor-pointer transition-colors hover:border-primary/50' : ''} ${selected ? 'border-primary ring-1 ring-primary' : 'border-border'}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">

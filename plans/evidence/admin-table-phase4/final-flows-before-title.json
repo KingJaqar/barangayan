@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "checks": [
+    "chrome: JSON household counts remain independent of normalized members",
+    "chrome: long-name details stay contained and keyboard focus returns to the trigger",
+    "firefox: JSON household counts remain independent of normalized members",
+    "firefox: long-name details stay contained and keyboard focus returns to the trigger",
+    "webkit: JSON household counts remain independent of normalized members",
+    "webkit: long-name details stay contained and keyboard focus returns to the trigger"
+  ],
+  "browsers": [
+    {
+      "name": "chrome",
+      "version": "154.0.8037.99"
+    },
+    {
+      "name": "firefox",
+      "version": "153.0"
+    },
+    {
+      "name": "webkit",
+      "version": "26.5"
+    }
+  ],
+  "errors": [],
+  "geometry": [
+    {
+      "name": "chrome",
+      "route": "residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "chrome",
+      "route": "households-residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "firefox",
+      "route": "residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "firefox",
+      "route": "households-residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "webkit",
+      "route": "residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "webkit",
+      "route": "households-residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    }
+  ]
+}

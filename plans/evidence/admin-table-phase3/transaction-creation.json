@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "Transaction request lookup chooses the latest reference, creates a centavo-accurate ledger row and audits archive"
+  ],
+  "errors": [],
+  "timings": [],
+  "refreshes": null,
+  "leaks": []
+}

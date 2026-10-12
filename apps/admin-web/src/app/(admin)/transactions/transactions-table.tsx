@@ -1,9 +1,19 @@
 'use client';
 
-import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
+import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
 import { RotateCcw, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+import { TableBrowsePanel } from '@/components/admin/table-browse-panel';
+import { TableBrowseControls } from '@/components/admin/table-browse-controls';
+import { TablePagination } from '@/components/admin/table-pagination';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { PilotSummary } from '@/components/admin/pilot-summary';
+import { usePilotTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { pageRange, type BrowseResult, type BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
+import { directionLabel } from '@/lib/admin-tables/sort-definitions';
+import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
@@ -12,9 +22,10 @@ import { StatusPill } from '@/components/admin/status-pill';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-import { TABS, type Tab } from './types';
+import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import { Spinner } from '@/components/loading/spinner';
+import { formContainerClass, inputClass, readOnlyClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 // Tables<'payments'> already includes document_fee_centavos, paymongo_payment_id,
 // refund_status, refund_amount_centavos, refund_reason, refunded_at, refunded_by
@@ -69,12 +80,13 @@ function AddTransactionForm({
   referenceOptions,
   admins,
   onClose,
+  onChanged,
 }: {
   referenceOptions: string[];
   admins: AdminOption[];
   onClose: () => void;
+  onChanged: () => void;
 }) {
-  const router = useRouter();
   const toast = useToast();
   const [reference, setReference] = useState('');
   const [method, setMethod] = useState<'pickup' | 'qrph'>('pickup');
@@ -87,14 +99,21 @@ function AddTransactionForm({
   // inside the onChange handler, matching how this codebase's other event-driven state
   // updates are wired (no set-state-in-effect surprises).
   const [matchedRequest, setMatchedRequest] = useState<MatchedRequest | null>(null);
-  const [lookupState, setLookupState] = useState<'idle' | 'loading' | 'found' | 'not_found'>('idle');
+  const [lookupState, setLookupState] = useState<'idle' | 'loading' | 'found' | 'not_found' | 'error'>('idle');
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lookupVersion = useRef(0);
+  useEffect(() => () => {
+    lookupVersion.current++;
+    if (lookupTimer.current) clearTimeout(lookupTimer.current);
+  }, []);
 
   const [collectedBy, setCollectedBy] = useState('');
   const [sourceId, setSourceId] = useState('');
 
   function scheduleLookup(value: string) {
     if (lookupTimer.current) clearTimeout(lookupTimer.current);
+    const version = ++lookupVersion.current;
+    setMatchedRequest(null);
     const trimmed = value.trim().replace(/^#/, '');
 
     if (!trimmed) {
@@ -111,11 +130,14 @@ function AddTransactionForm({
         .select('id, barangay_id, profiles!service_requests_resident_id_fkey(full_name), document_types(name)')
         .eq('reference_number', trimmed)
         .is('deleted_at', null)
+        .retry(false)
+        .abortSignal(AbortSignal.timeout(15000))
         .maybeSingle();
 
+      if (version !== lookupVersion.current) return;
       if (error || !data) {
         setMatchedRequest(null);
-        setLookupState('not_found');
+        setLookupState(error ? 'error' : 'not_found');
         return;
       }
 
@@ -135,6 +157,8 @@ function AddTransactionForm({
   }
 
   function resetForm() {
+    lookupVersion.current++;
+    if (lookupTimer.current) clearTimeout(lookupTimer.current);
     setReference('');
     setAmountPesos('');
     setStatus('pending');
@@ -208,23 +232,19 @@ function AddTransactionForm({
     toast.showSuccess('Transaction added.');
     resetForm();
     onClose();
-    router.refresh();
+    onChanged();
   }
 
-  const inputClass =
-    'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
-  const readOnlyClass =
-    'w-full rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-400';
 
   const residentDisplay =
-    lookupState === 'loading' ? 'Looking up…' : lookupState === 'not_found' ? 'No matching request' : (matchedRequest?.residentName ?? '');
+    lookupState === 'loading' ? 'Looking up…' : lookupState === 'error' ? 'Lookup failed — type the reference again to retry' : lookupState === 'not_found' ? 'No matching request' : (matchedRequest?.residentName ?? '');
   const documentDisplay =
-    lookupState === 'loading' ? 'Looking up…' : lookupState === 'not_found' ? 'No matching request' : (matchedRequest?.documentName ?? '');
+    lookupState === 'loading' ? 'Looking up…' : lookupState === 'error' ? 'Lookup failed — type the reference again to retry' : lookupState === 'not_found' ? 'No matching request' : (matchedRequest?.documentName ?? '');
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-2 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-4"
+      className={`${formContainerClass} mb-6 grid-cols-2 sm:grid-cols-4`}
     >
       <label className="col-span-2 text-sm sm:col-span-1">
         <span className="mb-1 block font-medium">Request Reference</span>
@@ -328,7 +348,7 @@ function AddTransactionForm({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Transaction</LoadingButtonContent>
         </button>
@@ -338,7 +358,7 @@ function AddTransactionForm({
             resetForm();
             onClose();
           }}
-          className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700"
+          className={cancelButtonClass}
         >
           Cancel
         </button>
@@ -348,82 +368,18 @@ function AddTransactionForm({
 }
 
 export function TransactionsTable({
-  payments,
-  barangayId,
-  referenceOptions,
-  admins,
-  residents,
-  documentTypes,
-  tab,
-  method,
-  q,
+  result, summary, requestedState, optionsError, barangayId, referenceOptions, admins, residents, documentTypes,
 }: {
-  payments: Payment[];
-  barangayId: string;
-  referenceOptions: string[];
-  admins: AdminOption[];
-  residents: ResidentOption[];
-  documentTypes: DocumentTypeOption[];
-  tab: Tab;
-  method: string;
-  q: string;
+  result: QueryOutcome<BrowseResult<Payment>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
+  optionsError: string | null; barangayId: string; referenceOptions: string[]; admins: AdminOption[]; residents: ResidentOption[]; documentTypes: DocumentTypeOption[];
 }) {
-  const router = useRouter();
+
   const toast = useToast();
-  const [dateOrder, setDateOrder] = useState<'asc' | 'desc'>('desc');
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/method around for the debounced search effect below, without making
-  // that effect re-fire (and re-push a redundant URL) whenever tab/method change on their
-  // own — those already navigate immediately through their own handlers.
-  const tabRef = useRef(tab);
-  const methodRef = useRef(method);
-  useEffect(() => {
-    tabRef.current = tab;
-    methodRef.current = method;
-  }, [tab, method]);
-
-  function navigate(next: { tab?: string; method?: string; q?: string }) {
-    const nextQ = next.q ?? q;
-    const nextMethod = next.method ?? method;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextMethod ? { method: nextMethod } : {}),
-    });
-    router.push(`/transactions?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after the
-  // user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(methodRef.current ? { method: methodRef.current } : {}),
-      });
-      router.push(`/transactions?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
-  const sortedPayments = [...payments].sort((a, b) => {
-    const diff = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    return dateOrder === 'asc' ? diff : -diff;
-  });
+  const browse = usePilotTableBrowse('transactions', requestedState, result);
+  const { state, value } = browse;
+  const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
+  const range = value ? pageRange(value.total, state.page, state.pageSize) : null;
 
   async function updateField(payment: Payment, patch: Partial<Tables<'payments'>>) {
     // Skip the log (but still persist) if nothing in the patch actually differs from the
@@ -450,7 +406,7 @@ export function TransactionsTable({
       entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
       changes: { before, after: patch },
     }).catch(() => {});
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
@@ -497,7 +453,7 @@ export function TransactionsTable({
       changes: { before, after: patch },
     }).catch(() => {});
 
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
@@ -541,11 +497,12 @@ export function TransactionsTable({
       metadata: { previousReference, newReference: next },
     }).catch(() => {});
 
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
   async function archive(payment: Payment) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: archived, error } = await supabase
       .from('payments')
@@ -571,7 +528,7 @@ export function TransactionsTable({
     }).catch(() => {});
 
     toast.showSuccess('Transaction archived.');
-    router.refresh();
+    browse.refresh();
   }
 
   // Full-amount only (no partial refunds) — see the refund-payment Edge Function.
@@ -579,6 +536,7 @@ export function TransactionsTable({
   // refund_status moves from 'pending' to 'refunded'/'failed' once the paymongo-webhook
   // function's refund.updated handler confirms it.
   async function refund(payment: Payment) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: refundResult, error } = await supabase.functions.invoke<{ paymentId: string; status: string }>('refund-payment', {
       body: { paymentId: payment.id, reason: 'requested_by_customer' },
@@ -608,16 +566,17 @@ export function TransactionsTable({
     }).catch(() => {});
 
     toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<Payment>[] = [
     {
-      header: 'Date',
+      id: 'created',
+      header: 'Date created',
       initialWidth: 148,
       minWidth: 138,
       wrap: 'nowrap',
-      render: (p) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTime(p.created_at)}</span>,
+      render: (p) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatAdminTimestamp(p.created_at)}</span>,
       edit: {
         type: 'datetime',
         getValue: (p) => p.created_at,
@@ -625,6 +584,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'reference',
       header: 'Reference',
       initialWidth: 160,
       minWidth: 148,
@@ -637,12 +597,14 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'resident',
       header: 'Resident',
       initialWidth: 190,
       minWidth: 160,
       wrap: 'break-word',
       render: (p) => p.service_requests?.profiles?.full_name ?? '—',
       edit: {
+        canEdit: () => !optionsError,
         type: 'select',
         options: residents.map((r) => ({ value: r.id, label: r.full_name })),
         getValue: (p) => p.service_requests?.resident_id ?? '',
@@ -650,12 +612,14 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'document',
       header: 'Document',
       initialWidth: 190,
       minWidth: 160,
       wrap: 'break-word',
       render: (p) => p.service_requests?.document_types?.name ?? '—',
       edit: {
+        canEdit: () => !optionsError,
         type: 'select',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (p) => p.service_requests?.document_type_id ?? '',
@@ -663,6 +627,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'method',
       header: 'Method',
       initialWidth: 126,
       minWidth: 116,
@@ -676,6 +641,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'amount',
       header: 'Amount',
       initialWidth: 118,
       minWidth: 108,
@@ -695,6 +661,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'status',
       header: 'Status',
       initialWidth: 136,
       minWidth: 128,
@@ -713,6 +680,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'collector',
       header: 'Collected By / Source',
       initialWidth: 208,
       minWidth: 180,
@@ -720,8 +688,8 @@ export function TransactionsTable({
       render: (p) => (p.method === 'pickup' ? (p.collector?.full_name ?? '—') : (p.paymongo_source_id ?? '—')),
       // Pickup rows need a select of admins (writes collected_by); QR PH rows need a free-text
       // PayMongo source id (writes paymongo_source_id) — genuinely different controls per row.
-      edit: (p): EditableCellConfig<Payment> =>
-        p.method === 'pickup'
+      edit: (p): EditableCellConfig<Payment> | undefined =>
+        optionsError && p.method === 'pickup' ? undefined : p.method === 'pickup'
           ? {
               type: 'select',
               options: admins.map((a) => ({ value: a.id, label: a.full_name })),
@@ -735,6 +703,7 @@ export function TransactionsTable({
             },
     },
     {
+      id: 'refund',
       header: 'Refund',
       initialWidth: 148,
       minWidth: 132,
@@ -799,6 +768,7 @@ export function TransactionsTable({
       },
     },
     {
+      id: 'actions',
       header: 'Actions',
       initialWidth: 76,
       minWidth: 72,
@@ -817,99 +787,31 @@ export function TransactionsTable({
     },
   ];
 
-  return (
-    <>
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setDateOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Date {dateOrder === 'asc' ? '↑' : '↓'}
-          </button>
-
-          <select
-            value={method}
-            onChange={(e) => navigate({ method: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
+  return <>
+    <PilotSummary name="transactions" summary={summary} onRetry={browse.refresh} />
+    {optionsError && <div role="alert" className="mb-4 rounded-xl border p-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}
+    {addOpen && <fieldset disabled={!!optionsError || browse.pending}><AddTransactionForm referenceOptions={referenceOptions} admins={admins} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <TableBrowsePanel label="Transactions" pending={browse.pending} error={browse.error} onRetry={browse.refresh}
+      queryIdentity={value?.queryIdentity}
+      announcement={value && range ? activeSort.label + ', ' + directionLabel(activeSort, state.dir) + '; Showing ' + range.start + '–' + range.end + ' of ' + value.total : undefined}
+      controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
+        onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
+        category={<div className="table-browse-field"><label htmlFor="transactions-method">Method</label>
+          <select id="transactions-method" value={state.filters.method} onChange={event => void browse.commit({ filters: { method: event.target.value } })}>
             <option value="">All Methods</option>
-            {METHOD_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search reference, resident, document, collector…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            disabled={!barangayId}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            + Add Transaction
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented status tabs, beneath the sort/filter/search + add row */}
-      <div className="mb-4 flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium ${
-              tab === t.key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-600 dark:text-zinc-300'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && (
-        <AddTransactionForm referenceOptions={referenceOptions} admins={admins} onClose={() => setAddOpen(false)} />
-      )}
-
-      {/* Section 6: table display — columns are user-resizable (drag the divider in each
-          header cell). */}
-      <EditableDataTable
-        rows={sortedPayments}
-        rowKey={(p) => p.id}
-        emptyLabel="No transactions yet."
-        columns={columns}
-        resizableColumns
-        density="compact"
-        tableMinWidth={1650}
-        cellOverflow="hidden"
-      />
-    </>
-  );
+            {METHOD_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select></div>}
+        filters={<SegmentedFilter label="Payment status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+          onChange={tab => void browse.commit({ filters: { tab } })} />}
+        actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
+          onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Transaction</button>} />}
+      pagination={value && <TablePagination total={value.total} page={state.page} pageSize={state.pageSize} pending={browse.pending}
+        onPageChange={page => void browse.commit({ page })} onPageSizeChange={pageSize => void browse.commit({ pageSize })} />}>
+      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
+        emptyLabel={browse.pending ? 'Updating results…' : 'No transactions in this view.'}
+        resizableColumns density="compact" tableMinWidth={1650} cellOverflow="hidden" />
+    </TableBrowsePanel>
+  </>;
 }

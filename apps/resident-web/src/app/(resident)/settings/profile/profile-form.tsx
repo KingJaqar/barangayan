@@ -19,7 +19,6 @@
  */
 
 import {
-  EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
   MOBILE_NUMBER_REGEX,
@@ -57,8 +56,13 @@ import { toast } from 'sonner';
 import { getIdDocumentSignedUrl } from '@/actions/id-document-signed-url';
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
 import { FamilyMemberDialog } from '@/components/emergency/family-member-dialog';
+import { InlineReadError } from '@/components/shared/inline-read-error';
+import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
+import { Skeleton, Spinner } from '@/components/ui/loading';
 import { useFamilyMembers } from '@/hooks/use-family-members';
+import { notifyHouseholdOutcome } from '@/lib/household-feedback';
+import { beginAttempt } from '@/lib/notify';
 import { ACCEPTED_IMAGE_MIME_TYPES, imageExtension, isWithinSizeLimit } from '@/lib/image-upload';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { Tables } from '@barangayan/shared';
@@ -132,10 +136,6 @@ function validateName(value: string): string | null {
 function validateMobileNumber(value: string): string | null {
   return MOBILE_NUMBER_REGEX.test(value) ? null : 'Enter an 11-digit mobile number (e.g. 09171234567)';
 }
-function validateEmail(value: string): string | null {
-  return EMAIL_REGEX.test(value) ? null : 'Enter a valid email address';
-}
-
 /**
  * Resolves a field's error/success pair:
  *  - empty value  → whatever the last Save Changes attempt reported (or nothing yet)
@@ -194,20 +194,20 @@ const MAX_ID_PHOTO_BYTES = 5 * 1024 * 1024;
 const MAX_AVATAR_BYTES = 3 * 1024 * 1024;
 
 const inputCls =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition-colors focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100';
-const labelCls = 'mb-1 block text-xs font-medium text-zinc-500 dark:text-zinc-400';
+  'min-w-0 w-full rounded-xl border-2 border-zinc-200 bg-zinc-50/60 px-3 py-2.5 text-sm outline-none transition-colors focus:border-[var(--accent)] focus:bg-white aria-invalid:border-red-400 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-100 dark:focus:bg-zinc-800';
+const labelCls = 'mb-2 block text-xs font-semibold text-zinc-600 dark:text-zinc-400';
 const disabledCls =
-  'w-full rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950';
+  'min-w-0 w-full rounded-xl border-2 border-zinc-200 bg-zinc-100/70 px-3 py-2.5 text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950';
 const cardCls =
-  'rounded-xl border border-black/10 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-900';
+  'min-w-0 rounded-2xl border-2 border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/40';
 
 function CardHeading({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="mb-3 flex items-center gap-2.5">
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-tint)] text-[var(--accent)]">
+    <div className="mb-5 flex items-center gap-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-tint)] text-[var(--accent)]">
         {icon}
       </span>
-      <h3 className="text-sm font-semibold">{children}</h3>
+      <h3 className="text-sm font-bold tracking-tight">{children}</h3>
     </div>
   );
 }
@@ -218,7 +218,7 @@ function CardHeading({ icon, children }: { icon: React.ReactNode; children: Reac
 function EmailVerifyStatus({ status }: { status: string | null }) {
   const verified = status === 'verified';
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-800/50">
+    <div className="inline-flex max-w-full flex-wrap items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-800 dark:bg-zinc-800/50">
       <span
         className={`flex items-center gap-1.5 text-xs font-semibold ${
           verified ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'
@@ -277,19 +277,20 @@ function AvatarSection({ profileId, currentUrl }: { profileId: string; currentUr
   }
 
   return (
-    <div className="flex shrink-0 flex-col items-center gap-2">
+    <div className="flex shrink-0 flex-col items-center gap-3">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[var(--accent)] text-2xl font-bold text-white ring-2 ring-[var(--accent)]/30 transition hover:ring-4">
+        aria-label="Change profile photo"
+        className="group relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--accent)] bg-[var(--accent-tint)] text-[var(--accent)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] disabled:opacity-60 sm:h-32 sm:w-32">
         {previewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={previewUrl} alt="Profile photo" className="h-full w-full object-cover" />
         ) : (
-          <span className="select-none text-2xl">👤</span>
+          <UserIcon aria-hidden size={44} strokeWidth={1.5} />
         )}
-        <span className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+        <span className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
           <Camera size={22} className="text-white" />
         </span>
         {uploading ? (
@@ -302,7 +303,7 @@ function AvatarSection({ profileId, currentUrl }: { profileId: string; currentUr
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="text-xs font-medium text-[var(--accent)] hover:underline disabled:opacity-50">
+        className="rounded-xl border-2 border-zinc-200 border-b-[3px] px-3 py-2 text-xs font-bold text-[var(--accent)] transition-colors hover:bg-[var(--accent-tint)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:opacity-50 dark:border-zinc-700">
         {uploading ? 'Uploading…' : 'Change Photo'}
       </button>
       <input
@@ -355,7 +356,7 @@ function IdPhotoSlot({
           <button
             type="button"
             onClick={onView}
-            className="flex h-24 w-full items-center justify-center overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
+            className="flex h-28 w-full items-center justify-center overflow-hidden rounded-xl border-2 border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
             {signedUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={signedUrl} alt={`${label} of ID document`} className="h-full w-full object-cover" />
@@ -379,7 +380,7 @@ function IdPhotoSlot({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="flex h-24 w-full flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-zinc-300 text-zinc-400 transition hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-50 dark:border-zinc-700">
+          className="flex h-28 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-200 bg-zinc-50/60 text-zinc-500 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800/30 dark:text-zinc-400">
           {uploading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" /> : <><Upload size={16} /><span className="text-[10px]">Upload</span></>}
         </button>
       )}
@@ -670,14 +671,14 @@ function IdDocumentSection({
 
   return (
     <div className={`${cardCls} space-y-3`}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-tint)] text-[var(--accent)]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-tint)] text-[var(--accent)]">
             <IdCard size={15} />
           </span>
-          <h3 id="upload-valid-id" tabIndex={-1} className="scroll-mt-24 text-sm font-semibold">Upload Valid ID</h3>
+          <h3 id="upload-valid-id" tabIndex={-1} className="scroll-mt-24 text-sm font-bold">Upload Valid ID</h3>
         </div>
-        <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusColor}`}>{statusLabel}</span>
+        <span className={`max-w-full rounded-lg px-2.5 py-1 text-[11px] font-semibold ${statusColor}`}>{statusLabel}</span>
       </div>
 
       {showFailed ? (
@@ -752,7 +753,7 @@ function IdDocumentSection({
         </div>
       </div>
 
-      <Button type="button" onClick={handleSave} disabled={saveDisabled} size="sm" className="w-full">
+      <Button type="button" onClick={handleSave} disabled={saveDisabled} size="sm" className="w-full rounded-xl">
         {saving ? 'Saving…' : 'Save ID Verification'}
       </Button>
 
@@ -776,45 +777,81 @@ function IdDocumentSection({
 // ─── Household members section ─────────────────────────────────────────────────
 
 function HouseholdSection({ profileId }: { profileId: string }) {
-  const { members, isLoading, addMember, updateMember, removeMember } = useFamilyMembers(profileId);
+  const { members, isInitialLoading, isReady, error, refetch, addMember, updateMember, removeMember, lastWriteFailure } = useFamilyMembers(profileId);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<(typeof members)[0] | null>(null);
+  // Id of the member whose inline Remove is in flight; also blocks other roster edits so
+  // two whole-roster writes never overlap.
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const removingRef = useRef(false);
 
-  async function handleSave(data: { id?: string; name: string; relation: string; role: string }) {
-    if (data.id) {
-      await updateMember(data.id, { name: data.name, relation: data.relation, role: data.role });
-      toast.success('Member updated.');
-    } else {
-      await addMember({ name: data.name, relation: data.relation, role: data.role });
-      toast.success('Member added.');
+  // Each handler reports success only from the write's own result and returns it, so the
+  // dialog stays open (inputs kept) on failure. This screen owns the one notification.
+  async function finish(action: 'add' | 'update' | 'remove', write: () => Promise<boolean>): Promise<boolean> {
+    const attempt = beginAttempt(`household-${action}`);
+    let ok = false;
+    try {
+      ok = await write();
+    } catch {
+      ok = false;
     }
-    setDialogOpen(false);
-    setEditing(null);
+    const failure = ok ? null : lastWriteFailure();
+    notifyHouseholdOutcome(action, ok, failure, attempt);
+    if (failure === 'unconfirmed') refetch();
+    return ok;
   }
 
-  async function handleRemove(id: string) {
-    await removeMember(id);
-    toast.success('Member removed.');
+  function handleSave(data: { id?: string; name: string; relation: string; role: string }): Promise<boolean> {
+    const { id } = data;
+    return id
+      ? finish('update', async () => (await updateMember(id, { name: data.name, relation: data.relation, role: data.role })) !== null)
+      : finish('add', async () => (await addMember({ name: data.name, relation: data.relation, role: data.role })) !== null);
+  }
+
+  function handleRemove(id: string): Promise<boolean> {
+    return finish('remove', () => removeMember(id));
+  }
+
+  async function handleInlineRemove(id: string) {
+    if (removingRef.current) return;
+    removingRef.current = true;
+    setRemovingId(id);
+    try {
+      await handleRemove(id);
+    } finally {
+      removingRef.current = false;
+      setRemovingId(null);
+    }
   }
 
   return (
     <div className={`${cardCls} space-y-3`}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-tint)] text-[var(--accent)]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-tint)] text-[var(--accent)]">
             <Users size={15} />
           </span>
-          <h3 className="text-sm font-semibold">Household Members</h3>
+          <h3 className="text-sm font-bold">Household Members</h3>
         </div>
-        <Button type="button" size="sm" variant="outline" onClick={() => { setEditing(null); setDialogOpen(true); }}>
+        <Button type="button" size="sm" variant="outline" disabled={removingId !== null || !isReady} onClick={() => { setEditing(null); setDialogOpen(true); }}>
           <Plus size={14} className="mr-1" /> Add
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="space-y-2">
-          {[1, 2].map((i) => <div key={i} className="h-10 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />)}
+      {isReady && error ? (
+        <InlineReadError
+          tone="warning"
+          message="Couldn't update the household list. Showing the last loaded list, which may be out of date."
+          onRetry={refetch}
+        />
+      ) : null}
+
+      {isInitialLoading ? (
+        <div aria-busy className="space-y-2">
+          {[1, 2].map((i) => <Skeleton key={i} className="h-10 rounded-lg" />)}
         </div>
+      ) : !isReady ? (
+        <InlineReadError message="We couldn't load your household members. Check your connection, then try again." onRetry={refetch} />
       ) : members.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">No household members added yet.</p>
       ) : (
@@ -826,24 +863,26 @@ function HouseholdSection({ profileId }: { profileId: string }) {
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">{[m.relation, m.role].filter(Boolean).join(' · ')}</p>
               </div>
               <div className="flex shrink-0 gap-1">
-                <button type="button" onClick={() => { setEditing(m); setDialogOpen(true); }}
-                  className="rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700">Edit</button>
-                <button type="button" onClick={() => handleRemove(m.id)}
-                  className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20">
-                  <Trash2 size={12} />
+                <button type="button" disabled={removingId !== null} onClick={() => { setEditing(m); setDialogOpen(true); }}
+                  className="rounded-md px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-200 disabled:opacity-50 dark:hover:bg-zinc-700">Edit</button>
+                <button type="button" disabled={removingId !== null} aria-busy={removingId === m.id || undefined}
+                  aria-label={`Remove ${m.name}`} onClick={() => void handleInlineRemove(m.id)}
+                  className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-950/20">
+                  {removingId === m.id ? <Spinner delayed={false} className="size-3" /> : <Trash2 size={12} />}
                 </button>
               </div>
             </li>
           ))}
         </ul>
       )}
+      <LoadingStatus active={isInitialLoading} label="Loading household members…" />
 
       <FamilyMemberDialog
         open={dialogOpen}
         initial={editing}
         onClose={() => { setDialogOpen(false); setEditing(null); }}
         onSave={handleSave}
-        onDelete={editing ? (id) => { handleRemove(id); setDialogOpen(false); setEditing(null); } : undefined}
+        onDelete={editing ? handleRemove : undefined}
       />
     </div>
   );
@@ -862,7 +901,6 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
   const [birthDateIso, setBirthDateIso] = useState<string | null>(profile.birth_date ?? null);
   const [showBirthPicker, setShowBirthPicker] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(profile.mobile_number ?? '');
-  const [email, setEmail] = useState(profile.email ?? '');
   const [houseNo, setHouseNo] = useState(profile.house_no ?? '');
   const [street, setStreet] = useState(profile.street ?? '');
   const [city, setCity] = useState(profile.city ?? '');
@@ -885,7 +923,6 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
     sex !== ((profile.sex as Sex | null) ?? '') ||
     birthDateIso !== (profile.birth_date ?? null) ||
     mobileNumber !== (profile.mobile_number ?? '') ||
-    email !== (profile.email ?? '') ||
     houseNo !== (profile.house_no ?? '') ||
     street !== (profile.street ?? '') ||
     city !== (profile.city ?? '') ||
@@ -902,7 +939,6 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
   const middleNameStatus = fieldStatus(middleName, fieldErrors.middleName, validateName);
   const suffixStatus = fieldStatus(suffix, fieldErrors.suffix, validateName);
   const mobileNumberStatus = fieldStatus(mobileNumber, fieldErrors.mobileNumber, validateMobileNumber);
-  const emailStatus = fieldStatus(email, fieldErrors.email, validateEmail);
   const houseNoStatus = fieldStatus(houseNo, fieldErrors.houseNo);
   const streetStatus = fieldStatus(street, fieldErrors.street);
 
@@ -924,9 +960,6 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
 
     if (!mobileNumber.trim()) errors.mobileNumber = 'Mobile number is required';
     else if (!MOBILE_NUMBER_REGEX.test(mobileNumber)) errors.mobileNumber = 'Enter an 11-digit mobile number (e.g. 09171234567)';
-
-    if (!email.trim()) errors.email = 'Email is required';
-    else if (!EMAIL_REGEX.test(email)) errors.email = 'Enter a valid email address';
 
     if (!houseNo.trim()) errors.houseNo = 'House No. is required';
     if (!street.trim()) errors.street = 'Street is required';
@@ -963,7 +996,6 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
         sex: sex || null,
         birth_date: birthDateIso,
         mobile_number: mobileNumber.trim() || null,
-        email: email.trim() || null,
         house_no: houseNo.trim() || null,
         street: street.trim() || null,
         ...(!fixedLocality ? { city: city.trim() || null } : {}),
@@ -981,7 +1013,7 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <BirthdayCalendarModal
         open={showBirthPicker}
         value={birthDateIso ? isoToLocalDate(birthDateIso) : null}
@@ -992,207 +1024,212 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
         }}
       />
 
-      {/* Identity summary: avatar + name + email verification, compact horizontal card */}
-      <div className={`${cardCls} flex flex-col items-center gap-4 sm:flex-row`}>
+      {/* Identity header separated from the editable sections below. */}
+      <div className="flex flex-col items-center gap-6 border-b-2 border-zinc-200 pb-8 sm:flex-row dark:border-zinc-800">
         <AvatarSection profileId={profile.id} currentUrl={profile.avatar_url ?? null} />
-        <div className="min-w-0 flex-1 space-y-2 text-center sm:text-left">
+        <div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
           <div>
-            <p className="truncate text-base font-semibold">
+            <h2 className="break-words text-2xl font-bold tracking-tight">
               {[firstName, lastName].filter(Boolean).join(' ') || 'Resident'}
-            </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{barangayName}</p>
+            </h2>
+            <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-zinc-500 sm:justify-start dark:text-zinc-400"><MapPin aria-hidden size={14} />{barangayName}</p>
           </div>
           <EmailVerifyStatus status={profile.email_verification_status ?? null} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_340px] xl:items-start">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:items-start">
         {/* Personal info / address / employment */}
-        <form onSubmit={handleSave} className={`${cardCls} space-y-4`}>
-          <CardHeading icon={<UserIcon size={15} />}>Personal Information</CardHeading>
+        <form onSubmit={handleSave} className="min-w-0 space-y-6">
+          <section className={`${cardCls} space-y-5`}>
+            <CardHeading icon={<UserIcon size={15} />}>Personal Information</CardHeading>
 
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <label className="text-sm">
-              <span className={labelCls}>
-                First Name
-                <RequiredMark />
-              </span>
-              <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputCls} aria-invalid={!!firstNameStatus.error} />
-              <FieldStatus {...firstNameStatus} />
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>
-                Last Name
-                <RequiredMark />
-              </span>
-              <input value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputCls} aria-invalid={!!lastNameStatus.error} />
-              <FieldStatus {...lastNameStatus} />
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>Middle Name</span>
-              <input value={middleName} onChange={(e) => setMiddleName(e.target.value)} className={inputCls} aria-invalid={!!middleNameStatus.error} />
-              <FieldStatus {...middleNameStatus} />
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>Suffix</span>
-              <input value={suffix} onChange={(e) => setSuffix(e.target.value)} className={inputCls} placeholder="Jr., III" aria-invalid={!!suffixStatus.error} />
-              <FieldStatus {...suffixStatus} />
-            </label>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <label className="text-sm">
-              <span className={labelCls}>
-                Sex
-                <RequiredMark />
-              </span>
-              <select value={sex} onChange={(e) => setSex(e.target.value as Sex | '')} className={inputCls}>
-                <option value="">Select sex</option>
-                {SEXES.map((s) => <option key={s} value={s}>{SEX_LABELS[s]}</option>)}
-              </select>
-              {fieldErrors.sex ? <FieldStatus error={fieldErrors.sex} /> : sex ? <FieldStatus success=" " /> : null}
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>
-                Mobile Number
-                <RequiredMark />
-              </span>
-              <div className="flex items-stretch">
-                <span className="flex items-center rounded-l-lg border border-r-0 border-zinc-300 bg-zinc-50 px-2.5 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
-                  +63
-                </span>
-                <input
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value.replace(/[^\d]/g, ''))}
-                  inputMode="numeric"
-                  maxLength={11}
-                  placeholder="09171234567"
-                  className={`${inputCls} rounded-l-none`}
-                  aria-invalid={!!mobileNumberStatus.error}
-                />
-              </div>
-              <FieldStatus {...mobileNumberStatus} />
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>
-                Email
-                <RequiredMark />
-              </span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={inputCls}
-                aria-invalid={!!emailStatus.error}
-              />
-              <FieldStatus {...emailStatus} />
-            </label>
-          </div>
-
-          <div className="text-sm sm:w-1/3">
-            <span className={labelCls}>
-              Date of Birth
-              <RequiredMark />
-            </span>
-            <button
-              type="button"
-              onClick={() => setShowBirthPicker(true)}
-              className={`${inputCls} flex items-center justify-between text-left`}>
-              <span className={birthDateIso ? undefined : 'text-zinc-400'}>
-                {birthDateIso ? fmtDate(birthDateIso) : 'Select date of birth'}
-              </span>
-              <CalendarIcon size={14} className="shrink-0 text-zinc-400" />
-            </button>
-            {fieldErrors.birthDate ? <FieldStatus error={fieldErrors.birthDate} /> : birthDateIso ? <FieldStatus success=" " /> : null}
-          </div>
-
-          <hr className="border-black/[0.06] dark:border-white/[0.06]" />
-          <CardHeading icon={<MapPin size={15} />}>Home Address</CardHeading>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-            <label className="text-sm">
-              <span className={labelCls}>
-                House No.
-                <RequiredMark />
-              </span>
-              <input value={houseNo} onChange={(e) => setHouseNo(e.target.value)} className={inputCls} aria-invalid={!!houseNoStatus.error} />
-              <FieldStatus {...houseNoStatus} />
-            </label>
-            <label className="text-sm sm:col-span-2">
-              <span className={labelCls}>
-                Street
-                <RequiredMark />
-              </span>
-              <input value={street} onChange={(e) => setStreet(e.target.value)} className={inputCls} aria-invalid={!!streetStatus.error} />
-              <FieldStatus {...streetStatus} />
-            </label>
-            <label className="text-sm">
-              <span className={labelCls}>
-                City
-                <RequiredMark />
-              </span>
-              <input aria-label="City" value={city} readOnly={fixedLocality} onChange={event => setCity(event.target.value)} className={fixedLocality ? disabledCls : inputCls} />
-            </label>
-          </div>
-
-          {/* Barangay is read-only — assigned at registration, not editable by the resident. */}
-          <div className="text-sm">
-            <span className={labelCls}>Barangay</span>
-            <input aria-label="Barangay" value={barangayName} readOnly className={disabledCls} />
-          </div>
-          <div className="text-sm">
-            <span className={labelCls}>Province</span>
-            <input aria-label="Province" value={profile.province ?? 'Not configured'} readOnly className={disabledCls} />
-          </div>
-
-          <hr className="border-black/[0.06] dark:border-white/[0.06]" />
-          <CardHeading icon={<Briefcase size={15} />}>Employment</CardHeading>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <label className="text-sm">
-              <span className={labelCls}>
-                Employment Status
-                <RequiredMark />
-              </span>
-              <select
-                value={employmentStatus}
-                onChange={(e) => {
-                  const next = e.target.value as EmploymentStatus | '';
-                  setEmploymentStatus(next);
-                  if (!next || !EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next as EmploymentStatus)) setOccupation('');
-                }}
-                className={inputCls}>
-                <option value="">Select employment status</option>
-                {EMPLOYMENT_STATUSES.map((s) => <option key={s} value={s}>{EMPLOYMENT_STATUS_LABELS[s]}</option>)}
-              </select>
-              {fieldErrors.employmentStatus ? (
-                <FieldStatus error={fieldErrors.employmentStatus} />
-              ) : employmentStatus ? (
-                <FieldStatus success=" " />
-              ) : null}
-            </label>
-
-            {showOccupation ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="text-sm">
-                <span className={labelCls}>Occupation</span>
-                <input value={occupation} onChange={(e) => setOccupation(e.target.value)} className={inputCls} placeholder="Optional" />
+                <span className={labelCls}>
+                  First Name
+                  <RequiredMark />
+                </span>
+                <input value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputCls} aria-invalid={!!firstNameStatus.error} />
+                <FieldStatus {...firstNameStatus} />
               </label>
-            ) : null}
-          </div>
+              <label className="text-sm">
+                <span className={labelCls}>
+                  Last Name
+                  <RequiredMark />
+                </span>
+                <input value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputCls} aria-invalid={!!lastNameStatus.error} />
+                <FieldStatus {...lastNameStatus} />
+              </label>
+              <label className="text-sm">
+                <span className={labelCls}>Middle Name</span>
+                <input value={middleName} onChange={(e) => setMiddleName(e.target.value)} className={inputCls} aria-invalid={!!middleNameStatus.error} />
+                <FieldStatus {...middleNameStatus} />
+              </label>
+              <label className="text-sm">
+                <span className={labelCls}>Suffix</span>
+                <input value={suffix} onChange={(e) => setSuffix(e.target.value)} className={inputCls} placeholder="Jr., III" aria-invalid={!!suffixStatus.error} />
+                <FieldStatus {...suffixStatus} />
+              </label>
+            </div>
 
-          <div className="flex items-center justify-between gap-3 pt-1">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="text-sm">
+                <span className={labelCls}>
+                  Sex
+                  <RequiredMark />
+                </span>
+                <select value={sex} onChange={(e) => setSex(e.target.value as Sex | '')} className={inputCls}>
+                  <option value="">Select sex</option>
+                  {SEXES.map((s) => <option key={s} value={s}>{SEX_LABELS[s]}</option>)}
+                </select>
+                {fieldErrors.sex ? <FieldStatus error={fieldErrors.sex} /> : sex ? <FieldStatus success=" " /> : null}
+              </label>
+              <label className="text-sm">
+                <span className={labelCls}>
+                  Mobile Number
+                  <RequiredMark />
+                </span>
+                <div className="flex items-stretch">
+                  <span className="flex items-center rounded-l-xl border-2 border-r-0 border-zinc-200 bg-zinc-100/70 px-2.5 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+                    +63
+                  </span>
+                  <input
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value.replace(/[^\d]/g, ''))}
+                    inputMode="numeric"
+                    maxLength={11}
+                    placeholder="09171234567"
+                    className={`${inputCls} rounded-l-none`}
+                    aria-invalid={!!mobileNumberStatus.error}
+                  />
+                </div>
+                <FieldStatus {...mobileNumberStatus} />
+              </label>
+              <div className="text-sm sm:col-span-2">
+                <label htmlFor="profile-email" className={labelCls}>
+                  Email
+                </label>
+                <input
+                  id="profile-email"
+                  type="email"
+                  value={profile.email ?? ''}
+                  disabled
+                  className={`${disabledCls} cursor-not-allowed`}
+                />
+                <Button asChild variant="outline" size="sm" className="mt-2">
+                  <Link href="/settings/email-verification?changeEmail=1">Change email address</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="text-sm sm:w-1/2">
+              <span className={labelCls}>
+                Date of Birth
+                <RequiredMark />
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowBirthPicker(true)}
+                className={`${inputCls} flex items-center justify-between text-left`}>
+                <span className={birthDateIso ? undefined : 'text-zinc-400'}>
+                  {birthDateIso ? fmtDate(birthDateIso) : 'Select date of birth'}
+                </span>
+                <CalendarIcon size={14} className="shrink-0 text-zinc-400" />
+              </button>
+              {fieldErrors.birthDate ? <FieldStatus error={fieldErrors.birthDate} /> : birthDateIso ? <FieldStatus success=" " /> : null}
+            </div>
+
+          </section>
+          <section className={`${cardCls} space-y-5`}>
+            <CardHeading icon={<MapPin size={15} />}>Home Address</CardHeading>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="text-sm">
+                <span className={labelCls}>
+                  House No.
+                  <RequiredMark />
+                </span>
+                <input value={houseNo} onChange={(e) => setHouseNo(e.target.value)} className={inputCls} aria-invalid={!!houseNoStatus.error} />
+                <FieldStatus {...houseNoStatus} />
+              </label>
+              <label className="text-sm">
+                <span className={labelCls}>
+                  Street
+                  <RequiredMark />
+                </span>
+                <input value={street} onChange={(e) => setStreet(e.target.value)} className={inputCls} aria-invalid={!!streetStatus.error} />
+                <FieldStatus {...streetStatus} />
+              </label>
+              <label className="text-sm">
+                <span className={labelCls}>
+                  City
+                  <RequiredMark />
+                </span>
+                <input aria-label="City" value={city} readOnly={fixedLocality} onChange={event => setCity(event.target.value)} className={fixedLocality ? disabledCls : inputCls} />
+              </label>
+            </div>
+
+            {/* Barangay is read-only — assigned at registration, not editable by the resident. */}
+            <div className="text-sm">
+              <span className={labelCls}>Barangay</span>
+              <input aria-label="Barangay" value={barangayName} readOnly className={disabledCls} />
+            </div>
+            <div className="text-sm">
+              <span className={labelCls}>Province</span>
+              <input aria-label="Province" value={profile.province ?? 'Not configured'} readOnly className={disabledCls} />
+            </div>
+
+          </section>
+          <section className={`${cardCls} space-y-5`}>
+            <CardHeading icon={<Briefcase size={15} />}>Employment</CardHeading>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <label className="text-sm">
+                <span className={labelCls}>
+                  Employment Status
+                  <RequiredMark />
+                </span>
+                <select
+                  value={employmentStatus}
+                  onChange={(e) => {
+                    const next = e.target.value as EmploymentStatus | '';
+                    setEmploymentStatus(next);
+                    if (!next || !EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next as EmploymentStatus)) setOccupation('');
+                  }}
+                  className={inputCls}>
+                  <option value="">Select employment status</option>
+                  {EMPLOYMENT_STATUSES.map((s) => <option key={s} value={s}>{EMPLOYMENT_STATUS_LABELS[s]}</option>)}
+                </select>
+                {fieldErrors.employmentStatus ? (
+                  <FieldStatus error={fieldErrors.employmentStatus} />
+                ) : employmentStatus ? (
+                  <FieldStatus success=" " />
+                ) : null}
+              </label>
+
+              {showOccupation ? (
+                <label className="text-sm">
+                  <span className={labelCls}>Occupation</span>
+                  <input value={occupation} onChange={(e) => setOccupation(e.target.value)} className={inputCls} placeholder="Optional" />
+                </label>
+              ) : null}
+            </div>
+
+          </section>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-zinc-200 pt-5 dark:border-zinc-800">
             {isDirty ? <p className="text-xs text-zinc-400">You have unsaved changes.</p> : <span />}
             <button
               type="submit"
               disabled={saving || !isDirty}
-              className="self-start rounded-full bg-[var(--accent)] px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50">
+              className="self-start rounded-xl border-b-[3px] border-[var(--accent-strong)] bg-[var(--accent)] px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:opacity-50">
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         </form>
 
         {/* Household + ID verification */}
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-6">
           <HouseholdSection profileId={profile.id} />
           <IdDocumentSection
             profileId={profile.id}

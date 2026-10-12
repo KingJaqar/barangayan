@@ -1,24 +1,39 @@
 import { newPasswordSchema } from '@barangayan/shared';
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { PrimaryButton } from '@/components/primary-button';
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryError, recoveryStyles } from '@/components/password-recovery-screen';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
-import { supabase } from '@/lib/supabase';
+import { useTheme } from '@/hooks/use-theme';
+import { passwordRecovery } from '@/lib/supabase';
+import { recoveryErrorMessage } from '@/lib/password-recovery';
+import { authSetupRequests } from '@/lib/setup-request';
 
 export default function ResetPasswordScreen() {
-  const { setPasswordRecovery } = useAuth();
+  const router = useRouter();
+  const theme = useTheme();
+  const { setPasswordRecovery, refreshCompletion } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const requirements = [
+    { label: '8 or more characters', met: password.length >= 8 },
+    { label: 'An uppercase letter', met: /[A-Z]/.test(password) },
+    { label: 'A number', met: /\d/.test(password) },
+    { label: 'A special character', met: /[^A-Za-z0-9]/.test(password) },
+  ];
 
   async function handleUpdate() {
+    if (loading || authSetupRequests.busy) return;
     setError(null);
     setFieldErrors({});
 
@@ -33,67 +48,81 @@ export default function ResetPasswordScreen() {
     }
 
     setLoading(true);
-    const { error: updateError } = await supabase.auth.updateUser({ password: result.data.password });
-    setLoading(false);
-
-    if (updateError) {
-      setError(updateError.message);
-      return;
+    try {
+      await passwordRecovery.update(result.data.password, result.data.confirmPassword);
+      setPassword('');
+      setConfirmPassword('');
+      await refreshCompletion();
+      // The verified recovery session is now a normal login.
+      setPasswordRecovery(false);
+    } catch (cause) {
+      setError(recoveryErrorMessage(cause));
+    } finally {
+      setLoading(false);
     }
-
-    // The recovery session (established by verifyOtp on the previous screen) is now a
-    // real login — clearing this is what lets Stack.Protected route into (app).
-    setPasswordRecovery(false);
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Reset Password
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">
-          Please create a strong, secure new password for your account.
-        </ThemedText>
-
+    <PasswordRecoveryScreen
+      step={3}
+      title="Create a new password"
+      description="Choose a strong password to keep your account secure.">
+      <View style={recoveryStyles.form}>
         <TextField
           label="New Password"
-          secureTextEntry
+          accessibilityLabel="New password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="new-password"
+          passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((visible) => !visible) }}
           value={password}
           onChangeText={setPassword}
+          editable={!loading}
           error={fieldErrors.password}
+          style={[recoveryStyles.field, { backgroundColor: theme.background }]}
         />
+        <View style={styles.requirements}>
+          {requirements.map(({ label, met }) => (
+            <View key={label} style={styles.requirement}>
+              <Ionicons name={met ? 'checkmark-circle' : 'ellipse-outline'} size={16} color={met ? theme.accentGreen : theme.textSecondary} />
+              <ThemedText themeColor={met ? 'accentGreen' : 'textSecondary'} style={recoveryStyles.help}>{label}</ThemedText>
+            </View>
+          ))}
+        </View>
         <TextField
           label="Confirm New Password"
-          secureTextEntry
+          accessibilityLabel="Confirm new password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="new-password"
+          passwordVisibility={{ visible: showConfirm, onToggle: () => setShowConfirm((visible) => !visible) }}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          editable={!loading}
           error={fieldErrors.confirmPassword}
+          success={confirmPassword && confirmPassword === password ? 'Passwords match' : undefined}
+          style={[recoveryStyles.field, { backgroundColor: theme.background }]}
         />
-
-        {error ? (
-          <ThemedText type="small" themeColor="accentRed">
-            {error}
-          </ThemedText>
-        ) : null}
-
-        <PrimaryButton label="Update Password" loading={loading} onPress={handleUpdate} />
+        <RecoveryError message={error} />
+        <RecoveryButton label="Update password" loading={loading} onPress={handleUpdate} />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ disabled: loading }}
+          disabled={loading}
+          style={({ pressed }) => [recoveryStyles.textLink, { opacity: loading || pressed ? 0.5 : 1 }]}
+          onPress={() => {
+            if (authSetupRequests.busy) return;
+            passwordRecovery.clear();
+            router.replace('/(auth)/forgot-password');
+          }}>
+          <ThemedText style={recoveryStyles.textLinkLabel}>Request a new reset code</ThemedText>
+        </Pressable>
       </View>
-    </SafeAreaView>
+    </PasswordRecoveryScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: Spacing.four,
-    justifyContent: 'center',
-    gap: Spacing.three,
-  },
-  title: {
-    fontSize: 28,
-  },
+  requirements: { gap: Spacing.two, marginTop: -Spacing.two },
+  requirement: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
 });

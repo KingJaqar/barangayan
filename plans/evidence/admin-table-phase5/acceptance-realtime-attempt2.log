@@ -1,0 +1,12 @@
+locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('dialog').getByText(/This record is no longer available/) to be visible[22m
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:365:74
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:23:88)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:342:9 {
+  log: [
+    "  - waiting for getByRole('dialog').getByText(/This record is no longer available/) to be visible"
+  ],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,79 @@
+{
+  "routeDiffs": [],
+  "requestDiffs": [
+    {
+      "url": "/home",
+      "class": "rest",
+      "before": 6,
+      "after": 7
+    }
+  ],
+  "reproducedFlags": {
+    "defect-drawer-perpetual-skeleton": {
+      "before": false,
+      "after": false
+    },
+    "defect-family-dialog-closes": {
+      "before": true,
+      "after": true
+    },
+    "defect-household-false-success": {
+      "before": true,
+      "after": true
+    },
+    "defect-false-empty-household": {
+      "before": true,
+      "after": true
+    },
+    "obsolete-drive-date": {
+      "before": true,
+      "after": true
+    },
+    "defect-qr-cancel-failure-silent": {
+      "before": true,
+      "after": true
+    },
+    "notification-toggle-toast": {
+      "before": true,
+      "after": true
+    }
+  },
+  "inaccessible": {
+    "otherRequest": {
+      "before": {
+        "finalPath": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+        "status": 404,
+        "h1": "404"
+      },
+      "after": {
+        "finalPath": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+        "status": 200,
+        "h1": "404"
+      }
+    },
+    "otherIncident": {
+      "before": {
+        "finalPath": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+        "status": 404,
+        "h1": "404"
+      },
+      "after": {
+        "finalPath": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+        "status": 200,
+        "h1": "404"
+      }
+    },
+    "otherReceipt": {
+      "before": {
+        "finalPath": "/services/payment/success",
+        "status": 200,
+        "h1": ""
+      },
+      "after": {
+        "finalPath": "/services/payment/success",
+        "status": 200,
+        "h1": ""
+      }
+    }
+  }
+}

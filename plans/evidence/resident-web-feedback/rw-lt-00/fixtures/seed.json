@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "at": "2026-10-11T16:05:50.259Z",
+  "apiUrl": "http://127.0.0.1:54321",
+  "accounts": {
+    "populated": {
+      "id": "5e0d0000-0000-4000-8000-0000000000a1",
+      "email": "rwfb-populated@test.local",
+      "password": "(generated; kept only in gitignored dist/rw-feedback-tools/fixtures.json)"
+    },
+    "empty": {
+      "id": "5e0d0000-0000-4000-8000-0000000000a2",
+      "email": "rwfb-empty@test.local",
+      "password": "(generated; kept only in gitignored dist/rw-feedback-tools/fixtures.json)"
+    },
+    "incomplete": {
+      "id": "5e0d0000-0000-4000-8000-0000000000a3",
+      "email": "rwfb-incomplete@test.local",
+      "password": "(generated; kept only in gitignored dist/rw-feedback-tools/fixtures.json)"
+    },
+    "other": {
+      "id": "5e0d0000-0000-4000-8000-0000000000a4",
+      "email": "rwfb-other@test.local",
+      "password": "(generated; kept only in gitignored dist/rw-feedback-tools/fixtures.json)"
+    }
+  },
+  "ids": {
+    "barangay": "5e0d0000-0000-4000-8000-000000000001",
+    "documentType": "5e0d0000-0000-4000-8000-0000000000d1",
+    "category": "5e0d0000-0000-4000-8000-0000000000c1",
+    "drive": "5e0d0000-0000-4000-8000-0000000000b1",
+    "users": {
+      "populated": "5e0d0000-0000-4000-8000-0000000000a1",
+      "empty": "5e0d0000-0000-4000-8000-0000000000a2",
+      "incomplete": "5e0d0000-0000-4000-8000-0000000000a3",
+      "other": "5e0d0000-0000-4000-8000-0000000000a4"
+    },
+    "requestPending": "5e0d0000-0000-4000-8000-0000000000e1",
+    "requestPaid": "5e0d0000-0000-4000-8000-0000000000e2",
+    "requestOther": "5e0d0000-0000-4000-8000-0000000000e3",
+    "incident": "5e0d0000-0000-4000-8000-0000000000f1",
+    "incidentOther": "5e0d0000-0000-4000-8000-0000000000f2",
+    "member": "5e0d0000-0000-4000-8000-000000000091"
+  },
+  "before": {
+    "fixtureUsers": 0,
+    "fixtureBarangay": 0,
+    "nonFixtureUsers": 4,
+    "nonFixturePayments": 0,
+    "nonFixtureRequests": 1,
+    "nonFixtureBarangays": 3,
+    "nonFixtureIncidents": 1
+  },
+  "after": {
+    "fixtureUsers": 4,
+    "fixtureBarangay": 1,
+    "nonFixtureUsers": 4,
+    "nonFixturePayments": 0,
+    "nonFixtureRequests": 1,
+    "nonFixtureBarangays": 3,
+    "nonFixtureIncidents": 1
+  }
+}

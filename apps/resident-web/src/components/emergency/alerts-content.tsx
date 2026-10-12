@@ -1,9 +1,12 @@
 'use client';
 
 import { formatDateTime } from '@barangayan/shared';
-import { CalendarDays, TriangleAlert } from 'lucide-react';
+import { CalendarDays, RotateCw, TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { InlineReadError } from '@/components/shared/inline-read-error';
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { PendingHint, Skeleton } from '@/components/ui/loading';
 import { useAnnouncements } from '@/hooks/use-announcements';
 
 type FilterMode = 'all' | 'today' | 'lastWeek' | 'lastMonth' | 'lastYear';
@@ -42,7 +45,7 @@ function isSameDay(a: Date, b: Date) {
  * feed (resolves the plan's CC-004). `barangayId` is null for guests — announcements are
  * publicly readable regardless (matches /home's guest branch). */
 export function AlertsContent({ barangayId }: { barangayId: string | null }) {
-  const { announcements, isLoading, error } = useAnnouncements({ barangayId, category: 'emergency' });
+  const { announcements, isInitialLoading, isRefreshing, isReady, error, refetch } = useAnnouncements({ barangayId, category: 'emergency' });
 
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [showCustomFilter, setShowCustomFilter] = useState(false);
@@ -92,12 +95,22 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
           <TriangleAlert size={14} />
         </span>
         <h1 className="text-lg font-bold">Emergency Alerts</h1>
-        {!isLoading ? <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">{filteredAlerts.length}</span> : null}
+        {isReady ? <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">{filteredAlerts.length}</span> : null}
+        {/* Quiet refresh hint: decorative, shown only after 120 ms, never announced. */}
+        <PendingHint pending={isRefreshing} className="ml-auto gap-1.5 text-xs text-muted-foreground">
+          <RotateCw size={12} className="rw-spinner" /> Updating
+        </PendingHint>
       </div>
 
-      {isLoading ? (
-        <div className="h-16 animate-pulse rounded-2xl bg-muted" />
-      ) : (
+      {isReady && error ? (
+        <InlineReadError
+          tone="warning"
+          message="Couldn't update emergency alerts. Showing the last loaded alerts, which may be out of date."
+          onRetry={refetch}
+        />
+      ) : null}
+
+      {isReady ? (
         <>
           <div className="flex flex-wrap gap-2">
             {FILTERS.map((f) => (
@@ -156,11 +169,17 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
             </div>
           ) : null}
         </>
-      )}
+      ) : null}
 
-      {error ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">Unable to load emergency alerts.</p>
-      ) : !isLoading && filteredAlerts.length === 0 ? (
+      {isInitialLoading ? (
+        <div aria-busy className="flex flex-col gap-3">
+          {[0, 1].map((i) => (
+            <Skeleton key={i} className="h-24 rounded-2xl" />
+          ))}
+        </div>
+      ) : !isReady ? (
+        <InlineReadError message="We couldn't load emergency alerts. Check your connection, then try again." onRetry={refetch} />
+      ) : filteredAlerts.length === 0 ? (
         <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">No emergency alerts found.</p>
       ) : (
         <div className="flex flex-col gap-3">
@@ -173,6 +192,7 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
           ))}
         </div>
       )}
+      <LoadingStatus active={isInitialLoading} label="Loading emergency alerts…" />
     </div>
   );
 }

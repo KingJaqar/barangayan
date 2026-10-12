@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "browsers": [
+    {
+      "engine": "firefox",
+      "version": "153.0"
+    },
+    {
+      "engine": "webkit",
+      "version": "26.5"
+    }
+  ],
+  "checks": [
+    "firefox: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "firefox: households defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "firefox: staff defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "webkit: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "webkit: households defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "webkit: staff defaults, sizes, last page, keyboard, scrolling, resizing and empty results"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "passed": false,
+  "checks": [
+    "chrome: JSON household counts remain independent of normalized members"
+  ],
+  "browsers": [
+    {
+      "name": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "errors": [],
+  "geometry": [
+    {
+      "name": "chrome",
+      "route": "residents",
+      "geometry": {
+        "width": 600,
+        "overflow": 0,
+        "height": 427.5
+      }
+    },
+    {
+      "name": "chrome",
+      "route": "residents",
+      "title": {
+        "width": 4457.8125,
+        "overflow": 0,
+        "right": 4569.8125
+      }
+    }
+  ],
+  "failure": "AssertionError [ERR_ASSERTION]: Long detail title must wrap within its dialog\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:50:18\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:22:38)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:44:7"
+}

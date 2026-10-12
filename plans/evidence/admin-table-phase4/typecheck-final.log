@@ -1,0 +1,13 @@
+
+> @barangayan/web@0.1.0 typecheck
+> tsc --noEmit
+
+src/app/(admin)/households-residents/households-table.tsx(295,29): error TS2322: Type 'string' is not assignable to type '"unavailable" | "error" | "loading"'.
+src/app/(admin)/residents/resident-directory.tsx(626,29): error TS2322: Type 'string' is not assignable to type '"unavailable" | "error" | "loading"'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path C:\Users\User\barangayan\apps\admin-web
+npm error workspace @barangayan/web@0.1.0
+npm error location C:\Users\User\barangayan\apps\admin-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc --noEmit

@@ -9,15 +9,27 @@
  * and a cancelled payment returns to payment-method-step (`onCancelled`) instead of
  * navigating to the request-tracking route — the resident can just pick a different
  * method without leaving the modal.
+ *
+ * Notification ownership (RW-LT-06): this screen owns every terminal notification for
+ * the attempt. A confirmed paid or expired status is announced once per payment attempt
+ * (the ID combines account, payment attempt and terminal state, so a poll and a Realtime
+ * event observing the same transition notify once). Cancellation success is announced
+ * only when the server confirmed it; a cancel that lost the race to payment follows the
+ * paid outcome. Failures also stay on the page, because payment guidance must outlive a
+ * toast. A countdown reaching zero is only a display condition.
  */
 
 import { formatCentavosAsPHP } from '@barangayan/shared';
-import { useEffect } from 'react';
+import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
+import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/loading';
 import { useCountdown } from '@/hooks/use-countdown';
 import { usePaymongoSource } from '@/hooks/use-paymongo-source';
+import { beginAttempt, eventId, notify } from '@/lib/notify';
 import type { SuccessPayload } from './types';
 
 const PAYMENT_STEPS = [
@@ -60,14 +72,24 @@ export function QrphStep({
   onCancelled: () => void;
   onBack: () => void;
 }) {
-  const { source, status, errorMessage, cancelPayment, cancelling } = usePaymongoSource(requestId);
+  const { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed } = usePaymongoSource(requestId);
   const remaining = useCountdown(source?.expiresAt ?? null);
   const totalDue = source?.amountCentavos ?? documentFeeCentavos;
+  const paymentId = source?.paymentId ?? null;
+  // Synchronous guard: a second activation before React re-renders must not start a
+  // second cancel request.
+  const cancelBusy = useRef(false);
 
   // Advances to the success step the moment settlement is observed — same 900ms beat as
   // the standalone route so the "Payment received — redirecting…" message is legible.
   useEffect(() => {
     if (status !== 'paid') return;
+    if (paymentId) {
+      notify.success('Payment received.', {
+        description: 'Your receipt is next.',
+        id: eventId('payment', paymentId, 'paid'),
+      });
+    }
     const timer = setTimeout(() => {
       onPaid({
         amountCentavos: totalDue,
@@ -80,10 +102,44 @@ export function QrphStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  // Confirmed expiry (server status, not the countdown): one warning per attempt. The
+  // inline guidance below stays on the page after the toast is gone.
+  useEffect(() => {
+    if (status !== 'expired' || !paymentId) return;
+    notify.warning('This QR code has expired.', {
+      description: 'If you already paid, don’t pay again — open My Request to check.',
+      id: eventId('payment', paymentId, 'expired'),
+    });
+  }, [status, paymentId]);
+
   async function handleCancelPayment() {
-    const result = await cancelPayment();
-    if (result.ok) onCancelled();
+    if (cancelBusy.current) return;
+    cancelBusy.current = true;
+    const attempt = beginAttempt('qrph-cancel');
+    try {
+      const result = await cancelPayment();
+      if (result.outcome === 'cancelled') {
+        notify.success('QR PH payment cancelled.', {
+          description: 'You can choose a payment method again.',
+          id: attempt,
+        });
+        onCancelled();
+      } else if (result.outcome === 'unconfirmed') {
+        notify.warning("We couldn't confirm the cancellation.", {
+          description: 'Your QR code may still be valid. We’re still checking its status.',
+          id: attempt,
+        });
+      } else if (result.outcome === 'rejected') {
+        notify.error('Could not cancel the payment.', { description: 'Your QR code is still active.', id: attempt });
+      }
+      // 'paid': the confirmed paid transition above owns the announcement — no
+      // cancellation message. 'ignored': nothing happened.
+    } finally {
+      cancelBusy.current = false;
+    }
   }
+
+  const expiryPassed = status === 'pending' && remaining !== null && remaining <= 0;
 
   return (
     <div className="flex flex-col gap-4">
@@ -108,13 +164,12 @@ export function QrphStep({
 
       <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 text-center">
         {status === 'loading' || (!source && status !== 'error') ? (
-          <>
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-sm text-muted-foreground">Generating your QR code…</p>
-          </>
+          // Same 256 px frame as the finished QR so nothing shifts when it arrives; steady
+          // (non-pulsing) because a payment code is not a decorative placeholder.
+          <Skeleton pulse={false} className="aspect-square w-64 max-w-full rounded-lg" />
         ) : status === 'error' ? (
           <>
-            <p className="text-sm text-status-error">
+            <p role="alert" className="text-sm text-status-error">
               {errorMessage === 'Request is not ready for payment'
                 ? 'This request can no longer be paid (it may have been cancelled or completed).'
                 : (errorMessage ?? 'Could not start a QR PH payment. Please try again.')}
@@ -124,7 +179,13 @@ export function QrphStep({
             </Button>
           </>
         ) : status === 'expired' ? (
-          <p className="text-sm text-status-error">This QR code has expired. Go back and try again.</p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-sm text-status-error">This QR code has expired. Go back and try again.</p>
+            <p className="text-xs text-muted-foreground">If you already paid, don&apos;t pay again — check your request first.</p>
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/services/requests/${requestId}`}>View My Request</Link>
+            </Button>
+          </div>
         ) : status === 'cancelled' ? (
           <p className="text-sm text-muted-foreground">Payment cancelled. Go back and try again if you&apos;d like to pay.</p>
         ) : status === 'paid' ? (
@@ -134,9 +195,11 @@ export function QrphStep({
           // https URL, neither of which next/image's remotePatterns (Supabase Storage
           // only) is configured for.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={toRenderableImageUri(source.qrImageUrl)} alt="PayMongo QR PH code" className="h-64 w-64 rounded-lg bg-white object-contain p-2" />
+          <img src={toRenderableImageUri(source.qrImageUrl)} alt="PayMongo QR PH code" className="aspect-square w-64 max-w-full rounded-lg bg-white object-contain p-2" />
         ) : null}
       </div>
+      {/* Announced once, outside the fixed-size frame so the frame never changes height. */}
+      <LoadingStatus active={status === 'loading' || (!source && status !== 'error')} label="Generating your QR code…" className="text-center" />
 
       {status === 'pending' || status === 'paid' ? (
         <div className="rounded-2xl border border-border bg-card p-5">
@@ -164,9 +227,27 @@ export function QrphStep({
             </div>
           </div>
 
+          {/* Persistent payment guidance. The matching toast is announced; these stay. */}
+          {errorMessage ? (
+            <p data-slot="payment-guidance" className="rounded-xl border border-status-warning/40 bg-status-warning/10 p-3 text-sm">
+              {errorMessage}
+            </p>
+          ) : null}
+          {statusCheckFailed ? (
+            <p role="status" data-slot="payment-status-check" className="rounded-xl border border-border bg-card p-3 text-sm text-muted-foreground">
+              We&apos;re having trouble checking your payment status. If you already paid, don&apos;t pay again — this page will update
+              when the connection returns.
+            </p>
+          ) : null}
+          {expiryPassed ? (
+            <p data-slot="payment-expiry-passed" className="rounded-xl border border-border bg-card p-3 text-sm text-muted-foreground">
+              This code&apos;s expiry time has passed. We&apos;re still confirming its status — if you already paid, keep this page open.
+            </p>
+          ) : null}
+
           <ConfirmDialog
             trigger={
-              <Button variant="destructive" loading={cancelling}>
+              <Button variant="destructive" loading={cancelling} loadingLabel="Cancelling…">
                 Cancel Payment
               </Button>
             }

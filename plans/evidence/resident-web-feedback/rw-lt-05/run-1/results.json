@@ -1,0 +1,1756 @@
+{
+  "run": "run-1",
+  "phase": "RW-LT-05",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-12T05:56:45.072Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless); camera scenarios use Chrome's fake capture device",
+    "api": "http://127.0.0.1:54321",
+    "realtime": "local Realtime unavailable; Realtime events use the in-browser protocol 2.0.0 stand-in (mockRealtime)",
+    "providers": "Edge Function (household QR PNG) and the OSRM routing service are fulfilled in the browser; household and check-in writes use the real local database with synthetic rows that the run restores/removes"
+  },
+  "scenarios": [
+    {
+      "id": "hub-read-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "slow: matching skeletons + one polite label, never \"No guidelines available.\"": {
+          "ok": true,
+          "detail": [
+            "Loading emergency information…"
+          ]
+        },
+        "content arrives steady (no entrance wrapper on urgent info)": {
+          "ok": true
+        },
+        "refresh failure: loaded content stays with a stale-data warning; no skeleton, no toast": {
+          "ok": true,
+          "detail": {
+            "sent": 2
+          }
+        },
+        "retry clears the warning and keeps content": {
+          "ok": true
+        },
+        "initial failure: inline error with Try again, not a false empty state, no toast": {
+          "ok": true,
+          "detail": [
+            "We couldn't load the preparedness guidelines. Check your connection, then try again. Try againTrying again…",
+            "We couldn't load the emergency hotlines. Check your connection, then try again. Try againTrying again…"
+          ]
+        },
+        "read-only retry recovers the guidelines (and issues no write)": {
+          "ok": true,
+          "detail": {
+            "GET": 1
+          }
+        },
+        "transport failure settles to the error view (loader released)": {
+          "ok": true
+        },
+        "successful empty → the existing empty copy": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "slow": {
+          "skeletons": 18,
+          "busy": 2,
+          "statuses": [
+            "Loading emergency information…"
+          ],
+          "alerts": [],
+          "overflowX": false,
+          "text": "Barangayan\n\nBarangay\n\nHome\nEmergency\nServices\nMaps\nHealth\nReports\nAnnouncements\nSettings\nLog In\nSign Up\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Info\n\nBe Prepared\n\nDisaster Preparedness Guidelines\nEmergency Hotlines\nLoading emergency information…"
+        },
+        "refreshFail": {
+          "sent": 2,
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [
+            "Couldn't update the guidelines. Showing the last loaded list, which may be out of date. Try againTrying again…",
+            "Couldn't update the hotlines. Showing the last loaded numbers, which may be out of date. Try againTrying again…"
+          ],
+          "alerts": [],
+          "overflowX": false,
+          "text": "Barangayan\n\nBarangay\n\nHome\nEmergency\nServices\nMaps\nHealth\nReports\nAnnouncements\nSettings\nLog In\nSign Up\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Info\n\nBe Prepared\n\nDisaster Preparedness Guidelines\n\nCouldn't update the guidelines. Showing the last loaded list, which may be out of date.\n\nTry again\nSynthetic flood guideline\nEmergency Hotlines\n\nCouldn't update the hotlines. Showing the last loaded numbers, which may be out of date.\n\nTry again\n\nSynthetic rescue hotline\n\nSynthetic desk"
+        },
+        "failed": {
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [],
+          "alerts": [
+            "We couldn't load the preparedness guidelines. Check your connection, then try again. Try againTrying again…",
+            "We couldn't load the emergency hotlines. Check your connection, then try again. Try againTrying again…"
+          ],
+          "overflowX": false,
+          "text": "Barangayan\n\nBarangay\n\nHome\nEmergency\nServices\nMaps\nHealth\nReports\nAnnouncements\nSettings\nLog In\nSign Up\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Info\n\nBe Prepared\n\nDisaster Preparedness Guidelines\n\nWe couldn't load the preparedness guidelines. Check your connection, then try again.\n\nTry again\nEmergency Hotlines\n\nWe couldn't load the emergency hotlines. Check your connection, then try again.\n\nTry again"
+        },
+        "empty": "Barangayan\n\nBarangay\n\nHome\nEmergency\nServices\nMaps\nHealth\nReports\nAnnouncements\nSettings\nLog In\nSign Up\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Info\n\nBe Prepared\n\nDisaster Preparedness Guidelines\n\nNo guidelines available.\n\nEmergency Hotlines\n\nNo hotlines available."
+      },
+      "requests": {
+        "total": 238,
+        "document": 4,
+        "rsc": 112,
+        "script": 92,
+        "rest": 18,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "alerts-read-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "initial failure → inline error + retry (not \"No emergency alerts found.\")": {
+          "ok": true
+        },
+        "retry recovers the alert list": {
+          "ok": true
+        },
+        "refresh failure keeps the loaded alerts, shows a warning, no skeleton/toast": {
+          "ok": true
+        },
+        "empty → existing empty copy and filters": {
+          "ok": true
+        },
+        "slow: skeleton cards + one polite label": {
+          "ok": true,
+          "detail": [
+            "Loading emergency alerts…"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": {
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [],
+          "alerts": [
+            "We couldn't load emergency alerts. Check your connection, then try again. Try againTrying again…"
+          ],
+          "overflowX": false,
+          "text": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Alerts\n\nWe couldn't load emergency alerts. Check your connection, then try again.\n\nTry again"
+        },
+        "refreshFail": {
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [
+            "Couldn't update emergency alerts. Showing the last loaded alerts, which may be out of date. Try againTrying again…"
+          ],
+          "alerts": [],
+          "overflowX": false,
+          "text": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nHub\nCenters\nScan\nFamily\nAlerts\nEmergency Alerts\n1\n\nCouldn't update emergency alerts. Showing the last loaded alerts, which may be out of date.\n\nTry again\nAll\nToday\nLast Week\nLast Month\nLast Year\nFilter by specific date\n\nSynthetic typhoon advisory\n\nSynthetic emergency body.\n\nOct 10, 2026, 12:05 AM"
+        },
+        "slow": {
+          "skeletons": 2,
+          "busy": 1,
+          "statuses": [
+            "Loading emergency alerts…"
+          ],
+          "alerts": [],
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 206,
+        "document": 4,
+        "rsc": 81,
+        "script": 83,
+        "rest": 18,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 18
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "centers-read-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "initial failure → inline error, not \"No evacuation centers found.\"": {
+          "ok": true
+        },
+        "read-only retry recovers the list": {
+          "ok": true
+        },
+        "successful empty → existing empty copy": {
+          "ok": true
+        },
+        "slow: three card skeletons + one polite label": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nHub\nCenters\nScan\nFamily\nAlerts\nEvacuation Centers\nList\nMap\n\nLocation is blocked for this site\n\nAllow location in your browser's site settings, then try again.\n\nTry again\n\nWe couldn't load evacuation centers. Check your connection, then try again.\n\nTry again",
+        "slow": {
+          "skeletons": 3,
+          "busy": 0,
+          "statuses": [
+            "Location is blocked for this siteAllow location in your browser's site settings, then try again.Try again",
+            "Loading evacuation centers…"
+          ],
+          "alerts": [],
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 213,
+        "document": 4,
+        "rsc": 84,
+        "script": 86,
+        "rest": 18,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "centers-location-denied-and-retry",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "blocked location: usable unsorted list with guidance naming site settings and a Try again": {
+          "ok": true
+        },
+        "cards are keyboard-activatable buttons": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "notice": "Hub\nCenters\nScan\nFamily\nAlerts\nEvacuation Centers\nList\nMap\n\nLocation is blocked for this site\n\nAllow location in your browser's site settings, then try again.\n\nTry again\n\nSynthetic Covered Court\n\nNo address provided\n\nOccupancy\n0%"
+      },
+      "requests": {
+        "total": 108,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "centers-location-granted-and-routes",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "granted location: no blocked/unavailable notice and distances are shown": {
+          "ok": true,
+          "detail": "Hub\nCenters\nScan\nFamily\nAlerts\nEvacuation Centers\nList\nMap\n\nSynthetic Court A\n\nNo address provided\n\n0.2 km\n\nEst. 2 min\n\nOccupancy\n10% (10/100)\n\nSynthetic Court B\n\nNo address provided\n\n0.3 km\n\nEst. 4 m"
+        },
+        "rapid selection: the slower, older route response never replaces the newer one": {
+          "ok": true,
+          "detail": "2.2 km · ~31 min walking (road route)"
+        },
+        "route loading is announced politely": {
+          "ok": true,
+          "detail": [
+            "Fetching walking route…"
+          ]
+        },
+        "route failure settles to an explanatory note (no perpetual \"Fetching\")": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "noticeGranted": "Hub\nCenters\nScan\nFamily\nAlerts\nEvacuation Centers\nList\nMap\n\nSynthetic Court A\n\nNo address provided\n\n0.2 km\n\nEst. 2 min\n\nOccupancy\n10% (10/100)\n\nSynthetic Court B\n\nNo address provided\n\n0.3 km\n\nEst. 4 min\n\nOccupancy\n10% (10/100)",
+        "routeLoading": [
+          "Fetching walking route…"
+        ],
+        "finalRoute": "2.2 km · ~31 min walking (road route)",
+        "osrmCalls": 2
+      },
+      "requests": {
+        "total": 128,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 31
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "centers-location-unavailable",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "position unavailable → its own explanation (not \"blocked\"), list still usable unsorted": {
+          "ok": true
+        },
+        "Try again re-requests the position (deliberate, one more call)": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "notice": "Hub\nCenters\nScan\nFamily\nAlerts\nEvacuation Centers\nList\nMap\n\nCouldn't get your location\n\nTry again in a moment.\n\nTry again\n\nSynthetic Covered Court\n\nNo address provided\n\nOccupancy\n0%"
+      },
+      "requests": {
+        "total": 108,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scan-read-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "instructions failure → inline error + retry; scan/show actions stay usable": {
+          "ok": true
+        },
+        "retry clears the error": {
+          "ok": true
+        },
+        "slow: skeleton + one polite label": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nHub\nCenters\nScan\nFamily\nAlerts\nQR Check-In Guide\n\nFollow these quick steps to register your presence securely.\n\nWe couldn't load the check-in instructions. You can still scan or show a QR code below.\n\nTry again\nScan QR\nShow QR\n\nNo working camera? Upload a photo of the QR code instead.\n\nUpload QR Image",
+        "slow": {
+          "skeletons": 2,
+          "busy": 1,
+          "statuses": [
+            "Loading check-in instructions…"
+          ],
+          "alerts": [],
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 164,
+        "document": 3,
+        "rsc": 61,
+        "script": 66,
+        "rest": 16,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-upload-checkin-outcomes",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "valid center QR: one real check-in, one success toast, controls restored": {
+          "ok": true,
+          "detail": {
+            "posts": 1,
+            "rows": 1,
+            "toasts": [
+              "Your presence has been registered at the evacuation center."
+            ],
+            "state": {
+              "skeletons": 0,
+              "busy": 0,
+              "statuses": [],
+              "alerts": [],
+              "overflowX": false
+            }
+          }
+        },
+        "partial success: exactly one warning, no success toast; the check-in row exists": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "warning:Check-in recorded.\nYour own check-in is saved, but we couldn't update your household's status. Tell center staff so they can mark your household."
+            ],
+            "rows": 1,
+            "patches": 1
+          }
+        },
+        "rejected insert: one error, one request, no row, control usable": {
+          "ok": true,
+          "detail": {
+            "posts": 1,
+            "toasts": [
+              "Couldn't record your check-in.\nNothing was recorded. Please try again."
+            ],
+            "rows": 0
+          }
+        },
+        "lost response: one unconfirmed warning, no automatic second request": {
+          "ok": true,
+          "detail": {
+            "posts": 1,
+            "toasts": [
+              "warning:We couldn't confirm your check-in.\nIt may have been recorded. Ask center staff to confirm before you scan again."
+            ]
+          }
+        },
+        "repeated image selection while pending: one request, one toast; busy + disabled immediately": {
+          "ok": true,
+          "detail": {
+            "button": {
+              "disabled": true,
+              "busy": "true",
+              "text": "Checking in…"
+            },
+            "posts": 1,
+            "toasts": 1
+          }
+        },
+        "unreadable image: exactly one error toast and no check-in request": {
+          "ok": true,
+          "detail": [
+            "No QR code found in that image.\nTry a clearer, closer photo of the whole code."
+          ]
+        },
+        "other barangay: exactly one error toast and no check-in request": {
+          "ok": true,
+          "detail": [
+            "This QR code belongs to a different barangay."
+          ]
+        },
+        "not a check-in code: exactly one error toast and no check-in request": {
+          "ok": true,
+          "detail": [
+            "This QR code is not a valid evacuation center check-in code."
+          ]
+        },
+        "plain text: exactly one error toast and no check-in request": {
+          "ok": true,
+          "detail": [
+            "This QR code does not contain a valid payload."
+          ]
+        },
+        "no check-in rows were created by the invalid and failed attempts": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "success": {
+          "posts": 1,
+          "rows": 1,
+          "toasts": [
+            "Your presence has been registered at the evacuation center."
+          ],
+          "state": {
+            "skeletons": 0,
+            "busy": 0,
+            "statuses": [],
+            "alerts": [],
+            "overflowX": false
+          }
+        },
+        "partial": {
+          "toasts": [
+            "warning:Check-in recorded.\nYour own check-in is saved, but we couldn't update your household's status. Tell center staff so they can mark your household."
+          ],
+          "rows": 1,
+          "patches": 1
+        },
+        "rejected": {
+          "posts": 1,
+          "toasts": [
+            "Couldn't record your check-in.\nNothing was recorded. Please try again."
+          ],
+          "rows": 0
+        },
+        "lost": {
+          "posts": 1,
+          "toasts": [
+            "warning:We couldn't confirm your check-in.\nIt may have been recorded. Ask center staff to confirm before you scan again."
+          ]
+        },
+        "repeated": {
+          "button": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Checking in…"
+          },
+          "posts": 1,
+          "toasts": 1
+        },
+        "invalid": [
+          {
+            "name": "unreadable image",
+            "toasts": [
+              "No QR code found in that image.\nTry a clearer, closer photo of the whole code."
+            ]
+          },
+          {
+            "name": "other barangay",
+            "toasts": [
+              "This QR code belongs to a different barangay."
+            ]
+          },
+          {
+            "name": "not a check-in code",
+            "toasts": [
+              "This QR code is not a valid evacuation center check-in code."
+            ]
+          },
+          {
+            "name": "plain text",
+            "toasts": [
+              "This QR code does not contain a valid payload."
+            ]
+          }
+        ]
+      },
+      "requests": {
+        "total": 118,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 17,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-camera-denied",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "guidance matches the failure and names the Upload fallback": {
+          "ok": true,
+          "detail": "Camera access is blocked.\n\nAllow camera access in your browser's site settings, then try again — or close this screen and use Upload QR Image instead.\n\nTry again\nClose"
+        },
+        "no toast duplicates the persistent guidance; named dialog with focus on Close": {
+          "ok": true,
+          "detail": {
+            "focus": "Close scanner"
+          }
+        },
+        "Try again and Close are available; spinner gone": {
+          "ok": true
+        },
+        "Escape closes the scanner": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "alert": "Camera access is blocked.\n\nAllow camera access in your browser's site settings, then try again — or close this screen and use Upload QR Image instead.\n\nTry again\nClose",
+        "focus": "Close scanner"
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-camera-missing",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "guidance matches the failure and names the Upload fallback": {
+          "ok": true,
+          "detail": "No camera was found on this device.\n\nClose this screen and use Upload QR Image to check in with a photo of the code.\n\nTry again\nClose"
+        },
+        "no toast duplicates the persistent guidance; named dialog with focus on Close": {
+          "ok": true,
+          "detail": {
+            "focus": "Close scanner"
+          }
+        },
+        "Try again and Close are available; spinner gone": {
+          "ok": true
+        },
+        "Escape closes the scanner": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "alert": "No camera was found on this device.\n\nClose this screen and use Upload QR Image to check in with a photo of the code.\n\nTry again\nClose",
+        "focus": "Close scanner"
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-camera-in-use",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "guidance matches the failure and names the Upload fallback": {
+          "ok": true,
+          "detail": "The camera is in use by another app.\n\nClose the other app or tab using the camera, then try again — or close this screen and use Upload QR Image.\n\nTry again\nClose"
+        },
+        "no toast duplicates the persistent guidance; named dialog with focus on Close": {
+          "ok": true,
+          "detail": {
+            "focus": "Close scanner"
+          }
+        },
+        "Try again and Close are available; spinner gone": {
+          "ok": true
+        },
+        "Escape closes the scanner": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "alert": "The camera is in use by another app.\n\nClose the other app or tab using the camera, then try again — or close this screen and use Upload QR Image.\n\nTry again\nClose",
+        "focus": "Close scanner"
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-unsupported-and-chunk-failure",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "failed reader chunk ends in guidance, not an endless \"starting\" spinner": {
+          "ok": true,
+          "detail": "We couldn't start the camera.\n\nTry again, or close this screen and use Upload QR Image to check in with a photo of the code.\n\nTry again\nClose"
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "alert": "We couldn't start the camera.\n\nTry again, or close this screen and use Upload QR Image to check in with a photo of the code.\n\nTry again\nClose"
+      },
+      "requests": {
+        "total": 112,
+        "document": 2,
+        "rsc": 39,
+        "script": 46,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-unsupported",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "unsupported browser → capability guidance with the upload alternative": {
+          "ok": true,
+          "detail": "This browser can't open the camera here.\n\nCamera scanning needs a secure (https) page and a supported browser. Close this screen and use Upload QR Image instead.\n\nTry again\nClose"
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "alert": "This browser can't open the camera here.\n\nCamera scanning needs a secure (https) page and a supported browser. Close this screen and use Upload QR Image instead.\n\nTry again\nClose"
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-camera-lifecycle",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "camera starts (fake device) with the frame guide visible": {
+          "ok": true,
+          "detail": 1
+        },
+        "closing the scanner releases the camera": {
+          "ok": true,
+          "detail": 0
+        },
+        "starting is announced once politely": {
+          "ok": true,
+          "detail": [
+            "Starting camera…"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "live": 1,
+        "afterClose": 0,
+        "starting": [
+          "Starting camera…"
+        ]
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "scanner-close-while-starting",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "closing while the camera is starting never leaves it running": {
+          "ok": true,
+          "detail": 0
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "afterEarlyClose": 0
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 45,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "pageerror: The play() request was interrupted because the media was removed from the document. https://goo.gl/LdLk22"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-show-share-copy-download",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "clipboard rejection: one error naming the alternatives; never \"Copied\"": {
+          "ok": true,
+          "detail": [
+            "error:Couldn't copy to the clipboard.\nYour browser blocked clipboard access. Use Download, or show this screen to center staff."
+          ]
+        },
+        "copy: one clipboard write and one success after it resolved": {
+          "ok": true,
+          "detail": {
+            "copies": 1,
+            "toasts": [
+              "Copied to clipboard."
+            ]
+          }
+        },
+        "download: \"Download started\" (not \"saved\"), one toast, PNG name": {
+          "ok": true,
+          "detail": {
+            "file": "evacuation-center-qr-synthetic-covered-court.png",
+            "toasts": [
+              "Download started."
+            ]
+          }
+        },
+        "QR frame is a steady 256 px square": {
+          "ok": true,
+          "detail": {
+            "w": 256,
+            "h": 256
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "box": {
+          "w": 256,
+          "h": 256
+        },
+        "rejected": [
+          "error:Couldn't copy to the clipboard.\nYour browser blocked clipboard access. Use Download, or show this screen to center staff."
+        ],
+        "copy": {
+          "copies": 1,
+          "toasts": [
+            "Copied to clipboard."
+          ]
+        },
+        "download": {
+          "file": "evacuation-center-qr-synthetic-covered-court.png",
+          "toasts": [
+            "Download started."
+          ]
+        }
+      },
+      "requests": {
+        "total": 110,
+        "document": 2,
+        "rsc": 39,
+        "script": 44,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-show-centers-read-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "failed centers read is never \"No evacuation centers found\"; retry offered": {
+          "ok": true
+        },
+        "retry loads the centers and renders the QR": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "text": "Show QR Code\n\nShow this screen to center staff so they can scan it at the desk.\n\nWe couldn't load the evacuation centers.\n\nTry again\nEvacuation centers unavailable\n\nEvacuation centers could not be loaded\n\nShare\nDownload\nClose"
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 44,
+        "rest": 11,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "household-qr-states",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "loading → ready keeps a fixed 256 px frame; loading announced once": {
+          "ok": true,
+          "detail": {
+            "loginDestination": "/home",
+            "loading": {
+              "box": {
+                "width": 256,
+                "height": 256
+              },
+              "status": [
+                "Generating your QR code…"
+              ],
+              "busy": 1
+            },
+            "ready": {
+              "width": 256,
+              "height": 256
+            },
+            "failed": {
+              "box": {
+                "width": 256,
+                "height": 256
+              },
+              "text": "We couldn't generate your QR code.\n\nTry again"
+            }
+          }
+        },
+        "failure: fixed frame, explanation and Try again (no toast)": {
+          "ok": true,
+          "detail": {
+            "box": {
+              "width": 256,
+              "height": 256
+            },
+            "text": "We couldn't generate your QR code.\n\nTry again"
+          }
+        },
+        "Try again regenerates the code": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "loading": {
+          "box": {
+            "width": 256,
+            "height": 256
+          },
+          "status": [
+            "Generating your QR code…"
+          ],
+          "busy": 1
+        },
+        "ready": {
+          "width": 256,
+          "height": 256
+        },
+        "failed": {
+          "box": {
+            "width": 256,
+            "height": 256
+          },
+          "text": "We couldn't generate your QR code.\n\nTry again"
+        }
+      },
+      "requests": {
+        "total": 111,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 3,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "family-dialog-contract",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "rejected add: dialog open, inputs and selections kept, one error, no success, pending released": {
+          "ok": true,
+          "detail": {
+            "writes": 1,
+            "open": true,
+            "name": "Synthetic Adult",
+            "relation": "true",
+            "toasts": [
+              "error:Couldn't add family member.\nNothing was changed. Please try again."
+            ],
+            "submit": {
+              "disabled": false,
+              "busy": null,
+              "text": "Add Member"
+            },
+            "names": [
+              "Synthetic Child"
+            ]
+          }
+        },
+        "pending shown immediately (disabled, aria-busy, \"Adding…\") and held until the write settles": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Adding…"
+          }
+        },
+        "repeated activation → one write; confirmed success → one toast, dialog closes, DB has the member": {
+          "ok": true,
+          "detail": {
+            "writes": 1,
+            "toasts": [
+              "Family member added."
+            ],
+            "dialogOpen": false,
+            "names": [
+              "Synthetic Adult",
+              "Synthetic Child"
+            ]
+          }
+        },
+        "lost response: one unconfirmed warning, one write (no automatic retry), dialog kept, list re-read read-only": {
+          "ok": true,
+          "detail": {
+            "writes": 1,
+            "readsAfter": 1,
+            "dialogOpen": true,
+            "toasts": [
+              "warning:We couldn't confirm the change.\nYour household list may or may not have been updated. Check the list before trying again."
+            ]
+          }
+        },
+        "rejected remove: dialog stays open, one error, member still stored": {
+          "ok": true,
+          "detail": {
+            "open": true,
+            "toasts": [
+              "Couldn't remove family member.\nNothing was changed. Please try again."
+            ],
+            "names": [
+              "Synthetic Adult",
+              "Synthetic Child"
+            ]
+          }
+        },
+        "confirmed remove: one success, dialog closes, member removed": {
+          "ok": true,
+          "detail": {
+            "names": [
+              "Synthetic Child"
+            ]
+          }
+        },
+        "closing during the write does not cancel it, reopen is clean, one success": {
+          "ok": true,
+          "detail": {
+            "writes": 1,
+            "names": [
+              "Synthetic Child",
+              "Synthetic Late"
+            ],
+            "dialogOpen": false
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "rejected": {
+          "writes": 1,
+          "open": true,
+          "name": "Synthetic Adult",
+          "relation": "true",
+          "toasts": [
+            "error:Couldn't add family member.\nNothing was changed. Please try again."
+          ],
+          "submit": {
+            "disabled": false,
+            "busy": null,
+            "text": "Add Member"
+          },
+          "names": [
+            "Synthetic Child"
+          ]
+        },
+        "pending": {
+          "disabled": true,
+          "busy": "true",
+          "text": "Adding…"
+        },
+        "added": {
+          "writes": 1,
+          "toasts": [
+            "Family member added."
+          ],
+          "dialogOpen": false,
+          "names": [
+            "Synthetic Adult",
+            "Synthetic Child"
+          ]
+        },
+        "lost": {
+          "writes": 1,
+          "readsAfter": 1,
+          "dialogOpen": true,
+          "toasts": [
+            "warning:We couldn't confirm the change.\nYour household list may or may not have been updated. Check the list before trying again."
+          ]
+        },
+        "removeFail": {
+          "open": true,
+          "toasts": [
+            "Couldn't remove family member.\nNothing was changed. Please try again."
+          ],
+          "names": [
+            "Synthetic Adult",
+            "Synthetic Child"
+          ]
+        },
+        "removed": {
+          "names": [
+            "Synthetic Child"
+          ]
+        },
+        "closedDuring": {
+          "writes": 1,
+          "names": [
+            "Synthetic Child",
+            "Synthetic Late"
+          ],
+          "dialogOpen": false
+        }
+      },
+      "requests": {
+        "total": 115,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 16,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "family-read-failure-not-empty",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "roster read failure → inline error + retry, never \"No family members added yet.\"": {
+          "ok": true
+        },
+        "read-only retry restores the roster": {
+          "ok": true
+        },
+        "slow: roster skeleton + one polite label (no \"Loading family members…\" paragraph swap)": {
+          "ok": true,
+          "detail": [
+            "Loading family members…"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "text": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nHub\nCenters\nScan\nFamily\nAlerts\nHousehold: Populated Family\n\nView and manage your family members.\n\nMy QR Code\n\nShow My Code\n\nPresent this QR code at evacuation centers for quick family check-in.\n\nFamily Members\n\nWe couldn't load your household members. Check your connection, then try again.\n\nTry again",
+        "slow": {
+          "skeletons": 2,
+          "busy": 1,
+          "statuses": [
+            "Loading family members…"
+          ],
+          "alerts": [],
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 160,
+        "document": 3,
+        "rsc": 61,
+        "script": 64,
+        "rest": 14,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "profile-household-no-false-success",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "D-01: failed write never toasts success or closes the editor; input retained; nothing stored": {
+          "ok": true,
+          "detail": {
+            "writes": 1,
+            "open": true,
+            "name": "Synthetic Profile Adult",
+            "toasts": [
+              "error:Couldn't add family member.\nNothing was changed. Please try again."
+            ],
+            "names": [
+              "Synthetic Child"
+            ]
+          }
+        },
+        "retry from the retained input succeeds once and closes": {
+          "ok": true,
+          "detail": [
+            "Synthetic Child",
+            "Synthetic Profile Adult"
+          ]
+        },
+        "inline remove: pending is immediate; a rejected write reports one error and keeps the row": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "toasts": [
+              "error:Couldn't remove family member.\nNothing was changed. Please try again."
+            ],
+            "stillListed": true,
+            "writes": 1
+          }
+        },
+        "confirmed remove updates the list once": {
+          "ok": true,
+          "detail": [
+            "Synthetic Child"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "rejected": {
+          "writes": 1,
+          "open": true,
+          "name": "Synthetic Profile Adult",
+          "toasts": [
+            "error:Couldn't add family member.\nNothing was changed. Please try again."
+          ],
+          "names": [
+            "Synthetic Child"
+          ]
+        },
+        "inlinePending": {
+          "disabled": true,
+          "busy": "true"
+        },
+        "inlineRejected": {
+          "toasts": [
+            "error:Couldn't remove family member.\nNothing was changed. Please try again."
+          ],
+          "stillListed": true,
+          "writes": 1
+        }
+      },
+      "requests": {
+        "total": 130,
+        "document": 2,
+        "rsc": 53,
+        "script": 44,
+        "rest": 13,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "maps-placeholder-and-locate",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "map placeholder is steady (not pulsing), announced once, and the map keeps its size": {
+          "ok": true,
+          "detail": {
+            "loginDestination": "/home",
+            "placeholder": {
+              "present": true,
+              "height": 680,
+              "width": 836,
+              "pulsing": 0,
+              "status": [
+                "Loading the map…"
+              ]
+            },
+            "map": {
+              "height": 680,
+              "width": 836
+            }
+          }
+        },
+        "denied permission: one error naming site settings and the manual alternative; control restored": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "error:Location access is blocked.\nAllow location in your browser's site settings to use this. You can still pan and zoom the map."
+            ],
+            "enabled": true
+          }
+        },
+        "automatic denial note explains the browser-settings fix": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "placeholder": {
+          "present": true,
+          "height": 680,
+          "width": 836,
+          "pulsing": 0,
+          "status": [
+            "Loading the map…"
+          ]
+        },
+        "map": {
+          "height": 680,
+          "width": 836
+        },
+        "denied": {
+          "toasts": [
+            "error:Location access is blocked.\nAllow location in your browser's site settings to use this. You can still pan and zoom the map."
+          ],
+          "enabled": true
+        }
+      },
+      "requests": {
+        "total": 131,
+        "document": 2,
+        "rsc": 43,
+        "script": 43,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 33
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "maps-locate-success-and-repeat",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "repeated activation → one geolocation request; busy immediately; no toast on success": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "locates": 1,
+            "toasts": 0,
+            "marker": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "busy": {
+          "disabled": true,
+          "busy": "true"
+        },
+        "after": {
+          "locates": 1,
+          "toasts": 0,
+          "marker": 1
+        }
+      },
+      "requests": {
+        "total": 143,
+        "document": 2,
+        "rsc": 41,
+        "script": 45,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 45
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "locate-unsupported",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "unsupported browser → one explanatory error, map usable": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home"
+      },
+      "requests": {
+        "total": 131,
+        "document": 2,
+        "rsc": 41,
+        "script": 45,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 33
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "directory-and-preparedness",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "directory failure → inline error + retry (not \"No contacts available.\")": {
+          "ok": true
+        },
+        "local search with no match → \"No contacts match your search.\" (no loader, no request)": {
+          "ok": true
+        },
+        "successful empty → existing empty copy": {
+          "ok": true
+        },
+        "preparedness guide: static — no data request, loader, or toast": {
+          "ok": true,
+          "detail": {
+            "rest": 0,
+            "toasts": 0,
+            "busy": 0
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": "Barangayan\n\nRW Feedback Local\n\nHome\nEmergency\nServices\nMaps\nHealth\n1\nReports\nAnnouncements\nSettings\n\nRW Populated\n\nR\nBack to Map\nDirectory\n\nEvery emergency contact for your barangay, in one place.\n\nWe couldn't load the directory. Check your connection, then try again.\n\nTry again",
+        "preparedness": {
+          "rest": 0,
+          "toasts": 0,
+          "busy": 0
+        }
+      },
+      "requests": {
+        "total": 190,
+        "document": 4,
+        "rsc": 64,
+        "script": 84,
+        "rest": 17,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "dialog-motion-normal",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "dialog animates 180 ms in / 140 ms out": {
+          "ok": true,
+          "detail": {
+            "loginDestination": "/home",
+            "open": {
+              "duration": "0.18s",
+              "name": "enter",
+              "transform": "matrix3d(0.98682, 0, 0, 0, 0, 0.98682, 0, 0, 0, 0, 0.98682, 0, 0, 0, 0, 1)"
+            },
+            "close": {
+              "duration": "0.14s",
+              "state": "closed"
+            }
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "open": {
+          "duration": "0.18s",
+          "name": "enter",
+          "transform": "matrix3d(0.98682, 0, 0, 0, 0, 0.98682, 0, 0, 0, 0, 0.98682, 0, 0, 0, 0, 1)"
+        },
+        "close": {
+          "duration": "0.14s",
+          "state": "closed"
+        }
+      },
+      "requests": {
+        "total": 108,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "dialog-motion-reduced",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "reduced motion: no zoom/slide travel (fade only), dialog still opens and closes": {
+          "ok": true,
+          "detail": {
+            "duration": "0.18s",
+            "name": "enter",
+            "transform": "matrix(1, 0, 0, 1, 0, 0)"
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "open": {
+          "duration": "0.18s",
+          "name": "enter",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "close": {
+          "duration": "0.14s",
+          "state": "closed"
+        }
+      },
+      "requests": {
+        "total": 108,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "emergency-narrow-320",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "320 px: no horizontal overflow on hub/family; toast within gutters; dialog within viewport": {
+          "ok": true,
+          "detail": {
+            "loginDestination": "/home",
+            "hub": {
+              "skeletons": 0,
+              "busy": 0,
+              "statuses": [],
+              "alerts": [],
+              "overflowX": false
+            },
+            "toast": {
+              "text": "Couldn't add family member.\nNothing was changed. Please try again.",
+              "type": "error",
+              "visible": "true",
+              "removed": "false",
+              "top": -26,
+              "left": 16,
+              "right": 304,
+              "width": 288,
+              "height": 96,
+              "close": {
+                "width": 28,
+                "height": 28,
+                "cx": 277,
+                "cy": 21.90625,
+                "label": "Close toast"
+              },
+              "opacity": 0,
+              "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+            },
+            "dialogBox": {
+              "x": 0,
+              "y": 128,
+              "width": 320,
+              "height": 464
+            },
+            "family": {
+              "skeletons": 0,
+              "busy": 0,
+              "statuses": [],
+              "alerts": [],
+              "overflowX": false
+            }
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "hub": {
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [],
+          "alerts": [],
+          "overflowX": false
+        },
+        "toast": {
+          "text": "Couldn't add family member.\nNothing was changed. Please try again.",
+          "type": "error",
+          "visible": "true",
+          "removed": "false",
+          "top": -26,
+          "left": 16,
+          "right": 304,
+          "width": 288,
+          "height": 96,
+          "close": {
+            "width": 28,
+            "height": 28,
+            "cx": 277,
+            "cy": 21.90625,
+            "label": "Close toast"
+          },
+          "opacity": 0,
+          "transition": "0.4s, 0.4s, 0.4s, 0.2s"
+        },
+        "dialogBox": {
+          "x": 0,
+          "y": 128,
+          "width": 320,
+          "height": 464
+        },
+        "family": {
+          "skeletons": 0,
+          "busy": 0,
+          "statuses": [],
+          "alerts": [],
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 144,
+        "document": 3,
+        "rsc": 46,
+        "script": 62,
+        "rest": 15,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-12T05:59:33.232Z",
+  "summary": {
+    "pass": 28,
+    "fail": 0,
+    "error": 0
+  },
+  "checks": 91
+}

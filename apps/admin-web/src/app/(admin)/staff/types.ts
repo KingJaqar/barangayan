@@ -1,3 +1,4 @@
+import type { Tables } from '@barangayan/shared';
 // Coarse admin-vs-staff split for the tabs, distinct from the finer-grained
 // OFFICIAL_ROLES (10 values — barangay_captain, kagawad, secretary, …) which stays a
 // dropdown filter (see staff-table.tsx) rather than a tab, the same "tabs for the
@@ -10,3 +11,5 @@ export const TABS: { key: Tab; label: string }[] = [
   { key: 'admin', label: 'Admins' },
   { key: 'staff', label: 'Staff' },
 ];
+
+export type OfficialWithProfile = Tables<'barangay_officials'> & { profile: Tables<'profiles'> };

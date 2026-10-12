@@ -1,0 +1,14 @@
+Passed: ten route mount cycles preserve one household channel and baseline table observers
+Passed: thirty warm committed-result timings meet the recorded loopback target
+locator.click: Timeout 15000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: 'View resident alpha duplicate', exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\detail-realtime.mjs:100:157
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\detail-realtime.mjs:13:3)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:90:3 {
+  log: [
+    "  - waiting for getByRole('button', { name: 'View resident alpha duplicate', exact: true })"
+  ],
+  name: 'TimeoutError'
+}

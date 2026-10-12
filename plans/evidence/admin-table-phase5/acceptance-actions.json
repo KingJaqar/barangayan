@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "mode": "actions",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "actual incident and drive creation, guided incident statuses, active edits and removal persist and audit",
+    "failed inline drafts block navigation, preserve identity, retry, persist and audit on every route",
+    "complete registration lookups include beyond-cap residents and only own-tenant active drives; real registration RPC persists score and audit"
+  ],
+  "failures": [
+    {
+      "label": "native detail dialogs keep IDs, dates and drafts; real modal saves revalidate; Escape restores focus",
+      "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await dialog.innerText()).includes(name === 'incidents' ? 'Submitted' : name === 'health' ? 'Date created' : 'Registered at'))\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:326:20\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:321:9"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "facts": {
+    "incidentRemoval": "pre-existing RLS rejection surfaced; row retained; no delete audit",
+    "createdRegistration": {
+      "id": "83dd1cff-6b88-43b5-b8a4-6ede5240e05f",
+      "applicant_number": "DEN-20261012-0001"
+    }
+  },
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ],
+  "failure": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await dialog.innerText()).includes(name === 'incidents' ? 'Submitted' : name === 'health' ? 'Date created' : 'Registered at'))\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:326:20\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:321:9"
+}

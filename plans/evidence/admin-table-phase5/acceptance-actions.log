@@ -1,0 +1,17 @@
+Passed: actual incident and drive creation, guided incident statuses, active edits and removal persist and audit
+Passed: failed inline drafts block navigation, preserve identity, retry, persist and audit on every route
+Passed: complete registration lookups include beyond-cap residents and only own-tenant active drives; real registration RPC persists score and audit
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok((await dialog.innerText()).includes(name === 'incidents' ? 'Submitted' : name === 'health' ? 'Date created' : 'Registered at'))
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:326:20
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:321:9 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

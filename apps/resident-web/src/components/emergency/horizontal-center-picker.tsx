@@ -3,6 +3,8 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 
+import { preferredScrollBehavior } from '@/lib/motion';
+
 export interface CenterPickerItem {
   id: string;
   name: string;
@@ -23,7 +25,7 @@ export function HorizontalCenterPicker({ items, selectedId, onSelect, onShowAll 
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function scrollByAmount(delta: number) {
-    scrollRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: delta, behavior: preferredScrollBehavior() });
   }
 
   function handleSelect(id: string) {
@@ -32,7 +34,7 @@ export function HorizontalCenterPicker({ items, selectedId, onSelect, onShowAll 
     const el = scrollRef.current;
     if (index >= 0 && el) {
       const chip = el.children[index + 1] as HTMLElement | undefined;
-      chip?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      chip?.scrollIntoView({ behavior: preferredScrollBehavior(), inline: 'center', block: 'nearest' });
     }
   }
 

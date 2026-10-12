@@ -1,0 +1,25 @@
+requests/default: p95 60.7ms
+requests/natural deep page: p95 641.5ms
+transactions/joined resident: p95 301.8ms
+residents/substring: p95 298.7ms
+incidents/nullable reporter: p95 174.8ms
+health/aggregate: p95 136.7ms
+applicants/joined score: p95 454.6ms
+households/joined head: p95 417.6ms
+staff/label role: p95 175.3ms
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Measured performance target failed; inspect query plans before adding indexes
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/performance.mjs:41:8
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

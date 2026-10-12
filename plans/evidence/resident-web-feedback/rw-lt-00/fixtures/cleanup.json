@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "at": "2026-10-11T16:05:47.155Z",
+  "before": {
+    "fixtureUsers": 4,
+    "fixtureBarangay": 1,
+    "nonFixtureUsers": 4,
+    "nonFixturePayments": 0,
+    "nonFixtureRequests": 1,
+    "nonFixtureBarangays": 3,
+    "nonFixtureIncidents": 1
+  },
+  "after": {
+    "fixtureUsers": 0,
+    "fixtureBarangay": 0,
+    "nonFixtureUsers": 4,
+    "nonFixturePayments": 0,
+    "nonFixtureRequests": 1,
+    "nonFixtureBarangays": 3,
+    "nonFixtureIncidents": 1
+  }
+}

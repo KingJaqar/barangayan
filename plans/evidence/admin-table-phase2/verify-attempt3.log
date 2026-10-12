@@ -1,0 +1,21 @@
+API failure 503 {"code":"PGRST002","details":null,"hint":null,"message":"Could not query the database for the schema cache. Retrying."}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"status":"error","code":"query-failed","message":"Could not load table results. Retry this query."}
+
+'error' !== 'success'
+
+    at ok (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/verify.mjs:68:28)
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/verify.mjs:78:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'error',
+  expected: 'success',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

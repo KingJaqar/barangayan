@@ -1,0 +1,15 @@
+Passed: chrome: requests defaults, ranges, sort controls, scrolling and responsive access
+Passed: chrome: transactions defaults, ranges, sort controls, scrolling and responsive access
+Passed: Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact
+locator.getAttribute: Timeout 15000ms exceeded.
+Call log:
+  - waiting for getByRole('link', { name: 'Claim link', exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase3\acceptance.mjs:147:242
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\acceptance.mjs:16:226)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:139:4 {
+  log: [
+    "  - waiting for getByRole('link', { name: 'Claim link', exact: true })"
+  ],
+  name: 'TimeoutError'
+}

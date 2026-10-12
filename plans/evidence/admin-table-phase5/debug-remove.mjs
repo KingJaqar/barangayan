@@ -1,0 +1,36 @@
+// Diagnostic only: reproduces the incident removal step and records toasts/requests.
+import fs from 'node:fs'; import path from 'node:path'; import { createRequire } from 'node:module';
+import { createClient } from '@supabase/supabase-js'; import { createServerClient } from '@supabase/ssr';
+import { statePath, privateDir } from './runtime-stack.mjs';
+const require = createRequire(import.meta.url);
+process.env.PLAYWRIGHT_BROWSERS_PATH = path.resolve('dist/admin-table-phase1-browsers');
+const { chromium } = require('playwright');
+const state = JSON.parse(fs.readFileSync(statePath)), users = JSON.parse(fs.readFileSync(privateDir + '/users.json'));
+const browser = await chromium.launch({ channel: 'chrome', headless: true }); const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const auth = createClient(state.api, state.anonKey, { auth: { persistSession: false } }); const signed = await auth.auth.signInWithPassword(users.admin);
+let cookies = []; const s = createServerClient(state.api, state.anonKey, { cookies: { getAll: () => cookies, setAll: n => { cookies = n; } } });
+await s.auth.setSession({ access_token: signed.data.session.access_token, refresh_token: signed.data.session.refresh_token });
+await page.context().addCookies(cookies.map(c => ({ name: c.name, value: c.value, url: 'http://127.0.0.1:3140' })));
+page.on('response', r => { if (r.request().method() === 'PATCH') console.log('PATCH', r.status(), r.url().split('?')[0]); });
+page.on('console', m => { if (m.type() === 'error') console.log('console', m.text().slice(0, 200)); });
+await page.goto('http://127.0.0.1:3140/incident-reports?tab=all&q=Phase5+created+incidents', { timeout: 60000 });
+await page.waitForFunction(() => document.querySelector('.table-browse-panel')?.getAttribute('aria-busy') === 'false');
+console.log('range', await page.locator('.table-browse-pagination').first().innerText());
+const btn = page.getByRole('button', { name: 'Remove incident: Phase5 created incidents', exact: true });
+console.log('remove buttons', await btn.count()); const region=page.getByRole('region',{name:'Incident Reports rows and columns',exact:true});
+const geo=()=>region.evaluate(e=>({sl:e.scrollLeft,max:e.scrollWidth-e.clientWidth,cw:e.clientWidth,sw:e.scrollWidth}));
+console.log('geo0',await geo());
+const cols=()=>page.locator('thead th').evaluateAll(t=>t.map(e=>Math.round(e.getBoundingClientRect().width)));
+console.log('cols0',JSON.stringify(await cols())); await page.waitForTimeout(1500); console.log('idle',await geo());
+for(let i=0;i<5;i++){await region.evaluate(e=>{e.scrollLeft=e.scrollWidth;}); await page.waitForTimeout(400); console.log('scroll',i,await geo(),await cols());}
+await region.evaluate(e=>{e.scrollLeft=0;}); await page.waitForTimeout(400); console.log('back',JSON.stringify(await cols())); await btn.click(); await page.waitForTimeout(500); console.log('confirm after settled click', await page.getByRole('button',{name:'Remove?',exact:true}).count()); process.exit(0);
+await region.evaluate(e=>{e.scrollLeft=e.scrollWidth;}); await page.waitForTimeout(300); console.log('geo1',await geo());
+const box=await btn.boundingBox(); const rb=await region.boundingBox(); console.log('btn',box,'region',rb);
+await btn.focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(500);
+console.log('confirm after Enter', await page.getByRole('button',{name:'Remove?',exact:true}).count());
+await page.screenshot({path:'plans/evidence/admin-table-phase5/debug-remove.png'});
+console.log('confirm buttons', await page.getByRole('button', { name: 'Remove?', exact: true }).count());
+process.exit(0); await page.waitForTimeout(3000);
+console.log('range after', await page.locator('.table-browse-pagination').first().innerText());
+console.log('toasts', await page.locator('[role=status],[role=alert]').allInnerTexts());
+await browser.close();

@@ -1,0 +1,3 @@
+Passed: combined filters/search preserve independent summaries and atomic first-page reset
+Passed: rapid delayed navigation, Back cancellation and one invalid-page correction
+Passed: independent table, summary and options errors retain full query on retry

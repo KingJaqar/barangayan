@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "mode": "browsing",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: incidents defaults, sizes, ranges, dates, keyboard, containment and search",
+    "chrome: health defaults, sizes, ranges, dates, keyboard, containment and search",
+    "chrome: applicants defaults, sizes, ranges, dates, keyboard, containment and search",
+    "all 50 sort/direction combinations follow authoritative complete-set database order",
+    "complete unchanged page concatenations have no gaps or duplicate IDs"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "facts": {
+    "sortDirections": 50,
+    "incidentsRows": 1505,
+    "healthRows": 1505,
+    "applicantsRows": 1506
+  },
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

@@ -12,6 +12,7 @@ import { AlertCircle, CheckCircle2, Eye, EyeOff, ShieldCheck } from 'lucide-reac
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import type { ReactNode } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -115,7 +116,7 @@ function PasswordField({
   );
 }
 
-export function ChangePasswordForm({ email }: { email: string }) {
+export function ChangePasswordForm({ email, forgotPassword }: { email: string; forgotPassword?: ReactNode }) {
   const router = useRouter();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -217,6 +218,7 @@ export function ChangePasswordForm({ email }: { email: string }) {
           error={fieldErrors.currentPassword}
           autoComplete="current-password"
         />
+        {forgotPassword}
         <hr className="border-zinc-100 dark:border-zinc-800" />
         <div>
           <PasswordField

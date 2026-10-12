@@ -2,6 +2,9 @@ import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 
+import { ReadFailure } from '@/components/shared/read-failure';
+import { isMissingRow } from '@/lib/service-feedback';
+
 import { RequestTracking } from './request-tracking';
 
 /**
@@ -17,7 +20,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
   const { user } = await requireUser();
   const supabase = await createSupabaseServerClient();
 
-  const { data: request } = await supabase
+  const { data: request, error } = await supabase
     .from('service_requests')
     .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
     .eq('id', requestId)
@@ -25,7 +28,13 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
     .single();
 
   if (!request) {
-    notFound();
+    // Missing/inaccessible is a 404 (not distinguished); a failed read is retryable.
+    if (isMissingRow(error)) notFound();
+    return (
+      <div className="mx-auto max-w-2xl">
+        <ReadFailure message="We couldn't load this request." />
+      </div>
+    );
   }
 
   return (

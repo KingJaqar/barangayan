@@ -2,7 +2,6 @@
 
 import {
   EMPLOYMENT_STATUSES,
-  formatDate,
   SEXES,
   serviceFoundationOperations,
   type IdSubmissionRow,
@@ -11,9 +10,19 @@ import {
   type IdVerificationStatus,
   type Sex,
 } from '@barangayan/shared';
-import { Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Eye, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
+import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
+import { PROFILE_TABLE_CONFIGS } from '@/lib/admin-tables/profile-config';
+import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
+import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
+import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
@@ -22,10 +31,11 @@ import { StatusPill } from '@/components/admin/status-pill';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-import type { ResidentRow } from './page';
-import { TABS, type Tab } from './types';
+import type { ResidentRow } from './types';
+import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import { Spinner } from '@/components/loading/spinner';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -40,9 +50,6 @@ type ServiceRequest = {
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────────
-
-const inputCls =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
 function fmtDate(iso: string | null): string {
   if (!iso) return '—';
@@ -114,23 +121,23 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-2"
+      className={`${formContainerClass} grid-cols-1 sm:grid-cols-2`}
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Email *</span>
-        <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} required />
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Full Name *</span>
-        <input className={inputCls} value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+        <input className={inputClass} value={fullName} onChange={(e) => setFullName(e.target.value)} required />
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Mobile Number</span>
-        <input className={inputCls} value={mobileNumber} onChange={(e) => setMobile(e.target.value)} />
+        <input className={inputClass} value={mobileNumber} onChange={(e) => setMobile(e.target.value)} />
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Home Address</span>
-        <input className={inputCls} value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} />
+        <input className={inputClass} value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} />
       </label>
       <p className="col-span-1 text-xs text-zinc-500 sm:col-span-2">
         The resident receives an email invite to set their own password — no password is ever stored here.
@@ -139,11 +146,11 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
         <button
           type="submit"
           disabled={submitting || !email.trim() || !fullName.trim()}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Sending invite…">Send Invite</LoadingButtonContent>
         </button>
-        <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
+        <button type="button" onClick={onClose} className={cancelButtonClass}>
           Cancel
         </button>
       </div>
@@ -163,7 +170,6 @@ function ResidentDetailModal({
   onIdStatusChange?: (id: string, status: IdVerificationStatus | null) => void;
 }) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
-  const router = useRouter();
   const toast = useToast();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
   const [idUrls, setIdUrls] = useState<string[]>([]);
@@ -247,7 +253,6 @@ function ResidentDetailModal({
             ? `${resident.full_name}'s ID marked as pending review.`
             : `ID verification cleared for ${resident.full_name}.`,
     );
-    router.refresh();
   }
 
   if (!resident) return null;
@@ -256,14 +261,13 @@ function ResidentDetailModal({
   const members = resident.household_members ?? [];
 
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900"
+        className="flex max-h-[calc(95vh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
-        <div className="flex items-start justify-between border-b border-black/10 p-6 dark:border-white/10">
-          <div className="flex items-center gap-4">
+        <div className="flex max-h-[40vh] shrink-0 flex-wrap items-start justify-between gap-3 overflow-y-auto border-b border-black/10 p-6 dark:border-white/10">
+          <div className="flex min-w-0 flex-[1_1_16rem] items-center gap-4">
             {/* Avatar */}
             {resident.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -277,13 +281,13 @@ function ResidentDetailModal({
                 {resident.full_name.charAt(0).toUpperCase()}
               </div>
             )}
-            <div>
+            <div className="min-w-0 break-words">
               <h2 className="text-xl font-bold">{resident.full_name}</h2>
               <p className="mt-0.5 text-sm text-zinc-500">{resident.email ?? 'No email on file'}</p>
               <p className="text-sm text-zinc-500">{resident.mobile_number ?? 'No mobile number'}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center gap-2">
             <span className={`rounded-full px-3 py-1 text-xs font-semibold ${verificationColor(verStatus)}`}>{verStatus}</span>
             <span className={`rounded-full px-3 py-1 text-xs font-semibold ${idVerifColor(idStatus)}`}>{idVerifLabel(idStatus)}</span>
             {resident.location_verified === false && (
@@ -294,7 +298,7 @@ function ResidentDetailModal({
               </span>
             )}
             <button
-              onClick={onClose}
+              onClick={onClose} aria-label="Close details"
               className="rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             >
               ✕
@@ -337,7 +341,7 @@ function ResidentDetailModal({
               </div>
               <div>
                 <dt className="text-zinc-400">Joined</dt>
-                <dd className="font-medium">{formatDate(resident.created_at)}</dd>
+                <dd className="font-medium">{formatAdminTimestamp(resident.created_at)}</dd>
               </div>
             </dl>
           </section>
@@ -370,9 +374,9 @@ function ResidentDetailModal({
           <section className="border-b border-black/10 p-6 dark:border-white/10">
             <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">ID Verification — Admin Action</h3>
             {resident.id_repair_required && <p role="alert" className="mb-3 text-sm text-red-700">Legacy approval needs repair: complete evidence is missing. Ask the resident to submit both ID sides.</p>}
-            {evidence && <p className="mb-3 text-sm">Submission version {evidence.version} · {evidence.id_type} · {evidence.evidence_origin.startsWith('legacy_') ? 'Imported legacy evidence; original submission/review provenance unavailable' : `Submitted ${formatDate(evidence.submitted_at)}`}{evidence.reviewed_at ? ` · Decision ${formatDate(evidence.reviewed_at)} · Reviewer ${evidence.reviewed_by}` : ''}</p>}
+            {evidence && <p className="mb-3 text-sm">Submission version {evidence.version} · {evidence.id_type} · {evidence.evidence_origin.startsWith('legacy_') ? 'Imported legacy evidence; original submission/review provenance unavailable' : `Submitted ${formatAdminTimestamp(evidence.submitted_at)}`}{evidence.reviewed_at ? ` · Decision ${formatAdminTimestamp(evidence.reviewed_at)} · Reviewer ${evidence.reviewed_by}` : ''}</p>}
             {evidence?.rejection_reason && <p className="mb-3 text-sm">Decision reason: {evidence.rejection_reason}</p>}
-            <label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className={inputCls} value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
+            <label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800" value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
             <div aria-busy={idStatusLoading} className="flex flex-wrap items-center gap-3">
               <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${idVerifColor(idStatus)}`}>
                 Current: {idVerifLabel(idStatus)}
@@ -460,7 +464,7 @@ function ResidentDetailModal({
                     <div>
                       <p className="font-medium">{r.document_types?.name ?? 'Document Request'}</p>
                       <p className="text-xs text-zinc-500">
-                        #{r.reference_number} · {formatDate(r.created_at)}
+                        #{r.reference_number} · {formatAdminTimestamp(r.created_at)}
                       </p>
                     </div>
                     <StatusPill status={r.status} />
@@ -471,7 +475,6 @@ function ResidentDetailModal({
           </section>
         </div>
       </div>
-    </div>
   );
 }
 
@@ -498,74 +501,17 @@ const EMPLOYMENT_STATUS_OPTIONS = [
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export function ResidentDirectory({
-  residents,
-  tab,
-  q,
-  verification,
-}: {
-  residents: ResidentRow[];
-  tab: Tab;
-  q: string;
-  verification: string;
+export function ResidentDirectory({ result, summary, requestedState, barangayId }: {
+  result: QueryOutcome<BrowseResult<ResidentRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
+  barangayId: string;
 }) {
-  const router = useRouter();
   const toast = useToast();
-  const supabase = createSupabaseBrowserClient();
-
-  const [selected, setSelected] = useState<ResidentRow | null>(null);
-  const [nameOrder, setNameOrder] = useState<'asc' | 'desc'>('asc');
+  const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.residents, requestedState, result, true);
+  const { state, value } = browse;
+  const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/verification around for the debounced search effect below,
-  // without making that effect re-fire (and re-push a redundant URL) whenever tab/
-  // verification change on their own — those already navigate immediately through
-  // their own handlers.
-  const tabRef = useRef(tab);
-  const verificationRef = useRef(verification);
-  useEffect(() => {
-    tabRef.current = tab;
-    verificationRef.current = verification;
-  }, [tab, verification]);
-
-  function navigate(next: { tab?: string; q?: string; verification?: string }) {
-    const nextQ = next.q ?? q;
-    const nextVerification = next.verification ?? verification;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextVerification ? { verification: nextVerification } : {}),
-    });
-    router.push(`/residents?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after
-  // the user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(verificationRef.current ? { verification: verificationRef.current } : {}),
-      });
-      router.push(`/residents?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
-  const sortedResidents = [...residents].sort((a, b) => a.full_name.localeCompare(b.full_name) * (nameOrder === 'asc' ? 1 : -1));
+  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<ResidentRow>('residents', result, browse.settle);
+  const supabase = createSupabaseBrowserClient();
 
   async function updateField(r: ResidentRow, patch: ProfileUpdate) {
     const rRecord = r as unknown as Record<string, unknown>;
@@ -578,7 +524,7 @@ export function ResidentDirectory({
       .from('profiles')
       .update(patch)
       .eq('id', r.id)
-      .select('id, full_name')
+      .select('id, full_name, updated_at')
       .maybeSingle();
     if (error) {
       return { error: error.message };
@@ -596,11 +542,12 @@ export function ResidentDirectory({
         after: patch,
       },
     }).catch(() => {});
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
   async function archive(resident: ResidentRow) {
+    if (!await browse.settle()) return;
     const { data: updated, error } = await supabase
       .from('profiles')
       .update({ deleted_at: new Date().toISOString() })
@@ -623,113 +570,58 @@ export function ResidentDirectory({
       metadata: { full_name: resident.full_name, email: resident.email, mobile_number: resident.mobile_number },
     }).catch(() => {});
     toast.showSuccess(`${updated.full_name} archived.`);
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<ResidentRow>[] = [
     {
-      header: 'First Name', initialWidth: 180, minWidth: 150, wrap: 'break-word',
+      id: 'first_name', header: 'First Name', initialWidth: 180, minWidth: 150, wrap: 'break-word',
       render: (r) => <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white">{r.full_name.charAt(0).toUpperCase()}</span><span className="font-medium">{r.first_name ?? '—'}</span></div>,
       edit: { type: 'text', getValue: (r) => r.first_name ?? '', onSave: (r, value) => updateField(r, { first_name: String(value).trim() || null }) },
     },
-    { header: 'Last Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.last_name ?? '—', edit: { type: 'text', getValue: (r) => r.last_name ?? '', onSave: (r, value) => updateField(r, { last_name: String(value).trim() || null }) } },
-    { header: 'Middle Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.middle_name ?? '—', edit: { type: 'text', getValue: (r) => r.middle_name ?? '', onSave: (r, value) => updateField(r, { middle_name: String(value).trim() || null }) } },
-    { header: 'Suffix', initialWidth: 90, minWidth: 78, wrap: 'nowrap', render: (r) => r.suffix ?? '—', edit: { type: 'text', getValue: (r) => r.suffix ?? '', onSave: (r, value) => updateField(r, { suffix: String(value).trim() || null }) } },
-    { header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
-    { header: 'Email', initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
-    { header: 'Mobile', initialWidth: 142, minWidth: 124, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{r.mobile_number ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.mobile_number ?? '', onSave: (r, value) => updateField(r, { mobile_number: String(value).trim() || null }) } },
-    { header: 'House No.', initialWidth: 110, minWidth: 92, wrap: 'nowrap', render: (r) => r.house_no ?? '—', edit: { type: 'text', getValue: (r) => r.house_no ?? '', onSave: (r, value) => updateField(r, { house_no: String(value).trim() || null }) } },
-    { header: 'Street', initialWidth: 180, minWidth: 140, wrap: 'break-word', render: (r) => r.street ?? '—', edit: { type: 'text', getValue: (r) => r.street ?? '', onSave: (r, value) => updateField(r, { street: String(value).trim() || null }) } },
-    { header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—' },
-    { header: 'Birthday', initialWidth: 130, minWidth: 118, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{fmtDate(r.birth_date)}</span>, edit: { type: 'date', getValue: (r) => r.birth_date ?? '', onSave: (r, value) => updateField(r, { birth_date: String(value) || null }) } },
-    { header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
-    { header: 'Occupation', initialWidth: 170, minWidth: 135, wrap: 'break-word', render: (r) => r.occupation ?? '—', edit: { type: 'text', getValue: (r) => r.occupation ?? '', onSave: (r, value) => updateField(r, { occupation: String(value).trim() || null }) } },
-    { header: 'ID Type', initialWidth: 150, minWidth: 120, wrap: 'nowrap', render: (r) => r.id_type ?? '—' },
-    { header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor(r.id_verification_status)}`}>{r.id_repair_required ? 'Evidence repair required' : idVerifLabel(r.id_verification_status)}</span> },
-    { header: 'Household', initialWidth: 100, minWidth: 88, wrap: 'nowrap', render: (r) => <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold tabular-nums text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{r.household_members?.length ?? 0}</span> },
-    { header: 'Email Verif.', initialWidth: 135, minWidth: 116, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>{r.email_verification_status}</span> },
-    { header: 'Location Verified', initialWidth: 230, minWidth: 175, wrap: 'break-word', render: (r) => r.verified_location ? <span className="text-green-700 dark:text-green-400">{r.verified_location_address ?? 'Verified (no address on file)'}</span> : <span className="text-zinc-400">Not verified</span> },
-    { header: 'Joined', initialWidth: 128, minWidth: 116, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-500">{formatDate(r.created_at)}</span> },
-    { header: 'Actions', initialWidth: 96, minWidth: 88, wrap: 'nowrap', overflow: 'visible', render: (r) => <div onClick={(e) => e.stopPropagation()}><ConfirmButton label={<Trash2 aria-hidden="true" className="h-4 w-4" />} ariaLabel={`Archive ${r.full_name}`} confirmLabel="Archive?" onConfirm={() => archive(r)} title={`Archive ${r.full_name}`} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900" /></div> },
+    { id: 'last_name', header: 'Last Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.last_name ?? '—', edit: { type: 'text', getValue: (r) => r.last_name ?? '', onSave: (r, value) => updateField(r, { last_name: String(value).trim() || null }) } },
+    { id: 'middle_name', header: 'Middle Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.middle_name ?? '—', edit: { type: 'text', getValue: (r) => r.middle_name ?? '', onSave: (r, value) => updateField(r, { middle_name: String(value).trim() || null }) } },
+    { id: 'suffix', header: 'Suffix', initialWidth: 90, minWidth: 78, wrap: 'nowrap', render: (r) => r.suffix ?? '—', edit: { type: 'text', getValue: (r) => r.suffix ?? '', onSave: (r, value) => updateField(r, { suffix: String(value).trim() || null }) } },
+    { id: 'sex', header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
+    { id: 'email', header: 'Email', initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
+    { id: 'mobile', header: 'Mobile', initialWidth: 142, minWidth: 124, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{r.mobile_number ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.mobile_number ?? '', onSave: (r, value) => updateField(r, { mobile_number: String(value).trim() || null }) } },
+    { id: 'house_no_', header: 'House No.', initialWidth: 110, minWidth: 92, wrap: 'nowrap', render: (r) => r.house_no ?? '—', edit: { type: 'text', getValue: (r) => r.house_no ?? '', onSave: (r, value) => updateField(r, { house_no: String(value).trim() || null }) } },
+    { id: 'street', header: 'Street', initialWidth: 180, minWidth: 140, wrap: 'break-word', render: (r) => r.street ?? '—', edit: { type: 'text', getValue: (r) => r.street ?? '', onSave: (r, value) => updateField(r, { street: String(value).trim() || null }) } },
+    { id: 'city', header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—' },
+    { id: 'birthday', header: 'Birthday', initialWidth: 130, minWidth: 118, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{fmtDate(r.birth_date)}</span>, edit: { type: 'date', getValue: (r) => r.birth_date ?? '', onSave: (r, value) => updateField(r, { birth_date: String(value) || null }) } },
+    { id: 'employment_status', header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
+    { id: 'occupation', header: 'Occupation', initialWidth: 170, minWidth: 135, wrap: 'break-word', render: (r) => r.occupation ?? '—', edit: { type: 'text', getValue: (r) => r.occupation ?? '', onSave: (r, value) => updateField(r, { occupation: String(value).trim() || null }) } },
+    { id: 'id_type', header: 'ID Type', initialWidth: 150, minWidth: 120, wrap: 'nowrap', render: (r) => r.id_type ?? '—' },
+    { id: 'id_status', header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor(r.id_verification_status)}`}>{r.id_repair_required ? 'Evidence repair required' : idVerifLabel(r.id_verification_status)}</span> },
+    { id: 'household', header: 'Household', initialWidth: 100, minWidth: 88, wrap: 'nowrap', render: (r) => <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold tabular-nums text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{r.household_members?.length ?? 0}</span> },
+    { id: 'email_verification', header: 'Email Verif.', initialWidth: 135, minWidth: 116, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>{r.email_verification_status}</span> },
+    { id: 'location_verified', header: 'Location Verified', initialWidth: 230, minWidth: 175, wrap: 'break-word', render: (r) => r.verified_location ? <span className="text-green-700 dark:text-green-400">{r.verified_location_address ?? 'Verified (no address on file)'}</span> : <span className="text-zinc-400">Not verified</span> },
+    { id: 'joined', header: 'Joined', initialWidth: 176, minWidth: 156, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-500">{formatAdminTimestamp(r.created_at)}</span> },
+    { id: 'actions', header: 'Actions', initialWidth: 132, minWidth: 124, wrap: 'nowrap', overflow: 'visible', render: (r) => <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}><button type="button" onClick={event => void openDetail(r, event.currentTarget)} aria-label={`View resident ${r.full_name}`} className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"><Eye aria-hidden="true" className="h-4 w-4" /></button><ConfirmButton label={<Trash2 aria-hidden="true" className="h-4 w-4" />} ariaLabel={`Archive ${r.full_name}`} confirmLabel="Archive?" onConfirm={() => archive(r)} title={`Archive ${r.full_name}`} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900" /></div> },
   ];
 
-  return (
-    <div className="flex flex-col gap-4">
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setNameOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Name {nameOrder === 'asc' ? '↑' : '↓'}
-          </button>
+  return <div ref={containerRef} className="min-w-0">
+    <ProfileTableSummary name="residents" summary={summary} onRetry={browse.refresh} />
 
-          <select
-            value={verification}
-            onChange={(e) => navigate({ verification: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="">All ID status</option>
-            <option value="with_id">With uploaded ID</option>
-            <option value="without_id">Without uploaded ID</option>
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search name, email, mobile, ID type…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800 sm:min-w-[260px]"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[var(--accent-strong)]"
-          >
-            + Add Resident
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented tabs, beneath the sort/filter/search + add row */}
-      <div className="flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              tab === t.key
-                ? 'bg-white shadow dark:bg-zinc-700'
-                : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && <AddResidentForm onCreated={() => router.refresh()} onClose={() => setAddOpen(false)} />}
-
+    {addOpen && <fieldset disabled={browse.pending}><AddResidentForm onCreated={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
+    <ProfileTablePanel label="Resident Directory" browse={browse} 
+      category={<label className="table-browse-field">ID presence <select aria-label="ID presence" value={state.filters.verification} onChange={event => void browse.commit({ filters: { verification: event.target.value } })}>
+        <option value="">All ID status</option><option value="with_id">With uploaded ID</option><option value="without_id">Without uploaded ID</option>
+      </select></label>}
+      filters={<SegmentedFilter label="Email verification" value={state.filters.tab}
+        options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
+      actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
+        onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Resident</button>}>
+      <EditableDataTable rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
+        onRowClick={(row, trigger) => void openDetail(row, trigger)} emptyLabel={browse.pending ? 'Updating results…' : 'No residents found.'}
+        resizableColumns density="compact" tableMinWidth={2840} cellOverflow="hidden" />
+    </ProfileTablePanel>
+    {selectedDetail && <TableDetailDialog label="Resident details" onClose={closeDetail}>
+      {detailStatus === 'ready' ? <ResidentDetailModal key={selectedDetail.id + selectedDetail.updated_at} resident={selectedDetail} onClose={closeDetail} onIdStatusChange={browse.refresh} />
+        : <TableDetailState status={detailStatus} onClose={closeDetail} onRetry={retryDetail} />}
+    </TableDetailDialog>}
       {/* Legacy table markup kept here temporarily while this change is reviewed.
       <TableScrollArea>
         <table
@@ -786,7 +678,7 @@ export function ResidentDirectory({
                 className={`cursor-pointer border-b-2 ${BORDER_CLS} transition last:border-b-0 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 ${
                   rowIndex % 2 === 1 ? 'bg-zinc-50/60 dark:bg-zinc-900/40' : 'bg-white dark:bg-zinc-900'
                 }`}
-                onClick={() => setSelected(r)}
+                onClick={event => void openDetail(r, event.currentTarget)}
               >
                   {/* First Name — inline editable, with small avatar thumbnail * /}
                   <td className={`overflow-hidden px-5 py-3.5 font-medium ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
@@ -797,12 +689,12 @@ export function ResidentDirectory({
                           src={r.avatar_url}
                           alt=""
                           className="h-8 w-8 flex-shrink-0 rounded-full object-cover"
-                          onClick={() => setSelected(r)}
+                          onClick={event => void openDetail(r, event.currentTarget)}
                         />
                       ) : (
                         <div
                           className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white"
-                          onClick={() => setSelected(r)}
+                          onClick={event => void openDetail(r, event.currentTarget)}
                         >
                           {r.full_name.charAt(0).toUpperCase()}
                         </div>
@@ -973,7 +865,7 @@ export function ResidentDirectory({
                   </td>
 
                   {/* Joined date * /}
-                  <td className={`overflow-hidden px-5 py-3.5 text-zinc-500 ${CELL_DIVIDER_CLS}`}>{formatDate(r.created_at)}</td>
+                  <td className={`overflow-hidden px-5 py-3.5 text-zinc-500 ${CELL_DIVIDER_CLS}`}>{formatAdminTimestamp(r.created_at)}</td>
 
                   {/* Archive action * /}
                   <td
@@ -994,22 +886,5 @@ export function ResidentDirectory({
             </tbody>
         </table>
       </TableScrollArea> */}
-      <EditableDataTable
-        columns={columns}
-        rows={sortedResidents}
-        rowKey={(resident) => resident.id}
-        emptyLabel="No residents found."
-        onRowClick={setSelected}
-        resizableColumns
-        density="compact"
-        tableMinWidth={2840}
-        cellOverflow="hidden"
-      />
-
-      {/* Detail modal */}
-      {selected && (
-        <ResidentDetailModal resident={selected} onClose={() => setSelected(null)} onIdStatusChange={() => router.refresh()} />
-      )}
-    </div>
-  );
+  </div>;
 }

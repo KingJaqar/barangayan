@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+      "message": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok((await page.locator('tbody').innerText()).includes(needle))\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:84:18\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:65:49"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

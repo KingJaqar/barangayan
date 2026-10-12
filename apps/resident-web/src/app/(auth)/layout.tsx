@@ -1,11 +1,13 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { NotificationSession } from '@/components/shared/notification-session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 // Routes under this layout that intentionally render WITH a session already present —
 // every other route here redirects an authenticated visitor straight to /home.
-const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/onboarding', '/complete-profile']);
+// verify-otp validates Settings recovery itself and redirects other authenticated visits.
+const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/verify-otp', '/onboarding', '/complete-profile']);
 
 /**
  * Unauthenticated shell for login/register/verify-otp/forgot-password/reset-password —
@@ -13,6 +15,8 @@ const ALLOWED_WHILE_AUTHENTICATED = new Set(['/reset-password', '/onboarding', '
  * on an auth screen via a stale bookmark or browser-back.
  *
  * Authenticated exemptions:
+ * - /verify-otp: the page checks the Settings recovery account/session itself;
+ *   other authenticated visits still redirect to /home.
  * - /reset-password: verify-otp's verifyOtp({type:'recovery'}) establishes a real
  *   session before the resident ever reaches that page, and a session cookie alone
  *   can't distinguish a recovery session from a normal one server-side (that
@@ -38,5 +42,10 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     redirect('/home');
   }
 
-  return <div className="h-full overflow-y-auto bg-background">{children}</div>;
+  return (
+    <div className="h-full overflow-y-auto bg-background">
+      <NotificationSession userId={user?.id ?? null} />
+      {children}
+    </div>
+  );
 }

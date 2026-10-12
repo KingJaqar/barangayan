@@ -1,0 +1,3 @@
+Passed: Actual request Realtime events defer during an edit and reconcile a burst without losing draft identity
+Passed: Ten client route mount cycles leave one request subscription and table observer counts at baseline
+Passed: Warm loopback control-to-committed-results timings are recorded for both pilot routes

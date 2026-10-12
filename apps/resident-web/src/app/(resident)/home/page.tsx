@@ -7,6 +7,7 @@ import { GuestHero } from '@/components/home/guest-hero';
 import { HomeSearchBar } from '@/components/home/home-search-bar';
 import { LatestAnnouncementCard } from '@/components/home/latest-announcement-card';
 import { QuickActionTile } from '@/components/home/quick-action-tile';
+import { ReadFailure } from '@/components/shared/read-failure';
 import { StatusPill } from '@/components/shared/status-pill';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -31,7 +32,14 @@ export default async function ResidentHomePage() {
   const { user, profile } = await getOptionalUser();
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: recentRequests }, { data: recentReports }, { data: latestAnnouncement }, { data: emailStatusRow }] = await Promise.all([
+  // Each read's error is kept so a failed read shows a retryable notice instead of an
+  // empty state. The email-status banner is informational and simply stays hidden.
+  const [
+    { data: recentRequests, error: requestsError },
+    { data: recentReports, error: reportsError },
+    { data: latestAnnouncement, error: announcementError },
+    { data: emailStatusRow },
+  ] = await Promise.all([
     user
       ? supabase
           .from('service_requests')
@@ -39,7 +47,7 @@ export default async function ResidentHomePage() {
           .eq('resident_id', user.id)
           .order('created_at', { ascending: false })
           .limit(5)
-      : Promise.resolve({ data: null }),
+      : Promise.resolve({ data: null, error: null }),
     user
       ? supabase
           .from('incidents')
@@ -48,7 +56,7 @@ export default async function ResidentHomePage() {
           .is('deleted_at', null)
           .order('created_at', { ascending: false })
           .limit(5)
-      : Promise.resolve({ data: null }),
+      : Promise.resolve({ data: null, error: null }),
     // Soft default for guests (no barangay context to scope by yet) — barangay-scoped
     // for a signed-in resident. Not a security boundary: announcements are public-read.
     profile
@@ -67,7 +75,7 @@ export default async function ResidentHomePage() {
           .order('published_at', { ascending: false })
           .limit(1)
           .maybeSingle(),
-    user ? supabase.from('profiles').select('email_verification_status').eq('id', user.id).single() : Promise.resolve({ data: null }),
+    user ? supabase.from('profiles').select('email_verification_status').eq('id', user.id).single() : Promise.resolve({ data: null, error: null }),
   ]);
 
   if (!user) {
@@ -87,7 +95,7 @@ export default async function ResidentHomePage() {
           ))}
         </div>
 
-        <LatestAnnouncementCard announcement={latestAnnouncement ?? null} />
+        <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} />
       </div>
     );
   }
@@ -110,7 +118,7 @@ export default async function ResidentHomePage() {
         <QuickActionTile href="/health" icon={HeartPulse} label="Medical Drives" description="Register for vaccination and medical drives." />
       </div>
 
-      <LatestAnnouncementCard announcement={latestAnnouncement ?? null} />
+      <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <section className="rounded-2xl border border-border bg-card p-5">
@@ -120,7 +128,9 @@ export default async function ResidentHomePage() {
               View all
             </Link>
           </div>
-          {recentRequests && recentRequests.length > 0 ? (
+          {requestsError ? (
+            <ReadFailure message="We couldn't load your recent requests." />
+          ) : recentRequests && recentRequests.length > 0 ? (
             <ul className="flex flex-col gap-3">
               {recentRequests.map((r) => (
                 <li key={r.id}>
@@ -148,7 +158,9 @@ export default async function ResidentHomePage() {
               View all
             </Link>
           </div>
-          {recentReports && recentReports.length > 0 ? (
+          {reportsError ? (
+            <ReadFailure message="We couldn't load your recent reports." />
+          ) : recentReports && recentReports.length > 0 ? (
             <ul className="flex flex-col gap-3">
               {recentReports.map((r) => (
                 <li key={r.id} className="flex items-center justify-between gap-3 text-sm">
@@ -167,4 +179,15 @@ export default async function ResidentHomePage() {
       </div>
     </div>
   );
+}
+
+function LatestAnnouncement({ announcement, failed }: { announcement: Parameters<typeof LatestAnnouncementCard>[0]['announcement']; failed: boolean }) {
+  if (failed) {
+    return (
+      <div className="mb-8 rounded-2xl border border-border bg-card p-5">
+        <ReadFailure message="We couldn't load the latest announcement." />
+      </div>
+    );
+  }
+  return <LatestAnnouncementCard announcement={announcement} />;
 }

@@ -1,0 +1,24 @@
+{
+  "passed": false,
+  "checks": [
+    "three actual member Realtime events defer while editing and coalesce after cancel",
+    "selected member stays the same ID off-page, reloads Realtime changes, handles errors and deletion"
+  ],
+  "errors": [],
+  "samples": [],
+  "mounts": [
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "channels": 1
+    }
+  ],
+  "refreshes": {
+    "events": 3,
+    "whileEditing": 0,
+    "afterCancel": 1
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   mutation: 1,\n+   resize: 1\n-   mutation: 0,\n-   resize: 0\n  }\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:74:223\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:11:39)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:69:3"
+}

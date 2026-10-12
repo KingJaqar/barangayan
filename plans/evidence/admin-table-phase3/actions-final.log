@@ -1,0 +1,14 @@
+Passed: Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact
+locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('tbody tr td').nth(5).locator('input,select') to be visible
+
+    at editCell (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\acceptance.mjs:29:122)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:143:103
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\acceptance.mjs:16:355)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:141:4 {
+  log: [
+    "  - waiting for locator('tbody tr td').nth(5).locator('input,select') to be visible"
+  ],
+  name: 'TimeoutError'
+}

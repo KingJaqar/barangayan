@@ -1,0 +1,20 @@
+Passed: chrome: requests defaults, ranges, sort controls, scrolling and responsive access
+Passed: chrome: transactions defaults, ranges, sort controls, scrolling and responsive access
+Passed: Chrome: every advertised sort in both directions matches the database before paging
+Passed: Chrome: concatenated 1505-row pages on both routes have no gaps or duplicate records
+Passed: Chrome: delayed rapid changes merge the draft, cancel history debounce and commit only the latest query
+Passed: Chrome: query, summary and option failures are independent and retries retain the full query
+Passed: Chrome: invalid pages are corrected once, including removal of the last matching row
+AssertionError [ERR_ASSERTION]: ifError got unwanted exception: permission denied for function reference_key
+    at patch (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:17:120)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:125:5
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:16:36)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/acceptance.mjs:117:4 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: null,
+  operator: 'ifError',
+  diff: 'simple'
+}

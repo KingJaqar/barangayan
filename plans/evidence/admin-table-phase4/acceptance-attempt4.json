@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+      "message": "locator.innerText: Error: strict mode violation: locator('.table-browse-pagination') resolved to 2 elements:\n    1) <div class=\"table-browse-pagination\">…</div> aka getByText('Showing 0–0 of 0Rows per page')\n    2) <nav aria-label=\"Table pages\" class=\"table-browse-pagination\">…</nav> aka getByRole('navigation', { name: 'Table pages' })\n\nCall log:\n\u001b[2m  - waiting for locator('.table-browse-pagination')\u001b[22m\n\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:86:157\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:65:49"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

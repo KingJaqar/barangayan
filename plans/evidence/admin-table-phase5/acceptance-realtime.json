@@ -1,0 +1,248 @@
+{
+  "passed": true,
+  "mode": "realtime",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "actual Realtime bursts defer drafts, reconcile once and revalidate selected details off-page on all three routes",
+    "ten client mount cycles maintain one channel and table observers per route"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "facts": {
+    "incidentsBurst": {
+      "events": 3,
+      "refreshes": 1
+    },
+    "incidentSoftDeleteRealtime": "withheld by RLS; detail revalidated on next committed query",
+    "healthBurst": {
+      "events": 3,
+      "refreshes": 1
+    },
+    "applicantsBurst": {
+      "events": 3,
+      "refreshes": 1
+    },
+    "mounts": [
+      {
+        "cycle": 0,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 0,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 0,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 1,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 1,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 1,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 2,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 2,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 2,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 3,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 3,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 3,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 4,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 4,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 4,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 5,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 5,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 5,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 6,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 6,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 6,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 7,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 7,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 7,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 8,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 8,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 8,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 9,
+        "name": "incidents",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 9,
+        "name": "health",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      },
+      {
+        "cycle": 9,
+        "name": "applicants",
+        "channels": 1,
+        "tableResizeObservers": 1,
+        "tableMutationObservers": 1
+      }
+    ]
+  },
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

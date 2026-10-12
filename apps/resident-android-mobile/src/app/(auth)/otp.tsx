@@ -1,13 +1,13 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 
-import { PrimaryButton } from '@/components/primary-button';
-import { TextField } from '@/components/text-field';
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryCodeInput, RecoveryError, recoveryStyles } from '@/components/password-recovery-screen';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
-import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/use-auth';
+import { passwordRecovery } from '@/lib/supabase';
+import { recoveryErrorMessage } from '@/lib/password-recovery';
+import { authSetupRequests } from '@/lib/setup-request';
 
 const RESEND_COOLDOWN_SECONDS = 45;
 
@@ -25,7 +25,8 @@ type OtpParams = {
 export default function OtpScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<OtpParams>();
-  const { email } = params;
+  const email = typeof params.email === 'string' ? params.email : '';
+  const { session, setPasswordRecovery } = useAuth();
 
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -40,104 +41,72 @@ export default function OtpScreen() {
   }, [secondsLeft]);
 
   async function handleVerify() {
+    if (loading || resending || authSetupRequests.busy) return;
     setError(null);
     setLoading(true);
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      type: 'recovery',
-      email,
-      token: code,
-    });
-    setLoading(false);
-
-    if (verifyError) {
-      setError(verifyError.message);
-      return;
+    try {
+      setPasswordRecovery(true);
+      await passwordRecovery.verify(email, code, session?.user);
+      setCode('');
+      router.replace('/(auth)/reset-password');
+    } catch (cause) {
+      setError(recoveryErrorMessage(cause));
+    } finally {
+      setLoading(false);
     }
-
-    router.replace('/(auth)/reset-password');
   }
 
   async function handleResend() {
+    if (loading || resending || secondsLeft > 0 || authSetupRequests.busy) return;
     setError(null);
     setResending(true);
-    const { error: resendError } = await supabase.auth.resetPasswordForEmail(email);
-    setResending(false);
-
-    if (resendError) {
-      setError(resendError.message);
-      return;
+    try {
+      await passwordRecovery.send(email, session?.user);
+      setCode('');
+      setSecondsLeft(RESEND_COOLDOWN_SECONDS);
+    } catch (cause) {
+      setError(recoveryErrorMessage(cause));
+    } finally {
+      setResending(false);
     }
-    setSecondsLeft(RESEND_COOLDOWN_SECONDS);
   }
 
   const maskedEmail = email.replace(/^(.{2}).*(@.*)$/, '$1••••$2');
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Enter Reset Code
-        </ThemedText>
-        <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-          We've sent a 6-digit code to{'\n'}
-          {maskedEmail}
-        </ThemedText>
-
-        <TextField
-          placeholder="000000"
-          keyboardType="number-pad"
-          maxLength={6}
+    <PasswordRecoveryScreen
+      step={2}
+      title="Check your inbox"
+      description={`Enter the six-digit code sent to ${maskedEmail}.`}>
+      <View style={recoveryStyles.form}>
+        <RecoveryCodeInput
           value={code}
           onChangeText={setCode}
-          style={styles.codeInput}
+          disabled={loading || resending}
         />
-
-        {error ? (
-          <ThemedText type="small" themeColor="accentRed">
-            {error}
-          </ThemedText>
-        ) : null}
-
-        {secondsLeft > 0 ? (
-          <ThemedText type="small" themeColor="textSecondary">
-            Resend code in 00:{String(secondsLeft).padStart(2, '0')}
-          </ThemedText>
-        ) : (
-          <PrimaryButton label="Resend Code" variant="secondary" loading={resending} onPress={handleResend} />
-        )}
-
-        <PrimaryButton
-          label="Verify"
+        <RecoveryError message={error} />
+        <RecoveryButton
+          label="Verify code"
           loading={loading}
-          disabled={code.length !== 6}
+          disabled={!/^\d{6}$/.test(code) || resending}
           onPress={handleVerify}
         />
+        <View style={recoveryStyles.footer}>
+          <ThemedText themeColor="textSecondary" style={recoveryStyles.help}>
+            Didn't receive it? Check your spam folder, or request another code.
+          </ThemedText>
+          <Pressable
+            onPress={handleResend}
+            disabled={secondsLeft > 0 || loading || resending}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: secondsLeft > 0 || loading || resending, busy: resending }}
+            style={({ pressed }) => [recoveryStyles.textLink, { opacity: loading || resending || pressed ? 0.5 : 1 }]}>
+            <ThemedText themeColor={secondsLeft > 0 ? 'textSecondary' : 'text'} style={recoveryStyles.textLinkLabel}>
+              {resending ? 'Sending code…' : secondsLeft > 0 ? `Resend code in 00:${String(secondsLeft).padStart(2, '0')}` : 'Resend code'}
+            </ThemedText>
+          </Pressable>
+        </View>
       </View>
-    </SafeAreaView>
+    </PasswordRecoveryScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: Spacing.four,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: Spacing.three,
-  },
-  title: {
-    fontSize: 26,
-  },
-  subtitle: {
-    textAlign: 'center',
-  },
-  codeInput: {
-    fontSize: 24,
-    letterSpacing: 8,
-    textAlign: 'center',
-    alignSelf: 'stretch',
-  },
-});

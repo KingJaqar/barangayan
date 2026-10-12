@@ -2,17 +2,13 @@
 
 import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, staffInviteSchema } from '@barangayan/shared';
 import type { OfficialRole } from '@barangayan/shared';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useToast } from '@/components/ui/toast';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
-
-export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose: () => void }) {
-  const router = useRouter();
+export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: string; onClose: () => void; onChanged: () => void }) {
   const toast = useToast();
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -61,7 +57,7 @@ export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose
       setHomeAddress('');
       toast.showSuccess('Staff account invited successfully.');
       onClose();
-      router.refresh();
+      onChanged();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to invite staff.';
       setError(message);
@@ -74,7 +70,7 @@ export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-2"
+      className={`${formContainerClass} mb-6 grid-cols-1 sm:grid-cols-2`}
     >
       <label className="col-span-2 text-sm">
         <span className="mb-1 block font-medium">Email</span>
@@ -136,7 +132,7 @@ export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose
         <button
           type="submit"
           disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Inviting…">Invite Account</LoadingButtonContent>
         </button>
@@ -144,7 +140,7 @@ export function StaffForm({ barangayId, onClose }: { barangayId: string; onClose
           type="button"
           onClick={onClose}
           disabled={submitting}
-          className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700"
+          className={cancelButtonClass}
         >
           Cancel
         </button>

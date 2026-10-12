@@ -16,3 +16,20 @@ export const TABS: { key: Tab; label: string }[] = [
   { key: 'all', label: 'All' },
   ...REGISTRATION_STATUS_OPTIONS.map(({ value, label }) => ({ key: value, label })),
 ];
+
+export type ApplicantRow = {
+  id: string;
+  drive_id: string;
+  user_id: string;
+  applicant_number: string;
+  age: number;
+  is_pwd: boolean;
+  comorbidities: string[];
+  prior_dose_date: string | null;
+  priority_score: number;
+  status: RegistrationStatus;
+  created_at: string;
+  updated_at: string;
+  medical_drives: { id: string; title: string; type: string; drive_date: string; location: string } | null;
+  profiles: { full_name: string } | null;
+};

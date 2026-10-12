@@ -4,7 +4,9 @@ import { CheckCircle2, Clock, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { ReadFailure } from '@/components/shared/read-failure';
 import { Button } from '@/components/ui/button';
+import { isMissingRow } from '@/lib/service-feedback';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -19,10 +21,16 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
   const supabase = await createSupabaseServerClient();
   const { user } = await getOptionalUser();
 
-  const { data: doc } = await supabase.from('document_types').select('*').eq('id', documentId).single();
+  const { data: doc, error } = await supabase.from('document_types').select('*').eq('id', documentId).single();
 
   if (!doc) {
-    notFound();
+    // A missing record is a 404; a failed read is not.
+    if (isMissingRow(error)) notFound();
+    return (
+      <div className="mx-auto max-w-2xl">
+        <ReadFailure message="We couldn't load this service." />
+      </div>
+    );
   }
 
   return (

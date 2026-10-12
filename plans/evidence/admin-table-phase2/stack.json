@@ -1,0 +1,123 @@
+{
+  "owner": "admin-table-phase2-01a12ad6",
+  "names": [
+    "barangayan-admin-phase2-db",
+    "barangayan-admin-phase2-rest"
+  ],
+  "network": "barangayan-admin-phase2",
+  "images": {
+    "db": "public.ecr.aws/supabase/postgres:17.6.1.155",
+    "rest": "public.ecr.aws/supabase/postgrest:v14.5"
+  },
+  "sourceHighest": "0109",
+  "copiedAccountRows": 0,
+  "restCap": 1000,
+  "postgres": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+  "collation": "en_US.UTF-8",
+  "views": [
+    {
+      "name": "administrable_role_authorizations",
+      "options": null
+    },
+    {
+      "name": "admin_requests_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_requests_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_transactions_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_transactions_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_residents_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_residents_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_incidents_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_incidents_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_health_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_health_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_applicants_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_applicants_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_households_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_households_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_staff_browse",
+      "options": [
+        "security_invoker=true"
+      ]
+    },
+    {
+      "name": "admin_staff_summary",
+      "options": [
+        "security_invoker=true"
+      ]
+    }
+  ],
+  "migrations": [
+    "0110",
+    "0111"
+  ]
+}

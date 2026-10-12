@@ -1,0 +1,61 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    '20000000-0000-4000-8000-000000000001',
+    '20000000-0000-4000-8000-000000000004',
+    '20000000-0000-4000-8000-000000000007',
++   null,
++   null,
++   null,
++   null,
++   null,
++   null,
++   null
+-   '20000000-0000-4000-8000-000000000010',
+-   '20000000-0000-4000-8000-000000000013',
+-   '20000000-0000-4000-8000-000000000016',
+-   '20000000-0000-4000-8000-000000000019',
+-   '20000000-0000-4000-8000-000000000022',
+-   '20000000-0000-4000-8000-000000000025',
+-   '20000000-0000-4000-8000-000000000028'
+  ]
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:61:98
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:59:49 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [
+    '20000000-0000-4000-8000-000000000001',
+    '20000000-0000-4000-8000-000000000004',
+    '20000000-0000-4000-8000-000000000007',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  expected: [
+    '20000000-0000-4000-8000-000000000001',
+    '20000000-0000-4000-8000-000000000004',
+    '20000000-0000-4000-8000-000000000007',
+    '20000000-0000-4000-8000-000000000010',
+    '20000000-0000-4000-8000-000000000013',
+    '20000000-0000-4000-8000-000000000016',
+    '20000000-0000-4000-8000-000000000019',
+    '20000000-0000-4000-8000-000000000022',
+    '20000000-0000-4000-8000-000000000025',
+    '20000000-0000-4000-8000-000000000028'
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

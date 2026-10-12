@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: exec: ERROR:  duplicate key value violates unique constraint "users_pkey"
+DETAIL:  Key (id)=(20000000-0000-4000-8000-000000009998) already exists.
+
+
+3 !== 0
+
+    at docker (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/runtime.mjs:14:9)
+    at sql (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/runtime.mjs:16:26)
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase2/performance.mjs:15:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 3,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.1

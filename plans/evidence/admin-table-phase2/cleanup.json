@@ -1,0 +1,10 @@
+{
+  "owner": "admin-table-phase2-01a12ad6",
+  "removed": [
+    "barangayan-admin-phase2-db",
+    "barangayan-admin-phase2-rest"
+  ],
+  "networkRemoved": true,
+  "privateStateRemoved": true,
+  "remaining": ""
+}

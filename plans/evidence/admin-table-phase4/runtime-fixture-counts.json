@@ -1,0 +1,22 @@
+{
+  "counts": {
+    "drives": 1507,
+    "scores": 1506,
+    "members": 1505,
+    "payments": 1505,
+    "profiles": 3014,
+    "requests": 1505,
+    "incidents": 1505,
+    "officials": 1508,
+    "registrations": 1507
+  },
+  "loginAccounts": [
+    "admin",
+    "foreignAdmin",
+    "resident",
+    "removedAdmin"
+  ],
+  "tenants": 2,
+  "seedTransaction": true,
+  "credentialsLocation": "ignored dist directory; removed during cleanup"
+}

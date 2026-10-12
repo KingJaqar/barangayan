@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "real ID verification/revocation RPC, request history and audits retain the selected resident"
+  ],
+  "errors": [],
+  "samples": [],
+  "mounts": [],
+  "refreshes": null
+}

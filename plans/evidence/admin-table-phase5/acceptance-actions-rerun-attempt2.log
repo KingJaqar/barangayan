@@ -1,0 +1,12 @@
+locator.fill: Timeout 15000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('dialog').getByLabel('Eligibility Criteria', { exact: true })[22m
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:331:25
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase5\acceptance.mjs:23:88)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:323:9 {
+  log: [
+    "  - waiting for getByRole('dialog').getByLabel('Eligibility Criteria', { exact: true })"
+  ],
+  name: 'TimeoutError'
+}

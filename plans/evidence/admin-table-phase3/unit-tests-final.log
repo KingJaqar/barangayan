@@ -1,0 +1,16 @@
+
+> @barangayan/web@0.1.0 test:tables
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/browse-state.test.ts (51 tests) 27ms
+ ✓ tests/table-browse/pilot.test.ts (5 tests) 228ms
+ ✓ tests/table-browse/queries.test.ts (9 tests) 323ms
+
+ Test Files  3 passed (3)
+      Tests  65 passed (65)
+   Start at  23:39:35
+   Duration  3.43s (transform 492ms, setup 0ms, collect 1.05s, tests 578ms, environment 1ms, prepare 3.05s)
+

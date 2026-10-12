@@ -1,0 +1,121 @@
+Passed: chrome: JSON household counts remain independent of normalized members
+locator.click: Timeout 15000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: /^View resident / }).first()
+    - locator resolved to <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]" aria-label="View resident Long Profile Fixture UnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnb…>…</button>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is not stable
+  - retrying click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <span title="Actions" class="block truncate">Actions</span> from <thead class="border-b border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-800/60">…</thead> subtree intercepts pointer events
+  - retrying click action
+    - waiting 20ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - <section aria-busy="false" class="table-browse-panel" aria-label="Resident Directory">…</section> intercepts pointer events
+  2 × retrying click action
+      - waiting 100ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events
+  7 × retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <span title="Actions" class="block truncate">Actions</span> from <thead class="border-b border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-800/60">…</thead> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <section aria-busy="false" class="table-browse-panel" aria-label="Resident Directory">…</section> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+      - waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events
+  - retrying click action
+    - waiting 500ms
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\final-flows.mjs:47:97
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\final-flows.mjs:22:38)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:44:7 {
+  log: [
+    "  - waiting for getByRole('button', { name: /^View resident / }).first()",
+    '    - locator resolved to <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]" aria-label="View resident Long Profile Fixture UnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnbrokenNameUnb…>…</button>',
+    '  - attempting click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is not stable',
+    '  - retrying click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - <span title="Actions" class="block truncate">Actions</span> from <thead class="border-b border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-800/60">…</thead> subtree intercepts pointer events',
+    '  - retrying click action',
+    '    - waiting 20ms',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - <section aria-busy="false" class="table-browse-panel" aria-label="Resident Directory">…</section> intercepts pointer events',
+    '  2 × retrying click action',
+    '      - waiting 100ms',
+    '      - waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events',
+    '  7 × retrying click action',
+    '      - waiting 500ms',
+    '      - waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <span title="Actions" class="block truncate">Actions</span> from <thead class="border-b border-black/10 dark:border-white/10 bg-zinc-50 dark:bg-zinc-800/60">…</thead> subtree intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 500ms',
+    '      - waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <section aria-busy="false" class="table-browse-panel" aria-label="Resident Directory">…</section> intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 500ms',
+    '      - waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 500ms',
+    '      - waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <div class="table-browse-pagination">…</div> from <div data-browse-footer="true">…</div> subtree intercepts pointer events',
+    '  - retrying click action',
+    '    - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

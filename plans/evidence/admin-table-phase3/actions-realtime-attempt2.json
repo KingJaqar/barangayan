@@ -1,0 +1,168 @@
+{
+  "passed": false,
+  "checks": [
+    "Actual request Realtime events defer during an edit and reconcile a burst without losing draft identity",
+    "Ten client route mount cycles leave one request subscription and table observer counts at baseline",
+    "Warm loopback control-to-committed-results timings are recorded for both pilot routes"
+  ],
+  "errors": [],
+  "timings": [
+    {
+      "route": "requests",
+      "ms": 658.1885000000002
+    },
+    {
+      "route": "requests",
+      "ms": 524.4743000000017
+    },
+    {
+      "route": "requests",
+      "ms": 470.02449999999953
+    },
+    {
+      "route": "requests",
+      "ms": 501.03050000000076
+    },
+    {
+      "route": "requests",
+      "ms": 563.1821000000018
+    },
+    {
+      "route": "requests",
+      "ms": 525.6203000000023
+    },
+    {
+      "route": "requests",
+      "ms": 589.1785000000018
+    },
+    {
+      "route": "requests",
+      "ms": 630.6125000000029
+    },
+    {
+      "route": "requests",
+      "ms": 607.6679999999978
+    },
+    {
+      "route": "requests",
+      "ms": 501.46659999999974
+    },
+    {
+      "route": "transactions",
+      "ms": 846.9487000000008
+    },
+    {
+      "route": "transactions",
+      "ms": 589.9991999999984
+    },
+    {
+      "route": "transactions",
+      "ms": 662.6805999999997
+    },
+    {
+      "route": "transactions",
+      "ms": 573.0658000000003
+    },
+    {
+      "route": "transactions",
+      "ms": 515.1396000000022
+    },
+    {
+      "route": "transactions",
+      "ms": 577.2795000000006
+    },
+    {
+      "route": "transactions",
+      "ms": 520.4422999999988
+    },
+    {
+      "route": "transactions",
+      "ms": 559.6688000000031
+    },
+    {
+      "route": "transactions",
+      "ms": 598.3579000000027
+    },
+    {
+      "route": "transactions",
+      "ms": 642.4821999999986
+    }
+  ],
+  "refreshes": {
+    "whileEditing": 1,
+    "events": 3
+  },
+  "leaks": [
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    },
+    {
+      "observers": {
+        "resize": 1,
+        "mutation": 1
+      },
+      "requestChannels": 1
+    }
+  ],
+  "error": "locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form').getByLabel('Reference', { exact: true })\u001b[22m\n"
+}

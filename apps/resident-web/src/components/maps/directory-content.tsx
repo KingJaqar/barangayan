@@ -1,14 +1,18 @@
 'use client';
 
-import { ChevronLeft, Phone, Search } from 'lucide-react';
+import { ChevronLeft, Phone, RotateCw, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 import { HotlineRow } from '@/components/emergency/hotline-row';
+import { HotlineSkeletonRows } from '@/components/emergency/hotline-skeleton';
+import { InlineReadError } from '@/components/shared/inline-read-error';
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { PendingHint } from '@/components/ui/loading';
 import { useEmergencyHotlines } from '@/hooks/use-emergency-hotlines';
 
 export function DirectoryContent({ barangayId }: { barangayId: string | null }) {
-  const { hotlines, isLoading, error } = useEmergencyHotlines(barangayId);
+  const { hotlines, isInitialLoading, isRefreshing, isReady, error, refetch } = useEmergencyHotlines(barangayId);
   const [query, setQuery] = useState('');
 
   const visibleHotlines = useMemo(() => {
@@ -38,6 +42,7 @@ export function DirectoryContent({ barangayId }: { barangayId: string | null }) 
         <Search className="h-4 w-4 shrink-0 text-muted-foreground" strokeWidth={2} />
         <input
           type="search"
+          aria-label="Search the directory by name or number"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by name or number…"
@@ -46,10 +51,26 @@ export function DirectoryContent({ barangayId }: { barangayId: string | null }) 
       </div>
 
       <section className="rounded-2xl border border-border bg-card p-4">
-        {isLoading ? (
-          <SkeletonRows />
-        ) : error ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Unable to load the directory.</p>
+        <div className="mb-3 flex min-h-4 justify-end">
+          {/* Quiet refresh hint: decorative, shown only after 120 ms, never announced. */}
+          <PendingHint pending={isRefreshing} className="gap-1.5 text-xs text-muted-foreground">
+            <RotateCw size={12} className="rw-spinner" /> Updating
+          </PendingHint>
+        </div>
+        {isReady && error ? (
+          <InlineReadError
+            tone="warning"
+            className="mb-3"
+            message="Couldn't update the directory. Showing the last loaded contacts, which may be out of date."
+            onRetry={refetch}
+          />
+        ) : null}
+        {isInitialLoading ? (
+          <div aria-busy>
+            <HotlineSkeletonRows />
+          </div>
+        ) : !isReady ? (
+          <InlineReadError message="We couldn't load the directory. Check your connection, then try again." onRetry={refetch} />
         ) : visibleHotlines.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
             {hotlines.length === 0 ? 'No contacts available.' : 'No contacts match your search.'}
@@ -69,22 +90,8 @@ export function DirectoryContent({ barangayId }: { barangayId: string | null }) 
           </div>
         )}
       </section>
-    </div>
-  );
-}
 
-function SkeletonRows() {
-  return (
-    <div className="flex flex-col gap-3">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="flex items-center gap-3">
-          <div className="h-10 w-10 shrink-0 animate-pulse rounded-full bg-muted" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3.5 w-4/5 animate-pulse rounded bg-muted" />
-            <div className="h-3 w-2/5 animate-pulse rounded bg-muted" />
-          </div>
-        </div>
-      ))}
+      <LoadingStatus active={isInitialLoading} label="Loading the directory…" />
     </div>
   );
 }

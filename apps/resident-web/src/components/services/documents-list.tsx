@@ -13,6 +13,7 @@ import { servicePriceLabel, serviceProcessingLabel, type Tables } from '@baranga
 import { FileText } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
+import { FadeIn } from '@/components/shared/fade-in';
 import { DocumentRequestModal } from './document-request-modal/document-request-modal';
 
 type DocumentTypeRow = Tables<'document_types'>;
@@ -48,18 +49,18 @@ export function DocumentsList({ documentTypes, isAuthenticated }: { documentType
   return (
     <>
       <div className={`grid grid-cols-1 gap-3 ${singleColumn ? '' : 'sm:grid-cols-2'}`}>
-        {documentTypes.map((doc) => {
+        {documentTypes.map((doc, index) => {
           const active = doc.id === selectedId;
           return (
+            <FadeIn key={doc.id} index={index} className="flex">
             <button
-              key={doc.id}
               type="button"
               onClick={() => handleSelect(doc.id)}
               aria-current={active ? 'true' : undefined}
               // Stronger than a border tint alone — this card's content is what's showing
               // in the panel right now, so it needs to read as clearly "open", not just
               // "selected", against the rest of the catalog.
-              className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-card p-5 text-left transition-colors ${
+              className={`relative flex w-full flex-col gap-2 rounded-2xl border-2 bg-card p-5 text-left transition-colors ${
                 active ? 'border-primary bg-primary/5 ring-2 ring-primary/15' : 'border-border hover:border-primary/40'
               }`}>
               {active ? (
@@ -80,6 +81,7 @@ export function DocumentsList({ documentTypes, isAuthenticated }: { documentType
                 <span>{serviceProcessingLabel(doc)}</span>
               </div>
             </button>
+            </FadeIn>
           );
         })}
       </div>

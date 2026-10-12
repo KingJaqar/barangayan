@@ -1,0 +1,13 @@
+Passed: Complete options permit request creation for a resident beyond the API cap; archive refreshes exact membership
+locator.click: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('form').getByRole('button', { name: 'Create Transaction', exact: true })
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:72:135
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase3\actions-realtime.mjs:11:275)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase3/actions-realtime.mjs:68:2 {
+  log: [
+    "  - waiting for locator('form').getByRole('button', { name: 'Create Transaction', exact: true })"
+  ],
+  name: 'TimeoutError'
+}

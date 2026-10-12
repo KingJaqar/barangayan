@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "identity": "anon",
+      "table": "incidents",
+      "rows": null,
+      "allowed": false,
+      "total": null
+    },
+    {
+      "identity": "anon",
+      "table": "health",
+      "rows": null,
+      "allowed": false,
+      "total": null
+    },
+    {
+      "identity": "anon",
+      "table": "applicants",
+      "rows": null,
+      "allowed": false,
+      "total": null
+    },
+    {
+      "identity": "anon",
+      "table": "protected score source",
+      "exposedRows": 0
+    },
+    {
+      "identity": "resident",
+      "table": "incidents",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "resident",
+      "table": "health",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "resident",
+      "table": "applicants",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "resident",
+      "table": "protected score source",
+      "exposedRows": 0
+    },
+    {
+      "identity": "removedAdmin",
+      "table": "incidents",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "removedAdmin",
+      "table": "health",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "removedAdmin",
+      "table": "applicants",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "foreignAdmin",
+      "table": "incidents",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "foreignAdmin",
+      "table": "health",
+      "rows": 2,
+      "allowed": true,
+      "total": 2
+    },
+    {
+      "identity": "foreignAdmin",
+      "table": "applicants",
+      "rows": 0,
+      "allowed": true,
+      "total": 0
+    },
+    {
+      "identity": "admin",
+      "table": "incidents",
+      "rows": 100,
+      "allowed": true,
+      "total": 1505
+    },
+    {
+      "identity": "admin",
+      "table": "health",
+      "rows": 100,
+      "allowed": true,
+      "total": 1505
+    },
+    {
+      "identity": "admin",
+      "table": "applicants",
+      "rows": 100,
+      "allowed": true,
+      "total": 1506
+    },
+    {
+      "identity": "admin",
+      "table": "protected score source",
+      "exposedRows": 1
+    }
+  ]
+}

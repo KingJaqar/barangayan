@@ -12,6 +12,7 @@
 import { formatDateTime, getSlaFlag } from '@barangayan/shared';
 
 import { AgencySlaStatus } from '@/components/services/agency-sla-status';
+import { FadeIn } from '@/components/shared/fade-in';
 import { StatusPill } from '@/components/shared/status-pill';
 import { RequestDrawer } from './request-drawer';
 import { useState } from 'react';
@@ -32,15 +33,23 @@ export function RequestsList({
   requests,
   emptyMessage,
   initialSelectedId = null,
+  hideEmpty = false,
 }: {
   requests: RequestRow[];
   emptyMessage: string;
   /** Opens straight to this request's drawer on mount — set from the ?open= query param
    * the document-request modal's post-payment buttons land here with. */
   initialSelectedId?: string | null;
+  /** Suppresses the empty-state card (used when the list failed to load, so it is not
+   * presented as an empty result). */
+  hideEmpty?: boolean;
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(initialSelectedId);
   const drawerOpen = selectedId !== null;
+
+  if (requests.length === 0 && hideEmpty) {
+    return <RequestDrawer requestId={selectedId} open={drawerOpen} onClose={() => setSelectedId(null)} />;
+  }
 
   if (requests.length === 0) {
     return (
@@ -55,21 +64,21 @@ export function RequestsList({
       {/* Forced back to a single column while the drawer is open so the background
           list stays comfortably readable next to it instead of competing for width. */}
       <div className={`grid grid-cols-1 gap-3 ${drawerOpen ? '' : 'sm:grid-cols-2'}`}>
-        {requests.map((r) => {
+        {requests.map((r, index) => {
           const flag = OPEN_STATUSES.includes(r.status)
             ? getSlaFlag(r.created_at, r.document_types?.processing_target_hours ?? 24)
             : 'on_track';
           const active = r.id === selectedId;
           return (
+            <FadeIn key={r.id} index={index} className="flex">
             <button
-              key={r.id}
               type="button"
               onClick={() => setSelectedId(r.id)}
               aria-current={active ? 'true' : undefined}
               // Stronger than a border tint alone — this card's content is what's showing
               // in the drawer right now, so it needs to read as clearly "open", not just
               // "selected", against the rest of the list.
-              className={`relative flex items-center justify-between gap-3 rounded-xl border-2 bg-card p-3.5 text-left transition-colors ${
+              className={`relative flex w-full items-center justify-between gap-3 rounded-xl border-2 bg-card p-3.5 text-left transition-colors ${
                 active ? 'border-primary bg-primary/5 ring-2 ring-primary/15' : 'border-border hover:border-primary/40'
               }`}>
               {active ? (
@@ -94,6 +103,7 @@ export function RequestsList({
                 <StatusPill status={r.status} />
               </div>
             </button>
+            </FadeIn>
           );
         })}
       </div>

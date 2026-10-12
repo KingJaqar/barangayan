@@ -1,10 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { formatDateTime, type Tables } from '@barangayan/shared';
+import { type Tables } from '@barangayan/shared';
 import { Archive, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { TableBrowsePanel } from '@/components/admin/table-browse-panel';
+import { TableBrowseControls } from '@/components/admin/table-browse-controls';
+import { TablePagination } from '@/components/admin/table-pagination';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { PilotSummary } from '@/components/admin/pilot-summary';
+import { usePilotTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { pageRange, type BrowseResult, type BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
+import { directionLabel } from '@/lib/admin-tables/sort-definitions';
+import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
@@ -15,8 +26,9 @@ import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { ServiceRequest } from './page';
-import { TABS, type Tab } from './types';
+import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 interface Resident {
   id: string;
@@ -38,13 +50,14 @@ function AddRequestForm({
   documentTypes,
   barangayId,
   onClose,
+  onChanged,
 }: {
   residents: Resident[];
   documentTypes: DocumentTypeOption[];
   barangayId: string;
   onClose: () => void;
+  onChanged: () => void;
 }) {
-  const router = useRouter();
   const toast = useToast();
   const [referenceNumber, setReferenceNumber] = useState('');
   const [residentId, setResidentId] = useState('');
@@ -106,16 +119,13 @@ function AddRequestForm({
     setSubmittedAt(currentDateTimeLocal());
     setNotes('');
     onClose();
-    router.refresh();
+    onChanged();
   }
-
-  const inputClass =
-    'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-4"
+      className={`${formContainerClass} mb-6 grid-cols-1 sm:grid-cols-4`}
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Reference</span>
@@ -179,11 +189,11 @@ function AddRequestForm({
         <button
           type="submit"
           disabled={submitting || !residentId || !documentTypeId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Request</LoadingButtonContent>
         </button>
-        <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
+        <button type="button" onClick={onClose} className={cancelButtonClass}>
           Cancel
         </button>
       </div>
@@ -192,89 +202,26 @@ function AddRequestForm({
 }
 
 export function RequestsTable({
-  requests,
-  residents,
-  documentTypes,
-  barangayId,
-  tab,
-  q,
-  doc,
+  result, summary, requestedState, optionsError, residents, documentTypes, barangayId,
 }: {
-  requests: ServiceRequest[];
-  residents: Resident[];
-  documentTypes: DocumentTypeOption[];
-  barangayId: string;
-  tab: Tab;
-  q: string;
-  doc: string;
+  result: QueryOutcome<BrowseResult<ServiceRequest>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
+  optionsError: string | null; residents: Resident[]; documentTypes: DocumentTypeOption[]; barangayId: string;
 }) {
   const router = useRouter();
   const toast = useToast();
-  const [referenceOrder, setReferenceOrder] = useState<'asc' | 'desc'>('asc');
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/doc around for the debounced search effect below, without making
-  // that effect re-fire (and re-push a redundant URL) whenever tab/doc change on their own —
-  // those already navigate immediately through their own handlers.
-  const tabRef = useRef(tab);
-  const docRef = useRef(doc);
-  useEffect(() => {
-    tabRef.current = tab;
-    docRef.current = doc;
-  }, [tab, doc]);
-
-  function navigate(next: { tab?: string; q?: string; doc?: string }) {
-    const nextQ = next.q ?? q;
-    const nextDoc = next.doc ?? doc;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextDoc ? { doc: nextDoc } : {}),
-    });
-    router.push(`/requests?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after the
-  // user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(docRef.current ? { doc: docRef.current } : {}),
-      });
-      router.push(`/requests?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
+  const browse = usePilotTableBrowse('requests', requestedState, result);
+  const { state, value } = browse;
+  const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
+  const range = value ? pageRange(value.total, state.page, state.pageSize) : null;
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    const channel = supabase
-      .channel('admin-service-requests')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_requests' }, () => router.refresh())
+    const channel = supabase.channel('admin-service-requests-' + crypto.randomUUID())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'service_requests', filter: 'barangay_id=eq.' + barangayId }, browse.refresh)
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [router]);
-
-  const sortedRequests = [...requests].sort(
-    (a, b) => a.reference_number.localeCompare(b.reference_number) * (referenceOrder === 'asc' ? 1 : -1),
-  );
+    return () => { void supabase.removeChannel(channel); };
+  }, [barangayId, browse.refresh]);
 
   async function updateField(request: ServiceRequest, patch: Partial<Tables<'service_requests'>>) {
     // Avoid both a duplicate submission and an audit entry when a cell is committed unchanged.
@@ -304,11 +251,12 @@ export function RequestsTable({
       entityLabel: updated.reference_number,
       changes: { before, after: patch },
     }).catch(() => {});
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
   async function archive(request: ServiceRequest) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('service_requests')
@@ -334,7 +282,7 @@ export function RequestsTable({
     }).catch(() => {});
 
     toast.showSuccess(`Request #${request.reference_number} archived.`);
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<ServiceRequest>[] = [
@@ -342,6 +290,7 @@ export function RequestsTable({
       // Plain text, not a Link — an editable cell can't also be a reliable nav target
       // (the anchor's default navigation fires on click regardless of the edit handler).
       // Navigation moved to the "View" link in Actions instead.
+      id: 'reference',
       header: 'Reference',
       initialWidth: 128,
       minWidth: 118,
@@ -359,13 +308,14 @@ export function RequestsTable({
       },
     },
     {
+      id: 'resident',
       header: 'Resident',
       initialWidth: 190,
       minWidth: 158,
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
       edit: {
-        canEdit: r => r.contract_version === 1,
+        canEdit: r => r.contract_version === 1 && !optionsError,
         type: 'select',
         options: residents.map((res) => ({ value: res.id, label: res.full_name })),
         getValue: (r) => r.resident_id,
@@ -374,13 +324,14 @@ export function RequestsTable({
       },
     },
     {
+      id: 'document',
       header: 'Document',
       initialWidth: 188,
       minWidth: 156,
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.document_types?.name ?? '—'}</span>,
       edit: {
-        canEdit: r => r.contract_version === 1,
+        canEdit: r => r.contract_version === 1 && !optionsError,
         type: 'select',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (r) => r.document_type_id,
@@ -389,6 +340,7 @@ export function RequestsTable({
       },
     },
     {
+      id: 'status',
       header: 'Status',
       initialWidth: 148,
       minWidth: 136,
@@ -413,6 +365,7 @@ export function RequestsTable({
       },
     },
     {
+      id: 'payment_status',
       header: 'Payment',
       initialWidth: 116,
       minWidth: 106,
@@ -432,11 +385,12 @@ export function RequestsTable({
       },
     },
     {
+      id: 'submitted',
       header: 'Submitted',
       initialWidth: 164,
       minWidth: 150,
       wrap: 'nowrap',
-      render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTime(r.created_at)}</span>,
+      render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatAdminTimestamp(r.created_at)}</span>,
       edit: {
         canEdit: r => r.contract_version === 1,
         type: 'datetime',
@@ -445,6 +399,7 @@ export function RequestsTable({
       },
     },
     {
+      id: 'notes',
       header: 'Notes',
       initialWidth: 240,
       minWidth: 190,
@@ -458,6 +413,7 @@ export function RequestsTable({
       },
     },
     {
+      id: 'actions',
       header: 'Actions',
       initialWidth: 208,
       minWidth: 188,
@@ -467,19 +423,30 @@ export function RequestsTable({
         <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
           <Link
             href={`/requests/${r.id}`}
+            onClick={event => {
+              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+              event.preventDefault();
+              void browse.settle().then(saved => { if (saved) router.push('/requests/' + r.id); });
+            }}
             title="View request details"
             aria-label={`View request ${r.reference_number}`}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
           >
             <Eye aria-hidden="true" className="h-4 w-4" />
           </Link>
-          {r.contract_version === 2 ? <Link className="text-xs text-[var(--accent)] underline" href={`/requests/${r.id}`}>Review</Link> : <RequestStatusActions
+          {r.contract_version === 2 ? <Link className="text-xs text-[var(--accent)] underline" href={`/requests/${r.id}`} onClick={event => {
+              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+              event.preventDefault();
+              void browse.settle().then(saved => { if (saved) router.push('/requests/' + r.id); });
+            }}>Review</Link> : <RequestStatusActions
             requestId={r.id}
             referenceNumber={r.reference_number}
             status={r.status}
             paymentStatus={r.payment_status}
             paymentMethod={r.payment_method}
             variant="compact"
+            onBeforeAction={browse.settle}
+            onChanged={browse.refresh}
           />}
           <ConfirmButton
             label={<Archive aria-hidden="true" className="h-4 w-4" />}
@@ -494,98 +461,33 @@ export function RequestsTable({
     },
   ];
 
-  return (
-    <>
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setReferenceOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Reference {referenceOrder === 'asc' ? '↑' : '↓'}
-          </button>
-
-          <select
-            value={doc}
-            onChange={(e) => navigate({ doc: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
+  return <>
+    <PilotSummary name="requests" summary={summary} onRetry={browse.refresh} />
+    {optionsError && <div role="alert" className="mb-4 rounded-xl border p-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}
+    {addOpen && <fieldset disabled={!!optionsError || browse.pending}><AddRequestForm residents={residents} documentTypes={documentTypes} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <TableBrowsePanel label="Requests" pending={browse.pending} error={browse.error} onRetry={browse.refresh}
+      queryIdentity={value?.queryIdentity}
+      announcement={value && range ? activeSort.label + ', ' + directionLabel(activeSort, state.dir) + '; Showing ' + range.start + '–' + range.end + ' of ' + value.total : undefined}
+      controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
+        onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
+        category={<div className="table-browse-field"><label htmlFor="requests-document">Document</label>
+          <select id="requests-document" value={state.filters.doc} disabled={!!optionsError}
+            onChange={event => void browse.commit({ filters: { doc: event.target.value } })}>
             <option value="">All documents</option>
-            {documentTypes.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search reference, resident, document…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            disabled={!barangayId}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            + Add Request
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented tabs, beneath the sort/filter/search + add row */}
-      <div className="mb-4 flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium ${
-              tab === t.key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-600 dark:text-zinc-300'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && (
-        <AddRequestForm residents={residents} documentTypes={documentTypes} barangayId={barangayId} onClose={() => setAddOpen(false)} />
-      )}
-
-      {/* Compact, resizable shared table. Its explicit floor keeps every column readable
-          and lets narrow layouts scroll instead of crushing the actions or status pills. */}
-      <EditableDataTable
-        rows={sortedRequests}
-        rowKey={(r) => r.id}
-        emptyLabel="No requests in this view."
-        columns={columns}
-        resizableColumns
-        density="compact"
-        tableMinWidth={1360}
-      />
-    </>
-  );
+            {state.filters.doc && !documentTypes.some(doc => doc.id === state.filters.doc) && <option value={state.filters.doc}>Selected document</option>}
+            {documentTypes.map(doc => <option key={doc.id} value={doc.id}>{doc.name}</option>)}
+          </select></div>}
+        filters={<SegmentedFilter label="Request status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+          onChange={tab => void browse.commit({ filters: { tab } })} />}
+        actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
+          onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Request</button>} />}
+      pagination={value && <TablePagination total={value.total} page={state.page} pageSize={state.pageSize} pending={browse.pending}
+        onPageChange={page => void browse.commit({ page })} onPageSizeChange={pageSize => void browse.commit({ pageSize })} />}>
+      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
+        emptyLabel={browse.pending ? 'Updating results…' : 'No requests in this view.'}
+        resizableColumns density="compact" tableMinWidth={1360}  />
+    </TableBrowsePanel>
+  </>;
 }

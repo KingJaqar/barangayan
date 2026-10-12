@@ -1,0 +1,16 @@
+{
+  "passed": false,
+  "checks": [
+    "23-row last-page removals clamp page 3 to page 2 without a refresh loop; seven rows at size 100"
+  ],
+  "browsers": [
+    {
+      "name": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "errors": [],
+  "geometry": [],
+  "clampRequests": 7,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'unavailable' !== '2'\n\n    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:40:87\n    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:21:38)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:39:7"
+}

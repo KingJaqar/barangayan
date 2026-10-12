@@ -1,0 +1,816 @@
+{
+  "timestamp": "2026-10-11T15:13:23.938Z",
+  "checks": [
+    "requests: all sorts, five sizes, one correction, empty and independent summaries",
+    "transactions: all sorts, five sizes, one correction, empty and independent summaries",
+    "residents: all sorts, five sizes, one correction, empty and independent summaries",
+    "incidents: all sorts, five sizes, one correction, empty and independent summaries",
+    "health: all sorts, five sizes, one correction, empty and independent summaries",
+    "applicants: all sorts, five sizes, one correction, empty and independent summaries",
+    "households: all sorts, five sizes, one correction, empty and independent summaries"
+  ],
+  "sorts": [
+    {
+      "name": "requests",
+      "sort": "reference",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "reference",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "resident",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "resident",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "document",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "document",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "status",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "status",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "payment_status",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "payment_status",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "submitted",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "submitted",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "requests",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "created",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "created",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "reference",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "reference",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "resident",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "resident",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "document",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "document",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "method",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "method",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "status",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "status",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "amount",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "amount",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "paid",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "paid",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "refund",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "transactions",
+      "sort": "refund",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "name",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "name",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "first_name",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "first_name",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "last_name",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "last_name",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "email",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "email",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "email_verification",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "email_verification",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "id_status",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "id_status",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "joined",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "joined",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "residents",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "submitted",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "submitted",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "title",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "title",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "category",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "category",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "reporter",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "reporter",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "status",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "status",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "confirmations",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "confirmations",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "incidents",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "created",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "created",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "title",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "title",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "category",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "category",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "drive_date",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "drive_date",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "active",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "active",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "registrations",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "registrations",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "stock",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "health",
+      "sort": "stock",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "applicants",
+      "sort": "registered",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "registered",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "number",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "number",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "resident",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "resident",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "drive",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "drive",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "category",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "category",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "status",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "status",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "age",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "age",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "priority",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "priority",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "drive_date",
+      "dir": "asc",
+      "rows": 1506
+    },
+    {
+      "name": "applicants",
+      "sort": "drive_date",
+      "dir": "desc",
+      "rows": 1506
+    },
+    {
+      "name": "households",
+      "sort": "name",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "name",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "head",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "head",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "relation",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "relation",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "role",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "role",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "checked_in",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "checked_in",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "center",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "center",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "added",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "added",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "check_in_date",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "households",
+      "sort": "check_in_date",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "name",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "name",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "role",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "role",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "email",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "email",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "hired",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "hired",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "created",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "created",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "modified",
+      "dir": "desc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "profile_modified",
+      "dir": "asc",
+      "rows": 1505
+    },
+    {
+      "name": "staff",
+      "sort": "profile_modified",
+      "dir": "desc",
+      "rows": 1505
+    }
+  ],
+  "counts": {
+    "requests": 1505,
+    "transactions": 1505,
+    "residents": 1505,
+    "incidents": 1505,
+    "health": 1505,
+    "applicants": 1506,
+    "households": 1505,
+    "staff": 1505
+  }
+}

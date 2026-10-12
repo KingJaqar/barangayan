@@ -1,84 +1,70 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
-import { PrimaryButton } from '@/components/primary-button';
+import { PasswordRecoveryScreen, RecoveryButton, RecoveryError, recoveryStyles } from '@/components/password-recovery-screen';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
-import { supabase } from '@/lib/supabase';
+import { useTheme } from '@/hooks/use-theme';
+import { passwordRecovery } from '@/lib/supabase';
+import { recoveryErrorMessage } from '@/lib/password-recovery';
+import { authSetupRequests } from '@/lib/setup-request';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const { setPasswordRecovery } = useAuth();
-  const [email, setEmail] = useState('');
+  const theme = useTheme();
+  const { session, setPasswordRecovery } = useAuth();
+  const [email, setEmail] = useState(session?.user.email ?? '');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSend() {
+    if (loading || authSetupRequests.busy) return;
     setError(null);
     setLoading(true);
     // Not signInWithOtp — that sends Supabase's magic-link template. Password recovery
     // (and the mailer_templates_recovery_content template customized to show the code)
     // is resetPasswordForEmail, paired with verifyOtp({ type: 'recovery', ... }).
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email);
-    setLoading(false);
-
-    if (resetError) {
-      setError(resetError.message);
-      return;
+    try {
+      const recoveryEmail = await passwordRecovery.send(email, session?.user);
+      // Keep the recovery stack reachable while verifyOtp establishes a session.
+      setPasswordRecovery(true);
+      router.push({ pathname: '/(auth)/otp', params: { type: 'recovery', email: recoveryEmail } });
+    } catch (cause) {
+      setError(recoveryErrorMessage(cause));
+    } finally {
+      setLoading(false);
     }
-
-    // Set BEFORE navigating to the OTP screen — verifyOtp establishes a real session,
-    // and this flag is what stops Stack.Protected from bouncing straight into (app)
-    // before the user has set a new password. See use-auth.tsx.
-    setPasswordRecovery(true);
-    router.push({ pathname: '/(auth)/otp', params: { type: 'recovery', email } });
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Forgot Password
-        </ThemedText>
-        <ThemedText themeColor="textSecondary">
-          Enter your email and we'll send you a code to reset your password.
-        </ThemedText>
-
+    <PasswordRecoveryScreen
+      step={1}
+      title="Recover your account"
+      description="We'll email you a six-digit code so you can choose a new password.">
+      <View style={recoveryStyles.form}>
         <TextField
-          label="Email"
+          label="Email address"
+          accessibilityLabel="Email address"
+          placeholder="you@example.com"
           autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="email"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          editable={!session && !loading}
+          style={[recoveryStyles.field, { backgroundColor: theme.background }]}
         />
-
-        {error ? (
-          <ThemedText type="small" themeColor="accentRed">
-            {error}
+        {session ? (
+          <ThemedText themeColor="textSecondary" style={recoveryStyles.help}>
+            We'll use the email linked to your account.
           </ThemedText>
         ) : null}
-
-        <PrimaryButton label="Send Reset Code" loading={loading} onPress={handleSend} />
+        <RecoveryError message={error} />
+        <RecoveryButton label="Send reset code" loading={loading} disabled={!email.trim()} onPress={handleSend} />
       </View>
-    </SafeAreaView>
+    </PasswordRecoveryScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: Spacing.four,
-    justifyContent: 'center',
-    gap: Spacing.three,
-  },
-  title: {
-    fontSize: 28,
-  },
-});

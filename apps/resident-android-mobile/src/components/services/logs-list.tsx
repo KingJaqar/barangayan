@@ -5,8 +5,7 @@ import { useFocusEffect } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { GuestPrompt } from '@/components/guest-prompt';
-import { PrimaryButton } from '@/components/primary-button';
-import { PlaceholderPanel } from '@/components/placeholder-panel';
+import { ServicesEmptyState, ServicesErrorState, ServicesListSkeleton } from '@/components/services/services-list-states';
 import { StatusBadge } from '@/components/status-badge';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -62,85 +61,127 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
       </View>
     );
   }
-  if (loadedOwner === userId && error) return <View style={styles.list}><ThemedText accessibilityRole="alert">{error}</ThemedText><PrimaryButton label="Retry activity" onPress={onRetry}/></View>;
+  if (loadedOwner === userId && error) {
+    return <ServicesErrorState message={error} retryLabel="Retry activity" onRetry={onRetry} />;
+  }
   if (requests === null || loadedOwner !== userId) {
-    return <PlaceholderPanel label="Loading activity…" />;
+    return <ServicesListSkeleton />;
   }
   if (requests.length === 0) {
-    return <PlaceholderPanel label="No activity yet." />;
+    return (
+      <ServicesEmptyState
+        icon="time-outline"
+        title="No activity yet"
+        message="Updates on your document requests will be listed here."
+      />
+    );
   }
 
   return (
     <View style={styles.list}>
-      {requests.map((request) => {
-        const payment = request.payments.find(row => ['paid', 'pending'].includes(row.status)) ?? request.payments[0];
-        const amount = requestFee(request, request.document_types?.fee_centavos ?? 0, payment?.document_fee_centavos ?? payment?.amount_centavos);
-        return (
-        <ThemedView key={request.id} style={[styles.card, { borderColor: theme.backgroundSelected }]}>
-          <View style={[styles.iconCircle, { backgroundColor: `${theme.primary}26` }]}>
-            <Ionicons name={getDocumentIcon(request.document_types?.name ?? '')} size={20} color={theme.primary} />
-          </View>
-          <View style={styles.cardInfo}>
-            <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
-              {formatDateTime(request.updated_at)}
-            </ThemedText>
-          </View>
-          <View style={styles.trailing}>
-            {amount === 0 ? (
-              <View style={[styles.pricePill, styles.pricePillFree, { borderColor: theme.textSecondary }]}>
+      <View style={styles.sectionHeader}>
+        <ThemedText type="heading">Recent activity</ThemedText>
+        <ThemedText type="small" themeColor="textSecondary">
+          Latest updates on your requests
+        </ThemedText>
+      </View>
+
+      <ThemedView style={[styles.group, { borderColor: theme.backgroundSelected }]}>
+        {requests.map((request, index) => {
+          const payment = request.payments.find(row => ['paid', 'pending'].includes(row.status)) ?? request.payments[0];
+          const amount = requestFee(request, request.document_types?.fee_centavos ?? 0, payment?.document_fee_centavos ?? payment?.amount_centavos);
+          return (
+            <View
+              key={request.id}
+              style={[
+                styles.row,
+                index > 0 && {
+                  borderTopWidth: StyleSheet.hairlineWidth,
+                  borderTopColor: theme.backgroundSelected,
+                },
+              ]}>
+              <View style={[styles.iconTile, { backgroundColor: `${theme.primary}1F` }]}>
+                <Ionicons name={getDocumentIcon(request.document_types?.name ?? '')} size={24} color={theme.primary} />
+              </View>
+              <View style={styles.cardInfo}>
+                <ThemedText type="smallBold" style={styles.cardTitle} numberOfLines={2}>
+                  {request.document_types?.name ?? 'Document Request'}
+                </ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">
-                  Free
+                  {formatDateTime(request.updated_at)}
                 </ThemedText>
+                <View style={styles.badgeRow}>
+                  <StatusBadge status={request.status} />
+                  {amount === 0 ? (
+                    <View style={[styles.pricePill, styles.pricePillFree, { borderColor: theme.textSecondary }]}>
+                      <ThemedText type="small" themeColor="textSecondary">
+                        Free
+                      </ThemedText>
+                    </View>
+                  ) : (
+                    <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
+                      <ThemedText type="smallBold" style={{ color: theme.primary }}>
+                        {amount === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(amount)}
+                      </ThemedText>
+                    </View>
+                  )}
+                </View>
               </View>
-            ) : (
-              <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
-                <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                  {amount === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(amount)}
-                </ThemedText>
-              </View>
-            )}
-            <StatusBadge status={request.status} />
-          </View>
-        </ThemedView>
-      ); })}
+            </View>
+          );
+        })}
+      </ThemedView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   list: {
-    padding: Spacing.three,
-    gap: Spacing.two,
+    paddingHorizontal: 20,
+    paddingTop: Spacing.two,
+    gap: Spacing.three,
   },
-  card: {
+  sectionHeader: {
+    gap: Spacing.half,
+  },
+  group: {
+    borderRadius: 20,
+    borderWidth: StyleSheet.hairlineWidth,
+    overflow: 'hidden',
+  },
+  row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: Spacing.three,
     padding: Spacing.three,
-    borderRadius: Spacing.three,
-    borderWidth: 1,
   },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  iconTile: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardInfo: {
     flex: 1,
+    minWidth: 0,
     gap: Spacing.half,
   },
-  trailing: {
-    alignItems: 'flex-end',
-    gap: Spacing.half,
+  cardTitle: {
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: Spacing.two,
+    marginTop: Spacing.one,
   },
   pricePill: {
     paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.half,
     borderRadius: Spacing.four,
-    alignSelf: 'flex-end',
   },
   pricePillFree: {
     borderWidth: 1,

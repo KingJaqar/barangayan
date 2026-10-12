@@ -1,0 +1,139 @@
+{
+  "phase": "RW-LT-05",
+  "ranAt": "2026-10-12T11:10:34.457Z",
+  "modules": [
+    "lib/qr-checkin.ts",
+    "lib/household-feedback.ts"
+  ],
+  "summary": {
+    "pass": 4,
+    "fail": 0
+  },
+  "results": [
+    {
+      "id": "parse-center-qr-rules",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "valid payload for own barangay": {
+          "ok": true
+        },
+        "non-JSON → invalid payload message": {
+          "ok": true
+        },
+        "wrong schema → not a check-in code": {
+          "ok": true
+        },
+        "other barangay → different barangay": {
+          "ok": true
+        },
+        "guest (null barangay) never matches": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "checkin-single-terminal-outcome",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "both succeed → one success": {
+          "ok": true,
+          "detail": {
+            "outcome": "recorded",
+            "toasts": [
+              "success:Your presence has been registered at the evacuation center."
+            ],
+            "ids": [
+              "attempt:qr:1"
+            ]
+          }
+        },
+        "check-in saved, household failed → one warning and no success": {
+          "ok": true,
+          "detail": {
+            "outcome": "partial",
+            "toasts": [
+              "warning:Check-in recorded."
+            ],
+            "ids": [
+              "attempt:qr:1"
+            ]
+          }
+        },
+        "rejected check-in → one error": {
+          "ok": true,
+          "detail": {
+            "outcome": "failed",
+            "toasts": [
+              "error:Couldn't record your check-in."
+            ],
+            "ids": [
+              "attempt:qr:1"
+            ]
+          }
+        },
+        "lost response → one unconfirmed warning (not a definite failure)": {
+          "ok": true,
+          "detail": {
+            "outcome": "unconfirmed",
+            "toasts": [
+              "warning:We couldn't confirm your check-in."
+            ],
+            "ids": [
+              "attempt:qr:1"
+            ]
+          }
+        },
+        "every terminal toast carries the attempt id": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "household-feedback-wording",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "confirmed add → one success": {
+          "ok": true,
+          "detail": []
+        },
+        "rejected update → error that says nothing changed": {
+          "ok": true,
+          "detail": []
+        },
+        "lost response → warning telling the resident to check the list": {
+          "ok": true,
+          "detail": []
+        },
+        "overlapping write → warning, never success": {
+          "ok": true,
+          "detail": []
+        }
+      }
+    },
+    {
+      "id": "ownership-and-contracts",
+      "phase": "RW-LT-05",
+      "status": "pass",
+      "checks": {
+        "RW-LT-05 modules use the notify adapter, not Sonner": {
+          "ok": true
+        },
+        "household handlers in the profile editor no longer toast success unconditionally": {
+          "ok": true
+        },
+        "FamilyMemberDialog callbacks return Promise<boolean>": {
+          "ok": true
+        },
+        "dialog does not notify or import Sonner/notify": {
+          "ok": true
+        },
+        "no checkIn payload change: insert columns unchanged": {
+          "ok": true
+        }
+      }
+    }
+  ]
+}

@@ -1,31 +1,28 @@
 'use client';
 
 import type { Tables } from '@barangayan/shared';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
+import { useScopedRead } from '@/hooks/use-scoped-read';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
 export type EmergencyHotline = Tables<'emergency_information'>;
 
 /** Web port of use-emergency-hotlines.ts [C-013] — see use-emergency-guidelines.ts's
- * doc comment for the offline-caching-dropped rationale, which applies identically here. */
+ * doc comments for the offline-caching-dropped rationale and the read-state fields, which
+ * apply identically here. */
 export function useEmergencyHotlines(barangayId: string | null): {
   hotlines: EmergencyHotline[];
   isLoading: boolean;
+  isInitialLoading: boolean;
+  isRefreshing: boolean;
+  isReady: boolean;
   error: string | null;
   refetch: () => void;
 } {
-  const [hotlines, setHotlines] = useState<EmergencyHotline[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const cancelledRef = useRef(false);
-
-  const doFetch = useCallback(() => {
-    setIsLoading(true);
-    setError(null);
+  const read = useScopedRead<EmergencyHotline[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
-
     let query = supabase
       .from('emergency_information')
       .select('*')
@@ -33,28 +30,12 @@ export function useEmergencyHotlines(barangayId: string | null): {
       .eq('is_active', true)
       .is('deleted_at', null)
       .order('sort_order', { ascending: true });
-
-    if (barangayId) {
-      query = query.eq('barangay_id', barangayId);
-    }
-
-    query.then(({ data, error: qErr }) => {
-      if (cancelledRef.current) return;
-      if (qErr) {
-        setError(qErr.message);
-      } else {
-        setHotlines((data ?? []) as EmergencyHotline[]);
-      }
-      setIsLoading(false);
-    });
-  }, [barangayId]);
+    if (barangayId) query = query.eq('barangay_id', barangayId);
+    return query.then(({ data, error }) => ({ data: (data ?? []) as EmergencyHotline[], error }));
+  });
+  const { refetch } = read;
 
   useEffect(() => {
-    cancelledRef.current = false;
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
-    // react-hooks/set-state-in-effect.
-    Promise.resolve().then(() => doFetch());
-
     const supabase = createSupabaseBrowserClient();
     const channel = supabase
       .channel(uniqueChannelName(`emergency-hotlines:${barangayId ?? 'all'}`))
@@ -66,17 +47,21 @@ export function useEmergencyHotlines(barangayId: string | null): {
           table: 'emergency_information',
           filter: barangayId ? `barangay_id=eq.${barangayId}` : undefined,
         },
-        () => {
-          if (!cancelledRef.current) doFetch();
-        },
+        () => refetch(),
       )
       .subscribe();
-
     return () => {
-      cancelledRef.current = true;
       supabase.removeChannel(channel);
     };
-  }, [doFetch, barangayId]);
+  }, [barangayId, refetch]);
 
-  return { hotlines, isLoading, error, refetch: doFetch };
+  return {
+    hotlines: read.data ?? [],
+    isLoading: read.isLoading,
+    isInitialLoading: read.isInitialLoading,
+    isRefreshing: read.isRefreshing,
+    isReady: read.isReady,
+    error: read.error,
+    refetch,
+  };
 }

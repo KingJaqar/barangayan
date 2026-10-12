@@ -1,6 +1,7 @@
 import './native-pkce-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSupabaseClient } from '@barangayan/shared';
+import { PasswordRecoveryFlow } from './password-recovery';
 
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
@@ -19,3 +20,5 @@ export const supabase = createSupabaseClient({
   authStorage: AsyncStorage,
   flowType: 'pkce',
 });
+
+export const passwordRecovery = new PasswordRecoveryFlow(supabase.auth);

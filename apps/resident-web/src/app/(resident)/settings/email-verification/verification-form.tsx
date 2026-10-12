@@ -1,13 +1,15 @@
 'use client';
 
 import { residentEmailVerification } from '@barangayan/shared';
-import Link from 'next/link';
+import { CircleAlert, CircleCheck, Mail, MailCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { ChangeEmailForm } from './change-email-form';
+import { syncResidentSignInEmail } from './actions';
 
-export function EmailVerificationForm({ userId, email, profileEmail, initialStatus }: { userId: string; email: string; profileEmail: string | null; initialStatus: string }) {
+export function EmailVerificationForm({ userId, email, profileEmail, initialStatus, pendingEmail = '', changeEmail = false }: { userId: string; email: string; profileEmail: string | null; initialStatus: string; pendingEmail?: string; changeEmail?: boolean }) {
   const router = useRouter();
   const [client] = useState(createSupabaseBrowserClient);
   const [status, setStatus] = useState(initialStatus);
@@ -19,6 +21,8 @@ export function EmailVerificationForm({ userId, email, profileEmail, initialStat
   const active = useRef(true), busy = useRef(false);
   const seconds = Math.max(0, Math.ceil((deadline - clock) / 1000));
   const matches = !!email && profileEmail?.trim().toLowerCase() === email.trim().toLowerCase();
+  const verified = matches && status === 'verified';
+  const StatusIcon = verified ? CircleCheck : !matches ? CircleAlert : MailCheck;
   useEffect(() => {
     active.current = true;
     const timer = setInterval(() => setClock(Date.now()), 1000);
@@ -40,23 +44,75 @@ export function EmailVerificationForm({ userId, email, profileEmail, initialStat
     } catch (error) { if (active.current) setMessage(error instanceof Error ? error.message : 'Unable to verify your email. Retry.'); }
     finally { busy.current = false; if (active.current) setLoading(false); }
   }
-  return <div className="space-y-4 rounded-xl border border-border bg-card p-5">
-    <p className="break-all font-medium">{email}</p>
-    {!matches ? <p role="alert">Save your sign-in email in Profile before verifying it.</p> : status === 'verified' ?
-      <p role="status">Your email is verified.</p> : <>
-        <p className="text-sm text-muted-foreground">We will send a code to your sign-in email. Verification keeps your account and password unchanged.</p>
-        {status === 'pending' && <form className="space-y-3" onSubmit={event => { event.preventDefault(); void run('verify'); }}>
-          <label htmlFor="resident-email-code" className="block text-sm font-medium">Email code</label>
-          <input id="resident-email-code" value={code} onChange={event => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
-            inputMode="numeric" autoComplete="one-time-code" maxLength={6} disabled={loading} required
-            className="w-full rounded-lg border border-input bg-background px-3 py-2" />
-          <Button type="submit" disabled={loading || code.length !== 6}>{loading ? 'Checking…' : 'Verify email'}</Button>
-        </form>}
-        <Button type="button" variant="outline" disabled={loading || seconds > 0} onClick={() => { void run('send'); }}>
-          {seconds > 0 ? `Resend in ${seconds}s` : status === 'pending' ? 'Resend code' : 'Send email code'}
-        </Button>
-      </>}
-    {message && <p role="status" aria-live="polite" className="text-sm">{message}</p>}
-    <Link href="/settings/profile" className="block text-sm underline">Back to Profile</Link>
-  </div>;
+  async function syncEmail() {
+    if (busy.current || !active.current) return;
+    busy.current = true; setLoading(true); setMessage(null);
+    try {
+      const result = await syncResidentSignInEmail(userId);
+      if (!active.current) return;
+      if (!result.ok) setMessage(result.message);
+      else router.refresh();
+    } catch { if (active.current) setMessage('Unable to update your email details. Try again.'); }
+    finally { busy.current = false; if (active.current) setLoading(false); }
+  }
+  return (
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="space-y-6 p-6 sm:p-8">
+        <div className="flex flex-col items-start gap-4 sm:flex-row">
+          <div className={`flex size-14 shrink-0 items-center justify-center rounded-2xl ${verified
+            ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400'
+            : 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400'}`}>
+            <StatusIcon aria-hidden="true" className="size-7" strokeWidth={1.75} />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${verified
+              ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400'
+              : 'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400'}`}>
+              {verified ? 'Verified' : !matches ? 'Action needed' : status === 'pending' ? 'Awaiting verification' : 'Not verified'}
+            </span>
+            <h2 className="text-lg font-semibold tracking-tight">
+              {verified ? 'Your email is verified' : !matches ? 'Sync your email details' : status === 'pending' ? 'Check your inbox' : 'Verify your email address'}
+            </h2>
+            <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              {verified ? 'You’re all set. This email address is confirmed for your Barangayan account.'
+                : !matches ? 'Update your profile to use your current sign-in email, then verify the address here.'
+                : status === 'pending' ? 'Enter the six-digit code sent to your email. The code expires after one hour.'
+                : 'We’ll send a six-digit code to the email address below to confirm it belongs to you.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-4">
+          <Mail aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-zinc-600 dark:text-zinc-400" />
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Sign-in email</p>
+            <p className="mt-1 break-all text-sm font-semibold">{email || 'No sign-in email available'}</p>
+          </div>
+        </div>
+
+        {!matches ? <Button type="button" variant="outline" disabled={loading} onClick={() => void syncEmail()}>{loading ? 'Updating…' : 'Use current sign-in email'}</Button> : null}
+        {matches && !verified ? (
+          <div className="space-y-4">
+            {status === 'pending' ? (
+              <form className="space-y-3" onSubmit={event => { event.preventDefault(); void run('verify'); }}>
+                <label htmlFor="resident-email-code" className="block text-sm font-medium">Verification code</label>
+                <input id="resident-email-code" value={code} onChange={event => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
+                  type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={6} disabled={loading} required
+                  pattern="[0-9]{6}" placeholder="000000" aria-describedby="resident-email-code-hint"
+                  className="h-14 w-full rounded-xl border border-input bg-background px-4 text-center text-xl font-semibold tracking-[0.35em] outline-none placeholder:text-muted-foreground/40 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50" />
+                <p id="resident-email-code-hint" className="text-xs text-zinc-600 dark:text-zinc-400">Enter all 6 digits from your email.</p>
+                <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>{loading ? 'Checking…' : 'Verify email'}</Button>
+              </form>
+            ) : null}
+            <Button type="button" variant={status === 'pending' ? 'outline' : 'default'} className="w-full" disabled={loading || seconds > 0} onClick={() => { void run('send'); }}>
+              {loading && status !== 'pending' ? 'Sending code…' : seconds > 0 ? `Resend in ${seconds}s` : status === 'pending' ? 'Resend code' : 'Send verification code'}
+            </Button>
+            <p className="text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400">Verification keeps your account and password unchanged.</p>
+          </div>
+        ) : null}
+        {message ? <p role="status" aria-live="polite" className="rounded-xl border border-border bg-muted/40 p-4 text-sm leading-6">{message}</p> : null}
+      </div>
+      <ChangeEmailForm userId={userId} email={email} initialPendingEmail={pendingEmail} initiallyOpen={changeEmail && !pendingEmail} disabled={loading} />
+    </div>
+  );
 }

@@ -1,0 +1,2321 @@
+{
+  "run": "post-rw-lt-01",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-11T22:38:45.478Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321"
+  },
+  "scenarios": [
+    {
+      "id": "guest-route-sweep",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "routes": [
+          {
+            "url": "/home",
+            "finalPath": "/home",
+            "status": 200,
+            "ms": 952,
+            "h1": "Your Barangay, Digitized.",
+            "requests": {
+              "total": 36,
+              "document": 1,
+              "rsc": 19,
+              "script": 13,
+              "other": 3
+            }
+          },
+          {
+            "url": "/announcements",
+            "finalPath": "/announcements",
+            "status": 200,
+            "ms": 748,
+            "h1": "Announcements",
+            "requests": {
+              "total": 37,
+              "document": 1,
+              "rsc": 19,
+              "script": 13,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency",
+            "finalPath": "/emergency",
+            "status": 200,
+            "ms": 743,
+            "h1": "Emergency Info",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 27,
+              "script": 14,
+              "rest": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/centers",
+            "finalPath": "/emergency/centers",
+            "status": 200,
+            "ms": 731,
+            "h1": "Evacuation Centers",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 27,
+              "script": 14,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/scan",
+            "finalPath": "/emergency/scan",
+            "status": 200,
+            "ms": 723,
+            "h1": "Log In to Use QR Check-In",
+            "requests": {
+              "total": 50,
+              "document": 1,
+              "rsc": 28,
+              "script": 16,
+              "rest": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/family",
+            "finalPath": "/emergency/family",
+            "status": 200,
+            "ms": 700,
+            "h1": "Log In to Manage Your Household",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 28,
+              "script": 15,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/alerts",
+            "finalPath": "/emergency/alerts",
+            "status": 200,
+            "ms": 704,
+            "h1": "Emergency Alerts",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 27,
+              "script": 14,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/maps",
+            "finalPath": "/maps",
+            "status": 200,
+            "ms": 949,
+            "h1": "Maps",
+            "requests": {
+              "total": 69,
+              "document": 1,
+              "rsc": 29,
+              "script": 16,
+              "other": 23
+            }
+          },
+          {
+            "url": "/maps/directory",
+            "finalPath": "/maps/directory",
+            "status": 200,
+            "ms": 677,
+            "h1": "Directory",
+            "requests": {
+              "total": 38,
+              "document": 1,
+              "rsc": 20,
+              "script": 13,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/maps/preparedness",
+            "finalPath": "/maps/preparedness",
+            "status": 200,
+            "ms": 678,
+            "h1": "Preparedness Guide",
+            "requests": {
+              "total": 37,
+              "document": 1,
+              "rsc": 20,
+              "script": 13,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/documents",
+            "finalPath": "/services/documents",
+            "status": 200,
+            "ms": 698,
+            "h1": "Document Catalog",
+            "requests": {
+              "total": 39,
+              "document": 1,
+              "rsc": 20,
+              "script": 15,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/5e0d0000-0000-4000-8000-0000000000d1",
+            "finalPath": "/services/5e0d0000-0000-4000-8000-0000000000d1",
+            "status": 200,
+            "ms": 677,
+            "h1": "RW Synthetic Clearance",
+            "requests": {
+              "total": 37,
+              "document": 1,
+              "rsc": 20,
+              "script": 13,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/requests",
+            "finalPath": "/login",
+            "status": 200,
+            "ms": 653,
+            "h1": "Barangayan",
+            "requests": {
+              "total": 26,
+              "document": 2,
+              "rsc": 6,
+              "script": 12,
+              "other": 6
+            }
+          },
+          {
+            "url": "/health",
+            "finalPath": "/health",
+            "status": 200,
+            "ms": 745,
+            "h1": "Active Medical Drives",
+            "requests": {
+              "total": 44,
+              "document": 1,
+              "rsc": 23,
+              "script": 15,
+              "rest": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/health/my-registrations",
+            "finalPath": "/health/my-registrations",
+            "status": 200,
+            "ms": 671,
+            "h1": "Log In to See Your Registrations",
+            "requests": {
+              "total": 42,
+              "document": 1,
+              "rsc": 23,
+              "script": 15,
+              "other": 3
+            }
+          },
+          {
+            "url": "/reports",
+            "finalPath": "/reports",
+            "status": 200,
+            "ms": 679,
+            "h1": "Log In to See Your Reports",
+            "requests": {
+              "total": 40,
+              "document": 1,
+              "rsc": 21,
+              "script": 15,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/help",
+            "finalPath": "/settings/help",
+            "status": 200,
+            "ms": 735,
+            "h1": "Help Center",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 27,
+              "script": 15,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/about",
+            "finalPath": "/settings/about",
+            "status": 200,
+            "ms": 737,
+            "h1": "About Us",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 27,
+              "script": 15,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/terms-privacy",
+            "finalPath": "/settings/terms-privacy",
+            "status": 200,
+            "ms": 713,
+            "h1": "Terms & Privacy Policy",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 27,
+              "script": 15,
+              "rest": 1,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/theme",
+            "finalPath": "/settings/theme",
+            "status": 200,
+            "ms": 861,
+            "h1": "Theme & Appearance",
+            "requests": {
+              "total": 45,
+              "document": 1,
+              "rsc": 27,
+              "script": 14,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/notifications",
+            "finalPath": "/settings/notifications",
+            "status": 200,
+            "ms": 709,
+            "h1": "Notifications",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 28,
+              "script": 14,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/download-data",
+            "finalPath": "/settings/download-data",
+            "status": 200,
+            "ms": 698,
+            "h1": "Download My Data",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 28,
+              "script": 14,
+              "other": 3
+            }
+          },
+          {
+            "url": "/login",
+            "finalPath": "/login",
+            "status": 200,
+            "ms": 614,
+            "h1": "Barangayan",
+            "requests": {
+              "total": 25,
+              "document": 1,
+              "rsc": 6,
+              "script": 12,
+              "other": 6
+            }
+          },
+          {
+            "url": "/register",
+            "finalPath": "/register",
+            "status": 200,
+            "ms": 706,
+            "h1": "Barangayan",
+            "requests": {
+              "total": 40,
+              "document": 1,
+              "rsc": 2,
+              "script": 16,
+              "rest": 2,
+              "other": 19
+            }
+          },
+          {
+            "url": "/forgot-password",
+            "finalPath": "/forgot-password",
+            "status": 200,
+            "ms": 603,
+            "h1": "Forgot Password",
+            "requests": {
+              "total": 16,
+              "document": 1,
+              "rsc": 2,
+              "script": 11,
+              "other": 2
+            }
+          },
+          {
+            "url": "/auth/error",
+            "finalPath": "/auth/error",
+            "status": 200,
+            "ms": 607,
+            "h1": "Google sign-in could not be completed",
+            "requests": {
+              "total": 16,
+              "document": 1,
+              "rsc": 4,
+              "script": 9,
+              "other": 2
+            }
+          }
+        ]
+      },
+      "requests": {
+        "total": 1117,
+        "document": 29,
+        "rsc": 560,
+        "script": 386,
+        "rest": 15,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 127
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "guest-home-360",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "visit": {
+          "url": "/home",
+          "finalPath": "/home",
+          "status": 200,
+          "ms": 796,
+          "h1": "Your Barangay, Digitized.",
+          "requests": {
+            "total": 22,
+            "document": 1,
+            "rsc": 5,
+            "script": 13,
+            "other": 3
+          }
+        },
+        "horizontalOverflow": false
+      },
+      "requests": {
+        "total": 22,
+        "document": 1,
+        "rsc": 5,
+        "script": 13,
+        "rest": 0,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 3
+      },
+      "consoleErrors": []
+    },
+    {
+      "id": "resident-route-sweep",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "routes": [
+          {
+            "url": "/home",
+            "finalPath": "/home",
+            "status": 200,
+            "ms": 1397,
+            "h1": "Welcome back, RW",
+            "requests": {
+              "total": 58,
+              "document": 1,
+              "rsc": 33,
+              "script": 13,
+              "rest": 6,
+              "other": 5
+            }
+          },
+          {
+            "url": "/announcements",
+            "finalPath": "/announcements",
+            "status": 200,
+            "ms": 1116,
+            "h1": "Announcements",
+            "requests": {
+              "total": 36,
+              "document": 1,
+              "rsc": 15,
+              "script": 13,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency",
+            "finalPath": "/emergency",
+            "status": 200,
+            "ms": 1301,
+            "h1": "Emergency Info",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 23,
+              "script": 14,
+              "rest": 5,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/centers",
+            "finalPath": "/emergency/centers",
+            "status": 200,
+            "ms": 1274,
+            "h1": "Evacuation Centers",
+            "requests": {
+              "total": 45,
+              "document": 1,
+              "rsc": 23,
+              "script": 14,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/scan",
+            "finalPath": "/emergency/scan",
+            "status": 200,
+            "ms": 1282,
+            "h1": "QR Check-In Guide",
+            "requests": {
+              "total": 48,
+              "document": 1,
+              "rsc": 23,
+              "script": 16,
+              "rest": 5,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/family",
+            "finalPath": "/emergency/family",
+            "status": 200,
+            "ms": 1234,
+            "h1": "Household: Populated Family",
+            "requests": {
+              "total": 46,
+              "document": 1,
+              "rsc": 23,
+              "script": 15,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/emergency/alerts",
+            "finalPath": "/emergency/alerts",
+            "status": 200,
+            "ms": 1246,
+            "h1": "Emergency Alerts",
+            "requests": {
+              "total": 45,
+              "document": 1,
+              "rsc": 23,
+              "script": 14,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/maps",
+            "finalPath": "/maps",
+            "status": 200,
+            "ms": 1380,
+            "h1": "Maps",
+            "requests": {
+              "total": 68,
+              "document": 1,
+              "rsc": 25,
+              "script": 16,
+              "rest": 3,
+              "other": 23
+            }
+          },
+          {
+            "url": "/maps/directory",
+            "finalPath": "/maps/directory",
+            "status": 200,
+            "ms": 1065,
+            "h1": "Directory",
+            "requests": {
+              "total": 37,
+              "document": 1,
+              "rsc": 16,
+              "script": 13,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/documents",
+            "finalPath": "/services/documents",
+            "status": 200,
+            "ms": 1364,
+            "h1": "Document Catalog",
+            "requests": {
+              "total": 47,
+              "document": 1,
+              "rsc": 21,
+              "script": 15,
+              "rest": 5,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/requests",
+            "finalPath": "/services/requests",
+            "status": 200,
+            "ms": 1368,
+            "h1": "My Requests",
+            "requests": {
+              "total": 49,
+              "document": 1,
+              "rsc": 23,
+              "script": 15,
+              "rest": 5,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/logs",
+            "finalPath": "/services/logs",
+            "status": 200,
+            "ms": 1241,
+            "h1": "Activity Log",
+            "requests": {
+              "total": 45,
+              "document": 1,
+              "rsc": 21,
+              "script": 13,
+              "rest": 5,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/requests/5e0d0000-0000-4000-8000-0000000000e1",
+            "finalPath": "/services/requests/5e0d0000-0000-4000-8000-0000000000e1",
+            "status": 200,
+            "ms": 1263,
+            "h1": "RW Synthetic Clearance",
+            "requests": {
+              "total": 49,
+              "document": 1,
+              "rsc": 22,
+              "script": 15,
+              "rest": 6,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/payment/5e0d0000-0000-4000-8000-0000000000e1",
+            "finalPath": "/services/payment/5e0d0000-0000-4000-8000-0000000000e1",
+            "status": 200,
+            "ms": 1236,
+            "h1": "",
+            "requests": {
+              "total": 49,
+              "document": 1,
+              "rsc": 22,
+              "script": 15,
+              "rest": 6,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/services/payment/success?requestId=5e0d0000-0000-4000-8000-0000000000e2",
+            "finalPath": "/services/payment/success",
+            "status": 200,
+            "ms": 1358,
+            "h1": "Payment Successful",
+            "requests": {
+              "total": 48,
+              "document": 1,
+              "rsc": 24,
+              "script": 13,
+              "rest": 5,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/reports",
+            "finalPath": "/reports",
+            "status": 200,
+            "ms": 1251,
+            "h1": "My Reports",
+            "requests": {
+              "total": 42,
+              "document": 1,
+              "rsc": 17,
+              "script": 15,
+              "rest": 4,
+              "auth": 2,
+              "other": 3
+            }
+          },
+          {
+            "url": "/reports/5e0d0000-0000-4000-8000-0000000000f1",
+            "finalPath": "/reports/5e0d0000-0000-4000-8000-0000000000f1",
+            "status": 200,
+            "ms": 1162,
+            "h1": "Synthetic fallen branch",
+            "requests": {
+              "total": 44,
+              "document": 1,
+              "rsc": 16,
+              "script": 15,
+              "rest": 3,
+              "other": 9
+            }
+          },
+          {
+            "url": "/reports/new",
+            "finalPath": "/reports/new",
+            "status": 200,
+            "ms": 1161,
+            "h1": "Report an Incident",
+            "requests": {
+              "total": 52,
+              "document": 1,
+              "rsc": 16,
+              "script": 15,
+              "rest": 3,
+              "other": 17
+            }
+          },
+          {
+            "url": "/health",
+            "finalPath": "/health",
+            "status": 200,
+            "ms": 1188,
+            "h1": "Active Medical Drives",
+            "requests": {
+              "total": 42,
+              "document": 1,
+              "rsc": 17,
+              "script": 15,
+              "rest": 6,
+              "other": 3
+            }
+          },
+          {
+            "url": "/health/my-registrations",
+            "finalPath": "/health/my-registrations",
+            "status": 200,
+            "ms": 1255,
+            "h1": "My Registrations",
+            "requests": {
+              "total": 40,
+              "document": 1,
+              "rsc": 17,
+              "script": 15,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/health/register/5e0d0000-0000-4000-8000-0000000000b1",
+            "finalPath": "/health/register/5e0d0000-0000-4000-8000-0000000000b1",
+            "status": 200,
+            "ms": 1220,
+            "h1": "Synthetic Vaccination",
+            "requests": {
+              "total": 39,
+              "document": 1,
+              "rsc": 18,
+              "script": 14,
+              "rest": 3,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/profile",
+            "finalPath": "/settings/profile",
+            "status": 200,
+            "ms": 1771,
+            "h1": "Profile",
+            "requests": {
+              "total": 64,
+              "document": 1,
+              "rsc": 37,
+              "script": 16,
+              "rest": 4,
+              "other": 6
+            }
+          },
+          {
+            "url": "/settings/change-password",
+            "finalPath": "/settings/change-password",
+            "status": 200,
+            "ms": 1582,
+            "h1": "Change Password",
+            "requests": {
+              "total": 58,
+              "document": 1,
+              "rsc": 37,
+              "script": 14,
+              "rest": 3,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/email-verification",
+            "finalPath": "/settings/email-verification",
+            "status": 200,
+            "ms": 1581,
+            "h1": "Email Verification",
+            "requests": {
+              "total": 58,
+              "document": 1,
+              "rsc": 37,
+              "script": 14,
+              "rest": 3,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/location-verification",
+            "finalPath": "/settings/location-verification",
+            "status": 200,
+            "ms": 1608,
+            "h1": "Location Verification",
+            "requests": {
+              "total": 108,
+              "document": 1,
+              "rsc": 37,
+              "script": 16,
+              "rest": 3,
+              "other": 51
+            }
+          },
+          {
+            "url": "/settings/theme",
+            "finalPath": "/settings/theme",
+            "status": 200,
+            "ms": 1617,
+            "h1": "Theme & Appearance",
+            "requests": {
+              "total": 58,
+              "document": 1,
+              "rsc": 37,
+              "script": 14,
+              "rest": 3,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/help",
+            "finalPath": "/settings/help",
+            "status": 200,
+            "ms": 1638,
+            "h1": "Help Center",
+            "requests": {
+              "total": 60,
+              "document": 1,
+              "rsc": 37,
+              "script": 15,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/about",
+            "finalPath": "/settings/about",
+            "status": 200,
+            "ms": 1580,
+            "h1": "About Us",
+            "requests": {
+              "total": 60,
+              "document": 1,
+              "rsc": 37,
+              "script": 15,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/terms-privacy",
+            "finalPath": "/settings/terms-privacy",
+            "status": 200,
+            "ms": 1616,
+            "h1": "Terms & Privacy Policy",
+            "requests": {
+              "total": 60,
+              "document": 1,
+              "rsc": 37,
+              "script": 15,
+              "rest": 4,
+              "other": 3
+            }
+          },
+          {
+            "url": "/settings/delete-account",
+            "finalPath": "/settings/delete-account",
+            "status": 200,
+            "ms": 1601,
+            "h1": "Delete My Account",
+            "requests": {
+              "total": 58,
+              "document": 1,
+              "rsc": 37,
+              "script": 14,
+              "rest": 3,
+              "other": 3
+            }
+          }
+        ]
+      },
+      "requests": {
+        "total": 1896,
+        "document": 37,
+        "rsc": 932,
+        "script": 539,
+        "rest": 154,
+        "auth": 22,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 212
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "resident-home-360",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "visit": {
+          "url": "/home",
+          "finalPath": "/home",
+          "status": 200,
+          "ms": 1254,
+          "h1": "Welcome back, RW",
+          "requests": {
+            "total": 50,
+            "document": 1,
+            "rsc": 25,
+            "script": 13,
+            "rest": 6,
+            "other": 5
+          }
+        },
+        "horizontalOverflow": false
+      },
+      "requests": {
+        "total": 91,
+        "document": 2,
+        "rsc": 37,
+        "script": 29,
+        "rest": 8,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": []
+    },
+    {
+      "id": "empty-resident-states",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "pages": {
+          "/services/requests": {
+            "emptyCopyVisible": true,
+            "excerpt": "it verified before requesting a document.\n\nVerify Now\nMy Requests\n\nEvery document request you've submitted, and its current status.\n\nNew Request\nAll\nActive\nPickup\nHistory\n\nYou haven't submitted any requests yet.\n\nRequest your first document"
+          },
+          "/reports": {
+            "emptyCopyVisible": true,
+            "excerpt": "My Reports\n\nIncidents you've reported to the barangay.\n\nReport Incident\nAll\nActive\nResolved\n\nYou haven't reported any incidents yet."
+          },
+          "/emergency/family": {
+            "emptyCopyVisible": true,
+            "excerpt": "y\nAlerts\nHousehold: Empty Family\n\nView and manage your family members.\n\nMy QR Code\n\nShow My Code\n\nPresent this QR code at evacuation centers for quick family check-in.\n\nFamily Members\n0 Total\n\nNo family members added yet.\n\nAdd Family Member"
+          },
+          "/health/my-registrations": {
+            "emptyCopyVisible": true,
+            "excerpt": "Active Drives\nMy Registrations\nMy Registrations\n\nApplications you've submitted for medical and vaccination drives.\n\nAll\nPending\nConfirmed\nAttended\nCancelled\n\nNo registrations yet\n\nRegister for an active medical drive to see it here."
+          }
+        }
+      },
+      "requests": {
+        "total": 276,
+        "document": 6,
+        "rsc": 119,
+        "script": 91,
+        "rest": 27,
+        "auth": 8,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 25
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "profile-completion-required",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "reportsNew": {
+          "url": "/reports/new",
+          "finalPath": "/complete-profile",
+          "status": 200,
+          "ms": 1115,
+          "h1": "Complete your resident profile",
+          "requests": {
+            "total": 59,
+            "document": 2,
+            "rsc": 16,
+            "script": 15,
+            "rest": 6,
+            "auth": 1,
+            "other": 19
+          }
+        },
+        "home": {
+          "url": "/home",
+          "finalPath": "/home",
+          "status": 200,
+          "ms": 1256,
+          "h1": "Welcome back, RW",
+          "requests": {
+            "total": 43,
+            "document": 1,
+            "rsc": 23,
+            "script": 13,
+            "rest": 3,
+            "other": 3
+          }
+        }
+      },
+      "requests": {
+        "total": 136,
+        "document": 4,
+        "rsc": 49,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 28
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "inaccessible-records",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "otherRequest": {
+          "url": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+          "finalPath": "/services/requests/5e0d0000-0000-4000-8000-0000000000e3",
+          "status": 404,
+          "ms": 1328,
+          "h1": "404",
+          "requests": {
+            "total": 50,
+            "document": 1,
+            "rsc": 24,
+            "script": 13,
+            "rest": 6,
+            "other": 6
+          }
+        },
+        "otherIncident": {
+          "url": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+          "finalPath": "/reports/5e0d0000-0000-4000-8000-0000000000f2",
+          "status": 404,
+          "ms": 1140,
+          "h1": "404",
+          "requests": {
+            "total": 35,
+            "document": 1,
+            "rsc": 16,
+            "script": 12,
+            "rest": 3,
+            "other": 3
+          }
+        },
+        "otherReceipt": {
+          "url": "/services/payment/success?requestId=5e0d0000-0000-4000-8000-0000000000e3",
+          "finalPath": "/services/payment/success",
+          "status": 200,
+          "ms": 1316,
+          "h1": "",
+          "requests": {
+            "total": 48,
+            "document": 1,
+            "rsc": 24,
+            "script": 13,
+            "rest": 5,
+            "auth": 2,
+            "other": 3
+          }
+        },
+        "otherReceiptAlert": "No confirmed payment receipt is available for this request.\n\nReturn to request payment"
+      },
+      "requests": {
+        "total": 174,
+        "document": 4,
+        "rsc": 76,
+        "script": 54,
+        "rest": 16,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 20
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "slow-read-2s",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "timeline": [
+          {
+            "t": 308,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 29,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 410,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 29,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 513,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 616,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 720,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 823,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 926,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1028,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1129,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1232,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1335,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1439,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1543,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1647,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1749,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1851,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 1953,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 2055,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 2158,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 2260,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 13,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 2362,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 15,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2464,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 15,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2567,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 2,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2670,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2771,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2875,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 2977,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 3081,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 3183,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 3284,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 3386,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 3491,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          }
+        ],
+        "firstContentMs": 2362,
+        "skeletonSeenMs": null,
+        "maxRunningAnimations": 29,
+        "ariaBusyEverSet": true
+      },
+      "requests": {
+        "total": 135,
+        "document": 3,
+        "rsc": 60,
+        "script": 42,
+        "rest": 12,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": []
+    },
+    {
+      "id": "fast-read",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "timeline": [
+          {
+            "t": 265,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 29,
+            "ariaBusy": 1,
+            "content": [
+              false
+            ]
+          },
+          {
+            "t": 335,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 3,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 387,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 3,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 440,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 3,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 494,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 3,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 546,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 2,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 599,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 651,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 702,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 756,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 808,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 860,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 913,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 965,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1017,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1069,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1122,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1175,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1228,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1281,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1333,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1384,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1436,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          },
+          {
+            "t": 1488,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              true
+            ]
+          }
+        ],
+        "firstContentMs": 335,
+        "skeletonVisibleSamples": 0
+      },
+      "requests": {
+        "total": 135,
+        "document": 3,
+        "rsc": 60,
+        "script": 42,
+        "rest": 12,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "error-read-and-retry",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "errorText": "Announcements\n\nBarangay news and updates.\n\nAll\nGeneral\nEmergency\nHealth\nEvents\n\nSynthetic RW feedback failure\n\nTry again",
+        "retryVisible": true,
+        "recoveredAfterRetry": true
+      },
+      "requests": {
+        "total": 89,
+        "document": 2,
+        "rsc": 35,
+        "script": 29,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 11
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ]
+    },
+    {
+      "id": "reduced-motion-baseline",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "timeline": [
+          {
+            "t": 336,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 16,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 446,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 550,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 653,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 754,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 856,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 959,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 1064,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          },
+          {
+            "t": 1166,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 1,
+            "content": []
+          }
+        ],
+        "maxRunningAnimationsUnderReducedMotion": 16,
+        "pulseAnimationName": null
+      },
+      "requests": {
+        "total": 88,
+        "document": 2,
+        "rsc": 35,
+        "script": 29,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 11
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "defect-drawer-perpetual-skeleton",
+      "phase": "RW-LT-00 (D-03)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "skeletonsAfter5s": 0,
+        "errorOrRetryVisible": 0,
+        "reproduced": false
+      },
+      "requests": {
+        "total": 104,
+        "document": 2,
+        "rsc": 43,
+        "script": 31,
+        "rest": 11,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "defect-family-dialog-closes",
+      "phase": "RW-LT-00 (D-02)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "dialogOpenImmediately": true,
+        "dialogOpenAfterSettle": false,
+        "toasts": [
+          "Could not add family member."
+        ],
+        "reproduced": true
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 43,
+        "script": 31,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ]
+    },
+    {
+      "id": "defect-household-false-success",
+      "phase": "RW-LT-00 (D-01)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "toasts": [
+          "Member added."
+        ],
+        "reproduced": true
+      },
+      "requests": {
+        "total": 119,
+        "document": 2,
+        "rsc": 57,
+        "script": 32,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "defect-false-empty-household",
+      "phase": "RW-LT-00 (D-07)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "falseEmptyVisible": true,
+        "reproduced": true
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 45,
+        "script": 31,
+        "rest": 9,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 12
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "obsolete-drive-date",
+      "phase": "RW-LT-00 (D-08)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "dates": {
+          "slow": "2026-10-13",
+          "fast": "2026-10-14",
+          "neutral": "2026-10-15"
+        },
+        "staleDriveShownForLaterDate": true,
+        "reproduced": true
+      },
+      "requests": {
+        "total": 99,
+        "document": 2,
+        "rsc": 37,
+        "script": 31,
+        "rest": 14,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "auth-network-abort",
+      "phase": "RW-LT-00 (D-04)",
+      "status": "pass",
+      "observations": {
+        "submitDisabledAfter3s": false,
+        "inlineError": "Incorrect email or password.",
+        "toasts": [
+          "Login failed — check your email and password."
+        ],
+        "pendingStuck": false
+      },
+      "requests": {
+        "total": 26,
+        "document": 1,
+        "rsc": 6,
+        "script": 12,
+        "rest": 0,
+        "auth": 1,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ]
+    },
+    {
+      "id": "payment-qr-mocked-paid-poll",
+      "phase": "RW-LT-00",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "generatingTimeline": [
+          {
+            "t": 347,
+            "skeletons": 0,
+            "spinners": 0,
+            "runningAnimations": 0,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              false
+            ]
+          },
+          {
+            "t": 451,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 555,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 657,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 760,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 861,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 963,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 1066,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 1168,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 1270,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 1373,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          },
+          {
+            "t": 1474,
+            "skeletons": 1,
+            "spinners": 0,
+            "runningAnimations": 1,
+            "ariaBusy": 0,
+            "content": [
+              false,
+              true
+            ]
+          }
+        ],
+        "qrBox": {
+          "x": 592,
+          "y": 568.5,
+          "width": 256,
+          "height": 256
+        },
+        "qrContainerHeight": 306,
+        "pollsBeforeOutcome": 2,
+        "path": "/services/payment/qrph/5e0d0000-0000-4000-8000-0000000000e1",
+        "receiptOutcome": "Could not confirm the recorded payment receipt. Reconnect and retry.",
+        "receiptRetryVisible": true,
+        "toasts": [],
+        "note": "Mocked paid poll advances to the receipt step; the confirmed-receipt read finds no paid row for this request and refuses (truthful). No payment row or charge was created."
+      },
+      "requests": {
+        "total": 106,
+        "document": 2,
+        "rsc": 42,
+        "script": 31,
+        "rest": 13,
+        "auth": 4,
+        "functions": 3,
+        "storage": 0,
+        "realtime": 0,
+        "other": 11
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "defect-qr-cancel-failure-silent",
+      "phase": "RW-LT-00 (D-14)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "failureMessageVisible": false,
+        "toasts": [],
+        "stillOnQrPage": true,
+        "reproduced": true
+      },
+      "requests": {
+        "total": 106,
+        "document": 2,
+        "rsc": 45,
+        "script": 31,
+        "rest": 11,
+        "auth": 4,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 11
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    },
+    {
+      "id": "notification-toggle-toast",
+      "phase": "RW-LT-00 (D-12)",
+      "status": "pass",
+      "observations": {
+        "loginDestination": "/home",
+        "toasts": [
+          "Email notifications disabled."
+        ],
+        "firstSwitchAfterReload": "true",
+        "reproduced": true
+      },
+      "requests": {
+        "total": 170,
+        "document": 3,
+        "rsc": 94,
+        "script": 44,
+        "rest": 11,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ]
+    }
+  ],
+  "consoleErrors": [],
+  "finishedAt": "2026-10-11T22:42:18.736Z",
+  "summary": {
+    "pass": 20,
+    "untested": 0,
+    "error": 0,
+    "meaning": "\"pass\" = scenario executed and its observations were recorded; defect scenarios record reproduced=true when the baseline defect is present."
+  }
+}

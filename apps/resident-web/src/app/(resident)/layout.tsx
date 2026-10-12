@@ -3,6 +3,7 @@ import { UnreadCountsProvider } from '@/hooks/use-unread-counts';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { ProfileCompletionBanner } from '@/components/auth/profile-completion-banner';
 import { ProfileSetupNotice } from '@/components/auth/profile-setup-notice';
+import { NotificationSession } from '@/components/shared/notification-session';
 
 /**
  * Shell for every route under (resident) — the resident-web counterpart of the mobile
@@ -19,6 +20,7 @@ export default async function ResidentLayout({ children }: { children: React.Rea
 
   return (
     <UnreadCountsProvider userId={user?.id ?? null}>
+      <NotificationSession userId={user?.id ?? null} />
       <ResidentShell
         barangayName={profile?.barangayName ?? 'Barangay'}
         residentName={profile?.full_name ?? null}

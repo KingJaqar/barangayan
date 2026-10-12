@@ -1,0 +1,29 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "chrome: households defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "chrome: staff defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+    "all 48 advertised sort/direction combinations follow global database order",
+    "complete unchanged concatenated pages have no gaps or duplicates on all three routes"
+  ],
+  "failures": [
+    {
+      "label": "combined filters/search preserve independent summaries and atomic first-page reset",
+      "message": "locator.selectOption: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('ID presence', { exact: true })\u001b[22m\n\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:117:84\n    at change (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:43:68)\n    at C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:117:19\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:22:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:112:9"
+    }
+  ],
+  "errors": [],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

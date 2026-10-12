@@ -1,0 +1,15 @@
+Passed: 23-row last-page removals clamp page 3 to page 2 without a refresh loop; seven rows at size 100
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'unavailable' !== '2'
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:40:87
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:21:38)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:39:7 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'unavailable',
+  expected: '2',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

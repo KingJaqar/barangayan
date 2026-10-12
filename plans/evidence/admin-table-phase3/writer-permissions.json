@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "before": {
+    "anonSchema": false,
+    "serviceText": false,
+    "anonReference": false,
+    "serviceReference": false,
+    "authenticatedReference": true
+  },
+  "after": {
+    "anonSchema": false,
+    "serviceText": true,
+    "anonReference": false,
+    "serviceReference": true,
+    "authenticatedReference": true
+  },
+  "numericComparison": true,
+  "migration": "0112",
+  "scope": "Only task-owned fixture; no hosted/source migration application"
+}

@@ -98,21 +98,41 @@ export function MapCanvas({
   const [activeCategoryIds, setActiveCategoryIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [userPosition, setUserPosition] = useState<{ lat: number; lng: number } | null>(null);
-  const [geoDenied, setGeoDenied] = useState(false);
+  // Why the automatic location request produced no position (null = fine or pending).
+  const [geoNotice, setGeoNotice] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(containerRef);
 
   useEffect(() => {
+    let active = true;
+    const unavailable = 'Location unavailable — showing the barangay view instead.';
     if (!('geolocation' in navigator)) {
-      Promise.resolve().then(() => setGeoDenied(true));
-      return;
+      Promise.resolve().then(() => {
+        if (active) setGeoNotice(unavailable);
+      });
+      return () => {
+        active = false;
+      };
     }
+    // getCurrentPosition cannot be cancelled; late callbacks are ignored after unmount.
     navigator.geolocation.getCurrentPosition(
-      (pos) => setUserPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => setGeoDenied(true),
+      (pos) => {
+        if (active) setUserPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      },
+      (failure) => {
+        if (!active) return;
+        setGeoNotice(
+          failure.code === 1
+            ? "Location is blocked — showing the barangay view. Allow location in your browser's site settings, then use the locate button."
+            : unavailable,
+        );
+      },
       { enableHighAccuracy: true, timeout: 8000 },
     );
+    return () => {
+      active = false;
+    };
   }, []);
 
   const categoryColorByIncidentId = useMemo(() => {
@@ -154,9 +174,9 @@ export function MapCanvas({
 
   return (
     <div className="flex flex-col gap-3">
-      {geoDenied ? (
+      {geoNotice ? (
         <p className="flex items-center gap-1 text-xs text-muted-foreground">
-          <MapPinOff size={12} /> Location unavailable — showing the barangay view instead.
+          <MapPinOff aria-hidden size={12} className="shrink-0" /> {geoNotice}
         </p>
       ) : null}
 

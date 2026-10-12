@@ -1,0 +1,4 @@
+Passed: failed directory edit retains same draft, blocks navigation and retries/audits
+Passed: directory details retain stable ID off-page, handle deletion/errors and restore focus
+Passed: member check-in cleanup, complete beyond-cap add lookup, removal and audit
+Passed: staff self-edit/removal guards and profile/role changes preserve current user

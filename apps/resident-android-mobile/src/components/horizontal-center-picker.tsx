@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { LayoutChangeEvent, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { LayoutChangeEvent, Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -36,6 +36,10 @@ export function HorizontalCenterPicker({
   const offsetsRef = useRef<Record<string, number>>({});
   const isAllSelected = selectedId === null;
 
+  useEffect(() => {
+    if (isAllSelected) scrollRef.current?.scrollTo({ x: 0, animated: true });
+  }, [isAllSelected]);
+
   const handleSelect = (id: string) => {
     onSelect(id);
     const x = offsetsRef.current[id];
@@ -59,7 +63,7 @@ export function HorizontalCenterPicker({
         style={[
           styles.chip,
           {
-            backgroundColor: isAllSelected ? theme.primary : 'transparent',
+            backgroundColor: isAllSelected ? theme.primary : theme.background,
             borderColor: isAllSelected ? theme.primary : theme.backgroundSelected,
           },
         ]}>
@@ -81,7 +85,7 @@ export function HorizontalCenterPicker({
               styles.chip,
               styles.centerChip,
               {
-                backgroundColor: isSelected ? theme.primary : 'transparent',
+                backgroundColor: isSelected ? theme.primary : theme.background,
                 borderColor: isSelected ? theme.primary : theme.backgroundSelected,
               },
             ]}>
@@ -112,17 +116,26 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 2,
-    paddingRight: 4,
+    gap: Spacing.two,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   chip: {
-    height: 32,
-    borderRadius: 16,
+    height: 38,
+    borderRadius: 19,
     borderWidth: 1,
-    paddingHorizontal: Spacing.three,
+    paddingHorizontal: 14,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.12,
+        shadowRadius: 4,
+      },
+      android: { elevation: 3 },
+    }),
   },
   centerChip: {
     flexDirection: 'row',
@@ -131,7 +144,7 @@ const styles = StyleSheet.create({
   chipName: {
     fontSize: 13,
     lineHeight: 16,
-    maxWidth: 140,
+    maxWidth: 160,
   },
   chipDistance: {
     fontSize: 11,

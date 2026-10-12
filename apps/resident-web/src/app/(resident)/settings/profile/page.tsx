@@ -21,15 +21,15 @@ export default async function ProfilePage() {
   const { data: locality } = await supabase.from('barangay_localities').select('display_name').eq('barangay_id', profile.barangay_id).maybeSingle();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-5">
-      <div className="mb-5">
-        <h1 className="text-xl font-bold tracking-tight">Profile</h1>
-        <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+    <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6 sm:py-6">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
+        <p className="mt-2 max-w-xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
           Manage your personal information, address, household, and ID verification.
         </p>
       </div>
       <ProfileForm key={profile.id} profile={profile} barangayName={locality?.display_name ?? sessionProfile.barangayName} fixedLocality={!!locality} />
-      <div className="mt-5"><GoogleButton label="Link Google to this account" link next="/settings/profile" /></div>
+      <div className="mt-8 border-t border-zinc-200 pt-6 dark:border-zinc-800"><GoogleButton label="Link Google to this account" link next="/settings/profile" /></div>
     </div>
   );
 }

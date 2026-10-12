@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "mode": "matrix",
+  "browsers": [
+    {
+      "engine": "firefox",
+      "version": "153.0"
+    },
+    {
+      "engine": "webkit",
+      "version": "26.5"
+    }
+  ],
+  "checks": [
+    "firefox: incidents defaults, sizes, ranges, dates, keyboard, containment and search",
+    "firefox: health defaults, sizes, ranges, dates, keyboard, containment and search",
+    "firefox: applicants defaults, sizes, ranges, dates, keyboard, containment and search",
+    "webkit: incidents defaults, sizes, ranges, dates, keyboard, containment and search",
+    "webkit: health defaults, sizes, ranges, dates, keyboard, containment and search",
+    "webkit: applicants defaults, sizes, ranges, dates, keyboard, containment and search"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

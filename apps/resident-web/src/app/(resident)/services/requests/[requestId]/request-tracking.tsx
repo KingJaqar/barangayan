@@ -6,14 +6,15 @@ import { submittedDetailLines, requestFee } from '@barangayan/shared';
 import { estimateLabel, formatCentavosAsPHP, formatDateTime, progressFraction, type Tables } from '@barangayan/shared';
 import { Banknote, CheckCircle2, HelpCircle, QrCode, RefreshCw, Store, Wallet } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { StatusPill } from '@/components/shared/status-pill';
 import { Button } from '@/components/ui/button';
 import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
 import { useCountdown } from '@/hooks/use-countdown';
+import { beginAttempt, notify } from '@/lib/notify';
+import { cancelRequestFailure, isNoAnswer } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 type ServiceRequest = Tables<'service_requests'> & {
@@ -62,6 +63,11 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
   const [pendingPayment, setPendingPayment] = useState<{ id: string; expiresAt: number } | null | undefined>(undefined);
   const [cancellingPayment, setCancellingPayment] = useState(false);
   const [cancellingRequest, setCancellingRequest] = useState(false);
+  // Synchronous guards: a second activation before React re-renders must not start a
+  // second cancel request.
+  const cancelPaymentBusy = useRef(false);
+  const cancelRequestBusy = useRef(false);
+  const [navigating, startNavigation] = useTransition();
   const pendingRemaining = useCountdown(pendingPayment?.expiresAt ?? null);
   // Unique per mounted instance — supabase.channel() returns the EXISTING channel when
   // one with the same topic is already registered, and a plain remount (e.g. React
@@ -78,9 +84,13 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
         .eq('id', requestId)
         .single()
-        .then(({ data }) => {
-          if (!cancelled && data) setRequest(data as ServiceRequest);
-        });
+        .then(
+          ({ data }) => {
+            if (!cancelled && data) setRequest(data as ServiceRequest);
+          },
+          // A quiet background refresh: the last valid request stays on screen.
+          () => {},
+        );
     }
 
     function loadPendingPayment() {
@@ -93,10 +103,21 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle()
-        .then(({ data }) => {
-          if (cancelled) return;
-          setPendingPayment(data ? { id: data.id, expiresAt: data.expires_at ? new Date(data.expires_at).getTime() : Date.now() } : null);
-        });
+        .then(
+          ({ data, error }) => {
+            if (cancelled) return;
+            // A failed read must not erase a known pending payment (that would hide its
+            // cancel control); only a successful read settles it.
+            if (error) {
+              setPendingPayment((current) => (current === undefined ? null : current));
+              return;
+            }
+            setPendingPayment(data ? { id: data.id, expiresAt: data.expires_at ? new Date(data.expires_at).getTime() : Date.now() } : null);
+          },
+          () => {
+            if (!cancelled) setPendingPayment((current) => (current === undefined ? null : current));
+          },
+        );
     }
 
     loadPendingPayment();
@@ -117,14 +138,54 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
     };
   }, [requestId, instanceId]);
 
+  /** Read-only: re-reads the request and its pending QR PH payment. */
+  async function refreshRequest() {
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const [{ data, error }, { data: pending, error: pendingError }] = await Promise.all([
+        supabase
+          .from('service_requests')
+          .select('*, document_types(name, processing_target_hours, fee_centavos), payments(document_fee_centavos, amount_centavos, status)')
+          .eq('id', requestId)
+          .single(),
+        supabase
+          .from('payments')
+          .select('id, expires_at')
+          .eq('service_request_id', requestId)
+          .eq('method', 'qrph')
+          .eq('status', 'pending')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+      ]);
+      if (!error && data) setRequest(data as ServiceRequest);
+      if (!pendingError) {
+        setPendingPayment(pending ? { id: pending.id, expiresAt: pending.expires_at ? new Date(pending.expires_at).getTime() : Date.now() } : null);
+      }
+    } catch {
+      // Quiet: the realtime subscription and the next load keep the view current.
+    }
+  }
+
   async function handleCancelPendingPayment() {
-    if (!pendingPayment) return;
+    if (!pendingPayment || cancelPaymentBusy.current) return;
+    cancelPaymentBusy.current = true;
+    const attempt = beginAttempt('tracking-cancel-payment');
     setCancellingPayment(true);
     try {
       const supabase = createSupabaseBrowserClient();
       const { data, error } = await supabase.functions.invoke('cancel-payment', { body: { paymentId: pendingPayment.id } });
 
       if (error) {
+        if (isNoAnswer(error)) {
+          // The cancel may have reached the provider: say so, then re-read (read-only).
+          notify.warning("We couldn't confirm the cancellation.", {
+            id: attempt,
+            description: 'Your QR code may still be valid. Check the payment status before paying again.',
+          });
+          void refreshRequest();
+          return;
+        }
         let message = 'Please try again.';
         const context = (error as { context?: Response }).context;
         if (context && typeof context.json === 'function') {
@@ -136,42 +197,59 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
             // Body wasn't JSON — keep generic message.
           }
         }
-        toast.error(message);
+        notify.error("Couldn't cancel the payment.", { id: attempt, description: message });
         return;
       }
 
       if (data?.status === 'cancelled' || data?.status === 'expired') {
         setPendingPayment(null);
-        toast.success('Your QR PH payment attempt has been cancelled. You can start a new payment at any time.');
+        notify.success('Payment attempt cancelled.', { id: attempt, description: 'You can start a new payment at any time.' });
       } else if (data?.status === 'paid') {
-        toast.info('This payment was already completed.');
+        // Lost the race: follow the paid outcome — no cancellation success.
+        notify.info('This payment was already completed.', { id: attempt });
+        void refreshRequest();
       } else {
-        toast.error('Could not cancel. Please try again.');
+        notify.error("Couldn't cancel the payment.", { id: attempt, description: 'Please try again.' });
       }
     } catch {
-      toast.error('Could not cancel. Please try again.');
+      notify.warning("We couldn't confirm the cancellation.", {
+        id: attempt,
+        description: 'Your QR code may still be valid. Check the payment status before paying again.',
+      });
+      void refreshRequest();
     } finally {
+      cancelPaymentBusy.current = false;
       setCancellingPayment(false);
     }
   }
 
   async function handleCancelRequest() {
+    if (cancelRequestBusy.current) return;
+    cancelRequestBusy.current = true;
+    const attempt = beginAttempt('tracking-cancel-request');
     setCancellingRequest(true);
     try {
       const supabase = createSupabaseBrowserClient();
-      const { error } = await supabase.rpc('cancel_own_service_request', { p_request_id: requestId, p_note: null });
+      const { error, status } = await supabase.rpc('cancel_own_service_request', { p_request_id: requestId, p_note: null });
 
       if (error) {
-        toast.error(error.message);
+        const failure = cancelRequestFailure(error, status);
+        notify[failure.uncertain ? 'warning' : 'error'](failure.title, { id: attempt, description: failure.description });
+        if (failure.uncertain) void refreshRequest();
         return;
       }
       // No local state patch needed — the realtime subscription above will pick up the
       // resulting status: 'cancelled' update.
-      toast.success('Your service request has been cancelled.');
+      notify.success('Your service request has been cancelled.', { id: attempt });
       router.refresh();
     } catch {
-      toast.error('Could not cancel. Please try again.');
+      notify.warning("We couldn't confirm the cancellation.", {
+        id: attempt,
+        description: 'Your request may or may not have been cancelled. Check its status before trying again.',
+      });
+      void refreshRequest();
     } finally {
+      cancelRequestBusy.current = false;
       setCancellingRequest(false);
     }
   }
@@ -241,19 +319,19 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         {showQrPayNow || showCancelSlot ? (
           <div className="flex flex-col gap-2 border-t border-border p-4">
             {showQrPayNow ? (
-              <Button onClick={() => router.push(`/services/payment/qrph/${requestId}`)}>
+              <Button loading={navigating} loadingLabel="Opening payment…" onClick={() => startNavigation(() => router.push(`/services/payment/qrph/${requestId}`))}>
                 {hasActivePendingPayment ? `Continue Payment ${formatButtonCountdown(pendingRemaining ?? 0)}` : 'Pay Now with QR PH'}
               </Button>
             ) : null}
             {showCancelSlot ? (
               pendingPayment ? (
-                <Button variant="destructive" loading={cancellingPayment} onClick={handleCancelPendingPayment}>
+                <Button variant="destructive" loading={cancellingPayment} loadingLabel="Cancelling…" onClick={handleCancelPendingPayment}>
                   Cancel Payment
                 </Button>
               ) : (
                 <ConfirmDialog
                   trigger={
-                    <Button variant="destructive" loading={cancellingRequest}>
+                    <Button variant="destructive" loading={cancellingRequest} loadingLabel="Cancelling…">
                       Cancel Request
                     </Button>
                   }

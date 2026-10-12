@@ -1,87 +1,104 @@
 'use client';
 
-import type { LatLng } from '@barangayan/shared';
+import type { LatLng, LocationAction, WalkingRoute } from '@barangayan/shared';
 import { getWalkingRoute } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { List, Map as MapIcon, MapPinOff } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { List, Map as MapIcon } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { CentersMapClient } from '@/components/emergency/centers-map-client';
 import { EvacuationCenterCard } from '@/components/emergency/evacuation-center-card';
+import { LocationStatusCard } from '@/components/emergency/location-status-card';
+import { InlineReadError } from '@/components/shared/inline-read-error';
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { PendingHint, Skeleton } from '@/components/ui/loading';
+import { useDeviceLocation } from '@/hooks/use-device-location';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 
 type View = 'list' | 'map';
 
 /** Web port of CentersContent (mobile index.tsx) — list/map toggle, nearest-first sort
- * via the browser Geolocation API, real OSRM walking route on selection [C-010].
- * `barangayId` is null for guests — evacuation_centers is publicly readable regardless.
- * `boundary` always has a real value (see emergency/centers/page.tsx — falls back to
- * the bundled Ampid I geometry, same as the main Maps screen). */
+ * from the confirmed device origin (useDeviceLocation), real OSRM walking route on
+ * selection [C-010]. `barangayId` is null for guests — evacuation_centers is publicly
+ * readable regardless. `boundary` always has a real value (see emergency/centers/page.tsx
+ * — falls back to the bundled Ampid I geometry, same as the main Maps screen). */
 export function CentersContent({ barangayId, boundary }: { barangayId: string | null; boundary: Polygon | MultiPolygon | null }) {
   const [view, setView] = useState<View>('list');
-  const [userPosition, setUserPosition] = useState<LatLng | null>(null);
-  const [geoDenied, setGeoDenied] = useState(false);
+  const location = useDeviceLocation();
+  const origin = location.state.origin;
+  const userPosition = useMemo<LatLng | null>(() => (origin ? { lat: origin.lat, lng: origin.lng } : null), [origin]);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
-  const [routePoints, setRoutePoints] = useState<LatLng[] | null>(null);
-  const [routeMeta, setRouteMeta] = useState<{ distanceMeters: number; durationSeconds: number } | null>(null);
+  // A route belongs to one center + origin revision; results for an older key are ignored.
+  const [route, setRoute] = useState<{ key: string; result: WalkingRoute | null } | null>(null);
 
-  const { centers, isLoading, error } = useEvacuationCenters({ barangayId, userPosition });
+  const { centers, isInitialLoading, isRefreshing, isReady, error, refetch } = useEvacuationCenters({ barangayId, userPosition });
 
+  const selectedCenter = centers.find((c) => c.id === selectedCenterId) ?? null;
+  const routeKey = selectedCenter && origin ? `${selectedCenter.id}:${origin.revision}` : null;
+  const centerLat = selectedCenter?.position.lat;
+  const centerLng = selectedCenter?.position.lng;
+
+  // Runs when a center is selected or a new origin is accepted, so a position that
+  // arrives after the selection still produces a route.
   useEffect(() => {
-    if (!('geolocation' in navigator)) {
-      // Routed through a microtask, not a direct setState — react-hooks/set-state-in-effect
-      // flags any setState reachable synchronously from an effect body (see
-      // use-unread-counts.tsx's identical pattern/rationale).
-      Promise.resolve().then(() => setGeoDenied(true));
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => setUserPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => setGeoDenied(true),
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
-  }, []);
+    if (!routeKey || !origin || centerLat === undefined || centerLng === undefined) return;
+    let cancelled = false;
+    getWalkingRoute({ lat: origin.lat, lng: origin.lng }, { lat: centerLat, lng: centerLng }).then((result) => {
+      if (!cancelled) setRoute({ key: routeKey, result });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [routeKey, origin, centerLat, centerLng]);
 
-  async function selectCenter(id: string) {
+  const currentRoute = route && route.key === routeKey ? route : null;
+  const routeStatus = !routeKey ? 'idle' : !currentRoute ? 'loading' : currentRoute.result ? 'ready' : 'unavailable';
+  const readFailedWithNothing = Boolean(error) && centers.length === 0;
+
+  function selectCenter(id: string) {
     setSelectedCenterId(id);
-    setRoutePoints(null);
-    setRouteMeta(null);
-    if (!userPosition) return;
-    const center = centers.find((c) => c.id === id);
-    if (!center) return;
-    const route = await getWalkingRoute(userPosition, center.position);
-    if (route) {
-      setRoutePoints(route.points);
-      setRouteMeta({ distanceMeters: route.distanceMeters, durationSeconds: route.durationSeconds });
-    }
   }
 
   function handleShowAll() {
     setSelectedCenterId(null);
-    setRoutePoints(null);
-    setRouteMeta(null);
+  }
+
+  function handleLocationAction(action: LocationAction) {
+    switch (action) {
+      case 'locate':
+      case 'retry':
+        location.locate();
+        break;
+      case 'cancel':
+        location.cancel();
+        break;
+      case 'confirm':
+        location.confirm();
+        break;
+      case 'reject':
+        location.reject();
+        break;
+    }
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-2">
           <h1 className="text-lg font-bold">Evacuation Centers</h1>
-          {geoDenied ? (
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPinOff size={12} /> Location unavailable — showing centers unsorted.
-            </p>
-          ) : null}
+          <PendingHint pending={isRefreshing}>Updating</PendingHint>
         </div>
         <div className="flex gap-1 rounded-full border border-border bg-card p-1">
           <button
             type="button"
+            aria-pressed={view === 'list'}
             onClick={() => setView('list')}
             className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${view === 'list' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
             <List size={14} /> List
           </button>
           <button
             type="button"
+            aria-pressed={view === 'map'}
             onClick={() => setView('map')}
             className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${view === 'map' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
             <MapIcon size={14} /> Map
@@ -89,26 +106,45 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
         </div>
       </div>
 
-      {isLoading ? (
+      <LocationStatusCard state={location.state} onAction={handleLocationAction} />
+
+      {error && !readFailedWithNothing ? (
+        <InlineReadError
+          tone="warning"
+          message="We couldn't refresh evacuation centers. Showing the last loaded list."
+          onRetry={refetch}
+          retrying={isRefreshing}
+        />
+      ) : null}
+
+      {isInitialLoading ? (
         <div className="flex flex-col gap-3">
+          <LoadingStatus active={isInitialLoading} label="Loading evacuation centers…" />
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-32 animate-pulse rounded-2xl bg-muted" />
+            <Skeleton key={i} className="h-32 rounded-2xl" />
           ))}
         </div>
-      ) : error ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">Unable to load evacuation centers.</p>
-      ) : centers.length === 0 ? (
+      ) : readFailedWithNothing ? (
+        <InlineReadError
+          message="We couldn't load evacuation centers. Check your connection, then try again."
+          onRetry={refetch}
+          retrying={isRefreshing}
+        />
+      ) : isReady && centers.length === 0 ? (
         <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">No evacuation centers found.</p>
       ) : view === 'map' ? (
         <CentersMapClient
           centers={centers}
-          userPosition={userPosition}
-          onUserPositionChange={setUserPosition}
+          origin={origin}
+          pendingFix={location.state.pending?.fix ?? null}
+          locating={location.state.activeRequestId !== null}
+          onLocate={location.locate}
           selectedCenterId={selectedCenterId}
           onSelectCenter={selectCenter}
           onShowAll={handleShowAll}
-          routePoints={routePoints}
-          routeMeta={routeMeta}
+          routePoints={currentRoute?.result?.points ?? null}
+          routeMeta={currentRoute?.result ?? null}
+          routeStatus={routeStatus}
           boundary={boundary}
         />
       ) : (

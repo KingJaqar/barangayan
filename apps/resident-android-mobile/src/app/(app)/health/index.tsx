@@ -2211,9 +2211,11 @@ export default function HealthScreen() {
   // Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
   const PRIMARY_GREEN = theme.primary;
   const insets = useSafeAreaInsets();
-  const { session, isGuest } = useAuth();
+  const { session } = useAuth();
 
-  const [segment, setSegment]           = useState<HealthSegment>('active-drives');
+  const [requestedSegment, setSegment] = useState<HealthSegment>('active-drives');
+  // Guests have no registrations: the My Registrations segment is hidden for them.
+  const segment: HealthSegment = !session ? 'active-drives' : requestedSegment;
   const [selectedDate, setSelectedDate]  = useState<string>(localToday);
   const [typeFilter, setTypeFilter]      = useState<DriveTypeFilter>('all');
   const [monthViewActive, setMonthViewActive] = useState(false);
@@ -2277,12 +2279,11 @@ export default function HealthScreen() {
   };
 
   const handleRegister = (drive: MedicalDrive) => {
-    if (!session && !isGuest) {
-      Alert.alert('Sign In Required', 'Please sign in to register for a medical drive.');
-      return;
-    }
     if (!session) {
-      Alert.alert('Sign In Required', 'Guest mode does not support registrations. Please sign in.');
+      Alert.alert('Sign In Required', 'Please log in to register for a medical drive.', [
+        { text: 'Not now', style: 'cancel' },
+        { text: 'Log In', onPress: () => router.push('/(auth)/login') },
+      ]);
       return;
     }
     // Navigate to the full-screen Applicant Registration form.
@@ -2311,16 +2312,18 @@ export default function HealthScreen() {
         </View>
 
       {/* ── Segmented control ────────────────────────────────────────────── */}
-      <ThemedView style={rootStyles.segmentRow}>
-        <SegmentedControl
-          segments={[
-            { key: 'active-drives',      label: 'Active Medical Drives' },
-            { key: 'my-registrations',   label: 'My Registrations' },
-          ]}
-          activeKey={segment}
-          onChange={setSegment}
-        />
-      </ThemedView>
+      {session && (
+        <ThemedView style={rootStyles.segmentRow}>
+          <SegmentedControl
+            segments={[
+              { key: 'active-drives',      label: 'Active Medical Drives' },
+              { key: 'my-registrations',   label: 'My Registrations' },
+            ]}
+            activeKey={segment}
+            onChange={setSegment}
+          />
+        </ThemedView>
+      )}
 
       {/* ── Active Medical Drives ─────────────────────────────────────────── */}
       {segment === 'active-drives' && (

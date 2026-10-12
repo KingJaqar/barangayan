@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: requests defaults, ranges, sort controls, scrolling and responsive access",
+    "chrome: transactions defaults, ranges, sort controls, scrolling and responsive access",
+    "Chrome: every advertised sort in both directions matches the database before paging",
+    "Chrome: concatenated 1505-row pages on both routes have no gaps or duplicate records",
+    "Chrome: delayed rapid changes merge the draft, cancel history debounce and commit only the latest query",
+    "Chrome: query, summary and option failures are independent and retries retain the full query",
+    "Chrome: invalid pages are corrected once, including removal of the last matching row",
+    "Chrome: failed request save retains its draft, blocks navigation, then retries and audits the same record"
+  ],
+  "failures": [
+    {
+      "label": "Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact",
+      "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Move to Processing', exact: true })\u001b[22m\n"
+    },
+    {
+      "label": "run",
+      "message": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Move to Processing', exact: true })\u001b[22m\n"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": []
+}

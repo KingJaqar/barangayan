@@ -1,0 +1,1770 @@
+{
+  "run": "run-1",
+  "phase": "RW-LT-06",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-12T10:20:41.047Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321",
+    "realtime": "local Realtime unavailable; Realtime events use the in-browser protocol 2.0.0 stand-in (mockRealtime)",
+    "providers": "create-payment-source / check-payment-status / cancel-payment (PayMongo) are fulfilled in the browser — no provider call, charge, or provider payment row; request submission, pickup records and receipts use the real local database with synthetic rows restored after every scenario"
+  },
+  "scenarios": [
+    {
+      "id": "catalog-modal-read-states",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "catalog renders the server read; first cards use the bounded entrance": {
+          "ok": true,
+          "detail": {
+            "reveals": 1
+          }
+        },
+        "slow read: matching skeleton, one polite \"Loading service…\", aria-busy region": {
+          "ok": true,
+          "detail": {
+            "skeletons": 5,
+            "status": [
+              "Loading service…"
+            ],
+            "busy": 1
+          }
+        },
+        "slow read settles to the details": {
+          "ok": true
+        },
+        "failed re-read keeps the already-loaded service (no error, no skeleton)": {
+          "ok": true
+        },
+        "failed read: inline error + Retry, no toast, no \"unavailable\" claim": {
+          "ok": true
+        },
+        "Retry is a read only and recovers": {
+          "ok": true,
+          "detail": []
+        },
+        "missing record: unavailable view with a safe way back, not an endless skeleton": {
+          "ok": true
+        },
+        "transport failure settles to the same retryable error": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "slow": {
+          "skeletons": 5,
+          "status": [
+            "Loading service…"
+          ],
+          "busy": 1
+        },
+        "failed": {
+          "alerts": [
+            "We couldn't load this service. Check your connection, then try again.\n\nRetry loading service"
+          ],
+          "toasts": 0
+        }
+      },
+      "requests": {
+        "total": 174,
+        "document": 3,
+        "rsc": 58,
+        "script": 67,
+        "rest": 24,
+        "auth": 6,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 406 (Not Acceptable)",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "catalog-rapid-selection-obsolete-response",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "an older, slower response never replaces the newer selection": {
+          "ok": true,
+          "detail": {
+            "headings": [
+              "Document Details",
+              "RW Second Service"
+            ]
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "after": {
+          "headings": [
+            "Document Details",
+            "RW Second Service"
+          ]
+        }
+      },
+      "requests": {
+        "total": 117,
+        "document": 2,
+        "rsc": 41,
+        "script": 45,
+        "rest": 12,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "request-check-pending-and-failure",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "pending is immediate: disabled, aria-busy, \"Checking your account…\"": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Checking your account…"
+          }
+        },
+        "repeated activation → no extra account check": {
+          "ok": true,
+          "detail": {
+            "single": 3,
+            "repeated": 3
+          }
+        },
+        "failed check: inline message (not the service-load retry), control restored, no toast": {
+          "ok": true,
+          "detail": {
+            "alert": "Unable to check your account. Please retry.",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Request This Document"
+            },
+            "toasts": 0
+          }
+        },
+        "the service itself stays visible": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "pending": {
+          "disabled": true,
+          "busy": "true",
+          "text": "Checking your account…"
+        },
+        "failed": {
+          "alert": "Unable to check your account. Please retry.",
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Request This Document"
+          },
+          "toasts": 0
+        }
+      },
+      "requests": {
+        "total": 124,
+        "document": 2,
+        "rsc": 37,
+        "script": 44,
+        "rest": 17,
+        "auth": 11,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "request-form-outcomes",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "validation: one inline message, no toast, no request sent": {
+          "ok": true,
+          "detail": {
+            "writes": 0,
+            "toasts": 0,
+            "alerts": [
+              "ID must be JPG, PNG or WEBP up to 5 MB."
+            ]
+          }
+        },
+        "refused: one toast, persistent guidance, input retained, control restored": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": [
+              "Couldn't submit your request."
+            ],
+            "guidance": "Your current profile ID must be approved before requesting a document. Open Verify Now. Open My Requests",
+            "notes": "Synthetic note kept across failures",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Submit request"
+            }
+          }
+        },
+        "lost response: unconfirmed wording, no automatic second request, nothing created": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": [
+              "We couldn't confirm your request."
+            ],
+            "guidance": "We couldn't confirm that your request was received. It may already be submitted. Submit again to recover it — it won't create a duplicate — or check My Requests before starting another. Open My Requests",
+            "created": 0
+          }
+        },
+        "slow submit: immediate disabled/aria-busy with a real stage label and one polite status": {
+          "ok": true,
+          "detail": {
+            "button": {
+              "disabled": true,
+              "busy": "true",
+              "text": "Submitting your request…"
+            },
+            "statuses": [
+              "Submitting your request…"
+            ]
+          }
+        },
+        "repeated activation → exactly one request and one write; destination unchanged; no extra toast": {
+          "ok": true,
+          "detail": {
+            "path": "/services/payment/b413dbdc-24d4-45ef-bb3d-79d2c0cd95ce",
+            "calls": 1,
+            "created": 1,
+            "toasts": 0
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "validation": {
+          "writes": 0,
+          "toasts": 0,
+          "alerts": [
+            "ID must be JPG, PNG or WEBP up to 5 MB."
+          ]
+        },
+        "refused": {
+          "calls": 1,
+          "toasts": [
+            "Couldn't submit your request."
+          ],
+          "guidance": "Your current profile ID must be approved before requesting a document. Open Verify Now. Open My Requests",
+          "notes": "Synthetic note kept across failures",
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Submit request"
+          }
+        },
+        "lost": {
+          "calls": 1,
+          "toasts": [
+            "We couldn't confirm your request."
+          ],
+          "guidance": "We couldn't confirm that your request was received. It may already be submitted. Submit again to recover it — it won't create a duplicate — or check My Requests before starting another. Open My Requests",
+          "created": 0
+        },
+        "slowSubmit": {
+          "button": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Submitting your request…"
+          },
+          "statuses": [
+            "Submitting your request…"
+          ]
+        },
+        "success": {
+          "path": "/services/payment/b413dbdc-24d4-45ef-bb3d-79d2c0cd95ce",
+          "calls": 1,
+          "created": 1,
+          "toasts": 0
+        }
+      },
+      "requests": {
+        "total": 125,
+        "document": 2,
+        "rsc": 39,
+        "script": 44,
+        "rest": 16,
+        "auth": 9,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 15
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "request-form-upload-stages",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "failed upload: accurate stage failure, files kept, control restored, no request created, no provider text": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Couldn't upload your file."
+            ],
+            "guidance": "We couldn't reach the server while uploading. Your details and files are kept here — check your connection, then submit again. Open My Requests",
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Submit request"
+            },
+            "created": 0
+          }
+        },
+        "upload stage is named truthfully, then submission; no percentage": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Uploading your ID…"
+          }
+        },
+        "retry with the retained file completes through the current workflow (one request)": {
+          "ok": true,
+          "detail": {
+            "created": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "uploadFailed": {
+          "toasts": [
+            "Couldn't upload your file."
+          ],
+          "guidance": "We couldn't reach the server while uploading. Your details and files are kept here — check your connection, then submit again. Open My Requests",
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Submit request"
+          },
+          "created": 0
+        },
+        "stage1": {
+          "disabled": true,
+          "busy": "true",
+          "text": "Uploading your ID…"
+        },
+        "stage2": {
+          "path": "/services/requests/new/5e0d0000-0000-4000-8000-0000000000d1",
+          "label": "Submitting your request…"
+        }
+      },
+      "requests": {
+        "total": 127,
+        "document": 2,
+        "rsc": 39,
+        "script": 44,
+        "rest": 15,
+        "auth": 9,
+        "functions": 0,
+        "storage": 3,
+        "realtime": 0,
+        "other": 15
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "requests-list-and-drawer",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "list renders with at most six entrance reveals": {
+          "ok": true,
+          "detail": {
+            "cards": 2,
+            "reveals": 2
+          }
+        },
+        "missing record: unavailable view (not a perpetual skeleton)": {
+          "ok": true
+        },
+        "failed read → error with Try again → recovers": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "list": {
+          "cards": 2,
+          "reveals": 2
+        }
+      },
+      "requests": {
+        "total": 230,
+        "document": 4,
+        "rsc": 84,
+        "script": 87,
+        "rest": 26,
+        "auth": 10,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 406 (Not Acceptable)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "tracking-cancel-request-outcomes",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "refused cancel: one error toast carrying the existing explanation; nothing claimed cancelled": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Couldn't cancel your request.\nthis request can no longer be cancelled"
+            ],
+            "calls": 1
+          }
+        },
+        "lost response: unconfirmed warning, one call, no automatic repeat": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "We couldn't confirm the cancellation.\nYour request may or may not have been cancelled. Check its status before trying again."
+            ],
+            "calls": 1
+          }
+        },
+        "confirmed cancel + repeated activation → one call, one success toast": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "toasts": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refused": {
+          "toasts": [
+            "Couldn't cancel your request.\nthis request can no longer be cancelled"
+          ],
+          "calls": 1
+        },
+        "lost": {
+          "toasts": [
+            "We couldn't confirm the cancellation.\nYour request may or may not have been cancelled. Check its status before trying again."
+          ],
+          "calls": 1
+        },
+        "confirmed": {
+          "calls": 1,
+          "toasts": 1
+        }
+      },
+      "requests": {
+        "total": 121,
+        "document": 2,
+        "rsc": 43,
+        "script": 43,
+        "rest": 16,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "tracking-cancel-payment-outcomes",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "refused: one error toast with the provider reason; control restored": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Couldn't cancel the payment.\nSynthetic provider refusal"
+            ],
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Cancel Payment"
+            }
+          }
+        },
+        "lost response: unconfirmed warning, one call, no automatic repeat": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "We couldn't confirm the cancellation.\nYour QR code may still be valid. Check the payment status before paying again."
+            ],
+            "calls": 1
+          }
+        },
+        "payment completed during cancellation → paid outcome only, never \"cancelled\"": {
+          "ok": true,
+          "detail": [
+            "This payment was already completed."
+          ]
+        },
+        "confirmed cancellation → one success, one call, request-level control returns": {
+          "ok": true,
+          "detail": {
+            "toasts": 1,
+            "calls": 1,
+            "cancelRequestOffered": true
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refused": {
+          "toasts": [
+            "Couldn't cancel the payment.\nSynthetic provider refusal"
+          ],
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Cancel Payment"
+          }
+        },
+        "lost": {
+          "toasts": [
+            "We couldn't confirm the cancellation.\nYour QR code may still be valid. Check the payment status before paying again."
+          ],
+          "calls": 1
+        },
+        "paid": [
+          "This payment was already completed."
+        ],
+        "cancelled": {
+          "toasts": 1,
+          "calls": 1,
+          "cancelRequestOffered": true
+        }
+      },
+      "requests": {
+        "total": 235,
+        "document": 4,
+        "rsc": 82,
+        "script": 87,
+        "rest": 29,
+        "auth": 10,
+        "functions": 4,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "payment-method-and-pickup",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "refused: one error toast + persistent plain guidance; stays on the step; no \"Request submitted.\"": {
+          "ok": true,
+          "detail": {
+            "toasts": [
+              "Couldn't save your payment method."
+            ],
+            "inline": "This request can't be paid right now. It may be cancelled, completed, or already paid.",
+            "url": "http://127.0.0.1:3127/services/payment/5e0d0000-0000-4000-8000-0000000000e1"
+          }
+        },
+        "lost response: uncertain wording that says nothing was charged; one write": {
+          "ok": true,
+          "detail": {
+            "calls": 1,
+            "inline": "We couldn't confirm that your payment method was saved. Nothing was charged. Choose it again, or open My Request to check."
+          }
+        },
+        "pending is immediate with \"Saving your choice…\"": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "busy": "true",
+            "text": "Saving your choice…"
+          }
+        },
+        "repeated activation → one method write; pickup recorded exactly once; no toast (the step is the confirmation)": {
+          "ok": true,
+          "detail": {
+            "methodCalls": 1,
+            "pickupCalls": 1,
+            "rows": 1,
+            "toasts": 0
+          }
+        },
+        "D-13: start_pickup_payment is idempotent — reopening/reloading the step leaves one pickup record": {
+          "ok": true,
+          "detail": {
+            "rows": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refused": {
+          "toasts": [
+            "Couldn't save your payment method."
+          ],
+          "inline": "This request can't be paid right now. It may be cancelled, completed, or already paid.",
+          "url": "http://127.0.0.1:3127/services/payment/5e0d0000-0000-4000-8000-0000000000e1"
+        },
+        "lost": {
+          "calls": 1,
+          "inline": "We couldn't confirm that your payment method was saved. Nothing was charged. Choose it again, or open My Request to check."
+        },
+        "pending": {
+          "disabled": true,
+          "busy": "true",
+          "text": "Saving your choice…"
+        },
+        "pickup": {
+          "methodCalls": 1,
+          "pickupCalls": 1,
+          "rows": 1,
+          "toasts": 0
+        },
+        "idempotent": {
+          "rows": 1
+        }
+      },
+      "requests": {
+        "total": 231,
+        "document": 4,
+        "rsc": 84,
+        "script": 87,
+        "rest": 29,
+        "auth": 8,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "pickup-failure-and-retry",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "failure: persistent inline alert + Retry, Done stays disabled, no toast, no raw token": {
+          "ok": true,
+          "detail": {
+            "alert": [
+              "We couldn't record your pickup payment. Please try again.\n\nRetry recording pickup payment",
+              ""
+            ],
+            "done": true,
+            "toasts": 0,
+            "calls": 1
+          }
+        },
+        "Retry records it once and enables Done": {
+          "ok": true
+        },
+        "lost response: uncertain wording, one automatic call only": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": {
+          "alert": [
+            "We couldn't record your pickup payment. Please try again.\n\nRetry recording pickup payment",
+            ""
+          ],
+          "done": true,
+          "toasts": 0,
+          "calls": 1
+        }
+      },
+      "requests": {
+        "total": 172,
+        "document": 3,
+        "rsc": 62,
+        "script": 65,
+        "rest": 20,
+        "auth": 6,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-generation-geometry-and-announcement",
+      "phase": "RW-LT-06",
+      "status": "fail",
+      "checks": {
+        "loading: steady 256 px placeholder + one polite \"Generating your QR code…\", no spinner": {
+          "ok": false,
+          "detail": {
+            "statuses": [
+              "Upload a valid ID in your profile and have it verified before requesting a document.Verify Now",
+              "Generating your QR code…"
+            ],
+            "steady": true,
+            "size": {
+              "w": 256,
+              "h": 256
+            },
+            "frame": {
+              "h": 342
+            },
+            "spinners": 1
+          }
+        },
+        "QR geometry is identical before and after (no layout shift)": {
+          "ok": false,
+          "detail": {
+            "loading": {
+              "statuses": [
+                "Upload a valid ID in your profile and have it verified before requesting a document.Verify Now",
+                "Generating your QR code…"
+              ],
+              "steady": true,
+              "size": {
+                "w": 256,
+                "h": 256
+              },
+              "frame": {
+                "h": 342
+              },
+              "spinners": 1
+            },
+            "ready": {
+              "size": {
+                "w": 256,
+                "h": 256
+              },
+              "frame": {
+                "h": 306
+              }
+            }
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "loading": {
+          "statuses": [
+            "Upload a valid ID in your profile and have it verified before requesting a document.Verify Now",
+            "Generating your QR code…"
+          ],
+          "steady": true,
+          "size": {
+            "w": 256,
+            "h": 256
+          },
+          "frame": {
+            "h": 342
+          },
+          "spinners": 1
+        },
+        "ready": {
+          "size": {
+            "w": 256,
+            "h": 256
+          },
+          "frame": {
+            "h": 306
+          }
+        }
+      },
+      "requests": {
+        "total": 112,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 11,
+        "auth": 4,
+        "functions": 1,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-paid-poll-and-realtime-overlap",
+      "phase": "RW-LT-06",
+      "status": "error",
+      "checks": {},
+      "observations": {
+        "loginDestination": "/home"
+      },
+      "note": "locator.waitFor: Timeout 15000ms exceeded.",
+      "requests": {
+        "total": 116,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 14,
+        "auth": 4,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-paid-during-cancellation",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "payment completes during cancellation → one paid outcome, never a cancellation toast": {
+          "ok": true,
+          "detail": [
+            "Payment received.\nYour receipt is next."
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "toasts": [
+          "Payment received.\nYour receipt is next."
+        ]
+      },
+      "requests": {
+        "total": 114,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 12,
+        "auth": 4,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-cancel-failure-and-guidance",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "D-14: failed cancel is reported — persistent guidance survives the toast, QR stays, control restored": {
+          "ok": true,
+          "detail": {
+            "guidance": "Synthetic cancel failure",
+            "qrStillShown": true,
+            "button": {
+              "disabled": false,
+              "busy": null,
+              "text": "Cancel Payment"
+            },
+            "toastsAfterDismiss": 0
+          }
+        },
+        "lost cancel response: unconfirmed wording, still watching status, one call": {
+          "ok": true,
+          "detail": {
+            "guidance": "We couldn't confirm whether the payment was cancelled. The QR code may still be valid, and we're still checking its status.",
+            "calls": 1,
+            "toasts": 1
+          }
+        },
+        "confirmed cancel → one success toast and back to the method step": {
+          "ok": true,
+          "detail": {
+            "toasts": 1,
+            "methodStep": true
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refused": {
+          "guidance": "Synthetic cancel failure",
+          "qrStillShown": true,
+          "button": {
+            "disabled": false,
+            "busy": null,
+            "text": "Cancel Payment"
+          },
+          "toastsAfterDismiss": 0
+        },
+        "lost": {
+          "guidance": "We couldn't confirm whether the payment was cancelled. The QR code may still be valid, and we're still checking its status.",
+          "calls": 1,
+          "toasts": 1
+        },
+        "confirmed": {
+          "toasts": 1,
+          "methodStep": true
+        }
+      },
+      "requests": {
+        "total": 115,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 11,
+        "auth": 4,
+        "functions": 4,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-expiry-and-connectivity",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "countdown at zero: no invented expired/failed claim, no toast, QR and Cancel still available": {
+          "ok": true,
+          "detail": {
+            "toasts": 0,
+            "qr": true,
+            "note": "This code's expiry time has passed. We're still confirming its status — if you already paid, keep this page open."
+          }
+        },
+        "confirmed expiry (poll + Realtime) → one warning and persistent guidance with a request link": {
+          "ok": true,
+          "detail": {
+            "toasts": 1,
+            "inline": true,
+            "trackLink": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "countdown": {
+          "toasts": 0,
+          "qr": true,
+          "note": "This code's expiry time has passed. We're still confirming its status — if you already paid, keep this page open."
+        },
+        "expired": {
+          "toasts": 1,
+          "inline": true,
+          "trackLink": 1
+        }
+      },
+      "requests": {
+        "total": 114,
+        "document": 2,
+        "rsc": 40,
+        "script": 43,
+        "rest": 11,
+        "auth": 4,
+        "functions": 1,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-status-check-connectivity",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "status checks failing: persistent \"don't pay again\" guidance, content intact, no toast, nothing declared failed": {
+          "ok": true,
+          "detail": {
+            "text": "We're having trouble checking your payment status. If you already paid, don't pay again — this page will update when the connection returns.",
+            "toasts": 0,
+            "qr": true
+          }
+        },
+        "recovers quietly when checks succeed again": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failing": {
+          "text": "We're having trouble checking your payment status. If you already paid, don't pay again — this page will update when the connection returns.",
+          "toasts": 0,
+          "qr": true
+        }
+      },
+      "requests": {
+        "total": 115,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 12,
+        "auth": 4,
+        "functions": 3,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "qr-creation-failures",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "provider refusal: persistent alert with the provider reason + Go Back, no toast, one call": {
+          "ok": true,
+          "detail": {
+            "alerts": [
+              "QR PH is not activated on this account",
+              ""
+            ],
+            "toasts": 0,
+            "calls": 1,
+            "back": 1
+          }
+        },
+        "transport failure settles to guidance (no endless spinner)": {
+          "ok": true,
+          "detail": {
+            "calls": 1
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refused": {
+          "alerts": [
+            "QR PH is not activated on this account",
+            ""
+          ],
+          "toasts": 0,
+          "calls": 1,
+          "back": 1
+        }
+      },
+      "requests": {
+        "total": 169,
+        "document": 3,
+        "rsc": 60,
+        "script": 65,
+        "rest": 17,
+        "auth": 6,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "receipt-read-only-retry-and-revisit",
+      "phase": "RW-LT-06",
+      "status": "fail",
+      "checks": {
+        "revisiting a paid request: paid summary, no create call, no historical toast": {
+          "ok": false,
+          "detail": {
+            "text": "Documents\nRequests\nLogs\n\nUpload a valid ID in your profile and have it verified before requesting a document.\n\nVerify Now\nRW Synthetic Clearance\n\nRef #REQ-2026-",
+            "creates": 1,
+            "toasts": 0
+          }
+        },
+        "standalone receipt revisit: confirmed receipt, no toast, no function calls": {
+          "ok": false,
+          "detail": {
+            "text": "Documents\nRequests\nLogs\n\nUpload a valid ID in your profile and have it verified before requesting a document.\n\nVerify No",
+            "toasts": 0
+          }
+        },
+        "no writes at all during revisit": {
+          "ok": false,
+          "detail": [
+            "POST /functions/v1/create-payment-source"
+          ]
+        },
+        "another resident's / unpaid request → \"No confirmed payment receipt\", never a receipt": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "revisit": {
+          "text": "Documents\nRequests\nLogs\n\nUpload a valid ID in your profile and have it verified before requesting a document.\n\nVerify Now\nRW Synthetic Clearance\n\nRef #REQ-2026-",
+          "creates": 1,
+          "toasts": 0
+        },
+        "receipt": {
+          "text": "Documents\nRequests\nLogs\n\nUpload a valid ID in your profile and have it verified before requesting a document.\n\nVerify No",
+          "toasts": 0
+        }
+      },
+      "requests": {
+        "total": 229,
+        "document": 4,
+        "rsc": 90,
+        "script": 86,
+        "rest": 21,
+        "auth": 8,
+        "functions": 1,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "receipt-step-retry-is-read-only",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "receipt read failure: persistent guidance (don't pay again) + Retry; the paid toast is the only toast": {
+          "ok": true,
+          "detail": {
+            "guidance": "We couldn't load your payment receipt. Check your connection, then try again.\n\nIf you already paid, don't pay again — your request keeps the confirmed payment record.\n\nRetry receipt\nView My Request",
+            "toasts": 1,
+            "creates": 1
+          }
+        },
+        "Retry is read-only: no new payment attempt, no write, no extra toast": {
+          "ok": true,
+          "detail": {
+            "creates": 1,
+            "writes": [
+              "POST /functions/v1/create-payment-source",
+              "POST /functions/v1/check-payment-status"
+            ]
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "failed": {
+          "guidance": "We couldn't load your payment receipt. Check your connection, then try again.\n\nIf you already paid, don't pay again — your request keeps the confirmed payment record.\n\nRetry receipt\nView My Request",
+          "toasts": 1,
+          "creates": 1
+        }
+      },
+      "requests": {
+        "total": 115,
+        "document": 2,
+        "rsc": 38,
+        "script": 43,
+        "rest": 13,
+        "auth": 4,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "payment-journey-refresh-failure-retains-content",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "D-06: refresh failure keeps the assessment/method choices and warns; no toast": {
+          "ok": true,
+          "detail": {
+            "methods": 1,
+            "toasts": 0
+          }
+        },
+        "Try again re-reads and clears the warning": {
+          "ok": true
+        },
+        "initial failure → error with retry (not an endless loader)": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "refreshFailed": {
+          "methods": 1,
+          "toasts": 0
+        }
+      },
+      "requests": {
+        "total": 171,
+        "document": 3,
+        "rsc": 60,
+        "script": 65,
+        "rest": 20,
+        "auth": 7,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "server-read-failures",
+      "phase": "RW-LT-06",
+      "status": "fail",
+      "checks": {
+        "every failed server read shows a retryable notice — never an empty state or a 404": {
+          "ok": false,
+          "detail": [
+            {
+              "name": "catalog",
+              "failure": true,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "requests",
+              "failure": false,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "logs",
+              "failure": false,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "document",
+              "failure": true,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "tracking",
+              "failure": false,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "payment",
+              "failure": false,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            },
+            {
+              "name": "receipt",
+              "failure": false,
+              "falseState": false,
+              "retry": 1,
+              "toasts": 0
+            }
+          ]
+        },
+        "after the service returns the real catalog is back": {
+          "ok": true
+        },
+        "another resident's request is still a not-found page (not distinguished from missing)": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "pages": [
+          {
+            "name": "catalog",
+            "failure": true,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "requests",
+            "failure": false,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "logs",
+            "failure": false,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "document",
+            "failure": true,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "tracking",
+            "failure": false,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "payment",
+            "failure": false,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          },
+          {
+            "name": "receipt",
+            "failure": false,
+            "falseState": false,
+            "retry": 1,
+            "toasts": 0
+          }
+        ],
+        "restRecovered": true
+      },
+      "requests": {
+        "total": 566,
+        "document": 10,
+        "rsc": 180,
+        "script": 218,
+        "rest": 113,
+        "auth": 8,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 37
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Temporarily Unavailable)"
+      ],
+      "unexpectedConsoleErrors": [
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+        "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "id": "route-fallbacks",
+      "phase": "RW-LT-06",
+      "status": "fail",
+      "checks": {
+        "detail route: shared header persists, \"Loading details…\" detail skeleton, then content": {
+          "ok": false,
+          "detail": {
+            "url": "/services/documents",
+            "status": "",
+            "statusRoles": [],
+            "statusVisible": 0,
+            "skeletons": 0,
+            "staticSkeletons": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "mains": 1,
+            "bottomBar": true,
+            "pendingHints": [],
+            "hintCount": 19,
+            "busy": 0,
+            "h1": "Document Catalog",
+            "alert": "",
+            "infiniteAnimations": 0,
+            "overflowX": false
+          }
+        },
+        "form route: \"Loading request form…\" skeleton below the segment nav": {
+          "ok": false,
+          "detail": {
+            "url": "/services/documents",
+            "status": "",
+            "statusRoles": [],
+            "statusVisible": 0,
+            "skeletons": 0,
+            "staticSkeletons": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "mains": 1,
+            "bottomBar": true,
+            "pendingHints": [],
+            "hintCount": 19,
+            "busy": 0,
+            "h1": "Document Catalog",
+            "alert": "",
+            "infiniteAnimations": 0,
+            "overflowX": false
+          }
+        },
+        "payment route: \"Loading payment…\" skeleton": {
+          "ok": false,
+          "detail": {
+            "url": "/services/documents",
+            "status": "",
+            "statusRoles": [],
+            "statusVisible": 0,
+            "skeletons": 0,
+            "staticSkeletons": 0,
+            "skeletonVisible": 0,
+            "headers": 1,
+            "mains": 1,
+            "bottomBar": true,
+            "pendingHints": [],
+            "hintCount": 19,
+            "busy": 0,
+            "h1": "Document Catalog",
+            "alert": "",
+            "infiniteAnimations": 0,
+            "overflowX": false
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "detail": {
+          "url": "/services/documents",
+          "status": "",
+          "statusRoles": [],
+          "statusVisible": 0,
+          "skeletons": 0,
+          "staticSkeletons": 0,
+          "skeletonVisible": 0,
+          "headers": 1,
+          "mains": 1,
+          "bottomBar": true,
+          "pendingHints": [],
+          "hintCount": 19,
+          "busy": 0,
+          "h1": "Document Catalog",
+          "alert": "",
+          "infiniteAnimations": 0,
+          "overflowX": false
+        },
+        "form": {
+          "url": "/services/documents",
+          "status": "",
+          "statusRoles": [],
+          "statusVisible": 0,
+          "skeletons": 0,
+          "staticSkeletons": 0,
+          "skeletonVisible": 0,
+          "headers": 1,
+          "mains": 1,
+          "bottomBar": true,
+          "pendingHints": [],
+          "hintCount": 19,
+          "busy": 0,
+          "h1": "Document Catalog",
+          "alert": "",
+          "infiniteAnimations": 0,
+          "overflowX": false
+        },
+        "payment": {
+          "url": "/services/documents",
+          "status": "",
+          "statusRoles": [],
+          "statusVisible": 0,
+          "skeletons": 0,
+          "staticSkeletons": 0,
+          "skeletonVisible": 0,
+          "headers": 1,
+          "mains": 1,
+          "bottomBar": true,
+          "pendingHints": [],
+          "hintCount": 19,
+          "busy": 0,
+          "h1": "Document Catalog",
+          "alert": "",
+          "infiniteAnimations": 0,
+          "overflowX": false
+        }
+      },
+      "requests": {
+        "total": 113,
+        "document": 2,
+        "rsc": 40,
+        "script": 44,
+        "rest": 10,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "narrow-320-and-reduced-motion",
+      "phase": "RW-LT-06",
+      "status": "fail",
+      "checks": {
+        "320 px, reduced motion: no horizontal overflow while loading or ready; QR stays 256 px": {
+          "ok": false,
+          "detail": {
+            "reduced": {
+              "running": [],
+              "skeletonStatic": true,
+              "overflow": false
+            },
+            "qr": {
+              "overflow": false,
+              "qr": 238
+            }
+          }
+        },
+        "reduced motion: placeholder is static (no running infinite animation from the placeholder)": {
+          "ok": true,
+          "detail": {
+            "running": [],
+            "skeletonStatic": true,
+            "overflow": false
+          }
+        },
+        "tracking page has no overflow at 320 px": {
+          "ok": true
+        },
+        "catalog modal has no overflow at 320 px": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "reduced": {
+          "running": [],
+          "skeletonStatic": true,
+          "overflow": false
+        },
+        "qr": {
+          "overflow": false,
+          "qr": 238
+        }
+      },
+      "requests": {
+        "total": 205,
+        "document": 4,
+        "rsc": 63,
+        "script": 85,
+        "rest": 24,
+        "auth": 9,
+        "functions": 1,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "account-change-suppresses-payment-outcome",
+      "phase": "RW-LT-06",
+      "status": "pass",
+      "checks": {
+        "a previous account's cancellation outcome never appears for the next visitor": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "toasts": []
+      },
+      "requests": {
+        "total": 138,
+        "document": 2,
+        "rsc": 52,
+        "script": 47,
+        "rest": 11,
+        "auth": 5,
+        "functions": 2,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-12T10:28:08.586Z",
+  "summary": {
+    "pass": 18,
+    "fail": 5,
+    "error": 1
+  },
+  "checks": 71
+}

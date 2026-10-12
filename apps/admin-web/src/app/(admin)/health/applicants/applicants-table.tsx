@@ -2,9 +2,16 @@
 
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
 import { Ban, Eye } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { OperationsTableSummary } from '@/components/admin/operations-table-summary';
+import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
+import { operationsConfig } from '@/lib/admin-tables/operations-config';
+import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
@@ -13,9 +20,10 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { formatDriveDate } from '../drive-table';
 import { ApplicantDetailModal } from './applicant-detail-modal';
-import type { ApplicantRow } from './page';
-import { REGISTRATION_STATUS_OPTIONS, TABS, registrationStatusLabel, type Tab } from './types';
+import type { ApplicantRow } from './types';
+import { REGISTRATION_STATUS_OPTIONS, TABS, registrationStatusLabel } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 export function StatusPill({ status }: { status: string }) {
   const styles: Record<string, string> = {
@@ -35,19 +43,16 @@ export function StatusPill({ status }: { status: string }) {
 function formatDateTimeShort(iso: string): { date: string; time: string } {
   const date = new Date(iso);
   return {
-    date: new Intl.DateTimeFormat('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }).format(date),
-    time: new Intl.DateTimeFormat('en-PH', { hour: 'numeric', minute: '2-digit' }).format(date),
+    date: new Intl.DateTimeFormat('en-PH', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' }).format(date),
+    time: new Intl.DateTimeFormat('en-PH', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Manila' }).format(date),
   };
 }
 
 type DriveOption = { id: string; title: string; drive_date: string };
 type ResidentOption = { id: string; full_name: string };
 
-function AddApplicantForm({ onClose }: { onClose: () => void }) {
-  const router = useRouter();
+function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: () => void; onChanged: () => void; drives: DriveOption[]; residents: ResidentOption[] }) {
   const toast = useToast();
-  const [drives, setDrives] = useState<DriveOption[]>([]);
-  const [residents, setResidents] = useState<ResidentOption[]>([]);
   const [driveId, setDriveId] = useState('');
   const [residentId, setResidentId] = useState('');
   const [age, setAge] = useState(30);
@@ -56,21 +61,7 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
   const [priorDoseDate, setPriorDoseDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
-    supabase
-      .from('medical_drives')
-      .select('id, title, drive_date')
-      .eq('is_active', true)
-      .is('deleted_at', null)
-      .then(({ data }) => setDrives((data ?? []) as DriveOption[]));
-    supabase
-      .from('profiles')
-      .select('id, full_name')
-      .eq('role', 'resident')
-      .order('full_name')
-      .then(({ data }) => setResidents((data ?? []) as ResidentOption[]));
-  }, []);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -126,16 +117,13 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
     setComorbidities('');
     setPriorDoseDate('');
     onClose();
-    router.refresh();
+    onChanged();
   }
-
-  const inputClass =
-    'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-3"
+      className={`${formContainerClass} mb-6 grid-cols-1 sm:grid-cols-3`}
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Drive</span>
@@ -195,11 +183,11 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
         <button
           type="submit"
           disabled={submitting || !driveId || !residentId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Registering…">Register</LoadingButtonContent>
         </button>
-        <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
+        <button type="button" onClick={onClose} className={cancelButtonClass}>
           Cancel
         </button>
       </div>
@@ -207,77 +195,25 @@ function AddApplicantForm({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; tab: Tab; type: string; q: string }) {
-  const router = useRouter();
+export function ApplicantsTable({ result, summary, requestedState, barangayId, drives, residents, optionsError }: {
+  result: QueryOutcome<BrowseResult<ApplicantRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
+  barangayId: string;
+  drives: DriveOption[]; residents: ResidentOption[]; optionsError: string | null;
+}) {
   const toast = useToast();
-  const [selected, setSelected] = useState<ApplicantRow | null>(null);
-  const [registeredOrder, setRegisteredOrder] = useState<'asc' | 'desc'>('desc');
+  const config = useMemo(() => operationsConfig('applicants'), []);
+  const browse = useConfiguredTableBrowse(config, requestedState, result, true);
+  const { state, value } = browse;
+  const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
+  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<ApplicantRow>('applicants', result, browse.settle);
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-  // Unique per mount — see drive-table.tsx's channelName comment for why.
-  const [channelName] = useState(() => `admin-drive-registrations-${Math.random().toString(36).slice(2)}`);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/type around for the debounced search effect below, without making
-  // that effect re-fire (and re-push a redundant URL) whenever tab/type change on their
-  // own — those already navigate immediately through their own handlers.
-  const tabRef = useRef(tab);
-  const typeRef = useRef(type);
-  useEffect(() => {
-    tabRef.current = tab;
-    typeRef.current = type;
-  }, [tab, type]);
-
-  function navigate(next: { tab?: string; type?: string; q?: string }) {
-    const nextQ = next.q ?? q;
-    const nextType = next.type ?? type;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextType ? { type: nextType } : {}),
-    });
-    router.push(`/health/applicants?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after the
-  // user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(typeRef.current ? { type: typeRef.current } : {}),
-      });
-      router.push(`/health/applicants?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
-  const sortedRows = [...rows].sort((a, b) => {
-    const diff = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    return registeredOrder === 'asc' ? diff : -diff;
-  });
-
+  const [channelName] = useState(() => 'admin-applicants-' + Math.random().toString(36).slice(2));
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    const channel = supabase
-      .channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'drive_registrations' }, () => router.refresh())
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [channelName, router]);
+    const channel = supabase.channel(channelName)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'drive_registrations' }, browse.refresh).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [channelName, browse.refresh]);
 
   async function updateField(row: ApplicantRow, patch: Partial<Tables<'drive_registrations'>>) {
     // Avoid a database write when a cell was opened and committed unchanged.
@@ -315,11 +251,12 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
         registered_at: row.created_at,
       },
     }).catch(() => {});
-    router.refresh();
+    browse.refresh();
     return { error: null, row: updated };
   }
 
   async function cancelRegistration(row: ApplicantRow) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('drive_registrations')
@@ -354,19 +291,19 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     }).catch(() => {});
 
     toast.showSuccess('Registration cancelled.');
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<ApplicantRow>[] = [
     {
-      header: 'Applicant #',
+      id: 'number', header: 'Applicant #',
       initialWidth: 124,
       minWidth: 116,
       wrap: 'nowrap',
       render: (r) => <span className="font-mono text-xs font-medium tabular-nums">{r.applicant_number}</span>,
     },
     {
-      header: 'Drive',
+      id: 'drive', header: 'Drive',
       initialWidth: 230,
       minWidth: 190,
       wrap: 'break-word',
@@ -382,14 +319,14 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
       ),
     },
     {
-      header: 'Resident',
+      id: 'resident', header: 'Resident',
       initialWidth: 188,
       minWidth: 160,
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
     },
     {
-      header: 'Age',
+      id: 'age', header: 'Age',
       initialWidth: 70,
       minWidth: 66,
       wrap: 'nowrap',
@@ -423,7 +360,7 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
       },
     },
     {
-      header: 'Priority Score',
+      id: 'priority', header: 'Priority Score',
       initialWidth: 112,
       minWidth: 104,
       wrap: 'nowrap',
@@ -434,7 +371,7 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
       ),
     },
     {
-      header: 'Status',
+      id: 'status', header: 'Status',
       initialWidth: 140,
       minWidth: 132,
       wrap: 'nowrap',
@@ -448,7 +385,7 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
       },
     },
     {
-      header: 'Registered At',
+      id: 'registered', header: 'Registered At',
       initialWidth: 142,
       minWidth: 132,
       wrap: 'nowrap',
@@ -471,7 +408,7 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
         <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={() => setSelected(r)}
+            onClick={event => void openDetail(r, event.currentTarget)}
             title="View registration details"
             aria-label={`View registration ${r.applicant_number}`}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
@@ -495,99 +432,30 @@ export function ApplicantsTable({ rows, tab, type, q }: { rows: ApplicantRow[]; 
     },
   ];
 
-  return (
-    <>
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setRegisteredOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Registered {registeredOrder === 'asc' ? '↑' : '↓'}
-          </button>
-
-          <select
-            value={type}
-            onChange={(e) => navigate({ type: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="">All categories</option>
-            {DRIVE_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {DRIVE_TYPE_CONFIG[t].label}
-              </option>
-            ))}
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search applicant #, drive, comorbidities…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white"
-          >
-            + Add Registration
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented tabs, beneath the sort/filter/search + add row */}
-      <div className="mb-4 flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium ${
-              tab === t.key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-600 dark:text-zinc-300'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && <AddApplicantForm onClose={() => setAddOpen(false)} />}
-
-      {/* Section 6: table display — columns are user-resizable (drag the divider in each
-          header cell) since drive/comorbidity text fields vary a lot in length. */}
-      <EditableDataTable
-        rows={sortedRows}
-        rowKey={(r) => r.id}
+  return <div ref={containerRef}>
+    <OperationsTableSummary name="applicants" summary={summary} onRetry={browse.refresh} />
+    <div>{optionsError && <p role="alert" className="mb-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></p>}</div>
+    {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddApplicantForm drives={drives} residents={residents} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <ProfileTablePanel label="Medical Applicants" browse={browse} 
+      category={<label className="table-browse-field">Category
+        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
+          <option value="">All categories</option>
+          {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
+        </select></label>}
+      filters={<SegmentedFilter label="Registration status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+        value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+      actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+        disabled={browse.pending || !barangayId || !!optionsError}>+ Add Registration</button>}>
+      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No registrations found."
-        columns={columns}
-        onRowClick={setSelected}
-        resizableColumns
-        density="compact"
-        tableMinWidth={1320}
-        cellOverflow="hidden"
-      />
-
-      {selected && <ApplicantDetailModal row={selected} onClose={() => setSelected(null)} onSave={(updated) => setSelected(updated)} />}
-    </>
-  );
+        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns  density="compact"
+        tableMinWidth={1320} cellOverflow="hidden"
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
+          onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
+    </ProfileTablePanel>
+    {selectedDetail && <ApplicantDetailModal row={selectedDetail} key={selectedDetail.id}
+      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
+      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+  </div>;
 }

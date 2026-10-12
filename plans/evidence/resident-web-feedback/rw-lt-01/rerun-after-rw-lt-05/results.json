@@ -1,0 +1,2104 @@
+{
+  "run": "rerun-after-rw-lt-05",
+  "phase": "RW-LT-01",
+  "base": "http://127.0.0.1:3127",
+  "startedAt": "2026-10-12T06:03:32.731Z",
+  "environment": {
+    "build": ".next-rw-feedback",
+    "browser": "Chrome (Playwright channel chrome, headless)",
+    "api": "http://127.0.0.1:54321"
+  },
+  "scenarios": [
+    {
+      "id": "list-fast-read-no-flash",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "content arrived under 120 ms": {
+          "ok": true,
+          "detail": 52
+        },
+        "no visible skeleton, spinner, or label": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "samples": [
+          {
+            "t": 11,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null,
+            "probe": false
+          },
+          {
+            "t": 31,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null,
+            "probe": false
+          },
+          {
+            "t": 52,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 68,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 85,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 101,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 116,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 131,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 148,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 163,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 178,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 195,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 211,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 228,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 247,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 261,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 276,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 291,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 307,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 324,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 339,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 354,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 372,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 387,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 402,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 419,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 436,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 451,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 467,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 483,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 498,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 512,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 526,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 542,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 562,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 577,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 595,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 610,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 625,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 641,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 656,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 670,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 685,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          },
+          {
+            "t": 699,
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null,
+            "probe": true
+          }
+        ],
+        "contentAtMs": 52
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-slow-read-2s",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "busy and label set immediately": {
+          "ok": true,
+          "detail": {
+            "t": 6,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          }
+        },
+        "decoration hidden before 120 ms": {
+          "ok": true
+        },
+        "skeletons hidden from assistive technology": {
+          "ok": true
+        },
+        "matching skeleton and visible label while pending": {
+          "ok": true
+        },
+        "settles: no status, no busy region, content shown": {
+          "ok": true,
+          "detail": {
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null
+          }
+        },
+        "revealed content fully visible within 400 ms": {
+          "ok": true,
+          "detail": 1
+        },
+        "stagger bounded to 150 ms": {
+          "ok": true,
+          "detail": [
+            "0s",
+            "0.03s"
+          ]
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "early": [
+          {
+            "t": 6,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          },
+          {
+            "t": 25,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          },
+          {
+            "t": 43,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          },
+          {
+            "t": 63,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          },
+          {
+            "t": 82,
+            "skeletons": 12,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 13,
+            "ariaBusy": 1,
+            "status": [
+              "Loading announcements…"
+            ],
+            "statusVisible": false,
+            "button": null
+          }
+        ],
+        "later": [
+          {
+            "t": 5,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 61,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 118,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 177,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 232,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 287,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 342,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 396,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 451,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 507,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 563,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 620,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 675,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 736,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 791,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 846,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 902,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 959,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1016,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1074,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1130,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1185,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1243,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1299,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1353,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1408,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1470,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1525,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1583,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1641,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1702,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1757,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1811,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1865,
+            "skeletonsVisible": 12,
+            "statusVisible": true,
+            "ariaBusy": 1,
+            "probe": false
+          },
+          {
+            "t": 1919,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 1977,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2032,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2093,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2151,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2210,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2266,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2321,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2375,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2432,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2485,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2540,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          },
+          {
+            "t": 2593,
+            "skeletonsVisible": 0,
+            "statusVisible": false,
+            "ariaBusy": 0,
+            "probe": true
+          }
+        ],
+        "skeletonVisibleAtMs": 61,
+        "cardOpacityAfter400ms": 1,
+        "staggerDelays": [
+          "0s",
+          "0.03s"
+        ]
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-slow-read-dark",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "theme-aware skeleton in dark mode": {
+          "ok": true,
+          "detail": "color(srgb 0.154941 0.154941 0.154941)"
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "htmlDark": true,
+        "skeletonColor": "color(srgb 0.154941 0.154941 0.154941)"
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-over-10s-taking-longer",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "no slow message before 10 s": {
+          "ok": true,
+          "detail": [
+            "Loading announcements…"
+          ]
+        },
+        "slow message after 10 s, still pending, no failure claim": {
+          "ok": true,
+          "detail": [
+            "Loading announcements… Taking longer than usual."
+          ]
+        },
+        "settles after slow success": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "at9s": {
+          "skeletons": 12,
+          "skeletonsVisible": 12,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 1,
+          "infiniteAnimations": 13,
+          "ariaBusy": 1,
+          "status": [
+            "Loading announcements…"
+          ],
+          "statusVisible": true,
+          "button": null
+        },
+        "at10_6s": {
+          "skeletons": 12,
+          "skeletonsVisible": 12,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 1,
+          "infiniteAnimations": 13,
+          "ariaBusy": 1,
+          "status": [
+            "Loading announcements… Taking longer than usual."
+          ],
+          "statusVisible": true,
+          "button": null
+        },
+        "settled": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        }
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-timer-cleanup",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "no late slow message or pending visuals after settle": {
+          "ok": true,
+          "detail": {
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "after": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        }
+      },
+      "requests": {
+        "total": 101,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-returned-error",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "pending visuals released on failure": {
+          "ok": true,
+          "detail": {
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null
+          }
+        },
+        "retry recovers the read": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "attempts": 1,
+        "settled": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        }
+      },
+      "requests": {
+        "total": 102,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 11,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "list-thrown-failure",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "pending visuals released on failure": {
+          "ok": true,
+          "detail": {
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null
+          }
+        },
+        "retry recovers the read": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "attempts": 4,
+        "settled": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        }
+      },
+      "requests": {
+        "total": 105,
+        "document": 2,
+        "rsc": 31,
+        "script": 43,
+        "rest": 14,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "reduced-motion-static",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "no infinite (pulse/spin) animation under reduced motion": {
+          "ok": true,
+          "detail": 0
+        },
+        "skeletons still delayed, then shown statically": {
+          "ok": true
+        },
+        "content appears without reveal movement": {
+          "ok": true,
+          "detail": {
+            "opacity": 1,
+            "animation": "none"
+          }
+        },
+        "legacy pulse/spin/shimmer disabled": {
+          "ok": true,
+          "detail": [
+            "animate-pulse:none",
+            "animate-spin:none",
+            "shimmer:none"
+          ]
+        },
+        "drawer opens without sliding": {
+          "ok": true,
+          "detail": {
+            "at30ms": 928,
+            "settled": 928
+          }
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "samples": [
+          {
+            "t": 6,
+            "skeletonsVisible": 0,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 71,
+            "skeletonsVisible": 0,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 136,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 199,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 265,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 328,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 392,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 455,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 519,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 583,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 647,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 711,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 774,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          },
+          {
+            "t": 840,
+            "skeletonsVisible": 12,
+            "infiniteAnimations": 0
+          }
+        ],
+        "cardOpacityImmediately": 1,
+        "revealAnimation": "none",
+        "legacy": [
+          "animate-pulse:none",
+          "animate-spin:none",
+          "shimmer:none"
+        ],
+        "scrollBehavior": "auto",
+        "drawerLeftAt30ms": 928,
+        "drawerLeftSettled": 928
+      },
+      "requests": {
+        "total": 158,
+        "document": 3,
+        "rsc": 53,
+        "script": 65,
+        "rest": 17,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 16
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "form-submit-login-label",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "disabled, aria-busy, pending label immediately": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "ariaBusy": "true",
+            "width": 384,
+            "height": 48,
+            "text": "Logging in…"
+          }
+        },
+        "one accessible name while pending": {
+          "ok": true,
+          "detail": {
+            "loggingIn": 1,
+            "logIn": 0
+          }
+        },
+        "spinner hidden before 120 ms": {
+          "ok": true
+        },
+        "button dimensions stable": {
+          "ok": true,
+          "detail": {
+            "before": {
+              "disabled": false,
+              "ariaBusy": null,
+              "width": 384,
+              "height": 48,
+              "text": "Log In"
+            },
+            "pending": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          }
+        },
+        "spinner visible after delay": {
+          "ok": true
+        },
+        "one sign-in request for repeated activation": {
+          "ok": true,
+          "detail": 1
+        },
+        "released after failure with original label and size": {
+          "ok": true,
+          "detail": {
+            "disabled": false,
+            "ariaBusy": null,
+            "width": 384,
+            "height": 48,
+            "text": "Log In"
+          }
+        },
+        "successful login keeps existing destination": {
+          "ok": true,
+          "detail": "/onboarding"
+        }
+      },
+      "observations": {
+        "before": {
+          "disabled": false,
+          "ariaBusy": null,
+          "width": 384,
+          "height": 48,
+          "text": "Log In"
+        },
+        "early": [
+          {
+            "t": 4,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          },
+          {
+            "t": 22,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          },
+          {
+            "t": 39,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          },
+          {
+            "t": 57,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          },
+          {
+            "t": 74,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 384,
+              "height": 48,
+              "text": "Logging in…"
+            }
+          }
+        ],
+        "namesWhilePending": {
+          "loggingIn": 1,
+          "logIn": 0
+        },
+        "mid": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 1,
+          "infiniteAnimations": 1,
+          "ariaBusy": 1,
+          "status": [],
+          "statusVisible": false,
+          "button": {
+            "disabled": true,
+            "ariaBusy": "true",
+            "width": 384,
+            "height": 48,
+            "text": "Logging in…"
+          }
+        },
+        "after": {
+          "disabled": false,
+          "ariaBusy": null,
+          "width": 384,
+          "height": 48,
+          "text": "Log In"
+        },
+        "tokenRequests": 1,
+        "successPath": "/onboarding"
+      },
+      "requests": {
+        "total": 42,
+        "document": 1,
+        "rsc": 11,
+        "script": 21,
+        "rest": 1,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 6
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "text-button-no-label-spinner",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "disabled + aria-busy immediately, size stable": {
+          "ok": true,
+          "detail": {
+            "disabled": true,
+            "ariaBusy": "true",
+            "width": 172,
+            "height": 44,
+            "text": "Detect My Location"
+          }
+        },
+        "accessible name preserved while pending": {
+          "ok": true
+        },
+        "no spinner flash before 120 ms": {
+          "ok": true
+        },
+        "spinner replaces content after delay": {
+          "ok": true
+        },
+        "released after failure": {
+          "ok": true,
+          "detail": {
+            "disabled": false,
+            "ariaBusy": null,
+            "width": 172,
+            "height": 44,
+            "text": "Detect My Location"
+          }
+        },
+        "stays on the form after failure": {
+          "ok": true,
+          "detail": "/register"
+        }
+      },
+      "observations": {
+        "before": {
+          "disabled": false,
+          "ariaBusy": null,
+          "width": 172,
+          "height": 44,
+          "text": "Detect My Location"
+        },
+        "early": [
+          {
+            "t": 2,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 172,
+              "height": 44,
+              "text": "Detect My Location"
+            }
+          },
+          {
+            "t": 35,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 172,
+              "height": 44,
+              "text": "Detect My Location"
+            }
+          },
+          {
+            "t": 53,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 172,
+              "height": 44,
+              "text": "Detect My Location"
+            }
+          },
+          {
+            "t": 71,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 172,
+              "height": 44,
+              "text": "Detect My Location"
+            }
+          },
+          {
+            "t": 89,
+            "spinnersVisible": 0,
+            "button": {
+              "disabled": true,
+              "ariaBusy": "true",
+              "width": 172,
+              "height": 44,
+              "text": "Detect My Location"
+            }
+          }
+        ],
+        "mid": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 1,
+          "infiniteAnimations": 1,
+          "ariaBusy": 1,
+          "status": [],
+          "statusVisible": false,
+          "button": {
+            "disabled": true,
+            "ariaBusy": "true",
+            "width": 172,
+            "height": 44,
+            "text": "Detect My Location"
+          }
+        },
+        "after": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": {
+            "disabled": false,
+            "ariaBusy": null,
+            "width": 172,
+            "height": 44,
+            "text": "Detect My Location"
+          }
+        },
+        "path": "/register"
+      },
+      "requests": {
+        "total": 47,
+        "document": 1,
+        "rsc": 2,
+        "script": 23,
+        "rest": 2,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 19
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "aschild-navigation-buttons",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "asChild Link renders as a link and navigates": {
+          "ok": true,
+          "detail": "A:button"
+        }
+      },
+      "observations": {
+        "tag": "A:button"
+      },
+      "requests": {
+        "total": 53,
+        "document": 1,
+        "rsc": 21,
+        "script": 26,
+        "rest": 0,
+        "auth": 0,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 5
+      },
+      "consoleErrors": [],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "drawer-pilot",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "entrance settles by ~240 ms without overshoot": {
+          "ok": true,
+          "detail": 282
+        },
+        "loading label + aria-busy while pending": {
+          "ok": true
+        },
+        "settles to real content": {
+          "ok": true,
+          "detail": {
+            "skeletons": 0,
+            "skeletonsVisible": 0,
+            "skeletonsAriaHidden": true,
+            "spinnersVisible": 0,
+            "infiniteAnimations": 0,
+            "ariaBusy": 0,
+            "status": [],
+            "statusVisible": false,
+            "button": null
+          }
+        },
+        "exit completes quickly (~180 ms)": {
+          "ok": true,
+          "detail": 234
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "openSamples": [
+          {
+            "t": 103,
+            "x": 1119,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 158,
+            "x": 962,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 203,
+            "x": 939,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 251,
+            "x": 930,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 282,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 312,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 343,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 375,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 407,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          },
+          {
+            "t": 437,
+            "x": 928,
+            "ariaBusy": 1,
+            "status": [
+              "Loading request…"
+            ]
+          }
+        ],
+        "settledAtMs": 282,
+        "loadedText": "Request Tracking\n\nStatus, payment, and tracking details for the selected service request.\n\nClose\nRW Synthetic Clearance\n\nRef #REQ-2026-00034\n\nPrevious timing mo",
+        "loaded": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        },
+        "exitMs": 234,
+        "d03": {
+          "skeletons": 0,
+          "skeletonsVisible": 0,
+          "skeletonsAriaHidden": true,
+          "spinnersVisible": 0,
+          "infiniteAnimations": 0,
+          "ariaBusy": 0,
+          "status": [],
+          "statusVisible": false,
+          "button": null
+        },
+        "d03StillReproduces": false
+      },
+      "requests": {
+        "total": 114,
+        "document": 2,
+        "rsc": 39,
+        "script": 43,
+        "rest": 13,
+        "auth": 4,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+      ],
+      "unexpectedConsoleErrors": []
+    },
+    {
+      "id": "mobile-360-no-overflow",
+      "phase": "RW-LT-01",
+      "status": "pass",
+      "checks": {
+        "no horizontal overflow at 360 px while loading": {
+          "ok": true
+        }
+      },
+      "observations": {
+        "loginDestination": "/home",
+        "overflow": false
+      },
+      "requests": {
+        "total": 97,
+        "document": 2,
+        "rsc": 28,
+        "script": 42,
+        "rest": 10,
+        "auth": 2,
+        "functions": 0,
+        "storage": 0,
+        "realtime": 0,
+        "other": 13
+      },
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503",
+        "WebSocket connection to 'ws://127.0.0.1:54321/realtime/v1/websocket?apikey=[redacted-jwt]&vsn=2.0.0' failed: Error during WebSocket handshake: Unexpected response code: 503"
+      ],
+      "unexpectedConsoleErrors": []
+    }
+  ],
+  "finishedAt": "2026-10-12T06:05:02.475Z",
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "error": 0
+  }
+}

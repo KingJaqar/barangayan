@@ -3,6 +3,9 @@
 import { QrCode } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { LoadingStatus } from '@/components/shared/loading-status';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/loading';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -16,7 +19,9 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { open: boolean; onClose: () => void; profileId: string; residentName: string }) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<'session' | 'unavailable' | null>(null);
+  // Bumped by "Try again": a read-only re-request of the same code (nothing is created).
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     if (!open) return;
@@ -25,38 +30,42 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
 
     async function load() {
       setLoading(true);
-      setFailed(false);
-      const supabase = createSupabaseBrowserClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        setFailed(true);
-        setLoading(false);
-        return;
-      }
-
+      setFailure(null);
+      setImageUrl(null);
       try {
+        const supabase = createSupabaseBrowserClient();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (cancelled) return;
+        if (!session?.access_token) {
+          setFailure('session');
+          return;
+        }
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-household-qr?profileId=${profileId}`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
         if (!res.ok) throw new Error('Failed to generate QR code');
         const blob = await res.blob();
+        // Created only while this request is still the current one, so a late response
+        // never leaves an unrevoked object URL behind.
+        if (cancelled) return;
         objectUrl = URL.createObjectURL(blob);
-        if (!cancelled) setImageUrl(objectUrl);
+        setImageUrl(objectUrl);
       } catch {
-        if (!cancelled) setFailed(true);
+        if (!cancelled) setFailure('unavailable');
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    load();
+    void load();
     return () => {
       cancelled = true;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [open, profileId]);
+  }, [open, profileId, attempt]);
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
@@ -66,19 +75,30 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
           <DialogDescription>Present this code at evacuation centers for quick family check-in.</DialogDescription>
         </DialogHeader>
 
-        <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border border-border bg-white p-3">
+        {/* Fixed geometry: the QR frame never resizes between loading, ready and failed. */}
+        <div aria-busy={loading || undefined} className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border border-border bg-white p-3">
           {loading ? (
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <Spinner className="size-8 text-primary" />
           ) : imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- server-issued PNG blob URL, not a next/image-eligible remote asset
             <img src={imageUrl} alt="Household QR code" className="h-full w-full object-contain" />
-          ) : failed ? (
-            <p className="text-center text-xs text-muted-foreground">Unable to generate QR code. Try again later.</p>
+          ) : failure ? (
+            <div role="alert" className="flex flex-col items-center gap-2 text-center">
+              <p className="text-xs text-muted-foreground">
+                {failure === 'session' ? 'Your session has ended. Log in again to show your household code.' : "We couldn't generate your QR code."}
+              </p>
+              {failure === 'unavailable' ? (
+                <Button type="button" size="sm" variant="outline" onClick={() => setAttempt((n) => n + 1)}>
+                  Try again
+                </Button>
+              ) : null}
+            </div>
           ) : (
             <QrCode size={80} className="text-muted-foreground" strokeWidth={1.5} />
           )}
         </div>
 
+        <LoadingStatus active={loading} label="Generating your QR code…" />
         <p className="text-center text-sm font-medium text-muted-foreground">{residentName}</p>
       </DialogContent>
     </Dialog>

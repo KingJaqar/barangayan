@@ -1,18 +1,25 @@
-'use client';
+import type * as React from 'react';
 
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { MOTION, staggerDelayMs } from '@/lib/motion';
+import { cn } from '@/lib/utils';
 
-/** Thin fade+rise-on-mount wrapper, used across onboarding and card lists in place of
- * Reanimated's FadeInDown (see the plan's §10 component tree). */
-export function FadeIn({ delay = 0, className, children, ...props }: HTMLMotionProps<'div'> & { delay?: number }) {
+/**
+ * Short content-arrival reveal: 200 ms fade with up to 6 px rise (CSS `rw-reveal`, so it
+ * stays server-compatible and needs no client boundary). Pass `index` for an initial
+ * list entrance: a 30 ms stagger capped at 150 ms for the first six items; later items
+ * render steady so long lists do no extra motion work. Reduced motion renders content
+ * immediately with no movement. Use one reveal per content region — don't nest them.
+ */
+export function FadeIn({ index, className, style, ...props }: React.ComponentProps<'div'> & { index?: number }) {
+  if (index !== undefined && index >= MOTION.staggerLimit) {
+    return <div className={className} style={style} {...props} />;
+  }
+  const delay = index ? staggerDelayMs(index) : 0;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
-      className={className}
-      {...props}>
-      {children}
-    </motion.div>
+    <div
+      className={cn('rw-reveal', className)}
+      style={delay ? ({ ...style, '--rw-reveal-delay': `${delay}ms` } as React.CSSProperties) : style}
+      {...props}
+    />
   );
 }

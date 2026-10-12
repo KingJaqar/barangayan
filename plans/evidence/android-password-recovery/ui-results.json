@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "forgot: renders shared header and form without horizontal overflow at 320px and 390px",
+    "otp: renders shared header and form without horizontal overflow at 320px and 390px",
+    "reset: renders shared header and form without horizontal overflow at 320px and 390px",
+    "Header chevron calls its recovery back handler",
+    "Typing, deletion, and whole-code entry work; underlying input text is fully covered even when forced to black or magenta",
+    "Wrong-code response appears inline and allows another attempt",
+    "Six-digit input enables full-width verification and advances to reset",
+    "Password checklist, confirmation feedback, and visibility controls work",
+    "Dark theme renders using theme colors",
+    "35% larger text at 320px remains within the viewport and the primary action can be scrolled into view"
+  ],
+  "errors": [],
+  "environment": "Actual React Native screens rendered on React Native Web with isolated navigation and Auth doubles; no emails or password writes"
+}

@@ -1,0 +1,12 @@
+Passed: chrome: JSON household counts remain independent of normalized members
+AssertionError [ERR_ASSERTION]: Long detail title must wrap within its dialog
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:50:18
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:22:38)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/final-flows.mjs:44:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

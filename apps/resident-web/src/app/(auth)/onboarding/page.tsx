@@ -4,7 +4,6 @@ import { ACCENT_COLORS } from '@barangayan/shared';
 import { Bell, Check, FileText, Megaphone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 import { useAccentController } from '@/components/theme/accent-controller';
 import { useThemeController } from '@/components/theme/theme-controller';
@@ -37,6 +36,7 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
+    // A quiet personalization read: on any failure the generic greeting stays.
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) return;
       setUserId(data.user.id);
@@ -45,8 +45,8 @@ export default function OnboardingPage() {
         .select('first_name')
         .eq('id', data.user.id)
         .single()
-        .then(({ data: profile }) => setFirstName(profile?.first_name ?? null));
-    });
+        .then(({ data: profile }) => setFirstName(profile?.first_name ?? null), () => {});
+    }, () => {});
   }, []);
 
   function handleContinue() {
@@ -101,10 +101,8 @@ export default function OnboardingPage() {
                 type="button"
                 aria-label={`Accent ${color}`}
                 aria-pressed={accent.toLowerCase() === color.toLowerCase()}
-                onClick={() => {
-                  setAccent(color);
-                  toast.success('Accent color updated');
-                }}
+                // The swatch and page update immediately; no toast per adjustment.
+                onClick={() => setAccent(color)}
                 className="flex h-9 w-9 items-center justify-center rounded-full transition-transform hover:scale-105"
                 style={{
                   backgroundColor: color,

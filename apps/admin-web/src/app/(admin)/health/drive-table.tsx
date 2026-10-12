@@ -2,9 +2,16 @@
 
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
 import { Eye, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { OperationsTableSummary } from '@/components/admin/operations-table-summary';
+import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
+import { SegmentedFilter } from '@/components/admin/segmented-filter';
+import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
+import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
+import { operationsConfig } from '@/lib/admin-tables/operations-config';
+import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
+import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
@@ -12,9 +19,10 @@ import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { DriveDetailModal } from './drive-detail-modal';
-import type { DriveRow } from './page';
-import { TABS, type Tab } from './types';
+import type { DriveRow } from './types';
+import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 export function DriveTypeBadge({ type }: { type: string }) {
   const cfg = DRIVE_TYPE_CONFIG[type as keyof typeof DRIVE_TYPE_CONFIG];
@@ -44,8 +52,7 @@ function currentDateISO() {
   return `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
 }
 
-function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: () => void }) {
-  const router = useRouter();
+function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string; onClose: () => void; onChanged: () => void }) {
   const toast = useToast();
   const [title, setTitle] = useState('');
   const [type, setType] = useState<(typeof DRIVE_TYPES)[number]>('vaccination');
@@ -131,16 +138,13 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
     setStockUnit('slots');
     setStockTotal(50);
     onClose();
-    router.refresh();
+    onChanged();
   }
-
-  const inputClass =
-    'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-6 grid grid-cols-1 gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900 sm:grid-cols-3"
+      className={`${formContainerClass} mb-6 grid-cols-1 sm:grid-cols-3`}
     >
       <label className="text-sm sm:col-span-3">
         <span className="mb-1 block font-medium">Title</span>
@@ -199,11 +203,11 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
         <button
           type="submit"
           disabled={submitting || !title.trim()}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={submitButtonClass}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Drive</LoadingButtonContent>
         </button>
-        <button type="button" onClick={onClose} className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold dark:bg-zinc-700">
+        <button type="button" onClick={onClose} className={cancelButtonClass}>
           Cancel
         </button>
       </div>
@@ -216,90 +220,24 @@ function AddDriveForm({ barangayId, onClose }: { barangayId: string; onClose: ()
  * Click the Drive cell to open the full-detail modal (title, location, time,
  * eligibility, stock label/unit). Action buttons stop click propagation so they don't
  * also open the modal. */
-export function DriveTable({
-  rows,
-  barangayId,
-  tab,
-  type,
-  q,
-}: {
-  rows: DriveRow[];
+export function DriveTable({ result, summary, requestedState, barangayId }: {
+  result: QueryOutcome<BrowseResult<DriveRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   barangayId: string;
-  tab: Tab;
-  type: string;
-  q: string;
 }) {
-  const router = useRouter();
   const toast = useToast();
-  const [selected, setSelected] = useState<DriveRow | null>(null);
-  const [dateOrder, setDateOrder] = useState<'asc' | 'desc'>('asc');
+  const config = useMemo(() => operationsConfig('health'), []);
+  const browse = useConfiguredTableBrowse(config, requestedState, result, true);
+  const { state, value } = browse;
+  const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
+  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<DriveRow>('health', result, browse.settle);
   const [addOpen, setAddOpen] = useState(false);
-  const [searchText, setSearchText] = useState(q);
-  // Unique per mount — see incident-reports/incident-table.tsx's channelName comment for why.
-  const [channelName] = useState(() => `admin-medical-drives-${Math.random().toString(36).slice(2)}`);
-
-  // Re-sync the box with the URL when the server sends a different `q` (back/forward, or a
-  // navigation from elsewhere). Adjusting state during render is React's recommended way to
-  // do this — an effect would render the stale value first, then immediately render again.
-  const [prevQ, setPrevQ] = useState(q);
-  if (prevQ !== q) {
-    setPrevQ(q);
-    setSearchText(q);
-  }
-
-  // Keep the latest tab/type around for the debounced search effect below, without making
-  // that effect re-fire (and re-push a redundant URL) whenever tab/type change on their
-  // own — those already navigate immediately through their own handlers.
-  const tabRef = useRef(tab);
-  const typeRef = useRef(type);
-  useEffect(() => {
-    tabRef.current = tab;
-    typeRef.current = type;
-  }, [tab, type]);
-
-  function navigate(next: { tab?: string; type?: string; q?: string }) {
-    const nextQ = next.q ?? q;
-    const nextType = next.type ?? type;
-    const params = new URLSearchParams({
-      tab: next.tab ?? tab,
-      ...(nextQ ? { q: nextQ } : {}),
-      ...(nextType ? { type: nextType } : {}),
-    });
-    router.push(`/health?${params.toString()}`);
-  }
-
-  // Real-time search: push the URL (and let the server re-filter) a short moment after the
-  // user stops typing, instead of waiting for a submit click.
-  useEffect(() => {
-    if (searchText === q) return;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams({
-        tab: tabRef.current,
-        ...(searchText ? { q: searchText } : {}),
-        ...(typeRef.current ? { type: typeRef.current } : {}),
-      });
-      router.push(`/health?${params.toString()}`);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
-  const sortedRows = [...rows].sort((a, b) => {
-    const diff = a.drive_date.localeCompare(b.drive_date);
-    return dateOrder === 'asc' ? diff : -diff;
-  });
-
+  const [channelName] = useState(() => 'admin-health-' + Math.random().toString(36).slice(2));
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
-    const channel = supabase
-      .channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'medical_drives' }, () => router.refresh())
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [router, channelName]);
+    const channel = supabase.channel(channelName)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'medical_drives' }, browse.refresh).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [channelName, browse.refresh]);
 
   async function updateField(drive: DriveRow, patch: Partial<Tables<'medical_drives'>>) {
     // Skip logging (but still write) when nothing actually changed — e.g. a cell
@@ -319,7 +257,7 @@ export function DriveTable({
     if (error) return { error: error.message };
     if (!updated) return { error: 'No medical drive was updated. Check that you still have access to this barangay.' };
 
-    router.refresh();
+    browse.refresh();
     const isStatusChange = patchKeys.length === 1 && patchKeys[0] === 'is_active';
     const before = Object.fromEntries(patchKeys.map((key) => [key, drive[key]]));
     logAdminAction({
@@ -333,6 +271,7 @@ export function DriveTable({
   }
 
   async function removeDrive(drive: DriveRow) {
+    if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     // No soft_delete RPC exists for medical_drives (unlike incidents) — the 0036 admin
     // update policy covers a plain soft-delete via deleted_at directly.
@@ -365,12 +304,12 @@ export function DriveTable({
     }).catch(() => {});
 
     toast.showSuccess('Drive removed.');
-    router.refresh();
+    browse.refresh();
   }
 
   const columns: EditableDataTableColumn<DriveRow>[] = [
     {
-      header: 'Drive',
+      id: 'title', header: 'Drive',
       initialWidth: 270,
       minWidth: 220,
       wrap: 'break-word',
@@ -385,7 +324,7 @@ export function DriveTable({
       // edited via the detail modal's form rather than a cramped inline text cell.
     },
     {
-      header: 'Category',
+      id: 'category', header: 'Category',
       initialWidth: 150,
       minWidth: 136,
       wrap: 'nowrap',
@@ -399,7 +338,7 @@ export function DriveTable({
       },
     },
     {
-      header: 'Date',
+      id: 'drive_date', header: 'Drive date',
       initialWidth: 142,
       minWidth: 132,
       wrap: 'nowrap',
@@ -411,7 +350,7 @@ export function DriveTable({
       },
     },
     {
-      header: 'Stock',
+      id: 'stock', header: 'Stock',
       initialWidth: 160,
       minWidth: 144,
       wrap: 'nowrap',
@@ -438,7 +377,7 @@ export function DriveTable({
       },
     },
     {
-      header: 'Registrations',
+      id: 'registrations', header: 'Registrations',
       initialWidth: 138,
       minWidth: 126,
       wrap: 'nowrap',
@@ -449,7 +388,7 @@ export function DriveTable({
       ),
     },
     {
-      header: 'Active',
+      id: 'active', header: 'Active',
       initialWidth: 118,
       minWidth: 108,
       wrap: 'nowrap',
@@ -486,7 +425,7 @@ export function DriveTable({
         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={() => setSelected(r)}
+            onClick={event => void openDetail(r, event.currentTarget)}
             title={`View ${r.title}`}
             aria-label={`View ${r.title}`}
             className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
@@ -506,101 +445,30 @@ export function DriveTable({
     },
   ];
 
-  return (
-    <>
-      {/* Section 3: sort/filter/search (left) + Section 5: add button (right) */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setDateOrder((current) => (current === 'asc' ? 'desc' : 'asc'))}
-            className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-          >
-            Date {dateOrder === 'asc' ? '↑' : '↓'}
-          </button>
-
-          <select
-            value={type}
-            onChange={(e) => navigate({ type: e.target.value })}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="">All categories</option>
-            {DRIVE_TYPES.map((t) => (
-              <option key={t} value={t}>
-                {DRIVE_TYPE_CONFIG[t].label}
-              </option>
-            ))}
-          </select>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ q: searchText });
-            }}
-            className="flex items-center gap-2"
-          >
-            <input
-              type="search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search title, location, eligibility…"
-              className="rounded-full border border-zinc-300 px-4 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-            />
-            <button
-              type="submit"
-              className="rounded-full border border-zinc-300 px-3 py-1.5 text-sm font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] dark:border-zinc-700"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-
-        {!addOpen && (
-          <button
-            type="button"
-            onClick={() => setAddOpen(true)}
-            disabled={!barangayId}
-            className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            + Add Drive
-          </button>
-        )}
-      </div>
-
-      {/* Section 4: segmented tabs, beneath the sort/filter/search + add row */}
-      <div className="mb-4 flex gap-1 rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => navigate({ tab: t.key })}
-            className={`flex-1 rounded-full px-4 py-1.5 text-sm font-medium ${
-              tab === t.key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-600 dark:text-zinc-300'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {addOpen && <AddDriveForm barangayId={barangayId} onClose={() => setAddOpen(false)} />}
-
-      {/* Section 6: table display — columns are user-resizable (drag the divider in each
-          header cell). */}
-      <EditableDataTable
-        rows={sortedRows}
-        rowKey={(r) => r.id}
+  return <div ref={containerRef}>
+    <OperationsTableSummary name="health" summary={summary} onRetry={browse.refresh} />
+    
+    {addOpen && <fieldset disabled={browse.pending}><AddDriveForm barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <ProfileTablePanel label="Medical drives" browse={browse} 
+      category={<label className="table-browse-field">Category
+        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
+          <option value="">All categories</option>
+          {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
+        </select></label>}
+      filters={<SegmentedFilter label="Drive schedule" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+        value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+      actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+        disabled={browse.pending || !barangayId}>+ Add Drive</button>}>
+      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No medical drives found."
-        columns={columns}
-        onRowClick={setSelected}
-        resizableColumns
-        pinLastColumn
-        density="compact"
-        tableMinWidth={900}
-        cellOverflow="hidden"
-      />
-
-      {selected && <DriveDetailModal drive={selected} onClose={() => setSelected(null)} />}
-    </>
-  );
+        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns pinLastColumn density="compact"
+        tableMinWidth={900} cellOverflow="hidden"
+        editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
+        sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
+          onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
+    </ProfileTablePanel>
+    {selectedDetail && <DriveDetailModal drive={selectedDetail} key={selectedDetail.id}
+      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
+      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+  </div>;
 }

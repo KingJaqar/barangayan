@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "user": "anon",
+      "route": "incident-reports",
+      "result": "redirected to login"
+    },
+    {
+      "user": "anon",
+      "route": "health",
+      "result": "redirected to login"
+    },
+    {
+      "user": "anon",
+      "route": "health/applicants",
+      "result": "redirected to login"
+    },
+    {
+      "user": "resident",
+      "route": "incident-reports",
+      "result": "redirected to login"
+    },
+    {
+      "user": "resident",
+      "route": "health",
+      "result": "redirected to login"
+    },
+    {
+      "user": "resident",
+      "route": "health/applicants",
+      "result": "redirected to login"
+    },
+    {
+      "user": "removedAdmin",
+      "route": "incident-reports",
+      "result": "redirected to login"
+    },
+    {
+      "user": "removedAdmin",
+      "route": "health",
+      "result": "redirected to login"
+    },
+    {
+      "user": "removedAdmin",
+      "route": "health/applicants",
+      "result": "redirected to login"
+    },
+    {
+      "user": "foreignAdmin",
+      "route": "incident-reports",
+      "result": "only own tenant; no tenant A rows"
+    },
+    {
+      "user": "foreignAdmin",
+      "route": "health",
+      "result": "only own tenant; no tenant A rows"
+    },
+    {
+      "user": "foreignAdmin",
+      "route": "health/applicants",
+      "result": "only own tenant; no tenant A rows"
+    }
+  ]
+}

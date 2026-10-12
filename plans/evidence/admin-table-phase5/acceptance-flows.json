@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "mode": "flows",
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "combined filters preserve independent complete summaries, Health Today is included in Upcoming",
+    "registration aggregates include cancelled and missing-score registrations; Applicants retains inner-score membership and name sorting",
+    "table, summary and complete-option failures stay separate and Retry retains the query",
+    "rapid delayed controls merge the search draft; Back cancels debounce; invalid pages correct once; partial sizes stay exact"
+  ],
+  "failures": [],
+  "errors": [],
+  "timings": [],
+  "facts": {},
+  "limitations": [
+    "Synthetic authenticated isolated database, loopback development preview, no production data or deployment.",
+    "Native Safari/Edge, physical input and OS settings, native zoom and manual screen readers remain Phase 6 verification."
+  ]
+}

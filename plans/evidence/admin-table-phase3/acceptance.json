@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "browsers": [
+    {
+      "engine": "firefox",
+      "version": "153.0"
+    },
+    {
+      "engine": "webkit",
+      "version": "26.5"
+    }
+  ],
+  "checks": [
+    "firefox: requests defaults, ranges, sort controls, scrolling and responsive access",
+    "firefox: transactions defaults, ranges, sort controls, scrolling and responsive access",
+    "webkit: requests defaults, ranges, sort controls, scrolling and responsive access",
+    "webkit: transactions defaults, ranges, sort controls, scrolling and responsive access"
+  ],
+  "failures": [],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": [],
+  "networkFailures": [
+    {
+      "engine": "firefox",
+      "path": "/rest/v1/admin_audit_log",
+      "failure": "NS_BINDING_ABORTED",
+      "headerNames": [
+        "host",
+        "user-agent",
+        "accept",
+        "accept-language",
+        "accept-encoding",
+        "referer",
+        "accept-profile",
+        "apikey",
+        "authorization",
+        "x-client-info",
+        "origin",
+        "connection",
+        "sec-fetch-dest",
+        "sec-fetch-mode",
+        "sec-fetch-site"
+      ]
+    }
+  ]
+}

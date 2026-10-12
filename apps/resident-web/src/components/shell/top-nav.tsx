@@ -5,6 +5,7 @@ import { Heart, Home, MapPin, Settings, ClipboardList, Bell, ShieldAlert, Newspa
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
 // `badge` names which live count (from useUnreadCounts) drives this item's badge, if
@@ -60,6 +61,7 @@ export function TopNav() {
               </span>
               {label}
             </span>
+            <LinkPendingHint className="bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 text-primary" />
           </Link>
         );
       })}

@@ -1,0 +1,29 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [
+    "chrome: requests defaults, ranges, sort controls, scrolling and responsive access",
+    "chrome: transactions defaults, ranges, sort controls, scrolling and responsive access"
+  ],
+  "failures": [
+    {
+      "label": "Chrome: request lifecycle actions refresh membership; legacy guards and v2 review stay intact",
+      "message": "Docker exec failed: ERROR:  new row for relation \"service_requests\" violates check constraint \"service_requests_v2_shape\"\nDETAIL:  Failing row contains (40000000-0000-4000-8000-000000001504, 10000000-0000-4000-8000-000000000001, 20000000-0000-4000-8000-000000001504, 30000000-0000-4000-8000-000000000001, REQ-PHASE0-01504, Fixture notes, submitted, pending, [{\"at\": \"2026-10-11T15:33:07.651891+00:00\", \"note\": \"Request sub..., 2026-01-02 01:04:00+00, 2026-10-11 15:33:07.651891+00, null, null, null, 2, null, null, null, null, null, null, null, legacy, f, null, null, legacy, null, null, null, null, null, legacy_hours, null, legacy, null, null, null, null, null, pending, null, null, null, null).\n\n\n3 !== 0\n"
+    },
+    {
+      "label": "run",
+      "message": "Docker exec failed: ERROR:  new row for relation \"service_requests\" violates check constraint \"service_requests_v2_shape\"\nDETAIL:  Failing row contains (40000000-0000-4000-8000-000000001504, 10000000-0000-4000-8000-000000000001, 20000000-0000-4000-8000-000000001504, 30000000-0000-4000-8000-000000000001, REQ-PHASE0-01504, Fixture notes, submitted, pending, [{\"at\": \"2026-10-11T15:33:07.651891+00:00\", \"note\": \"Request sub..., 2026-01-02 01:04:00+00, 2026-10-11 15:33:07.651891+00, null, null, null, 2, null, null, null, null, null, null, null, legacy, f, null, null, legacy, null, null, null, null, null, legacy_hours, null, legacy, null, null, null, null, null, pending, null, null, null, null).\n\n\n3 !== 0\n"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Refund provider endpoint is replaced with a synthetic successful submission; the browser uses the real confirmation read and audit action. No external payment provider is contacted.",
+    "Physical input, native Safari/Edge and manual screen-reader checks remain release work."
+  ],
+  "timings": []
+}

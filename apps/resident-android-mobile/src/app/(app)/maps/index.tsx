@@ -286,9 +286,10 @@ export default function MapsScreen() {
   // ── PanResponder (attached to the handle row) ───────────────────────────
   const panResponder = useRef(
     PanResponder.create({
-      // Claim the gesture as soon as the user touches the handle zone.
-      onStartShouldSetPanResponder: () => true,
-      // Also claim once a vertical move is confirmed (in case of ambiguity).
+      // Don't claim on touch start — that would swallow simple taps before
+      // TouchableOpacity's onPress can fire. Only claim once a vertical
+      // drag is confirmed.
+      onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 5,
 
       onPanResponderMove: (_, g) => {

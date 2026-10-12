@@ -1,3 +1,5 @@
+import type { Tables } from '@barangayan/shared';
+
 export type Tab = 'upcoming' | 'today' | 'past' | 'inactive' | 'all';
 
 // Same segmented-workflow architecture as the Incident Reports screen
@@ -6,9 +8,11 @@ export type Tab = 'upcoming' | 'today' | 'past' | 'inactive' | 'all';
 // incidents — the workflow here is date-driven (Upcoming/Today/Past) plus the
 // `is_active` toggle (Inactive), so the tabs are derived rather than a literal column.
 export const TABS: { key: Tab; label: string }[] = [
+  { key: 'all', label: 'All' },
   { key: 'upcoming', label: 'Upcoming' },
   { key: 'today', label: 'Today' },
   { key: 'past', label: 'Past' },
   { key: 'inactive', label: 'Inactive' },
-  { key: 'all', label: 'All' },
 ];
+
+export type DriveRow = Tables<'medical_drives'> & { registration_count: number };

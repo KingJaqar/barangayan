@@ -6,14 +6,15 @@ import { ArrowLeft, Bell, FileText, Mail, Megaphone } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
-import { toast } from 'sonner';
+import { Suspense, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
+import { AUTH_MESSAGES, authFailureKind } from '@/lib/auth/auth-feedback';
 import { getResidentLoginDestination } from '@/lib/auth/login-destination';
+import { beginAttempt, notify } from '@/lib/notify';
 import { hasCompletedOnboarding } from '@/lib/onboarding';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -41,33 +42,54 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(searchParams.has('authError') ? 'Google sign-in was cancelled, expired, or failed. Please try again.' : null);
   const [loading, setLoading] = useState(false);
+  // Synchronous guard: Enter + click in the same frame must not start two sign-ins.
+  const busy = useRef(false);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    if (busy.current) return;
+    busy.current = true;
     setError(null);
     setLoading(true);
-
-    const supabase = createSupabaseBrowserClient();
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (signInError) {
+    const attempt = beginAttempt('login');
+    // The inline message persists for recovery; the toast is the one announced outcome.
+    const fail = (inline: string, title: string, description: string) => {
+      busy.current = false;
       setLoading(false);
-      // Deliberately generic — do not let this message reveal whether the email exists
-      // (see the plan's §4 Route Contract Matrix security note for /login).
-      setError('Incorrect email or password.');
-      toast.error('Login failed — check your email and password.');
-      return;
-    }
+      setError(inline);
+      notify.error(title, { id: attempt, description });
+    };
 
-    let incomplete;
-    try { incomplete = await needsResidentProfile(supabase, signInData.user.id); }
-    catch { setLoading(false); setError('Unable to load your profile. Please retry.'); return; }
-    const safeNext = safeResidentRedirect(next);
-    const destination = incomplete
-      ? (residentActionNeedsProfile(new URL(safeNext, window.location.origin).pathname) ? residentCompletionDestination(safeNext) : safeNext)
-      : getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
-    router.replace(destination);
-    router.refresh();
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (signInError) {
+        const kind = authFailureKind(signInError);
+        if (kind === 'connection') return fail(AUTH_MESSAGES.connection, 'Login failed', "Couldn't reach the server. Check your connection.");
+        if (kind === 'rate-limit') return fail(AUTH_MESSAGES.rateLimit, 'Login failed', 'Too many attempts. Wait a moment, then try again.');
+        if (kind === 'service') return fail(AUTH_MESSAGES.service, 'Login failed', 'The sign-in service is having trouble. Try again shortly.');
+        // Deliberately generic — do not let this message reveal whether the email exists
+        // (see the plan's §4 Route Contract Matrix security note for /login).
+        return fail('Incorrect email or password.', 'Login failed', 'Check your email and password.');
+      }
+
+      let incomplete;
+      try { incomplete = await needsResidentProfile(supabase, signInData.user.id); }
+      catch {
+        // Signed in, but the profile check that picks the destination didn't load.
+        return fail("You're logged in, but we couldn't load your profile. Check your connection, then try again.", "Couldn't finish logging in", "Your profile didn't load. Try again.");
+      }
+      const safeNext = safeResidentRedirect(next);
+      const destination = incomplete
+        ? (residentActionNeedsProfile(new URL(safeNext, window.location.origin).pathname) ? residentCompletionDestination(safeNext) : safeNext)
+        : getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
+      // Stay pending until the destination replaces this screen.
+      router.replace(destination);
+      router.refresh();
+    } catch {
+      fail(AUTH_MESSAGES.connection, 'Login failed', "Couldn't reach the server. Check your connection.");
+    }
   }
 
   return (
@@ -138,9 +160,13 @@ function LoginForm() {
           />
 
           <h2 className="text-2xl font-bold tracking-tight">Welcome back</h2>
-          <p className="mt-1 mb-7 text-sm text-muted-foreground">Log in to continue to your account.</p>
+          <p className="mt-1 mb-7 text-sm text-muted-foreground">
+            {/* A gated page (or an expired session) sent the resident here with ?next=. */}
+            {next ? 'Log in to continue where you left off.' : 'Log in to continue to your account.'}
+          </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {searchParams.get('passwordReset') === 'success' ? <p role="status" className="text-sm text-primary">Password updated. Sign in with your new password.</p> : null}
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -176,7 +202,7 @@ function LoginForm() {
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-            <Button type="submit" size="lg" loading={loading} className="mt-1 w-full">
+            <Button type="submit" size="lg" loading={loading} loadingLabel="Logging in…" className="mt-1 w-full">
               Log In
             </Button>
           </form>

@@ -2,6 +2,7 @@ import { requestFee } from '@barangayan/shared';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { FileText } from 'lucide-react';
 
+import { ReadFailure } from '@/components/shared/read-failure';
 import { StatusPill } from '@/components/shared/status-pill';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -18,7 +19,7 @@ export default async function LogsPage() {
   const { user } = await requireUser();
   const supabase = await createSupabaseServerClient();
 
-  const { data: requests } = await supabase
+  const { data: requests, error } = await supabase
     .from('service_requests')
     .select('*, document_types(name, fee_centavos), payments(document_fee_centavos, amount_centavos)')
     .eq('resident_id', user.id)
@@ -31,7 +32,9 @@ export default async function LogsPage() {
         <p className="text-sm text-muted-foreground">Recent activity across all your document requests.</p>
       </div>
 
-      {requests && requests.length > 0 ? (
+      {error ? (
+        <ReadFailure message="We couldn't load your activity." />
+      ) : requests && requests.length > 0 ? (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {requests.map((r) => (
             <div key={r.id} className="flex items-center gap-2.5 rounded-xl border border-border bg-card p-3">

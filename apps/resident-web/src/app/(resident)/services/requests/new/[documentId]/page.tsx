@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+import { ReadFailure } from '@/components/shared/read-failure';
+import { isMissingRow } from '@/lib/service-feedback';
+
 import { NewRequestForm } from './new-request-form';
 
 /**
@@ -16,13 +19,18 @@ export default async function NewRequestPage({ params }: { params: Promise<{ doc
   const { user } = await requireUser();
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: doc }, { data: profile }] = await Promise.all([
+  const [{ data: doc, error: docError }, { data: profile }] = await Promise.all([
     supabase.from('document_types').select('*').eq('id', documentId).eq('is_active', true).single(),
     supabase.from('profiles').select('full_name, mobile_number').eq('id', user.id).single(),
   ]);
 
   if (!doc) {
-    notFound();
+    if (isMissingRow(docError)) notFound();
+    return (
+      <div className="mx-auto max-w-2xl">
+        <ReadFailure message="We couldn't load this service." />
+      </div>
+    );
   }
 
   return (

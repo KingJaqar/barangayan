@@ -1,13 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PrimaryButton } from '@/components/primary-button';
+import { GuestBrowseButton } from '@/components/guest-browse-button';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
-import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 
 /**
@@ -20,17 +19,20 @@ export default function AuthChoiceScreen() {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { setGuest } = useAuth();
+  const { height } = useWindowDimensions();
+  const compact = height - insets.top - insets.bottom < 600;
+  const badgeSize = compact ? 72 : height < 740 ? 112 : 160;
+  const logoSize = compact ? 52 : height < 740 ? 80 : 112;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]} edges={['top', 'left', 'right']}>
-      <View style={[styles.root, { backgroundColor: theme.background }]}>
+      <ScrollView style={[styles.root, { backgroundColor: theme.background }]} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} bounces={false} alwaysBounceVertical={false} overScrollMode="never">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <View style={[styles.hero, { backgroundColor: theme.primary, paddingTop: Spacing.five }]}>
-          <View style={styles.logoBadge}>
+        <View style={[styles.hero, { backgroundColor: theme.primary, paddingTop: compact ? 12 : 20, paddingBottom: compact ? 32 : 40 }]}>
+          <View style={[styles.logoBadge, { width: badgeSize, height: badgeSize, borderRadius: badgeSize * 0.27 }]}>
             <Image
               source={require('../../../assets/logo/barangayan-logo-1024.png')}
-              style={styles.logo}
+              style={{ width: logoSize, height: logoSize }}
               contentFit="contain"
               accessibilityLabel="Barangayan logo"
             />
@@ -45,11 +47,11 @@ export default function AuthChoiceScreen() {
         <View
           style={[
             styles.sheet,
-            { backgroundColor: theme.background, paddingBottom: insets.bottom + Spacing.four },
+            { backgroundColor: theme.background, paddingBottom: insets.bottom + Spacing.two },
           ]}>
           <ThemedText style={styles.sheetTitle}>Get Started</ThemedText>
           <ThemedText themeColor="textSecondary" style={styles.sheetSubtitle}>
-            Join your community platform to stay connected, informed, and engaged.
+            Stay connected to your barangay community.
           </ThemedText>
 
           <View style={styles.actions}>
@@ -64,24 +66,11 @@ export default function AuthChoiceScreen() {
             />
           </View>
 
-          <Pressable
-            onPress={() => {
-              // Unlike the other transitions in this app, this one needs an explicit
-              // navigate: entering guest mode makes BOTH (app) and (auth) reachable at
-              // once (see _layout.tsx), so nothing auto-redirects away from this screen.
-              setGuest(true);
-              router.replace('/home');
-            }}
-            accessibilityRole="button"
-            style={styles.guestLink}
-            hitSlop={Spacing.two}>
-            <ThemedText themeColor="textSecondary" style={styles.guestLinkText}>
-              Browse public updates as a guest
-            </ThemedText>
-            <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} />
-          </Pressable>
+          <View style={styles.guestAction}>
+            <GuestBrowseButton />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -89,48 +78,34 @@ export default function AuthChoiceScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   root: { flex: 1 },
+  scrollContent: { flexGrow: 1 },
 
   hero: {
     alignItems: 'center',
-    paddingBottom: Spacing.six,
-    gap: Spacing.two,
+    gap: 6,
   },
   logoBadge: {
-    width: 220,
-    height: 220,
-    borderRadius: 60,
     backgroundColor: 'rgba(255,255,255,0.16)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.one,
   },
-  // 150% larger than the original 56×56 (56 + 150% = 140).
-  logo: { width: 140, height: 140 },
-  heroTitle: { fontSize: 26, fontWeight: '700' },
-  heroSubtitle: { fontSize: 14, opacity: 0.85, textAlign: 'center' },
+  heroTitle: { fontSize: 26, lineHeight: 30, fontWeight: '700' },
+  heroSubtitle: { fontSize: 14, lineHeight: 20, opacity: 0.85, textAlign: 'center' },
 
   sheet: {
     flex: 1,
-    marginTop: -Spacing.five,
+    marginTop: -Spacing.four,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.five,
+    paddingTop: 20,
   },
-  sheetTitle: { fontSize: 22, fontWeight: '700' },
+  sheetTitle: { fontSize: 22, lineHeight: 28, fontWeight: '700' },
   sheetSubtitle: { fontSize: 14, marginTop: Spacing.one, lineHeight: 20 },
 
   actions: {
     gap: Spacing.two,
-    marginTop: Spacing.five,
+    marginTop: Spacing.three,
   },
-  guestLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: Spacing.half,
-    marginTop: Spacing.four,
-    alignSelf: 'center',
-  },
-  guestLinkText: { fontSize: 14, fontWeight: '600' },
+  guestAction: { marginTop: Spacing.one },
 });

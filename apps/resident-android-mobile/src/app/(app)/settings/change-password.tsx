@@ -140,6 +140,13 @@ function ChangeOrManagePassword() {
   const confirmPasswordError =
     fieldErrors.confirmPassword === "Passwords don't match" ? undefined : fieldErrors.confirmPassword;
 
+  function handleForgotPassword() {
+    if (loading) return;
+    // Enable the existing login recovery stack before leaving the signed-in screen.
+    setPasswordRecovery(true);
+    router.replace('/(auth)/forgot-password');
+  }
+
   async function handleUpdate() {
     setError(null);
     setFieldErrors({});
@@ -237,7 +244,7 @@ function ChangeOrManagePassword() {
             </ThemedText>
             {mode === 'error' ? <PrimaryButton label="Retry" onPress={() => { void refreshCompletion(); }} /> : null}
             {mode === 'recover_only' ? (
-              <PrimaryButton label="Recover password by email" onPress={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }} />
+              <PrimaryButton label="Recover password by email" onPress={handleForgotPassword} />
             ) : null}
           </View>
         ) : (
@@ -278,6 +285,16 @@ function ChangeOrManagePassword() {
                   autoComplete="current-password"
                   passwordVisibility={{ visible: showCurrent, onToggle: () => setShowCurrent((v) => !v) }}
                 />
+                <Pressable
+                  onPress={handleForgotPassword}
+                  disabled={loading}
+                  accessibilityRole="link"
+                  accessibilityState={{ disabled: loading }}
+                  style={[styles.forgotLink, { opacity: loading ? 0.5 : 1 }]}>
+                  <ThemedText type="link" style={{ color: theme.primary, fontWeight: '600' }}>
+                    Forgot Password?
+                  </ThemedText>
+                </Pressable>
                 <View style={[styles.divider, { backgroundColor: theme.backgroundSelected }]} />
                 <TextField
                   label="New Password"
@@ -333,7 +350,7 @@ function ChangeOrManagePassword() {
                   label="Recover password by email"
                   variant="secondary"
                   disabled={loading}
-                  onPress={() => { setPasswordRecovery(true); router.replace('/(auth)/forgot-password'); }}
+                  onPress={handleForgotPassword}
                 />
               ) : null}
             </ScrollView>
@@ -510,6 +527,10 @@ const styles = StyleSheet.create({
   divider: {
     height: StyleSheet.hairlineWidth,
     marginVertical: Spacing.half,
+  },
+  forgotLink: {
+    alignSelf: 'flex-end',
+    marginTop: -Spacing.two,
   },
   passwordMatchIndicator: {
     flexDirection: 'row',

@@ -1,0 +1,10 @@
+locator.fill: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('tbody tr td').first().locator('input')
+
+    at C:\Users\User\barangayan\plans\evidence\admin-table-phase4\detail-realtime.mjs:49:130
+    at async check (C:\Users\User\barangayan\plans\evidence\admin-table-phase4\detail-realtime.mjs:11:39)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/detail-realtime.mjs:46:3 {
+  log: [ "  - waiting for locator('tbody tr td').first().locator('input')" ],
+  name: 'TimeoutError'
+}

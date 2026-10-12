@@ -1,0 +1,32 @@
+{
+  "passed": false,
+  "browsers": [
+    {
+      "engine": "chrome",
+      "version": "154.0.8037.99"
+    }
+  ],
+  "checks": [],
+  "failures": [
+    {
+      "label": "chrome: residents defaults, sizes, last page, keyboard, scrolling, resizing and empty results",
+      "message": "page.waitForFunction: Timeout 15000ms exceeded.\n    at ready (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:34:14)\n    at go (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:39:137)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:61:11\n    at async check (C:\\Users\\User\\barangayan\\plans\\evidence\\admin-table-phase4\\acceptance.mjs:21:45)\n    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase4/acceptance.mjs:59:49"
+    }
+  ],
+  "errors": [
+    {
+      "engine": "chrome",
+      "message": "Cannot read properties of null (reading 'revision')"
+    },
+    {
+      "engine": "chrome",
+      "message": "Cannot read properties of null (reading 'revision')"
+    }
+  ],
+  "timings": [],
+  "limitations": [
+    "Physical inputs, native Safari/Edge, native zoom and manual screen-reader checks remain release verification.",
+    "ID evidence signing/image responses are synthetic; the actual review RPC and audit use the isolated database.",
+    "Invitation provider delivery is outside the table integration gate."
+  ]
+}

@@ -6,11 +6,13 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { FilterChips } from '@/components/filter-chips';
 import { AnnouncementsFeed, FilterKey, useAnnouncementChips } from '@/components/reports/announcements-feed';
+import { GuestAuthCallout } from '@/components/guest-auth-callout';
 import { FadeInView } from '@/components/reports/fade-in-view';
 import { MyIncidentsFeed, StatusFilterKey, useStatusChips } from '@/components/reports/my-incidents-feed';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { Fonts, Spacing } from '@/constants/theme';
+import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 
@@ -70,7 +72,15 @@ const markReadStyles = StyleSheet.create({
 // render real data via MyIncidentsFeed (reporter_id = current user, status-filtered).
 export default function ReportsScreen() {
   const params = useLocalSearchParams<{ tab?: ReportsSegment }>();
-  const [segment, setSegment] = useState<ReportsSegment>(params.tab ?? 'incident-reports');
+  const [requestedSegment, setSegment] = useState<ReportsSegment>(params.tab ?? 'incident-reports');
+  // Guests have no incident reports of their own: the Active/Resolved segments are hidden
+  // and Incidents shows a login prompt. Announcements stay public.
+  const { session } = useAuth();
+  const isGuest = !session;
+  const segment: ReportsSegment =
+    isGuest && (requestedSegment === 'active' || requestedSegment === 'resolved')
+      ? 'incident-reports'
+      : requestedSegment;
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -105,6 +115,8 @@ export default function ReportsScreen() {
     setAnnouncementFilter('all');
   }, [segment]);
 
+  const guestIncidents = isGuest && segment === 'incident-reports';
+
   const renderHeading = () => {
     switch (segment) {
       case 'incident-reports':
@@ -136,6 +148,7 @@ export default function ReportsScreen() {
   };
 
   const renderFilters = () => {
+    if (guestIncidents) return null;
     if (segment === 'incident-reports') {
       return (
         <FilterChips
@@ -177,12 +190,19 @@ export default function ReportsScreen() {
       {/* Section 1 — Segmented control */}
       <View style={styles.section1}>
         <SegmentedControl
-          segments={[
-            { key: 'incident-reports', label: 'Incidents' },
-            { key: 'active', label: 'Active' },
-            { key: 'resolved', label: 'Resolved' },
-            { key: 'announcements', label: 'Announcements', icon: 'notifications-outline' },
-          ]}
+          segments={
+            isGuest
+              ? [
+                  { key: 'incident-reports', label: 'Incidents' },
+                  { key: 'announcements', label: 'Announcements', icon: 'notifications-outline' },
+                ]
+              : [
+                  { key: 'incident-reports', label: 'Incidents' },
+                  { key: 'active', label: 'Active' },
+                  { key: 'resolved', label: 'Resolved' },
+                  { key: 'announcements', label: 'Announcements', icon: 'notifications-outline' },
+                ]
+          }
           activeKey={segment}
           onChange={handleSegmentChange}
         />
@@ -192,6 +212,7 @@ export default function ReportsScreen() {
           "Mark all as read" action inline on the right, same row as the heading text on the
           left. Active Reports is a live status count (open + in_progress), not an unread
           notification count, so it has no button; the bell/badge for it never clears. */}
+      {!guestIncidents && (
       <View style={styles.section2}>
         <View style={styles.section2Row}>
           {/* `key={segment}` remounts on every switch so the heading crossfades in rather
@@ -203,11 +224,12 @@ export default function ReportsScreen() {
           {segment === 'resolved' && (
             <MarkAllReadButton label="Mark all as read" onPress={markResolvedRead} />
           )}
-          {segment === 'announcements' && (
+          {segment === 'announcements' && !isGuest && (
             <MarkAllReadButton label="Mark all as read" onPress={markAnnouncementsRead} />
           )}
         </View>
       </View>
+      )}
 
       {/* Section 3 — Category filter controls. */}
       <View style={styles.section3}>{renderFilters()}</View>
@@ -222,7 +244,15 @@ export default function ReportsScreen() {
         {/* Content panels */}
 
         {/* All of the resident's own reports (any status) */}
-        {segment === 'incident-reports' && (
+        {guestIncidents && (
+          <GuestAuthCallout
+            tabName="Incident Reports"
+            message="You need to log in before you can submit an incident report or track your reports."
+            showRegister={false}
+          />
+        )}
+
+        {segment === 'incident-reports' && !isGuest && (
           <MyIncidentsFeed
             activeFilter={incidentFilter}
             onFilterChange={setIncidentFilter}

@@ -1,0 +1,15 @@
+Passed: combined filters preserve independent complete summaries, Health Today is included in Upcoming
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'👥\n1' !== '👥 0'
+
+    at file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:206:18
+    at async check (file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:21:45)
+    at async file:///C:/Users/User/barangayan/plans/evidence/admin-table-phase5/acceptance.mjs:201:9 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '👥\n1',
+  expected: '👥 0',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
