@@ -130,7 +130,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
 
       <label className="text-sm">
         <span className={labelClass}>Category</span>
-        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+        <AdminSelect kind="announcement" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
           {ANNOUNCEMENT_CATEGORIES.map((cat) => (
             <option key={cat} value={cat}>
               {ANNOUNCEMENT_CATEGORY_META[cat].label}

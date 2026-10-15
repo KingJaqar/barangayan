@@ -215,6 +215,8 @@ Gate: the pilot matches the resident visual reference and preserves actual field
 
 2026-10-14 progress: Added `components/admin/dropdown/` with admin-only tokens, same-width anchoring/7px gap, viewport flip/shift, scoped dialog portals, normal 44px/compact 32px variants, icons and reduced motion. Required validation, native serialization/reset, disabled fieldsets, missing/empty/dynamic options, keyboard/typeahead/scrolling, unchanged selection and outside dismissal passed isolated browser checks. Actual browse/inline controls and QR Controller passed their pilot. Native comparison confirmed Enter opens/selects without submitting, while adjacent text-input Enter submits. Dialog Escape closes the popup first; option clicks do not blur-save or open rows. Hidden backing geometry is bounded against existing global CSS; CSS zoom and bounded ancestor-transition tracking preserve alignment. Panel height is capped at 320px/50% viewport, and accent decoration is blended toward foreground for bright-accent contrast. No dependencies added.
 
+2026-10-15 icon refinement: The icon criterion was partially implemented: the shared control repeated a generic field icon on every option. Replaced that fallback with UI-only, typed field/option metadata. Fixed domain choices receive semantic glyphs; data-driven, placeholder and unknown choices retain a neutral gutter. Selected options preview their glyph unless the caller supplies an explicit trigger icon. Existing explicit per-option icons retain priority. No interaction or form-bridge logic changed.
+
 ### Phase 3 — Migrate high-reuse shared entry points
 
 Status: Complete.
@@ -229,6 +231,8 @@ Gate: sorting/direction/page-size still use existing browse state, URL changes, 
 
 2026-10-14 progress: Migrated browse sort/direction, page size, configured inline select, and record select/boolean fields. Updated ContentSideSheet focus selectors to exclude backing controls and recognize triggers, and the inline editor's internal blur boundary. Actual fixtures verified eight main tables, eight record archive implementations, five content archive sections, all 16 generated record fields and the version-2 request restriction. Existing table browser passed all 45 size/count combinations plus independent sort/direction/category/status/page-size, page reset, Back/Forward, pending/error/retry, scroll/resize and cleanup checks. Existing record and row-context suites passed with mocked writes. Original queries, settlement and persistence callbacks were preserved.
 
+2026-10-15 icon refinement: Added explicit icon kinds to the existing inline-editor UI configurations and record-field rendering without editing business configurations. Sort methods now show field-specific icons (resident, document, amount, stock and others); direction glyphs reflect text, dates, numbers/references and boolean ordering. Existing browse, drawer, keyboard and save/cancel regression checks passed.
+
 ### Phase 4 — Migrate screen filters, forms, and compatibility sites
 
 Status: Complete.
@@ -242,6 +246,8 @@ Status: Complete.
 Gate: the inventory has no unexplained remaining native selects or datalists. Any native element retained solely as a form backing field is documented and not an extra visible control.
 
 2026-10-14 progress: Migrated all inventory B fields and eligibility, all generated C controls, four resident compatibility declarations, and the four declarations in the two unused modals. Actual compatibility/modal/QR fixtures passed without production activation or submission. Transaction reference uses an editable suggestion combobox and the unchanged lookup callback/options. Options, defaults, order, required/disabled rules, conditional fields and permissions remain in their existing source expressions. Final source scan finds only the one aria-hidden, untabbable native backing declaration in `admin-select.tsx`; no production datalists remain. The audit records 58/58 migrated declarations.
+
+2026-10-15 icon refinement: Wired semantic icons for announcement/FAQ/hub categories, health types, waste types, payment methods, staff roles, sex/employment, ID presence, service workflows, center availability and related field triggers. QR instruction choices now preview the actual corresponding symbols. Both unused modals remain unreferenced in production. Actual form, compatibility, QR, inline-editor and record-drawer icon checks passed with mocked persistence and zero console/page errors or warnings. No dependencies added.
 
 ### Phase 5 — Apply the same visual system to other popup types
 
@@ -273,6 +279,8 @@ Gate: no clipped or detached panels, no horizontal overflow introduced, no wrong
 
 2026-10-14 progress: Final typecheck, full admin lint, all 110 existing table/search tests and production Webpack build passed. Focused dropdown, compatibility/popup/content-archive, existing table, record and context-menu browser suites passed. Focused/coverage fixtures logged zero page/console errors or warnings. Reviewed 320/390/768/1024/1440, 30 light/dark/accent combinations, live font/theme/accent changes, system/Georgia/Verdana stacks, long lists/labels, drawers, edge collisions, horizontal scroll/resized columns, reduced motion, forced colors and 200%/400% zoom. Tests use actual UI with synthetic records and mocked callbacks. Manual authenticated read-only checks, screen-reader announcements, physical touch and other browser engines remain supplemental coverage; exact steps and environment limits are in `plans/evidence/admin-dropdown-ui/verification.md`.
 
+2026-10-15 verification: Baseline and final admin typecheck, full lint, 118 existing unit tests and local production Webpack build passed (45 generated pages). The final focused icon browser suite and existing dropdown regression suite passed; both report zero page/console errors or warnings. The latter reverified form serialization/reset/validation, disabled and dynamic choices, keyboard/typeahead/dismissal, inline commit/cancel, 30 viewport/theme/accent combinations, font changes, reduced motion, zoom, all eight main tables and record archives, and all generated record selectors. Reviewed settled light/dark QR screenshots. An initial icon-test expectation used Lucide's old CircleHelp CSS alias and the wrong staff header label; corrected those fixture expectations to the installed package and actual UI. React's static-component lint finding was corrected with a stable module-level icon lookup. No outstanding regression remains. Evidence: `plans/evidence/admin-dropdown-ui/icon-refinement-2026-10-15/`.
+
 ### Phase 7 — Close the audit and deliver
 
 Status: Complete.
@@ -286,6 +294,8 @@ Status: Complete.
 Gate: all identified sites are accounted for, and the frontend-only diff audit passes. The final summary distinguishes browser/sample-data checks from any read-only live checks. No outstanding regression is described as completed work.
 
 2026-10-14 progress: Saved before/after screenshots, native Enter comparison, browser results, before/after inventory, compressed original source snapshot and task-only source patch under `plans/evidence/admin-dropdown-ui/`. Reviewed the 38 changed existing UI files and five new shared files against the session baseline, including every changed line in mixed UI/data files. The frontend-only audit passes: no backend/query/payload/business/permission/integration/environment/deployment/dependency changes attributable to this task. Pre-existing source edits are preserved. No commits, pushes, deployments, remote migrations, hosted-data writes or resource changes were performed. Every acceptance item below is met by the recorded local/source/fixture evidence; supplemental manual checks are explicitly unverified. No implementation blocker or outstanding regression remains.
+
+2026-10-15 closeout: Icon refinement complete. Compared the 25 affected screen files with this session's pre-edit snapshot: removing only icon-kind metadata yields identical source, confirming unchanged callbacks, options, values and rules. Reviewed the four shared-component changes and new icon metadata separately. Preserved concurrent profile/header/surface/backend work and added no dependencies or backend changes. Saved separate evidence instead of replacing the 2026-10-14 results. Inventory discrepancy: the current service form has one workflow selector and no pricing selector; the formerly listed request-review-panel file is absent, so neither was recreated. Previously recorded live, assistive-technology, physical-device and other-engine checks remain pending manual verification with their existing steps.
 
 ## 6. Acceptance checklist
 

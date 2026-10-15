@@ -23,8 +23,8 @@ function applyFontVar(id: string) {
 /** Mirrors theme-controller.tsx's hasStoredTheme() — gates theme-form.tsx's DB
  * reconciliation to a genuinely first-ever visit on this browser. */
 export function hasStoredFont(): boolean {
-  if (typeof localStorage === 'undefined') return true;
   try {
+    if (typeof localStorage === 'undefined') return true;
     return localStorage.getItem(STORAGE_KEY) !== null;
   } catch {
     return true;
@@ -54,8 +54,8 @@ export const FONT_INIT_SCRIPT = `
 
 export function FontControllerProvider({ children }: { children: ReactNode }) {
   const [fontId, setFontIdState] = useState<string>(() => {
-    if (typeof localStorage === 'undefined') return DEFAULT_FONT_ID;
     try {
+      if (typeof localStorage === 'undefined') return DEFAULT_FONT_ID;
       const stored = localStorage.getItem(STORAGE_KEY);
       return stored && isValidFontId(stored) ? stored : DEFAULT_FONT_ID;
     } catch {

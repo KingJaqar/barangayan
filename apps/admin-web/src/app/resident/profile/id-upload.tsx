@@ -81,7 +81,7 @@ export function IdUpload() {
       </h2>
       <label>
         ID type
-        <AdminSelect
+        <AdminSelect kind="id"
           required
           className="block w-full rounded-lg border p-3"
           value={type}

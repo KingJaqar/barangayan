@@ -13,8 +13,10 @@ const button = 'rounded-lg bg-[var(--accent)] px-4 py-2 text-sm text-white disab
 
 export function RequestFulfillmentPanel({
   request: r,
+  onChanged,
 }: {
   request: Request;
+  onChanged?: () => void;
 }) {
   const router = useRouter();
   const [collectionAmount, setCollectionAmount] = useState('');
@@ -39,7 +41,8 @@ export function RequestFulfillmentPanel({
       const result = await operation();
       if (result.error) throw new Error(result.error.message);
       setNotice(message);
-      router.refresh();
+      if (onChanged) onChanged();
+      else router.refresh();
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : 'Operation failed. Refresh and retry.');
     } finally {

@@ -1,8 +1,14 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
-import type { RouteServiceError, RouteServiceSuccess } from '../../../packages/shared/src/lib/evacuation-route-service';
-import { clientAddress, evacuationRouteHandler, loadRoutingPack, RoutingPackError, type RouteServiceDependencies, type RoutingPack } from './handler';
+import { ROUTING_PROFILES, planEvacuationRoute } from '../../../packages/shared/src/lib/evacuation-routing';
+import {
+  parseRouteConditionsSnapshot,
+  selectRouteConditions,
+  type RouteServiceError,
+  type RouteServiceSuccess,
+} from '../../../packages/shared/src/lib/evacuation-route-service';
+import { clientAddress, evacuationRouteHandler, loadRoutingPack, RoutingPackError, rolloutFlagState, type RouteServiceDependencies, type RoutingPack } from './handler';
 
 const packDir = new URL('../../../data/routing-packs/ampid-1/pack/', import.meta.url);
 const graphJson: unknown = JSON.parse(readFileSync(new URL('graph.json', packDir), 'utf8'));
@@ -49,6 +55,7 @@ const ORIGIN = { lat: 14.6773, lng: 121.1154, accuracyMeters: 8, revision: 4 };
 
 function deps(overrides: Partial<RouteServiceDependencies> = {}) {
   const base = {
+    enabled: vi.fn(() => true),
     pack: vi.fn(async () => pack),
     conditions: vi.fn(async (_areaId: string, _graphVersion: string, _signal: AbortSignal): Promise<unknown> => snapshot()),
     rateLimit: vi.fn(async (_address: string, _signal: AbortSignal) => 0),
@@ -116,6 +123,17 @@ describe('clientAddress', () => {
   it('returns null when no header looks like an address', () => {
     expect(clientAddress(new Headers())).toBeNull();
     expect(clientAddress(new Headers({ 'x-forwarded-for': 'unknown' }))).toBeNull();
+  });
+});
+
+describe('rolloutFlagState', () => {
+  it('serves when unset or true and pauses on false or any unrecognised value', () => {
+    expect(rolloutFlagState(undefined)).toEqual({ enabled: true, valid: true });
+    expect(rolloutFlagState('true')).toEqual({ enabled: true, valid: true });
+    expect(rolloutFlagState('false')).toEqual({ enabled: false, valid: true });
+    for (const typo of ['', 'FALSE', 'off', '0', 'True', ' true']) {
+      expect(rolloutFlagState(typo)).toEqual({ enabled: false, valid: false });
+    }
   });
 });
 
@@ -270,7 +288,70 @@ describe('evacuationRouteHandler: routing', () => {
   });
 });
 
+describe('connected and on-device routes agree for one snapshot (plan R10)', () => {
+  // The Android hook (use-local-route.ts) feeds the same core with the conditions that
+  // localRoutingInputs derives through parseRouteConditionsSnapshot and selectRouteConditions.
+  function onDevice(snap: Record<string, unknown>, origin: { lat: number; lng: number; accuracyMeters: number; revision: number }): unknown {
+    const parsed = parseRouteConditionsSnapshot(snap);
+    if (parsed === null) throw new Error('snapshot rejected');
+    const selection = selectRouteConditions(parsed, pack.graph, null);
+    if (!selection.ok) throw new Error(selection.reason);
+    const route = planEvacuationRoute({
+      graph: pack.graph,
+      conditions: selection.conditions,
+      centers: selection.centers,
+      request: { origin, originEdgeId: null, centerId: null, avoidEdgeIds: [] },
+      profile: ROUTING_PROFILES['ampid-fine'],
+    });
+    return JSON.parse(JSON.stringify(route));
+  }
+
+  it('gives identical route results for 25 origins, with and without a published closure', async () => {
+    const origins = Array.from({ length: 25 }, (_, i) => ({
+      lat: 14.6755 + (i % 5) * 0.0018,
+      lng: 121.1125 + Math.floor(i / 5) * 0.0028,
+      accuracyMeters: 10,
+      revision: i + 1,
+    }));
+    let closureCases = 0;
+    for (const origin of origins) {
+      const open = snapshot();
+      const served = await success(await evacuationRouteHandler(deps({ conditions: vi.fn(async () => open) }))(post({ origin })));
+      expect(served.route).toEqual(onDevice(open, origin));
+      if (served.route.status !== 'ok') continue;
+      const cut = served.route.best.edgeIds[Math.floor(served.route.best.edgeIds.length / 2)];
+      const closed = snapshot({ closures: [closure([cut])] });
+      const reroute = await success(await evacuationRouteHandler(deps({ conditions: vi.fn(async () => closed) }))(post({ origin })));
+      expect(reroute.route).toEqual(onDevice(closed, origin));
+      if (reroute.route.status === 'ok') expect(reroute.route.best.edgeIds).not.toContain(cut);
+      closureCases += 1;
+    }
+    expect(closureCases).toBeGreaterThan(10);
+  });
+});
+
 describe('evacuationRouteHandler: failure behavior', () => {
+  it('answers service_disabled before any pack, limiter or database work when the switch is off', async () => {
+    const paused = deps({ enabled: vi.fn(() => false) });
+    const response = await evacuationRouteHandler(paused)(post({ origin: ORIGIN }));
+    await failure(response, 503, 'service_disabled');
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(paused.pack).not.toHaveBeenCalled();
+    expect(paused.rateLimit).not.toHaveBeenCalled();
+    expect(paused.conditions).not.toHaveBeenCalled();
+    expect(paused.reportError).not.toHaveBeenCalled();
+  });
+
+  it('keeps answering CORS preflight while paused, and resumes without a restart', async () => {
+    let on = false;
+    const toggled = deps({ enabled: vi.fn(() => on) });
+    const handler = evacuationRouteHandler(toggled);
+    expect((await handler(new Request('http://localhost/evacuation-route', { method: 'OPTIONS' }))).status).toBe(204);
+    await failure(await handler(post({ origin: ORIGIN })), 503, 'service_disabled');
+    on = true;
+    expect((await success(await handler(post({ origin: ORIGIN })))).route.status).toBe('ok');
+  });
+
   it('limits requests per client address with Retry-After', async () => {
     const d = deps({ rateLimit: vi.fn(async () => 17) });
     const response = await evacuationRouteHandler(d)(post({ origin: ORIGIN }));

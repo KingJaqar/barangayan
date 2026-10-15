@@ -22,7 +22,7 @@ export async function preview(entries, { baseline = false, uiMocks = false } = {
         const original = sources[path.relative(root, args.path).replaceAll('\\', '/')];
         return original === undefined ? undefined : { contents: original, loader: args.path.endsWith('.css') ? 'local-css' : 'tsx' };
       });
-      b.onResolve({ filter: /^next\/navigation$|^@\/lib\/supabase\/client$|^@\/actions\/admin-(record|audit)-actions$/ }, () => ({ path: adapters }));
+      b.onResolve({ filter: /^next\/navigation$|^@\/lib\/supabase\/client$|^@\/actions\/(admin-(record|audit)|request-review)-actions$/ }, () => ({ path: adapters }));
       b.onResolve({ filter: /^next\/link$/ }, () => ({ path: 'link', namespace: 'fixture' }));
       b.onResolve({ filter: /^next\/image$/ }, () => ({ path: 'image', namespace: 'fixture' }));
       b.onLoad({ filter: /^image$/, namespace: 'fixture' }, () => ({ contents: 'import React from "react"; export default function Image({priority, ...props}){return React.createElement("img",props)}', loader: 'js', resolveDir: app }));

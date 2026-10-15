@@ -1,11 +1,11 @@
 'use client';
 
+import { QrCode } from 'lucide-react';
+import { SELECT_OPTION_ICONS } from '@/components/admin/dropdown/select-iconography';
+import styles from './emergency-qr.module.css';
 import type { Tables } from '@barangayan/shared';
 
 type EmergencyQrContent = Tables<'emergency_qr_content'>;
-
-const PHONE_FRAME_CLASSES =
-  'rounded-[2rem] border-[6px] border-zinc-900 bg-white shadow-xl dark:border-zinc-100 overflow-hidden';
 
 export function MobilePreviewCard({
   whyScan,
@@ -15,51 +15,38 @@ export function MobilePreviewCard({
   howItWorks: EmergencyQrContent | undefined;
 }) {
   return (
-    <div className={PHONE_FRAME_CLASSES}>
-      <div className="bg-[var(--accent)] px-4 py-3">
-        <p className="text-center text-sm font-semibold text-white">Mobile Preview</p>
-      </div>
-      <div className="p-4 space-y-4">
-        {[whyScan, howItWorks].filter(Boolean).map((item) => (
-          <div
-            key={item!.id}
-            className="rounded-xl border border-zinc-100 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-800/50">
-            <div className="flex items-center gap-2 mb-2">
-              <div
-                className="h-8 w-8 rounded-full flex items-center justify-center shrink-0"
-                style={{ backgroundColor: item!.icon_bg ?? undefined }}>
-                <span
-                  className="text-xs font-bold"
-                  style={{ color: item!.icon_color ?? undefined }}>
-                  {item!.icon?.slice(0, 2).toUpperCase() ?? 'QR'}
+    <div className={styles.phone}>
+      <div className={styles.phoneBar}><span /><span>Barangayan</span><QrCode size={14} aria-hidden="true" /></div>
+      <div className={styles.phoneScreen}>
+        <p className={styles.eyebrow}>Emergency QR</p>
+        <h3>Check in with confidence.</h3>
+        <p className={styles.phoneIntro}>Your guide to a safe arrival.</p>
+        {[whyScan, howItWorks].filter((item): item is EmergencyQrContent => !!item).map((item) => {
+          const icons = SELECT_OPTION_ICONS.qrIcon;
+          const Icon = icons && item.icon && Object.hasOwn(icons, item.icon) ? icons[item.icon] : QrCode;
+          return (
+            <div key={item.id} className={styles.phoneCard}>
+              <div className={styles.phoneCardHeading}>
+                <span className={styles.phoneIcon} style={{ backgroundColor: item.icon_bg ?? undefined, color: item.icon_color ?? undefined }}>
+                  <Icon size={17} aria-hidden="true" />
                 </span>
+                <h4>{item.title}</h4>
               </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
-                  {item!.title}
-                </p>
-                <p className="text-xs text-zinc-500 line-clamp-2">{item!.body}</p>
-              </div>
-            </div>
-            <div className="ml-10 space-y-1">
-              {(item!.content as unknown as { step: number; title: string; desc: string }[] | undefined)?.map(
-                (step, idx) => (
-                  <div key={idx} className="flex gap-2 text-xs">
-                    <span className="font-bold text-[var(--accent)]">{step.step}.</span>
-                    <div>
-                      <p className="font-semibold text-zinc-700 dark:text-zinc-200">{step.title}</p>
-                      <p className="text-zinc-500">{step.desc}</p>
-                    </div>
+              <p>{item.body}</p>
+              <div className={styles.previewSteps}>
+                {(Array.isArray(item.content) ? item.content as unknown as { step: number; title: string; desc: string }[] : []).map((step, idx) => (
+                  <div key={idx} className={styles.previewStep}>
+                    <span>{step.step}</span>
+                    <div><h5>{step.title}</h5><p>{step.desc}</p></div>
                   </div>
-                ),
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-        {!whyScan && !howItWorks && (
-          <p className="text-center text-sm text-zinc-400 py-4">No content configured yet.</p>
-        )}
+          );
+        })}
+        {!whyScan && !howItWorks && <p className={styles.previewEmpty}>No content configured yet.</p>}
       </div>
+      <div className={styles.phoneBottom}><span /></div>
     </div>
   );
 }

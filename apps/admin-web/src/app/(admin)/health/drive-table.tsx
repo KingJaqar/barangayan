@@ -152,7 +152,7 @@ function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string; 
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
-        <AdminSelect className={inputClass} value={type} onValueChange={(nextValue) => setType(nextValue as typeof type)}>
+        <AdminSelect kind="health" className={inputClass} value={type} onValueChange={(nextValue) => setType(nextValue as typeof type)}>
           {DRIVE_TYPES.map((t) => (
             <option key={t} value={t}>
               {DRIVE_TYPE_CONFIG[t].label}
@@ -294,7 +294,7 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
       wrap: 'nowrap',
       render: (r) => <DriveTypeBadge type={r.type} />,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'health',
         options: DRIVE_TYPES.map((t) => ({ value: t, label: DRIVE_TYPE_CONFIG[t].label })),
         getValue: (r) => r.type,
         onSave: (r, value) => updateField(r, { type: value as (typeof DRIVE_TYPES)[number] }),
@@ -367,7 +367,7 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
           </span>
         ),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: [
           { value: 'true', label: 'Active' },
           { value: 'false', label: 'Inactive' },
@@ -387,7 +387,7 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
     {addOpen && <fieldset disabled={browse.pending}><AddDriveForm barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
     <ProfileTablePanel label="Medical drives" browse={browse}
       category={<label className="table-browse-field">Category
-        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
+        <AdminSelect kind="health" aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
           <option value="">All categories</option>
           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
         </AdminSelect></label>}

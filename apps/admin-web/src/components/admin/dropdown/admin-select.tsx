@@ -1,7 +1,8 @@
 'use client';
 
 import { Children, isValidElement, useCallback, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type ReactNode, type Ref } from 'react';
-import { CalendarDays, Check, ChevronDown, FileText, ListFilter, Users, CircleCheck, Rows3, ArrowDownWideNarrow } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
+import { SELECT_FIELD_ICONS, SELECT_OPTION_ICONS, type AdminSelectKind } from './select-iconography';
 import { DropdownSurface } from './dropdown-surface';
 import styles from './dropdown.module.css';
 
@@ -9,9 +10,8 @@ export type AdminSelectOption = { value: string; label: ReactNode; disabled?: bo
 type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange' | 'children'> & {
   value: string | number; onValueChange: (value: string) => void; options?: readonly AdminSelectOption[];
   children?: ReactNode; name?: string; required?: boolean; form?: string; compact?: boolean;
-  width?: 'auto' | 'full'; icon?: ReactNode; kind?: keyof typeof ICONS; ref?: Ref<HTMLButtonElement>;
+  width?: 'auto' | 'full'; icon?: ReactNode; kind?: AdminSelectKind; ref?: Ref<HTMLButtonElement>;
 };
-const ICONS = { category: ListFilter, people: Users, date: CalendarDays, document: FileText, status: CircleCheck, page: Rows3, sort: ArrowDownWideNarrow };
 
 function labelText(label: ReactNode): string {
   if (typeof label === 'string' || typeof label === 'number') return String(label);
@@ -44,7 +44,9 @@ export function AdminSelect({ value, onValueChange, options: supplied, children,
   const options = supplied ?? childOptions(children);
   const selected = options.findIndex(option => option.value === String(value));
   const active = options.findIndex(option => option.value === activeValue && !option.disabled);
-  const Icon = ICONS[kind];
+  const Icon = SELECT_FIELD_ICONS[kind];
+  const optionIcons = SELECT_OPTION_ICONS[kind];
+  const SelectedIcon = optionIcons && Object.hasOwn(optionIcons, String(value)) ? optionIcons[String(value)] : undefined;
   function setActive(index: number) { setActiveValue(options[index]?.value ?? null); }
   const close = useCallback(() => { if (open) setExiting(true); setOpen(false); search.current = { text: '', time: 0 }; }, [open]);
 
@@ -119,7 +121,7 @@ export function AdminSelect({ value, onValueChange, options: supplied, children,
         }
         onKeyDown?.(event);
       }}>
-      <span className={styles.icon} aria-hidden="true">{icon ?? <Icon size={17} />}</span>
+      <span className={styles.icon} aria-hidden="true">{icon ?? options[selected]?.icon ?? (SelectedIcon ? <SelectedIcon size={17} /> : <Icon size={17} />)}</span>
       <span className={styles.label}>{options[selected]?.label ?? (value ? String(value) : 'Select…')}</span>
       <ChevronDown size={15} aria-hidden="true" className={styles.chevron} />
     </button>
@@ -142,13 +144,16 @@ export function AdminSelect({ value, onValueChange, options: supplied, children,
     {(open || exiting) && <DropdownSurface anchor={trigger} open={open} onDismiss={close} id={listId} role="listbox"
       aria-label={props['aria-label']} aria-labelledby={props['aria-labelledby'] ?? id}
       className={compact ? styles.compact : ''} onPointerDown={event => event.preventDefault()}>
-      {options.length ? options.map((option, index) => <div key={`${option.value}-${index}`} id={`${listId}-${index}`} role="option"
+      {options.length ? options.map((option, index) => {
+        // Data-driven and unknown values keep the gutter without an invented icon.
+        const OptionIcon = optionIcons && Object.hasOwn(optionIcons, option.value) ? optionIcons[option.value] : undefined;
+        return <div key={`${option.value}-${index}`} id={`${listId}-${index}`} role="option"
         aria-selected={String(value) === option.value} aria-disabled={option.disabled || undefined} data-active={active === index}
         className={styles.row} onPointerMove={() => { if (!option.disabled) setActive(index); }} onClick={() => choose(index)}>
-        <span className={styles.icon} aria-hidden="true">{option.icon ?? icon ?? <Icon size={17} />}</span>
+        <span className={styles.icon} aria-hidden="true">{option.icon ?? (OptionIcon ? <OptionIcon size={17} /> : null)}</span>
         <span className={styles.label}>{option.label}</span>
         {String(value) === option.value && <Check size={16} aria-hidden="true" className={styles.check} />}
-      </div>) : <div className={styles.row} role="status">No options available</div>}
+      </div>; }) : <div className={styles.row} role="status">No options available</div>}
     </DropdownSurface>}
   </span>;
 }

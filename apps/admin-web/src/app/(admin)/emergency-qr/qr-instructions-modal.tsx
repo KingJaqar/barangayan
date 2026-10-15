@@ -10,6 +10,7 @@ import { useToast } from '@/components/ui/toast';
 import { emergencyQrContentSchema } from '@barangayan/shared';
 import type { EmergencyQrContent, Json, QrStepItem, Tables } from '@barangayan/shared';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import styles from './emergency-qr.module.css';
 
 type QrInstructionRow = Tables<'emergency_qr_content'>;
 
@@ -37,8 +38,7 @@ const PRESET_COLORS = [
   { name: 'Slate', value: '#475569', bg: '#F1F5F9' },
 ];
 
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
+const inputClass = styles.field;
 
 function toStepArray(content: Json | undefined): QrStepItem[] {
   if (Array.isArray(content)) {
@@ -155,13 +155,14 @@ export function QrInstructionsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl rounded-xl border border-black/10 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-zinc-900 max-h-[90vh] overflow-y-auto">
+      <div className={styles.modal}>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold">
             {existing ? 'Edit' : 'Add'} {section === 'why_scan' ? 'Why Scan' : 'How It Works'}
           </h2>
           <button
             onClick={onClose}
+            aria-label="Close instruction editor"
             className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             type="button">
             ✕
@@ -240,7 +241,7 @@ export function QrInstructionsModal({
           <div className="text-sm">
             <span className="mb-1 block font-medium">Icon</span>
             <Controller name="icon" control={form.control} render={({ field, fieldState }) => (
-              <AdminSelect ref={field.ref} name={field.name} aria-label="Icon" value={field.value ?? ''}
+              <AdminSelect kind="qrIcon" ref={field.ref} name={field.name} aria-label="Icon" value={field.value ?? ''}
                 onValueChange={field.onChange} onBlur={field.onBlur} disabled={field.disabled}
                 aria-invalid={fieldState.invalid} className={inputClass}
                 options={PRESET_ICONS.map(icon => ({ value: icon, label: icon }))} />
@@ -289,7 +290,7 @@ export function QrInstructionsModal({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className={`${styles.button} ${styles.primary}`}
               aria-busy={submitting}>
               <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save</LoadingButtonContent>
             </button>
@@ -297,7 +298,7 @@ export function QrInstructionsModal({
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
+              className={styles.button}>
               Cancel
             </button>
           </div>

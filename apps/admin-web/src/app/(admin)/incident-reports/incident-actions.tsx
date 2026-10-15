@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { CircleCheck, Clock, RotateCcw, TriangleAlert } from 'lucide-react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
@@ -43,8 +44,8 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
 
   const btnClass =
     variant === 'compact'
-      ? 'inline-flex min-h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-xs font-semibold transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
-      : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
+      ? 'inline-flex min-h-9 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 py-2 text-xs font-semibold transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
+      : 'inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
 
   const step = NEXT_STEP[status] ?? null;
 
@@ -122,6 +123,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
             onClick={() => setStatus(step.next, `Incident marked as ${step.next.replace('_', ' ')}.`)}
             disabled={busy}
             className={`${btnClass} ${step.color}`}>
+            {step.next === 'in_progress' ? <Clock size={16} className="shrink-0" aria-hidden="true" /> : <CircleCheck size={16} className="shrink-0" aria-hidden="true" />}
             {step.label}
           </button>
         )}
@@ -131,12 +133,13 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
             onClick={() => setStatus('unresolved', 'Incident marked as unresolved.')}
             disabled={busy}
             className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
+            <TriangleAlert size={16} className="shrink-0" aria-hidden="true" />
             Mark as Unresolved
           </button>
         )}
 
         {CAN_MARK_UNRESOLVED.has(status) && <button type="button" onClick={() => setStatus('withdrawn', 'Report withdrawn.')} disabled={busy}
-          className={`${btnClass} bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200`}>Withdraw</button>}
+          className={`${btnClass} bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200`}><RotateCcw size={16} className="shrink-0" aria-hidden="true" />Withdraw</button>}
 
         {showRemove && (!showDeleteConfirm ? (
           <button

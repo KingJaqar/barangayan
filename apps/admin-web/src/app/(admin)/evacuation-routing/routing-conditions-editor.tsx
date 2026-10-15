@@ -16,6 +16,7 @@ import {
   type RoutingPackEditorGraph,
 } from '@barangayan/shared';
 import dynamic from 'next/dynamic';
+import { ArrowUpRight, Building2, Check, Clock3, Info, MapPin, RefreshCw, Route, Waypoints } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -26,7 +27,12 @@ import { useToast } from '@/components/ui/toast';
 import { loadPackGraph, nearestNode, type PackNode } from '@/lib/routing-packs';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-const RoutingMap = dynamic(() => import('./routing-map').then((m) => ({ default: m.RoutingMap })), { ssr: false });
+import styles from './routing.module.css';
+
+const RoutingMap = dynamic(() => import('./routing-map').then((m) => ({ default: m.RoutingMap })), {
+  ssr: false,
+  loading: () => <div className={styles.mapPlaceholder} role="status" aria-busy="true"><Route size={28} strokeWidth={1.25} aria-hidden="true" />Loading routing map…</div>,
+});
 
 type SnapshotCenter = RoutingConditionsSnapshot['centers'][number];
 type SnapshotClosure = RoutingConditionsSnapshot['closures'][number];
@@ -51,10 +57,9 @@ interface RoutingConditionsEditorProps {
 /** Clicks farther than this from every graph node do not pick an entrance. */
 const ENTRANCE_PICK_RADIUS_METERS = 40;
 
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
-const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
-const cardClass = 'rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900';
+const inputClass = styles.input;
+const labelClass = styles.fieldLabel;
+const cardClass = styles.card;
 
 const AVAILABILITY_LABELS: Record<EvacuationCenterAvailability, string> = {
   available: 'Available',
@@ -76,7 +81,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
   const [entranceCenterId, setEntranceCenterId] = useState<string | null>(null);
   const [entranceCandidate, setEntranceCandidate] = useState<PackNode | null>(null);
   // The map and the entrance form sit at the top; the center list is further down the page.
-  const mapSectionRef = useRef<HTMLDivElement>(null);
+  const mapSectionRef = useRef<HTMLElement>(null);
   const [clearTarget, setClearTarget] = useState<SnapshotCenter | null>(null);
   const [busyAction, setBusyAction] = useState<string | null>(null);
 
@@ -239,21 +244,21 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
   const clearing = clearTarget !== null && busyAction === `clear:${clearTarget.id}`;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={styles.editor}>
       {clearTarget ? (
         <TableDetailDialog label={`Clear entrance for ${clearTarget.name}`} onClose={() => setClearTarget(null)} preventClose={clearing}>
-          <div className="flex flex-col gap-3 rounded-2xl bg-white p-6 dark:bg-zinc-900">
+          <div className={styles.dialog}>
             <h2 className="text-base font-semibold">Clear the entrance for {clearTarget.name}?</h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            <p className={styles.recordText}>
               Residents will not get walking routes to this center until a new entrance is set. The center stays listed, and
               routes to other centers are not affected.
             </p>
-            <div className="flex justify-end gap-2">
+            <div className={styles.actions}>
               <button
                 type="button"
                 onClick={() => setClearTarget(null)}
                 disabled={clearing}
-                className="rounded-full bg-zinc-200 px-4 py-1.5 text-xs font-semibold disabled:opacity-50 dark:bg-zinc-700">
+                className={styles.button}>
                 Cancel
               </button>
               <button
@@ -261,7 +266,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
                 onClick={() => void clearEntrance(clearTarget)}
                 disabled={clearing}
                 aria-busy={clearing}
-                className="rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+                className={styles.dangerButton}>
                 <LoadingButtonContent pending={clearing} pendingLabel="Clearing…">
                   Clear entrance
                 </LoadingButtonContent>
@@ -271,6 +276,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
         </TableDetailDialog>
       ) : null}
       <StatusCard
+        areaName={area.name}
         snapshot={snapshot}
         bundledVersion={bundledVersion}
         bundledRegistered={bundledVersion !== null && registeredGraphVersions.includes(bundledVersion)}
@@ -280,69 +286,99 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
       />
 
       {graphError ? (
-        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300">
+        <p role="alert" className={styles.notice} data-tone="error">
           {graphError}
         </p>
       ) : null}
 
-      <div ref={mapSectionRef} className="grid scroll-mt-4 gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className={`${cardClass} p-0`}>
-          {graph && bundledPack ? (
-            <RoutingMap
-              graph={graph}
-              attribution={bundledPack.attribution}
-              closures={snapshot.closures}
-              closedEdgeIds={closedEdgeIds}
-              selectedEdgeIds={selectedSet}
-              onToggleEdge={toggleEdge}
-              centers={snapshot.centers}
-              entranceMode={entranceCenter !== null}
-              entranceCandidate={entranceCandidate}
-              onMapClick={handleMapClick}
-              editable={editable}
-            />
-          ) : (
-            <div className="flex h-[560px] items-center justify-center text-sm text-zinc-500" aria-busy={!graphError && bundledPack !== null}>
-              {bundledPack ? (graphError ? 'Map unavailable.' : 'Loading routing map data…') : 'No routing map data is bundled for this area.'}
+      <nav className={styles.sectionNav} aria-label="Routing sections">
+        <a href="#routing-workspace"><Route size={14} aria-hidden="true" /> Routing map <span>01</span></a>
+        <a href="#routing-closures">Active closures <span>{snapshot.closures.length}</span></a>
+        <a href="#routing-centers">Centers &amp; entrances <span>{snapshot.centers.length}</span></a>
+        <a href="#routing-history">Recent changes <ArrowUpRight size={13} aria-hidden="true" /></a>
+      </nav>
+
+      <section ref={mapSectionRef} id="routing-workspace" className={styles.workspace} aria-labelledby="routing-workspace-heading">
+        <div className={styles.sectionHeading}>
+          <div>
+            <h2 id="routing-workspace-heading"><span className={styles.sectionNumber}>01</span> Routing workspace</h2>
+            <p>Review the road network, select a closure, or verify a center entrance.</p>
+          </div>
+          <span className={`${styles.badge} ${!editable ? styles.badgeMuted : ''}`}>
+            <Waypoints size={12} aria-hidden="true" /> {editable ? 'Map ready to edit' : 'Map preview'}
+          </span>
+        </div>
+        <div className={styles.workspaceGrid}>
+          <div className={`${cardClass} ${styles.mapCard}`}>
+            <div className={styles.mapBar}>
+              <span><MapPin size={14} aria-hidden="true" /> {area.name}</span>
+              <span className={styles.badge}>{entranceCenter ? 'Entrance selection' : 'Road conditions'}</span>
             </div>
-          )}
-        </div>
+            {graph && bundledPack ? (
+              <RoutingMap
+                graph={graph}
+                attribution={bundledPack.attribution}
+                closures={snapshot.closures}
+                closedEdgeIds={closedEdgeIds}
+                selectedEdgeIds={selectedSet}
+                onToggleEdge={toggleEdge}
+                centers={snapshot.centers}
+                entranceMode={entranceCenter !== null}
+                entranceCandidate={entranceCandidate}
+                onMapClick={handleMapClick}
+                editable={editable}
+              />
+            ) : (
+              <div className={styles.mapPlaceholder} aria-busy={!graphError && bundledPack !== null} role="status">
+                <Route size={28} strokeWidth={1.25} aria-hidden="true" />
+                {bundledPack ? (graphError ? 'Map unavailable.' : 'Loading routing map data…') : 'No routing map data is bundled for this area.'}
+              </div>
+            )}
+            <p className={styles.mapCaption}><Info size={13} aria-hidden="true" />
+              {entranceCenter ? `Pick the walkable road point where residents enter ${entranceCenter.name}.` : editable ? 'Select a road segment to add it to a closure. Click it again to deselect.' : 'Road selection is available when the bundled map data is loaded and active.'}
+            </p>
+          </div>
 
-        <div className="flex flex-col gap-4">
-          {entranceCenter ? (
-            <EntrancePanel
-              center={entranceCenter}
-              candidate={entranceCandidate}
-              saving={busyAction === `entrance:${entranceCenter.id}`}
-              onPickCoordinates={(point) => pickEntrance(point, 'coordinates')}
-              onSave={saveEntrance}
-              onCancel={cancelEntrance}
-            />
-          ) : (
-            <ClosureForm
-              areaId={area.id}
-              graphVersion={activeGraph}
-              editable={editable}
-              selectedEdges={selectedEdgeIds.flatMap((id) => {
-                const edge = edgesById.get(id);
-                return edge ? [edge] : [];
-              })}
-              onClearSelection={() => setSelectedEdgeIds([])}
-              onPublished={() => {
-                setSelectedEdgeIds([]);
-                router.refresh();
-              }}
-            />
-          )}
+          <div className="flex flex-col gap-4">
+            {entranceCenter ? (
+              <EntrancePanel
+                center={entranceCenter}
+                candidate={entranceCandidate}
+                saving={busyAction === `entrance:${entranceCenter.id}`}
+                onPickCoordinates={(point) => pickEntrance(point, 'coordinates')}
+                onSave={saveEntrance}
+                onCancel={cancelEntrance}
+              />
+            ) : (
+              <ClosureForm
+                areaId={area.id}
+                graphVersion={activeGraph}
+                editable={editable}
+                selectedEdges={selectedEdgeIds.flatMap((id) => {
+                  const edge = edgesById.get(id);
+                  return edge ? [edge] : [];
+                })}
+                onClearSelection={() => setSelectedEdgeIds([])}
+                onPublished={() => {
+                  setSelectedEdgeIds([]);
+                  router.refresh();
+                }}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <section className={cardClass}>
-        <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Active closures ({snapshot.closures.length})</h2>
+      <section id="routing-closures" className={cardClass} aria-labelledby="routing-closures-heading">
+        <div className={styles.sectionHeading}>
+          <div><h2 id="routing-closures-heading"><span className={styles.sectionNumber}>02</span> Active closures</h2>
+            <p>Verified restrictions currently excluded from residents&apos; routes.</p></div>
+          <span className={styles.count}>{snapshot.closures.length}</span>
+        </div>
         {snapshot.closures.length === 0 ? (
-          <p className="text-sm text-zinc-500">No active closures are reported. This does not confirm that every road is passable.</p>
+          <div className={styles.empty}><p><strong>No active closures reported</strong>This does not confirm that every road is passable.</p></div>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className={styles.list}>
             {snapshot.closures.map((closure) => (
               <ClosureRow key={closure.id} closure={closure} onReopened={() => router.refresh()} />
             ))}
@@ -350,33 +386,34 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
         )}
       </section>
 
-      <section className={cardClass}>
-        <h2 className="mb-1 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Evacuation centers</h2>
-        <p className="mb-3 text-xs text-zinc-500">
+      <section id="routing-centers" className={cardClass} aria-labelledby="routing-centers-heading">
+        <div className={styles.sectionHeading}>
+        <div><h2 id="routing-centers-heading"><span className={styles.sectionNumber}>03</span> Centers &amp; entrances</h2>
+        <p>
           Routing uses available centers first, and unknown ones only when no available center can be reached. A center
           without a reviewed entrance is shown to residents but never routed to. Moving a center clears its entrance.
-        </p>
+        </p></div><span className={styles.count}>{snapshot.centers.length}</span></div>
         {snapshot.centers.length === 0 ? (
-          <p className="text-sm text-zinc-500">No evacuation centers yet. Add them under Evacuation Centers.</p>
+          <div className={styles.empty}><Building2 size={22} strokeWidth={1.5} aria-hidden="true" /><p><strong>No evacuation centers yet</strong>Add them under Evacuation Centers to review availability and entrances here.</p></div>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className={styles.list}>
             {snapshot.centers.map((center) => (
-              <li key={center.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-black/5 p-3 dark:border-white/10">
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold">
+              <li key={center.id} className={`${styles.row} ${styles.centerRow}`}>
+                <div className={styles.centerInfo}>
+                  <p className={styles.recordTitle}>
                     {center.name}
-                    {!center.active ? <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">Inactive</span> : null}
+                    {!center.active ? <span className={`${styles.badge} ${styles.dangerBadge}`}>Inactive</span> : null}
                   </p>
-                  <p className="text-xs text-zinc-500">
-                    {center.entranceNodeId ? 'Entrance reviewed' : 'No entrance — not routable'}
+                  <p className={styles.recordText}>
+                    <span className={styles.entranceState}>{center.entranceNodeId ? <Check size={12} aria-hidden="true" /> : <Info size={12} aria-hidden="true" />}{center.entranceNodeId ? 'Entrance reviewed' : 'No entrance — not routable'}</span>
                     {center.availabilityUpdatedAt ? ` · Availability updated ${formatTime(center.availabilityUpdatedAt)}` : ''}
                   </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <label className="text-xs">
+                <div className={styles.centerActions}>
+                  <label className={styles.availability}>
                     <span className="sr-only">Availability of {center.name}</span>
-                    <AdminSelect kind="status"
-                      className={`${inputClass} w-auto`}
+                    <AdminSelect kind="availability"
+                      className={inputClass}
                       value={center.availability}
                       disabled={busyAction === `availability:${center.id}`}
                       onValueChange={(nextValue) => {
@@ -395,7 +432,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
                     disabled={!editable || !center.active || !center.position}
                     title={!center.active ? 'Activate the center to set its entrance' : !center.position ? 'The center has no valid position' : undefined}
                     onClick={() => startEntrance(center.id)}
-                    className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] disabled:opacity-50 dark:bg-zinc-800 dark:text-zinc-200">
+                    className={styles.button}>
                     {center.entranceNodeId ? 'Change entrance' : 'Set entrance'}
                   </button>
                   {center.entrancePosition ? (
@@ -403,7 +440,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
                       type="button"
                       disabled={busyAction === `clear:${center.id}`}
                       onClick={() => setClearTarget(center)}
-                      className="rounded-full px-3 py-1 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300">
+                      className={styles.dangerButton}>
                       <LoadingButtonContent pending={busyAction === `clear:${center.id}`} pendingLabel="Clearing…">
                         Clear entrance
                       </LoadingButtonContent>
@@ -416,26 +453,29 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
         )}
       </section>
 
-      <section className={cardClass}>
-        <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Recent changes</h2>
+      <section id="routing-history" className={cardClass} aria-labelledby="routing-history-heading">
+        <div className={styles.sectionHeading}><div>
+          <h2 id="routing-history-heading"><span className={styles.sectionNumber}>04</span> Recent changes</h2>
+          <p>The latest published updates to this area&apos;s routing conditions.</p>
+        </div><Clock3 size={18} className={styles.sectionNumber} aria-hidden="true" /></div>
         {events.length === 0 ? (
-          <p className="text-sm text-zinc-500">No routing changes yet.</p>
+          <div className={styles.empty}><Clock3 size={22} strokeWidth={1.5} aria-hidden="true" /><p><strong>No routing changes yet</strong>Published updates will appear here with their revision and time.</p></div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-xs">
+          <div className={styles.tableScroll}>
+            <table className={styles.history}>
               <thead>
-                <tr className="text-[11px] uppercase tracking-wide text-zinc-400">
-                  <th scope="col" className="w-16 pb-2 pr-4 font-semibold">Revision</th>
-                  <th scope="col" className="pb-2 pr-4 font-semibold">Change</th>
-                  <th scope="col" className="pb-2 font-semibold">When</th>
+                <tr>
+                  <th scope="col">Revision</th>
+                  <th scope="col">Change</th>
+                  <th scope="col">When</th>
                 </tr>
               </thead>
-              <tbody className="text-zinc-600 dark:text-zinc-300">
+              <tbody>
                 {events.map((event) => (
                   <tr key={event.id}>
-                    <td className="py-1 pr-4 align-top font-mono text-zinc-400">r{event.revision}</td>
-                    <td className="py-1 pr-4 align-top">{describeEvent(event)}</td>
-                    <td className="whitespace-nowrap py-1 align-top text-zinc-400">{formatTime(event.createdAt)}</td>
+                    <td>r{event.revision}</td>
+                    <td>{describeEvent(event)}</td>
+                    <td>{formatTime(event.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -448,6 +488,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
 }
 
 function StatusCard({
+  areaName,
   snapshot,
   bundledVersion,
   bundledRegistered,
@@ -455,6 +496,7 @@ function StatusCard({
   onRegister,
   onRefresh,
 }: {
+  areaName: string;
   snapshot: RoutingConditionsSnapshot;
   bundledVersion: string | null;
   bundledRegistered: boolean;
@@ -464,27 +506,33 @@ function StatusCard({
 }) {
   const needsActivation = bundledVersion !== null && bundledVersion !== snapshot.activeGraphVersion;
   return (
-    <section className={cardClass}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 text-sm">
-          <p>
-            <span className="font-semibold">Revision {snapshot.revision}</span>
-            <span className="text-zinc-500"> · published {formatTime(snapshot.revisedAt)} · loaded {formatTime(snapshot.generatedAt)}</span>
-          </p>
-          <p className="mt-0.5 break-all text-xs text-zinc-500">
-            Active map data: {snapshot.activeGraphVersion ?? 'none'}
-            {bundledVersion && bundledVersion !== snapshot.activeGraphVersion ? ` · this admin build has ${bundledVersion}` : ''}
-          </p>
-        </div>
+    <section className={`${cardClass} ${styles.status}`} aria-label="Published routing overview">
+      <div className={styles.statusTop}>
+        <p className={styles.area}><MapPin size={15} aria-hidden="true" /> {areaName}
+          <span className={`${styles.badge} ${!snapshot.activeGraphVersion ? styles.badgeMuted : ''}`}>
+            {snapshot.activeGraphVersion ? 'Active map data' : 'Awaiting map activation'}
+          </span>
+        </p>
         <button
           type="button"
           onClick={onRefresh}
-          className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200">
-          Refresh
+          className={styles.button}>
+          <RefreshCw size={13} aria-hidden="true" /> Refresh
         </button>
       </div>
+      <dl className={styles.stats}>
+        <div><dt>Published revision</dt><dd>r{snapshot.revision}<small>{formatTime(snapshot.revisedAt)}</small></dd></div>
+        <div><dt>Active closures</dt><dd>{snapshot.closures.length}<small>Excluded from routing</small></dd></div>
+        <div><dt>Evacuation centers</dt><dd>{snapshot.centers.length}<small>{snapshot.centers.filter(center => center.active && center.availability === 'available').length} active &amp; available</small></dd></div>
+        <div><dt>Reviewed entrances</dt><dd>{snapshot.centers.filter(center => center.entranceNodeId !== null).length}<span className={styles.sectionNumber}> / {snapshot.centers.length}</span><small>Centers with an entrance set</small></dd></div>
+      </dl>
+      <p className={styles.mapVersion}>
+        Active map data: {snapshot.activeGraphVersion ?? 'none'}
+        {bundledVersion && bundledVersion !== snapshot.activeGraphVersion ? ` · this admin build has ${bundledVersion}` : ''}
+        {' · '}Loaded {formatTime(snapshot.generatedAt)}
+      </p>
       {needsActivation ? (
-        <div className="mt-3 flex flex-wrap items-center gap-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+        <div className={styles.activation}>
           <p className="min-w-0 flex-1">
             {snapshot.activeGraphVersion
               ? 'This admin build carries newer map data. Activation is refused until every active closure and center entrance is mapped to it.'
@@ -495,7 +543,7 @@ function StatusCard({
             type="button"
             onClick={onRegister}
             disabled={registering}
-            className="rounded-full bg-[var(--accent)] px-4 py-1 text-xs font-semibold text-white disabled:opacity-50"
+            className={styles.primaryButton}
             aria-busy={registering}>
             <LoadingButtonContent pending={registering} pendingLabel="Activating…">
               Activate map data
@@ -579,24 +627,25 @@ function ClosureForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`${cardClass} flex flex-col gap-3`}>
+    <form onSubmit={handleSubmit} className={`${cardClass} ${styles.form}`}>
       <div>
-        <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-300">Publish a verified closure</h2>
-        <p className="mt-0.5 text-xs text-zinc-500">
+        <p className={styles.eyebrow}>Road restriction</p>
+        <h2>Publish a verified closure</h2>
+        <p className={styles.recordText}>
           {editable
             ? 'Click road segments on the map to select them. A closed road is blocked for every resident until you reopen it.'
             : 'Activate the bundled map data to publish closures.'}
         </p>
       </div>
 
-      <p className="text-xs">
-        <span className="font-semibold">{selectedEdges.length}</span> segment{selectedEdges.length === 1 ? '' : 's'} selected
+      <div className={styles.selection}>
+        <p><strong>{selectedEdges.length}</strong> segment{selectedEdges.length === 1 ? '' : 's'} selected</p>
         {selectedEdges.length > 0 ? (
-          <button type="button" onClick={onClearSelection} className="ml-2 font-semibold text-[var(--accent)] hover:underline">
+          <button type="button" onClick={onClearSelection} className={styles.textButton}>
             Clear
           </button>
         ) : null}
-      </p>
+      </div>
 
       <label className="text-sm">
         <span className={labelClass}>Road label</span>
@@ -636,7 +685,7 @@ function ClosureForm({
       </label>
 
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className={styles.error}>
           {error}
         </p>
       ) : null}
@@ -644,7 +693,7 @@ function ClosureForm({
       <button
         type="submit"
         disabled={!editable || submitting || selectedEdges.length === 0}
-        className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+        className={styles.primaryButton}
         aria-busy={submitting}>
         <LoadingButtonContent pending={submitting} pendingLabel="Publishing…">
           Publish closure
@@ -687,19 +736,19 @@ function ClosureRow({ closure, onReopened }: { closure: SnapshotClosure; onReope
   }
 
   return (
-    <li className="rounded-lg border border-black/5 p-3 dark:border-white/10">
-      <div className="flex flex-wrap items-start justify-between gap-2">
+    <li className={styles.row}>
+      <div className={styles.rowTop}>
         <div className="min-w-0">
-          <p className="text-sm font-semibold">
+          <p className={styles.recordTitle}>
             {closure.label}
             {closure.edgeIds === null ? (
-              <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+              <span className={`${styles.badge} ${styles.warningBadge}`}>
                 Not mapped to the active map data
               </span>
             ) : null}
           </p>
-          <p className="text-xs text-zinc-600 dark:text-zinc-300">{closure.reason}</p>
-          <p className="mt-0.5 text-[11px] text-zinc-500">
+          <p className={styles.recordText}>{closure.reason}</p>
+          <p className={styles.recordMeta}>
             Observed {formatTime(closure.observedAt)} · published {formatTime(closure.publishedAt)} · revision {closure.revision} ·{' '}
             {closure.sourceRefs.length} segment{closure.sourceRefs.length === 1 ? '' : 's'}
           </p>
@@ -708,13 +757,13 @@ function ClosureRow({ closure, onReopened }: { closure: SnapshotClosure; onReope
           <button
             type="button"
             onClick={() => setReopening(true)}
-            className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200">
+            className={styles.button}>
             Reopen…
           </button>
         ) : null}
       </div>
       {reopening ? (
-        <div className="mt-2 flex flex-col gap-2">
+        <div className={styles.reopenForm}>
           <label className="text-sm">
             <span className={labelClass}>Why is the road open again? *</span>
             <input
@@ -726,16 +775,16 @@ function ClosureRow({ closure, onReopened }: { closure: SnapshotClosure; onReope
             />
           </label>
           {error ? (
-            <p role="alert" className="text-xs text-red-600">
+            <p role="alert" className={styles.error}>
               {error}
             </p>
           ) : null}
-          <div className="flex gap-2">
+          <div className={styles.actions}>
             <button
               type="button"
               onClick={() => void reopen()}
               disabled={submitting}
-              className="rounded-full bg-red-600 px-4 py-1 text-xs font-semibold text-white disabled:opacity-50"
+              className={styles.dangerButton}
               aria-busy={submitting}>
               <LoadingButtonContent pending={submitting} pendingLabel="Reopening…">
                 Confirm reopen
@@ -748,7 +797,7 @@ function ClosureRow({ closure, onReopened }: { closure: SnapshotClosure; onReope
                 setError(null);
               }}
               disabled={submitting}
-              className="rounded-full bg-zinc-200 px-4 py-1 text-xs font-semibold disabled:opacity-50 dark:bg-zinc-700">
+              className={styles.button}>
               Cancel
             </button>
           </div>
@@ -803,18 +852,18 @@ function EntrancePanel({
   const tooFar = metersFromCenter !== null && metersFromCenter > 250;
 
   return (
-    <section className={`${cardClass} flex flex-col gap-3`}>
+    <section className={`${cardClass} ${styles.form}`}>
       <div>
-        <h2 ref={headingRef} tabIndex={-1} className="text-sm font-semibold text-zinc-600 outline-none dark:text-zinc-300">
+        <h2 ref={headingRef} tabIndex={-1} className="outline-none">
           Entrance for {center.name}
         </h2>
-        <p className="mt-0.5 text-xs text-zinc-500">
+        <p className={styles.recordText}>
           Click the walkable road point where residents enter the center (within {ENTRANCE_PICK_RADIUS_METERS} m of a road and
           250 m of the center).
         </p>
       </div>
       <form onSubmit={findRoadPoint} noValidate className="flex flex-col gap-2">
-        <p className="text-xs text-zinc-500">Or enter the entrance coordinates:</p>
+        <p className={styles.recordText}>Or enter the entrance coordinates:</p>
         <div className="grid grid-cols-2 gap-2">
           <label>
             <span className={labelClass}>Latitude</span>
@@ -840,14 +889,14 @@ function EntrancePanel({
           </label>
         </div>
         {coordinateError ? (
-          <p role="alert" className="text-xs text-red-600">
+          <p role="alert" className={styles.error}>
             {coordinateError}
           </p>
         ) : null}
         <button
           type="submit"
           disabled={saving}
-          className="self-start rounded-full bg-zinc-200 px-4 py-1.5 text-xs font-semibold disabled:opacity-50 dark:bg-zinc-700">
+          className={styles.button}>
           Find road point
         </button>
       </form>
@@ -859,16 +908,16 @@ function EntrancePanel({
           : 'No point selected yet.'}
       </p>
       {tooFar ? (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className={styles.error}>
           This point is more than 250 m from the center&apos;s pin. Move the center on the Evacuation Centers page first.
         </p>
       ) : null}
-      <div className="flex gap-2">
+      <div className={styles.actions}>
         <button
           type="button"
           onClick={onSave}
           disabled={!candidate || saving || tooFar}
-          className="rounded-full bg-[var(--accent)] px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+          className={styles.primaryButton}
           aria-busy={saving}>
           <LoadingButtonContent pending={saving} pendingLabel="Saving…">
             Save entrance
@@ -878,7 +927,7 @@ function EntrancePanel({
           type="button"
           onClick={onCancel}
           disabled={saving}
-          className="rounded-full bg-zinc-200 px-4 py-1.5 text-xs font-semibold disabled:opacity-50 dark:bg-zinc-700">
+          className={styles.button}>
           Cancel
         </button>
       </div>

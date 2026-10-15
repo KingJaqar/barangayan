@@ -1,7 +1,8 @@
 'use client';
 
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
-import { ALargeSmall, CalendarDays, Hash, CircleCheck, ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react';
+import { selectSortIcon } from '@/components/admin/dropdown/select-iconography';
+import { CircleCheck, CircleMinus, ArrowDownAZ, ArrowUpAZ, CalendarArrowDown, CalendarArrowUp, ArrowDown01, ArrowUp01 } from 'lucide-react';
 
 import { useId, type ReactNode } from 'react';
 import type { BrowseState, BrowseChange } from '@/lib/admin-tables/browse-state';
@@ -25,6 +26,8 @@ export function TableBrowseControls({ state, sorts, searchDraft, onSearchChange,
   searchPlaceholder?: string;
 }) {
   const active = sorts.find(sort => sort.key === state.sort);
+  const ascendingIcon = active?.category === 'text' ? ArrowDownAZ : active?.category === 'date' ? CalendarArrowUp : active?.category === 'boolean' ? CircleMinus : ArrowDown01;
+  const descendingIcon = active?.category === 'text' ? ArrowUpAZ : active?.category === 'date' ? CalendarArrowDown : active?.category === 'boolean' ? CircleCheck : ArrowUp01;
   const id = useId();
   return <div className="table-browse-controls" data-browse-controls>
     <div className="table-browse-section table-browse-search" data-section="search">
@@ -40,13 +43,15 @@ export function TableBrowseControls({ state, sorts, searchDraft, onSearchChange,
       <div className="table-browse-field"><label htmlFor={`${id}-sort`}>Sort by</label>
         <AdminSelect kind="sort" id={`${id}-sort`} value={state.sort} onValueChange={nextValue => onChange({ sort: nextValue })}
           options={sorts.map(sort => {
-            const Icon = sort.category === 'text' ? ALargeSmall : sort.category === 'date' ? CalendarDays : sort.category === 'boolean' ? CircleCheck : Hash;
+            const Icon = selectSortIcon(sort);
             return { value: sort.key, label: sort.label, icon: <Icon size={17} /> };
           })} /></div>
       <div className="table-browse-field"><label htmlFor={`${id}-direction`}>Direction</label>
         <AdminSelect kind="sort" id={`${id}-direction`} value={state.dir} onValueChange={nextValue => onChange({ dir: nextValue as SortDirection })}
-          options={active?.directions.map(direction => ({ value: direction, label: directionLabel(active, direction),
-            icon: direction === 'asc' ? <ArrowUpWideNarrow size={17} /> : <ArrowDownWideNarrow size={17} /> })) ?? []} /></div>
+          options={active?.directions.map(direction => {
+            const Icon = direction === 'asc' ? ascendingIcon : descendingIcon;
+            return { value: direction, label: directionLabel(active, direction), icon: <Icon size={17} /> };
+          }) ?? []} /></div>
       {category}
     </div>
     {(filters || actions) && <div className="table-browse-section table-browse-filters" data-section="filters">

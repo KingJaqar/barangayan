@@ -4,6 +4,8 @@ import { bundledPackFor } from '@/lib/routing-packs';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { RoutingConditionsEditor, type RoutingEventView } from './routing-conditions-editor';
+import { RoutingPageShell } from './routing-page-shell';
+import styles from './routing.module.css';
 
 // DRRM routing conditions (plan R4): verified road closures, center availability and
 // entrances, published as one revisioned snapshot that residents' routing reads.
@@ -72,30 +74,11 @@ export default async function EvacuationRoutingPage() {
   );
 }
 
-function RoutingPageShell({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mx-auto max-w-6xl">
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold">Evacuation Routing</h1>
-        <p className="text-sm text-zinc-500">
-          Publish DRRM-verified road closures and center availability. Residents&apos; evacuation routes never use a
-          closed road, and missing information is treated as unknown.
-        </p>
-      </div>
-      {children}
-    </div>
-  );
-}
-
 function Notice({ tone, children }: { tone: 'info' | 'error'; children: React.ReactNode }) {
   return (
     <p
       role={tone === 'error' ? 'alert' : undefined}
-      className={`rounded-xl border p-4 text-sm ${
-        tone === 'error'
-          ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-300'
-          : 'border-black/10 bg-white text-zinc-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300'
-      }`}>
+      className={styles.notice} data-tone={tone}>
       {children}
     </p>
   );

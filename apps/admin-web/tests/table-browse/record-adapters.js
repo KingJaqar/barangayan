@@ -20,7 +20,9 @@ export function createSupabaseBrowserClient() {
           return { data: fixture.unavailable || !row ? null : { row: structuredClone(row), f_archived: !!row.deleted_at }, error: null };
         }, then(resolve) { return Promise.resolve({ data: [], error: null }).then(resolve); } };
       return query;
-    }, async rpc(name, input) {
+    }, rpc(name, input) {
+      if (name === 'service_request_sla_tracking') return { abortSignal() { return Promise.resolve({ data: { request: structuredClone(window.recordFixture.rows[window.recordFixture.name]), pauses: [], evaluated_at: new Date().toISOString() }, error: null }); } };
+      return (async () => {
       const fixture = window.recordFixture;
       const row = fixture.rows[fixture.name];
       fixture.workflowCalls ??= [];
@@ -38,6 +40,7 @@ export function createSupabaseBrowserClient() {
         [row.status, row.sla_state] = steps[input.p_input.action];
       }
       return { data: row.id, error: null };
+      })();
     }, functions: { async invoke(name, input) {
       const fixture = window.recordFixture;
       const row = fixture.rows[fixture.name];
@@ -66,4 +69,20 @@ export async function mutateAdminRecord(name, id, operation, expected, patch) {
     }
   } else Object.assign(fixture.rows[name], patch);
   return { error: null };
+}
+
+export async function loadRequestReview() {
+  const fixture = window.recordFixture;
+  fixture.reviewReads = (fixture.reviewReads ?? 0) + 1;
+  await new Promise(resolve => setTimeout(resolve, fixture.readDelay ?? 25));
+  if (fixture.reviewFailNext) { fixture.reviewFailNext = false; throw new Error('Fixture review failure.'); }
+  const row = fixture.rows.requests;
+  if (!row || fixture.unavailable) return null;
+  return {
+    request: structuredClone({ ...row, document_types: { ...row.document_types, fee_centavos: 5000, requirements: ['Valid ID', 'Proof of residency'] },
+      status_history: [{ status: 'submitted', at: row.created_at, note: 'Request submitted' },
+        ...(row.status === 'in_progress' ? [{ status: 'in_progress', at: row.updated_at, note: 'Review accepted' }] : [])] }),
+    payment: { id: row.id, method: 'pickup', status: 'pending', amount_centavos: 5000, document_fee_centavos: 5000, refund_status: 'none', refund_transfer_link: null },
+    evidence: fixture.reviewEvidence ?? null, evidenceImages: fixture.reviewEvidenceImages ?? [], files: fixture.reviewFiles ?? [],
+  };
 }

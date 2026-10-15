@@ -1,0 +1,81 @@
+/* Incident sheets inherit every paint and font choice from appearance settings. */
+.sheet {
+  --incident-muted: color-mix(in srgb, var(--foreground) 65%, var(--background));
+  --incident-line: color-mix(in srgb, var(--foreground) 14%, var(--background));
+  --incident-soft: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  --incident-tint: color-mix(in srgb, var(--accent) 9%, var(--background));
+  width: min(100%, 800px);
+  font-family: var(--font-app);
+}
+.sheet.sheet { background: var(--background); color: var(--foreground); border-color: var(--incident-line); }
+.sheet > div:first-child { padding: 22px 36px; border-color: var(--incident-line); }
+.sheet > div:first-child h2 { font-size: 14px; letter-spacing: -.02em; }
+.sheet > div:first-child p { color: var(--incident-muted); font-size: 12px; }
+.sheet > div:first-child button { background: var(--incident-soft); color: var(--foreground); border: 1px solid var(--incident-line); border-radius: 50%; }
+.sheet > div:nth-child(2) { padding: 0 36px 24px; scroll-padding-block: 24px; }
+.sheet .recordForm { color: var(--foreground); }
+.report { min-width: 0; overflow-wrap: anywhere; }
+.hero { padding: 34px 0 24px; }
+.eyebrow { color: var(--incident-muted); font-size: 10px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 12px; }
+.title { max-width: 620px; font-size: clamp(26px, 3.2vw, 38px); font-weight: 500; line-height: 1.15; letter-spacing: -.045em; text-wrap: pretty; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.badge, .status { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--incident-line); border-radius: 5px; padding: 5px 9px; font-size: 11px; line-height: 1.5; }
+.status { background: var(--incident-tint); text-transform: capitalize; }
+.status > span { height: 6px; width: 6px; flex-shrink: 0; border-radius: 50%; background: var(--accent); }
+.summary { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 20px; color: var(--incident-muted); font-size: 11px; }
+.summary > span { display: inline-flex; align-items: center; gap: 7px; }
+.navigation { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 18px; border-bottom: 1px solid var(--incident-line); }
+.navigation a { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 8px 12px; border-radius: 5px; color: var(--incident-muted); font-size: 12px; text-decoration: none; }
+.navigation a:first-child { color: var(--foreground); background: var(--incident-soft); }
+.navigation a:hover { background: var(--incident-tint); color: var(--foreground); }
+.navigation a span { font-size: 10px; font-variant-numeric: tabular-nums; }
+.section { padding: 26px 0; border-bottom: 1px solid var(--incident-line); scroll-margin-top: 24px; }
+.heading { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 15px; font-weight: 550; letter-spacing: -.025em; }
+.number { color: var(--incident-muted); font-size: 10px; font-weight: 400; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.heading > svg, .count { margin-left: auto; color: var(--incident-muted); }
+.count { font-size: 11px; font-weight: 400; letter-spacing: normal; }
+.description { font-size: 14px; line-height: 1.85; white-space: pre-wrap; }
+.details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+.details dt { margin-bottom: 6px; color: var(--incident-muted); font-size: 11px; }
+.details dd { font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+.wide { grid-column: 1 / -1; }
+.coordinates { font-variant-numeric: tabular-nums; }
+.reporter { font-size: 14px; line-height: 1.7; }
+.empty { display: flex; align-items: center; gap: 16px; padding: 24px; background: var(--incident-soft); border: 1px solid var(--incident-line); border-radius: 8px; }
+.empty > svg { color: var(--incident-muted); flex-shrink: 0; }
+.empty p { font-size: 13px; margin-bottom: 4px; }
+.empty span { color: var(--incident-muted); font-size: 12px; line-height: 1.6; }
+.photoStage { background: var(--incident-soft); border: 1px solid var(--incident-line); border-radius: 8px; overflow: hidden; }
+.photo { display: block; width: 100%; height: 280px; object-fit: contain; color: var(--incident-muted); font-size: 13px; }
+.gallery figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-block: 12px; color: var(--incident-muted); font-size: 11px; }
+.gallery figcaption a { display: inline-flex; align-items: center; gap: 4px; color: var(--foreground); text-decoration: none; }
+.gallery figcaption a:hover { text-decoration: underline; }
+.thumbnails { display: flex; overflow-x: auto; gap: 10px; padding: 4px; }
+.thumbnails button { position: relative; flex: 0 0 72px; height: 60px; border: 1px solid var(--incident-line); border-radius: 5px; background: var(--incident-soft); padding: 3px; cursor: pointer; }
+.thumbnails button[aria-pressed='true'] { outline: 2px solid var(--accent); outline-offset: 1px; }
+.thumbnails img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+.thumbnails span { position: absolute; right: 3px; bottom: 3px; background: var(--background); color: var(--foreground); border-radius: 2px; padding: 1px 4px; font-size: 9px; }
+.sheet .recordForm > div:last-child, .sheet .recordForm form > div:last-child { margin-top: 0; bottom: -24px; padding: 20px 0; border-color: var(--incident-line); background: var(--background); box-shadow: 0 -12px 20px var(--background); }
+.sheet .recordForm > div:last-child button, .sheet .recordForm form > div:last-child button { min-height: 40px; padding: 9px 18px; border: 1px solid var(--incident-line); box-shadow: none; background: var(--background); color: var(--foreground); font-size: 12px; font-weight: 500; }
+.sheet .recordForm > div:last-child button:first-child, .sheet .recordForm form > div:last-child button:first-child { background: var(--incident-tint); border-color: color-mix(in srgb, var(--accent) 30%, var(--incident-line)); }
+.sheet .recordForm button:hover { background: var(--incident-soft); }
+.sheet .recordForm form { padding-top: 28px; }
+.sheet .recordForm form > div:last-child { margin-top: 28px; }
+.sheet .recordForm label > span:first-child { color: var(--incident-muted); font-size: 12px; }
+.sheet .recordForm label > :is(input, textarea) { color: var(--foreground); background: var(--incident-soft); border-color: var(--incident-line); }
+.sheet :is(button, a, input, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 639px) {
+  .sheet > div:first-child { padding: 18px 20px; }
+  .sheet > div:nth-child(2) { padding: 0 20px 20px; }
+  .hero { padding-top: 28px; }
+  .title { font-size: 28px; }
+  .navigation { gap: 2px; }
+  .navigation a { padding-inline: 9px; }
+  .photo { height: 220px; }
+  .sheet .recordForm > div:last-child, .sheet .recordForm form > div:last-child { bottom: -20px; }
+}
+@media (max-width: 379px) { .details { grid-template-columns: minmax(0, 1fr); } .empty { padding: 18px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .sheet > div:nth-child(2) { scroll-behavior: smooth; }
+  .navigation a, .sheet .recordForm button { transition: background-color 150ms ease, border-color 150ms ease; }
+}

@@ -145,7 +145,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
       minWidth: 170,
       wrap: 'nowrap',
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'officialRole',
         options: OFFICIAL_ROLES.map((role) => ({ value: role, label: OFFICIAL_ROLE_LABELS[role] })),
         getValue: (r) => r.official_role,
         canEdit: notSelf,
@@ -205,7 +205,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
 
     {addOpen && <fieldset disabled={browse.pending}><StaffForm barangayId={barangayId} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
     <ProfileTablePanel label="Staff Members" browse={browse}
-      category={<label className="table-browse-field">Official role <AdminSelect kind="people" aria-label="Official role" value={state.filters.role} onValueChange={nextValue => void browse.commit({ filters: { role: nextValue } })}>
+      category={<label className="table-browse-field">Official role <AdminSelect kind="officialRole" aria-label="Official role" value={state.filters.role} onValueChange={nextValue => void browse.commit({ filters: { role: nextValue } })}>
         <option value="">All roles</option>{OFFICIAL_ROLES.map(role => <option key={role} value={role}>{OFFICIAL_ROLE_LABELS[role]}</option>)}
       </AdminSelect></label>}
       filters={<SegmentedFilter label="Account type" value={state.filters.tab}

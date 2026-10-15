@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "Actual announcements form: every fixed option has its corresponding semantic icon",
+    "Actual faq form: every fixed option has its corresponding semantic icon",
+    "Actual hub form: every fixed option has its corresponding semantic icon",
+    "Actual waste form: every fixed option has its corresponding semantic icon",
+    "Actual compatibility sex/employment choices and all ten QR presets; selected QR trigger previews the glyph; no save",
+    "Actual requests inline editor: semantic icons and cancel without persistence",
+    "Actual transactions inline editor: semantic icons and cancel without persistence",
+    "Actual residents inline editor: semantic icons and cancel without persistence",
+    "Actual health inline editor: semantic icons and cancel without persistence",
+    "Actual staff inline editor: semantic icons and cancel without persistence",
+    "Actual sort fields, numeric directions and record drawer use semantic icons without popup-open/dismiss writes",
+    "Explicit trigger/option overrides preserved; unknown values have an empty icon gutter and remain safe"
+  ],
+  "errors": [],
+  "warnings": [],
+  "limitations": [
+    "Actual frontend components with synthetic records and mocked persistence. No hosted-data writes."
+  ]
+}

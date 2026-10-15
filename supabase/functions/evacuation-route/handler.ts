@@ -57,7 +57,19 @@ export async function loadRoutingPack(graph: unknown, manifest: unknown, sha256H
   return { graph: prepared.graph, areaId, graphSha256: entry.sha256, osmBaseTimestamp, attribution };
 }
 
+/**
+ * Reads the rollout secret. Unset or `true` serves routes; `false` pauses connected routing. Any
+ * other value is a mistyped pause: it also pauses, so the switch can never read as "on" by
+ * accident, and `valid: false` lets the caller report it.
+ */
+export function rolloutFlagState(value: string | undefined): { enabled: boolean; valid: boolean } {
+  if (value === undefined || value === 'true') return { enabled: true, valid: true };
+  return { enabled: false, valid: value === 'false' };
+}
+
 export interface RouteServiceDependencies {
+  /** Rollout switch (plan section 6), read per request so a change applies without a redeploy. */
+  enabled: () => boolean;
   /** The verified pack; memoized by the caller. */
   pack: () => Promise<RoutingPack>;
   /** get_routing_conditions_snapshot for the pack's area and graph. */
@@ -98,6 +110,7 @@ const ERRORS: Record<RouteServiceErrorCode, { status: number; message: string }>
   graph_not_active: { status: 503, message: 'The route service map is not the active map for this area.' },
   snapshot_outdated: { status: 503, message: 'The route service has older road conditions than this device.' },
   closures_unmapped: { status: 503, message: 'A verified road closure is not mapped onto the route map.' },
+  service_disabled: { status: 503, message: 'The route service is paused by the barangay.' },
   deadline_exceeded: { status: 503, message: 'Route calculation took too long.' },
   // Non-standard 499 (client closed request): the response is never read.
   cancelled: { status: 499, message: 'The route request was cancelled.' },
@@ -155,6 +168,8 @@ export function evacuationRouteHandler(deps: RouteServiceDependencies): (req: Re
   return async (req: Request): Promise<Response> => {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (req.method !== 'POST') return fail('method_not_allowed');
+    // Before any body, pack, limiter or database work: pausing must cost almost nothing.
+    if (!deps.enabled()) return fail('service_disabled');
 
     let body: string | null;
     try {

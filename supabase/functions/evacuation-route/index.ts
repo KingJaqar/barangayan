@@ -1,6 +1,6 @@
 import graph from '../../../data/routing-packs/ampid-1/pack/graph.json' with { type: 'json' };
 import manifest from '../../../data/routing-packs/ampid-1/pack/manifest.json' with { type: 'json' };
-import { evacuationRouteHandler, loadRoutingPack, type RoutingPack } from './handler.ts';
+import { evacuationRouteHandler, loadRoutingPack, rolloutFlagState, type RoutingPack } from './handler.ts';
 
 // Public emergency routing (plan R5): no sign-in required (invariant 9). Deployed with
 // verify_jwt = false (config.toml) and limited per hashed client address instead.
@@ -48,9 +48,22 @@ async function rpc(name: string, args: Record<string, unknown>, key: string, sig
   return await response.json();
 }
 
+// Rollout switch: the function secret EVACUATION_ROUTE_ENABLED (see rolloutFlagState). Read on
+// every request, because Supabase applies a changed secret without a redeploy.
+let flagReported = false;
+function routeServiceEnabled(): boolean {
+  const state = rolloutFlagState(Deno.env.get('EVACUATION_ROUTE_ENABLED'));
+  if (!state.valid && !flagReported) {
+    flagReported = true;
+    console.error('evacuation-route: rollout_flag_invalid');
+  }
+  return state.enabled;
+}
+
 let pack: Promise<RoutingPack> | null = null;
 
 Deno.serve(evacuationRouteHandler({
+  enabled: routeServiceEnabled,
   pack: () => (pack ??= loadRoutingPack(graph, manifest, sha256Hex)),
   conditions: (areaId, graphVersion, signal) =>
     rpc('get_routing_conditions_snapshot', { p_area_id: areaId, p_graph_version: graphVersion }, anonKey, signal),

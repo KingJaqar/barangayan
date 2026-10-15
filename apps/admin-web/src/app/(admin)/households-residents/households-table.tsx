@@ -143,7 +143,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       wrap: 'nowrap',
       render: (r) => r.relation,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'relation',
         options: RELATION_OPTIONS,
         getValue: (r) => r.relation,
         onSave: (r, value) => updateField(r, { relation: String(value) }),
@@ -157,7 +157,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       wrap: 'nowrap',
       render: (r) => r.role,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'memberRole',
         options: ROLE_OPTIONS,
         getValue: (r) => r.role,
         onSave: (r, value) => updateField(r, { role: String(value) }),
@@ -181,7 +181,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
         </span>
       ),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'boolean',
         options: CHECKED_IN_OPTIONS,
         getValue: (r) => String(r.is_checked_in),
         onSave: (r, value) => {
@@ -221,7 +221,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
     <div>{optionsError && <div role="alert">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddMemberForm residents={residents} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
     <ProfileTablePanel label="Households & Residents" browse={browse}
-      category={<label className="table-browse-field">Relation <AdminSelect kind="people" aria-label="Relation" value={state.filters.relation} onValueChange={nextValue => void browse.commit({ filters: { relation: nextValue } })}>
+      category={<label className="table-browse-field">Relation <AdminSelect kind="relation" aria-label="Relation" value={state.filters.relation} onValueChange={nextValue => void browse.commit({ filters: { relation: nextValue } })}>
         <option value="">All relations</option>{RELATION_FILTER_OPTIONS.map(rel => <option key={rel} value={rel}>{rel.charAt(0).toUpperCase() + rel.slice(1)}</option>)}
       </AdminSelect></label>}
       filters={<SegmentedFilter label="Check-in status" value={state.filters.tab}
@@ -337,7 +337,7 @@ function AddMemberForm({ residents, onClose, onChanged }: {
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Relation</span>
-        <AdminSelect kind="people" className={inputClass} value={relation} onValueChange={(nextValue) => setRelation(nextValue)}>
+        <AdminSelect kind="relation" className={inputClass} value={relation} onValueChange={(nextValue) => setRelation(nextValue)}>
           {RELATION_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -347,7 +347,7 @@ function AddMemberForm({ residents, onClose, onChanged }: {
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Role</span>
-        <AdminSelect kind="people" className={inputClass} value={role} onValueChange={(nextValue) => setRole(nextValue)}>
+        <AdminSelect kind="memberRole" className={inputClass} value={role} onValueChange={(nextValue) => setRole(nextValue)}>
           {ROLE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

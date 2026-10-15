@@ -32,7 +32,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthent
   const isSettings = pathname === '/settings' || pathname.startsWith('/settings/');
 
   return (
-    <div className={`${styles.shell} ${pathname === '/home' && isAuthenticated ? styles.homeShell : ''}`}>
+    <div className={styles.shell}>
       <header ref={toastAnchorRef} data-toast-anchor className={`${styles.header} ${!isAuthenticated ? styles.guestHeader : ''}`}>
         <div className={styles.headerInner}>
           <Link href="/home" className={styles.brand}>

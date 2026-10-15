@@ -13,17 +13,18 @@ import { ProfileNavigationGuard, useProfileNavigation } from './profile-navigati
 interface AdminShellProps {
   barangayName: string;
   adminName: string;
+  adminAvatarUrl?: string | null;
   barangayId: string;
   children: ReactNode;
 }
 
 /** Holds the hamburger's sidebar-collapse state (v1: not persisted, resets on reload —
  * per the plan's §1.1 scope call). Wraps Header + SidebarNav + page content. */
-export function AdminShell({ barangayName, adminName, barangayId, children }: AdminShellProps) {
-  return <ProfileNavigationGuard><GuardedAdminShell barangayName={barangayName} adminName={adminName} barangayId={barangayId}>{children}</GuardedAdminShell></ProfileNavigationGuard>;
+export function AdminShell({ barangayName, adminName, adminAvatarUrl, barangayId, children }: AdminShellProps) {
+  return <ProfileNavigationGuard><GuardedAdminShell barangayName={barangayName} adminName={adminName} adminAvatarUrl={adminAvatarUrl} barangayId={barangayId}>{children}</GuardedAdminShell></ProfileNavigationGuard>;
 }
 
-function GuardedAdminShell({ barangayName, adminName, barangayId, children }: AdminShellProps) {
+function GuardedAdminShell({ barangayName, adminName, adminAvatarUrl, barangayId, children }: AdminShellProps) {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const { requestLeave } = useProfileNavigation();
@@ -42,6 +43,7 @@ function GuardedAdminShell({ barangayName, adminName, barangayId, children }: Ad
       <Header
         barangayName={barangayName}
         adminName={adminName}
+        adminAvatarUrl={adminAvatarUrl}
         barangayId={barangayId}
         sidebarCollapsed={collapsed}
         onToggleSidebar={() => setCollapsed((v) => !v)}

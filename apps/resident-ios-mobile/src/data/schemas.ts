@@ -83,3 +83,26 @@ export const SITE_CONTENT_COLUMNS = 'id,section,title,body';
 export const faqRow = z.object({ id, category: text, question: text, answer: text });
 export const FAQ_COLUMNS = 'id,category,question,answer';
 
+
+/** The resident's own barangay with its boundary and configured locality (profile and location screens). */
+const localityRow = z.object({ display_name: text, city: text.nullable(), province: text.nullable() });
+export const barangayProfileRow = z.object({
+  name: text,
+  boundary: z.unknown(),
+  barangay_localities: z.union([localityRow, z.array(localityRow), z.null()]),
+});
+export const BARANGAY_PROFILE_COLUMNS = 'name,boundary,barangay_localities(display_name,city,province)';
+
+/** The resident's newest ID version (own rows only, by row-level security and the explicit owner filter). */
+export const idSubmissionRow = z.object({
+  id,
+  version: z.number().int().min(1),
+  id_type: text,
+  front_path: text,
+  back_path: text.nullable(),
+  decision: text,
+  submitted_at: timestamp,
+  reviewed_at: timestamp.nullable(),
+  rejection_reason: text.nullable(),
+});
+export const ID_SUBMISSION_COLUMNS = 'id,version,id_type,front_path,back_path,decision,submitted_at,reviewed_at,rejection_reason';

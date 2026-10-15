@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
+import { Building2, Eye, Pencil, Plus, Save, Users } from 'lucide-react';
+import styles from './about-us.module.css';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
@@ -14,8 +16,7 @@ import { LoadingButtonContent } from '@/components/loading/loading-button-conten
 type AboutUsRow = Tables<'about_us'>;
 type DeveloperProfileRow = Tables<'developer_profiles'>;
 
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
+const inputClass = styles.input;
 
 function getExtension(filename: string): string {
   const idx = filename.lastIndexOf('.');
@@ -81,7 +82,6 @@ export function AboutUsForm({
 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [isLive, setIsLive] = useState(false);
 
   useEffect(() => {
     if (!barangayId) return;
@@ -99,7 +99,7 @@ export function AboutUsForm({
         { event: '*', schema: 'public', table: 'developer_profiles', filter: `barangay_id=eq.${barangayId}` },
         () => router.refresh(),
       )
-      .subscribe((status) => setIsLive(status === 'SUBSCRIBED'));
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
@@ -289,235 +289,128 @@ export function AboutUsForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <div className="flex items-center justify-end gap-3">
-        <div className="flex items-center gap-1.5">
-          <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${isLive ? 'bg-green-500' : 'bg-zinc-300'}`}>
-            {isLive && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />}
-          </span>
-          <span className="text-xs text-zinc-500">{isLive ? 'Live' : 'Offline'}</span>
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowPreview((v) => !v)}
-          className="text-xs font-semibold text-[var(--accent)] hover:underline">
-          {showPreview ? 'Edit' : 'Preview'}
+    <form onSubmit={handleSubmit} className={styles.workspace}>
+      <header className={styles.toolbar}>
+        <div className={styles.eyebrow}>Community / About Us</div>
+        <button type="button" className={styles.secondaryButton} aria-pressed={showPreview} onClick={() => setShowPreview((v) => !v)}>
+          {showPreview ? <Pencil size={15} /> : <Eye size={15} />}{showPreview ? 'Back to editing' : 'Preview page'}
         </button>
-      </div>
+      </header>
+
+      {!showPreview && <nav className={styles.navigation} aria-label="About Us sections">
+        <a href="#about-identity">01 <span>Identity</span></a>
+        <a href="#about-story">02 <span>Our story</span></a>
+        <a href="#about-contact">03 <span>Contact</span></a>
+        <a href="#about-team">04 <span>Development team</span></a>
+      </nav>}
 
       {showPreview ? (
-        <div className="prose prose-sm max-w-none rounded-xl border border-black/10 bg-white p-6 dark:prose-invert dark:border-white/10 dark:bg-zinc-900">
-          {(logoPreview || logoUrl) && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-                src={logoPreview ?? logoUrl}
-                alt="Barangay logo"
-                className="mb-2 rounded-full object-cover"
-                style={{ width: logoSize, height: logoSize }}
-              />
-          )}
-          {title ? <h1 className="mb-4 text-2xl font-bold">{title}</h1> : null}
-          <h2>Mission</h2>
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{mission}</ReactMarkdown>
-          <h2>Vision</h2>
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{vision}</ReactMarkdown>
-          <h2>History</h2>
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{history}</ReactMarkdown>
-          <h2>Contact</h2>
-          <p>
-            {contactEmail} {contactPhone} {address}
-          </p>
-          <h2>Development Team</h2>
-          <ul>
-            {developers.map((d) => (
-              <li key={d.key}>
-                <strong>{d.name}</strong> — {d.role}
-                {d.bio ? `: ${d.bio}` : ''}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <>
-          <section className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
-            <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Barangay Profile</h2>
-            <div className="mb-4 flex items-start gap-4">
-              {(logoPreview || logoUrl) && (
+        <article className={styles.preview} aria-label="About Us preview">
+          <div className={styles.previewHeading}>
+            <span className={styles.eyebrow}>Page preview · {isActive ? 'Published' : 'Unpublished'}</span>
+            {(logoPreview || logoUrl) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoPreview ?? logoUrl} alt="Barangay logo" className={styles.logo} style={{ width: logoSize, height: logoSize }} />
+            )}
+            <h2>{title || 'Your barangay'}</h2>
+          </div>
+          <div className={styles.twoColumns}>
+            {[['Mission', mission], ['Vision', vision]].map(([label, content]) => <section key={label} className={styles.previewBlock}>
+              <h3>{label}</h3><ReactMarkdown rehypePlugins={[rehypeSanitize]}>{content || 'No content added yet.'}</ReactMarkdown>
+            </section>)}
+          </div>
+          <section className={styles.previewBlock}><h3>History</h3><ReactMarkdown rehypePlugins={[rehypeSanitize]}>{history || 'No history added yet.'}</ReactMarkdown></section>
+          <section className={styles.previewBlock}><h3>Contact</h3><div className={styles.contactPreview}>
+            <div><span>Email</span><p>{contactEmail || 'Not provided'}</p></div>
+            <div><span>Phone</span><p>{contactPhone || 'Not provided'}</p></div>
+            <div><span>Address</span><p>{address || 'Not provided'}</p></div>
+          </div></section>
+          <section className={styles.previewBlock}><h3>Development team</h3><div className={styles.twoColumns}>
+            {developers.map((dev) => <div key={dev.key} className={styles.teamPreview}>
+              {(dev.photoPreview || dev.photo_url) && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoPreview ?? logoUrl}
-                  alt="Logo preview"
-                  className="shrink-0 rounded-full object-cover"
-                  style={{ width: logoSize, height: logoSize }}
-                />
+                <img src={dev.photoPreview ?? dev.photo_url} alt={dev.name || 'Developer photo'} />
               )}
-              <div className="flex flex-col gap-3">
-                <label className="text-sm">
-                  <span className="mb-1 block font-medium">Logo</span>
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/jpg,image/webp"
-                    onChange={(e) => handleLogoPick(e.target.files?.[0] ?? null)}
-                    className="text-sm"
-                  />
-                </label>
-                <label className="text-sm">
-                  <span className="mb-1 block font-medium">
-                    Logo Size — <span className="font-normal text-zinc-500">{logoSize}px</span>
-                  </span>
-                  <input
-                    type="range"
-                    min={40}
-                    max={200}
-                    step={4}
-                    value={logoSize}
-                    onChange={(e) => setLogoSize(Number(e.target.value))}
-                    className="w-48"
-                  />
-                </label>
+              <div><h4>{dev.name || 'Developer name'}</h4><span>{dev.role || 'Role'}</span>{dev.bio && <p>{dev.bio}</p>}</div>
+            </div>)}
+            {!developers.length && <p className={styles.muted}>No developers added yet.</p>}
+          </div></section>
+        </article>
+      ) : (
+        <div className={styles.editor}>
+          <section id="about-identity" className={styles.section}>
+            <div className={styles.sectionIntro}><span className={styles.eyebrow}>01 / Identity</span><h2>A familiar face.</h2><p>Give residents a name and a logo they recognize.</p></div>
+            <div className={styles.panel}>
+              <div className={styles.logoRow}>
+                <div className={styles.logoStage}>
+                  {(logoPreview || logoUrl) ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={logoPreview ?? logoUrl} alt="Logo preview" className={styles.logo} style={{ width: logoSize, height: logoSize }} />
+                  ) : <Building2 size={36} strokeWidth={1} aria-hidden="true" />}
+                </div>
+                <div className={styles.logoControls}>
+                  <label className={styles.field}><span>Barangay logo</span><input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" onChange={(e) => handleLogoPick(e.target.files?.[0] ?? null)} className={styles.fileInput} /></label>
+                  <p className={styles.hint}>PNG, JPG, or WebP</p>
+                  <label className={styles.field}><span className={styles.rangeLabel}>Logo size <output>{logoSize}px</output></span><input type="range" min={40} max={200} step={4} value={logoSize} onChange={(e) => setLogoSize(Number(e.target.value))} /></label>
+                </div>
               </div>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">Title</span>
-                <input
-                  className={inputClass}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Barangayan"
-                />
-              </label>
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">Mission (Markdown supported)</span>
-                <textarea className={inputClass} value={mission} onChange={(e) => setMission(e.target.value)} rows={3} />
-              </label>
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">Vision (Markdown supported)</span>
-                <textarea className={inputClass} value={vision} onChange={(e) => setVision(e.target.value)} rows={3} />
-              </label>
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">History (Markdown supported)</span>
-                <textarea className={inputClass} value={history} onChange={(e) => setHistory(e.target.value)} rows={5} />
-              </label>
-
-              <div className="grid grid-cols-2 gap-4">
-                <label className="text-sm">
-                  <span className="mb-1 block font-medium">Contact Email</span>
-                  <input className={inputClass} type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
-                </label>
-                <label className="text-sm">
-                  <span className="mb-1 block font-medium">Contact Phone</span>
-                  <input className={inputClass} value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
-                </label>
-              </div>
-
-              <label className="text-sm">
-                <span className="mb-1 block font-medium">Address</span>
-                <input className={inputClass} value={address} onChange={(e) => setAddress(e.target.value)} />
-              </label>
-
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300"
-                />
-                <span className="font-medium">Published (visible to residents)</span>
-              </label>
+              <label className={styles.field}><span>Page title</span><input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Barangayan" /></label>
             </div>
           </section>
 
-          <section className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-300">Development Team</h2>
-              <button
-                type="button"
-                onClick={addDeveloper}
-                className="rounded-full border border-[var(--accent)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
-                + Add Developer
-              </button>
+          <section id="about-story" className={styles.section}>
+            <div className={styles.sectionIntro}><span className={styles.eyebrow}>02 / Our story</span><h2>Purpose. Progress.<br />A shared future.</h2><p>Tell residents what your community stands for and where it’s headed.</p><span className={styles.formatNote}>Markdown supported in all story fields.</span></div>
+            <div className={styles.panel}>
+              <label className={styles.field}><span>Mission</span><textarea className={inputClass} value={mission} onChange={(e) => setMission(e.target.value)} rows={4} placeholder="What guides your community every day?" /></label>
+              <label className={styles.field}><span>Vision</span><textarea className={inputClass} value={vision} onChange={(e) => setVision(e.target.value)} rows={4} placeholder="The future you’re building together." /></label>
+              <label className={styles.field}><span>History</span><textarea className={inputClass} value={history} onChange={(e) => setHistory(e.target.value)} rows={6} placeholder="Share the story of your barangay." /></label>
             </div>
+          </section>
 
-            <div className="flex flex-col gap-4">
-              {developers.map((dev) => (
-                <div key={dev.key} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-                  <div className="mb-3 flex items-center gap-4">
+          <section id="about-contact" className={styles.section}>
+            <div className={styles.sectionIntro}><span className={styles.eyebrow}>03 / Contact</span><h2>Keep in touch.</h2><p>Make it easy for residents to reach their barangay.</p></div>
+            <div className={styles.panel}>
+              <div className={styles.twoColumns}>
+                <label className={styles.field}><span>Contact email</span><input className={inputClass} type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email address" /></label>
+                <label className={styles.field}><span>Contact phone</span><input className={inputClass} type="tel" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone number" /></label>
+              </div>
+              <label className={styles.field}><span>Address</span><input className={inputClass} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Barangay office address" /></label>
+            </div>
+          </section>
+
+          <section id="about-team" className={styles.section}>
+            <div className={styles.sectionIntro}><span className={styles.eyebrow}>04 / Development team</span><h2>The people<br />behind it.</h2><p>Recognize the team helping your community stay connected.</p></div>
+            <div className={styles.panel}>
+              <div className={styles.panelHeading}><span>Development team <span className={styles.count}>{developers.length}</span></span><button type="button" onClick={addDeveloper} className={styles.secondaryButton}><Plus size={14} />Add Developer</button></div>
+              {developers.map((dev, index) => (
+                <div key={dev.key} className={styles.developer}>
+                  <div className={styles.developerHeading}><span>Team member {String(index + 1).padStart(2, '0')}</span><button type="button" onClick={() => removeDeveloper(dev.key)} className={styles.removeButton} aria-label={`Remove ${dev.name || `team member ${index + 1}`}`}>Remove</button></div>
+                  <div className={styles.photoRow}>
                     {(dev.photoPreview || dev.photo_url) && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={dev.photoPreview ?? dev.photo_url}
-                        alt={dev.name || 'Developer photo'}
-                        className="h-12 w-12 rounded-full object-cover"
-                      />
+                      <img src={dev.photoPreview ?? dev.photo_url} alt={dev.name || 'Developer photo'} />
                     )}
-                    <label className="text-sm">
-                      <span className="mb-1 block font-medium">Photo</span>
-                      <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg,image/webp"
-                        onChange={(e) => handleDeveloperPhotoPick(dev.key, e.target.files?.[0] ?? null)}
-                        className="text-sm"
-                      />
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => removeDeveloper(dev.key)}
-                      className="ml-auto text-xs font-semibold text-red-600 hover:underline">
-                      Remove
-                    </button>
+                    <label className={styles.field}><span>Photo</span><input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" onChange={(e) => handleDeveloperPhotoPick(dev.key, e.target.files?.[0] ?? null)} className={styles.fileInput} /></label>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="text-sm">
-                      <span className="mb-1 block font-medium">Name</span>
-                      <input
-                        className={inputClass}
-                        value={dev.name}
-                        onChange={(e) => updateDeveloper(dev.key, { name: e.target.value })}
-                        required
-                      />
-                    </label>
-                    <label className="text-sm">
-                      <span className="mb-1 block font-medium">Role</span>
-                      <input
-                        className={inputClass}
-                        value={dev.role}
-                        onChange={(e) => updateDeveloper(dev.key, { role: e.target.value })}
-                        required
-                      />
-                    </label>
+                  <div className={styles.twoColumns}>
+                    <label className={styles.field}><span>Name</span><input className={inputClass} value={dev.name} onChange={(e) => updateDeveloper(dev.key, { name: e.target.value })} required /></label>
+                    <label className={styles.field}><span>Role</span><input className={inputClass} value={dev.role} onChange={(e) => updateDeveloper(dev.key, { role: e.target.value })} required /></label>
                   </div>
-                  <label className="mt-3 block text-sm">
-                    <span className="mb-1 block font-medium">Bio</span>
-                    <textarea
-                      className={inputClass}
-                      value={dev.bio}
-                      onChange={(e) => updateDeveloper(dev.key, { bio: e.target.value })}
-                      rows={2}
-                    />
-                  </label>
+                  <label className={styles.field}><span>Bio</span><textarea className={inputClass} value={dev.bio} onChange={(e) => updateDeveloper(dev.key, { bio: e.target.value })} rows={3} /></label>
                 </div>
               ))}
-              {developers.length === 0 && (
-                <p className="py-6 text-center text-sm text-zinc-500">No developers added yet.</p>
-              )}
+              {!developers.length && <div className={styles.empty}><Users size={28} strokeWidth={1} /><h3>A little credit goes a long way.</h3><p>Add the people who brought your community’s platform to life.</p></div>}
             </div>
           </section>
-        </>
+        </div>
       )}
-
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-
-      <div>
-        <button
-          type="submit"
-          disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          aria-busy={submitting}>
-          <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+      {error && <p role="alert" className={styles.error}>{error}</p>}
+      <footer className={styles.saveBar}>
+        <label className={styles.publishControl}><input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} /><span><strong>Published</strong><small>Visible to residents when saved</small></span></label>
+        <button type="submit" disabled={submitting || !barangayId} className={styles.primaryButton} aria-busy={submitting}>
+          <LoadingButtonContent pending={submitting} pendingLabel="Saving…"><Save size={15} />Save Changes</LoadingButtonContent>
         </button>
-      </div>
+      </footer>
     </form>
   );
 }

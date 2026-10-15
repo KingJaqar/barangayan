@@ -19,7 +19,7 @@ export function NewRequestForm({ documentTypes }: { documentTypes: Tables<'docum
       <VerificationNotice client={client} profileHref="/resident/profile#upload-valid-id" />
       <label>
         Document type
-        <AdminSelect
+        <AdminSelect kind="document"
           aria-label="Document type"
           className="block w-full rounded-lg border p-3"
           value={id}

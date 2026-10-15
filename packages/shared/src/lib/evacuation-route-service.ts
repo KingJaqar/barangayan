@@ -238,6 +238,8 @@ export type RouteServiceErrorCode =
   | 'conditions_unavailable'
   | 'invalid_conditions'
   | RouteSnapshotRejection
+  /** The rollout switch is off: the service is paused on purpose (plan 3.8, section 6). */
+  | 'service_disabled'
   | 'deadline_exceeded'
   | 'cancelled';
 

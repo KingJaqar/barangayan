@@ -1,5 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { ClientWrapper } from './client-wrapper';
+import { EmergencyQrHeader } from './emergency-qr-header';
+import styles from './emergency-qr.module.css';
 
 export default async function EmergencyQrPage() {
   const supabase = await createSupabaseServerClient();
@@ -23,13 +25,8 @@ export default async function EmergencyQrPage() {
     .order('name', { ascending: true });
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Emergency QR</h1>
-        <p className="text-sm text-zinc-500">
-          Manage evacuation center QR codes and instructional content.
-        </p>
-      </div>
+    <div className={styles.page}>
+      <EmergencyQrHeader />
       <ClientWrapper
         initialContent={content ?? []}
         initialCenters={centers ?? []}

@@ -1,0 +1,113 @@
+/* Request-only presentation. All paint values follow the live appearance tokens. */
+.sheet {
+  --review-text: var(--foreground);
+  --review-muted: color-mix(in srgb, var(--foreground) 64%, var(--background));
+  --review-line: color-mix(in srgb, var(--foreground) 13%, var(--background));
+  --review-soft: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  --review-accent-soft: color-mix(in srgb, var(--accent) 8%, var(--background));
+  width: min(100%, 800px);
+  background: var(--background);
+  border-color: var(--review-line);
+  color: var(--review-text);
+  font-family: var(--font-app);
+}
+.sheet > div:first-child { padding: 22px 32px; border-color: var(--review-line); }
+.sheet > div:first-child h2 { font-size: 14px; font-weight: 600; letter-spacing: -.02em; }
+.sheet > div:first-child p { color: var(--review-muted); font-size: 12px; margin-top: 4px; }
+.sheet > div:first-child button { color: var(--review-muted); border: 1px solid var(--review-line); border-radius: 50%; background: var(--background); }
+.sheet > div:first-child button:hover { background: var(--review-soft); color: var(--foreground); }
+.sheet > div:nth-child(2) { padding: 30px 32px 24px; scroll-behavior: smooth; scroll-padding-block: 18px; }
+.sheet .recordForm { color: var(--foreground); }
+.sheet .recordForm > div:last-child {
+  margin-top: 26px; padding-top: 18px; padding-bottom: 18px; border-color: var(--review-line);
+  background: var(--background); box-shadow: 0 -12px 20px var(--background);
+}
+.sheet .recordForm > div:last-child button { box-shadow: none; border-radius: 8px; font: inherit; font-size: 12px; min-height: 38px; padding: 8px 14px; border: 1px solid var(--review-line); background: var(--background); color: var(--foreground); }
+.sheet .recordForm > div:last-child button:first-child { background: var(--review-accent-soft); border-color: color-mix(in srgb, var(--accent) 25%, var(--background)); }
+.sheet .recordForm > div:last-child button:hover { background: var(--review-soft); }
+.sheet :is(button, a, summary, input):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.recordFields { margin-top: 26px; border-top: 1px solid var(--review-line); padding-top: 18px; }
+.recordFields > summary { color: var(--review-muted); cursor: pointer; font-size: 12px; font-weight: 500; }
+.recordFields[open] > summary { color: var(--foreground); }
+
+.review { font-family: inherit; color: var(--foreground); line-height: 1.6; }
+.review .hero { margin-bottom: 24px; gap: 20px; }
+.review .eyebrow { display: flex; align-items: center; gap: 7px; color: var(--review-muted); font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px; }
+.review .hero h2 { font-size: clamp(26px, 3vw, 36px); font-weight: 550; line-height: 1.14; letter-spacing: -.045em; overflow-wrap: anywhere; }
+.review .reference { color: var(--review-muted); font-size: 12px; margin-top: 10px; }
+.review .statuses { padding-top: 3px; flex-shrink: 0; gap: 7px; }
+.review .statuses > span { border: 1px solid var(--review-line); background: var(--review-soft); color: var(--foreground); font-size: 10px; font-weight: 500; padding: 5px 10px; white-space: nowrap; }
+.review .statuses > span:last-child { border-color: color-mix(in srgb, var(--accent) 24%, var(--background)); background: var(--review-accent-soft); }
+.navigation { display: flex; flex-wrap: wrap; gap: 4px 24px; border-bottom: 1px solid var(--review-line); padding-bottom: 15px; margin-bottom: 24px; }
+.navigation a { display: inline-flex; align-items: center; min-height: 32px; font-size: 12px; color: var(--review-muted); text-decoration: none; border-radius: 3px; transition: color 160ms ease; }
+.navigation a:hover, .navigation a:focus-visible { color: var(--foreground); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 8px; }
+.review .workflow { padding: 18px 20px; border-radius: 12px; border-color: var(--review-line); background: var(--review-soft); margin-bottom: 12px; }
+.sectionLabel { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--review-muted); font-weight: 600; margin-bottom: 12px; }
+.review .workflow button { font-family: inherit; border: 1px solid var(--review-line); border-radius: 8px; font-size: 12px; line-height: 1.5; padding: 10px 15px; min-height: 40px; color: var(--foreground); background: var(--background); transition: background 160ms ease, color 160ms ease, border-color 160ms ease; }
+.review .workflow button:first-of-type { color: var(--background); background: var(--foreground); border-color: var(--foreground); }
+.review .workflow button:hover:not(:disabled) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.review .workflow input { min-width: 0; max-width: 100%; font-family: inherit; color: var(--foreground); background: var(--background); border-color: var(--review-line); }
+.review .workflow [aria-busy] > div { flex-wrap: wrap; }
+.review .workflow p, .review .workflow label { font-size: 12px; }
+.review .workflow h2 { font-size: 14px; letter-spacing: -.02em; }
+.clock { margin-bottom: 26px; color: var(--review-muted); }
+.clock > span { font-size: 11px; }
+.clock > div { background: var(--review-soft); border-color: var(--review-line); border-radius: 10px; padding: 16px; font-size: 12px; }
+.review .overview { gap: 16px; margin-bottom: 24px; scroll-margin-top: 18px; }
+.review .card { padding: 22px; background: var(--background); border: 1px solid var(--review-line); border-radius: 12px; margin-bottom: 20px; scroll-margin-top: 18px; overflow-wrap: anywhere; }
+.review .overview .card { margin: 0; }
+.review .card > h2 { display: flex; align-items: center; gap: 9px; color: var(--review-muted); font-size: 12px; line-height: 1.5; font-weight: 500; margin-bottom: 16px; letter-spacing: -.01em; }
+.review .card > h2 svg { color: var(--review-muted); flex-shrink: 0; }
+.review .residentName { color: var(--foreground); font-size: 18px; letter-spacing: -.025em; font-weight: 550; line-height: 1.35; margin: 4px 0 8px; }
+.review .secondary { color: var(--review-muted); line-height: 1.7; }
+.review .resident .secondary { font-size: 12px; }
+.review .fee { margin-bottom: 8px; }
+.review .feeLabel { display: block; color: var(--review-muted); font-size: 11px; margin-bottom: 2px; }
+.review .fee > span:last-child { font-size: 26px; letter-spacing: -.04em; line-height: 1.3; font-weight: 550; }
+.review .payment .secondary, .review .total { color: var(--review-muted); font-size: 11px; }
+.review .total { border-top: 1px solid var(--review-line); padding-top: 10px; margin-top: 10px; }
+.review .total span { color: var(--foreground); }
+.review .purpose { color: var(--foreground); font-size: 15px; line-height: 1.75; white-space: pre-wrap; }
+.review .requirements ul { list-style: none; display: grid; gap: 10px; color: var(--foreground); font-size: 13px; }
+.review .requirements li { display: flex; align-items: baseline; gap: 10px; }
+.review .requirements li::before { content: ''; width: 6px; height: 6px; border: 1px solid var(--review-muted); border-radius: 50%; flex-shrink: 0; }
+.review .submission h3 { border-top: 1px solid var(--review-line); padding-top: 20px; font-size: 12px; font-weight: 600; }
+.review .supportingDetails { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.review .supportingDetails dt { font-size: 11px; font-weight: 400; color: var(--review-muted); }
+.review .supportingDetails dd { font-size: 13px; }
+.review .evidenceLink { display: inline-flex; padding: 8px 0; font-size: 12px; color: var(--foreground); text-decoration-color: var(--accent); text-underline-offset: 4px; }
+.review .timeline { gap: 0; }
+.review .timelineEntry { position: relative; gap: 15px; padding-bottom: 24px; }
+.review .timelineEntry:last-child { padding-bottom: 0; }
+.review .timelineEntry:not(:last-child)::before { content: ''; position: absolute; left: 4px; top: 14px; bottom: 0; width: 1px; background: var(--review-line); }
+.review .timelineDot { margin-top: 7px; width: 9px; height: 9px; background: var(--background); border: 2px solid var(--accent); z-index: 1; }
+.review .timelineEntry:last-child .timelineDot { background: var(--accent); }
+.review .timelineEntry p:first-child { font-size: 13px; font-weight: 550; }
+.review .timelineEntry .secondary { font-size: 11px; }
+@media (max-width: 639px) {
+  .sheet > div:first-child { padding: 18px 20px; }
+  .sheet > div:nth-child(2) { padding: 24px 20px 20px; }
+  .review .hero { flex-direction: column; gap: 16px; }
+  .review .statuses { flex-direction: row; flex-wrap: wrap; padding: 0; }
+  .review .hero h2 { font-size: 30px; }
+  .review .card { padding: 18px; }
+  .review .workflow { padding: 16px; }
+  .review .overview { gap: 12px; }
+  .navigation { column-gap: 20px; }
+  .review .supportingDetails, .review .evidenceGrid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet > div:nth-child(2) { scroll-behavior: auto; }
+  .review :is(button, a) { transition: none; }
+}
+/* Keep editable controls and expanded record fields on the same appearance tokens. */
+.sheet.sheet { background: var(--background); border-color: var(--review-line); color: var(--foreground); }
+.sheet .review .workflow label > input,
+.sheet .recordForm label > input,
+.sheet .recordForm label > textarea {
+  background: var(--background); color: var(--foreground); border-color: var(--review-line); font-family: inherit;
+}
+.sheet .recordForm label > span:first-child,
+.sheet .recordFields dt { color: var(--review-muted); }
+.sheet .recordFields dd { color: var(--foreground); }
+.sheet .recordForm > div:last-child button:first-child:hover { background: color-mix(in srgb, var(--accent) 14%, var(--background)); }

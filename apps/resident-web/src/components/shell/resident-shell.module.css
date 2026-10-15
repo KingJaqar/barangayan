@@ -365,28 +365,6 @@
   padding-top: 32px;
 }
 
-/* The home header stays compact while retaining the shared navigation motion. */
-.homeShell .header {
-  --shell-active: color-mix(in srgb, var(--primary) 35%, var(--foreground));
-}
-
-.homeShell .navIcon {
-  width: 26px;
-  height: 26px;
-}
-
-.homeShell .navIcon > svg {
-  width: 24px;
-  height: 24px;
-}
-
-@media (min-width: 1200px) {
-  .homeShell .headerInner {
-    max-width: 1440px;
-    padding-block: 16px;
-  }
-}
-
 .brand:focus-visible, .navLink:focus-visible, .profileTrigger:focus-visible, .profileMenuItem:focus-visible, .login:focus-visible, .signup:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;

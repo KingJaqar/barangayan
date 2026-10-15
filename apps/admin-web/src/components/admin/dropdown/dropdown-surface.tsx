@@ -5,8 +5,8 @@ import { createPortal } from 'react-dom';
 import styles from './dropdown.module.css';
 
 /** Mount only while open (or during the noninteractive exit). Native dialogs own their portals. */
-export function DropdownSurface({ anchor, open = true, onDismiss, width, className = '', children, ...props }: HTMLAttributes<HTMLDivElement> & {
-  anchor: RefObject<HTMLElement | null>; open?: boolean; onDismiss: () => void; width?: number;
+export function DropdownSurface({ anchor, open = true, onDismiss, width, maxHeight, className = '', children, ...props }: HTMLAttributes<HTMLDivElement> & {
+  anchor: RefObject<HTMLElement | null>; open?: boolean; onDismiss: () => void; width?: number; maxHeight?: number;
 }) {
   const panel = useRef<HTMLDivElement>(null);
   const owner = anchor.current?.closest('dialog, [role="dialog"]') ?? anchor.current?.ownerDocument.body;
@@ -35,11 +35,11 @@ export function DropdownSurface({ anchor, open = true, onDismiss, width, classNa
       const above = rect.top - topEdge - 7 - margin;
       const contentHeight = element.scrollHeight * scale;
       const flip = below < Math.min(contentHeight, 256) && above > below;
-      const maxHeight = Math.max(44, Math.min(320, viewHeight * .5, flip ? above : below));
+      const heightLimit = Math.max(44, Math.min(maxHeight ?? Math.min(320, viewHeight * .5), flip ? above : below));
       element.style.width = `${panelWidth / scale}px`;
-      element.style.maxHeight = `${maxHeight / scale}px`;
+      element.style.maxHeight = `${heightLimit / scale}px`;
       element.style.left = `${Math.max(leftEdge + margin, Math.min(rect.left, leftEdge + viewWidth - panelWidth - margin)) / scale}px`;
-      element.style.top = `${(flip ? rect.top - 7 - Math.min(contentHeight, maxHeight) : rect.bottom + 7) / scale}px`;
+      element.style.top = `${(flip ? rect.top - 7 - Math.min(contentHeight, heightLimit) : rect.bottom + 7) / scale}px`;
     }
     align();
     let frame = 0;
@@ -74,7 +74,7 @@ export function DropdownSurface({ anchor, open = true, onDismiss, width, classNa
       window.removeEventListener('resize', align); window.removeEventListener('scroll', align, true);
       window.visualViewport?.removeEventListener('resize', align); window.visualViewport?.removeEventListener('scroll', align);
     };
-  }, [anchor, onDismiss, width]);
+  }, [anchor, onDismiss, width, maxHeight]);
 
   useEffect(() => {
     if (!open) return;

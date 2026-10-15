@@ -1,6 +1,6 @@
 # Phase 4 — Authentication, guest access, setup, recovery and session management (`P04`)
 
-**Status (2026-10-15):** Partially complete. T01–T07 are implemented and verified on non-device checks (typecheck, lint, 49 new tests, export, generated configuration). T08 and every live-provider or device run are Skipped (OD-06) or blocked: Phase 3 exit, PR-03 (callback scheme), PR-06 (Apple provider) and PR-18 (tenant/environment) are open. See the record for owner-attended steps.
+**Status (2026-10-15, amended by OD-07):** Partially complete. T01–T07 are Verified (non-device scope, OD-06/OD-07) on typecheck, lint, 49 new tests, export and generated configuration; no screen was run. T08 and every live-app, real-provider or device run are Skipped (OD-06, OD-07: PR-03 callback scheme and PR-18 tenant/environment skipped by the owner). Still open: the Phase 3 exit and PR-06 (Apple provider). The record lists the steps that apply if PR-03/PR-18 are supplied later.
 
 **Entry dependencies:** Phase 1, Phase 2, Phase 3. Started on the owner's explicit 2026-10-15 instruction while the Phase 3 and Phase 1 exits were open (see the record, section 1). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 

@@ -90,7 +90,7 @@ export function MemberFormModal({
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Relation *</span>
-            <AdminSelect kind="people"
+            <AdminSelect kind="relation"
               className={inputCls}
               value={relation}
               onValueChange={(nextValue) => setRelation(nextValue as (typeof HOUSEHOLD_MEMBER_RELATIONS)[number])}>
@@ -103,7 +103,7 @@ export function MemberFormModal({
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Role *</span>
-            <AdminSelect kind="people"
+            <AdminSelect kind="memberRole"
               className={inputCls}
               value={role}
               onValueChange={(nextValue) => setRole(nextValue as (typeof HOUSEHOLD_MEMBER_ROLES)[number])}>

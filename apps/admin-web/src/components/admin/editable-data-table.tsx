@@ -1,6 +1,7 @@
 'use client';
 
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+import type { AdminSelectKind } from '@/components/admin/dropdown/select-iconography';
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 
@@ -31,6 +32,7 @@ export interface EditableSelectOption {
 export interface EditableCellConfig<T> {
   type: 'text' | 'number' | 'select' | 'datetime' | 'date';
   options?: EditableSelectOption[]; // required when type === 'select'
+  selectKind?: AdminSelectKind;
   getValue: (row: T) => string | number;
   /** Return { error: null } on success, { error: <message> } on failure — never throw. */
   onSave: (row: T, value: string | number) => Promise<{ error: string | null }>;
@@ -477,7 +479,7 @@ export function EditableDataTable<T>({
                         {(
                         edit.type === 'select' ? (
                           <div className="space-y-1">
-                            <AdminSelect compact
+                            <AdminSelect compact kind={edit.selectKind}
                               aria-label={`Edit ${col.header}`}
                               autoFocus
                               value={draft}

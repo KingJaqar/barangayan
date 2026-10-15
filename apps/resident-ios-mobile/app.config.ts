@@ -30,6 +30,12 @@ const config: ExpoConfig = {
       motionUsagePermission: false,
       isIosBackgroundLocationEnabled: false,
     }],
+    // The Photos picker needs no library permission and microphone is never used; only the camera purpose is declared.
+    ['expo-image-picker', {
+      photosPermission: false,
+      cameraPermission: 'Barangayan uses the camera when you choose to take a photo of yourself or of your ID.',
+      microphonePermission: false,
+    }],
     ['expo-splash-screen', { backgroundColor: '#0F6E5B', image: './assets/barangayan-logo-1024.png', imageWidth: 96 }],
   ],
   experiments: { typedRoutes: true },

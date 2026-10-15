@@ -126,7 +126,7 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Drive</span>
-        <AdminSelect className={inputClass} value={driveId} onValueChange={(nextValue) => setDriveId(nextValue)} required>
+        <AdminSelect kind="health" className={inputClass} value={driveId} onValueChange={(nextValue) => setDriveId(nextValue)} required>
           <option value="">Select a drive…</option>
           {drives.map((d) => (
             <option key={d.id} value={d.id}>
@@ -160,7 +160,7 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Is PWD</span>
-        <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
+        <AdminSelect kind="pwd" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
           <option value="false">No</option>
           <option value="true">Yes</option>
         </AdminSelect>
@@ -317,12 +317,13 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
     },
     {
       header: 'PWD',
-      initialWidth: 72,
-      minWidth: 68,
+      // Keep the inline select and its menu wide enough for icons, labels, and indicators.
+      initialWidth: 144,
+      minWidth: 144,
       wrap: 'nowrap',
       render: (r) => (r.is_pwd ? 'Yes' : 'No'),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'pwd',
         options: [
           { value: 'true', label: 'Yes' },
           { value: 'false', label: 'No' },
@@ -349,7 +350,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
       wrap: 'nowrap',
       render: (r) => <StatusPill status={r.status} />,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: [...REGISTRATION_STATUS_OPTIONS],
         getValue: (r) => r.status,
         onSave: (r, value) => updateField(r, { status: String(value) as ApplicantRow['status'] }),
@@ -381,7 +382,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddApplicantForm drives={drives} residents={residents} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
     <ProfileTablePanel label="Medical Applicants" browse={browse}
       category={<label className="table-browse-field">Category
-        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
+        <AdminSelect kind="health" aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
           <option value="">All categories</option>
           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
         </AdminSelect></label>}

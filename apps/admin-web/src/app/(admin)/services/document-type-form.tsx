@@ -105,7 +105,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       </div>
       {row && row.contract_version === 1 ? <p className="text-sm text-zinc-500">Complete the charter for future requests. Existing requests keep their recorded fees and previous timing model.</p> : null}
       <label className="block text-sm">Service workflow
-        <AdminSelect kind="document" className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
+        <AdminSelect kind="workflow" className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
           onValueChange={nextValue => setDraft({ ...draft, serviceKind: nextValue as ServiceCatalogContract['serviceKind'],
             pricingMode: nextValue === 'business' ? 'assessment' : nextValue === 'certified_true_copy' ? 'per_page' : 'fixed', requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: draft.requirementRules.personalAppearance } })}>
           {kinds.map(([value, label]) => <option key={value} value={value}>{label}</option>)}

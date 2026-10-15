@@ -1,8 +1,9 @@
 'use client';
 
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+import { recordSelectKind } from '@/components/admin/dropdown/select-iconography';
 
-import Link from 'next/link';
+import { RequestRecordReview } from './request-record-review';
 import { useCallback, useEffect, useId, useRef, useState, useTransition, type ReactNode } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { Archive, Eye, RotateCcw, Trash2 } from 'lucide-react';
@@ -16,6 +17,10 @@ import { ContentSideSheet } from './content-create-panel';
 import { TableDetailDialog } from './table-detail-dialog';
 import { useToast } from '@/components/ui/toast';
 import styles from './content-forms.module.css';
+import reviewStyles from './request-review.module.css';
+import residentStyles from './resident-record.module.css';
+import { IncidentRecordDetails } from './incident-record-details';
+import incidentStyles from './incident-record.module.css';
 import { formatCentavosAsPHP } from '@barangayan/shared';
 
 const buttonClass = 'inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-zinc-200 px-2.5 text-xs font-medium hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800';
@@ -128,7 +133,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
     });
   }
   const title = row ? recordLabel(row) : 'Record details';
-  const form = <div className={styles.form}>
+  const form = <div className={`${styles.form} ${name === 'requests' ? reviewStyles.recordForm : ''} ${name === 'residents' ? residentStyles.recordForm : ''} ${name === 'incidents' ? incidentStyles.recordForm : ''}`}>
     {loadError ? <div role="alert"><p>{loadError}</p><button type="button" className={buttonClass} onClick={() => { setLoadError(null); setRow(null); setRevision(value => value + 1); }}>Retry details</button></div>
       : !row ? <p role="status">Loading current details…</p> : <>
         {row.deleted_at && <p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">Archived record</p>}
@@ -141,12 +146,17 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
           <div className={styles.actions}><button type="submit" disabled={pending} className={styles.createButton}>{pending ? 'Saving…' : 'Save'}</button>
             <button type="button" disabled={pending} className={styles.secondaryButton} onClick={() => { setEditing(false); setDraft({}); setError(null); }}>Cancel</button></div>
         </form> : <>
-          <RecordDetails name={name} row={row} />
-          {extra?.(row)}
-          {name === 'requests' && <Link href={`/requests/${id}`} className={`${buttonClass} mt-4`}>Open request review</Link>}
+          {name === 'incidents' ? <IncidentRecordDetails key={revision} row={row} /> : name === 'residents' && extra ? <>
+            {extra(row)}
+            <details className={residentStyles.recordFields}><summary>Record fields and timestamps</summary><div><RecordDetails name={name} row={row} /></div></details>
+          </> : name === 'requests' && !row.deleted_at ? <>
+            <RequestRecordReview key={revision} requestId={id} onChanged={() => { onChanged(); setRevision(value => value + 1); }} />
+            <details className={reviewStyles.recordFields}><summary className="cursor-pointer text-sm font-semibold">Record fields and timestamps</summary><div className="mt-4"><RecordDetails name={name} row={row} /></div></details>
+          </> : <RecordDetails name={name} row={row} />}
+          {name !== 'residents' && extra?.(row)}
           <div className={styles.actions}>
             <button type="button" className={styles.createButton} disabled={pending || protectedRecord || !fields.length} onClick={edit}>Edit</button>
-            {!fields.length && <p className="text-xs text-zinc-500">{name === 'requests' ? 'Use request review to change workflow details.' : 'Completed payment amounts are kept as ledger records.'}</p>}
+            {!fields.length && <p className="text-xs text-zinc-500">{name === 'requests' ? 'Use the review controls above to change workflow details.' : 'Completed payment amounts are kept as ledger records.'}</p>}
             <button type="button" className={styles.secondaryButton} disabled={pending || protectedRecord} onClick={() => { setError(null); setConfirmation(row.deleted_at ? 'restore' : 'archive'); }}>{row.deleted_at ? 'Restore' : 'Archive'}</button>
             <button type="button" className={`${styles.secondaryButton} text-red-600`} disabled={pending || protectedRecord} onClick={() => { setError(null); setConfirmation('delete'); }}>Delete</button>
           </div>
@@ -154,7 +164,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
       </>}
   </div>;
   return <>
-    <ContentSideSheet id={sheetId} open onClose={close} form={{ label: 'View Details', title, description: RECORD_CONFIG[name].label + ' · Record details', content: form }} />
+    <ContentSideSheet className={name === 'requests' ? reviewStyles.sheet : name === 'residents' ? residentStyles.sheet : name === 'incidents' ? incidentStyles.sheet : undefined} id={sheetId} open onClose={close} form={{ label: 'View Details', title: name === 'residents' ? 'Resident record' : name === 'incidents' ? 'Incident record' : title, description: RECORD_CONFIG[name].label + ' · Record details', content: form }} />
     {confirmation && row && !loadError && <TableDetailDialog label={`${confirmation} record`} preventClose={pending} onClose={() => { if (!busy.current) setConfirmation(null); }}>
       <div className="rounded-xl bg-white p-6 shadow-xl dark:bg-zinc-900">
         <h2 className="text-lg font-semibold">{confirmation === 'delete' ? 'Permanently delete' : confirmation === 'restore' ? 'Restore' : 'Archive'} {recordLabel(row)}?</h2>
@@ -173,8 +183,8 @@ function RecordInput({ field, value, onChange }: { field: RecordField; value: un
   const id = useId();
   const display = Array.isArray(value) ? value.join(', ') : String(value ?? '');
   return <label htmlFor={id} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}><span className="block">{field.label}{field.required ? ' *' : ''}</span>
-    {field.type === 'boolean' ? <AdminSelect kind="status" id={id} value={String(value)} onValueChange={nextValue => onChange(nextValue === 'true')}><option value="false">No</option><option value="true">Yes</option></AdminSelect>
-      : field.type === 'select' ? <AdminSelect id={id} value={display} required={field.required} onValueChange={nextValue => onChange(nextValue)}><option value="">Select…</option>{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</AdminSelect>
+    {field.type === 'boolean' ? <AdminSelect kind={recordSelectKind(field.key)} id={id} value={String(value)} onValueChange={nextValue => onChange(nextValue === 'true')}><option value="false">No</option><option value="true">Yes</option></AdminSelect>
+      : field.type === 'select' ? <AdminSelect kind={recordSelectKind(field.key)} id={id} value={display} required={field.required} onValueChange={nextValue => onChange(nextValue)}><option value="">Select…</option>{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</AdminSelect>
       : field.type === 'textarea' ? <textarea id={id} rows={4} value={display} required={field.required} onChange={event => onChange(event.target.value)} />
       : <input id={id} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'time' ? 'time' : 'text'}
         required={field.required} min={field.min} max={field.max} step={field.type === 'number' ? 1 : undefined} value={field.type === 'time' ? display.slice(0, 5) : display}

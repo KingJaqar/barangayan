@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { AdminShell } from '@/components/admin/admin-shell';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { ownedAvatarPath } from '@/lib/admin-profile/schema';
 
 /**
  * Guards every route under (admin) — same Supabase project, same profiles.role column
@@ -22,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, full_name, barangay_id, barangays(name)')
+    .select('role, full_name, avatar_url, barangay_id, barangays(name)')
     .eq('id', user.id)
     .is('deleted_at', null)
     .single();
@@ -31,10 +32,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/login');
   }
 
+  const apiUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const avatarUrl = apiUrl && ownedAvatarPath(profile.avatar_url, user.id, apiUrl) ? profile.avatar_url : null;
+
   return (
     <AdminShell
       barangayName={profile.barangays?.name ?? 'Barangay'}
       adminName={profile.full_name}
+      adminAvatarUrl={avatarUrl}
       barangayId={profile.barangay_id}
     >
       {children}

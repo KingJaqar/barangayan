@@ -119,7 +119,7 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
-        <AdminSelect
+        <AdminSelect kind="faq"
           className={inputClass}
           value={category}
           onValueChange={(nextValue) => setCategory(nextValue)}>

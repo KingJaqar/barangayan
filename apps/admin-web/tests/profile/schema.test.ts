@@ -3,8 +3,8 @@ import { hasStructuredName, ownedAvatarPath, profileFailure, profileSaveSchema }
 
 describe('admin profile boundaries', () => {
   const expected = '2026-10-14T06:00:00.123456+00:00';
-  it('rejects target identity, lifecycle, address and resident data injection', () => {
-    for (const field of ['id', 'barangay_id', 'role', 'deleted_at', 'first_name', 'home_address', 'email_verified_at', 'household_members']) {
+  it('rejects target identity, lifecycle, verification and resident data injection', () => {
+    for (const field of ['id', 'barangay_id', 'role', 'deleted_at', 'email_verification_status', 'id_verification_status', 'location_verified', 'email_verified_at', 'household_members']) {
       expect(profileSaveSchema.safeParse({ expected, patch: { email: 'a@example.test', [field]: 'injected' } }).success).toBe(false);
     }
     expect(profileSaveSchema.safeParse({ expected, patch: { email: 'a@example.test' }, id: 'target' }).success).toBe(false);
@@ -22,6 +22,17 @@ describe('admin profile boundaries', () => {
   it('never guesses structured name parts', () => {
     expect(hasStructuredName({ first_name: null, last_name: null, middle_name: null, suffix: null })).toBe(false);
     expect(hasStructuredName({ first_name: null, last_name: null, middle_name: 'Given', suffix: null })).toBe(true);
+  });
+  it('accepts personal details and independent admin contact addresses', () => {
+    const patch = { home_address: '24 Mabini Street', city: 'Quezon City', province: 'Metro Manila', birth_date: '1992-06-12', sex: 'female', employment_status: 'self_employed', occupation: 'Designer' };
+    expect(profileSaveSchema.parse({ expected, patch }).patch).toEqual(patch);
+    expect(profileSaveSchema.parse({ expected, patch: { first_name: 'Alex', last_name: 'Reyes', middle_name: null, suffix: null } }).patch.first_name).toBe('Alex');
+    expect(profileSaveSchema.parse({ expected, patch: Object.fromEntries(Object.keys(patch).map(key => [key, null])) }).patch.birth_date).toBeNull();
+  });
+  it('rejects invalid dates, categorical values and oversized personal details', () => {
+    for (const patch of [{ birth_date: '2999-01-01' }, { birth_date: '2000-02-30' }, { sex: 'invalid' }, { employment_status: 'invalid' }, { home_address: 'a'.repeat(501) }, { city: 'a'.repeat(151) }, { province: 'a'.repeat(151) }, { occupation: 'a'.repeat(151) }, { first_name: '' }]) {
+      expect(profileSaveSchema.safeParse({ expected, patch }).success).toBe(false);
+    }
   });
   it('permits owned avatar objects only on the configured project origin', () => {
     const id = 'b1190000-0000-0000-0000-000000000001';

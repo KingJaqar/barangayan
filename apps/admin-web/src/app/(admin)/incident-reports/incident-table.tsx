@@ -348,7 +348,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
           <span className="text-zinc-400">—</span>
         ),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'category',
         canEdit: () => !optionsError,
         options: [{ value: '', label: 'Uncategorized' }, ...categories.map((c) => ({ value: c.id, label: c.name }))],
         getValue: (r) => r.category_id ?? '',
@@ -371,7 +371,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
           <span className="text-zinc-400">Anonymous</span>
         ),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'people',
         canEdit: () => !optionsError,
         options: [{ value: '', label: 'Anonymous / Walk-in' }, ...residents.map((res) => ({ value: res.id, label: res.full_name }))],
         getValue: (r) => r.reporter_id ?? '',
@@ -480,7 +480,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
       wrap: 'nowrap',
       render: (r) => <IncidentStatusPill status={r.status} />,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: Object.entries(INCIDENT_STATUS).map(([value, cfg]) => ({ value, label: cfg.label })),
         // Bare update — an admin hand-correction path alongside the guided FSM buttons in
         // the Actions column (which go through update_incident_status for guardrails).

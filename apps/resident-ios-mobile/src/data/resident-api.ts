@@ -6,9 +6,9 @@ import { checkWrite, containsPattern, parseCount, parseMaybeRow, parseRow, parse
 import { DataError, toDataError } from './outcome';
 import { readAll, type PageRead } from './pagination';
 import {
-  ANNOUNCEMENT_DETAIL_COLUMNS, ANNOUNCEMENT_LIST_COLUMNS, announcementDetailRow, announcementListRow, BARANGAY_COLUMNS, barangayRow,
+  ANNOUNCEMENT_DETAIL_COLUMNS, ANNOUNCEMENT_LIST_COLUMNS, announcementDetailRow, announcementListRow, BARANGAY_COLUMNS, BARANGAY_PROFILE_COLUMNS, barangayProfileRow, barangayRow,
   CENTER_COLUMNS, centerRow, createdRequestRow, DOCUMENT_COLUMNS, documentRow, DRIVE_COLUMNS, driveRegistrationRow, driveRow,
-  EMERGENCY_INFORMATION_COLUMNS, emergencyInformationRow, FAQ_COLUMNS, faqRow, REQUEST_DETAIL_COLUMNS, REQUEST_LIST_COLUMNS,
+  EMERGENCY_INFORMATION_COLUMNS, emergencyInformationRow, FAQ_COLUMNS, faqRow, ID_SUBMISSION_COLUMNS, idSubmissionRow, REQUEST_DETAIL_COLUMNS, REQUEST_LIST_COLUMNS,
   requestDetailRow, requestListRow, requestStatusRow, SITE_CONTENT_COLUMNS, siteContentRow,
 } from './schemas';
 
@@ -50,6 +50,24 @@ export function residentApi(client: SupabaseClient<Database>, barangayId: string
   return {
     async barangay(signal: AbortSignal) {
       return parseRow(barangayRow, await client.from('barangays').select(BARANGAY_COLUMNS).eq('id', barangayId).abortSignal(signal).maybeSingle(), signal);
+    },
+
+    /** B03 own barangay boundary and configured locality, for the profile and location screens. */
+    async barangayProfile(signal: AbortSignal) {
+      const row = parseMaybeRow(barangayProfileRow, await client.from('barangays').select(BARANGAY_PROFILE_COLUMNS).eq('id', barangayId).abortSignal(signal).maybeSingle(), signal);
+      if (!row) return null;
+      const locality = Array.isArray(row.barangay_localities) ? row.barangay_localities[0] ?? null : row.barangay_localities;
+      return { name: row.name, boundary: row.boundary, locality };
+    },
+    /** B05 the newest ID version of the signed-in resident, or null when none was submitted. */
+    async latestIdSubmission(signal: AbortSignal) {
+      const rows = parseRows(idSubmissionRow, await client.from('id_submissions').select(ID_SUBMISSION_COLUMNS).eq('resident_id', owner()).eq('barangay_id', barangayId).order('version', { ascending: false }).limit(1).abortSignal(signal), signal);
+      return rows[0] ?? null;
+    },
+    /** Reconciliation read after an uncertain ID publication. */
+    async idSubmissionExists(submissionId: unknown, signal: AbortSignal) {
+      const found = parseMaybeRow(idSubmissionRow, await client.from('id_submissions').select(ID_SUBMISSION_COLUMNS).eq('id', routeId(submissionId)).eq('resident_id', owner()).maybeSingle(), signal);
+      return found !== null;
     },
 
     /** B06 catalogue, searched server-side by name or description. */

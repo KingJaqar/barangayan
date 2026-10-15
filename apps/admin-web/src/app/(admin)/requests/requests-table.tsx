@@ -302,7 +302,7 @@ export function RequestsTable({
       render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
       edit: {
         canEdit: r => r.contract_version === 1 && !optionsError,
-        type: 'select',
+        type: 'select', selectKind: 'people',
         options: residents.map((res) => ({ value: res.id, label: res.full_name })),
         getValue: (r) => r.resident_id,
         onSave: (r, value) => updateField(r, { resident_id: String(value) }),
@@ -318,7 +318,7 @@ export function RequestsTable({
       render: (r) => <span className="font-medium leading-snug">{r.document_types?.name ?? '—'}</span>,
       edit: {
         canEdit: r => r.contract_version === 1 && !optionsError,
-        type: 'select',
+        type: 'select', selectKind: 'document',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (r) => r.document_type_id,
         onSave: (r, value) => updateField(r, { document_type_id: String(value) }),
@@ -334,7 +334,7 @@ export function RequestsTable({
       render: (r) => <StatusPill status={r.status} />,
       edit: {
         canEdit: r => r.contract_version === 1,
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: [
           { value: 'submitted', label: 'Submitted' },
           { value: 'in_progress', label: 'Processing' },
@@ -359,7 +359,7 @@ export function RequestsTable({
       render: (r) => <StatusPill status={r.payment_status} />,
       edit: {
         canEdit: r => r.contract_version === 1,
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: [
           { value: 'pending', label: 'Pending' },
           { value: 'paid', label: 'Paid' },
@@ -412,7 +412,7 @@ export function RequestsTable({
       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
         category={<div className="table-browse-field"><label htmlFor="requests-document">Document</label>
-          <AdminSelect id="requests-document" value={state.filters.doc} disabled={!!optionsError}
+          <AdminSelect kind="document" id="requests-document" value={state.filters.doc} disabled={!!optionsError}
             onValueChange={nextValue => void browse.commit({ filters: { doc: nextValue } })}>
             <option value="">All documents</option>
             {state.filters.doc && !documentTypes.some(doc => doc.id === state.filters.doc) && <option value={state.filters.doc}>Selected document</option>}

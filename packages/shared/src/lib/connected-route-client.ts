@@ -37,6 +37,7 @@ const ERROR_CODES: readonly RouteServiceErrorCode[] = [
   'graph_not_active',
   'snapshot_outdated',
   'closures_unmapped',
+  'service_disabled',
   'deadline_exceeded',
   'cancelled',
 ];
@@ -149,6 +150,8 @@ export function describeConnectedFailure(failure: ConnectedRouteFailure): string
         case 'invalid_conditions':
         case 'closures_unmapped':
           return 'Current road conditions are not available, so no route is shown.';
+        case 'service_disabled':
+          return 'The barangay has paused the route service for now.';
         case 'deadline_exceeded':
           return 'The route took too long to calculate. Try again.';
         default:

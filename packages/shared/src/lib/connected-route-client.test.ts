@@ -88,6 +88,14 @@ describe('parseConnectedRouteBody', () => {
   });
 });
 
+describe('a paused service', () => {
+  it('is a typed service failure with its own wording, never a route', async () => {
+    const outcome = await requestConnectedRoute(call((() => json(503, { error: 'service_disabled', message: 'x' })) as unknown as typeof fetch));
+    expect(outcome).toEqual({ kind: 'failure', failure: { reason: 'service', code: 'service_disabled' } });
+    expect(describeConnectedFailure({ reason: 'service', code: 'service_disabled' })).toMatch(/paused/i);
+  });
+});
+
 describe('describeConnectedFailure', () => {
   it('never suggests a straight-line route', () => {
     for (const failure of [{ reason: 'unreachable' }, { reason: 'timeout' }, { reason: 'invalid_response' }, { reason: 'service', code: 'unknown' }] as const) {

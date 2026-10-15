@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { Check, Copy, Download, MapPin, Save, ScanLine } from 'lucide-react';
+import styles from './emergency-qr.module.css';
 import { QRCodeCanvas } from 'qrcode.react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -71,50 +73,39 @@ export function QrCodeDisplay({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="font-semibold">{center.name}</h3>
-          <p className="text-xs text-zinc-500">{center.address ?? 'No address'}</p>
+    <article className={styles.qrWorkspace}>
+      <div className={styles.qrStage}>
+        <p className={styles.eyebrow}><ScanLine size={15} aria-hidden="true" /> Scan to check in</p>
+        <div className={styles.qrPaper}>
+          <QRCodeCanvas ref={canvasRef} value={JSON.stringify(payload)} size={600} level="H" includeMargin
+            title={`Check-in QR code for ${center.name}`} />
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={saveToDb}
-            className="rounded-full bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90">
-            Save to DB
+        <p className={styles.scanCaption}>Scan with the Barangayan mobile app to check in.</p>
+      </div>
+      <div className={styles.qrDetails}>
+        <div>
+          <p className={styles.eyebrow}>Evacuation center</p>
+          <h3 className={styles.centerName}>{center.name}</h3>
+          <p className={styles.address}><MapPin size={15} aria-hidden="true" /> {center.address ?? 'No address'}</p>
+        </div>
+        <p className={styles.qrHelp}>Save this code for your center, or download a PNG to print and display at the check-in area.</p>
+        <div className={styles.qrActions}>
+          <button onClick={saveToDb} className={`${styles.button} ${styles.primary}`}>
+            <Save size={16} aria-hidden="true" /> Save QR code
           </button>
-          <button
-            onClick={downloadPng}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800">
-            Download PNG
+          <button onClick={downloadPng} className={styles.button}>
+            <Download size={16} aria-hidden="true" /> Download PNG
           </button>
-          <button
-            onClick={copyPayload}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800">
+        </div>
+        <details className={styles.payload}>
+          <summary>QR payload <span className={styles.muted}>Technical details</span></summary>
+          <pre>{JSON.stringify(payload, null, 2)}</pre>
+          <button onClick={copyPayload} className={styles.editButton}>
+            {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
             {copied ? 'Copied!' : 'Copy Payload'}
           </button>
-        </div>
+        </details>
       </div>
-
-      <div className="flex flex-col items-center gap-4">
-        <div className="rounded-xl border border-zinc-100 bg-white p-4 shadow-sm dark:border-zinc-800">
-          <QRCodeCanvas
-            ref={canvasRef}
-            value={JSON.stringify(payload)}
-            size={600}
-            level="H"
-            includeMargin
-          />
-        </div>
-        <p className="text-xs text-zinc-400">Scan with the Barangayan mobile app to check in.</p>
-      </div>
-
-      <div>
-        <p className="mb-1 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Payload</p>
-        <pre className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700 overflow-x-auto dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-          {JSON.stringify(payload, null, 2)}
-        </pre>
-      </div>
-    </div>
+    </article>
   );
 }

@@ -19,6 +19,8 @@ import {
 } from '@barangayan/shared';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import { Spinner } from '@/components/loading/spinner';
+import { ArrowUpRight, Check, Clock3 } from 'lucide-react';
+import styles from './settings.module.css';
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
 const DAY_LABELS: Record<string, string> = {
@@ -31,8 +33,16 @@ const DAY_LABELS: Record<string, string> = {
   sunday: 'Sunday',
 };
 
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
+const inputClass = styles.input;
+
+function SettingSwitch({ title, description, checked, onChange }: { title: string; description?: string; checked: boolean; onChange: () => void }) {
+  return (
+    <label className={styles.switchRow}>
+      <span className={styles.switchCopy}><span>{title}</span>{description && <small>{description}</small>}</span>
+      <input type="checkbox" role="switch" checked={checked} onChange={onChange} aria-label={title} className={styles.switch} />
+    </label>
+  );
+}
 
 export function SettingsForm({ barangayId }: { barangayId: string }) {
   const router = useRouter();
@@ -117,10 +127,10 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
     return (
       <>
         <LoadingStatus message="Loading settings" />
-        <div aria-busy="true" className="flex items-center justify-center py-12">
+        <div aria-busy="true" className={styles.loading}>
           <div aria-hidden="true" className="flex items-center gap-3">
             <Spinner size="regular" />
-            <span className="text-sm text-zinc-500">Loading settings…</span>
+            <span className={styles.muted}>Loading settings...</span>
           </div>
         </div>
       </>
@@ -129,12 +139,12 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
 
   if (error && !settings) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+      <div className={`${styles.workspace} ${styles.notice}`} role="alert">
         <p className="font-semibold">Failed to load settings</p>
         <p className="mt-1">{error}</p>
         <button
           onClick={() => router.refresh()}
-          className="mt-3 rounded-full bg-red-100 px-4 py-1.5 text-xs font-semibold text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-100">
+          className={styles.secondaryButton}>
           Retry
         </button>
       </div>
@@ -142,199 +152,118 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {formError ? <p className="text-sm text-red-600">{formError}</p> : null}
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+    <div className={styles.workspace}>
+      <header className={styles.hero}>
+        <div className={styles.eyebrow}>Administration / Settings</div>
+        <h1 className="sr-only">Settings</h1>
+      </header>
 
-      {/* Contact */}
-      <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Contact Information</h2>
-        <div className="grid grid-cols-2 gap-4">
-          <label className="col-span-2 text-sm">
-            <span className="mb-1 block font-medium">Barangay Email</span>
-            <input
-              className={inputClass}
-              type="email"
-              value={contact.email}
-              onChange={(e) => handleContactChange('email', e.target.value)}
-              placeholder="barangay@example.com"
-            />
-          </label>
+      <nav className={styles.navigation} aria-label="Settings sections">
+        <a href="#settings-contact"><span>01</span> Contact information <ArrowUpRight size={13} /></a>
+        <a href="#settings-hours"><span>02</span> Operating hours <ArrowUpRight size={13} /></a>
+        <a href="#settings-features"><span>03</span> Features <ArrowUpRight size={13} /></a>
+        <a href="#settings-audit"><span>04</span> Audit notifications <ArrowUpRight size={13} /></a>
+      </nav>
 
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Phone Number</span>
-            <input
-              className={inputClass}
-              type="tel"
-              value={contact.phone}
-              onChange={(e) => handleContactChange('phone', e.target.value)}
-              placeholder="+63 900 000 0000"
-            />
-          </label>
+      <form onSubmit={handleSubmit}>
+        {formError ? <p role="alert" className={styles.notice}>{formError}</p> : null}
+        {error ? <p role="alert" className={styles.notice}>{error}</p> : null}
 
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Office Address</span>
-            <input
-              className={inputClass}
-              type="text"
-              value={contact.address}
-              onChange={(e) => handleContactChange('address', e.target.value)}
-              placeholder="Purok 1, Barangay Name"
-            />
-          </label>
-        </div>
-      </div>
-
-      {/* Operating Hours */}
-      <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Operating Hours</h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {DAYS.map((day) => (
-            <div key={day} className="flex items-center gap-3">
-              <span className="w-24 shrink-0 text-sm font-medium text-zinc-600 dark:text-zinc-300">{DAY_LABELS[day]}</span>
-              <input
-                className={inputClass}
-                type="time"
-                value={operatingHours[day]?.open ?? ''}
-                onChange={(e) => handleHoursChange(day, 'open', e.target.value)}
-              />
-              <span className="text-xs text-zinc-500">to</span>
-              <input
-                className={inputClass}
-                type="time"
-                value={operatingHours[day]?.close ?? ''}
-                onChange={(e) => handleHoursChange(day, 'close', e.target.value)}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Feature Flags */}
-      <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Feature Flags</h2>
-        <div className="flex flex-col gap-3">
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={features.allowGuestCheckIn}
-              onChange={() => handleFeatureToggle('allowGuestCheckIn')}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Allow Guest Check-In</span>
-            <span className="text-xs text-zinc-500">Guests can mark themselves present at evacuation centers</span>
-          </label>
-
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={features.requireIdVerification}
-              onChange={() => handleFeatureToggle('requireIdVerification')}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Require ID Verification</span>
-            <span className="text-xs text-zinc-500">Residents must verify a government ID before accessing services</span>
-          </label>
-
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={features.enableWasteNotifications}
-              onChange={() => handleFeatureToggle('enableWasteNotifications')}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Waste Collection Notifications</span>
-            <span className="text-xs text-zinc-500">Push reminders before scheduled pickups</span>
-          </label>
-
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={features.enableEmergencyAlerts}
-              onChange={() => handleFeatureToggle('enableEmergencyAlerts')}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Emergency Alerts</span>
-            <span className="text-xs text-zinc-500">Broadcast DRRM advisories to residents</span>
-          </label>
-        </div>
-      </div>
-
-      {/* Audit Notification Preferences */}
-      <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-1 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Audit Notification Preferences</h2>
-        <p className="mb-4 text-xs text-zinc-500">
-          Control which admin actions appear in the notification bell. Disabling the master switch hides all notifications.
-        </p>
-
-        {/* Master toggle */}
-        <label className="mb-4 flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={features.enableAdminAuditLog}
-            onChange={() => handleFeatureToggle('enableAdminAuditLog')}
-            className="h-4 w-4 rounded border-zinc-300"
-          />
-          <span className="font-medium">Enable Admin Audit Notifications</span>
-        </label>
-
-        {/* Per-category checkboxes — disabled when master is off */}
-        <fieldset disabled={!features.enableAdminAuditLog} className="space-y-2 disabled:opacity-50">
-          <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Categories</legend>
-          {CATEGORY_ORDER.map((key) => (
-            <label key={key} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={auditPrefs.enabledCategories[key]}
-                onChange={() => handleCategoryToggle(key)}
-                className="h-4 w-4 rounded border-zinc-300"
-              />
-              <span>{CATEGORY_LABELS[key]}</span>
+        <section id="settings-contact" aria-labelledby="contact-heading" className={styles.section}>
+          <div className={styles.sectionIntro}>
+            <span className={styles.eyebrow}>01 / Get in touch</span>
+            <h2 id="contact-heading">Contact information</h2>
+            <p>The everyday details that help residents reach your barangay office.</p>
+          </div>
+          <div className={styles.panel}>
+            <label className={styles.field}>
+              <span>Barangay Email</span>
+              <input className={inputClass} type="email" value={contact.email} onChange={(e) => handleContactChange('email', e.target.value)} placeholder="barangay@example.com" />
             </label>
-          ))}
-
-          <div className="mt-3 border-t border-black/5 pt-3 dark:border-white/5">
-            <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400">Auth Events</legend>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={auditPrefs.notifyOnLogin}
-                onChange={() => handleAuditPrefToggle('notifyOnLogin')}
-                className="h-4 w-4 rounded border-zinc-300"
-              />
-              <span>Log admin logins</span>
+            <label className={styles.field}>
+              <span>Phone Number</span>
+              <input className={inputClass} type="tel" value={contact.phone} onChange={(e) => handleContactChange('phone', e.target.value)} placeholder="+63 900 000 0000" />
             </label>
-            <label className="mt-2 flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={auditPrefs.notifyOnLogout}
-                onChange={() => handleAuditPrefToggle('notifyOnLogout')}
-                className="h-4 w-4 rounded border-zinc-300"
-              />
-              <span>Log admin logouts</span>
+            <label className={styles.field}>
+              <span>Office Address</span>
+              <input className={inputClass} type="text" value={contact.address} onChange={(e) => handleContactChange('address', e.target.value)} placeholder="Purok 1, Barangay Name" />
             </label>
           </div>
-        </fieldset>
-      </div>
+        </section>
 
-      <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          aria-busy={saving}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-          <LoadingButtonContent pending={saving} pendingLabel="Saving…">
-            Save Settings
-          </LoadingButtonContent>
-        </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          disabled={saving}
-          className="rounded-full bg-zinc-200 px-5 py-2 text-sm font-semibold disabled:opacity-50 dark:bg-zinc-700">
-          Cancel
-        </button>
-      </div>
-    </form>
+        <section id="settings-hours" aria-labelledby="hours-heading" className={styles.section}>
+          <div className={styles.sectionIntro}>
+            <span className={styles.eyebrow}>02 / Office schedule</span>
+            <h2 id="hours-heading">Operating hours</h2>
+            <p>Set opening and closing times for each day of the week.</p>
+            <span className={styles.asideNote}><Clock3 size={14} /> Your regular weekly schedule</span>
+          </div>
+          <div className={styles.hoursPanel}>
+            <div className={styles.hoursHeading} aria-hidden="true"><span>Day</span><span>Opens</span><span /><span>Closes</span></div>
+            {DAYS.map((day) => (
+              <div key={day} className={styles.hoursRow}>
+                <span className={styles.day}>{DAY_LABELS[day]}</span>
+                <input className={inputClass} type="time" aria-label={`${DAY_LABELS[day]} opening time`} value={operatingHours[day]?.open ?? ''} onChange={(e) => handleHoursChange(day, 'open', e.target.value)} />
+                <span className={styles.timeSeparator} aria-hidden="true">&ndash;</span>
+                <input className={inputClass} type="time" aria-label={`${DAY_LABELS[day]} closing time`} value={operatingHours[day]?.close ?? ''} onChange={(e) => handleHoursChange(day, 'close', e.target.value)} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="settings-features" aria-labelledby="features-heading" className={styles.section}>
+          <div className={styles.sectionIntro}>
+            <span className={styles.eyebrow}>03 / Community services</span>
+            <h2 id="features-heading">Features</h2>
+            <p>Choose how residents access services and receive community updates.</p>
+          </div>
+          <div className={styles.togglePanel}>
+            <SettingSwitch title="Allow Guest Check-In" description="Guests can mark themselves present at evacuation centers." checked={features.allowGuestCheckIn} onChange={() => handleFeatureToggle('allowGuestCheckIn')} />
+            <SettingSwitch title="Require ID Verification" description="Residents must verify a government ID before accessing services." checked={features.requireIdVerification} onChange={() => handleFeatureToggle('requireIdVerification')} />
+            <SettingSwitch title="Waste Collection Notifications" description="Push reminders before scheduled pickups." checked={features.enableWasteNotifications} onChange={() => handleFeatureToggle('enableWasteNotifications')} />
+            <SettingSwitch title="Emergency Alerts" description="Broadcast DRRM advisories to residents." checked={features.enableEmergencyAlerts} onChange={() => handleFeatureToggle('enableEmergencyAlerts')} />
+          </div>
+        </section>
+
+        <section id="settings-audit" aria-labelledby="audit-heading" className={styles.section}>
+          <div className={styles.sectionIntro}>
+            <span className={styles.eyebrow}>04 / Stay informed</span>
+            <h2 id="audit-heading">Audit notifications</h2>
+            <p>Choose which admin actions appear in your notification bell.</p>
+          </div>
+          <div className={styles.auditPanel}>
+            <SettingSwitch title="Enable Admin Audit Notifications" description="Turn off to hide all admin audit notifications." checked={features.enableAdminAuditLog} onChange={() => handleFeatureToggle('enableAdminAuditLog')} />
+            <fieldset disabled={!features.enableAdminAuditLog} className={styles.preferences}>
+              <legend>Notification categories</legend>
+              <div className={styles.categories}>
+                {CATEGORY_ORDER.map((key) => (
+                  <label key={key} className={styles.checkboxRow}>
+                    <input type="checkbox" checked={auditPrefs.enabledCategories[key]} onChange={() => handleCategoryToggle(key)} />
+                    <span>{CATEGORY_LABELS[key]}</span>
+                  </label>
+                ))}
+              </div>
+              <div className={styles.authEvents}>
+                <h3>Authentication events</h3>
+                <div className={styles.categories}>
+                  <label className={styles.checkboxRow}><input type="checkbox" checked={auditPrefs.notifyOnLogin} onChange={() => handleAuditPrefToggle('notifyOnLogin')} /><span>Log admin logins</span></label>
+                  <label className={styles.checkboxRow}><input type="checkbox" checked={auditPrefs.notifyOnLogout} onChange={() => handleAuditPrefToggle('notifyOnLogout')} /><span>Log admin logouts</span></label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </section>
+
+        <footer className={styles.saveBar}>
+          <div className={styles.saveNote}><Check size={16} /><span>Make it yours.<small>Changes apply when you save.</small></span></div>
+          <div className={styles.actions}>
+            <button type="button" onClick={() => router.back()} disabled={saving} className={styles.secondaryButton}>Cancel</button>
+            <button type="submit" disabled={saving} aria-busy={saving} className={styles.primaryButton}>
+              <LoadingButtonContent pending={saving} pendingLabel="Saving...">Save Settings <ArrowUpRight size={14} /></LoadingButtonContent>
+            </button>
+          </div>
+        </footer>
+      </form>
+    </div>
   );
 }

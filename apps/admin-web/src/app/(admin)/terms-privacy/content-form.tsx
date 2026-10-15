@@ -5,17 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
+import { ArrowUpRight, Check, Eye, PencilLine } from 'lucide-react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import styles from './terms-privacy.module.css';
 
 type SiteContentRow = Tables<'site_content'>;
 type Section = 'terms_of_service' | 'privacy_policy';
-
-const inputClass =
-  'w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800';
 
 export function ContentForm({
   section,
@@ -111,64 +110,65 @@ export function ContentForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-          {SITE_CONTENT_SECTION_META[section].label}
-        </h2>
-        <button
-          type="button"
-          onClick={() => setShowPreview((v) => !v)}
-          className="text-xs font-semibold text-[var(--accent)] hover:underline">
-          {showPreview ? 'Edit' : 'Preview'}
-        </button>
+    <form onSubmit={handleSubmit} className={styles.editor} aria-label={`${SITE_CONTENT_SECTION_META[section].label} editor`}>
+      <div className={styles.editorHeader}>
+        <div>
+          <p className={styles.eyebrow}>{showPreview ? 'Document preview' : 'Document editor'}</p>
+          <h2>{SITE_CONTENT_SECTION_META[section].label}</h2>
+        </div>
+        <div className={styles.viewToggle} role="group" aria-label="Document view">
+          <button type="button" aria-pressed={!showPreview} onClick={() => setShowPreview(false)}><PencilLine size={14} aria-hidden="true" />Edit</button>
+          <button type="button" aria-pressed={showPreview} onClick={() => setShowPreview(true)}><Eye size={14} aria-hidden="true" />Preview</button>
+        </div>
       </div>
 
       {showPreview ? (
-        <div className="prose prose-sm max-w-none rounded-lg border border-zinc-200 p-4 dark:prose-invert dark:border-zinc-700">
+        <div className={styles.preview}>
+          <p className={styles.eyebrow}>Resident view</p>
           <h1>{title}</h1>
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
+          {body ? <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown> : <p className={styles.emptyPreview}>Your policy content will appear here. Return to Edit to start writing.</p>}
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Title</span>
-            <input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <div className={styles.fields}>
+          <label className={styles.field}>
+            <span>Document title</span>
+            <input className={styles.input} value={title} onChange={(e) => setTitle(e.target.value)} required />
           </label>
 
-          <label className="text-sm">
-            <span className="mb-1 block font-medium">Content (Markdown supported)</span>
+          <label className={styles.field}>
+            <span className={styles.fieldHeading}>Policy content <span>Markdown supported</span></span>
             <textarea
-              className={inputClass}
+              className={styles.textarea}
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={16}
               placeholder="Write the full content here…"
               required
+              aria-describedby="policy-format-help"
             />
           </label>
-
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={isActive}
-              onChange={(e) => setIsActive(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            <span className="font-medium">Published (visible to residents)</span>
-          </label>
+          <p id="policy-format-help" className={styles.formatHelp}>Use # for headings, **bold** for emphasis, and - for lists.</p>
         </div>
       )}
 
-      {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-
-      <div className="mt-5">
+      <div className={styles.publishing}>
+        <label className={styles.publishLabel}>
+          <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
+          <span className={styles.checkbox} aria-hidden="true">{isActive && <Check size={13} strokeWidth={2.5} />}</span>
+          <span><strong>Published</strong><span>Visible to residents after saving</span></span>
+        </label>
+        <span className={styles.visibility}>{isActive ? 'Visible' : 'Hidden'}</span>
+      </div>
+      {error ? <p className={styles.error} role="alert">{error}</p> : null}
+      <div className={styles.footer}>
+        <p>Review your policy before saving.<br /><span>Changes apply to this document only.</span></p>
         <button
           type="submit"
           disabled={submitting || !barangayId}
-          className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className={styles.saveButton}
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Saving…">Save Changes</LoadingButtonContent>
+          {!submitting && <ArrowUpRight size={16} aria-hidden="true" />}
         </button>
       </div>
     </form>

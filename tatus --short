@@ -1,0 +1,36 @@
+ .../src/app/(admin)/profile/profile-workspace.tsx  |   27 [32m+[m[31m-[m
+ apps/admin-web/tests/profile/e2e.mjs               |    8 [32m+[m[31m-[m
+ ...Implementation_and_Execution_Plan_2026_10_14.md |    6 [32m+[m[31m-[m
+ .../activation-corrected-deployment-created.log    |   42 [32m+[m
+ .../activation-corrected-hosted-build.log          |  117 [32m++[m
+ .../activation-corrected-ready-inspect.log         |   48 [32m+[m
+ .../activation-final-hosted-console.json           |    1 [32m+[m
+ .../activation-final-hosted-runtime.jsonl          |    1 [32m+[m
+ .../admin-profile/activation-final-lint.log        |    4 [32m+[m
+ .../activation-final-local-console.json            |    1 [32m+[m
+ .../admin-profile/activation-final-typecheck.log   |    4 [32m+[m
+ .../activation-hosted-profile-enabled.png          |  Bin [31m0[m -> [32m56409[m bytes
+ .../activation-hosted-profile-final.png            |  Bin [31m0[m -> [32m60430[m bytes
+ .../activation-hosted-ready-inspect.log            |   48 [32m+[m
+ .../admin-profile/activation-hosted-runtime.jsonl  |    1 [32m+[m
+ .../activation-hydration-baseline-console.json     |    8 [32m+[m
+ .../activation-prior-release-manifest.json         | 1418 [32m++++++++++++++++++++[m
+ .../admin-profile/activation-release-manifest.json | 1418 [32m++++++++++++++++++++[m
+ .../activation-retained-tab-console.json           |    8 [32m+[m
+ .../admin-profile/activation-timezone-build.log    |   73 [32m+[m
+ .../admin-profile/activation-timezone-e2e-run.log  |   47 [32m+[m
+ .../admin-profile/activation-timezone-results.json |   86 [32m++[m
+ .../admin-profile/activation-timezone-server.log   |   15 [32m+[m
+ .../admin-profile/activation-unit-tests.log        |   22 [32m+[m
+ plans/evidence/admin-profile/activation.json       |   89 [32m++[m
+ plans/evidence/admin-profile/e2e-build.log         |    8 [32m+[m[31m-[m
+ plans/evidence/admin-profile/e2e-results.json      |   23 [32m+[m[31m-[m
+ plans/evidence/admin-profile/e2e-server.log        |   24 [32m+[m[31m-[m
+ .../evidence/admin-profile/linked-resident-390.png |  Bin [31m59803[m -> [32m55972[m bytes
+ .../admin-profile/phase6-hosted-followup.json      |   43 [32m+[m[31m-[m
+ plans/evidence/admin-profile/profile-1440.png      |  Bin [31m93814[m -> [32m85967[m bytes
+ plans/evidence/admin-profile/profile-390.png       |  Bin [31m56051[m -> [32m53320[m bytes
+ plans/evidence/admin-profile/profile-768.png       |  Bin [31m79083[m -> [32m80826[m bytes
+ plans/evidence/admin-profile/profile-dark.png      |  Bin [31m102159[m -> [32m109949[m bytes
+ plans/evidence/admin-profile/verification.md       |   24 [32m+[m[31m-[m
+ 35 files changed, 3559 insertions(+), 55 deletions(-)

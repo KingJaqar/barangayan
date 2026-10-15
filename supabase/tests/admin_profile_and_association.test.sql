@@ -40,7 +40,7 @@ select pg_temp.expect_error($q$select public.admin_begin_resident_association()$
 select set_config('request.jwt.claims','{"sub":"b1190000-0000-0000-0000-000000000001","role":"authenticated","session_id":"c1190000-0000-0000-0000-000000000001"}',true);
 select pg_temp.expect_error($q$select public.admin_update_own_profile('{"role":"resident"}','2026-01-01')$q$,'22023');
 select pg_temp.expect_error($q$select public.admin_update_own_profile('{"id":"b1190000-0000-0000-0000-000000000004"}','2026-01-01')$q$,'22023');
-select pg_temp.expect_error($q$select public.admin_update_own_profile('{"home_address":"overwrite"}','2026-01-01')$q$,'22023');
+select pg_temp.expect_error($q$select public.admin_update_own_profile('{"email_verified_at":"2026-01-01"}','2026-01-01')$q$,'22023');
 select pg_temp.expect_error($q$select public.admin_update_own_profile('{"full_name":"  "}','2026-01-01')$q$,'22023');
 select pg_temp.expect_error($q$select public.admin_update_own_profile('{"mobile_number":"123"}','2026-01-01')$q$,'22023');
 select pg_temp.expect_error($q$select public.admin_update_own_profile('{"email":"invalid"}','2026-01-01')$q$,'22023');

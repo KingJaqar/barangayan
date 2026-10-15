@@ -6,6 +6,17 @@ export const profilePatchSchema = z.object({
   mobile_number: z.string().trim().max(11).regex(MOBILE_NUMBER_REGEX, 'Use an 11-digit number beginning with 09.').nullable().optional(),
   email: z.string().trim().max(254).regex(EMAIL_REGEX, 'Enter a valid contact email.').nullable().optional(),
   avatar_url: z.string().url().regex(/^https?:\/\//, 'Use an owned profile photo.').max(1024).nullable().optional(),
+  first_name: z.string().trim().min(1, 'Enter your first name.').max(100).optional(),
+  last_name: z.string().trim().min(1, 'Enter your last name.').max(100).optional(),
+  middle_name: z.string().trim().max(100).nullable().optional(),
+  suffix: z.string().trim().max(20).nullable().optional(),
+  home_address: z.string().trim().max(500).nullable().optional(),
+  city: z.string().trim().max(150).nullable().optional(),
+  province: z.string().trim().max(150).nullable().optional(),
+  birth_date: z.string().date('Enter a valid date of birth.').refine(value => value <= new Date().toISOString().slice(0, 10), 'Date of birth cannot be in the future.').nullable().optional(),
+  sex: z.enum(['male', 'female']).nullable().optional(),
+  employment_status: z.enum(['employed', 'unemployed', 'student', 'self_employed', 'retired']).nullable().optional(),
+  occupation: z.string().trim().max(150).nullable().optional(),
 }).strict().refine(value => Object.keys(value).length > 0, 'Change at least one field.');
 
 export const profileSaveSchema = z.object({

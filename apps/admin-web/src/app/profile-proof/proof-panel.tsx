@@ -1,5 +1,8 @@
 'use client';
 
+import { ArrowRight, Info, LockKeyhole, Mail, X } from 'lucide-react';
+import styles from './proof.module.css';
+
 import { createClient } from '@supabase/supabase-js';
 import { EMAIL_REGEX } from '@barangayan/shared';
 import { ProfileMfaForm } from '@/components/admin/profile-mfa-form';
@@ -122,13 +125,36 @@ export function ProofPanel({ purpose, request, challenge }: { purpose: 'admin' |
     if (failed) { setMessage('Temporary sign-in cleanup failed. Try closing verification again.'); return; }
     window.close();
   }
-  return <main className="h-full overflow-y-auto bg-zinc-50 p-6 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100"><h1 className="text-2xl font-bold">Verify {purpose} account ownership</h1><p className="my-4">This separate sign-in keeps your main admin session in place. Use the existing {purpose} account you own.</p>
-    {!hasOpener && <p role="alert" className="my-4 rounded-lg border p-3">The admin window is unavailable. Close verification and start again from your admin profile.</p>}
-    {message && <p ref={summary} tabIndex={-1} role="status" className="my-4 rounded-lg border p-3">{message}</p>}
-    {!proved && mfaRequired && proofAuth && <ProfileMfaForm auth={proofAuth} onVerified={sendProof} onBusy={setBusy} />}
-    {!proved && !mfaRequired && <form onSubmit={submit} className="grid gap-4"><label className="grid gap-2">Sign-in email<input className="rounded-lg border bg-transparent p-3" type="email" autoComplete="username" maxLength={254} required value={email} onChange={event => { setEmail(event.target.value); setCodeSent(false); setCode(''); }} disabled={busy || !ready} /></label>
-      {emailProof ? <><p>Use your existing account’s verified sign-in inbox, including accounts normally accessed through Google. Email sign-in must be enabled for that account.</p><button type="button" disabled={busy || !ready || !hasOpener} className="rounded-lg border p-3" onClick={requestCode}>{codeSent ? 'Request another code or link' : 'Request code or link'}</button><label className="grid gap-2">Email verification code<input className="rounded-lg border bg-transparent p-3" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={code} onChange={event => setCode(event.target.value)} disabled={busy || !codeSent} /></label></> : <label className="grid gap-2">Password<input className="rounded-lg border bg-transparent p-3" type="password" autoComplete="current-password" required value={password} onChange={event => setPassword(event.target.value)} disabled={busy || !ready} /></label>}
-      <button disabled={busy || !ready || !hasOpener || (emailProof && !codeSent)} className="rounded-lg bg-[var(--accent)] p-3 text-white">{busy ? 'Verifying…' : 'Verify ownership'}</button><button type="button" disabled={busy || !ready || !hasOpener} className="rounded-lg border p-3" onClick={() => { setEmailProof(value => !value); setPassword(''); setCode(''); setCodeSent(false); }}>{emailProof ? 'Use password instead' : 'Use email verification instead'}</button></form>}
-    <button type="button" className="mt-4 rounded-lg border p-3" disabled={busy} onClick={close}>Close verification</button>
-  </main>;
+  return (
+    <main className={styles.page}>
+      <div className={styles.workspace}>
+        <div className={styles.content}>
+          <section className={styles.intro} aria-labelledby="proof-title">
+            <h1 id="proof-title">Verify your<br /><span>{purpose} account.</span></h1>
+            <p>One quick check to confirm it’s you. Sign in with the existing {purpose} account you own.</p>
+          </section>
+          <section className={styles.card} aria-labelledby="sign-in-title" aria-busy={busy}>
+            <h2 id="sign-in-title">{proved ? 'You’re verified.' : mfaRequired ? 'One more check.' : emailProof ? 'Verify by email.' : 'Sign in to verify.'}</h2>
+            <p className={styles.cardDescription}>{proved ? 'Return to your admin profile to finish.' : mfaRequired ? 'Confirm with your enrolled authenticator.' : emailProof ? 'We’ll send a code or link to your sign-in inbox.' : 'Use your existing account credentials.'}</p>
+            {!hasOpener && <p role="alert" className={styles.notice}><Info size={16} aria-hidden="true" /><span>The admin window is unavailable. Close verification and start again from your admin profile.</span></p>}
+            {message && <p ref={summary} tabIndex={-1} role="status" className={styles.notice}><Info size={16} aria-hidden="true" /><span>{message}</span></p>}
+            {!proved && mfaRequired && proofAuth && <div className={styles.mfa}><ProfileMfaForm auth={proofAuth} onVerified={sendProof} onBusy={setBusy} /></div>}
+            {!proved && !mfaRequired && <form onSubmit={submit} className={styles.form}>
+              <label className={styles.field}>Sign-in email<input type="email" autoComplete="username" placeholder="you@example.com" maxLength={254} required value={email} onChange={event => { setEmail(event.target.value); setCodeSent(false); setCode(''); }} disabled={busy || !ready} /></label>
+              {emailProof ? <>
+                <p className={styles.help}>Use your existing account’s verified sign-in inbox, including accounts normally accessed through Google. Email sign-in must be enabled for that account.</p>
+                <button type="button" disabled={busy || !ready || !hasOpener} className={styles.secondary} onClick={requestCode}><Mail size={16} aria-hidden="true" />{codeSent ? 'Request another code or link' : 'Request code or link'}</button>
+                <label className={styles.field}>Email verification code<input inputMode="numeric" autoComplete="one-time-code" placeholder="Enter your code" pattern="[0-9]{6,10}" required value={code} onChange={event => setCode(event.target.value)} disabled={busy || !codeSent} /></label>
+              </> : <label className={styles.field}>Password<input type="password" autoComplete="current-password" placeholder="Enter your password" required value={password} onChange={event => setPassword(event.target.value)} disabled={busy || !ready} /></label>}
+              <button disabled={busy || !ready || !hasOpener || (emailProof && !codeSent)} className={styles.primary}>{busy ? 'Verifying…' : 'Verify ownership'}<ArrowRight size={17} aria-hidden="true" /></button>
+              <div className={styles.divider}><span>or</span></div>
+              <button type="button" disabled={busy || !ready || !hasOpener} className={styles.secondary} onClick={() => { setEmailProof(value => !value); setPassword(''); setCode(''); setCodeSent(false); }}>{emailProof ? <LockKeyhole size={16} aria-hidden="true" /> : <Mail size={16} aria-hidden="true" />}{emailProof ? 'Use password instead' : 'Use email verification instead'}</button>
+            </form>}
+            <div className={styles.cardFooter}><button type="button" className={styles.close} disabled={busy} onClick={close}><X size={14} aria-hidden="true" />Close verification</button></div>
+          </section>
+        </div>
+        <footer className={styles.footer}><span>Barangayan Admin</span><span><LockKeyhole size={12} aria-hidden="true" /> A separate, temporary sign-in</span></footer>
+      </div>
+    </main>
+  );
 }

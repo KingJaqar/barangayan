@@ -20,7 +20,7 @@ const bundle = await build({ entryPoints: { screens: path.join(import.meta.dirna
   define: { 'process.env.NODE_ENV': '"development"' },
   alias: { react: path.dirname(require.resolve('react/package.json')), 'react-dom': path.dirname(require.resolve('react-dom/package.json')) },
   plugins: [{ name: 'screen-fixtures', setup(b) {
-    b.onResolve({ filter: /^next\/navigation$|^@\/lib\/supabase\/client$|^@\/actions\/admin-(record|audit)-actions$/ }, () => ({ path: adapters }));
+    b.onResolve({ filter: /^next\/navigation$|^@\/lib\/supabase\/client$|^@\/actions\/(admin-(record|audit)|request-review)-actions$/ }, () => ({ path: adapters }));
     b.onResolve({ filter: /^next\/link$/ }, () => ({ path: 'link', namespace: 'fixture' }));
     b.onLoad({ filter: /.*/, namespace: 'fixture' }, () => ({ contents: 'import React from "react"; export default function Link(props){return React.createElement("a",props)}', loader: 'js', resolveDir: app }));
   } }] });

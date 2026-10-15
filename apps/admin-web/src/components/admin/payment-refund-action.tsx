@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface PaymentRefundActionProps {
+  onChanged?: () => void;
   paymentId: string;
   /** Threaded down purely so the audit log entry this action writes has a meaningful
    * `entityLabel` — this component otherwise only deals in ids. */
@@ -31,6 +32,7 @@ export function PaymentRefundAction({
   status,
   refundStatus,
   refundTransferLink,
+  onChanged,
 }: PaymentRefundActionProps) {
   const router = useRouter();
   const toast = useToast();
@@ -55,7 +57,8 @@ export function PaymentRefundAction({
     }).catch(() => {});
 
     toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
-    router.refresh();
+    if (onChanged) onChanged();
+    else router.refresh();
   }
 
   const claimLink = refundTransferLink ? (

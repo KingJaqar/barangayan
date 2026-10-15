@@ -3,15 +3,17 @@ import {
   isPointInPolygon, registrationLocality, residentDetailsStepSchema, residentNamePrefill,
   type EmploymentStatus, type Json, type Sex, type Tables,
 } from '@barangayan/shared';
-import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { authRequests, Ownership, profileRequests, SetupTimeout } from '../../auth/request-gate';
 import { Action, Body, Card, Field, Notice, Screen, Selector } from '../../components/ui';
+import { birthdayLabel } from '../profile/birthday';
+import { BirthdaySheet } from '../profile/birthday-sheet';
+import { HomePinCard } from '../profile/home-pin';
 import { useDeviceLocation } from '../../lib/device-location';
 import { useResident } from '../../lib/runtime';
-import { space, typeScale, useColors } from '../../lib/theme';
+import { layout, radius, space, typeScale, useColors } from '../../lib/theme';
 import { useLatest } from '../../lib/use-latest';
 import { EmergencyEntry } from './parts';
 
@@ -20,7 +22,6 @@ const EMPLOYMENT_LABELS: Record<EmploymentStatus, string> = {
   employed: 'Employed', unemployed: 'Unemployed', student: 'Student', self_employed: 'Self-employed', retired: 'Retired',
 };
 const EMPLOYMENT_OPTIONS = EMPLOYMENT_STATUSES.map((value) => ({ value, label: EMPLOYMENT_LABELS[value] }));
-const DEFAULT_BIRTH = new Date(2000, 0, 1, 12);
 
 function isoDate(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -66,6 +67,7 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus | ''>('');
   const [occupation, setOccupation] = useState('');
   const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [birthdayOpen, setBirthdayOpen] = useState(false);
   const [locality, setLocality] = useState<Locality | null>(null);
   const [gps, setGps] = useState<{ lat: number; lng: number } | null>(null);
   const [home, setHome] = useState<{ lat: number; lng: number } | null>(null);
@@ -185,10 +187,14 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
         <Selector label="Sex" required options={SEX_OPTIONS} selected={sex} onChange={setSex} disabled={!editable} error={fieldErrors.sex} />
         <View style={{ gap: space[2] }}>
           <Text style={[typeScale.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>Date of birth <Text style={{ color: colors.danger }}>*</Text></Text>
-          {birthDate
-            ? <DateTimePicker value={birthDate} onValueChange={(_, date) => setBirthDate(date)} mode="date" display="compact" maximumDate={new Date()} disabled={!editable} />
-            : <Action label="Select your date of birth" secondary disabled={!editable} onPress={() => setBirthDate(DEFAULT_BIRTH)} />}
+          <Pressable accessibilityRole="button" accessibilityLabel="Date of birth, required" accessibilityValue={{ text: birthDate ? birthdayLabel(isoDate(birthDate)) : 'Not selected' }}
+            accessibilityHint="Opens the date picker" accessibilityState={{ disabled: !editable }} disabled={!editable} onPress={() => setBirthdayOpen(true)}
+            style={{ minHeight: layout.buttonMinHeight, justifyContent: 'center', paddingHorizontal: space[3], borderWidth: 1, borderColor: fieldErrors.birthDate ? colors.danger : colors.border, borderRadius: radius.sm, borderCurve: 'continuous', backgroundColor: colors.surface, opacity: editable ? 1 : 0.5 }}>
+            <Text style={[typeScale.body, { color: birthDate ? colors.textPrimary : colors.textTertiary }]}>{birthDate ? birthdayLabel(isoDate(birthDate)) : 'Select your date of birth'}</Text>
+          </Pressable>
           {!!fieldErrors.birthDate && <Notice tone="danger" message={fieldErrors.birthDate} />}
+          <BirthdaySheet visible={birthdayOpen} value={birthDate ? isoDate(birthDate) : ''} onClose={() => setBirthdayOpen(false)}
+            onApply={(iso) => { setBirthDate(parseIso(iso)); setBirthdayOpen(false); }} />
         </View>
       </Card>
       <Card><Body heading role="headline">Contact and address</Body>
@@ -207,6 +213,7 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
       </Card>
       <LocationCheck locating={locating} onLocating={setLocating} editable={editable} boundary={locality?.boundary ?? null}
         gps={gps} onGps={setGps} />
+      <HomePinCard boundary={locality?.boundary ?? null} home={home} onHome={setHome} areaName={locality?.name ?? 'your barangay'} disabled={!editable} />
     </>}
     {!!error && <Notice tone="danger" message={error} />}
     {loadFailed && <Notice tone="danger" message="Unable to load your current profile or registration locality. Check your connection and retry." />}
@@ -220,7 +227,6 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
     {!required && onSkip && <Action label="Skip for now" secondary disabled={busy} onPress={() => leave(onSkip)} />}
     <Action label="Sign out" secondary disabled={busy} onPress={() => leave(onSignOut)} />
     {required && <Card><EmergencyEntry /></Card>}
-    {home !== null && <Body tone="secondary" role="footnote">A saved home location is kept until you change it in Settings.</Body>}
   </Screen>;
 }
 

@@ -24,6 +24,8 @@
     "expo-crypto": "~57.0.1",
     "expo-dev-client": "~57.0.20",
     "expo-file-system": "~57.0.2",
+    "expo-image-manipulator": "~57.0.21",
+    "expo-image-picker": "~57.0.20",
     "expo-linking": "~57.0.4",
     "expo-location": "~57.0.8",
     "expo-router": "57.0.10",
@@ -34,12 +36,14 @@
     "react-native": "0.86.2",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
+    "react-native-webview": "13.16.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
     "eslint": "9.39.5",
     "eslint-config-expo": "~57.0.1",
+    "leaflet": "1.9.4",
     "typescript": "~6.0.3",
     "vitest": "3.2.7"
   }

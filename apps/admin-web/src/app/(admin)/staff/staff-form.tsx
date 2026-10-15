@@ -99,7 +99,7 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Barangay Role</span>
-        <AdminSelect kind="people" className={inputClass} value={officialRole} onValueChange={(nextValue) => setOfficialRole(nextValue as OfficialRole)}>
+        <AdminSelect kind="officialRole" className={inputClass} value={officialRole} onValueChange={(nextValue) => setOfficialRole(nextValue as OfficialRole)}>
           {OFFICIAL_ROLES.map((r) => (
             <option key={r} value={r}>
               {OFFICIAL_ROLE_LABELS[r]}

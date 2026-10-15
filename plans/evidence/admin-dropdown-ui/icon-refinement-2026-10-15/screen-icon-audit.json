@@ -1,0 +1,102 @@
+[
+  {
+    "file": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-codes-tab.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-modal.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/faq/faq-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/faq/faq-row.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/hub/emergency-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/services/document-type-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-row.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/profile/id-upload.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/profile/profile-form.tsx",
+    "onlyIconMetadata": true
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/requests/new/new-request-form.tsx",
+    "onlyIconMetadata": true
+  }
+]

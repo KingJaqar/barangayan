@@ -204,7 +204,7 @@ export function FaqRow({ article }: { article: FaqArticle }) {
 
           <label className="text-sm">
             <span className="mb-1 block font-medium">Category</span>
-            <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+            <AdminSelect kind="faq" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
               {Object.entries(FAQ_CATEGORY_META).map(([key, val]) => (
                 <option key={key} value={key}>{val.label}</option>
               ))}

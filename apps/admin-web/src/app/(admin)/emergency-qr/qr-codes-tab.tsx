@@ -1,5 +1,8 @@
 'use client';
 
+import { RefreshCw, QrCode } from 'lucide-react';
+import styles from './emergency-qr.module.css';
+
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { useMemo, useState } from 'react';
@@ -68,34 +71,36 @@ export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCente
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Select Center</label>
-          <AdminSelect aria-label="Select Center"
-            value={selectedCenterId}
-            onValueChange={(nextValue) => setSelectedCenterId(nextValue)}
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800">
-            {initialCenters.map((center) => (
-              <option key={center.id} value={center.id}>
-                {center.name}
-              </option>
-            ))}
-          </AdminSelect>
+    <div className={styles.codesView}>
+      <div className={styles.codesHeading}>
+        <div className={styles.sectionHeading}>
+          <p className={styles.eyebrow}>02 / Center check-in</p>
+          <h2>One scan. A warmer welcome.</h2>
+          <p>Select a center to save or download its check-in code.</p>
         </div>
-        <button
-          onClick={regenerateAll}
-          className="rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
-          Regenerate All
-        </button>
+        {initialCenters.length > 0 && <button onClick={regenerateAll} className={styles.button}>
+          <RefreshCw size={15} aria-hidden="true" /> Regenerate All
+        </button>}
       </div>
 
-      {selectedCenter && payload && (
-        <QrCodeDisplay center={selectedCenter} payload={payload} />
-      )}
+      {initialCenters.length > 0 && <div className={styles.centerPicker}>
+        <label htmlFor="emergency-center" className={styles.eyebrow}>Evacuation center</label>
+        <AdminSelect kind="center" id="emergency-center" aria-label="Select Center"
+          value={selectedCenterId} onValueChange={(nextValue) => setSelectedCenterId(nextValue)}>
+          {initialCenters.map((center) => (
+            <option key={center.id} value={center.id}>{center.name}</option>
+          ))}
+        </AdminSelect>
+        <span className={styles.muted}>{initialCenters.length} active {initialCenters.length === 1 ? 'center' : 'centers'}</span>
+      </div>}
 
+      {selectedCenter && payload && <QrCodeDisplay center={selectedCenter} payload={payload} />}
       {initialCenters.length === 0 && (
-        <p className="text-center text-sm text-zinc-500">No evacuation centers configured.</p>
+        <div className={styles.emptyState}>
+          <span className={styles.iconTile}><QrCode size={26} aria-hidden="true" /></span>
+          <h3>No evacuation centers yet</h3>
+          <p>QR codes will be available here once an active evacuation center is configured.</p>
+        </div>
       )}
     </div>
   );

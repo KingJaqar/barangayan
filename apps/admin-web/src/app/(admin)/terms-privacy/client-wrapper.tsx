@@ -3,10 +3,12 @@
 import type { Tables } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowUpRight } from 'lucide-react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { ContentForm } from './content-form';
+import styles from './terms-privacy.module.css';
 
 type SiteContentRow = Tables<'site_content'>;
 type Section = 'terms_of_service' | 'privacy_policy';
@@ -21,7 +23,6 @@ export function ClientWrapper({
   initialPrivacy: SiteContentRow | null;
 }) {
   const [section, setSection] = useState<Section>('terms_of_service');
-  const [isLive, setIsLive] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,9 +43,7 @@ export function ClientWrapper({
           router.refresh();
         },
       )
-      .subscribe((status) => {
-        setIsLive(status === 'SUBSCRIBED');
-      });
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
@@ -54,42 +53,28 @@ export function ClientWrapper({
   const current = section === 'terms_of_service' ? initialTerms : initialPrivacy;
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Terms & Privacy Policy</h1>
-          <p className="text-sm text-zinc-500">
-            Manage the legal content shown to residents in Settings.
-          </p>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${isLive ? 'bg-green-500' : 'bg-zinc-300'}`}>
-            {isLive && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />}
-          </span>
-          <span className="text-xs text-zinc-500">{isLive ? 'Live' : 'Offline'}</span>
-        </div>
+    <div className={styles.page}>
+      <header className={styles.hero}>
+        <p className={styles.eyebrow}>Resident experience / Legal content</p>
+      </header>
+      <div className={styles.workspace}>
+        <aside className={styles.sidebar}>
+          <p className={styles.eyebrow}>Your documents <span>02</span></p>
+          <nav aria-label="Legal documents" className={styles.documents}>
+            {([
+              { id: 'terms_of_service', label: 'Terms of Service', description: 'Guidelines for using the app', number: '01' },
+              { id: 'privacy_policy', label: 'Privacy Policy', description: 'How resident data is handled', number: '02' },
+            ] as const).map(({ id, label, description, number }) => (
+              <button key={id} type="button" aria-pressed={section === id} onClick={() => setSection(id)} className={styles.document}>
+                <span className={styles.documentTop}><span>{number}</span></span>
+                <strong>{label}<ArrowUpRight size={16} aria-hidden="true" /></strong>
+                <span className={styles.documentDescription}>{description}</span>
+              </button>
+            ))}
+          </nav>
+        </aside>
+        <ContentForm key={section} section={section} barangayId={barangayId} initial={current} />
       </div>
-
-      <div className="mb-6 flex rounded-full border border-black/10 bg-white p-1 dark:border-white/10 dark:bg-zinc-900">
-        <button
-          type="button"
-          onClick={() => setSection('terms_of_service')}
-          className={`flex-1 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-            section === 'terms_of_service' ? 'bg-[var(--accent)] text-white' : 'text-zinc-600 dark:text-zinc-300'
-          }`}>
-          Terms of Service
-        </button>
-        <button
-          type="button"
-          onClick={() => setSection('privacy_policy')}
-          className={`flex-1 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-            section === 'privacy_policy' ? 'bg-[var(--accent)] text-white' : 'text-zinc-600 dark:text-zinc-300'
-          }`}>
-          Privacy Policy
-        </button>
-      </div>
-
-      <ContentForm key={section} section={section} barangayId={barangayId} initial={current} />
     </div>
   );
 }

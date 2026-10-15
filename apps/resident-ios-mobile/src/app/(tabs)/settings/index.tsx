@@ -44,6 +44,8 @@ export default function SettingsScreen() {
       <Destination title={rows.password.title} detail={rows.password.subtitle || undefined} href="/settings/change-password" />
       {rows.password.warning && <StatusBadge label="Password not set" icon="exclamationmark.triangle" tone="warning" />}
       <Destination title="Email verification" detail={verified ? 'Verified' : 'Not verified'} href="/settings/email-verification" />
+      <Destination title="ID verification" detail="ID type and front and back photos" href="/settings/id-verification" />
+      <Destination title="Location verification" detail={profile?.verified_location ? 'A home location is saved' : 'Not saved yet'} href="/settings/location-verification" />
     </Card>
     {status && <Card><Body heading>Sign-in methods</Body>
       <Body tone="secondary">{[

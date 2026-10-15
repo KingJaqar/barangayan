@@ -2,7 +2,7 @@
 
 import { ACCENT_COLORS, FONT_OPTIONS } from '@barangayan/shared';
 import { Check, Moon, Palette, Pipette, Plus, Sun, Type, X } from 'lucide-react';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 
 import { hasStoredAccent, isValidHexColor, MAX_CUSTOM_COLORS, useAccentController } from '@/components/ui/accent-controller';
 import { hasStoredFont, useFontController } from '@/components/ui/font-controller';
@@ -18,10 +18,21 @@ interface ThemeFormProps {
   initialFontId: string;
 }
 
+// The server cannot read browser storage. Keep its snapshot for hydration, then
+// expose the already-loaded local preferences without changing persistence.
+const subscribeToHydration = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function ThemeForm({ initialTheme, initialAccentColor, initialCustomColors, initialFontId }: ThemeFormProps) {
-  const { theme, setTheme } = useThemeController();
-  const { accent, setAccent, customColors, setCustomColors, addCustomColor, removeCustomColor } = useAccentController();
-  const { fontId, setFontId } = useFontController();
+  const hydrated = useSyncExternalStore(subscribeToHydration, getClientSnapshot, getServerSnapshot);
+  const { theme: localTheme, setTheme } = useThemeController();
+  const { accent: localAccent, setAccent, customColors: localCustomColors, setCustomColors, addCustomColor, removeCustomColor } = useAccentController();
+  const { fontId: localFontId, setFontId } = useFontController();
+  const theme = hydrated ? localTheme : initialTheme === 'dark' ? 'dark' : 'light';
+  const accent = hydrated ? localAccent : initialAccentColor;
+  const customColors = hydrated ? localCustomColors : initialCustomColors;
+  const fontId = hydrated ? localFontId : initialFontId;
   const [saved, setSaved] = useState(false);
   const [customHex, setCustomHex] = useState(initialAccentColor);
   const [customHexError, setCustomHexError] = useState(false);
@@ -141,7 +152,7 @@ export function ThemeForm({ initialTheme, initialAccentColor, initialCustomColor
           <div className={styles.appearanceOptions}>
             {(['light', 'dark'] as const).map((option) => (
               <button key={option} type="button" onClick={() => handleThemeChange(option)}
-                aria-pressed={theme === option} suppressHydrationWarning
+                aria-pressed={theme === option}
                 className={`${styles.appearanceOption} ${option === 'light' ? styles.lightOption : styles.darkOption}`}>
                 <span className={`${styles.miniWindow} ${option === 'dark' ? styles.miniDark : styles.miniLight}`} aria-hidden="true">
                   <span className={styles.miniSidebar}><i /><i /><i /></span>

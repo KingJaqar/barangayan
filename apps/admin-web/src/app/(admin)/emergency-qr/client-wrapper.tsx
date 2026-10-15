@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import type { Tables } from '@barangayan/shared';
 import { QrInstructionsTab } from './qr-instructions-tab';
 import { QrCodesTab } from './qr-codes-tab';
+import { BookOpen, QrCode } from 'lucide-react';
+import styles from './emergency-qr.module.css';
 
 type Tab = 'instructions' | 'qr_codes';
 
@@ -49,36 +51,35 @@ export function ClientWrapper({
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-3">
-        <div className="flex rounded-full border border-black/10 bg-white p-1 dark:border-white/10 dark:bg-zinc-900">
+      <div className={styles.navigation}>
+        <nav className={styles.tabs} aria-label="Emergency QR views">
           <button
             onClick={() => setTab('instructions')}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-              tab === 'instructions' ? 'bg-[var(--accent)] text-white' : 'text-zinc-600 dark:text-zinc-300'
-            }`}>
-            Instructions
+            aria-pressed={tab === 'instructions'} aria-controls="emergency-qr-view">
+            <BookOpen size={16} aria-hidden="true" /> Instructions
           </button>
           <button
             onClick={() => setTab('qr_codes')}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-              tab === 'qr_codes' ? 'bg-[var(--accent)] text-white' : 'text-zinc-600 dark:text-zinc-300'
-            }`}>
-            QR Codes
+            aria-pressed={tab === 'qr_codes'} aria-controls="emergency-qr-view">
+            <QrCode size={16} aria-hidden="true" /> QR Codes
+            <span className={styles.tabCount}>{initialCenters.length}</span>
           </button>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${isLive ? 'bg-green-500' : 'bg-zinc-300'}`}>
-            {isLive && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />}
+        </nav>
+        <div className={styles.live} role="status">
+          <span className={styles.liveDot} data-live={isLive}>
+            {isLive && <span />}
           </span>
-          <span className="text-xs text-zinc-500">{isLive ? 'Live' : 'Offline'}</span>
+          <span>{isLive ? 'Live updates' : 'Offline'}</span>
         </div>
       </div>
 
-      {tab === 'instructions' ? (
-        <QrInstructionsTab initialContent={initialContent} barangayId={barangayId} />
-      ) : (
-        <QrCodesTab initialCenters={initialCenters} />
-      )}
+      <section id="emergency-qr-view" aria-label={tab === 'instructions' ? 'Instructions' : 'QR Codes'}>
+        {tab === 'instructions' ? (
+          <QrInstructionsTab initialContent={initialContent} barangayId={barangayId} />
+        ) : (
+          <QrCodesTab initialCenters={initialCenters} />
+        )}
+      </section>
     </div>
   );
 }

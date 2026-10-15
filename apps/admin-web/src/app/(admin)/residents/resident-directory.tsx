@@ -14,7 +14,9 @@ import {
   type IdVerificationStatus,
   type Sex,
 } from '@barangayan/shared';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { ArrowUpRight, FileCheck2, History, Mail, MapPin, Phone, UserRound, Users } from 'lucide-react';
+import styles from '@/components/admin/resident-record.module.css';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
 import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
@@ -163,13 +165,13 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
 
 export function ResidentDetailContent({
   resident,
-  onClose,
   onIdStatusChange,
 }: {
   resident: ResidentRow | null;
   onClose: () => void;
   onIdStatusChange?: (id: string, status: IdVerificationStatus | null) => void;
 }) {
+  const sectionId = useId();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const toast = useToast();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
@@ -269,70 +271,71 @@ export function ResidentDetailContent({
 
   return (
       <div
-        className="mt-6 flex w-full flex-col rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+        className={styles.profile}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal header */}
-        <div className="flex max-h-[40vh] shrink-0 flex-wrap items-start justify-between gap-3 overflow-y-auto border-b border-black/10 p-6 dark:border-white/10">
-          <div className="flex min-w-0 flex-[1_1_16rem] items-center gap-4">
+        {/* Resident overview */}
+        <div className={styles.identity}>
+          <div className={styles.identityMain}>
             {/* Avatar */}
             {resident.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resident.avatar_url}
                 alt={resident.full_name}
-                className="h-14 w-14 flex-shrink-0 rounded-full object-cover ring-2 ring-[var(--accent)]/20"
+                className={styles.avatar}
               />
             ) : (
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-lg font-bold text-white">
+              <div className={styles.avatar}>
                 {resident.full_name.charAt(0).toUpperCase()}
               </div>
             )}
             <div className="min-w-0 break-words">
-              <h2 className="text-xl font-bold">{resident.full_name}</h2>
-              <p className="mt-0.5 text-sm text-zinc-500">{resident.email ?? 'No email on file'}</p>
-              <p className="text-sm text-zinc-500">{resident.mobile_number ?? 'No mobile number'}</p>
+              <p className={styles.eyebrow}>Resident overview</p>
+              <h2 className={styles.name}>{resident.full_name}</h2>
+              <p className={styles.contact}><Mail size={14} aria-hidden="true" />{resident.email ?? 'No email on file'}</p>
+              <p className={styles.contact}><Phone size={14} aria-hidden="true" />{resident.mobile_number ?? 'No mobile number'}</p>
             </div>
           </div>
-          <div className="flex max-w-full flex-wrap items-center gap-2">
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${verificationColor(verStatus)}`}>{verStatus}</span>
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${idVerifColor(idStatus)}`}>{idVerifLabel(idStatus)}</span>
+          <div className={styles.badges}>
+            <span className={styles.badge}>Email · {verStatus}</span>
+            <span className={styles.badge}>{idVerifLabel(idStatus)}</span>
             {resident.location_verified === false && (
               <span
                 title="This resident's device location at signup fell outside the barangay boundary. Soft flag only — did not block registration."
-                className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                className={styles.badge}>
                 ⚠ Location Outside Boundary
               </span>
             )}
-            <button
-              onClick={onClose} aria-label="Close details"
-              className="rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-            >
-              ✕
-            </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <nav className={styles.navigation} aria-label="Resident record sections">
+          <a href={`#${sectionId}-personal`}><UserRound size={14} aria-hidden="true" />Overview</a>
+          <a href={`#${sectionId}-household`}><Users size={14} aria-hidden="true" />Household</a>
+          <a href={`#${sectionId}-verification`}><FileCheck2 size={14} aria-hidden="true" />ID review</a>
+          <a href={`#${sectionId}-history`}><History size={14} aria-hidden="true" />History</a>
+        </nav>
+        <div className={styles.sections}>
           {/* Personal details */}
-          <section className="border-b border-black/10 p-6 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">Personal Details</h3>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+          <section id={`${sectionId}-personal`} className={styles.section}>
+            <h3 className={styles.sectionHeading}><UserRound size={16} aria-hidden="true" />Personal details</h3>
+            <dl className={styles.details}>
               <div>
-                <dt className="text-zinc-400">Address</dt>
+                <dt className={styles.muted}>Address</dt>
                 <dd className="font-medium">{resident.home_address ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-zinc-400">Birthday</dt>
+                <dt className={styles.muted}>Birthday</dt>
                 <dd className="font-medium">{fmtDate(resident.birth_date)}</dd>
               </div>
               <div className="col-span-2">
-                <dt className="text-zinc-400">Verified Location (Settings)</dt>
+                <dt><MapPin size={13} aria-hidden="true" />Verified location · Settings</dt>
                 <dd className="font-medium">
                   {resident.verified_location ? (
                     <>
                       {resident.verified_location_address ?? 'Verified (no address on file)'}
-                      <span className="ml-2 text-xs font-normal text-zinc-400">
+                      <span className={styles.coordinates}>
                         {(resident.verified_location as { lat: number; lng: number }).lat.toFixed(5)},{' '}
                         {(resident.verified_location as { lat: number; lng: number }).lng.toFixed(5)}
                       </span>
@@ -342,27 +345,30 @@ export function ResidentDetailContent({
                   )}
                 </dd>
               </div>
+              <div><dt>Sex</dt><dd>{resident.sex ? SEX_LABELS[resident.sex as Sex] ?? resident.sex : '—'}</dd></div>
+              <div><dt>Employment status</dt><dd>{resident.employment_status ? EMPLOYMENT_STATUS_LABELS[resident.employment_status as EmploymentStatus] ?? resident.employment_status : '—'}</dd></div>
+              <div><dt>Occupation</dt><dd>{resident.occupation ?? '—'}</dd></div>
               <div>
-                <dt className="text-zinc-400">ID Type</dt>
+                <dt className={styles.muted}>ID Type</dt>
                 <dd className="font-medium">{resident.id_type ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-zinc-400">Joined</dt>
+                <dt className={styles.muted}>Joined</dt>
                 <dd className="font-medium">{formatAdminTimestamp(resident.created_at)}</dd>
               </div>
             </dl>
           </section>
 
           {/* Household members */}
-          <section className="border-b border-black/10 p-6 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">Household Members ({members.length})</h3>
+          <section id={`${sectionId}-household`} className={styles.section}>
+            <h3 className={styles.sectionHeading}><Users size={16} aria-hidden="true" />Household members <span>{members.length}</span></h3>
             {members.length === 0 ? (
-              <p className="text-sm text-zinc-400">No household members recorded.</p>
+              <p className={styles.empty}>No household members recorded.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {members.map((m) => (
-                  <div key={m.id} className="flex items-center gap-3 rounded-lg border border-black/10 px-4 py-3 dark:border-white/10">
-                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-zinc-100 text-sm font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                  <div key={m.id} className={styles.listRow}>
+                    <div className={styles.memberAvatar}>
                       {m.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1">
@@ -378,52 +384,52 @@ export function ResidentDetailContent({
           </section>
 
           {/* Admin: ID verification actions */}
-          <section className="border-b border-black/10 p-6 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">ID Verification — Admin Action</h3>
-            {resident.id_repair_required && <p role="alert" className="mb-3 text-sm text-red-700">Legacy approval needs repair: complete evidence is missing. Ask the resident to submit both ID sides.</p>}
+          <section id={`${sectionId}-verification`} className={styles.section}>
+            <h3 className={styles.sectionHeading}><FileCheck2 size={16} aria-hidden="true" />ID verification <span>Admin review</span></h3>
+            {resident.id_repair_required && <p role="alert" className={styles.notice}>Legacy approval needs repair: complete evidence is missing. Ask the resident to submit both ID sides.</p>}
             {evidence && <p className="mb-3 text-sm">Submission version {evidence.version} · {evidence.id_type} · {evidence.evidence_origin.startsWith('legacy_') ? 'Imported legacy evidence; original submission/review provenance unavailable' : `Submitted ${formatAdminTimestamp(evidence.submitted_at)}`}{evidence.reviewed_at ? ` · Decision ${formatAdminTimestamp(evidence.reviewed_at)} · Reviewer ${evidence.reviewed_by}` : ''}</p>}
             {evidence?.rejection_reason && <p className="mb-3 text-sm">Decision reason: {evidence.rejection_reason}</p>}
             {evidence?.confirmed_details && <dl className="mb-3 space-y-1 text-sm">
               {Object.entries(evidence.confirmed_details).map(([key, value]) => <div key={key}><dt className="inline font-medium">{({ fullName: 'Full name', idNumber: 'ID number', birthDate: 'Birth date', address: 'Address' } as Record<string, string>)[key]}: </dt><dd className="inline">{value || 'Not shown on ID'}</dd></div>)}
             </dl>}
-            {!reviewingId && evidence && <button type="button" className="mb-3 rounded-md border px-3 py-2 text-sm" onClick={() => setReviewingId(true)}>Review ID</button>}
-            {reviewingId && <><label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800" value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
-              <button type="button" disabled={idStatusLoading} className="mb-3 rounded-md border px-3 py-2 text-sm" onClick={() => { setReviewingId(false); setReviewReason(''); }}>Cancel ID review</button></>}
+            {!reviewingId && evidence && <button type="button" className={styles.reviewAction} onClick={() => setReviewingId(true)}>Review ID</button>}
+            {reviewingId && <><label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className={styles.reviewReason} value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
+              <button type="button" disabled={idStatusLoading} className={styles.reviewAction} onClick={() => { setReviewingId(false); setReviewReason(''); }}>Cancel ID review</button></>}
             <div aria-busy={idStatusLoading} className="flex flex-wrap items-center gap-3">
-              <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${idVerifColor(idStatus)}`}>
+              <span className={styles.badge}>
                 Current: {idVerifLabel(idStatus)}
               </span>
 
               {reviewingId && evidence?.decision === 'pending' && (
                 <ConfirmButton
-                  label="✅ Mark as Verified"
+                  label="Mark as Verified"
                   confirmLabel="Confirm verification?"
                   onConfirm={() => handleIdVerifAction('verified')}
                   disabled={idStatusLoading || !idEvidenceReady}
                   title={idUrls.length ? "Mark this resident's ID as verified" : 'No ID document uploaded yet'}
-                  className="rounded-full bg-green-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className={styles.reviewAction}
                 />
               )}
 
               {reviewingId && evidence?.decision === 'pending' && (
                 <ConfirmButton
-                  label="❌ Mark as Failed"
+                  label="Mark as Failed"
                   confirmLabel="Reject this ID? The resident will see 'Verification Failed, Try Again' and can re-upload."
                   onConfirm={() => handleIdVerifAction('verification_failed')}
                   disabled={idStatusLoading || !idEvidenceReady || !reviewReason.trim()}
                   title={idUrls.length ? 'Reject this ID — resident can re-upload to retry' : 'No ID document uploaded yet'}
-                  className="rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className={styles.reviewAction}
                 />
               )}
 
               {reviewingId && evidence?.decision === 'verified' && (
                 <ConfirmButton
-                  label="↩ Revoke Verification"
+                  label="Revoke Verification"
                   confirmLabel="Revoke this reviewed ID approval?"
                   onConfirm={() => handleIdVerifAction('pending')}
                   disabled={idStatusLoading || !reviewReason.trim()}
                   title="Revert to pending — resident must re-upload or admin re-verify"
-                  className="rounded-full bg-amber-500 px-4 py-1.5 text-xs font-semibold text-white hover:bg-amber-600 disabled:opacity-50"
+                  className={styles.reviewAction}
                 />
               )}
 
@@ -434,25 +440,26 @@ export function ResidentDetailContent({
               </p>
             ) : null}
             {!idUrls.length && (
-              <p className="mt-2 text-xs text-zinc-400">No ID photo uploaded — cannot verify until the resident uploads one.</p>
+              <p className={styles.hint}>No ID photo uploaded — cannot verify until the resident uploads one.</p>
             )}
           </section>
 
           {/* ID photos */}
-          <section className="border-b border-black/10 p-6 dark:border-white/10">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">ID Documents ({idUrls.length})</h3>
+          <section id={`${sectionId}-documents`} className={styles.section}>
+            <h3 className={styles.sectionHeading}><FileCheck2 size={16} aria-hidden="true" />ID documents <span>{idUrls.length}</span></h3>
             {idUrls.length === 0 ? (
-              <p className="text-sm text-zinc-400">No ID documents uploaded.</p>
+              <p className={styles.empty}>No ID documents uploaded.</p>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className={styles.documents}>
                 {idUrls.map((url, i) => (
-                  <a key={i} href={url} target="_blank" rel="noreferrer" className="group">
+                  <a key={i} href={url} target="_blank" rel="noreferrer" className={styles.document}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={url}
                       alt={`ID document ${i + 1}`}
-                      className="h-[396px] w-[613px] rounded-lg border border-black/10 object-contain bg-zinc-50 transition group-hover:opacity-90 dark:border-white/10 dark:bg-zinc-800"
+                      className={styles.documentImage}
                     />
+                    <span>ID document {i + 1}<span>Open full size <ArrowUpRight size={13} aria-hidden="true" /></span></span>
                   </a>
                 ))}
               </div>
@@ -460,18 +467,18 @@ export function ResidentDetailContent({
           </section>
 
           {/* Service request history */}
-          <section className="p-6">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">Request History</h3>
+          <section id={`${sectionId}-history`} className={styles.section}>
+            <h3 className={styles.sectionHeading}><History size={16} aria-hidden="true" />Request history</h3>
             {requests === null ? (
-              <p className="text-sm text-zinc-400">Loading…</p>
+              <p className={styles.empty}>Loading…</p>
             ) : requests.length === 0 ? (
-              <p className="text-sm text-zinc-400">No service requests yet.</p>
+              <p className={styles.empty}>No service requests yet.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {requests.map((r) => (
                   <div
                     key={r.id}
-                    className="flex items-center justify-between rounded-lg border border-black/10 px-4 py-3 text-sm dark:border-white/10"
+                    className={styles.listRow}
                   >
                     <div>
                       <p className="font-medium">{r.document_types?.name ?? 'Document Request'}</p>
@@ -567,14 +574,14 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     { id: 'last_name', header: 'Last Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.last_name ?? '—', edit: { type: 'text', getValue: (r) => r.last_name ?? '', onSave: (r, value) => updateField(r, { last_name: String(value).trim() || null }) } },
     { id: 'middle_name', header: 'Middle Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.middle_name ?? '—', edit: { type: 'text', getValue: (r) => r.middle_name ?? '', onSave: (r, value) => updateField(r, { middle_name: String(value).trim() || null }) } },
     { id: 'suffix', header: 'Suffix', initialWidth: 90, minWidth: 78, wrap: 'nowrap', render: (r) => r.suffix ?? '—', edit: { type: 'text', getValue: (r) => r.suffix ?? '', onSave: (r, value) => updateField(r, { suffix: String(value).trim() || null }) } },
-    { id: 'sex', header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
+    { id: 'sex', header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', selectKind: 'sex', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
     { id: 'email', header: 'Email', initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
     { id: 'mobile', header: 'Mobile', initialWidth: 142, minWidth: 124, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{r.mobile_number ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.mobile_number ?? '', onSave: (r, value) => updateField(r, { mobile_number: String(value).trim() || null }) } },
     { id: 'house_no_', header: 'House No.', initialWidth: 110, minWidth: 92, wrap: 'nowrap', render: (r) => r.house_no ?? '—', edit: { type: 'text', getValue: (r) => r.house_no ?? '', onSave: (r, value) => updateField(r, { house_no: String(value).trim() || null }) } },
     { id: 'street', header: 'Street', initialWidth: 180, minWidth: 140, wrap: 'break-word', render: (r) => r.street ?? '—', edit: { type: 'text', getValue: (r) => r.street ?? '', onSave: (r, value) => updateField(r, { street: String(value).trim() || null }) } },
     { id: 'city', header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—' },
     { id: 'birthday', header: 'Birthday', initialWidth: 130, minWidth: 118, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{fmtDate(r.birth_date)}</span>, edit: { type: 'date', getValue: (r) => r.birth_date ?? '', onSave: (r, value) => updateField(r, { birth_date: String(value) || null }) } },
-    { id: 'employment_status', header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
+    { id: 'employment_status', header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', selectKind: 'employment', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
     { id: 'occupation', header: 'Occupation', initialWidth: 170, minWidth: 135, wrap: 'break-word', render: (r) => r.occupation ?? '—', edit: { type: 'text', getValue: (r) => r.occupation ?? '', onSave: (r, value) => updateField(r, { occupation: String(value).trim() || null }) } },
     { id: 'id_type', header: 'ID Type', initialWidth: 150, minWidth: 120, wrap: 'nowrap', render: (r) => r.id_type ?? '—' },
     { id: 'id_status', header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor(r.id_verification_status)}`}>{r.id_repair_required ? 'Evidence repair required' : idVerifLabel(r.id_verification_status)}</span> },
@@ -591,7 +598,7 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
 
     {addOpen && <fieldset disabled={browse.pending}><AddResidentForm onCreated={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
     <ProfileTablePanel label="Resident Directory" browse={browse}
-      category={<label className="table-browse-field">ID presence <AdminSelect aria-label="ID presence" value={state.filters.verification} onValueChange={nextValue => void browse.commit({ filters: { verification: nextValue } })}>
+      category={<label className="table-browse-field">ID presence <AdminSelect kind="idPresence" aria-label="ID presence" value={state.filters.verification} onValueChange={nextValue => void browse.commit({ filters: { verification: nextValue } })}>
         <option value="">All ID status</option><option value="with_id">With uploaded ID</option><option value="without_id">Without uploaded ID</option>
       </AdminSelect></label>}
       filters={<SegmentedFilter label="Email verification" value={state.filters.tab}

@@ -13,8 +13,8 @@ This plan replaces earlier proposals. It is **not** a continuation of the cancel
 | R0–R7 (closure-based routing, Android offline, web online-only) | Feasible with the current stack (`expo-file-system`, `expo-location`, `@react-native-community/netinfo`, `react-native-webview`, Deno 2 Edge runtime, vitest in `packages/shared`). |
 | R3 exit gate, R10 device matrix and 72-hour drill | Feasible, but require DRRM reviewers and a **physical** Android phone. Emulated GPS (LDPlayer) does not satisfy R1/R10. |
 | R8 BFS shadow model | Code is feasible. Requires three inputs not in the repository: PAGASA feed access and station coordinates, a licensed DEM, and a verified vertical datum. |
-| R9 activation, R10 enablement | Externally gated on ≥2 held-out flood events and DRRM acceptance. |
-| R9 tooling, activation configuration, holdover and clearance logic, failure handling; R10 items that do not read model output | Feasible without any PAGASA, DEM or flood-event data (synthetic fixtures only). They enable nothing. See R9 and R10 for the split. |
+| R9 activation, R10b enablement | Externally gated on ≥2 held-out flood events and DRRM acceptance. |
+| R9 tooling, activation configuration, holdover and clearance logic, failure handling; R10a (closure-only release items that do not read model output) | Feasible without any PAGASA, DEM or flood-event data (synthetic fixtures only). They enable nothing. See R9 and R10 for the split. |
 
 Closure-based routing can release before any model activation. Do not claim project completion while device acquisition or model prerequisites remain unverified.
 
@@ -27,6 +27,8 @@ Closure-based routing can release before any model activation. Do not claim proj
 | BFS flood extent from gauge levels, road flood flags, sensor penalty, BFS advisory/exclusion | **Yes** (gauge levels and coordinates, licensed DEM, verified datum) | Code done in R2/R8; reports `modelStatus: unavailable` until the inputs exist. |
 
 Without the data nothing in a resident's route reacts to river levels; DRRM must publish closures. The model stays off rather than guess (invariant 4). This is the supported first release, not a fault. Phases R9 and R10 may proceed only as split below: nothing that needs real events, thresholds or calibration may be written with invented values, and no phase may be marked complete on synthetic evidence.
+
+**Use limit (owner decision, 2026-10-15):** the PAGASA request letter is for an **academic capstone only** (`PAGASA_Water_Level_Data_Request_Letter_Academic.docx`, signed by the capstone team and noted by the adviser). Whatever PAGASA grants under it covers research and prototype testing; it does **not** authorize an operational resident-facing service, and the letter promises not to use the data for one. A production feed (stage 2 and later) needs a new permission from PAGASA, with the barangay as requester. Until then the flood model stays in shadow with `residentInfluence: 'none'`.
 
 Where the data can come from (searched 2026-10-15): **PAGASA's own Pasig-Marikina-Tullahan flood-warning site serves the gauge data publicly.** Its HTTPS host fails certificate verification, but the same site answers over plain HTTP at `http://121.58.193.173:8080/` (the address PAGASA's flood page links as "Flood Monitoring for Metro Manila"). Its pages call two undocumented JSON endpoints, `/water/table_list.do` (POST `ymdhm=YYYYMMDDHHmm`, PHT) and `/water/map_list.do` (GET `ymdhm`, `basin`; Marikina = 111). Read once on 2026-10-15 (21 stations): thresholds match RRL Table 1 for San Mateo-1 (18.00 / 19.00 / 20.00), Montalban (22.40 / 23.00 / 23.60), Nangka (16.50 / 17.10 / 17.70) and Rodriguez (28.80 / 29.80 / 30.70); the 2018 bulletin's "Montalban" values were Tumana Bridge's (17.26 / 18.26 / 19.26). Coordinates: San Mateo-1 14.67955, 121.10973; Nangka 14.67402, 121.10932 (both beside the west edge of Ampid I); Montalban 14.73308, 121.13058; Rodriguez 14.73755, 121.15467. Readings carry 10-minute timestamps. Snapshot: `plans/evidence/resident-drrm-routing/r8-shadow/pagasa-ffws-snapshot-2026-10-15.json`. **Not yet usable as a production source:** the endpoints are undocumented, publish no terms, run over unauthenticated HTTP (a path attacker could forge levels), and the vertical datum ("EL.m"), the meaning of the "(*)" marker, the historical baseline and the supported cadence are unverified. Use needs PAGASA's permission (the "Hydromet Data" request portal) and an integrity plan. Still missing entirely: the licensed DEM and datum match. Community mirrors exist but are unofficial; UP DREAM/LiPAD 1 m LiDAR is reported open but Rizal coverage, vertical accuracy and licence are unconfirmed.
 
@@ -46,6 +48,7 @@ Routing exists **only inside Barangay Ampid I** (San Mateo, Rizal). The single u
 | Sensor penalty / exclusion for residents | **Staged:** closures ON at release → sensor warning banner + soft penalty once station data is verified → BFS "advisory" overlay → BFS exclusion only after validation | A wrong exclusion can strand people; ignoring an official critical gauge is unrealistic. DRRM-verified closures are the authoritative hard block. |
 | Who supplies data | Owner/developer obtains station coordinates and thresholds; barangay DRRM supplies ground truth and verifies closures; DEM licence is the owner's request | Fixed owners, with a fallback: if unavailable, BFS stays pending and closure routing still ships. |
 | Model data gating (owner Q&A, 2026-10-15) | Closure-based routing is the supported first release. R9/R10 proceed only for work that needs no external data (R9a below); everything else stays pending until PAGASA/DEM/DRRM inputs exist | Prevents invented thresholds or fabricated validation; keeps the safety logic (holdover, clearance, failure handling) testable now. |
+| PAGASA data deferred (owner decision, 2026-10-15) | Work that needs PAGASA station data, a DEM or DRRM ground truth is **paused** until the owner has the data; the plan resumes at that point (R8 inputs → R9b → R10 model-gated items). Nothing is built on unverified or scraped values in the meantime. | The request is an academic capstone request (see section 7); the owner will obtain the data through the capstone letter, not through an operational agreement. |
 | iOS | **Out of scope for now.** Android and web only; `apps/resident-ios-mobile` is not touched. Revisit as a separate plan once Android and web are verified | Owner decision, 2026-10-12. The shared contracts and Edge Function keep the door open without iOS work. |
 
 ## 1. Product contract and boundaries
@@ -680,7 +683,7 @@ No existing control changed size or position (cancelled Phase 8 boundary).
 **Verification:** missing/stale readings, invalid datum, barriers, multiple seeds, source failure; preprocessing and traversal budgets measured separately; superseded computations cannot publish.
 **Exit gate:** reproducible shadow output and documented input readiness. Missing external data leaves this phase **pending**; do not fabricate completion.
 
-**Status (2026-10-14): Partially complete — code, storage and tests done and verified on synthetic inputs and a disposable database; real shadow output is pending external data (stations, licensed DEM, datum, feed). Nothing deployed or applied to hosted.** Evidence: `plans/evidence/resident-drrm-routing/r8-shadow/README.md`.
+**Status (2026-10-14, updated 2026-10-15): Partially complete — code, storage and tests done and verified on synthetic inputs and a disposable database; real shadow output is pending external data (stations, licensed DEM, datum, feed). Nothing deployed or applied to hosted. Paused by the owner until the PAGASA data is obtained; resume steps: fill `sensor-stations.json` and `terrain.json` after review, rebuild the pack with `stations.json`, apply `0120`, deploy and schedule `flood-shadow` (owner-authorized).** Evidence: `plans/evidence/resident-drrm-routing/r8-shadow/README.md`.
 
 | R8 item | Status |
 |---|---|
@@ -723,19 +726,78 @@ No existing control changed size or position (cancelled Phase 8 boundary).
 | **R9a — buildable now** | Replay/comparison tooling (verified on synthetic events only); versioned activation configuration with the stage order (closures → sensor warning/penalty → BFS advisory → BFS exclusion, none skippable) and every model stage **off**; model replacement, holdover restrictions and explicit clearance (a valid newer model clears only its own exclusions, never a verified closure or a resident avoidance mark); degraded operation when the sensor or model service fails; precision/recall/IoU computation code | None | Enables nothing and changes no resident behavior. No thresholds, calibration values or accuracy claims; `modelStatus` stays `unavailable`. Evidence is labelled synthetic. |
 | **R9b — data-gated** | Held-out event reports (≥ 2 events with archived gauge series and extents); precision/recall/IoU numbers; road-level false positives/negatives; bridge/approach validation; calibration sensitivity; DRRM acceptance of a versioned exclusion policy | Station data, licensed DEM, datum, flood-event ground truth, DRRM review | Stays **pending**. Not started, not simulated, not marked passed. |
 
-**Status (2026-10-15): Not started.** R9a may start without external data but has not been requested by the owner; R9b is pending the inputs in section 7. The exit gate is unmet and cannot be met by R9a.
+**Status (2026-10-15): Partially complete — R9a done and verified (synthetic, automated); R9b paused until the owner gives the go signal with the PAGASA data (owner decision, 2026-10-15). Exit gate not met.** Evidence: `plans/evidence/resident-drrm-routing/r9-validation/README.md`.
+
+| R9 item | Status |
+|---|---|
+| Replay/comparison tooling | Done (R9a) — `packages/shared/src/lib/flood-validation.ts`: `replayShadowEvent` (chained history, as the scheduled function), `compareShadowReports` (stage-3 difference log), `compareExtents` / `scoreReportRoads` / `scoreReportCells` (precision, recall, IoU, road-level false positives/negatives; bridge decks unknown; 0/0 → null), `terrainOffsetSensitivity`. Synthetic events only. |
+| Versioned activation configuration | Done (R9a) — `model-activation.ts`: `DEFAULT_ACTIVATION` with every model stage off; stages `sensor` → `advisory` → `exclusion` enabled only in order and only with an acceptance reference and date; `resolveModelInfluence` withholds everything for an invalid config or a stale/unavailable model. Not wired into routing (nothing to enable). |
+| Model replacement, holdover restrictions, explicit clearance | Done (R9a) as pure logic — `model-exclusions.ts`: complete newer revision replaces, degraded only adds, expiry/failure → holdover, older ignored, reviewer clearance; `effectiveBlocks` keeps closure and avoidance reasons so the model can never reopen them. Persistence and snapshot wiring come with stage 4 (data-gated). |
+| Verification: accepted revisions clear only their own exclusions | Done (automated). |
+| Verification: degraded operation when sensor or model services fail | Done (automated): stale/unavailable health → no new influence; exclusions held over. |
+| Verification: false positives/negatives and calibration sensitivity documented | Tooling done; **numbers paused** (R9b). |
+| Held-out event reports (Ulysses, Kristine); bridge/approach validation | **Paused** (R9b) — owner go signal with the PAGASA data. |
+| Exit gate: DRRM acceptance evidence | **Not met**; cannot be met by R9a. |
+
+**R9 decisions**
+
+- **Three model stages** (`sensor` = stage 2 warning + soft penalty, `advisory` = stage 3, `exclusion` = stage 4); closure routing is never gated.
+- **Influence needs `ok` or `degraded` health**; a stale or unavailable model adds nothing, earlier exclusions stay as holdover. Only a complete (`ok`) revision clears.
+- **Staleness** = 10 × a *confirmed* run interval (plan 3.6); no confirmed interval → `unavailable`.
+- **No persistence or routing wiring yet**: both change what residents receive and belong with the first activation after DRRM acceptance.
+- **Paused work is not simulated**: no thresholds, calibration values or accuracy figures were written.
+- **Migration numbering:** no migration in R9; the repository is at `0128` (other sessions), so the next new one is `0129` or whatever follows the highest prefix.
+
+*Progress note, 2026-10-15 (R9a):* Baseline: `packages/shared` vitest 31 files / 490 pass, `tsc` 5 pre-existing errors (`id-evidence.ts` ×2, `service-catalog.test.ts` ×3, other sessions' files), `supabase/functions` 5 / 72, R2 digest `217d8e6a`. After: shared 34 files / 524 pass (+34: activation 12, exclusions 10, validation 12), same 5 `tsc` errors, functions 5 / 72, digest `217d8e6a`. Mutation check 14/14 killed (`mutate-r9.mjs`). No app, function or migration changed. Remaining: R9b on the owner's go signal. The exit gate is unmet and cannot be met by R9a.
 
 ### R10 — Storm drill, release and recovery runbook
 - Rollout flags, model/ingestion health indicators, privacy-preserving telemetry; preparedness and recovery instructions; acceptance evidence and feature documentation.
+- **Split into R10a (closure-only release: rollout flags, runbook and documentation, device and drill evidence) and R10b (model-gated: health indicators, sensor-penalty and exclusion flags); see the status block.**
 
 **Verification:** 72-hour simulated Android outage; real-device location matrix; closure/bridge/center changes during active use; connected/local route agreement for identical snapshots; p95 local ≤ 2 s; connected ≤ 3 s under documented pilot load; Android map usable within 5 s of cold start without waiting for GPS; CPU, memory, storage budgets within limits.
 **Exit gate:** all required evidence passes; rollout and rollback rehearsed.
+
+**Status (2026-10-15): Partially complete — R10a code, runbook and field protocol done and verified automatically; R10a device and drill evidence pending a physical phone and DRRM; R10b (model-gated) paused by the owner until the PAGASA data and R9b. Exit gate not met.** Evidence: `plans/evidence/resident-drrm-routing/r10-release/README.md`; runbook `plans/Resident_DRRM_Routing_Release_Recovery_Runbook.md`; field protocol `plans/evidence/resident-drrm-routing/r10-release/field-protocol.md`.
+
+**Split (owner, 2026-10-15).** **R10a** is the closure-only release: rollout flags, runbook and documentation, and the device and drill evidence; it goes ahead once a physical phone and DRRM are available. **R10b** is model-gated: model/ingestion health indicators and the sensor-penalty / exclusion flags, after the PAGASA data and R9b. Before R10a's drill is worth running, DRRM must confirm the **five remaining centers' entrances**; otherwise most of the list is unroutable during the drill (hosted state: two centers routable, five not).
 
 **Dependency split (owner Q&A, 2026-10-15).**
 
 - **Not model-gated** (need a physical phone, DRRM drills or hosted access only): 72-hour simulated Android outage; real-device location matrix; closure/bridge/center changes during active use; connected/local agreement; p95 and budget measurements; cold-start map within 5 s; rollout flags and rollback rehearsal for closure routing; preparedness and recovery instructions.
 - **Model-gated** (stay pending until R9b): enabling sensor penalties, BFS advisory or exclusion for residents; storm drills that rely on live model output; model-health indicators showing real (not `unavailable`) status.
 - A closure-only release is complete only when its own evidence passes; it must not describe itself as weather-aware.
+
+| R10 item | Part | Status |
+|---|---|---|
+| Rollout flag: connected routing kill switch | R10a | Done in code — function secret `EVACUATION_ROUTE_ENABLED` (unset/`true` on, `false` or any other value pauses); `503 service_disabled` before any database work; read per request; clients map it to their own wording (Android keeps the labelled on-phone route, web calculates nothing). Not set or exercised on hosted (owner-attended). |
+| Rollout flag: Android packs | R10a | Documented, no new code: the area's active graph version plus the pack bundled in the build; no remote revoke exists (R6 decision), and a server switch never revokes offline data. |
+| Rollout flags: sensor penalties, BFS advisory/exclusion | R10b | Off by construction (`DEFAULT_ACTIVATION`, R9a); nothing reads them. Enabling needs DRRM acceptance and R9b. **Paused.** |
+| Runbook, rollback and recovery, preparedness instructions, feature documentation | R10a | Done — `plans/Resident_DRRM_Routing_Release_Recovery_Runbook.md`. |
+| Privacy-preserving telemetry | R10a | Decision recorded: fixed event names only, platform invocation counts for success, no client analytics, no per-request success line (runbook section 6). No new pipeline built. |
+| Model/ingestion health indicators | R10b | **Paused** (needs real `flood-shadow` runs). |
+| Connected/local route agreement for identical snapshots | R10a | Automated done (25 origins, with and without a closure, in `handler.test.ts`); on-device (Hermes) check **pending**. |
+| Real-device location matrix, 72-hour outage, changes during active use, drill | R10a | **Pending** physical phone and DRRM — exact steps in `field-protocol.md`. |
+| p95 local ≤ 2 s, connected ≤ 3 s under pilot load, cold start ≤ 5 s, budgets | R10a | **Pending** on a physical phone and the deployed function; the load probe (`load-probe.mjs`) and steps exist. Emulator and local-runtime figures from R5/R6 stay as earlier evidence. |
+| Rollout and rollback rehearsed | R10a | Switch verified in the real edge runtime locally; rehearsal on the deployed function **pending** owner authorization. |
+
+**R10 decisions and discrepancies**
+
+- **Kill switch is a function secret, not a database flag.** Supabase documents that secrets apply without a redeploy, so nothing needs a migration, a snapshot-schema change or an admin page, but a flip leaves no application-level audit row. A database flag would let administrators flip it with an audit row; revisit only if DRRM must be able to pause without the developer (that would be `0129` or the next free prefix).
+- **Fail-safe direction:** an unrecognised value pauses and logs `rollout_flag_invalid`, so a typo meant to pause can never leave routing silently on. The cost (a typo pauses emergency routing) is bounded because Android keeps routing on the phone and the paused wording says why.
+- **`service_disabled` is a new service error code** in the shared contract and client wording; the Android and web screens needed no change (they print `describeConnectedFailure`).
+- **Graph rollback has no admin-web control:** only activation of the bundled version is offered. Re-registering an older version with `p_activate` works through the RPC but is refused while an active closure lacks a mapping to it (documented in the runbook).
+- **No migration in R10;** `AGENTS.md` ("last pushed 0094") remains stale; the repository is at `0128`.
+- **Telemetry scope:** the owner's R10a/R10b split did not assign "privacy-preserving telemetry"; it was treated as not model-gated and met with fixed event names plus platform counts. Say so if a richer pipeline is wanted.
+- **Stand-in runtime caveat:** the local edge-runtime checks used a stand-in main service whose first worker booted in 171–203 s (Docker bind mount); they verify the switch only. R5 remains the cold-start evidence.
+- **Out of scope, noticed:** the hosted rate-limiter client-address header is still unverified (R5 item); admin-web has no control to roll back to an older graph (the RPC works but is refused while an active closure lacks a mapping to it); Android `tsc` reports 3 typed-route complexity errors in `external-link.tsx` (unmodified, other session's types).
+
+**Open actions to finish R10a** (none is authorized or started):
+
+1. DRRM confirms the five remaining centers' locations and entrances (precondition P1 of the field protocol).
+2. Owner authorizes a hosted rehearsal of `EVACUATION_ROUTE_ENABLED` and the pilot-load probe.
+3. Developer and DRRM run `field-protocol.md` on a physical phone and record each result.
+
+*Progress note, 2026-10-15 (R10a):* Baseline: `packages/shared` vitest 34 files / 524 pass, `tsc` 5 pre-existing errors (`id-evidence.ts` ×2, `service-catalog.test.ts` ×3), `supabase/functions` 5 files / 72 pass. After: shared 34 / 525 pass (+1), same 5 `tsc` errors; functions 5 / 76 pass (+4: flag parsing, paused path, resume without restart, 25-origin connected/local agreement); handler and test `tsc` 0 errors; Android `vitest` 14 / 126, `tsc` 3 errors, all in the unmodified `external-link.tsx` (typed-route complexity; not caused by this work, no Android baseline taken before editing); web `tsc` 0 errors. Mutation check: removing the pause check fails 2 tests. Real supabase-edge-runtime 1.76.2 (stand-in main service, dummy upstream): flag `false` and a mistyped value (`off`, logged `rollout_flag_invalid`) → `503 service_disabled`; flag unset → request proceeds past the switch (dummy upstream: `503 conditions_unavailable`). Nothing deployed, no secret set, no migration, no hosted write. Remaining R10a: the field protocol on a physical phone with DRRM, after the five centers' entrances are confirmed; hosted rollback rehearsal. R10b: paused.
 
 ## 6. Completion evidence and release rules
 
@@ -747,6 +809,8 @@ Run shared routing tests, affected workspace type/lint/build checks and function
 
 Separate flags control connected routing, Android packs, sensor penalties and BFS exclusions. A server kill switch does not revoke already-offline Android data.
 
+Current mapping (R10a): connected routing = function secret `EVACUATION_ROUTE_ENABLED`; Android packs = the area's active graph version plus the bundled pack (no remote revoke); sensor penalties and BFS advisory/exclusion = `DEFAULT_ACTIVATION` stages in `model-activation.ts`, all off and read by nothing yet (R10b). Procedure: `plans/Resident_DRRM_Routing_Release_Recovery_Runbook.md`.
+
 The final release must preserve known restrictions, state the age of its information, and provide a usable outcome when location, connectivity, data or routing fails.
 
 ## 7. Previously open matters — now resolved
@@ -755,10 +819,12 @@ The four earlier open items are settled in the "Resolved decisions" table at the
 
 | Action | Owner | If it does not happen |
 |---|---|---|
-| Obtain coordinates and current Alert/Alarm/Critical levels for the PAGASA stations nearest San Mateo (Table 1: San Mateo-1, Montalban, Nangka, Rodriguez), and confirm real update cadence | Developer | Stage 2 and BFS stay off; closure routing ships. |
+| Obtain coordinates and current Alert/Alarm/Critical levels for the PAGASA stations nearest San Mateo (Table 1: San Mateo-1, Montalban, Nangka, Rodriguez), and confirm real update cadence | Developer | Stage 2 and BFS stay off; closure routing ships. **State (2026-10-15): paused by the owner.** Academic request letter drafted (to PAGASA, via the Administrator, attention HMD Chief); signatories and group details being completed; not yet sent. Public values read once on 2026-10-15 match Table 1 but are unverified (evidence snapshot). Resume when PAGASA replies. |
 | Provide or review past flood extents, closure logs and photos for Ampid I; verify bridge/road closures through admin-web | Barangay DRRM | R9 has no ground truth; stage 4 cannot start. |
 | Request a licensed DEM of adequate vertical accuracy (candidates to check: NAMRIA IfSAR, Project NOAH/LiDAR products — availability and licence unconfirmed) | Developer | BFS limited to shadow/advisory at best. |
 | Confirm the t(e) bound and Table 1 values visually against the PDF | Developer (R0) | Constants not committed. |
 | Supply a physical Android phone for the location matrix | Developer | R1/R10 remain pending. |
+| Confirm the location, entrance and availability of the five remaining centers (hosted: two routable, five not) | Barangay DRRM | R10a drill is mostly unroutable; run nothing until done. |
+| Authorize a hosted rehearsal of the connected-routing pause switch and a pilot-load run of `load-probe.mjs` | Owner | R10a rollback and the 3 s load target stay unverified on the deployed function. |
 
 **RRL licence:** CC BY-NC 4.0. Keep the citation, and note the non-commercial terms if Barangayan is ever distributed commercially.

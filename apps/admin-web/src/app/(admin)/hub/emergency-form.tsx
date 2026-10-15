@@ -195,7 +195,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
 
       <label className="text-sm">
         <span className={labelClass}>Category</span>
-        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+        <AdminSelect kind="hub" className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
           <option value="guidelines">Guidelines</option>
           <option value="hotlines">Hotlines</option>
         </AdminSelect>

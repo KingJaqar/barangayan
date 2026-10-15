@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { preview } from './preview.mjs';
 
-const evidence = path.resolve(import.meta.dirname, '../../../../plans/evidence/admin-dropdown-ui');
+const evidence = process.env.DROPDOWN_TEST_EVIDENCE_DIR ? path.resolve(process.env.DROPDOWN_TEST_EVIDENCE_DIR) : path.resolve(import.meta.dirname, '../../../../plans/evidence/admin-dropdown-ui');
+fs.mkdirSync(evidence, { recursive: true });
 const server = await preview({ fixture: path.join(import.meta.dirname, 'fixture.tsx'), screens: path.resolve(import.meta.dirname, '../table-browse/record-fixture.jsx') });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const report = { checks: [], errors: [], warnings: [], limitations: ['Isolated actual frontend components; synthetic records and mocked persistence/navigation. No hosted-data writes.'] };

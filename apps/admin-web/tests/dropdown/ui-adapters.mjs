@@ -1,4 +1,4 @@
-export { mutateAdminRecord, logAdminAction } from '../table-browse/record-adapters.js';
+export { mutateAdminRecord, logAdminAction, loadRequestReview } from '../table-browse/record-adapters.js';
 
 const audit = { id: 'notification-1', barangay_id: 'fixture-barangay', admin_id: null, action: 'create', entity_type: 'announcement',
   entity_id: 'fixture-announcement', entity_label: 'Fixture Announcement', changes: null, metadata: null, is_read: false, created_at: '2026-10-14T08:00:00Z' };

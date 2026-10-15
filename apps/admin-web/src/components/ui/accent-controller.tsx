@@ -59,8 +59,8 @@ function applyAccentVar(color: string) {
  * theme-controller.tsx's hasStoredTheme(), gating theme-form.tsx's DB reconciliation to a
  * genuinely first-ever visit instead of clobbering a live pick on every /theme visit. */
 export function hasStoredAccent(): boolean {
-  if (typeof localStorage === 'undefined') return true;
   try {
+    if (typeof localStorage === 'undefined') return true;
     return localStorage.getItem(STORAGE_KEY) !== null;
   } catch {
     return true;
@@ -83,8 +83,8 @@ export const ACCENT_INIT_SCRIPT = `
 `;
 
 function readStoredCustomColors(): string[] {
-  if (typeof localStorage === 'undefined') return [];
   try {
+    if (typeof localStorage === 'undefined') return [];
     const raw = localStorage.getItem(CUSTOM_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);

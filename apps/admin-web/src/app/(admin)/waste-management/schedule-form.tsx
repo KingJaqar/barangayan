@@ -105,7 +105,7 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
     <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
       <label className="text-sm">
         <span className={labelClass}>Zone</span>
-        <AdminSelect className={inputClass} value={zoneId} onValueChange={(nextValue) => setZoneId(nextValue)} required>
+        <AdminSelect kind="zone" className={inputClass} value={zoneId} onValueChange={(nextValue) => setZoneId(nextValue)} required>
           <option value="">Select a zone</option>
           {zones.map((z) => (
             <option key={z.id} value={z.id}>{z.name}</option>
@@ -115,7 +115,7 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
 
       <label className="text-sm">
         <span className={labelClass}>Waste Type</span>
-        <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
+        <AdminSelect kind="waste" className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
           {WASTE_TYPES.map((t) => (
             <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
           ))}

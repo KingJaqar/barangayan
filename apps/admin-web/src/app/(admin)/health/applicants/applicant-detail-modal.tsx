@@ -230,7 +230,7 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
                   </label>
                   <label className="text-sm">
                     <span className="mb-1 block font-medium">PWD</span>
-                    <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
+                    <AdminSelect kind="pwd" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
                       <option value="false">No</option>
                       <option value="true">Yes</option>
                     </AdminSelect>

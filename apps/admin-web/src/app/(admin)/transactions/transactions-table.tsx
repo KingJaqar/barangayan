@@ -295,7 +295,7 @@ function AddTransactionForm({
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Method</span>
-        <AdminSelect className={inputClass} value={method} onValueChange={(nextValue) => setMethod(nextValue as 'pickup' | 'qrph')}>
+        <AdminSelect kind="payment" className={inputClass} value={method} onValueChange={(nextValue) => setMethod(nextValue as 'pickup' | 'qrph')}>
           {METHOD_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
@@ -593,7 +593,7 @@ export function TransactionsTable({
       render: (p) => p.service_requests?.profiles?.full_name ?? '—',
       edit: {
         canEdit: () => !optionsError,
-        type: 'select',
+        type: 'select', selectKind: 'people',
         options: residents.map((r) => ({ value: r.id, label: r.full_name })),
         getValue: (p) => p.service_requests?.resident_id ?? '',
         onSave: (p, value) => updateLinkedRequest(p, { resident_id: String(value) }),
@@ -608,7 +608,7 @@ export function TransactionsTable({
       render: (p) => p.service_requests?.document_types?.name ?? '—',
       edit: {
         canEdit: () => !optionsError,
-        type: 'select',
+        type: 'select', selectKind: 'document',
         options: documentTypes.map((d) => ({ value: d.id, label: d.name })),
         getValue: (p) => p.service_requests?.document_type_id ?? '',
         onSave: (p, value) => updateLinkedRequest(p, { document_type_id: String(value) }),
@@ -622,7 +622,7 @@ export function TransactionsTable({
       wrap: 'nowrap',
       render: (p) => (p.method === 'qrph' ? 'QR PH' : 'Pay at Pickup'),
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'payment',
         options: METHOD_OPTIONS,
         getValue: (p) => p.method,
         onSave: (p, value) => updateField(p, { method: String(value) }),
@@ -656,7 +656,7 @@ export function TransactionsTable({
       wrap: 'nowrap',
       render: (p) => <StatusPill status={p.status} />,
       edit: {
-        type: 'select',
+        type: 'select', selectKind: 'status',
         options: STATUS_OPTIONS,
         getValue: (p) => p.status,
         onSave: (p, value) =>
@@ -679,7 +679,7 @@ export function TransactionsTable({
       edit: (p): EditableCellConfig<Payment> | undefined =>
         optionsError && p.method === 'pickup' ? undefined : p.method === 'pickup'
           ? {
-              type: 'select',
+              type: 'select', selectKind: 'people',
               options: admins.map((a) => ({ value: a.id, label: a.full_name })),
               getValue: () => p.collected_by ?? '',
               onSave: (row, value) => updateField(row, { collected_by: String(value) || null }),
@@ -753,7 +753,7 @@ export function TransactionsTable({
       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
         category={<div className="table-browse-field"><label htmlFor="transactions-method">Method</label>
-          <AdminSelect id="transactions-method" value={state.filters.method} onValueChange={nextValue => void browse.commit({ filters: { method: nextValue } })}>
+          <AdminSelect kind="payment" id="transactions-method" value={state.filters.method} onValueChange={nextValue => void browse.commit({ filters: { method: nextValue } })}>
             <option value="">All Methods</option>
             {METHOD_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
           </AdminSelect></div>}

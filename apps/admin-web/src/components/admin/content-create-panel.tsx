@@ -51,8 +51,8 @@ export function ContentCreatePanel({ title, description, forms }: {
   </div>;
 }
 
-export function ContentSideSheet({ id, form, open, onClose }: {
-  id: string; form: CreateForm; open: boolean; onClose: () => void;
+export function ContentSideSheet({ id, form, open, onClose, className }: {
+  id: string; form: CreateForm; open: boolean; onClose: () => void; className?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const motion = useMountTransition(open);
@@ -104,7 +104,7 @@ export function ContentSideSheet({ id, form, open, onClose }: {
     }}
     onCancel={event => { event.preventDefault(); onClose(); }}>
     <div className={`${styles.backdrop} ${SIDE_SHEET_FADE_TRANSITION} ${visible ? 'opacity-100' : 'opacity-0'}`} aria-hidden="true" onClick={onClose} />
-    <section className={`${styles.sheet} ${SIDE_SHEET_SLIDE_TRANSITION} ${visible ? 'translate-x-0' : 'translate-x-full'}`} onTransitionEnd={onTransitionEnd}>
+    <section className={`${styles.sheet} ${className ?? ''} ${SIDE_SHEET_SLIDE_TRANSITION} ${visible ? 'translate-x-0' : 'translate-x-full'}`} onTransitionEnd={onTransitionEnd}>
       <div className={styles.panelHeader}>
         <div>
           <h2 id={`${id}-title`} className="text-lg font-semibold tracking-tight">{form.title}</h2>

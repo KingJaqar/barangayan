@@ -9,9 +9,12 @@ The plan recorded an owner decision (2026-10-15) not to start Phase 4 until its 
 | Entry item | State on 2026-10-15 (re-read this session) |
 |---|---|
 | Phase 3 exit | Partially complete. Hosted migration history lists `0121`–`0124` (read-only `list_migrations`); the stray row `20261015003812` is still present; `delete-my-account` freshness deploy and the hosted invariant run are not done. |
-| Phase 1 exit | In progress: PR-03 (URL scheme / OAuth callback allowlist) open. |
+| Phase 1 exit | Verified (non-device scope, OD-06/OD-07) after the owner skipped PR-03 (URL scheme / OAuth callback allowlist). |
 | PR-06 | Open: Apple provider on hosted not confirmed. |
-| PR-18 | Open: the iOS `.env` has no `EXPO_PUBLIC_BARANGAY_ID` / `EXPO_PUBLIC_ENVIRONMENT`, so the app cannot start and no flow could be exercised end to end. |
+| PR-03 | Skipped (OD-07, 2026-10-15). No scheme exists, so the Google browser flow fails closed. |
+| PR-18 | Skipped (OD-07, 2026-10-15). The iOS `.env` has no `EXPO_PUBLIC_BARANGAY_ID` / `EXPO_PUBLIC_ENVIRONMENT`, so the app shows its "unavailable" screen; no flow was or can be exercised end to end. |
+
+After this record was first written, the owner instructed "skip PR-03 and PR-18" (decision-register OD-07). Consequences recorded here: T01–T07 are marked Verified on the non-device standard only (nothing was rendered or driven), T08 and all live-app and real-provider runs are Skipped rather than blocked, and the Phase 3 exit and PR-06 remain the only open items.
 
 ## 2. Dependencies
 
@@ -72,9 +75,11 @@ New files: `src/auth/*` (pure modules: request gate, setup status/routing, provi
 
 Not run: any on-device or simulator run, any real Supabase/Google/Apple exchange, any screen interaction (the app cannot start without PR-18), hosted RPC call of the v2 function.
 
-## 6. Pending manual verification (owner-attended)
+## 6. Manual verification if PR-03/PR-18 are ever supplied (skipped by OD-07)
 
-1. Supply PR-18 (tenant ID, environment) and PR-03 (`IOS_URL_SCHEME`; add `<scheme>://auth/callback` to the Supabase redirect allowlist; check P01-D05 if `barangayan` is chosen).
+These steps were not performed and are not required while OD-07 stands; they are the steps that reopen if the owner later supplies a scheme and tenant configuration.
+
+1. Supply PR-18 (tenant ID, environment) and PR-03 (`IOS_URL_SCHEME`; add `<scheme>://auth/callback` to the Supabase redirect allowlist; check P01-D05 if `barangayan` is chosen). *(Both skipped by OD-07.)*
 2. Enable the Apple provider on hosted (PR-06) with the matching service/bundle identifiers, and Manual Linking if "Link Google account" is to work.
 3. Email signup: register with a fresh address → code → details → password → Home; kill the app after the code step and after details, relaunch, confirm resumption from server status.
 4. Google: sign up and sign in; cancel the browser; replay the callback link; start from account A and answer with account B (expect rejection and sign-out of B).

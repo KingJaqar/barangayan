@@ -12,8 +12,8 @@ const STORAGE_KEY = 'barangayan-web-theme';
  * browser/device), never on a routine navigation to /theme where it would clobber a theme
  * the admin already set locally. See theme-form.tsx. */
 export function hasStoredTheme(): boolean {
-  if (typeof localStorage === 'undefined') return true; // SSR: don't force a client-only sync
   try {
+    if (typeof localStorage === 'undefined') return true; // SSR: don't force a client-only sync
     return localStorage.getItem(STORAGE_KEY) !== null;
   } catch {
     return true; // storage disabled — treat as "already decided", never override live state

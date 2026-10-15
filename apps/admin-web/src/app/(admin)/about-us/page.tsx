@@ -27,14 +27,7 @@ export default async function AboutUsPage() {
     : { data: [] };
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">About Us</h1>
-        <p className="text-sm text-zinc-500">
-          Manage the barangay profile, mission/vision, and development team shown to residents.
-        </p>
-      </div>
-
+    <div className="mx-auto w-full max-w-6xl">
       <AboutUsForm barangayId={barangayId} initialAbout={about ?? null} initialDevelopers={developers ?? []} />
     </div>
   );

@@ -21,4 +21,9 @@ export type ResidentAccountSetupFunctions = {
     Args: Record<PropertyKey, never>;
     Returns: string;
   };
+  // Migration 0123 (resident iOS Phase 3): whole-list household save with a stale-list check.
+  save_resident_household_if_unchanged: {
+    Args: { p_members: Json; p_expected: Json };
+    Returns: Json;
+  };
 };

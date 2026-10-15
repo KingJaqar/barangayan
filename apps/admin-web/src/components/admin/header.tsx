@@ -27,16 +27,18 @@ const ICON_STROKE = { strokeWidth: 2.5, strokeLinecap: 'round', strokeLinejoin: 
 interface HeaderProps {
   barangayName: string;
   adminName: string;
+  adminAvatarUrl?: string | null;
   barangayId: string;
   sidebarCollapsed: boolean;
   onToggleSidebar: () => void;
   onLogout: () => void;
 }
 
-export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, onToggleSidebar, onLogout }: HeaderProps) {
+export function Header({ barangayName, adminName, adminAvatarUrl, barangayId, sidebarCollapsed, onToggleSidebar, onLogout }: HeaderProps) {
   const router = useRouter();
   const { requestLeave } = useProfileNavigation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifFilter, setNotifFilter] = useState<NotificationFilter>('all');
   // Split in two so the drawer can play its exit animation before actually
@@ -116,7 +118,8 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
         </button>
 
         {showNotifications ? (
-          <DropdownSurface anchor={notifTrigger} onDismiss={closeNotifications} width={416} role="region" aria-label="Notifications"
+          <DropdownSurface anchor={notifTrigger} onDismiss={closeNotifications} width={416} maxHeight={640} role="region" aria-label="Notifications"
+            style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
             onKeyDown={event => {
               if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeNotifications(); notifTrigger.current?.focus({ preventScroll: true }); }
               if (event.key === 'Tab') {
@@ -125,7 +128,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
               }
             }}>
             {/* Header */}
-            <div className="border-b border-black/10 px-4 py-3 dark:border-white/10">
+            <div className="shrink-0 border-b border-black/10 px-4 py-3 dark:border-white/10">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-sm font-semibold">Notifications</span>
                 <div className="flex items-center gap-3">
@@ -153,7 +156,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
             </div>
 
             {/* Filter chips — every module, always shown, horizontally scrollable */}
-            <div className="border-b border-black/10 px-2 py-2 dark:border-white/10">
+            <div className="shrink-0 border-b border-black/10 px-2 py-2 dark:border-white/10">
               <ScrollableChipRow className="px-1" edgeFromClassName="from-white dark:from-zinc-900">
                 <FilterChip active={notifFilter === 'all'} onClick={() => setNotifFilter('all')}>
                   All
@@ -172,7 +175,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
 
             {/* List — themed thin scrollbar + edge fade so the cut-off blends into the card */}
             <div
-              className={`max-h-[32rem] overflow-y-auto ${THEMED_SCROLLBAR_CLASS}`}
+              className={`min-h-0 flex-1 overflow-y-auto overscroll-contain ${THEMED_SCROLLBAR_CLASS}`}
               style={{
                 maskImage: 'linear-gradient(to bottom, transparent, black 10px, black calc(100% - 10px), transparent)',
                 WebkitMaskImage:
@@ -239,8 +242,10 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
           aria-haspopup="menu"
           onKeyDown={event => { if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); setShowProfileMenu(true); } }}
           className={`flex items-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${styles.profile}`}>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold dark:bg-zinc-700">
-            {adminName.charAt(0).toUpperCase() || 'A'}
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-bold dark:bg-zinc-700" aria-hidden="true">
+            {adminAvatarUrl && failedAvatarUrl !== adminAvatarUrl ? (
+              <Image src={adminAvatarUrl} alt="" width={30} height={30} unoptimized className="h-full w-full object-cover" onError={() => setFailedAvatarUrl(adminAvatarUrl)} />
+            ) : adminName.charAt(0).toUpperCase() || 'A'}
           </span>
           <span className="hidden sm:inline">{adminName}</span>
           <ChevronDown className="size-3.5 text-zinc-400" {...ICON_STROKE} />

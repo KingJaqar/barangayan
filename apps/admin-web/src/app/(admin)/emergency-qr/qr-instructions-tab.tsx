@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { ArrowUpRight, BookOpen, Pencil, ScanLine } from 'lucide-react';
+import styles from './emergency-qr.module.css';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -68,62 +70,61 @@ export function QrInstructionsTab({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <div className="flex flex-col gap-4">
-        {['why_scan', 'how_it_works'].map((section) => {
+    <div className={styles.instructionsGrid}>
+      <div className={styles.editorColumn}>
+        <div className={styles.sectionHeading}>
+          <p className={styles.eyebrow}>01 / Resident guidance</p>
+          <h2>A little clarity goes a long way.</h2>
+          <p>Edit the guidance residents read before they scan. Active sections are visible in the resident app.</p>
+        </div>
+        {['why_scan', 'how_it_works'].map((section, index) => {
           const record = content.find((c) => c.section === section);
           const meta = SECTION_META[section];
           const isActive = record?.is_active ?? true;
           const steps = Array.isArray(record?.content) ? record.content.length : 0;
+          const Icon = section === 'why_scan' ? ScanLine : BookOpen;
 
           return (
-            <div
-              key={section}
-              className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900">
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold">{meta.label}</span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                        isActive
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
-                          : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300'
-                      }`}>
-                      {isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm text-zinc-500">{record?.title ?? 'Not configured'}</p>
-                  <p className="mt-0.5 text-xs text-zinc-400">
-                    {steps} steps
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    onClick={() => setEditingSection(section)}
-                    title="Edit"
-                    className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">
-                    ✏️ Edit
-                  </button>
-                  <label className="relative inline-flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      checked={isActive}
-                      onChange={() => toggleActive(section, isActive)}
-                      className="peer sr-only"
-                    />
-                    <div className="h-5 w-9 rounded-full bg-zinc-200 peer-checked:bg-[var(--accent)] dark:bg-zinc-700 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-all peer-checked:after:translate-x-full"></div>
+            <article key={section} className={styles.instructionCard}>
+              <div className={styles.cardTop}>
+                <span className={styles.iconTile}><Icon size={22} aria-hidden="true" /></span>
+                <span className={styles.number}>0{index + 1}</span>
+              </div>
+              <div className={styles.cardTitle}>
+                <h3>{meta.label}</h3>
+                <span className={styles.badge} data-active={!!record && isActive}>
+                  {record ? (isActive ? 'Active' : 'Inactive') : 'Not configured'}
+                </span>
+              </div>
+              <p className={styles.cardDescription}>{record?.title ?? 'Add guidance to help residents check in with confidence.'}</p>
+              <div className={styles.cardFooter}>
+                <span className={styles.muted}>{steps} {steps === 1 ? 'step' : 'steps'}</span>
+                <div className={styles.cardActions}>
+                  <label className={styles.toggle}>
+                    <input type="checkbox" checked={!!record && isActive} disabled={!record}
+                      aria-label={`Show ${meta.label} in resident app`}
+                      onChange={() => toggleActive(section, isActive)} />
+                    <span aria-hidden="true" />
                   </label>
+                  <button onClick={() => setEditingSection(section)} className={styles.editButton}
+                    aria-label={`Edit ${meta.label}`}>
+                    <Pencil size={14} aria-hidden="true" /> Edit <ArrowUpRight size={14} aria-hidden="true" />
+                  </button>
                 </div>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
 
-      <div className="lg:sticky lg:top-6 lg:self-start">
+      <aside className={styles.previewPanel} aria-label="Resident app preview">
+        <div className={styles.previewHeading}>
+          <div><p className={styles.eyebrow}>The resident view</p><h2>Small screen. Clear steps.</h2></div>
+          <span className={styles.badge}>Preview</span>
+        </div>
         <MobilePreviewCard whyScan={whyScan} howItWorks={howItWorks} />
-      </div>
+        <p className={styles.previewCaption}>A preview of your current instructional content.</p>
+      </aside>
 
       {editingSection && (
         <QrInstructionsModal

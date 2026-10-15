@@ -171,7 +171,7 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
         <div className="grid grid-cols-4 gap-3">
           <label className="text-sm">
             <span className={labelClass}>Waste Type</span>
-            <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
+            <AdminSelect kind="waste" className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
               {WASTE_TYPES.map((t) => (
                 <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
               ))}
