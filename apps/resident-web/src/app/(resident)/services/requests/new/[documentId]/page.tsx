@@ -16,13 +16,11 @@ import { NewRequestForm } from './new-request-form';
  */
 export default async function NewRequestPage({ params }: { params: Promise<{ documentId: string }> }) {
   const { documentId } = await params;
-  const { user } = await requireUser();
+  await requireUser();
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: doc, error: docError }, { data: profile }] = await Promise.all([
-    supabase.from('document_types').select('*').eq('id', documentId).eq('is_active', true).single(),
-    supabase.from('profiles').select('full_name, mobile_number').eq('id', user.id).single(),
-  ]);
+  const { data: doc, error: docError } = await supabase
+    .from('document_types').select('*').eq('id', documentId).eq('is_active', true).single();
 
   if (!doc) {
     if (isMissingRow(docError)) notFound();
@@ -40,7 +38,7 @@ export default async function NewRequestPage({ params }: { params: Promise<{ doc
         <p className="text-sm text-muted-foreground">Confirm your details and add any notes for the barangay staff.</p>
       </div>
 
-      <NewRequestForm doc={doc} residentName={profile?.full_name ?? null} residentMobile={profile?.mobile_number ?? null} />
+      <NewRequestForm doc={doc} />
     </div>
   );
 }

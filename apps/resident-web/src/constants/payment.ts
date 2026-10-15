@@ -28,7 +28,7 @@ export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
   },
   {
     key: 'qrph',
-    label: 'QR PH',
+    label: 'Pay with QR PH',
     subtitle: "Pay instantly via GCash, Maya, or your bank's QR PH app.",
     icon: QrCode,
   },

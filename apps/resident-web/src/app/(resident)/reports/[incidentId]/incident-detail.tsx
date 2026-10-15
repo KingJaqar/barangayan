@@ -13,6 +13,7 @@ import { uniqueChannelName } from '@/lib/realtime-channel';
 import { incidentStatusMeta } from '@/constants/incident-status';
 import { renderIonicon } from '@/lib/ionicon-map';
 import { IncidentLocationMapWrapper } from '@/components/reports/incident-location-map-wrapper';
+import styles from '@/components/reports/reports.module.css';
 
 type IncidentCategoryRow = { id: string; name: string; color: string | null; icon: string | null };
 
@@ -46,7 +47,7 @@ function isWithinWithdrawWindow(createdAt: string): boolean {
   return Date.now() - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
 }
 
-const CARD = 'rounded-2xl border border-black/8 bg-white p-4 shadow-sm dark:border-white/8 dark:bg-zinc-900';
+const CARD = styles.detailCard;
 
 // ─── Info row ──────────────────────────────────────────────────────────────
 
@@ -301,16 +302,14 @@ export function IncidentDetailBody({ incident: initial, onWithdrawn }: { inciden
       <div className={CARD}>
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-lg font-bold leading-snug tracking-tight">{incident.title}</h1>
-          <span className={`flex-shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${meta.className}`}>
-            {meta.label}
+          <span className={styles.status} data-status={incident.status}>
+            <span aria-hidden="true" />{meta.label}
           </span>
         </div>
 
         {category && (
-          <div
-            className="mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
-            style={{ backgroundColor: `${category.color ?? 'var(--accent)'}20`, color: category.color ?? 'var(--accent)' }}>
-            {renderIonicon(category.icon, { size: 13, color: category.color ?? 'var(--accent)' })}
+          <div className={styles.detailCategory}>
+            {renderIonicon(category.icon, { size: 13, color: 'currentColor' })}
             {category.name}
           </div>
         )}

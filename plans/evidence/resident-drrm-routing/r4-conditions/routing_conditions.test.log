@@ -1,0 +1,82 @@
+1..81
+ok 1 - Each new center takes the next area revision
+ok 2 - Availability defaults to unknown
+ok 3 - Center creation is recorded in the routing history
+ok 4 - Anonymous callers read the snapshot revision
+ok 5 - Snapshot lists every non-deleted center of the area
+ok 6 - No graph is active before registration
+ok 7 - Empty closure list is a successful snapshot
+ok 8 - Unknown area is reported, not empty
+ok 9 - Malformed graph version is rejected
+ok 10 - Anonymous callers cannot publish closures
+ok 11 - Anonymous callers cannot read closure tables
+ok 12 - Residents cannot register graph versions
+ok 13 - Residents cannot read routing areas
+ok 14 - Another barangay's administrator cannot register a graph
+ok 15 - Another barangay's administrator cannot read the area
+ok 16 - Closures need an active graph
+ok 17 - Graph version must belong to the area
+ok 18 - Administrator registers and activates the first graph
+ok 19 - Active graph recorded
+ok 20 - Publishing against a stale graph version is refused
+ok 21 - At least one segment is required
+ok 22 - Duplicate segment ids are rejected
+ok 23 - Geometry must have one line per segment
+ok 24 - Non-numeric coordinates are rejected
+ok 25 - A reason is required
+ok 26 - Observation time cannot be in the future
+ok 27 - Publication returns the new area revision
+ok 28 - Label is trimmed
+ok 29 - Observation time is kept separate from publication time
+ok 30 - Publication is written to the admin audit log
+ok 31 - Administrators cannot insert closures directly
+ok 32 - Administrators cannot update closures directly
+ok 33 - Administrators cannot delete closures directly
+ok 34 - Administrators cannot forge history
+ok 35 - Administrators cannot rewrite the revision
+ok 36 - Another barangay's administrator cannot read closures
+ok 37 - Another barangay's administrator cannot reopen a closure
+ok 38 - Verified closures are never deleted
+ok 39 - Published closures are never edited
+ok 40 - History rows are immutable
+ok 41 - History rows cannot be deleted
+ok 42 - Snapshot carries the closure edges for the active graph
+ok 43 - Unknown graph versions are reported as unregistered
+ok 44 - Closures without a mapping stay listed as unmapped, never dropped
+ok 45 - Availability change takes the area revision (client value ignored)
+ok 46 - Availability change time is recorded
+ok 47 - Non-routing edits do not change the center revision
+ok 48 - Non-routing edits add no routing history
+ok 49 - Entrances more than 250 m away are rejected
+ok 50 - Administrator sets a reviewed entrance
+ok 51 - Another barangay's administrator cannot set entrances
+ok 52 - Snapshot carries the entrance node for the active graph
+ok 53 - Snapshot carries availability
+ok 54 - Moving a center clears its entrance
+ok 55 - A moved center is unroutable in the snapshot
+ok 56 - Entrance can be reviewed again after a move
+ok 57 - Another barangay's administrator cannot clear entrances
+ok 58 - Administrator clears an entrance
+ok 59 - Clearing an entrance removes its graph mappings
+ok 60 - Entrance can be set again after clearing
+ok 61 - Deactivated centers stay in the snapshot as inactive
+ok 62 - Inactive centers expose no routable position
+ok 63 - Archived centers become tombstones
+ok 64 - Hard-deleted centers become tombstones
+ok 65 - Removed centers leave the center list
+ok 66 - Reopening needs a reason
+ok 67 - A closure is reopened only once
+ok 68 - Reopened closures leave the active list
+ok 69 - Reopened closures appear as tombstones at the reopening revision
+ok 70 - A second graph can be registered without activation
+ok 71 - Activation is refused while a closure or entrance is unmapped
+ok 72 - Mappings on the active graph cannot be changed
+ok 73 - Closure is mapped onto the new graph
+ok 74 - Activation still waits for the unmapped entrance
+ok 75 - Entrance is mapped onto the new graph
+ok 76 - Activation succeeds once every restriction is mapped
+ok 77 - Snapshot of the new active graph uses its mapping
+ok 78 - Previous graph stays registered for devices that still hold it
+ok 79 - Previous graph keeps its own mapping
+ok 80 - History revisions strictly increase
+ok 81 - The area revision equals the latest history revision

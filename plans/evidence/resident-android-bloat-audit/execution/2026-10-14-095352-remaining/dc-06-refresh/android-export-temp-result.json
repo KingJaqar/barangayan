@@ -1,0 +1,17 @@
+{
+  "id": "android-export-temp",
+  "stage": "dc-06-refresh",
+  "args": [
+    "C:\\Users\\User\\barangayan\\node_modules\\expo\\bin\\cli",
+    "export",
+    "--platform",
+    "android",
+    "--output-dir",
+    "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-bloat-audit\\execution\\2026-10-14-095352-remaining\\dc-06-refresh\\android-export-temp"
+  ],
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "startedAt": "2026-10-14T10:56:16.010Z",
+  "finishedAt": "2026-10-14T10:58:19.001Z",
+  "exitCode": 0,
+  "signal": null
+}

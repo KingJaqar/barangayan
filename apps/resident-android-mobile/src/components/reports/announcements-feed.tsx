@@ -220,8 +220,4 @@ const styles = StyleSheet.create({
   separator: {
     height: Spacing.two - 2,
   },
-  empty: {
-    textAlign: 'center',
-    marginTop: Spacing.six,
-  },
 });

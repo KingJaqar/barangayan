@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { HouseholdMember } from '@/hooks/use-family-members';
+import styles from './emergency.module.css';
 
 const RELATIONS = ['Spouse', 'Child', 'Parent', 'Sibling', 'Grandparent', 'Grandchild', 'Other'] as const;
 const ROLES = ['Head of Family', 'Student', 'Employed', 'Unemployed', 'Retired', 'Minor'] as const;
@@ -84,9 +85,10 @@ export function FamilyMemberDialog({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className={styles.dialog}>
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Edit Family Member' : 'Add Family Member'}</DialogTitle>
+          <DialogDescription>Keep your household details ready for emergency check-in.</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 text-left">
@@ -104,7 +106,7 @@ export function FamilyMemberDialog({
                   type="button"
                   aria-pressed={relation === opt}
                   onClick={() => setRelation(opt)}
-                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${relation === opt ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-muted text-muted-foreground'}`}>
+                  className={styles.choice}>
                   {opt}
                 </button>
               ))}
@@ -120,7 +122,7 @@ export function FamilyMemberDialog({
                   type="button"
                   aria-pressed={role === opt}
                   onClick={() => setRole(opt)}
-                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${role === opt ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-muted text-muted-foreground'}`}>
+                  className={styles.choice}>
                   {opt}
                 </button>
               ))}
@@ -148,6 +150,7 @@ export function FamilyMemberDialog({
           ) : null}
           <Button
             type="button"
+            className={styles.primaryButton}
             disabled={!name.trim() || pending === 'remove'}
             loading={pending === 'save'}
             loadingLabel={isEdit ? 'Updating…' : 'Adding…'}

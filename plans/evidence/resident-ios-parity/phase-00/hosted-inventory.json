@@ -1,0 +1,45 @@
+{
+  "capturedOn": "2026-10-13",
+  "method": "Read-only Supabase connector calls list_projects, list_migrations and list_edge_functions. No SQL, writes or configuration changes.",
+  "project": {
+    "ref": "pwjbucnyqexiepoinoke",
+    "name": "Barangayan",
+    "region": "ap-northeast-2",
+    "status": "ACTIVE_HEALTHY",
+    "postgres": "17.6.1.155",
+    "matchesConfiguredPublicUrl": "apps/resident-ios-mobile/.env and apps/resident-android-mobile/.env EXPO_PUBLIC_SUPABASE_URL host",
+    "environmentClassification": "UNCONFIRMED - the only Barangayan project visible; no separate staging project was found. Treat as the shared live backend until an owner states otherwise (prerequisite PR-01)."
+  },
+  "migrations": {
+    "appliedCount": 111,
+    "firstVersion": "0001",
+    "lastVersion": "0113",
+    "lastName": "routing_conditions",
+    "absentVersions": ["0016", "0028"],
+    "matchesRepositoryPrefixes": true,
+    "notes": [
+      "Hosted history contains 0113_routing_conditions, which is an uncommitted (untracked) file in the working tree at the baseline. Repository presence and hosted application now agree by prefix/name only; file-content equality was not checked.",
+      "Hosted names 0104 and 0109 carry a duplicated numeric prefix in the recorded name (0104_google_minimal_resident_profiles, 0109_invalidate_changed_profile_email_verification). Historical; do not renumber.",
+      "AGENTS.md still states the last pushed migration is 0094. Hosted evidence shows 0095-0113 applied. The AGENTS.md numbering rule (next unused prefix after the highest repository prefix) still governs: next was 0114 at capture; concurrent DRRM routing work then added 0114_routing_rate_limits.sql locally, so recheck the highest repository prefix before writing any migration."
+    ]
+  },
+  "edgeFunctions": [
+    { "slug": "create-payment-source", "version": 12, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "check-payment-status", "version": 8, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "paymongo-webhook", "version": 8, "verifyJwt": false, "status": "ACTIVE" },
+    { "slug": "refund-payment", "version": 4, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "cancel-payment", "version": 3, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "export-my-data", "version": 1, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "delete-my-account", "version": 1, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "generate-household-qr", "version": 1, "verifyJwt": true, "status": "ACTIVE" },
+    { "slug": "verify-resident-email", "version": 1, "verifyJwt": true, "status": "ACTIVE" }
+  ],
+  "edgeFunctionNotes": [
+    "All nine repository function directories are deployed. Deployed source equality with the repository was not compared; Phase 3 (P03-T01) owns that reconciliation.",
+    "paymongo-webhook has verify_jwt=false, which is expected for a provider webhook; its signature/replay validation is a Phase 3/10 qualification item, not verified here."
+  ],
+  "notEstablished": [
+    "Grants, RLS, storage policies and function bodies were not inspected (Phase 3).",
+    "No staging/production split, APNs, Apple, EAS or PayMongo configuration is evidenced by these calls."
+  ]
+}

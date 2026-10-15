@@ -1,0 +1,58 @@
+{
+  "status": "failed",
+  "browser": "chrome",
+  "database": "admin_profile_test_21482c0173",
+  "containers": [
+    "admin-profile-db-21482c0173",
+    "admin-profile-inbucket-21482c0173",
+    "admin-profile-auth-21482c0173",
+    "admin-profile-rest-21482c0173",
+    "admin-profile-storage-21482c0173"
+  ],
+  "checks": [
+    "Fresh empty-schema and representative-schema migration rehearsal with real caller roles",
+    "Expired/rate-limited proof, commit-time target retirement and atomic mandatory link/unlink audit failure",
+    "Existing resident_profile_conflict database regression checks",
+    "Existing resident_email_verification database regression checks",
+    "Existing resident_account_setup database regression checks",
+    "Existing admin_record_lifecycle database regression checks",
+    "Existing admin_incident_withdrawal database regression checks",
+    "Request/payment workflow regression output matches its pre-feature baseline; existing failures recorded separately",
+    "Simultaneous conditional saves, competing verified links and duplicate unlinks commit exactly one winner"
+  ],
+  "consoleErrors": [
+    "The resource http://127.0.0.1:51143/_next/static/css/ab92e36af98ebe4f.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. [/staff]"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Dedicated local database cloned from the local 0117 schema; 0118 and 0119 are applied only to this test database.",
+    "Hosted settings are inventoried separately; hosted SMTP delivery and admin callbacks remain unverified.",
+    "Test containers are stopped on completion. The isolated database is preserved; no existing data is deleted."
+  ],
+  "preExistingFailures": [
+    "admin_request_row_workflows: not ok 30 - Versioned accept delegates to guarded SLA",
+    "admin_request_row_workflows: not ok 31 - Versioned SLA running persisted",
+    "admin_request_row_workflows: not ok 32 - Versioned ready delegates to guarded SLA",
+    "admin_request_row_workflows: not ok 34 - Versioned pickup collection succeeds",
+    "admin_request_row_workflows: not ok 35 - Versioned release succeeds after collection",
+    "admin_request_row_workflows: not ok 36 - Versioned released state persisted"
+  ],
+  "localAuthSettings": {
+    "GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED": "true",
+    "GOTRUE_MFA_TOTP_VERIFY_ENABLED": "true",
+    "GOTRUE_PASSWORD_REQUIRED_CHARACTERS": "abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ:0123456789:!\"#$%&'()*+,-./\\:;<=>?@[\\]^_`{|}~",
+    "GOTRUE_MFA_TOTP_ENROLL_ENABLED": "true",
+    "GOTRUE_MAILER_AUTOCONFIRM": "true",
+    "GOTRUE_JWT_EXP": "3600",
+    "GOTRUE_PASSWORD_MIN_LENGTH": "6",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_REAUTHENTICATION": "false",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_CURRENT_PASSWORD": "false"
+  },
+  "nextPid": 35932,
+  "webOrigin": "http://127.0.0.1:51143",
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('cell', { name: 'Regression Invited Staff', exact: true }) to be visible\u001b[22m\n",
+  "visibleFailureState": "Barangayan\n\nProfile E2E Barangay admin\n\n2\nP\nProfile admin\n\nOVERVIEW\n\nDashboard\nProfile\nTheme\n\nOPERATIONS\n\nServices\nAnnouncements\nRequests\nTransactions\n\nDIRECTORIES & MAPPING\n\nResident directory\nIncident reports\nIncident map\nHealth\nMedical Applicants\nWaste Management\n\nEMERGENCY & DRRM\n\nHub\nEvacuation Centers\nEvacuation Routing\nEmergency QR\nHouseholds & Residents\n\nADMINISTRATION\n\nStaff member\nFAQ content\nTerms & Privacy\nAbout Us\nSettings\nArchives\nLogout\nStaff & Admin Accounts\n\nInvite and manage barangay staff and administrator accounts.\n\nBrowse archived records\n\nTotal Employees\n\n4\n\nAdmins\n\n0\n\nStaff\n\n4\n\nSearch\nSort by\nName\nName\nOfficial role\nEmail\nHired\nStaff-record creation\nStaff-record modification\nAccount-profile modification\nDirection\nA–Z\nA–Z\nZ–A\nOfficial role\nAll roles\nAll roles\nAdministrator\nStaff\nBarangay Captain\nKagawad\nSK Chairman\nSecretary\nTreasurer\nBarangay Health Worker\nTanod\nClerk\nAll\nAdmins\nStaff\n+ Add Staff\n#\n\tName\n\tRole\n\tEmail\n\t\nMOBILE\n\t\nADDRESS\n\tHired\n\t\nACTIONS\n\n1\tProfile admin\tStaff\tcontact-admin@example.test\t09172222222\tLegacy admin address\tOct 15, 2026\t\n\n2\tProfile inactive\tStaff\tcontact-inactive@example.test\t—\tLegacy inactive address\tOct 15, 2026\t\n\n3\tProfile otherAdmin\tStaff\tcontact-otherAdmin@example.test\t—\tLegacy otherAdmin address\tOct 15, 2026\t\n\n4\tRegression Invited Staff\tStaff\tprofile-invited-21482c0173@example.test\t—\t—\tOct 15, 2026\t\n\n\n\n\n\n\n\nShowing 1–4 of 4\nRows per page\n10\n10\n20\n30\n50\n100\nPage 1 of 1\nName, A–Z; Showing 1–4 of 4",
+  "focusAtFailure": {
+    "tag": "BODY"
+  }
+}

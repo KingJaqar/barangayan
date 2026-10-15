@@ -1,13 +1,16 @@
 'use client';
 
 import { formatDateTime } from '@barangayan/shared';
-import { CalendarDays, RotateCw, TriangleAlert } from 'lucide-react';
+import { Bell, CalendarDays, ChevronDown, RotateCw, TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { InlineReadError } from '@/components/shared/inline-read-error';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { PendingHint, Skeleton } from '@/components/ui/loading';
 import { useAnnouncements } from '@/hooks/use-announcements';
+import { EmergencyPageHeader } from '@/components/emergency/emergency-page-header';
+import styles from './emergency.module.css';
+import stickyStyles from '@/components/shared/sticky-tabs.module.css';
 
 type FilterMode = 'all' | 'today' | 'lastWeek' | 'lastMonth' | 'lastYear';
 
@@ -89,13 +92,13 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
   const activeCustomFilterCount = [monthInput, dayInput, yearInput].filter((v) => v.trim().length > 0).length;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-status-error text-white">
-          <TriangleAlert size={14} />
-        </span>
-        <h1 className="text-lg font-bold">Emergency Alerts</h1>
-        {isReady ? <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-muted-foreground">{filteredAlerts.length}</span> : null}
+    <div className={styles.content}>
+      <EmergencyPageHeader title="Emergency Alerts" />
+      <div className={styles.toolbar}>
+        <div className={styles.toolbarTitle}>
+          <h2>Emergency updates</h2>
+          {isReady ? <span className={styles.count}>{filteredAlerts.length} {filteredAlerts.length === 1 ? 'alert' : 'alerts'}</span> : null}
+        </div>
         {/* Quiet refresh hint: decorative, shown only after 120 ms, never announced. */}
         <PendingHint pending={isRefreshing} className="ml-auto gap-1.5 text-xs text-muted-foreground">
           <RotateCw size={12} className="rw-spinner" /> Updating
@@ -112,34 +115,41 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
 
       {isReady ? (
         <>
-          <div className="flex flex-wrap gap-2">
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setFilterMode(f.key)}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${filterMode === f.key ? 'bg-status-error text-white' : 'bg-muted text-muted-foreground'}`}>
-                {f.label}
-              </button>
-            ))}
+          <div className={`${styles.toolbar} ${stickyStyles.secondary}`}>
+            <div className={styles.filters} role="group" aria-label="Alert date range">
+              {FILTERS.map((f) => (
+                  <button
+                    key={f.key}
+                    type="button"
+                    onClick={() => setFilterMode(f.key)}
+                    aria-pressed={filterMode === f.key}
+                    className={styles.filterButton}>
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCustomFilter((prev) => !prev)}
+              aria-expanded={showCustomFilter}
+              aria-controls="emergency-custom-date"
+              className={styles.dateToggle}>
+              <CalendarDays size={14} />
+              Filter by specific date
+              {activeCustomFilterCount > 0 ? (
+                <span className={styles.count}>{activeCustomFilterCount}</span>
+              ) : null}
+              <ChevronDown size={14} className={`transition-transform ${showCustomFilter ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setShowCustomFilter((prev) => !prev)}
-            className="flex items-center gap-2 self-start text-xs font-medium text-muted-foreground">
-            <CalendarDays size={14} />
-            Filter by specific date
-            {activeCustomFilterCount > 0 ? (
-              <span className="rounded-full bg-status-error px-1.5 py-0.5 text-[10px] font-bold text-white">{activeCustomFilterCount}</span>
-            ) : null}
-          </button>
-
           {showCustomFilter ? (
-            <div className="grid grid-cols-1 gap-3 rounded-2xl border border-border bg-card p-4 sm:grid-cols-3">
+            <div id="emergency-custom-date" className={styles.customDate}>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-muted-foreground">Month</label>
+                <label htmlFor="emergency-month" className="text-xs font-semibold text-muted-foreground">Month</label>
                 <input
+                  id="emergency-month"
                   value={monthInput}
                   onChange={(e) => setMonthInput(e.target.value.replace(/[^a-zA-Z]/g, ''))}
                   placeholder="e.g. January"
@@ -147,8 +157,9 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-muted-foreground">Day</label>
+                <label htmlFor="emergency-day" className="text-xs font-semibold text-muted-foreground">Day</label>
                 <input
+                  id="emergency-day"
                   value={dayInput}
                   onChange={(e) => setDayInput(e.target.value.replace(/[^0-9]/g, ''))}
                   placeholder="e.g. 15"
@@ -157,8 +168,9 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-muted-foreground">Year</label>
+                <label htmlFor="emergency-year" className="text-xs font-semibold text-muted-foreground">Year</label>
                 <input
+                  id="emergency-year"
                   value={yearInput}
                   onChange={(e) => setYearInput(e.target.value.replace(/[^0-9]/g, ''))}
                   placeholder="e.g. 2026"
@@ -180,15 +192,22 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
       ) : !isReady ? (
         <InlineReadError message="We couldn't load emergency alerts. Check your connection, then try again." onRetry={refetch} />
       ) : filteredAlerts.length === 0 ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">No emergency alerts found.</p>
+        <div className={styles.empty}>
+          <span className={styles.emptyIcon}><Bell size={26} strokeWidth={1.5} aria-hidden="true" /></span>
+          <p>No emergency alerts found.</p>
+          <p className="text-xs">Try another date range to view more updates.</p>
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className={styles.alertList}>
           {filteredAlerts.map((alert) => (
-            <div key={alert.id} className="rounded-2xl border border-border bg-card p-4">
-              <p className="font-semibold">{alert.title}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{alert.body}</p>
-              <p className="mt-2 text-xs text-muted-foreground">{formatDateTime(alert.published_at)}</p>
-            </div>
+            <article key={alert.id} className={styles.alert}>
+              <div className={styles.alertMeta}>
+                <span className={styles.alertLabel}><TriangleAlert size={12} aria-hidden="true" /> Emergency alert</span>
+                <time dateTime={alert.published_at} className={styles.alertDate}>{formatDateTime(alert.published_at)}</time>
+              </div>
+              <h3>{alert.title}</h3>
+              <p className={styles.alertBody}>{alert.body}</p>
+            </article>
           ))}
         </div>
       )}

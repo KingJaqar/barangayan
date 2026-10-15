@@ -1,12 +1,37 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { serviceFoundationOperations } from './service-foundations';
+import type { IdConfirmedDetails } from '../schemas/service-foundations';
 
-/** Copies both selected sides into a new immutable submission. The stable ID
+/** React Native Blob omits arrayBuffer(); its native FileReader supplies it. */
+async function readEvidenceBytes(blob: Blob): Promise<Uint8Array> {
+  if (typeof blob.arrayBuffer === 'function') return new Uint8Array(await blob.arrayBuffer());
+  const message = 'Could not read your ID image. Select it again and retry.';
+  if (typeof FileReader === 'undefined') throw new Error(message);
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result instanceof ArrayBuffer) resolve(new Uint8Array(reader.result));
+      else reject(new Error(message));
+    };
+    reader.onerror = () => reject(new Error(message));
+    reader.onabort = () => reject(new Error(message));
+    try { reader.readAsArrayBuffer(blob); }
+    catch { reject(new Error(message)); }
+  });
+}
+
+type IdEvidenceInput = {
+  submissionId: string; idType: string; frontPath: string; backPath?: string; confirmedDetails?: IdConfirmedDetails;
+};
+type PublishedIdEvidence = { submissionId: string; frontPath: string; backPath?: string };
+
+// Existing two-sided callers retain a guaranteed backPath in their result.
+export function publishIdEvidence(client: SupabaseClient<Database>, input: IdEvidenceInput & { backPath: string }): Promise<PublishedIdEvidence & { backPath: string }>;
+export function publishIdEvidence(client: SupabaseClient<Database>, input: IdEvidenceInput): Promise<PublishedIdEvidence>;
+/** Copies the selected evidence into a new immutable submission. The stable ID
  * makes interrupted upload/publication retries safe, including type-only changes. */
-export async function publishIdEvidence(client: SupabaseClient<Database>, input: {
-  submissionId: string; idType: string; frontPath: string; backPath: string;
-}) {
+export async function publishIdEvidence(client: SupabaseClient<Database>, input: IdEvidenceInput): Promise<PublishedIdEvidence> {
   const { data: { user }, error: authError } = await client.auth.getUser();
   if (authError || !user) throw new Error('Sign in again before submitting your ID.');
   const bucket = client.storage.from('id-documents');
@@ -18,7 +43,7 @@ export async function publishIdEvidence(client: SupabaseClient<Database>, input:
     if (source === target) return target;
     const { data, error } = await bucket.download(source);
     if (error || !data) throw new Error('Could not read your ID image. Select it again and retry.');
-    const bytes = new Uint8Array(await data.arrayBuffer());
+    const bytes = await readEvidenceBytes(data);
     if (!bytes.length || bytes.length > 5 * 1024 * 1024) throw new Error('ID images must be at most 5 MB.');
     const mime = extension === 'png' ? 'image/png' : extension === 'webp' ? 'image/webp' : 'image/jpeg';
     const { error: uploadError } = await bucket.upload(target, bytes, { upsert: false, contentType: mime });
@@ -26,15 +51,16 @@ export async function publishIdEvidence(client: SupabaseClient<Database>, input:
       // A lost upload response may leave the target present. Accept only identical
       // bytes; never overwrite the immutable target to recover from a conflict.
       const { data: existing } = await bucket.download(target);
-      const saved = existing ? new Uint8Array(await existing.arrayBuffer()) : null;
+      const saved = existing ? await readEvidenceBytes(existing) : null;
       if (!saved || saved.length !== bytes.length || saved.some((byte, index) => byte !== bytes[index])) throw uploadError;
     }
     return target;
   }
   const frontPath = await copySide(input.frontPath, 'front');
-  const backPath = await copySide(input.backPath, 'back');
+  const backPath = input.backPath ? await copySide(input.backPath, 'back') : undefined;
   const { data, error } = await serviceFoundationOperations(client).publishId({ ...input, frontPath, backPath });
   if (error) throw error;
+  if (!data) throw new Error('Could not confirm your ID submission. Please retry.');
   return { submissionId: data, frontPath, backPath };
 }
 

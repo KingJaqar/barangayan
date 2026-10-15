@@ -1,20 +1,6 @@
 'use client';
 
-/**
- * Step 4a (Pay at Pickup branch) — ported from payment/pickup/[requestId]/
- * pickup-confirmation.tsx. Terminal screen for this branch, same as the standalone
- * route it's ported from: there's nothing left to do but close the modal or jump to the
- * full Requests list. `onDone` closes the modal rather than navigating home — the
- * resident is still on /services/documents and can pick another document straight away.
- *
- * The pickup record is written once when this step opens. `start_pickup_payment` is
- * idempotent on the server (it reuses the request's pending/paid pickup payment and only
- * inserts when none exists — migration 0098 `pickup_payment`), so a remount, Strict Mode
- * replay, or a deliberate retry after a lost response never creates a second record.
- * This screen still guards the on-mount call to once per mounted request, reports the
- * outcome inline (it is its own confirmation view, so no toast), and keeps the Retry
- * control read-safe.
- */
+/** Records the pickup choice once, then opens the requests list. */
 
 import { formatCentavosAsPHP } from '@barangayan/shared';
 import { Banknote } from 'lucide-react';
@@ -26,21 +12,20 @@ import { Button } from '@/components/ui/button';
 import { pickupPaymentFailure } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-type PickupState = { status: 'saving' } | { status: 'saved' } | { status: 'failed'; message: string; uncertain: boolean };
+type PickupState = { status: 'saving' } | { status: 'saved' } | { status: 'failed'; message: string };
 
 export function PickupStep({
   requestId,
   referenceNumber,
   documentName,
   feeCentavos,
-  onDone,
+  feeDescription,
 }: {
   requestId: string;
-  barangayId: string;
   referenceNumber: string;
   documentName: string;
-  feeCentavos: number;
-  onDone: () => void;
+  feeCentavos: number | null;
+  feeDescription?: string;
 }) {
   const [state, setState] = useState<PickupState>({ status: 'saving' });
   const inFlight = useRef(false);
@@ -58,14 +43,14 @@ export function PickupStep({
       if (!active.current) return;
       if (error) {
         const failure = pickupPaymentFailure(error, status);
-        setState({ status: 'failed', message: failure.message, uncertain: failure.uncertain });
+        setState({ status: 'failed', message: failure.message });
       } else {
         setState({ status: 'saved' });
       }
     } catch {
       if (!active.current) return;
       const failure = pickupPaymentFailure({ message: '' }, 0);
-      setState({ status: 'failed', message: failure.message, uncertain: true });
+      setState({ status: 'failed', message: failure.message });
     } finally {
       inFlight.current = false;
     }
@@ -98,11 +83,11 @@ export function PickupStep({
           <Banknote size={32} strokeWidth={1.75} />
         </div>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Amount Due</p>
-        <p className="text-3xl font-bold">{feeCentavos === 0 ? 'Free' : formatCentavosAsPHP(feeCentavos)}</p>
+        <p className="text-3xl font-bold">{feeCentavos === null ? feeDescription : feeCentavos === 0 ? 'Free' : formatCentavosAsPHP(feeCentavos)}</p>
         <p className="text-sm text-muted-foreground">
-          {feeCentavos === 0
+          {feeCentavos === null ? 'Pay the applicable tax-code fee when you pick up this document at the Barangay Hall.' : feeCentavos === 0
             ? 'This document has no processing fee.'
-            : `Pay ${formatCentavosAsPHP(feeCentavos)} in cash when you pick up this document at the Barangay Hall.`}
+            : `Pay ${formatCentavosAsPHP(feeCentavos ?? 0)} in cash when you pick up this document at the Barangay Hall.`}
         </p>
       </div>
 
@@ -121,14 +106,8 @@ export function PickupStep({
         ) : null}
         <LoadingStatus active={saving} label="Recording your pickup payment…" />
       </div>
-      <Button size="lg" disabled={state.status !== 'saved'} onClick={onDone}>
-        Done
-      </Button>
-      {/* ?open= lands on the Requests list with this request's tracking drawer already
-          open, rather than just the bare list — same in-context pattern success-step
-          uses instead of a bare navigation. */}
-      <Button asChild size="lg" variant="outline">
-        <Link href={`/services/requests?open=${requestId}`}>View My Request</Link>
+      <Button asChild size="lg" disabled={state.status !== 'saved'}>
+        <Link href="/services/requests">View My Requests</Link>
       </Button>
     </div>
   );

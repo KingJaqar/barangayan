@@ -1,0 +1,194 @@
+[
+  {
+    "file": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-codes-tab.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-modal.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-form.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-row.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/faq/faq-form.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/faq/faq-row.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+    "count": 2,
+    "classification": "unreferenced",
+    "status": "migrated; isolated fixture only; still unreferenced in production"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+    "count": 4,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+    "count": 2,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+    "count": 4,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+    "count": 2,
+    "classification": "unreferenced",
+    "status": "migrated; isolated fixture only; still unreferenced in production"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/hub/emergency-form.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+    "count": 4,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+    "count": 5,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/services/document-type-form.tsx",
+    "count": 2,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+    "count": 4,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-form.tsx",
+    "count": 3,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/(admin)/waste-management/schedule-row.tsx",
+    "count": 2,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/profile/id-upload.tsx",
+    "count": 1,
+    "classification": "compatibility",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/profile/profile-form.tsx",
+    "count": 2,
+    "classification": "compatibility",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/app/resident/requests/new/new-request-form.tsx",
+    "count": 1,
+    "classification": "compatibility",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/components/admin/editable-data-table.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/components/admin/record-workspace.tsx",
+    "count": 2,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/components/admin/request-review-panel.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/components/admin/table-browse-controls.tsx",
+    "count": 2,
+    "classification": "active",
+    "status": "migrated"
+  },
+  {
+    "file": "apps/admin-web/src/components/admin/table-pagination.tsx",
+    "count": 1,
+    "classification": "active",
+    "status": "migrated"
+  }
+]

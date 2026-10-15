@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/loading';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import styles from './emergency.module.css';
 
 /**
  * Web port of household-qr-modal.tsx / family-content.tsx's "My QR Code" card — calls
@@ -69,14 +70,14 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className={`${styles.dialog} ${styles.qrDialog}`}>
         <DialogHeader>
           <DialogTitle>Household QR Code</DialogTitle>
           <DialogDescription>Present this code at evacuation centers for quick family check-in.</DialogDescription>
         </DialogHeader>
 
         {/* Fixed geometry: the QR frame never resizes between loading, ready and failed. */}
-        <div aria-busy={loading || undefined} className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border border-border bg-white p-3">
+        <div aria-busy={loading || undefined} className={styles.qrFrame}>
           {loading ? (
             <Spinner className="size-8 text-primary" />
           ) : imageUrl ? (

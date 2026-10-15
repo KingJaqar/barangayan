@@ -1,25 +1,26 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+import { ConfirmButton } from '@/components/admin/confirm-button';
+
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
-import { Ban, Eye } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { OperationsTableSummary } from '@/components/admin/operations-table-summary';
 import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
 import { SegmentedFilter } from '@/components/admin/segmented-filter';
 import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
-import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
 import { operationsConfig } from '@/lib/admin-tables/operations-config';
 import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { formatDriveDate } from '../drive-table';
-import { ApplicantDetailModal } from './applicant-detail-modal';
 import type { ApplicantRow } from './types';
 import { REGISTRATION_STATUS_OPTIONS, TABS, registrationStatusLabel } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
@@ -60,8 +61,6 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
   const [comorbidities, setComorbidities] = useState('');
   const [priorDoseDate, setPriorDoseDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -127,25 +126,25 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Drive</span>
-        <select className={inputClass} value={driveId} onChange={(e) => setDriveId(e.target.value)} required>
+        <AdminSelect className={inputClass} value={driveId} onValueChange={(nextValue) => setDriveId(nextValue)} required>
           <option value="">Select a drive…</option>
           {drives.map((d) => (
             <option key={d.id} value={d.id}>
               {d.title} — {d.drive_date}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Resident</span>
-        <select className={inputClass} value={residentId} onChange={(e) => setResidentId(e.target.value)} required>
+        <AdminSelect kind="people" className={inputClass} value={residentId} onValueChange={(nextValue) => setResidentId(nextValue)} required>
           <option value="">Select a resident…</option>
           {residents.map((r) => (
             <option key={r.id} value={r.id}>
               {r.full_name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Age</span>
@@ -161,10 +160,10 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Is PWD</span>
-        <select className={inputClass} value={isPwd} onChange={(e) => setIsPwd(e.target.value)}>
+        <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
           <option value="false">No</option>
           <option value="true">Yes</option>
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Comorbidities</span>
@@ -205,7 +204,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
   const browse = useConfiguredTableBrowse(config, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
-  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<ApplicantRow>('applicants', result, browse.settle);
+
   const [addOpen, setAddOpen] = useState(false);
   const [channelName] = useState(() => 'admin-applicants-' + Math.random().toString(36).slice(2));
   useEffect(() => {
@@ -255,44 +254,17 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
     return { error: null, row: updated };
   }
 
-  async function cancelRegistration(row: ApplicantRow) {
-    if (!await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    const { data: updated, error } = await supabase
-      .from('drive_registrations')
-      .update({ status: 'cancelled' })
-      .eq('id', row.id)
-      .select('id, status')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to cancel: ${error.message}`);
-      return;
-    }
-    if (!updated) {
-      toast.showError('Failed to cancel: no registration was updated. Check that you still have access to this barangay.');
-      return;
-    }
-
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'drive_registration',
-      entityId: updated.id,
-      entityLabel: row.applicant_number,
-      changes: { before: { status: row.status }, after: { status: 'cancelled' } },
-      metadata: {
-        applicant_number: row.applicant_number,
-        drive: row.medical_drives?.title ?? null,
-        resident: row.profiles?.full_name ?? null,
-        age: row.age,
-        is_pwd: row.is_pwd,
-        priority_score: row.priority_score,
-        registered_at: row.created_at,
-      },
-    }).catch(() => {});
-
-    toast.showSuccess('Registration cancelled.');
-    browse.refresh();
-  }
+  const lifecycle = useRecordWorkspace<ApplicantRow>('applicants', browse.refresh, browse.settle, {
+    actionsMinWidth: 360,
+    workflowActions: row => row.status !== 'cancelled' && row.status !== 'attended' ? <ConfirmButton label="Cancel Registration" confirmLabel="Cancel registration?"
+      ariaLabel="Cancel Registration" title="Cancel this medical registration" className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-950 dark:text-red-200"
+      onConfirm={async () => {
+        if (!await browse.settle()) return;
+        const result = await updateField(row, { status: 'cancelled' });
+        if (result.error) toast.showError(`Failed to cancel registration: ${result.error}`);
+        else toast.showSuccess('Registration cancelled.');
+      }} /> : null,
+  });
 
   const columns: EditableDataTableColumn<ApplicantRow>[] = [
     {
@@ -399,63 +371,32 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
         );
       },
     },
-    {
-      header: 'Actions',
-      minWidth: 180,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      render: (r) => (
-        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            onClick={event => void openDetail(r, event.currentTarget)}
-            title="View registration details"
-            aria-label={`View registration ${r.applicant_number}`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-          </button>
-          <ConfirmButton
-            label={
-              <>
-                <Ban aria-hidden="true" className="h-4 w-4" />
-                <span className="sr-only">Cancel registration {r.applicant_number}</span>
-              </>
-            }
-            confirmLabel="Cancel?"
-            onConfirm={() => cancelRegistration(r)}
-            title="Cancel registration"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        </div>
-      ),
-    },
+    lifecycle.column,
   ];
 
-  return <div ref={containerRef}>
+  return <div >
+    <RecordArchiveLink name="applicants" beforeOpen={browse.settle} />
     <OperationsTableSummary name="applicants" summary={summary} onRetry={browse.refresh} />
     <div>{optionsError && <p role="alert" className="mb-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></p>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddApplicantForm drives={drives} residents={residents} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
-    <ProfileTablePanel label="Medical Applicants" browse={browse} 
+    <ProfileTablePanel label="Medical Applicants" browse={browse}
       category={<label className="table-browse-field">Category
-        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
+        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
           <option value="">All categories</option>
           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
-        </select></label>}
+        </AdminSelect></label>}
       filters={<SegmentedFilter label="Registration status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
         disabled={browse.pending || !barangayId || !!optionsError}>+ Add Registration</button>}>
-      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No registrations found."
-        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns  density="compact"
+        onRowClick={row => lifecycle.open(row)} resizableColumns  density="compact"
         tableMinWidth={1320} cellOverflow="hidden"
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
           onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
     </ProfileTablePanel>
-    {selectedDetail && <ApplicantDetailModal row={selectedDetail} key={selectedDetail.id}
-      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
-      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+    {lifecycle.view}
   </div>;
 }

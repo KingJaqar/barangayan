@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { AgencySlaStatus } from '@/components/admin/agency-sla-status';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -5,7 +6,7 @@ import { formatCentavosAsPHP, formatDateTime, requestFee, type Tables } from '@b
 
 import { PaymentRefundAction } from '@/components/admin/payment-refund-action';
 import { RequestStatusActions } from '@/components/admin/request-status-actions';
-import { RequestReviewPanel } from '@/components/admin/request-review-panel';
+import { RequestFulfillmentPanel } from '@/components/admin/request-fulfillment-panel';
 import { StatusPill } from '@/components/admin/status-pill';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -50,7 +51,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
     request.approved_id_submission_id ? supabase.from('id_submissions').select('*').eq('id', request.approved_id_submission_id).maybeSingle() : Promise.resolve({ data: null }),
     supabase.from('request_attachments').select('*').eq('request_id', request.id),
   ]);
-  const evidenceImages = evidence ? await Promise.all([evidence.front_path, evidence.back_path].map(async path => {
+  const evidenceImages = evidence ? await Promise.all([evidence.front_path, evidence.back_path].filter((path): path is string => !!path).map(async path => {
     const { data: signed, error } = await supabase.storage.from('id-documents').createSignedUrl(path, 600);
     return { url: signed?.signedUrl, error: error?.message };
   })) : [];
@@ -72,7 +73,6 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
     .limit(1)
     .maybeSingle();
 
-  const { count: paymentCount } = await supabase.from('payments').select('id', { count: 'exact', head: true }).eq('service_request_id', requestId);
   const fee = requestFee(request, request.document_types?.fee_centavos ?? 0, payment?.document_fee_centavos ?? payment?.amount_centavos);
 
   return (
@@ -94,12 +94,13 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       </div>
 
       <div className="mb-6 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        {request.contract_version === 2 ? <RequestReviewPanel key={`${request.updated_at}:${paymentCount}`} request={request} paymentStarted={(paymentCount ?? 0) > 0} /> : <RequestStatusActions
+        {request.contract_version === 2 ? <RequestFulfillmentPanel key={request.updated_at} request={request} /> : <RequestStatusActions
           requestId={request.id}
           referenceNumber={request.reference_number}
           status={request.status}
           paymentStatus={request.payment_status}
           paymentMethod={request.payment_method}
+          workflowRequest={request}
           variant="full"
         />}
       </div>
@@ -120,7 +121,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
           <p className="text-sm">
             Document Fee:{' '}
             <span className="font-medium">
-              {fee === null ? 'Awaiting fee assessment' : fee === 0 ? 'No payment required' : formatCentavosAsPHP(fee)}
+              {fee === null ? requestFeeLabel(request, null) : fee === 0 ? 'No payment required' : formatCentavosAsPHP(fee)}
             </span>
           </p>
           {payment ? (
@@ -148,9 +149,9 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
         <p>{request.purpose_label}{request.purpose_explanation ? ` — ${request.purpose_explanation}` : ''}</p>
         <dl className="space-y-2 text-sm">{Object.entries(request.supporting_details as Record<string, unknown>).map(([key, value]) => <div key={key}><dt className="font-medium">{({ businessName: 'Business name', establishmentAddress: 'Establishment address', isRenter: 'Transient/renter', recordReference: 'Record description/reference', copies: 'Requested copies', personalAppearanceAcknowledged: 'Personal appearance acknowledged' } as Record<string, string>)[key] ?? key}</dt><dd>{typeof value === 'boolean' ? value ? 'Yes' : 'No' : String(value)}</dd></div>)}</dl>
         <h3 className="font-semibold">Supporting attachments</h3>
-        {files.length ? files.map(file => <p key={file.id} className="text-sm">{file.url ? <a className="text-[var(--accent)] underline" href={file.url} target="_blank" rel="noreferrer">Open {file.requirement_code.toUpperCase()} evidence ({file.mime_type}, {Math.ceil(file.size_bytes / 1024)} KB)</a> : <span role="alert">Evidence unavailable: {file.error}. Reload to retry.</span>}</p>) : <p className="text-sm text-zinc-500">No supporting files supplied. Review eligibility and required in-person documents.</p>}
+        {files.length ? files.map(file => <p key={file.id} className="text-sm">{file.url ? <a className="text-[var(--accent)] underline" href={file.url} target="_blank" rel="noreferrer">Open {file.requirement_code.toUpperCase()} evidence ({file.mime_type}, {Math.ceil(file.size_bytes / 1024)} KB)</a> : <span role="alert">Evidence unavailable: {file.error}. Reload to retry.</span>}</p>) : <p className="text-sm text-zinc-500">No supporting files supplied.</p>}
         <h3 className="font-semibold">ID evidence approved at submission</h3>
-        {evidence ? <><p className="text-sm">{evidence.id_type} · Version {evidence.version} · Current evidence decision: {evidence.decision}</p><p className="text-xs text-zinc-500">This request retains the evidence approved at submission, even if a later replacement or revocation blocks new requests.</p><div className="grid grid-cols-2 gap-3">{evidenceImages.map((file, i) => file.url ? <a key={i} href={file.url} target="_blank" rel="noreferrer" className="text-[var(--accent)] underline">View approved ID {i === 0 ? 'front' : 'back'}</a> : <p key={i} role="alert">ID preview unavailable. Reload to retry.</p>)}</div></> : <p role="alert">Referenced ID evidence is unavailable. Resolve before acceptance.</p>}
+        {evidence ? <><p className="text-sm">{evidence.id_type} · Version {evidence.version} · Current evidence decision: {evidence.decision}</p><p className="text-xs text-zinc-500">This request retains the evidence approved at submission, even if a later replacement or revocation blocks new requests.</p><div className="grid grid-cols-2 gap-3">{evidenceImages.map((file, i) => file.url ? <a key={i} href={file.url} target="_blank" rel="noreferrer" className="text-[var(--accent)] underline">View approved ID {i === 0 ? 'front' : 'back'}</a> : <p key={i} role="alert">ID preview unavailable. Reload to retry.</p>)}</div></> : <p role="alert">Referenced ID evidence is unavailable.</p>}
       </div> : null}
 
       {request.document_types?.requirements?.length ? (

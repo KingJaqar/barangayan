@@ -24,6 +24,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     .from('profiles')
     .select('role, full_name, barangay_id, barangays(name)')
     .eq('id', user.id)
+    .is('deleted_at', null)
     .single();
 
   if (!profile || profile.role !== 'admin') {

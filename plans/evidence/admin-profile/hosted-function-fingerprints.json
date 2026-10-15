@@ -1,0 +1,78 @@
+[
+  {
+    "signature": "admin_begin_resident_association()",
+    "definition_md5": "1dc9242ec44b936d2b38a991743004ec"
+  },
+  {
+    "signature": "admin_cancel_resident_association(uuid)",
+    "definition_md5": "1479bfc3d2aab562c5f00fb831056d39"
+  },
+  {
+    "signature": "admin_finish_resident_association(uuid)",
+    "definition_md5": "908ed5c641a2160cc3bfb450809f05a3"
+  },
+  {
+    "signature": "admin_profile_access()",
+    "definition_md5": "b4121c8344a3cc86ba498d4b5f23569d"
+  },
+  {
+    "signature": "admin_profile_resident_available()",
+    "definition_md5": "cdc507f6e6ec205283a1e9dd9dec14cf"
+  },
+  {
+    "signature": "admin_profile_verify_fresh_session()",
+    "definition_md5": "091d2d15ba79615de2e638f2dbd43597"
+  },
+  {
+    "signature": "admin_unlink_resident_association(uuid,timestamp with time zone)",
+    "definition_md5": "feb43e6c8405900fb5b9485b80fb3940"
+  },
+  {
+    "signature": "admin_update_own_profile(jsonb,timestamp with time zone)",
+    "definition_md5": "5e82557d393d376b53fd6334cc3a8c65"
+  },
+  {
+    "signature": "barangayan_private.admin_begin_resident_association()",
+    "definition_md5": "48fd28c2df71265f70eb64f7aadaa629"
+  },
+  {
+    "signature": "barangayan_private.admin_cancel_resident_association(uuid)",
+    "definition_md5": "f7e4d9188cca5486030196b956f385f1"
+  },
+  {
+    "signature": "barangayan_private.admin_finish_resident_association(uuid)",
+    "definition_md5": "b025cb7c37d26b372aa31c975fdf46e3"
+  },
+  {
+    "signature": "barangayan_private.admin_profile_actor()",
+    "definition_md5": "a3add43fbd1d9c29221fb86bc50d5ba5"
+  },
+  {
+    "signature": "barangayan_private.admin_profile_photo_unreferenced(text)",
+    "definition_md5": "7297b36d435078c8bdf26e89c5a7224d"
+  },
+  {
+    "signature": "barangayan_private.admin_profile_resident_available()",
+    "definition_md5": "745cff674d353e6b8324053a0dc6b4bf"
+  },
+  {
+    "signature": "barangayan_private.admin_profile_verify_fresh_session()",
+    "definition_md5": "79b2732a2120b0a7fa98da52f9d6cb20"
+  },
+  {
+    "signature": "barangayan_private.admin_unlink_resident_association(uuid,timestamp with time zone)",
+    "definition_md5": "5cee99cc16c6d50506bb79a3444fc8df"
+  },
+  {
+    "signature": "barangayan_private.profile_live_identity()",
+    "definition_md5": "bd769ffb1b8e34e875dc26d01976677c"
+  },
+  {
+    "signature": "barangayan_private.resident_prove_admin_association(uuid)",
+    "definition_md5": "1f1d9f0f50890303866b5471e1c11a73"
+  },
+  {
+    "signature": "resident_prove_admin_association(uuid)",
+    "definition_md5": "ac7e51c7ccba81bf4a0d185a0b71eefc"
+  }
+]

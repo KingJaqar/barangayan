@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { useMemo, useState } from 'react';
 
 import { ZoneRow } from './zone-row';
@@ -54,74 +57,38 @@ export function WasteCatalog({
     });
   }, [schedules, query, status, zoneNameById]);
 
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <div className="flex shrink-0 gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          <button
-            type="button"
-            onClick={() => setTab('zones')}
-            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-              tab === 'zones' ? 'bg-[var(--accent)] text-white' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}>
-            Zones ({zones.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab('schedules')}
-            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-              tab === 'schedules' ? 'bg-[var(--accent)] text-white' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}>
-            Schedules ({schedules.length})
-          </button>
-        </div>
+  const hasFilters = query.trim() !== '' || status !== 'all';
+  const reset = () => { setQuery(''); setStatus('all'); };
+  const total = tab === 'zones' ? zones.length : schedules.length;
+  const count = tab === 'zones' ? filteredZones.length : filteredSchedules.length;
+  const active = tab === 'zones' ? zones.filter(z => z.is_active).length : schedules.filter(s => s.is_active).length;
 
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by zone name…"
-          className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-        />
-
-        <div className="flex shrink-0 gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setStatus(f.value)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                status === f.value ? 'bg-[var(--accent)] text-white' : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-              }`}>
-              {f.label}
-            </button>
-          ))}
-        </div>
+  return <>
+    <ContentSummary items={[
+      { label: 'Collection zones', value: zones.length, detail: 'Areas in your collection network' },
+      { label: 'Active zones', value: zones.filter(z => z.is_active).length, detail: 'Currently serving residents' },
+      { label: 'Active schedules', value: schedules.filter(s => s.is_active).length, detail: 'Recurring collection windows' },
+    ]} />
+    <ContentSection title="Collection network" description="Organize collection areas and their recurring pickup schedules.">
+      <div className={styles.tabs}>
+        <ContentFilters<Tab> label="Waste catalog view" value={tab} onChange={setTab} options={[
+          { value: 'zones', label: 'Zones', count: zones.length },
+          { value: 'schedules', label: 'Schedules', count: schedules.length },
+        ]} />
       </div>
-
-      {tab === 'zones' ? (
-        <div className="flex flex-col gap-2">
-          {filteredZones.map((zone) => (
-            <ZoneRow key={zone.id} zone={zone} schedules={schedulesByZone[zone.id] ?? []} />
-          ))}
-          {filteredZones.length === 0 && zones.length > 0 ? (
-            <p className="py-6 text-center text-sm text-zinc-500">No zones match your search.</p>
-          ) : null}
-          {zones.length === 0 ? <p className="py-6 text-center text-sm text-zinc-500">No zones yet — add one above.</p> : null}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {filteredSchedules.map((schedule) => (
-            <ScheduleRow key={schedule.id} schedule={schedule} zoneName={zoneNameById[schedule.zone_id] ?? 'Unknown Zone'} />
-          ))}
-          {filteredSchedules.length === 0 && schedules.length > 0 ? (
-            <p className="py-6 text-center text-sm text-zinc-500">No schedules match your search.</p>
-          ) : null}
-          {schedules.length === 0 ? (
-            <p className="py-6 text-center text-sm text-zinc-500">No schedules yet — add one above.</p>
-          ) : null}
-        </div>
-      )}
-    </div>
-  );
+      <ContentToolbar label="Search collection network" query={query} onQueryChange={setQuery} placeholder="Search by zone name…">
+        <ContentFilters label="Collection status" value={status} onChange={setStatus}
+          options={STATUS_FILTERS.map(f => ({ ...f, count: f.value === 'all' ? total : f.value === 'active' ? active : total - active }))} />
+      </ContentToolbar>
+      <ContentResults count={count} total={total} noun={tab} filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {tab === 'zones'
+          ? filteredZones.map(zone => <ZoneRow key={zone.id} zone={zone} schedules={schedulesByZone[zone.id] ?? []} />)
+          : filteredSchedules.map(schedule => <ScheduleRow key={schedule.id} schedule={schedule} zoneName={zoneNameById[schedule.zone_id] ?? 'Unknown Zone'} />)}
+        {count === 0 ? <ContentEmptyState title={total ? 'No matching ' + tab : tab === 'zones' ? 'Define your collection areas' : 'Plan your first pickup'}
+          description={total ? 'Try another zone name or clear your filters.' : tab === 'zones' ? 'Create a collection zone to get started.' : 'Add a schedule for an active collection zone.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
+      </div>
+    </ContentSection>
+  </>;
 }

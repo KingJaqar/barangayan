@@ -757,12 +757,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-
-  // ── Filter pills ────────────────────────────────────────────────────────
-  pillsScroll: {
-    marginTop: 10,
-    flexGrow: 0,
-  },
   pillsScrollFloating: {
     position: 'absolute',
     top: 116,  // below search bar (12+44) + segment toggle (10+40) + 10 gap

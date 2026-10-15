@@ -1,5 +1,9 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+
 import {
   EMPLOYMENT_STATUSES,
   SEXES,
@@ -10,7 +14,6 @@ import {
   type IdVerificationStatus,
   type Sex,
 } from '@barangayan/shared';
-import { Eye, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
@@ -21,8 +24,6 @@ import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 import { PROFILE_TABLE_CONFIGS } from '@/lib/admin-tables/profile-config';
 import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
-import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
-import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
@@ -160,7 +161,7 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
 
 // ─── Resident Detail Modal ─────────────────────────────────────────────────────
 
-function ResidentDetailModal({
+export function ResidentDetailContent({
   resident,
   onClose,
   onIdStatusChange,
@@ -177,6 +178,7 @@ function ResidentDetailModal({
   const [idStatusLoading, setIdStatusLoading] = useState(false);
   const [evidence, setEvidence] = useState<IdSubmissionRow | null>(null);
   const [reviewReason, setReviewReason] = useState('');
+  const [reviewingId, setReviewingId] = useState(false);
 
   // Reset the panel's per-resident state the moment a different resident (or none) is
   // selected, so the previous resident's requests/photos never flash in the new panel.
@@ -215,12 +217,17 @@ function ResidentDetailModal({
       if (cancelled) return;
       setEvidence(row); setIdUrls([]);
       if (!row) return;
-      const { data, error } = await supabase.storage.from('id-documents').createSignedUrls([row.front_path, row.back_path], 600);
+      const { data, error } = await supabase.storage.from('id-documents').createSignedUrls([row.front_path, row.back_path].filter((path): path is string => !!path), 600);
       if (!cancelled && !error && data) setIdUrls(data.map(d => d.signedUrl).filter((u): u is string => !!u));
     }
     loadEvidence();
     return () => { cancelled = true; };
   }, [resident, supabase]);
+
+  // Front-only submissions (migration 0118) have no back_path, so the evidence is complete
+  // once every stored side has a signed URL: one photo for front-only, two otherwise.
+  const expectedIdPhotos = evidence ? (evidence.back_path ? 2 : 1) : 0;
+  const idEvidenceReady = !!evidence && idUrls.length === expectedIdPhotos;
 
   async function handleIdVerifAction(nextStatus: IdVerificationStatus | null) {
     if (!resident || !evidence) return;
@@ -262,7 +269,7 @@ function ResidentDetailModal({
 
   return (
       <div
-        className="flex max-h-[calc(95vh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900"
+        className="mt-6 flex w-full flex-col rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
@@ -376,35 +383,40 @@ function ResidentDetailModal({
             {resident.id_repair_required && <p role="alert" className="mb-3 text-sm text-red-700">Legacy approval needs repair: complete evidence is missing. Ask the resident to submit both ID sides.</p>}
             {evidence && <p className="mb-3 text-sm">Submission version {evidence.version} · {evidence.id_type} · {evidence.evidence_origin.startsWith('legacy_') ? 'Imported legacy evidence; original submission/review provenance unavailable' : `Submitted ${formatAdminTimestamp(evidence.submitted_at)}`}{evidence.reviewed_at ? ` · Decision ${formatAdminTimestamp(evidence.reviewed_at)} · Reviewer ${evidence.reviewed_by}` : ''}</p>}
             {evidence?.rejection_reason && <p className="mb-3 text-sm">Decision reason: {evidence.rejection_reason}</p>}
-            <label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800" value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
+            {evidence?.confirmed_details && <dl className="mb-3 space-y-1 text-sm">
+              {Object.entries(evidence.confirmed_details).map(([key, value]) => <div key={key}><dt className="inline font-medium">{({ fullName: 'Full name', idNumber: 'ID number', birthDate: 'Birth date', address: 'Address' } as Record<string, string>)[key]}: </dt><dd className="inline">{value || 'Not shown on ID'}</dd></div>)}
+            </dl>}
+            {!reviewingId && evidence && <button type="button" className="mb-3 rounded-md border px-3 py-2 text-sm" onClick={() => setReviewingId(true)}>Review ID</button>}
+            {reviewingId && <><label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800" value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
+              <button type="button" disabled={idStatusLoading} className="mb-3 rounded-md border px-3 py-2 text-sm" onClick={() => { setReviewingId(false); setReviewReason(''); }}>Cancel ID review</button></>}
             <div aria-busy={idStatusLoading} className="flex flex-wrap items-center gap-3">
               <span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${idVerifColor(idStatus)}`}>
                 Current: {idVerifLabel(idStatus)}
               </span>
 
-              {evidence?.decision === 'pending' && (
+              {reviewingId && evidence?.decision === 'pending' && (
                 <ConfirmButton
                   label="✅ Mark as Verified"
                   confirmLabel="Confirm verification?"
                   onConfirm={() => handleIdVerifAction('verified')}
-                  disabled={idStatusLoading || idUrls.length !== 2}
+                  disabled={idStatusLoading || !idEvidenceReady}
                   title={idUrls.length ? "Mark this resident's ID as verified" : 'No ID document uploaded yet'}
                   className="rounded-full bg-green-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               )}
 
-              {evidence?.decision === 'pending' && (
+              {reviewingId && evidence?.decision === 'pending' && (
                 <ConfirmButton
                   label="❌ Mark as Failed"
                   confirmLabel="Reject this ID? The resident will see 'Verification Failed, Try Again' and can re-upload."
                   onConfirm={() => handleIdVerifAction('verification_failed')}
-                  disabled={idStatusLoading || idUrls.length !== 2 || !reviewReason.trim()}
+                  disabled={idStatusLoading || !idEvidenceReady || !reviewReason.trim()}
                   title={idUrls.length ? 'Reject this ID — resident can re-upload to retry' : 'No ID document uploaded yet'}
                   className="rounded-full bg-red-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               )}
 
-              {evidence?.decision === 'verified' && (
+              {reviewingId && evidence?.decision === 'verified' && (
                 <ConfirmButton
                   label="↩ Revoke Verification"
                   confirmLabel="Revoke this reviewed ID approval?"
@@ -478,7 +490,6 @@ function ResidentDetailModal({
   );
 }
 
-
 // Sex / Employment Status labels (mirrors resident/profile/profile-form.tsx and the
 // mobile Profile screen — kept local to each app rather than shared, same convention
 // those two already follow).
@@ -505,12 +516,11 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
   result: QueryOutcome<BrowseResult<ResidentRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   barangayId: string;
 }) {
-  const toast = useToast();
   const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.residents, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
   const [addOpen, setAddOpen] = useState(false);
-  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<ResidentRow>('residents', result, browse.settle);
+
   const supabase = createSupabaseBrowserClient();
 
   async function updateField(r: ResidentRow, patch: ProfileUpdate) {
@@ -546,32 +556,7 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     return { error: null, row: updated };
   }
 
-  async function archive(resident: ResidentRow) {
-    if (!await browse.settle()) return;
-    const { data: updated, error } = await supabase
-      .from('profiles')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', resident.id)
-      .select('id, full_name')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to archive: ${error.message}`);
-      return;
-    }
-    if (!updated) {
-      toast.showError('Failed to archive: no resident was updated. Check that you still have access to this barangay.');
-      return;
-    }
-    logAdminAction({
-      action: 'delete',
-      entityType: 'resident',
-      entityId: updated.id,
-      entityLabel: updated.full_name,
-      metadata: { full_name: resident.full_name, email: resident.email, mobile_number: resident.mobile_number },
-    }).catch(() => {});
-    toast.showSuccess(`${updated.full_name} archived.`);
-    browse.refresh();
-  }
+  const lifecycle = useRecordWorkspace<ResidentRow>('residents', browse.refresh, browse.settle, { extra: (row, close) => <ResidentDetailContent resident={row} onClose={close} onIdStatusChange={browse.refresh} /> });
 
   const columns: EditableDataTableColumn<ResidentRow>[] = [
     {
@@ -597,294 +582,29 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     { id: 'email_verification', header: 'Email Verif.', initialWidth: 135, minWidth: 116, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>{r.email_verification_status}</span> },
     { id: 'location_verified', header: 'Location Verified', initialWidth: 230, minWidth: 175, wrap: 'break-word', render: (r) => r.verified_location ? <span className="text-green-700 dark:text-green-400">{r.verified_location_address ?? 'Verified (no address on file)'}</span> : <span className="text-zinc-400">Not verified</span> },
     { id: 'joined', header: 'Joined', initialWidth: 176, minWidth: 156, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-500">{formatAdminTimestamp(r.created_at)}</span> },
-    { id: 'actions', header: 'Actions', initialWidth: 132, minWidth: 124, wrap: 'nowrap', overflow: 'visible', render: (r) => <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}><button type="button" onClick={event => void openDetail(r, event.currentTarget)} aria-label={`View resident ${r.full_name}`} className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"><Eye aria-hidden="true" className="h-4 w-4" /></button><ConfirmButton label={<Trash2 aria-hidden="true" className="h-4 w-4" />} ariaLabel={`Archive ${r.full_name}`} confirmLabel="Archive?" onConfirm={() => archive(r)} title={`Archive ${r.full_name}`} className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900" /></div> },
+    lifecycle.column,
   ];
 
-  return <div ref={containerRef} className="min-w-0">
+  return <div  className="min-w-0">
+    <RecordArchiveLink name="residents" beforeOpen={browse.settle} />
     <ProfileTableSummary name="residents" summary={summary} onRetry={browse.refresh} />
 
     {addOpen && <fieldset disabled={browse.pending}><AddResidentForm onCreated={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
-    <ProfileTablePanel label="Resident Directory" browse={browse} 
-      category={<label className="table-browse-field">ID presence <select aria-label="ID presence" value={state.filters.verification} onChange={event => void browse.commit({ filters: { verification: event.target.value } })}>
+    <ProfileTablePanel label="Resident Directory" browse={browse}
+      category={<label className="table-browse-field">ID presence <AdminSelect aria-label="ID presence" value={state.filters.verification} onValueChange={nextValue => void browse.commit({ filters: { verification: nextValue } })}>
         <option value="">All ID status</option><option value="with_id">With uploaded ID</option><option value="without_id">Without uploaded ID</option>
-      </select></label>}
+      </AdminSelect></label>}
       filters={<SegmentedFilter label="Email verification" value={state.filters.tab}
         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
         onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Resident</button>}>
-      <EditableDataTable rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
-        onRowClick={(row, trigger) => void openDetail(row, trigger)} emptyLabel={browse.pending ? 'Updating results…' : 'No residents found.'}
+        onRowClick={row => lifecycle.open(row)} emptyLabel={browse.pending ? 'Updating results…' : 'No residents found.'}
         resizableColumns density="compact" tableMinWidth={2840} cellOverflow="hidden" />
     </ProfileTablePanel>
-    {selectedDetail && <TableDetailDialog label="Resident details" onClose={closeDetail}>
-      {detailStatus === 'ready' ? <ResidentDetailModal key={selectedDetail.id + selectedDetail.updated_at} resident={selectedDetail} onClose={closeDetail} onIdStatusChange={browse.refresh} />
-        : <TableDetailState status={detailStatus} onClose={closeDetail} onRetry={retryDetail} />}
-    </TableDetailDialog>}
-      {/* Legacy table markup kept here temporarily while this change is reviewed.
-      <TableScrollArea>
-        <table
-          // w-full only kicks in once the pinned columns are measured and the table is
-          // on fixed layout — applying it earlier would stretch the very widths
-          // startColumnResize is trying to capture as "natural".
-          className={`text-sm ${columnsMeasured ? 'w-full' : ''}`}
-          style={columnsMeasured ? { tableLayout: 'fixed' } : undefined}
-        >
-          <colgroup>
-            {COLUMN_HEADERS.map((header) => (
-              <col key={header} style={colWidths[header] ? { width: colWidths[header] } : undefined} />
-            ))}
-          </colgroup>
-          <thead>
-            <tr
-              className={`border-b-2 ${BORDER_CLS} bg-zinc-50 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-800/60`}
-            >
-              {COLUMN_HEADERS.map((header, colIndex) => (
-                <th
-                  key={header}
-                  ref={(el) => {
-                    thRefs.current[header] = el;
-                  }}
-                  style={colIndex === COLUMN_HEADERS.length - 1 ? { minWidth: LAST_COLUMN_MIN_WIDTH } : undefined}
-                  className={`relative px-5 py-3.5 ${header === 'Household' ? 'text-center' : ''} ${
-                    colIndex < COLUMN_HEADERS.length - 1 ? CELL_DIVIDER_CLS : ''
-                  }`}
-                >
-                  {/* The trailing Actions column is deliberately unlabelled. * /}
-                  <span className="block truncate" title={header === 'Actions' ? undefined : header}>
-                    {header === 'Actions' ? '' : header}
-                  </span>
-                  <div
-                    onMouseDown={(e) => startColumnResize(e, header)}
-                    title="Drag to resize"
-                    className="absolute inset-y-0 right-0 w-1.5 cursor-col-resize select-none hover:bg-[var(--accent)]/40 active:bg-[var(--accent)]"
-                  />
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedResidents.length === 0 && (
-              <tr>
-                <td colSpan={COLUMN_HEADERS.length} className="px-5 py-8 text-center text-zinc-400">
-                  No residents found.
-                </td>
-              </tr>
-            )}
-            {sortedResidents.map((r, rowIndex) => (
-              <tr
-                key={r.id}
-                className={`cursor-pointer border-b-2 ${BORDER_CLS} transition last:border-b-0 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 ${
-                  rowIndex % 2 === 1 ? 'bg-zinc-50/60 dark:bg-zinc-900/40' : 'bg-white dark:bg-zinc-900'
-                }`}
-                onClick={event => void openDetail(r, event.currentTarget)}
-              >
-                  {/* First Name — inline editable, with small avatar thumbnail * /}
-                  <td className={`overflow-hidden px-5 py-3.5 font-medium ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center gap-2.5">
-                      {r.avatar_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={r.avatar_url}
-                          alt=""
-                          className="h-8 w-8 flex-shrink-0 rounded-full object-cover"
-                          onClick={event => void openDetail(r, event.currentTarget)}
-                        />
-                      ) : (
-                        <div
-                          className="flex h-8 w-8 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white"
-                          onClick={event => void openDetail(r, event.currentTarget)}
-                        >
-                          {r.full_name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <EditableCell value={r.first_name ?? ''} onSave={(val) => updateField(r,{ first_name: val || null })} />
-                    </div>
-                  </td>
+    {lifecycle.view}
 
-                  {/* Last Name * /}
-                  <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
-                    <EditableCell value={r.last_name ?? ''} onSave={(val) => updateField(r,{ last_name: val || null })} />
-                  </td>
-
-                  {/* Middle Name * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.middle_name ?? ''} onSave={(val) => updateField(r,{ middle_name: val || null })} />
-                  </td>
-
-                  {/* Suffix * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.suffix ?? ''} onSave={(val) => updateField(r,{ suffix: val || null })} />
-                  </td>
-
-                  {/* Sex * /}
-                  <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
-                    <EditableSelectCell
-                      value={r.sex ?? ''}
-                      options={SEX_OPTIONS}
-                      onSave={(val) => updateField(r,{ sex: val || null })}
-                      renderDisplay={(val) => (val ? (SEX_LABELS[val as Sex] ?? val) : <span className="text-zinc-400">—</span>)}
-                    />
-                  </td>
-
-                  {/* Email * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.email ?? ''} onSave={(val) => updateField(r,{ email: val || null })} />
-                  </td>
-
-                  {/* Mobile * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.mobile_number ?? ''} onSave={(val) => updateField(r,{ mobile_number: val || null })} />
-                  </td>
-
-                  {/* House No. * /}
-                  <td
-                    className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.house_no ?? ''} onSave={(val) => updateField(r,{ house_no: val || null })} />
-                  </td>
-
-                  {/* Street * /}
-                  <td
-                    className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.street ?? ''} onSave={(val) => updateField(r,{ street: val || null })} />
-                  </td>
-
-                  {/* City * /}
-                  <td
-                    className={`truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.city ?? ''} onSave={(val) => updateField(r,{ city: val || null })} />
-                  </td>
-
-                  {/* Birthday * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell
-                      value={r.birth_date ?? ''}
-                      onSave={(val) => updateField(r,{ birth_date: val || null })}
-                      display={r.birth_date ? fmtDate(r.birth_date) : undefined}
-                      placeholder="YYYY-MM-DD"
-                    />
-                  </td>
-
-                  {/* Employment Status * /}
-                  <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
-                    <EditableSelectCell
-                      value={r.employment_status ?? ''}
-                      options={EMPLOYMENT_STATUS_OPTIONS}
-                      onSave={(val) => updateField(r,{ employment_status: val || null })}
-                      renderDisplay={(val) =>
-                        val ? (EMPLOYMENT_STATUS_LABELS[val as EmploymentStatus] ?? val) : <span className="text-zinc-400">—</span>
-                      }
-                    />
-                  </td>
-
-                  {/* Occupation * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableCell value={r.occupation ?? ''} onSave={(val) => updateField(r,{ occupation: val || null })} />
-                  </td>
-
-                  {/* ID Type * /}
-                  <td
-                    className={`overflow-hidden px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <EditableSelectCell
-                      value={r.id_type ?? ''}
-                      options={ID_TYPE_OPTIONS}
-                      onSave={(val) => updateField(r,{ id_type: val || null })}
-                    />
-                  </td>
-
-                  {/* ID Verification status * /}
-                  <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`} onClick={(e) => e.stopPropagation()}>
-                    <EditableSelectCell
-                      value={r.id_verification_status ?? ''}
-                      options={ID_STATUS_OPTIONS}
-                      onSave={(val) => updateField(r,{ id_verification_status: val || null })}
-                      renderDisplay={(val) => (
-                        <span
-                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor((val || null) as IdVerificationStatus | null)}`}
-                        >
-                          {idVerifLabel((val || null) as IdVerificationStatus | null)}
-                        </span>
-                      )}
-                    />
-                  </td>
-
-                  {/* Household count * /}
-                  <td className={`overflow-hidden px-5 py-3.5 text-center ${CELL_DIVIDER_CLS}`}>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                      {r.household_members?.length ?? 0}
-                    </span>
-                  </td>
-
-                  {/* Email verification status * /}
-                  <td className={`overflow-hidden px-5 py-3.5 ${CELL_DIVIDER_CLS}`}>
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>
-                      {r.email_verification_status}
-                    </span>
-                  </td>
-
-                  {/* Location Verified — resident-initiated pin from Settings > Location
-                      Verification (mobile), migrations 0090/0091. Distinct from the
-                      "⚠ Location Outside Boundary" flag above, which is the one-time
-                      signup-time GPS check (0075/0078). * /}
-                  <td className={`overflow-hidden truncate px-5 py-3.5 text-zinc-600 dark:text-zinc-400 ${CELL_DIVIDER_CLS}`} title={r.verified_location_address ?? undefined}>
-                    {r.verified_location ? (
-                      <span className="inline-flex items-center gap-1">
-                        <span className="text-green-600 dark:text-green-400">📍</span>
-                        <span className="truncate">{r.verified_location_address ?? 'Verified (no address on file)'}</span>
-                      </span>
-                    ) : (
-                      <span className="text-zinc-400">Not verified</span>
-                    )}
-                  </td>
-
-                  {/* Joined date * /}
-                  <td className={`overflow-hidden px-5 py-3.5 text-zinc-500 ${CELL_DIVIDER_CLS}`}>{formatAdminTimestamp(r.created_at)}</td>
-
-                  {/* Archive action * /}
-                  <td
-                    className="overflow-hidden px-5 py-3.5"
-                    style={{ minWidth: LAST_COLUMN_MIN_WIDTH }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ConfirmButton
-                      label="🗑"
-                      confirmLabel="Archive?"
-                      onConfirm={() => archive(r)}
-                      title="Archive resident"
-                      className="rounded-full px-2 py-1 text-zinc-400 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-        </table>
-      </TableScrollArea> */}
   </div>;
 }

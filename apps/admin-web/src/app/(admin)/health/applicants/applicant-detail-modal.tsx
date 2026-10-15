@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
 import { useEffect, useRef, useState } from 'react';
 
@@ -228,10 +230,10 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
                   </label>
                   <label className="text-sm">
                     <span className="mb-1 block font-medium">PWD</span>
-                    <select className={inputClass} value={isPwd} onChange={(e) => setIsPwd(e.target.value)}>
+                    <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
                       <option value="false">No</option>
                       <option value="true">Yes</option>
-                    </select>
+                    </AdminSelect>
                   </label>
                 </div>
                 <label className="text-sm">
@@ -245,13 +247,13 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
                   </label>
                   <label className="text-sm">
                     <span className="mb-1 block font-medium">Status</span>
-                    <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as ApplicantRow['status'])}>
+                    <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as ApplicantRow['status'])}>
                       {REGISTRATION_STATUS_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
                       ))}
-                    </select>
+                    </AdminSelect>
                   </label>
                 </div>
                 <label className="text-sm">

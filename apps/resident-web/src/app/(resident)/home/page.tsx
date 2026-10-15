@@ -1,5 +1,5 @@
 import { formatDateTime } from '@barangayan/shared';
-import { Bell, FileText, Inbox, TriangleAlert, HeartPulse, Megaphone } from 'lucide-react';
+import { ArrowRight, Bell, FileText, Inbox, TriangleAlert, HeartPulse, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 
 import { EmailVerifyBanner } from '@/components/home/email-verify-banner';
@@ -7,6 +7,7 @@ import { GuestHero } from '@/components/home/guest-hero';
 import { HomeSearchBar } from '@/components/home/home-search-bar';
 import { LatestAnnouncementCard } from '@/components/home/latest-announcement-card';
 import { QuickActionTile } from '@/components/home/quick-action-tile';
+import styles from '@/components/home/home.module.css';
 import { ReadFailure } from '@/components/shared/read-failure';
 import { StatusPill } from '@/components/shared/status-pill';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
@@ -80,101 +81,131 @@ export default async function ResidentHomePage() {
 
   if (!user) {
     return (
-      <div className="mx-auto max-w-5xl">
+      <div className={styles.home}>
         <GuestHero />
 
-        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className={styles.highlights}>
           {GUEST_HIGHLIGHTS.map(({ title, body, icon: Icon }) => (
-            <div key={title} className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary">
-                <Icon size={20} strokeWidth={1.75} />
+            <section key={title} className={styles.highlight}>
+              <div className={styles.actionIcon}>
+                <Icon aria-hidden size={20} strokeWidth={1.75} />
               </div>
-              <p className="font-semibold">{title}</p>
-              <p className="text-sm text-muted-foreground">{body}</p>
-            </div>
+              <h2>{title}</h2>
+              <p className={styles.actionDescription}>{body}</p>
+            </section>
           ))}
         </div>
 
-        <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} />
+        {latestAnnouncement || announcementError ? <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} /> : null}
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Welcome back, {profile?.full_name.split(' ')[0] || 'Resident'}</h1>
-        <p className="text-sm text-muted-foreground">Request documents, report incidents, and track their status here.</p>
+    <div className={`${styles.home} ${styles.dashboard}`}>
+      <div className={`${styles.hero} ${styles.dashboardHero}`}>
+        <HomeSearchBar />
       </div>
-
-      <HomeSearchBar />
 
       {emailStatusRow ? <EmailVerifyBanner status={emailStatusRow.email_verification_status} /> : null}
 
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <QuickActionTile href="/services/documents" icon={FileText} label="Request a Document" description="Barangay clearance, certificates, and more." />
-        <QuickActionTile href="/services/requests" icon={Inbox} label="My Requests" description="Track the status of everything you've requested." />
-        <QuickActionTile href="/reports/new" icon={TriangleAlert} label="Report an Incident" description="Flag a hazard, dispute, or concern in your barangay." />
-        <QuickActionTile href="/health" icon={HeartPulse} label="Medical Drives" description="Register for vaccination and medical drives." />
-      </div>
+      <section aria-labelledby="quick-actions-title" className={styles.shortcuts}>
+        <div className={styles.sectionHeader}>
+          <h2 id="quick-actions-title">How can we help?</h2>
+        </div>
+        <div className={styles.actions}>
+          <QuickActionTile href="/services/documents" icon={FileText} label="Request a Document" description="Barangay clearance, certificates, and more." />
+          <QuickActionTile href="/services/requests" icon={Inbox} label="My Requests" description="Track the status of everything you've requested." />
+          <QuickActionTile href="/reports/new" icon={TriangleAlert} label="Report an Incident" description="Flag a hazard, dispute, or concern in your barangay." />
+          <QuickActionTile href="/health" icon={HeartPulse} label="Medical Drives" description="Register for vaccination and medical drives." />
+        </div>
+      </section>
 
-      <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} />
-
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <section className="rounded-2xl border border-border bg-card p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Recent Requests</h2>
-            <Link href="/services/requests" className="text-xs font-medium text-primary hover:underline">
-              View all
-            </Link>
+      <div className={styles.dashboardLayout}>
+        <section aria-labelledby="community-updates-title" className={styles.feed}>
+          <div className={styles.sectionHeader}>
+            <h2 id="community-updates-title">Community updates</h2>
+            <Link href="/announcements" className={styles.textLink}>View all <ArrowRight aria-hidden size={13} /></Link>
           </div>
-          {requestsError ? (
-            <ReadFailure message="We couldn't load your recent requests." />
-          ) : recentRequests && recentRequests.length > 0 ? (
-            <ul className="flex flex-col gap-3">
-              {recentRequests.map((r) => (
-                <li key={r.id}>
-                  <Link href={`/services/requests/${r.id}`} className="flex items-center justify-between gap-3 text-sm">
-                    <div className="min-w-0">
-                      <p className="truncate font-medium">{r.document_types?.name ?? 'Document Request'}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {r.reference_number} · {formatDateTime(r.created_at)}
-                      </p>
-                    </div>
-                    <StatusPill status={r.status} />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-muted-foreground">No requests yet.</p>
-          )}
+          <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} />
         </section>
 
-        <section className="rounded-2xl border border-border bg-card p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-semibold">Recent Reports</h2>
-            <Link href="/reports" className="text-xs font-medium text-primary hover:underline">
-              View all
-            </Link>
+        <section aria-labelledby="recent-activity-title" className={styles.activitySidebar}>
+          <div className={styles.sectionHeader}>
+            <h2 id="recent-activity-title">Your recent activity</h2>
+            <p className={styles.sectionHint}>The latest on your requests and reports.</p>
           </div>
-          {reportsError ? (
-            <ReadFailure message="We couldn't load your recent reports." />
-          ) : recentReports && recentReports.length > 0 ? (
-            <ul className="flex flex-col gap-3">
-              {recentReports.map((r) => (
-                <li key={r.id} className="flex items-center justify-between gap-3 text-sm">
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{r.title}</p>
-                    <p className="text-xs text-muted-foreground">{formatDateTime(r.created_at)}</p>
+          <div className={styles.activity}>
+            <section aria-labelledby="recent-requests-title" className={styles.panel}>
+              <div className={styles.panelHeader}>
+                <h3 id="recent-requests-title"><Inbox aria-hidden size={17} /> Recent Requests</h3>
+                <Link href="/services/requests" className={styles.textLink}>
+                  View all <ArrowRight aria-hidden size={13} />
+                </Link>
+              </div>
+              <div className={styles.panelBody}>
+                {requestsError ? (
+                  <ReadFailure message="We couldn't load your recent requests." />
+                ) : recentRequests && recentRequests.length > 0 ? (
+                  <ul>
+                    {recentRequests.map((r) => (
+                      <li key={r.id}>
+                        <Link href={`/services/requests/${r.id}`} className={styles.activityRow}>
+                          <div className="min-w-0">
+                            <p className={styles.rowTitle}>{r.document_types?.name ?? 'Document Request'}</p>
+                            <p className={styles.rowMeta}>
+                              {r.reference_number} · {formatDateTime(r.created_at)}
+                            </p>
+                          </div>
+                          <span className={styles.rowStatus}><StatusPill status={r.status} /></span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className={styles.empty}>
+                    <span className={styles.emptyIcon}><FileText aria-hidden size={18} /></span>
+                    <p className={styles.emptyTitle}>No requests yet.</p>
+                    <p className={styles.emptyDescription}>Your document requests and their status will appear here.</p>
+                    <Link href="/services/documents" className={styles.textLink}>Request a document <ArrowRight aria-hidden size={14} /></Link>
                   </div>
-                  <StatusPill status={r.status} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-muted-foreground">No reports yet.</p>
-          )}
+                )}
+              </div>
+            </section>
+
+            <section aria-labelledby="recent-reports-title" className={styles.panel}>
+              <div className={styles.panelHeader}>
+                <h3 id="recent-reports-title"><TriangleAlert aria-hidden size={17} /> Recent Reports</h3>
+                <Link href="/reports" className={styles.textLink}>
+                  View all <ArrowRight aria-hidden size={13} />
+                </Link>
+              </div>
+              <div className={styles.panelBody}>
+                {reportsError ? (
+                  <ReadFailure message="We couldn't load your recent reports." />
+                ) : recentReports && recentReports.length > 0 ? (
+                  <ul>
+                    {recentReports.map((r) => (
+                      <li key={r.id} className={styles.activityRow}>
+                        <div className="min-w-0">
+                          <p className={styles.rowTitle}>{r.title}</p>
+                          <p className={styles.rowMeta}>{formatDateTime(r.created_at)}</p>
+                        </div>
+                        <span className={styles.rowStatus}><StatusPill status={r.status} /></span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className={styles.empty}>
+                    <span className={styles.emptyIcon}><TriangleAlert aria-hidden size={18} /></span>
+                    <p className={styles.emptyTitle}>No reports yet.</p>
+                    <p className={styles.emptyDescription}>Keep track of community concerns you&apos;ve reported.</p>
+                    <Link href="/reports/new" className={styles.textLink}>Report an incident <ArrowRight aria-hidden size={14} /></Link>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
         </section>
       </div>
     </div>
@@ -184,7 +215,7 @@ export default async function ResidentHomePage() {
 function LatestAnnouncement({ announcement, failed }: { announcement: Parameters<typeof LatestAnnouncementCard>[0]['announcement']; failed: boolean }) {
   if (failed) {
     return (
-      <div className="mb-8 rounded-2xl border border-border bg-card p-5">
+      <div className={`${styles.announcement} ${styles.announcementReadFailure}`}>
         <ReadFailure message="We couldn't load the latest announcement." />
       </div>
     );

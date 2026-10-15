@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { useRowAction } from '@/hooks/use-row-action';
 
 
 interface ConfirmButtonProps {
@@ -25,7 +26,7 @@ interface ConfirmButtonProps {
  * RequestStatusActions. */
 export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, title, ariaLabel, className, disabled }: ConfirmButtonProps) {
   const [confirming, setConfirming] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const { busy, runAction } = useRowAction();
 
   if (confirming) {
     return (
@@ -33,18 +34,18 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
         <button
           disabled={busy}
           aria-busy={busy}
-          onClick={async () => {
-            setBusy(true);
+          type="button"
+          onClick={() => void runAction(async () => {
             await onConfirm();
-            setBusy(false);
             setConfirming(false);
-          }}
+          })}
           className="min-w-0 max-w-full rounded-full bg-red-600 px-2 py-1 text-xs font-semibold text-white disabled:opacity-50">
           <LoadingButtonContent pending={busy} pendingLabel="Working…" spinnerSize="compact" wrapText>
             {confirmLabel}
           </LoadingButtonContent>
         </button>
         <button
+          type="button"
           disabled={busy}
           onClick={() => setConfirming(false)}
           className="shrink-0 rounded-full bg-zinc-200 px-2 py-1 text-xs font-semibold dark:bg-zinc-700">
@@ -56,6 +57,7 @@ export function ConfirmButton({ label, confirmLabel = 'Confirm', onConfirm, titl
 
   return (
     <button
+      type="button"
       disabled={disabled}
       onClick={(e) => {
         e.stopPropagation();

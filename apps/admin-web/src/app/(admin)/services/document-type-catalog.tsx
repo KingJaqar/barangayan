@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import type { Tables } from '@barangayan/shared';
 import { useMemo, useState } from 'react';
 
@@ -31,44 +34,28 @@ export function DocumentTypeCatalog({ documentTypes }: { documentTypes: Document
     });
   }, [documentTypes, query, status]);
 
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name…"
-          className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-        />
-        <div className="flex shrink-0 gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setStatus(f.value)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                status === f.value
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-              }`}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
+  const active = documentTypes.filter(doc => doc.is_active).length;
+  const hasFilters = query.trim() !== '' || status !== 'all';
+  const reset = () => { setQuery(''); setStatus('all'); };
 
-      <div className="flex flex-col gap-2">
-        {filtered.map((doc) => (
-          <DocumentTypeRow key={doc.id} documentType={doc} />
-        ))}
-        {filtered.length === 0 && documentTypes.length > 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No document types match your search.</p>
-        ) : null}
-        {documentTypes.length === 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No document types yet — add one above.</p>
-        ) : null}
+  return <>
+    <ContentSummary items={[
+      { label: 'Total services', value: documentTypes.length, detail: 'In your document catalog' },
+      { label: 'Active', value: active, detail: 'Available for resident requests' },
+      { label: 'Inactive', value: documentTypes.length - active, detail: 'Hidden from new requests' },
+    ]} />
+    <ContentSection title="Document catalog" description="Service details, requirements, and fees in one place.">
+      <ContentToolbar label="Search services" query={query} onQueryChange={setQuery} placeholder="Search services…">
+        <ContentFilters label="Service status" options={FILTERS.map(f => ({ ...f, count: f.value === 'all' ? documentTypes.length : f.value === 'active' ? active : documentTypes.length - active }))}
+          value={status} onChange={setStatus} />
+      </ContentToolbar>
+      <ContentResults count={filtered.length} total={documentTypes.length} noun="services" filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {filtered.map(doc => <DocumentTypeRow key={doc.id} documentType={doc} />)}
+        {filtered.length === 0 ? <ContentEmptyState title={documentTypes.length ? 'No matching services' : 'Your catalog starts here'}
+          description={documentTypes.length ? 'Try a different name or clear your filters.' : 'Create a service to make it available for resident requests.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
       </div>
-    </div>
-  );
+    </ContentSection>
+  </>;
 }

@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/loading';
 import { useQrCheckins } from '@/hooks/use-qr-checkins';
 import { beginAttempt, notify } from '@/lib/notify';
 import { completeCheckIn, parseCenterQr } from '@/lib/qr-checkin';
+import styles from './emergency.module.css';
 
 type ScanState = 'starting' | 'scanning' | 'unavailable' | 'processing';
 type CameraProblem = 'denied' | 'no-camera' | 'in-use' | 'unsupported' | 'unknown';
@@ -191,12 +192,12 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
   const guidance = CAMERA_GUIDANCE[problem];
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Scan QR code" className="fixed inset-0 z-50 flex flex-col bg-black">
+    <div role="dialog" aria-modal="true" aria-label="Scan QR code" className="fixed inset-0 z-50 flex flex-col bg-card text-foreground">
       <div className="flex items-center justify-between px-4 pt-4">
-        <button ref={closeRef} type="button" onClick={onClose} aria-label="Close scanner" className="flex h-11 w-11 items-center justify-center rounded-full text-white focus-visible:ring-2 focus-visible:ring-white">
+        <button ref={closeRef} type="button" onClick={onClose} aria-label="Close scanner" className="flex h-11 w-11 items-center justify-center rounded-full text-foreground focus-visible:ring-2 focus-visible:ring-ring">
           <X size={24} />
         </button>
-        <p className="text-sm font-semibold text-white">Scan QR Code</p>
+        <p className="text-sm font-semibold">Scan QR Code</p>
         <span className="w-11" />
       </div>
 
@@ -204,31 +205,31 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
         <div id={elementId} className="h-full w-full [&_video]:h-full [&_video]:w-full [&_video]:object-cover" />
 
         {state === 'unavailable' ? (
-          <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/90 px-8 text-center">
-            <CameraOff aria-hidden size={40} className="text-white/70" />
-            <p className="text-sm font-semibold text-white">{guidance.title}</p>
-            <p className="max-w-sm text-xs text-white/70">{guidance.body}</p>
+          <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-card/90 px-8 text-center">
+            <CameraOff aria-hidden size={40} className="text-muted-foreground" />
+            <p className="text-sm font-semibold">{guidance.title}</p>
+            <p className="max-w-sm text-xs text-muted-foreground">{guidance.body}</p>
             <div className="mt-2 flex flex-wrap justify-center gap-2">
-              <Button type="button" size="sm" onClick={() => setStartAttempt((n) => n + 1)}>
+              <Button type="button" size="sm" className={styles.primaryButton} onClick={() => setStartAttempt((n) => n + 1)}>
                 Try again
               </Button>
-              <Button type="button" size="sm" variant="outline" className="border-white/40 text-white hover:bg-white/10" onClick={onClose}>
+              <Button type="button" size="sm" variant="outline" className={styles.secondaryButton} onClick={onClose}>
                 Close
               </Button>
             </div>
           </div>
         ) : state === 'starting' ? (
-          <div aria-hidden className="absolute inset-0 flex items-center justify-center bg-black/60 text-white">
+          <div aria-hidden className="absolute inset-0 flex items-center justify-center bg-card/60 text-foreground">
             <Spinner className="size-8" />
           </div>
         ) : (
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-3xl border-2 border-white/30" />
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-3xl border-2 border-primary/70" />
         )}
       </div>
 
       <div className="flex min-h-20 flex-col items-center gap-2 px-4 pb-10 pt-4">
-        <p className="text-center text-sm text-white/90">Position the barangay QR code within the frame</p>
-        <div className="text-white [&_span]:text-white">
+        <p className="text-center text-sm">Position the barangay QR code within the frame</p>
+        <div className="text-foreground [&_span]:text-foreground">
           <LoadingStatus active={state === 'starting'} label="Starting camera…" />
           <LoadingStatus active={state === 'processing'} label="Checking you in…" />
         </div>

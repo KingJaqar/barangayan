@@ -1,7 +1,8 @@
 'use client';
 
 import { Calendar, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { DropdownSurface } from './dropdown/dropdown-surface';
 
 export interface DateRangeValue {
   /** yyyy-mm-dd, or '' for unbounded. */
@@ -57,7 +58,8 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<DateRangeValue>(value);
   const [viewDate, setViewDate] = useState(() => parseDateStr(value.from) ?? new Date());
-  const containerRef = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const dismiss = useCallback(() => setOpen(false), []);
 
   // Re-seed the draft/visible month from the committed value each time the
   // popover opens, so a previously discarded draft doesn't linger.
@@ -66,22 +68,6 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
     setViewDate(parseDateStr(value.from) ?? new Date());
     setOpen(true);
   }
-
-  useEffect(() => {
-    if (!open) return;
-    function onPointerDown(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
-    }
-    document.addEventListener('mousedown', onPointerDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
 
   function handleDayClick(day: Date) {
     const dateStr = toDateStr(day);
@@ -99,6 +85,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
     setDraft(cleared);
     onChange(cleared);
     setOpen(false);
+    trigger.current?.focus({ preventScroll: true });
   }
 
   function handleSave() {
@@ -107,6 +94,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
     const next = draft.from && !draft.to ? { from: draft.from, to: draft.from } : draft;
     onChange(next);
     setOpen(false);
+    trigger.current?.focus({ preventScroll: true });
   }
 
   const label =
@@ -123,9 +111,13 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
   const todayStr = toDateStr(new Date());
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative">
       <button
+        ref={trigger}
+        aria-expanded={open}
+        aria-haspopup="dialog"
         type="button"
+        onKeyDown={event => { if (event.key === 'Escape' && open) { event.preventDefault(); event.stopPropagation(); dismiss(); } }}
         onClick={() => (open ? setOpen(false) : openPicker())}
         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors ${
           value.from || value.to
@@ -138,9 +130,17 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
       </button>
 
       {open ? (
-        <div className="absolute right-0 z-30 mt-2 w-72 rounded-xl border border-black/10 bg-white p-3 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <DropdownSurface anchor={trigger} width={288} onDismiss={dismiss} role="dialog" aria-label="Date range" style={{ padding: 12 }}
+          onKeyDown={event => {
+            if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); dismiss(); trigger.current?.focus({ preventScroll: true }); }
+            if (event.key === 'Tab') {
+              const controls = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+              if (document.activeElement === (event.shiftKey ? controls[0] : controls[controls.length - 1])) { dismiss(); trigger.current?.focus({ preventScroll: true }); }
+            }
+          }}>
           <div className="mb-2 flex items-center justify-between">
             <button
+              autoFocus
               type="button"
               onClick={() => setViewDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
               className="rounded-full p-1 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -208,7 +208,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
               Save
             </button>
           </div>
-        </div>
+        </DropdownSurface>
       ) : null}
     </div>
   );

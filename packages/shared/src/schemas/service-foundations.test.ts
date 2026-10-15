@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { charterSchema, coordinatesSchema, feeAssessmentSchema, idReviewSchema, profileCompletionSchema, serviceCatalogContractSchema, serviceSubmissionSchema, slaTransitionSchema, supportingAttachmentSchema, submissionSchemaForCatalog } from './service-foundations';
+import { charterSchema, coordinatesSchema, idPublicationSchema, idReviewSchema, profileCompletionSchema, serviceCatalogContractSchema, serviceSubmissionSchema, slaTransitionSchema, supportingAttachmentSchema, submissionSchemaForCatalog } from './service-foundations';
 import type { ServiceCatalogContract, ServiceSubmissionInput } from './service-foundations';
 
 const uuid = 'b1000000-0000-4000-8000-000000000001';
@@ -9,6 +9,16 @@ const input: ServiceSubmissionInput = { documentTypeId: uuid, idempotencyKey: uu
 const attachment = { requirementCode: 'lessor' as const, path: `${uuid}/${uuid}/file.pdf`, mimeType: 'application/pdf' as const, sizeBytes: 5242880 };
 
 describe('Phase 1 shared contracts', () => {
+  it('requires confirmed details for front-only submissions and retains two-sided compatibility', () => {
+    const front = { submissionId: uuid, idType: 'PhilSys', frontPath: 'owner/front.jpg' };
+    expect(idPublicationSchema.safeParse(front).success).toBe(false);
+    expect(idPublicationSchema.safeParse({ ...front, backPath: 'owner/back.jpg' }).success).toBe(true);
+    const confirmedDetails = { fullName: 'Ana Reyes', idNumber: '', birthDate: '', address: '' };
+    expect(idPublicationSchema.safeParse({ ...front, confirmedDetails }).success).toBe(true);
+    expect(idPublicationSchema.safeParse({ ...front, confirmedDetails: { ...confirmedDetails, fullName: ' ' } }).success).toBe(false);
+    expect(idPublicationSchema.safeParse({ ...front, confirmedDetails: { ...confirmedDetails, birthDate: '2001-02-29' } }).success).toBe(false);
+    expect(idPublicationSchema.safeParse({ ...front, confirmedDetails: { ...confirmedDetails, verified: true } }).success).toBe(false);
+  });
   it('retains grouped charter prose and explicitly missing personnel', () => {
     expect(serviceCatalogContractSchema.parse(catalog).charter.personResponsible).toBeNull();
     expect(charterSchema.safeParse({ ...charter, classification: 'Complex' }).success).toBe(true);
@@ -44,10 +54,12 @@ describe('Phase 1 shared contracts', () => {
     expect(schema.safeParse(business).success).toBe(false);
     expect(schema.safeParse({ ...business, attachments: [{ ...attachment, requirementCode: 'dti' }] }).success).toBe(true);
   });
-  it('requires a record reference and positive integer copies', () => {
+  it('requires a record reference, positive integer copies and total pages', () => {
     const schema = submissionSchemaForCatalog({ ...catalog, serviceKind: 'certified_true_copy' });
     expect(schema.safeParse(input).success).toBe(false);
-    expect(schema.safeParse({ ...input, details: { ...input.details, recordReference: 'Record 12', copies: 2 } }).success).toBe(true);
+    expect(schema.safeParse({ ...input, details: { ...input.details, recordReference: 'Record 12', copies: 2, totalPages: 6 } }).success).toBe(true);
+    for (const totalPages of [undefined, 0, -1, 1.5, NaN, 1000001])
+      expect(schema.safeParse({ ...input, details: { ...input.details, recordReference: 'Record 12', copies: 2, totalPages } }).success).toBe(false);
     expect(schema.safeParse({ ...input, details: { ...input.details, recordReference: 'Record 12', copies: 1.5 } }).success).toBe(false);
   });
   it('enforces MIME/size and duplicate attachment limits', () => {
@@ -64,12 +76,11 @@ describe('Phase 1 shared contracts', () => {
     for (const field of ['password', 'role', 'barangayId', 'city', 'province', 'userId']) expect(profileCompletionSchema.safeParse({ ...profile, [field]: 'forged' }).success).toBe(false);
     expect(profileCompletionSchema.safeParse({ ...profile, birthDate: '2001-02-29' }).success).toBe(false);
   });
-  it('requires recorded decision and transition reasons and complete requirements', () => {
+  it('requires decision and transition reasons and accepts processing without review fields', () => {
     expect(idReviewSchema.safeParse({ submissionId: uuid, decision: 'revoked' }).success).toBe(false);
     expect(slaTransitionSchema.safeParse({ requestId: uuid, action: 'pause', reason: '  ' }).success).toBe(false);
-    expect(slaTransitionSchema.safeParse({ requestId: uuid, action: 'accept' }).success).toBe(false);
-    expect(slaTransitionSchema.safeParse({ requestId: uuid, action: 'accept', requirementsComplete: true }).success).toBe(true);
-    expect(feeAssessmentSchema.safeParse({ requestId: uuid, state: 'waived', amountCentavos: 100, basis: 'Exempt' }).success).toBe(false);
+    expect(slaTransitionSchema.safeParse({ requestId: uuid, action: 'accept' }).success).toBe(true);
+    expect(slaTransitionSchema.safeParse({ requestId: uuid, action: 'accept', requirementsComplete: true }).success).toBe(false);
   });
   it('validates finite coordinate ranges for later map consumers', () => {
     for (const lat of [NaN, Infinity, 91]) expect(coordinatesSchema.safeParse({ lat, lng: 121 }).success).toBe(false);

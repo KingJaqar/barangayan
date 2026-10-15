@@ -1,8 +1,12 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+import { IncidentActions } from './incident-actions';
+
 import type { Tables } from '@barangayan/shared';
 import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
-import { Eye, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -10,18 +14,14 @@ import { OperationsTableSummary } from '@/components/admin/operations-table-summ
 import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
 import { SegmentedFilter } from '@/components/admin/segmented-filter';
 import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
-import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
 import { operationsConfig } from '@/lib/admin-tables/operations-config';
 import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-import { IncidentActions } from './incident-actions';
-import { IncidentDetailModal } from './incident-detail-modal';
 import type { IncidentRow } from './types';
 import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
@@ -184,35 +184,35 @@ function AddIncidentForm({
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
-        <select className={inputClass} value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+        <AdminSelect className={inputClass} value={categoryId} onValueChange={(nextValue) => setCategoryId(nextValue)}>
           <option value="">Uncategorized</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Reporter</span>
-        <select className={inputClass} value={reporterId} onChange={(e) => setReporterId(e.target.value)}>
+        <AdminSelect kind="people" className={inputClass} value={reporterId} onValueChange={(nextValue) => setReporterId(nextValue)}>
           <option value="">Anonymous / Walk-in</option>
           {residents.map((r) => (
             <option key={r.id} value={r.id}>
               {r.full_name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Status</span>
-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
+        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as typeof status)}>
           {Object.entries(INCIDENT_STATUS).map(([value, cfg]) => (
             <option key={value} value={value}>
               {cfg.label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm sm:col-span-3">
         <span className="mb-1 block font-medium">Submitted Date</span>
@@ -244,14 +244,13 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
   barangayId: string;
   categories: CategoryOption[]; residents: ResidentOption[]; optionsError: string | null;
 }) {
-  const toast = useToast();
   const params = useSearchParams();
   const category = params.get('category') ?? '';
   const config = useMemo(() => operationsConfig('incidents', [category, ...categories.map(option => option.id)]), [category, categories]);
   const browse = useConfiguredTableBrowse(config, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
-  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<IncidentRow>('incidents', result, browse.settle);
+
   const [addOpen, setAddOpen] = useState(false);
   const [channelName] = useState(() => 'admin-incidents-' + Math.random().toString(36).slice(2));
   useEffect(() => {
@@ -299,35 +298,12 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
     return { error: null };
   }
 
-  async function removeIncident(incident: IncidentRow) {
-    if (!await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    const { data: updated, error } = await supabase
-      .from('incidents')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', incident.id)
-      .select('id, deleted_at')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to remove incident: ${error.message}`);
-      return;
-    }
-    if (!updated?.deleted_at) {
-      toast.showError('Failed to remove incident: no incident was updated. Check that you still have access to this barangay.');
-      return;
-    }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'incident',
-      entityId: updated.id,
-      entityLabel: incident.title,
-      metadata: { title: incident.title, description: incident.description, address: incident.address, status: incident.status },
-    }).catch(() => {});
-
-    toast.showSuccess('Incident removed.');
-    browse.refresh();
-  }
+  const lifecycle = useRecordWorkspace<IncidentRow>('incidents', browse.refresh, browse.settle, {
+    actionsMinWidth: 640,
+    workflowActions: row => <IncidentActions incidentId={row.id} status={row.status} incidentTitle={row.title} variant="compact"
+      showRemove={false}
+      onBeforeAction={browse.settle} onChanged={browse.refresh} />,
+  });
 
   const columns: EditableDataTableColumn<IncidentRow>[] = [
     {
@@ -525,66 +501,34 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
         onSave: (r, value) => updateField(r, { created_at: String(value) }),
       },
     },
-    {
-      header: 'Actions',
-      initialWidth: 370,
-      minWidth: 340,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      // Stop propagation so the surrounding EditableDataTable's onRowClick (which opens the
-      // detail modal for the non-editable Incident/Actions cells) doesn't also fire and
-      // reopen the modal underneath these buttons.
-      render: (r) => (
-        <div className="flex flex-nowrap items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            onClick={event => void openDetail(r, event.currentTarget)}
-            title="View incident details"
-            aria-label={`View incident: ${r.title}`}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-          </button>
-          <IncidentActions incidentId={r.id} status={r.status} incidentTitle={r.title} incidentDescription={r.description} variant="compact" onBeforeAction={browse.settle} onChanged={browse.refresh} />
-          <ConfirmButton
-            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
-            confirmLabel="Remove?"
-            onConfirm={() => removeIncident(r)}
-            title="Remove incident"
-            ariaLabel={`Remove incident: ${r.title}`}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        </div>
-      ),
-    },
+    lifecycle.column,
   ];
 
-  return <div ref={containerRef}>
+  return <div >
+    <RecordArchiveLink name="incidents" beforeOpen={browse.settle} />
     <OperationsTableSummary name="incidents" summary={summary} onRetry={browse.refresh} />
     <div>{optionsError && <p role="alert" className="mb-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></p>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddIncidentForm categories={categories} residents={residents} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
-    <ProfileTablePanel label="Incident Reports" browse={browse} 
+    <ProfileTablePanel label="Incident Reports" browse={browse}
       category={<label className="table-browse-field">Category
-        <select aria-label="Category" value={state.filters.category} disabled={!!optionsError}
-          onChange={event => void browse.commit({ filters: { category: event.target.value } })}>
+        <AdminSelect aria-label="Category" value={state.filters.category} disabled={!!optionsError}
+          onValueChange={nextValue => void browse.commit({ filters: { category: nextValue } })}>
           <option value="">All categories</option>
           {state.filters.category && !categories.some(option => option.id === state.filters.category) && <option value={state.filters.category}>Selected category</option>}
           {categories.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
-        </select></label>}
+        </AdminSelect></label>}
       filters={<SegmentedFilter label="Incident status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
         disabled={browse.pending || !barangayId || !!optionsError}>+ Add Incident</button>}>
-      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No incident reports found."
-        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns pinLastColumn density="compact"
+        onRowClick={row => lifecycle.open(row)} resizableColumns pinLastColumn density="compact"
         tableMinWidth={1710} cellOverflow="hidden"
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
           onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
     </ProfileTablePanel>
-    {selectedDetail && <IncidentDetailModal incident={selectedDetail} key={selectedDetail.id}
-      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
-      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+    {lifecycle.view}
   </div>;
 }

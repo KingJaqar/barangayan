@@ -1,0 +1,54 @@
+[
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/",
+    "purpose": "Installed Expo 57.0.10 / React Native 0.86 / React 19.2.3"
+  },
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/sdk/router/",
+    "purpose": "All 56 route/layout roots retained; platform variants"
+  },
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/sdk/notifications/",
+    "purpose": "Qualified unused wrapper checks; notification guards retained"
+  },
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/sdk/async-storage/",
+    "purpose": "Cache/queue behavior retained; source hold"
+  },
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/sdk/reanimated/",
+    "purpose": "Retained animation components/effects"
+  },
+  {
+    "url": "https://reactnative.dev/docs/0.86/stylesheet",
+    "purpose": "StyleSheet.create identity; deletion of private unreferenced literal properties"
+  },
+  {
+    "url": "https://reactnative.dev/docs/0.86/animated",
+    "purpose": "Retained animation behavior"
+  },
+  {
+    "url": "https://react.dev/reference/react",
+    "purpose": "React 19.2 framework reference"
+  },
+  {
+    "url": "https://v3.vitest.dev/guide/cli",
+    "purpose": "Existing Vitest 3.2.7 suite, config and JSON reporter"
+  },
+  {
+    "url": "https://www.typescriptlang.org/docs/handbook/compiler-options.html",
+    "purpose": "Installed TypeScript 6.0.3 standard noEmit project check"
+  },
+  {
+    "url": "https://eslint.org/docs/latest/use/command-line-interface",
+    "purpose": "Installed ESLint 9.39.5 scoped JSON diagnostics"
+  },
+  {
+    "url": "https://docs.expo.dev/more/expo-cli/",
+    "purpose": "Local Android/web exports and unique output paths"
+  },
+  {
+    "url": "https://docs.expo.dev/versions/v57.0.0/sdk/dev-client/",
+    "purpose": "Existing native shell local-bundle smoke attempt"
+  }
+]

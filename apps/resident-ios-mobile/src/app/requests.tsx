@@ -1,15 +1,16 @@
-import { getResidentRequestStatus, RESIDENT_STATUS_LABEL } from '@barangayan/shared';
-import { Card, Destination, Screen } from '../components/ui';
+import { Card, Destination } from '../components/ui';
+import { RequestStatus } from '../components/request-status';
+import { RequireResident } from '../components/require-resident';
 import { ResourceList } from '../components/resource-list';
-import { useResident } from '../lib/runtime';
 import { useApi } from '../data/use-api';
-import { useResource } from '../data/use-resource';
+import { usePagedResource } from '../data/use-paged-resource';
+import { useResident } from '../lib/runtime';
 export default function Requests() {
-  const { session } = useResident();
-  return session ? <OwnRequests /> : <Screen><Destination title="Sign in to view your requests" href="/auth" /></Screen>;
+  return <RequireResident purpose="view your document requests"><OwnRequests /></RequireResident>;
 }
 function OwnRequests() {
   const api = useApi();
-  const resource = useResource('requests', api.requests);
-  return <ResourceList resource={resource} empty="You have no document requests yet." render={(request) => <Card><Destination title={request.document_types?.name ?? request.reference_number} detail={`${request.reference_number} · ${RESIDENT_STATUS_LABEL[getResidentRequestStatus(request.status, request.payment_status)]}`} href={{ pathname: '/request/[id]', params: { id: request.id } }} /></Card>} />;
+  const { session } = useResident();
+  const resource = usePagedResource('requests', api.requests(), session ? [{ table: 'service_requests', filter: `resident_id=eq.${session.user.id}` }] : []);
+  return <ResourceList resource={resource} empty={{ title: 'No requests yet', message: 'Requests you submit will appear here.' }} render={(request) => <Card><Destination title={request.document_types?.name ?? request.reference_number} detail={request.reference_number} href={{ pathname: '/request/[id]', params: { id: request.id } }} /><RequestStatus status={request.status} paymentStatus={request.payment_status} /></Card>} />;
 }

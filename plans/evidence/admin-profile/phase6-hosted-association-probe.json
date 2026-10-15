@@ -1,0 +1,42 @@
+{
+  "startedAt": "2026-10-15T07:06:33.006Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "checks": [
+    "Fresh admin authenticated and caller-bound challenge created; no existing link replaced",
+    "Fresh resident authenticated after challenge creation; admin access denied",
+    "Both-account proof committed the exact disposable one-to-one relationship",
+    "Owner reads the verified resident projection through the hosted authorization boundary",
+    "Consumed proof replay rejected with 22023",
+    "Versioned unlink preserves both entire profiles, Auth emails and independent sessions"
+  ],
+  "status": "passed",
+  "privilegedKeyUsed": false,
+  "credentialMutations": 0,
+  "adminMailAccepted": true,
+  "residentMailAccepted": true,
+  "admin": {
+    "email": "barangayan.ampid1+profile-phase6-updated-20261015@gmail.com",
+    "id": "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b",
+    "verified": true,
+    "profileBefore": "8c62543e63298c891870a357e230713603d64a71b4d1793bbb8ff9ab5f4efcd4"
+  },
+  "resident": {
+    "email": "barangayan.ampid1+profile-phase6-resident-20261015@gmail.com",
+    "id": "b9c774a9-2128-45ba-8278-01b0ed836c29",
+    "verified": true,
+    "profileBefore": "50e502750d18b18f0e599cbf908058e7e6e8dd54e9ab370814403b71db232ca3"
+  },
+  "passed": true,
+  "challengeCleanupError": null,
+  "sessionCleanup": [
+    {
+      "scope": "local",
+      "errorCode": null
+    },
+    {
+      "scope": "local",
+      "errorCode": null
+    }
+  ],
+  "finishedAt": "2026-10-15T07:07:32.883Z"
+}

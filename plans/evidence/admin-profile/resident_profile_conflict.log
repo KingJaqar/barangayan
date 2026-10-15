@@ -1,0 +1,22 @@
+ok 1 - No anonymous completion
+ok 2 - No service-role shortcut
+b6080000-0000-0000-0000-000000000001
+ok 3 - Malformed snapshot rejected
+ok 4 - Caller with no profile can complete with null snapshot
+ok 5 - Lifecycle reader sees atomic completion
+ok 6 - Null snapshot cannot overwrite a concurrently created profile
+ok 7 - Conflict makes no write
+ok 8 - Exact current snapshot saves
+ok 9 - Older caller completion remains compatible
+ok 10 - Caller cannot supply an identity
+ok 11 - Caller cannot supply a tenant
+ok 12 - Server preserves configured tenant
+
+ok 13 - Absent identity denied
+b6080000-0000-0000-0000-000000000001
+ok 14 - Banned account denied before comparison
+
+b6080000-0000-0000-0000-000000000001
+ok 15 - Staff role cannot be converted
+ok 16 - Soft-deleted profile denied
+1..16

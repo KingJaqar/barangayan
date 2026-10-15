@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '../../supabase/server';
 import { parseBrowseState, pageRange, queryIdentity, type BrowseResult, type BrowseState } from '../browse-state';
 import { TABLE_CONFIGS, TABLE_SUMMARY_KEYS, type TableName } from '../table-configs';
 import type { AdminBrowseDatabase } from './schema';
+import type { AdminRecordDatabase } from '../record-schema';
 import type { ServiceRequest } from '../../../app/(admin)/requests/page';
 import type { Payment } from '../../../app/(admin)/transactions/transactions-table';
 import type { ResidentRow } from '../../../app/(admin)/residents/page';
@@ -66,14 +67,15 @@ function error(code: 'query-failed' | 'results-changed' | 'access-denied', messa
 // One deadline covers the initial read AND the sole allowed corrective read.
 // Disabling SDK retries prevents Retry-After from extending that deadline.
 export async function browseTable<K extends TableName>(name: K, requested: BrowseState,
-  client?: SupabaseClient<Database>, signal = AbortSignal.timeout(15000), now = new Date()): Promise<QueryOutcome<BrowseResult<TableRows[K]>>> {
+  client?: SupabaseClient<Database>, signal = AbortSignal.timeout(15000), now = new Date(), archived = false): Promise<QueryOutcome<BrowseResult<TableRows[K]>>> {
   const state = validated(name, requested);
-  const db = (client ?? await createSupabaseServerClient()) as unknown as SupabaseClient<AdminBrowseDatabase>;
+  const db = (client ?? await createSupabaseServerClient()) as unknown as SupabaseClient<AdminRecordDatabase>;
   async function read(page?: number, ids?: string[]) {
-    const view: `admin_${TableName}_browse` = `admin_${name as TableName}_browse`;
+    const view: `admin_${TableName}_browse` | `admin_${TableName}_records` = archived ? `admin_${name as TableName}_records` : `admin_${name as TableName}_browse`;
     let query = db.from(view).select('id,row', { count: ids ? undefined : 'exact', head: page === undefined && !ids });
     // Override the selected shape below without a dynamic PostgREST type parser.
     if (!ids) query = query.select('id');
+    if (archived) query = query.eq('f_archived', true);
     const f = state.filters;
     const tab = f.tab;
     if (name === 'requests' && tab !== 'all') query = query.eq('f_status', REQUEST_STATUS_BY_TAB[tab]);

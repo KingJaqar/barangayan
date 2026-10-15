@@ -10,9 +10,11 @@ import { useTheme } from '@/hooks/use-theme';
 export function ServiceScreenHeader({
   title,
   backLabel = 'Go back',
+  onBack,
 }: {
   title: string;
   backLabel?: string;
+  onBack?: () => void;
 }) {
   const router = useRouter();
   const theme = useTheme();
@@ -21,7 +23,7 @@ export function ServiceScreenHeader({
   return (
     <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={onBack ?? (() => router.back())}
         style={styles.backBtn}
         accessibilityRole="button"
         accessibilityLabel={backLabel}

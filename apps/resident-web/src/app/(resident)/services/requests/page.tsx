@@ -6,6 +6,7 @@ import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { requireUser } from '@/lib/auth/require-user';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { RequestsList } from './requests-list';
+import styles from '../services-layout.module.css';
 
 const TABS = [
   { key: 'all', label: 'All' },
@@ -65,18 +66,20 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
         </Link>
       </div>
 
-      <div className="mb-5 flex gap-1 overflow-x-auto rounded-full border border-border bg-card p-1">
-        {TABS.map(({ key, label }) => (
-          <Link
-            key={key}
-            href={`/services/requests?tab=${key}`}
-            className={`relative shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
-              activeTab === key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-            }`}>
-            {label}
-            <LinkPendingHint className="bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2" />
-          </Link>
-        ))}
+      <div className={styles.requestFilters}>
+        <nav className={styles.filters} aria-label="Filter requests by status">
+          {TABS.map(({ key, label }) => (
+            <Link
+              key={key}
+              href={`/services/requests?tab=${key}`}
+              aria-current={activeTab === key ? 'page' : undefined}
+              className={styles.filter}>
+              {key !== 'all' && <span className={styles.filterDot} aria-hidden="true" />}
+              {label}
+              <LinkPendingHint className="bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2" />
+            </Link>
+          ))}
+        </nav>
       </div>
 
       {requestsError ? (

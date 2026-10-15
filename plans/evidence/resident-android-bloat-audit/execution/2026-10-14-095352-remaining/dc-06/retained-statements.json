@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "files": [
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/constants/payment.ts",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/dialog.ts",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "retainedStatementsTextIdentical": true
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "retainedStatementsTextIdentical": true
+    }
+  ]
+}

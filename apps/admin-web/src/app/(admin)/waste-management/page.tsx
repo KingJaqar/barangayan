@@ -1,3 +1,7 @@
+import { ContentSection } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+import { ContentCreatePanel } from '@/components/admin/content-create-panel';
+import { RecordArchiveLink } from '@/components/admin/record-archive-link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { DEFAULT_TRASH_SCORING_CONFIG, trashIncidentScore, type Tables } from '@barangayan/shared';
 
@@ -87,58 +91,36 @@ export default async function WasteManagementPage() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl">
-      {/* Section 1: header + description */}
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold">Waste Management</h1>
-        <p className="text-sm text-zinc-500">
-          Manage collection zones, recurring pickup schedules, and monitor illegal dumping reports.
-        </p>
-      </div>
+    <div className={styles.page}>
+      <ContentCreatePanel
+        title="Waste Management"
+        description="Manage collection zones, recurring pickup schedules, and monitor illegal dumping reports."
+        forms={[
+          { label: "Create new zone", title: "New collection zone",
+            description: "Name the collection area and describe its boundaries or landmarks.",
+            content: <ZoneForm barangayId={profile?.barangay_id ?? ''} /> },
+          { label: "Create new schedule", title: "New collection schedule",
+            description: "Choose a zone, waste type, and recurring collection window.",
+            content: <ScheduleForm barangayId={profile?.barangay_id ?? ''} zones={activeZones} /> },
+        ]}
+      />
 
-      {/* Section 2: add zone and add schedule form */}
-      <div className="mb-6 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Add Zone</h2>
-        <ZoneForm barangayId={profile?.barangay_id ?? ''} />
-
-        <div className="my-4 border-t border-black/5 dark:border-white/5" />
-
-        <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Add Schedule</h2>
-        <ScheduleForm barangayId={profile?.barangay_id ?? ''} zones={activeZones} />
-      </div>
-
-      {/* Sections 3 + 4: filter controls / search bar, and existing items */}
-      <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Collection Zones &amp; Schedules</h2>
-      <div className="mb-8">
-        <WasteCatalog
-          zones={zoneList}
-          schedules={scheduleList}
-          schedulesByZone={schedulesByZone}
-          zoneNameById={zoneNameById}
-        />
-      </div>
+      <RecordArchiveLink name="waste-management" />
+      <WasteCatalog
+        zones={zoneList}
+        schedules={scheduleList}
+        schedulesByZone={schedulesByZone}
+        zoneNameById={zoneNameById}
+      />
 
       {/* Trash / Illegal Dumping Incidents */}
-      <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        <div className="mb-3 flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-300">Illegal Dumping Reports</h2>
-            <p className="text-xs text-zinc-400">
-              Time-decay weighted frequency scoring · half-life {DEFAULT_TRASH_SCORING_CONFIG.halfLifeDays} days
-            </p>
-          </div>
-          {trashIncidents.length > 0 && (
-            <span className="rounded-full bg-[var(--accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
-              {trashIncidents.length} report{trashIncidents.length !== 1 ? 's' : ''}
-            </span>
-          )}
-        </div>
+      <ContentSection title="Illegal dumping reports" description={`Prioritized by recent reports and community confirmations · ${trashIncidents.length} report${trashIncidents.length === 1 ? '' : 's'}`}>
         <TrashIncidentTable
           rows={trashIncidents}
           categoryNames={trashCategoryNames}
           highPriorityThreshold={DEFAULT_TRASH_SCORING_CONFIG.highPriorityThreshold}
         />
-      </div>
+      </ContentSection>
     </div>
   );
 }

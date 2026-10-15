@@ -1,4 +1,6 @@
 import { EmergencySegmentNav } from '@/components/emergency/emergency-segment-nav';
+import { StickyPrimaryTabs } from '@/components/shared/sticky-primary-tabs';
+import styles from '@/components/emergency/emergency.module.css';
 
 /**
  * Shell for the 5 Emergency & DRRM routes (Hub/Centers/Scan/Family/Alerts) — just the
@@ -10,8 +12,8 @@ import { EmergencySegmentNav } from '@/components/emergency/emergency-segment-na
  */
 export default function EmergencyLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-3xl">
-      <EmergencySegmentNav />
+    <div className={styles.workspace}>
+      <StickyPrimaryTabs><EmergencySegmentNav /></StickyPrimaryTabs>
       {children}
     </div>
   );

@@ -1,0 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { ROUTING_PROFILES, planEvacuationRoute, prepareRoutingGraph, type RoutingGraph } from '../../../../../../../barangayan/packages/shared/src/lib/evacuation-routing.ts';
+const graph = JSON.parse(readFileSync('data/routing-packs/ampid-1/pack/graph.json', 'utf8')) as RoutingGraph;
+const p = prepareRoutingGraph(graph); if (!p.ok) throw new Error('bad');
+const centers = [['00000000-0000-0000-0000-00000000c001','n11175955772','unknown'],['00000000-0000-0000-0000-00000000c002','n13165316139','available'],['00000000-0000-0000-0000-00000000c003','n10250156647','available'],['00000000-0000-0000-0000-00000000c004','n674020408','unknown']].map(([id,e,a])=>({id,name:id,entranceNodeId:e,availability:a as 'available'|'unknown',active:true}));
+const closed = process.argv.slice(2);
+const r = planEvacuationRoute({ graph: p.graph, conditions: { graphVersion: graph.version, revision: 1, closedEdgeIds: closed, modelExcludedEdgeIds: [], stationReadings: [], traffic: [] }, centers, request: { origin: { lat: 14.681, lng: 121.1128, accuracyMeters: 5, revision: 1 }, originEdgeId: null, centerId: '00000000-0000-0000-0000-00000000c002', avoidEdgeIds: [] }, profile: ROUTING_PROFILES['ampid-fine'] });
+if (r.status === 'ok') console.log(Math.round(r.best.distanceMeters), r.best.edgeIds.length, r.best.edgeIds[0], r.best.edgeIds.at(-1), JSON.stringify(r.best.edgeIds)); else console.log(r.status);

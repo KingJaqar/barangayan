@@ -1,0 +1,38 @@
+{
+  "verifiedAt": "2026-10-15T06:56:04.316Z",
+  "source": "Read-only visible Supabase SQL result, public.profiles only",
+  "before": {
+    "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b": {
+      "fingerprint": "1327e0ad4bf22d85d89083d52d7f8c1a",
+      "role": "admin"
+    },
+    "fad11fec-be21-486d-a8c5-0e0d7638e611": {
+      "fingerprint": "311ce80837553217cd49f0606edec4d8",
+      "role": "admin"
+    },
+    "b9c774a9-2128-45ba-8278-01b0ed836c29": {
+      "fingerprint": "a900ab2e5d419709aeff6fc2e7ef36f4",
+      "role": "resident"
+    }
+  },
+  "after": {
+    "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b": {
+      "fingerprint": "2c1aedac580114fd2dfe6e7600e6a33c",
+      "role": "admin"
+    },
+    "fad11fec-be21-486d-a8c5-0e0d7638e611": {
+      "fingerprint": "311ce80837553217cd49f0606edec4d8",
+      "role": "admin"
+    },
+    "b9c774a9-2128-45ba-8278-01b0ed836c29": {
+      "fingerprint": "a900ab2e5d419709aeff6fc2e7ef36f4",
+      "role": "resident"
+    }
+  },
+  "disposableAdminChanged": true,
+  "mainAdminUnchanged": true,
+  "residentUnchanged": true,
+  "contactEmail": "barangayan.ampid1+profile-phase6-contact@gmail.com",
+  "signInEmailUnchanged": "barangayan.ampid1+profile-phase6-20261015@gmail.com",
+  "screenshot": "phase6-hosted-profile-saved.png"
+}

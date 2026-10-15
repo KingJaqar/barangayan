@@ -1,0 +1,74 @@
+[
+  {
+    "key": "passwordMatchIndicator",
+    "from": 22856,
+    "to": 22963,
+    "text": "passwordMatchIndicator: {\r\n    flexDirection: 'row',\r\n    alignItems: 'center',\r\n    gap: Spacing.one,\r\n  }"
+  },
+  {
+    "key": "successModalBackdrop",
+    "from": 23369,
+    "to": 23515,
+    "text": "successModalBackdrop: {\r\n    flex: 1,\r\n    justifyContent: 'center',\r\n    padding: Spacing.four,\r\n    backgroundColor: 'rgba(0, 0, 0, 0.45)',\r\n  }"
+  },
+  {
+    "key": "successModalCard",
+    "from": 23520,
+    "to": 23657,
+    "text": "successModalCard: {\r\n    padding: Spacing.four,\r\n    borderRadius: Spacing.four,\r\n    alignItems: 'center',\r\n    gap: Spacing.three,\r\n  }"
+  },
+  {
+    "key": "successIcon",
+    "from": 23662,
+    "to": 23795,
+    "text": "successIcon: {\r\n    width: 64,\r\n    height: 64,\r\n    borderRadius: 32,\r\n    alignItems: 'center',\r\n    justifyContent: 'center',\r\n  }"
+  },
+  {
+    "key": "successModalTitle",
+    "from": 23800,
+    "to": 23870,
+    "text": "successModalTitle: {\r\n    fontSize: 24,\r\n    textAlign: 'center',\r\n  }"
+  },
+  {
+    "key": "successModalMessage",
+    "from": 23875,
+    "to": 23928,
+    "text": "successModalMessage: {\r\n    textAlign: 'center',\r\n  }"
+  },
+  {
+    "key": "successModalActions",
+    "from": 23933,
+    "to": 24030,
+    "text": "successModalActions: {\r\n    flexDirection: 'row',\r\n    gap: Spacing.two,\r\n    width: '100%',\r\n  }"
+  },
+  {
+    "key": "successModalActionButton",
+    "from": 24035,
+    "to": 24081,
+    "text": "successModalActionButton: {\r\n    flex: 1,\r\n  }"
+  },
+  {
+    "key": "formError",
+    "from": 24618,
+    "to": 24652,
+    "text": "formError: { textAlign: 'center' }"
+  },
+  {
+    "key": "submitActions",
+    "from": 24657,
+    "to": 24732,
+    "text": "submitActions: {\r\n    gap: Spacing.three,\r\n    marginTop: Spacing.one,\r\n  }"
+  },
+  {
+    "key": "footerRow",
+    "from": 24737,
+    "to": 24835,
+    "text": "footerRow: {\r\n    flexDirection: 'row',\r\n    justifyContent: 'center',\r\n    flexWrap: 'wrap',\r\n  }"
+  },
+  {
+    "key": "footerText",
+    "from": 24840,
+    "to": 24868,
+    "text": "footerText: { fontSize: 14 }"
+  }
+]

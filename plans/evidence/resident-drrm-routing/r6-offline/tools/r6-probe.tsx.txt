@@ -1,0 +1,119 @@
+// TEMPORARY R6 device probe — removed after the device run (see plan evidence r6-offline).
+import { useEffect, useRef, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { WebView } from 'react-native-webview';
+import * as Crypto from 'expo-crypto';
+import { ROUTING_PROFILES, planEvacuationRoute, planEvacuationRouteAsync, isInsideCoverage } from '@barangayan/shared/src/lib/evacuation-routing';
+import { routingDigest } from '../../../../plans/evidence/resident-drrm-routing/r2-routing-core/runtime-digest.ts';
+import { bundledAmpidPack } from '@/lib/offline-routing-storage';
+import { verifyPack } from '@/lib/offline-routing';
+import { useOfflineRouting } from '@/hooks/use-offline-routing';
+import { useLocalRoute } from '@/hooks/use-local-route';
+import { MapView } from '@/components/map-view';
+import type { ConfirmedOrigin } from '@barangayan/shared';
+
+const ORIGIN: ConfirmedOrigin = { lat: 14.681, lng: 121.1128, accuracyMeters: 5, deviceTimestamp: 0, source: 'device-auto', fixSource: 'current', revision: 1 };
+
+function ProbeRoute() {
+  const routing = useOfflineRouting(true);
+  const { pack, conditions, avoidance } = routing.state;
+  const route = useLocalRoute({ pack, conditions, avoidance, origin: ORIGIN, centerId: '00000000-0000-0000-0000-00000000c002', originEdgeId: null });
+  const best = route.status === 'done' && route.result.status === 'ok' ? route.result.best : null;
+  const points = best ? best.geometry.map(([lng, lat]) => ({ lat, lng })) : null;
+  const marks = { closures: (conditions?.snapshot.closures ?? []).flatMap((c) => c.geometry.coordinates), avoided: avoidance.flatMap((r) => r.edges.map((e) => e.geometry)), selected: null };
+  return (
+    <View>
+      <Text testID="probe-route" style={{ fontSize: 13, color: '#000000' }}>
+        {`ROUTE phase=${routing.state.phase} repair=${routing.state.repair} conditionsRev=${conditions?.snapshot.revision ?? 'none'} checkedAt=${conditions?.storedAt ?? 'none'} failures=${routing.state.conditionsFailures} avoid=${avoidance.length} status=${route.status === 'done' ? route.result.status : route.status}${route.status === 'unavailable' ? ' ' + route.problem : ''}${best ? ` dist=${Math.round(best.distanceMeters)}m edges=${best.edgeIds.length} ms=${route.status === 'done' ? route.computeMs : ''} first=${best.edgeIds[0]} last=${best.edgeIds[best.edgeIds.length - 1]}` : ''}`}
+      </Text>
+      <View style={{ height: 420 }}>
+        <MapView markers={[]} showTiles={false} packMap={pack?.map ?? null} roadMarks={marks} route={points} userLocation={{ position: { lat: ORIGIN.lat, lng: ORIGIN.lng }, accuracyMeters: 5, pending: false }} />
+      </View>
+    </View>
+  );
+}
+
+function pct(values: number[], p: number) {
+  const s = [...values].sort((a, b) => a - b);
+  return s[Math.min(s.length - 1, Math.ceil((p / 100) * s.length) - 1)];
+}
+
+export default function Probe() {
+  const [lines, setLines] = useState<string[]>([]);
+  const add = (line: string) => setLines((l) => [...l, line]);
+  const sentAt = useRef(0);
+  const webRef = useRef<WebView>(null);
+  const [mapJson, setMapJson] = useState<string | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      const t0 = Date.now();
+      const digest = routingDigest();
+      add(`DIGEST ${digest.digest} cases=${digest.cases} ms=${Date.now() - t0}`);
+      const t1 = Date.now();
+      const files = bundledAmpidPack();
+      const t2 = Date.now();
+      const verified = await verifyPack(files, (text) => Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, text), 'ampid-1');
+      const t3 = Date.now();
+      add(`PACK serialize=${t2 - t1}ms verify+prepare=${t3 - t2}ms ok=${verified.ok}`);
+      if (!verified.ok) return;
+      const { graph } = verified.pack;
+      const centers = [
+        ['c2', 'n13165316139', 'available'],
+        ['c3', 'n10250156647', 'available'],
+        ['c4', 'n674020408', 'unknown'],
+        ['c1', 'n11175955772', 'unknown'],
+      ].map(([id, entranceNodeId, availability]) => ({ id, name: id, entranceNodeId, availability: availability as 'available' | 'unknown', active: true }));
+      const conditions = { graphVersion: graph.version, revision: 1, closedEdgeIds: [], modelExcludedEdgeIds: [], stationReadings: [], traffic: [] };
+      const origins = graph.nodes.filter((n, i) => i % 4 === 0 && isInsideCoverage(n, graph.coverage)).slice(0, 200);
+      const times: number[] = [];
+      const statuses: Record<string, number> = {};
+      for (const [i, n] of origins.entries()) {
+        const s = Date.now();
+        const r = planEvacuationRoute({ graph, conditions, centers, request: { origin: { lat: n.lat + 0.00005, lng: n.lng, accuracyMeters: 10, revision: i }, originEdgeId: null, centerId: null, avoidEdgeIds: [] }, profile: ROUTING_PROFILES['ampid-fine'] });
+        times.push(Date.now() - s);
+        statuses[r.status] = (statuses[r.status] ?? 0) + 1;
+      }
+      add(`SYNC n=${times.length} p50=${pct(times, 50)} p95=${pct(times, 95)} max=${Math.max(...times)} ${JSON.stringify(statuses)}`);
+      const asyncTimes: number[] = [];
+      for (const [i, n] of origins.slice(0, 40).entries()) {
+        const s = Date.now();
+        await planEvacuationRouteAsync({ graph, conditions, centers, request: { origin: { lat: n.lat + 0.00005, lng: n.lng, accuracyMeters: 10, revision: i }, originEdgeId: null, centerId: null, avoidEdgeIds: [] }, profile: ROUTING_PROFILES['ampid-fine'] }, { yieldControl: () => new Promise((r) => setTimeout(r, 0)) });
+        asyncTimes.push(Date.now() - s);
+      }
+      add(`ASYNC n=${asyncTimes.length} p50=${pct(asyncTimes, 50)} p95=${pct(asyncTimes, 95)} max=${Math.max(...asyncTimes)}`);
+      setMapJson(files.map);
+    })().catch((e: unknown) => add(`ERROR ${String(e)}`));
+  }, []);
+
+  const onLoad = () => {
+    if (!mapJson) return;
+    const msg = JSON.stringify({ type: 'SET_PACK_BASEMAP', payload: { map: JSON.parse(mapJson) } });
+    const js = `(function(){var event=new MessageEvent('message',{data:${JSON.stringify(msg)}});window.dispatchEvent(event);})();true;`;
+    sentAt.current = Date.now();
+    add(`BRIDGE injecting ${js.length} chars`);
+    webRef.current?.injectJavaScript(js);
+  };
+
+  return (
+    <ScrollView style={{ flex: 1, padding: 16, marginTop: 40, backgroundColor: '#FFFFFF' }}>
+      <ProbeRoute />
+      {lines.map((l) => (
+        <Text key={l} testID="probe-line" style={{ fontSize: 13, color: '#000000' }}>
+          {l}
+        </Text>
+      ))}
+      {mapJson ? (
+        <View style={{ height: 10 }}>
+          <WebView
+            ref={webRef}
+            originWhitelist={['*']}
+            source={{ html: '<html><body><script>window.addEventListener("message",function(e){var m=JSON.parse(e.data);window.ReactNativeWebView.postMessage(String(m.payload.map.features.length));});</script></body></html>' }}
+            onLoadEnd={onLoad}
+            onMessage={(e) => add(`BRIDGE roundtrip=${Date.now() - sentAt.current}ms features=${e.nativeEvent.data}`)}
+          />
+        </View>
+      ) : null}
+    </ScrollView>
+  );
+}

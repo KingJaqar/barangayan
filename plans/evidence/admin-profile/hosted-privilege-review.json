@@ -1,0 +1,6 @@
+{
+  "functions": 19,
+  "unexpected_acl": 0,
+  "unexpected_search_path": 0,
+  "association_rls": true
+}

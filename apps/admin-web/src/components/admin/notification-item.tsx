@@ -1,8 +1,9 @@
 'use client';
 
+import { NotificationIconBadge } from './notification-icon';
+
 import {
   ACTION_VERBS,
-  ENTITY_ICONS,
   formatChangesDiff,
   formatMetadataEntries,
   MODULE_META,
@@ -22,7 +23,6 @@ interface NotificationItemProps {
  * component (rather than 4 separate ones) so every layout stays built from
  * the same underlying data/derivations. */
 export function NotificationItem({ notification: n, variant, selected, onClick }: NotificationItemProps) {
-  const icon = ENTITY_ICONS[n.entity_type] ?? '📝';
   const verb = ACTION_VERBS[n.action] ?? n.action;
   const moduleMeta = MODULE_META[n.module];
   const adminName = (n.metadata as Record<string, unknown> | null)?.admin_name as string | undefined;
@@ -49,7 +49,7 @@ export function NotificationItem({ notification: n, variant, selected, onClick }
         onClick={onClick}
         className={`${baseClass} flex items-center gap-3 rounded-lg border border-black/10 px-3 py-2 text-sm dark:border-white/10`}
       >
-        <span className="text-base">{icon}</span>
+        <NotificationIconBadge module={n.module} />
         <span className={`flex-1 truncate ${!n.is_read ? 'font-medium' : 'text-zinc-500'}`}>{label}</span>
         <span className="hidden sm:inline">{moduleBadge}</span>
         <span className="shrink-0 text-xs text-zinc-400">{n.relativeTime}</span>
@@ -65,7 +65,7 @@ export function NotificationItem({ notification: n, variant, selected, onClick }
         className={`${baseClass} flex flex-col gap-2 rounded-xl border border-black/10 p-4 dark:border-white/10`}
       >
         <div className="flex items-center justify-between">
-          <span className="text-xl">{icon}</span>
+          <NotificationIconBadge module={n.module} />
           {unreadDot}
         </div>
         <div>
@@ -91,8 +91,8 @@ export function NotificationItem({ notification: n, variant, selected, onClick }
         className={`${baseClass} flex flex-col gap-2 rounded-xl border border-black/10 p-4 dark:border-white/10`}
       >
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2">
-            <span className="text-lg">{icon}</span>
+          <div className="flex items-start gap-3">
+            <NotificationIconBadge module={n.module} />
             <div>
               <p className={`text-sm leading-snug ${!n.is_read ? 'font-medium' : 'text-zinc-500'}`}>
                 {verb}: {label}
@@ -145,8 +145,8 @@ export function NotificationItem({ notification: n, variant, selected, onClick }
       className={`${baseClass} flex flex-col gap-1.5 rounded-lg border border-black/10 px-4 py-3 dark:border-white/10`}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-start gap-2">
-          <span className="text-lg">{icon}</span>
+        <div className="flex items-start gap-3">
+          <NotificationIconBadge module={n.module} />
           <div>
             <p className={`text-sm leading-snug ${!n.is_read ? 'font-medium' : 'text-zinc-500'}`}>
               {verb}: {label}
@@ -156,7 +156,7 @@ export function NotificationItem({ notification: n, variant, selected, onClick }
         </div>
         {unreadDot}
       </div>
-      <div className="flex items-center gap-2 pl-7 text-xs text-zinc-400">
+      <div className="flex items-center gap-2 pl-12 text-xs text-zinc-400">
         {moduleBadge}
         <span>{n.relativeTime}</span>
       </div>

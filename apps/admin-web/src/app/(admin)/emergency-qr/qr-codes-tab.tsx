@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { useMemo, useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -70,16 +72,16 @@ export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCente
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Select Center</label>
-          <select
+          <AdminSelect aria-label="Select Center"
             value={selectedCenterId}
-            onChange={(e) => setSelectedCenterId(e.target.value)}
+            onValueChange={(nextValue) => setSelectedCenterId(nextValue)}
             className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800">
             {initialCenters.map((center) => (
               <option key={center.id} value={center.id}>
                 {center.name}
               </option>
             ))}
-          </select>
+          </AdminSelect>
         </div>
         <button
           onClick={regenerateAll}

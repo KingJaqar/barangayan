@@ -1,0 +1,264 @@
+{
+  "checkedAt": "2026-10-14T10:08:16.125Z",
+  "passed": false,
+  "boundaryRemoved": true,
+  "protectedFiles": 5042,
+  "checks": [
+    {
+      "name": "android exact roots",
+      "passed": true
+    },
+    {
+      "name": "android exact reachable",
+      "passed": true
+    },
+    {
+      "name": "android exact externals",
+      "passed": true
+    },
+    {
+      "name": "android exact dynamic",
+      "passed": true
+    },
+    {
+      "name": "android dependency edges",
+      "passed": true,
+      "detail": {
+        "removed": [
+          {
+            "from": "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+            "specifier": "react-native",
+            "resolved": null
+          }
+        ],
+        "added": []
+      }
+    },
+    {
+      "name": "web exact roots",
+      "passed": true
+    },
+    {
+      "name": "web exact reachable",
+      "passed": true
+    },
+    {
+      "name": "web exact externals",
+      "passed": true
+    },
+    {
+      "name": "web exact dynamic",
+      "passed": true
+    },
+    {
+      "name": "web dependency edges",
+      "passed": true,
+      "detail": {
+        "removed": [
+          {
+            "from": "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+            "specifier": "react-native",
+            "resolved": null
+          }
+        ],
+        "added": []
+      }
+    },
+    {
+      "name": "Active assets preserved",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/constants/payment.ts",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/constants/payment.ts",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/lib/dialog.ts",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/lib/dialog.ts",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/components/family-content.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/components/family-content.tsx",
+      "passed": true
+    },
+    {
+      "name": "Exact deletion-only prepared content: apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "passed": true
+    },
+    {
+      "name": "Remaining style text: apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/components/app-header.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/components/hint-row.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/components/settings-row.tsx",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "passed": true
+    },
+    {
+      "name": "Qualified file absent: apps/resident-android-mobile/src/hooks/use-family-members.ts",
+      "passed": true
+    },
+    {
+      "name": "Protected current source/config/backend/evidence",
+      "passed": false,
+      "detail": {
+        "changed": [
+          "plans/evidence/resident-ios-parity/execution-ledger.csv",
+          "plans/evidence/resident-ios-parity/phase-00/README.md",
+          "plans/evidence/resident-ios-parity/phase-00/build-ledgers.mjs",
+          "plans/evidence/resident-ios-parity/phase-00/decision-register.md",
+          "plans/evidence/resident-ios-parity/phase-00/fixtures-and-captures.md",
+          "plans/evidence/resident-ios-parity/phase-00/ledger-check.json",
+          "plans/evidence/resident-ios-parity/phase-00/prerequisite-register.md",
+          "plans/evidence/resident-ios-parity/phase-00/route-ledger.csv",
+          "apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+          "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+          "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+          "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+          "apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+          "apps/resident-android-mobile/src/components/app-header.tsx",
+          "apps/resident-android-mobile/src/components/family-content.tsx",
+          "apps/resident-android-mobile/src/components/hint-row.tsx",
+          "apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+          "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+          "apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+          "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+          "apps/resident-android-mobile/src/components/settings-row.tsx",
+          "apps/resident-android-mobile/src/constants/payment.ts",
+          "apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+          "apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+          "apps/resident-android-mobile/src/hooks/use-family-members.ts",
+          "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+          "apps/resident-android-mobile/src/lib/dialog.ts",
+          "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+          "apps/resident-android-mobile/src/lib/push-notifications.ts",
+          "plans/Resident_iOS_Implementation_Plan.md"
+        ],
+        "unexpected": [
+          "plans/evidence/resident-ios-parity/execution-ledger.csv",
+          "plans/evidence/resident-ios-parity/phase-00/README.md",
+          "plans/evidence/resident-ios-parity/phase-00/build-ledgers.mjs",
+          "plans/evidence/resident-ios-parity/phase-00/decision-register.md",
+          "plans/evidence/resident-ios-parity/phase-00/fixtures-and-captures.md",
+          "plans/evidence/resident-ios-parity/phase-00/ledger-check.json",
+          "plans/evidence/resident-ios-parity/phase-00/prerequisite-register.md",
+          "plans/evidence/resident-ios-parity/phase-00/route-ledger.csv",
+          "plans/Resident_iOS_Implementation_Plan.md"
+        ]
+      }
+    },
+    {
+      "name": "Exact lint diagnostics",
+      "passed": true
+    },
+    {
+      "name": "Existing mobile suite",
+      "passed": true,
+      "detail": {
+        "baseline": 126,
+        "final": 126,
+        "suites": 14,
+        "success": true,
+        "exitCode": 0
+      }
+    }
+  ]
+}

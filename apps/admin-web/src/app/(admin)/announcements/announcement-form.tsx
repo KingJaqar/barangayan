@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -86,8 +91,8 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3">
-      <label className="col-span-4 text-sm sm:col-span-2">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Title</span>
         <input
           className={inputClass}
@@ -98,15 +103,40 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
+      <label className="sm:col-span-2 text-sm">
+        <span className={labelClass}>Body</span>
+        <textarea
+          className={inputClass}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={3}
+          placeholder="Short summary shown on the announcement card (2 sentences or so)…"
+          required
+        />
+      </label>
+
+      <label className="sm:col-span-2 text-sm">
+        <span className={labelClass}>Detailed Description (optional)</span>
+        <textarea
+          className={inputClass}
+          value={detailedDescription}
+          onChange={(e) => setDetailedDescription(e.target.value)}
+          rows={4}
+          placeholder="Full write-up shown when a resident taps the announcement for more detail…"
+        />
+      </label>
+
+      <div className={styles.groupHeading}><h3>Publication</h3></div>
+
       <label className="text-sm">
         <span className={labelClass}>Category</span>
-        <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
+        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
           {ANNOUNCEMENT_CATEGORIES.map((cat) => (
             <option key={cat} value={cat}>
               {ANNOUNCEMENT_CATEGORY_META[cat].label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">
@@ -119,30 +149,9 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      <label className="col-span-4 text-sm sm:col-span-2">
-        <span className={labelClass}>Body</span>
-        <textarea
-          className={inputClass}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          rows={2}
-          placeholder="Short summary shown on the announcement card (2 sentences or so)…"
-          required
-        />
-      </label>
+      <div className={styles.groupHeading}><h3>Media</h3></div>
 
-      <label className="col-span-4 text-sm">
-        <span className={labelClass}>Detailed Description (optional)</span>
-        <textarea
-          className={inputClass}
-          value={detailedDescription}
-          onChange={(e) => setDetailedDescription(e.target.value)}
-          rows={4}
-          placeholder="Full write-up shown when a resident taps the announcement for more detail…"
-        />
-      </label>
-
-      <label className="col-span-4 text-sm sm:col-span-2">
+      <label className="text-sm">
         <span className={labelClass}>Image URL (optional)</span>
         <input
           className={inputClass}
@@ -153,9 +162,9 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-4">
+      <ContentFormActions busy={submitting}>
         <button
           type="submit"
           disabled={submitting || !barangayId}
@@ -163,7 +172,7 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Publishing…">Publish Announcement</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

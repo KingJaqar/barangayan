@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { requestFee } from '@barangayan/shared';
 import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { FileText } from 'lucide-react';
@@ -47,7 +48,7 @@ export default async function LogsPage() {
               </div>
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="text-xs font-semibold text-muted-foreground">
-                  {requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos) === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos)!)}
+                  {requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos) === null ? requestFeeLabel(r, null) : formatCentavosAsPHP(requestFee(r,r.document_types?.fee_centavos ?? 0,r.payments[0]?.document_fee_centavos ?? r.payments[0]?.amount_centavos)!)}
                 </span>
                 <StatusPill status={r.status} />
               </div>

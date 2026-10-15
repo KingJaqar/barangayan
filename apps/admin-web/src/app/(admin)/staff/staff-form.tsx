@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, staffInviteSchema } from '@barangayan/shared';
 import type { OfficialRole } from '@barangayan/shared';
 import { useState } from 'react';
@@ -97,13 +99,13 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Barangay Role</span>
-        <select className={inputClass} value={officialRole} onChange={(e) => setOfficialRole(e.target.value as OfficialRole)}>
+        <AdminSelect kind="people" className={inputClass} value={officialRole} onValueChange={(nextValue) => setOfficialRole(nextValue as OfficialRole)}>
           {OFFICIAL_ROLES.map((r) => (
             <option key={r} value={r}>
               {OFFICIAL_ROLE_LABELS[r]}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">

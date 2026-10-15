@@ -1,0 +1,47 @@
+{
+  "verified_on": "2026-10-15",
+  "method": "Read-only Supabase and Vercel connectors; git tree comparison",
+  "supabase": {
+    "project_ref": "pwjbucnyqexiepoinoke",
+    "name": "Barangayan",
+    "matching_branches": [
+      {
+        "name": "main",
+        "is_default": true,
+        "project_ref": "pwjbucnyqexiepoinoke"
+      }
+    ],
+    "separate_barangayan_staging_found": false,
+    "unrelated_project_used": false
+  },
+  "vercel": {
+    "project_id": "prj_AL0YPMsKg5PIVmnA8JAFL10OwwEM",
+    "project_name": "barangayan-admin-web",
+    "team_id": "team_6b0TR8mzj8rxhZsgs2DVd1y6",
+    "supplied_deployment": {
+      "id": "dpl_Do9wJMRxaSEgBJR6xDaQ2bFsmZrW",
+      "url": "https://barangayan-admin-mljmo9xhp-barangayan.vercel.app",
+      "state": "READY",
+      "target": "production",
+      "commit": "3f9e2d5fbebd565661a8359d8b6346e4d1eae223",
+      "commit_date": "2026-10-06",
+      "profile_source_present": false
+    },
+    "latest_deployment": {
+      "id": "dpl_DMYQHtjzyPRPkuoZCQaJbEhH6Qj9",
+      "state": "ERROR",
+      "target": "production",
+      "commit": "2e5681cd329df2b70a0591895cc1e5656a55506c",
+      "error_code": "ENOENT",
+      "error_step": "buildStep",
+      "build_command": "cd ../.. && npm run build --workspace=@barangayan/web"
+    },
+    "deployment_file_access": "403 forbidden for barangayan scope",
+    "local_vercel_cli_available": false,
+    "protection_changed": false,
+    "temporary_share_link_created": false
+  },
+  "hosted_writes": false,
+  "deployments_created": false,
+  "emails_sent": false
+}

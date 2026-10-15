@@ -1,5 +1,9 @@
 'use client';
 
+import styles from '@/components/admin/content-workspace.module.css';
+
+import { Trash2 } from 'lucide-react';
+
 import { wasteZoneSchema, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -130,7 +134,7 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
 
   if (isEditing) {
     return (
-      <form onSubmit={handleSave} className="rounded-xl border border-[var(--accent)] bg-white p-3 dark:border-[var(--accent)] dark:bg-zinc-900">
+      <form onSubmit={handleSave} className={styles.rowEdit}>
         <div className="grid grid-cols-4 gap-3">
           <label className="col-span-4 text-sm sm:col-span-1">
             <span className={labelClass}>Zone Name</span>
@@ -159,34 +163,34 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
   }
 
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-900">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+    <div className={styles.row}>
+      <div className={styles.rowHeader}>
+        <div className={styles.rowMain}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold">{zone.name}</span>
+            <h3 className={styles.rowTitle}>{zone.name}</h3>
             {!zone.is_active ? (
-              <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">Inactive</span>
+              <span className={styles.badge}>Inactive</span>
             ) : null}
             {zone.trash_score > 0 && (
               <span
-                title={`Time-decay dumping score, recomputed hourly by pg_cron${zone.trash_score_updated_at ? ` (last: ${new Date(zone.trash_score_updated_at).toLocaleString()})` : ''}`}
+                title={`Dumping priority score${zone.trash_score_updated_at ? ` · Updated ${new Date(zone.trash_score_updated_at).toLocaleString()}` : ''}`}
                 className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
-                🗑 {zone.trash_score.toFixed(1)} pts
+                <Trash2 size={13} className="mr-1 inline-block" aria-hidden="true" />{zone.trash_score.toFixed(1)} pts
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">
+          <p className={styles.rowMeta}>
             {zone.description ? `${zone.description} · ` : ''}
             {schedules.length} schedule{schedules.length !== 1 ? 's' : ''} assigned
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className={styles.rowActions}>
           <button onClick={toggleActive} className={`rounded-full px-3 py-1 text-xs font-semibold ${zone.is_active ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-[var(--accent)]/15 text-[var(--accent)]'}`}>
             {zone.is_active ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={startEdit} title="Edit" className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">Edit</button>
-          <ConfirmButton label="Archive" confirmLabel="Archive zone?" onConfirm={archive} title="Archive Zone" className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300" />
+          <button onClick={startEdit} title="Edit" className={styles.primaryAction}>Edit</button>
+          <ConfirmButton label="Archive" confirmLabel="Archive zone?" onConfirm={archive} title="Archive Zone" className={styles.dangerAction} />
         </div>
       </div>
     </div>

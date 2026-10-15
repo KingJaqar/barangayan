@@ -1,5 +1,6 @@
-import { BookOpen, Megaphone, Phone, ShieldAlert, TriangleAlert } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Building2, Megaphone, Phone, Plus, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
+import styles from './maps.module.css';
 
 /**
  * Sidebar of Emergency/DRRM + reporting shortcuts, occupying the unused space beside
@@ -13,28 +14,32 @@ import Link from 'next/link';
  */
 export function MapSidebar() {
   const links = [
-    { href: '/emergency', label: 'Emergency Hub', icon: ShieldAlert },
-    { href: '/emergency/centers', label: 'Evacuation Centers', icon: ShieldAlert },
-    { href: '/reports/new', label: 'Report an Incident', icon: TriangleAlert },
-    { href: '/emergency/alerts', label: 'Emergency Alerts', icon: Megaphone },
-    { href: '/maps/directory', label: 'Directory', icon: Phone },
-    { href: '/maps/preparedness', label: 'Preparedness Guide', icon: BookOpen },
+    { href: '/emergency', label: 'Emergency Hub', description: 'Find help and safety information', icon: ShieldAlert },
+    { href: '/emergency/centers', label: 'Evacuation Centers', description: 'Explore places to stay safe', icon: Building2 },
+    { href: '/emergency/alerts', label: 'Emergency Alerts', description: 'Read the latest advisories', icon: Megaphone },
+    { href: '/maps/directory', label: 'Directory', description: 'Keep important contacts close', icon: Phone },
+    { href: '/maps/preparedness', label: 'Preparedness Guide', description: 'Be ready before an emergency', icon: BookOpen },
   ] as const;
 
   return (
-    <aside className="flex h-[calc(100vh-220px)] min-h-[480px] flex-col gap-2 overflow-y-auto rounded-2xl border border-border bg-card p-3">
-      <p className="px-1 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Emergency & Reports</p>
-      {links.map(({ href, label, icon: Icon }) => (
-        <Link
-          key={href}
-          href={href}
-          className="flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 transition-colors hover:border-border hover:bg-muted">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-            <Icon size={18} strokeWidth={1.75} />
-          </span>
-          <span className="text-sm font-semibold">{label}</span>
-        </Link>
-      ))}
+    <aside className={styles.sidebar} aria-label="Emergency and community resources">
+      <Link href="/reports/new" className={styles.reportLink}>
+        <Plus size={18} aria-hidden /> Report an incident <ArrowUpRight size={16} aria-hidden />
+      </Link>
+      <nav className={styles.resourceLinks} aria-label="Map resources">
+        {links.map(({ href, label, description, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className={styles.resourceLink}>
+            <span className={styles.resourceIcon}>
+              <Icon size={19} strokeWidth={1.65} aria-hidden />
+            </span>
+            <span className={styles.resourceCopy}><span>{label}</span><small>{description}</small></span>
+            <ArrowUpRight size={14} className={styles.resourceArrow} aria-hidden />
+          </Link>
+        ))}
+      </nav>
     </aside>
   );
 }

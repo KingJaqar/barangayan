@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { AgencySlaStatus } from '@/components/services/agency-sla-status';
 import { submittedDetailLines, requestFee } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
@@ -387,7 +388,7 @@ export default function RequestTrackingScreen() {
           <View style={styles.paymentAmountRow}>
             <ThemedText type="small" themeColor="textSecondary">Total Amount Due</ThemedText>
             <ThemedText type="smallBold">
-              {totalDue === null ? 'Awaiting fee assessment' : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
+              {totalDue === null ? requestFeeLabel(request, null) : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
             </ThemedText>
           </View>
           {showQrPayNow || showCancelSlot ? (
@@ -513,7 +514,7 @@ export default function RequestTrackingScreen() {
         </ThemedView>
 
         {request.purpose_label ? <ThemedView type="backgroundElement" style={styles.section}><ThemedText type="smallBold">Purpose</ThemedText><ThemedText>{request.purpose_label}</ThemedText>{request.purpose_explanation ? <ThemedText>{request.purpose_explanation}</ThemedText> : null}{submittedDetailLines(request.supporting_details).map(([label,value])=><View key={label}><ThemedText type="smallBold">{label}</ThemedText><ThemedText>{value}</ThemedText></View>)}</ThemedView> : null}
-        {fee !== null && fee > 0 && !isPaid && !isRefunded && canPayNow ? <PrimaryButton label="Choose or continue payment" onPress={()=>router.push(`/services/payment/${requestId}`)}/> : null}
+        {(fee === null || fee > 0) && !isPaid && !isRefunded && canPayNow ? <PrimaryButton label="Choose or continue payment" onPress={()=>router.push(`/services/payment/${requestId}`)}/> : null}
         {request.requester_notes ? (
           <AnimatedAppear>
             <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>

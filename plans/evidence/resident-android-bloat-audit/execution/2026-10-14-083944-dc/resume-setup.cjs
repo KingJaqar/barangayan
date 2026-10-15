@@ -1,0 +1,31 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const { spawnSync } = require('node:child_process');
+const root = path.resolve(__dirname, '../../../../..');
+const parent = path.dirname(__dirname);
+const runId = '2026-10-14-' + new Date().toISOString().slice(11, 19).replaceAll(':', '') + '-remaining';
+const run = path.join(parent, runId);
+if (fs.existsSync(run)) throw new Error('Do not overwrite a previous run');
+fs.mkdirSync(path.join(run, 'dc-00'), { recursive: true });
+for (const helper of ['capture.cjs', 'run-check.cjs']) fs.copyFileSync(path.join(__dirname, helper), path.join(run, helper));
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const git = args => spawnSync('git', args, { cwd: root, maxBuffer: 30 * 1024 * 1024 });
+const safety = JSON.parse(fs.readFileSync(path.join(root, 'plans/evidence/resident-android-bloat-audit/strict-deletion-safety-2026-10-14.json'), 'utf8'));
+const candidates = [...safety.candidateFiles.map(item => item.path), ...safety.modifiedInMemory.map(item => item.file), path.join(root, 'apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson')];
+for (const file of [...candidates, path.join(root, 'plans/Resident_Android_Code_and_File_Bloat_Audit_2026_10_14.md'), path.join(root, 'plans/Resident_Android_Unused_Code_Deletion_Execution_Plan_2026_10_14.md')]) {
+  const rel = path.relative(root, file);
+  const target = path.join(run, 'dc-00/before', rel);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(file, target);
+}
+const listed = git(['ls-files', '-z', '--cached', '--others', '--exclude-standard']).stdout.toString().split('\0').filter(file => file && !file.startsWith('plans/evidence/resident-android-bloat-audit/execution/'));
+const hashes = {};
+for (const file of listed) if (fs.existsSync(path.join(root, file))) hashes[file] = sha(fs.readFileSync(path.join(root, file)));
+const environment = 'apps/resident-android-mobile/.env';
+if (fs.existsSync(path.join(root, environment))) hashes[environment] = sha(fs.readFileSync(path.join(root, environment)));
+fs.writeFileSync(path.join(run, 'dc-00/hashes.json'), JSON.stringify(hashes, null, 2) + '\n');
+fs.writeFileSync(path.join(run, 'dc-00/git-status.txt'), git(['status', '--porcelain=v1', '-uall']).stdout);
+fs.writeFileSync(path.join(run, 'dc-00/preexisting.diff'), git(['diff', '--binary']).stdout);
+fs.writeFileSync(path.join(run, 'dc-00/context.json'), JSON.stringify({ runId, startedAt: new Date().toISOString(), head: git(['rev-parse', 'HEAD']).stdout.toString().trim(), candidates, previousRun: path.basename(__dirname), authorization: 'User instructed: if deletion is fully safe, then do it; ensure the deleted code/files is completely unused. Revalidate all active app/test/build/backend consumers and preserve historical candidate bytes. Historical verifier/index remain unchanged as archival records; no backend data deletion is permitted.' }, null, 2) + '\n');
+console.log(JSON.stringify({ runId, run, protectedFiles: Object.keys(hashes).length, beforeFiles: candidates.length + 2 }));

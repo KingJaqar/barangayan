@@ -1,17 +1,20 @@
 'use client';
 
 import { DRIVE_TYPES, type DriveType } from '@barangayan/shared';
+import type { CSSProperties } from 'react';
 
 import { driveTypeConfig } from '@/hooks/use-medical-drives';
+
+import styles from './health.module.css';
 
 export type DriveTypeFilter = DriveType | 'all';
 
 const ALL_KEYS: DriveTypeFilter[] = ['all', ...DRIVE_TYPES];
 
-/** Horizontally-scrollable drive-type filter chips — web counterpart of mobile's HorizontalCategoryNav. */
+/** Wrapping category filters keep every drive type accessible at narrow widths. */
 export function CategoryFilterPills({ active, onSelect }: { active: DriveTypeFilter; onSelect: (k: DriveTypeFilter) => void }) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1">
+    <div className={styles.filters} role="group" aria-label="Filter drives by category">
       {ALL_KEYS.map((key) => {
         const label = key === 'all' ? 'All' : driveTypeConfig(key).label;
         const color = key === 'all' ? 'var(--accent)' : driveTypeConfig(key).color;
@@ -21,12 +24,9 @@ export function CategoryFilterPills({ active, onSelect }: { active: DriveTypeFil
             key={key}
             type="button"
             onClick={() => onSelect(key)}
-            className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
-            style={
-              isActive
-                ? { backgroundColor: color, color: '#fff' }
-                : { borderWidth: 1, borderStyle: 'solid', borderColor: `${color}55`, color, backgroundColor: `${color}0d` }
-            }>
+            className={`${styles.filter} ${styles.categoryFilter}`}
+            style={{ '--drive-color': color } as CSSProperties}
+            aria-pressed={isActive}>
             {label}
           </button>
         );

@@ -1,0 +1,12 @@
+{
+  "status": "pending manual verification",
+  "freshBundleExecuted": false,
+  "reason": "Existing native shell rejected the fresh development-client cold-launch VIEW link: Intent does not match any activities. Verified normal launcher was reopened. No new bundle/flow is counted as passed.",
+  "previewTerminated": true,
+  "temporaryForwardingRemoved": [
+    8160
+  ],
+  "appDataReset": false,
+  "nativeShellChangedOrInstalled": false,
+  "manualSteps": "REPORT.md pending manual steps; all nine DC-05 journey rows remain unqualified"
+}

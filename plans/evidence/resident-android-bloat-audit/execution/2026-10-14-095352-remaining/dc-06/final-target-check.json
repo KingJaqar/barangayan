@@ -1,0 +1,27 @@
+{
+  "preparedEditsIdentical": true,
+  "deletedPathsAbsent": true,
+  "activeBoundaryPreserved": true,
+  "refreshedChecks": [
+    {
+      "id": "types",
+      "exitCode": 0
+    },
+    {
+      "id": "tests",
+      "exitCode": 0
+    },
+    {
+      "id": "lint",
+      "exitCode": 0
+    },
+    {
+      "id": "android-export-temp",
+      "exitCode": 0
+    },
+    {
+      "id": "web-export-unrestricted",
+      "exitCode": 0
+    }
+  ]
+}

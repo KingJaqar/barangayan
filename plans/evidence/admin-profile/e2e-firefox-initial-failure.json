@@ -1,0 +1,57 @@
+{
+  "status": "failed",
+  "browser": "firefox",
+  "database": "admin_profile_test_ba30e521ba",
+  "containers": [
+    "admin-profile-db-ba30e521ba",
+    "admin-profile-auth-ba30e521ba",
+    "admin-profile-rest-ba30e521ba",
+    "admin-profile-storage-ba30e521ba"
+  ],
+  "checks": [
+    "Fresh empty-schema and representative-schema migration rehearsal with real caller roles",
+    "Expired/rate-limited proof, commit-time target retirement and atomic mandatory link/unlink audit failure",
+    "Existing resident_profile_conflict database regression checks",
+    "Existing resident_email_verification database regression checks",
+    "Existing resident_account_setup database regression checks",
+    "Simultaneous conditional saves, competing verified links and duplicate unlinks commit exactly one winner",
+    "Direct protected route, Dashboard -> Profile -> Theme order and active state",
+    "Dirty navigation preserves drafts; real save affects only admin and preserves legacy address",
+    "Dirty Cancel restores saved values through explicit confirmation",
+    "Atomic stale-save rejection keeps draft and requires deliberate reload",
+    "Theme destination, dirty browser Back cancellation/discard and Forward restoration",
+    "Committed replacement survives old-photo cleanup failure with one save and explicit partial-success feedback",
+    "Oversized avatar rejected; real upload, reference commit and retirement pass",
+    "Uncertain upload response leaves the saved profile untouched and retires only its confirmed unreferenced object",
+    "Avatar reference failure preserves saved state and removes only the new unreferenced object",
+    "Lost commit response reconciled by fresh read with exactly one mutation",
+    "Optional audit failure reports partial success without repeating persistence"
+  ],
+  "consoleErrors": [
+    "Failed to fetch RSC payload for http://127.0.0.1:51274/profile. Falling back to browser navigation. JSHandle@object [/_next/static/chunks/1968-9e3047059368200e.js]"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Dedicated local database cloned from the local 0117 schema; 0118 and 0119 are applied only to this test database.",
+    "Hosted SMTP, Google provider callbacks and hosted Auth configuration remain unverified.",
+    "Test containers are stopped on completion. The isolated database is preserved; no existing data is deleted."
+  ],
+  "localAuthSettings": {
+    "GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED": "true",
+    "GOTRUE_MFA_TOTP_VERIFY_ENABLED": "true",
+    "GOTRUE_PASSWORD_REQUIRED_CHARACTERS": "abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ:0123456789:!\"#$%&'()*+,-./\\:;<=>?@[\\]^_`{|}~",
+    "GOTRUE_MFA_TOTP_ENROLL_ENABLED": "true",
+    "GOTRUE_MAILER_AUTOCONFIRM": "false",
+    "GOTRUE_JWT_EXP": "3600",
+    "GOTRUE_PASSWORD_MIN_LENGTH": "6",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_REAUTHENTICATION": "false",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_CURRENT_PASSWORD": "false"
+  },
+  "nextPid": 42860,
+  "webOrigin": "http://127.0.0.1:51274",
+  "failure": "page.reload: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - waiting for navigation until \"load\"\u001b[22m\n",
+  "visibleFailureState": "Barangayan\n\nProfile E2E Barangay admin\n\n2\nC\nConcurrent Admin\n\nOVERVIEW\n\nDashboard\nProfile\nTheme\n\nOPERATIONS\n\nServices\nAnnouncements\nRequests\nTransactions\n\nDIRECTORIES & MAPPING\n\nResident directory\nIncident reports\nIncident map\nHealth\nMedical Applicants\nWaste Management\n\nEMERGENCY & DRRM\n\nHub\nEvacuation Centers\nEvacuation Routing\nEmergency QR\nHouseholds & Residents\n\nADMINISTRATION\n\nStaff member\nFAQ content\nTerms & Privacy\nAbout Us\nSettings\nArchives\nLogout\nCA\n\nAdmin account\n\nConcurrent Admin\n\nProfile E2E Barangay · Personal profile, account security and verified resident association.\n\nEdit profile\n\nThe change completed, but its audit entry could not be recorded.\n\nAdmin profile\n\nChanges here affect your admin profile only. Contact email is separate from sign-in email.\n\nDisplay name\nConcurrent Admin\nContact email\ncontact-admin@example.test\nMobile number\n09171234568\nHome address\nLegacy admin address\nCity\nNot provided\nProvince\nNot provided\nDate of birth\nNot provided\nSex\nNot provided\nEmployment\nNot provided\nOccupation\nNot provided\nContact email verification\nNot applicable — admin contact verification is unavailable\nID verification\nNot provided\nLocation verification\nNot provided\nStaff information\n\nRead-only. Staff management controls your role and status.\n\nPosition\nstaff\nStatus\nActive\nDate hired\n2026-10-15\nAdmin account security\n\nThese controls affect your admin sign-in only. Contact email and resident credentials stay separate.\n\nSign-in email\nprofile-admin-ba30e521ba@example.test\nAuth email confirmation\nConfirmed\nLogin providers\nemail\nChange sign-in email\nChange password\nAssociated resident account\n\nA separate account. These details are read-only; admin changes do not update it.\n\nNo resident account is linked. Linking requires an existing resident account and proof of ownership.\n\nRetry account details\n\nLinking authenticates an existing resident account in a separate window. It copies no profile information.\n\nLink my resident account\nAdditional admin details",
+  "focusAtFailure": {
+    "tag": "P"
+  }
+}

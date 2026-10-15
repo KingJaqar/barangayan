@@ -1,0 +1,18 @@
+begin;
+select no_plan();
+select is((select count(*)::int from public.service_requests where fee_assessment_state='pending'),0,'Migration removes every pending fee assessment');
+select is(r.assessed_amount_centavos,10000,'Existing uncharged certificate immediately gets the fixed fee') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id='b6250000-0000-0000-0000-000000000001' and d.service_kind='indigency';
+select is(r.assessed_amount_centavos,2500,'Existing pickup amount is preserved') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id='b6250000-0000-0000-0000-000000000001' and d.service_kind='first_time_job_seeker';
+select is(p.amount_centavos,2500,'Migration preserves historical ledger amount') from public.payments p join public.service_requests r on r.id=p.service_request_id where r.resident_id='b6250000-0000-0000-0000-000000000001';
+select is(r.fee_assessment_state,'page_count_required','Old copy request asks the resident for pages') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id='b6250000-0000-0000-0000-000000000001' and d.service_kind='certified_true_copy';
+set local role authenticated;
+set local request.jwt.claim.sub='b6250000-0000-0000-0000-000000000001';
+select lives_ok(format('select public.set_service_request_payment_method(%L,''pickup'')',r.id),'Old business request can select pickup immediately') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='business';
+select lives_ok(format('select public.start_pickup_payment(%L)',r.id),'Old business request reaches payment without review') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='business';
+select throws_ok(format('select public.set_service_request_pages(%L,0)',r.id),'22023','invalid_total_pages','Invalid page count rejected') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='certified_true_copy';
+select lives_ok(format('select public.set_service_request_pages(%L,9)',r.id),'Resident supplies missing pages without staff review') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='certified_true_copy';
+select is(r.assessed_amount_centavos,9000,'Existing copy fee calculated from supplied pages') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='certified_true_copy';
+select lives_ok(format('select public.set_service_request_payment_method(%L,''qrph'')',r.id),'Recovered copy request can immediately select QR PH') from public.service_requests r join public.document_types d on d.id=r.document_type_id where r.resident_id=auth.uid() and d.service_kind='certified_true_copy';
+reset role;
+select * from finish();
+rollback;

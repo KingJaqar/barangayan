@@ -1,0 +1,311 @@
+{
+  "date": "2026-10-14",
+  "historical": {
+    "verifier": "scripts/phase0-verify.cjs",
+    "classification": "Archival evidence integrity; original git-diff boundary accepts only migration 0094. No CI/package caller found. Must remain unchanged; full original source snapshot cannot be certified.",
+    "indexed": 758,
+    "recovered": 754,
+    "unrecoverable": [
+      "apps/admin-web/next-env.d.ts",
+      "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+      "apps/resident-web/next-env.d.ts",
+      "supabase/tests/rls_isolation.test.sql"
+    ],
+    "decision": "Hold all indexed removals until owner resolves archival compatibility; do not weaken verifier or alter evidence."
+  },
+  "declarations": [
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "names": [
+        "ShimmerGroup"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "names": [
+        "SkeletonGap"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/constants/payment.ts",
+      "names": [
+        "PaymentMethodOption"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/constants/payment.ts",
+      "names": [
+        "PAYMENT_METHOD_OPTIONS"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "names": [
+        "normalizeHexColor"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/dialog.ts",
+      "names": [
+        "notify"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "names": [
+        "clearEmergencyCache"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "names": [
+        "getCachedExpoPushToken"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "names": [
+        "addNotificationResponseListener"
+      ],
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    }
+  ],
+  "orphanFiles": [
+    {
+      "file": "apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/app-header.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/hint-row.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/settings-row.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-family-members.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    }
+  ],
+  "styles": [
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "key": "group",
+      "status": "hold",
+      "references": [
+        "group"
+      ],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "key": "centersList",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "key": "centersToolbar",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "key": "alertLinkPressable",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "key": "alertLink",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "key": "verificationBanner",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "key": "verificationText",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "key": "pillsScroll",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/family-content.tsx",
+      "key": "memberRelation",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "key": "empty",
+      "status": "hold",
+      "references": [],
+      "reason": "Historical indexed path/hash dependency or U01-dependent hold"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "passwordMatchIndicator",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalBackdrop",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalCard",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successIcon",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalTitle",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalMessage",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalActions",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "successModalActionButton",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "formError",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "submitActions",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "footerRow",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "key": "footerText",
+      "status": "eligible",
+      "references": [],
+      "reason": "Private nonescaping styles; no property consumer; passive literals/plain Spacing reads; not historically indexed"
+    }
+  ],
+  "boundary": {
+    "file": "apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+    "active": "apps/resident-android-mobile/assets/geojson/ampid1-boundary.json",
+    "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4",
+    "identical": true,
+    "bytes": 20316,
+    "status": "eligible",
+    "provenance": "Migration 0024 source comment names earlier apps/mobile path. Active identical asset and rollback copy preserve supplied trace; no executable reader or historical index entry."
+  },
+  "manual": {
+    "native": "ADB daemon failed to start in restricted execution; no fresh device smoke result",
+    "browser": "Baseline web export pending"
+  }
+}

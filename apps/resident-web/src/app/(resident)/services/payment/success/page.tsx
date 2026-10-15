@@ -2,6 +2,7 @@ import { formatCentavosAsPHP, formatDateTime } from '@barangayan/shared';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
+import { DownloadReceiptButton } from '@/components/services/download-receipt-button';
 import { ReadFailure } from '@/components/shared/read-failure';
 import { Button } from '@/components/ui/button';
 import { requireUser } from '@/lib/auth/require-user';
@@ -54,8 +55,9 @@ export default async function PaymentSuccessPage({
 
       <div className="flex w-full flex-col gap-2">
         <Button asChild size="lg">
-          <Link href={requestId ? `/services/requests/${requestId}` : '/services/requests'}>Track My Request →</Link>
+          <Link href={requestId ? `/services/requests/${requestId}` : '/services/requests'}>Track My Request</Link>
         </Button>
+        <DownloadReceiptButton payment={payment} referenceNumber={refNumber ?? payment.service_request_id} />
         <Button asChild size="lg" variant="secondary">
           <Link href="/home">Return to Home</Link>
         </Button>

@@ -1,0 +1,22 @@
+
+> @barangayan/web@0.1.0 test:tables
+> vitest run --config vitest.config.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/admin-web
+
+ ✓ tests/table-browse/refund-handler.test.ts (19 tests) 67ms
+ ✓ tests/table-browse/browse-state.test.ts (51 tests) 47ms
+ ✓ tests/table-browse/operations.test.ts (3 tests) 212ms
+ ✓ tests/table-browse/queries.test.ts (10 tests) 394ms
+ ✓ tests/table-browse/content-archive.test.ts (4 tests) 331ms
+ ✓ tests/table-browse/pilot.test.ts (5 tests) 298ms
+ ✓ tests/search/search.test.ts (13 tests) 906ms
+ ✓ tests/profile/schema.test.ts (6 tests) 14ms
+ ✓ tests/table-browse/record-lifecycle.test.ts (5 tests) 44ms
+
+ Test Files  9 passed (9)
+      Tests  116 passed (116)
+   Start at  05:17:00
+   Duration  7.87s (transform 3.20s, setup 0ms, collect 10.65s, tests 2.31s, environment 4ms, prepare 32.50s)
+

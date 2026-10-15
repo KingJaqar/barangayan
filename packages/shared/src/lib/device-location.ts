@@ -77,7 +77,7 @@ export interface DeviceLocationState {
   origin: ConfirmedOrigin | null;
   /** Meaningful when status is 'denied': false means the OS/browser will not prompt again. */
   canAskAgain: boolean;
-  /** The granted permission only allows approximate location (Android "Approximate"). */
+  /** The granted permission only allows approximate location (Android "Approximate", iOS Precise Location off). */
   approximate: boolean;
   unavailableReason: LocationUnavailableReason | null;
 }
@@ -161,7 +161,9 @@ function minutesText(ms: number): string {
   return `${minutes} min`;
 }
 
-function concernText(concern: FixConcern, fix: LocationFix, platform: 'android' | 'web'): string {
+export type LocationPlatform = 'android' | 'ios' | 'web';
+
+function concernText(concern: FixConcern, fix: LocationFix, platform: LocationPlatform): string {
   switch (concern) {
     case 'last-known':
       return `This is your last known location, about ${minutesText(locationFixAgeMs(fix))} old.`;
@@ -172,17 +174,18 @@ function concernText(concern: FixConcern, fix: LocationFix, platform: 'android' 
     case 'accuracy-unknown':
       return 'Its accuracy is unknown.';
     case 'approximate-permission':
-      return platform === 'android'
-        ? 'Only approximate location is allowed. Turn on Precise location in Settings for a better fix.'
-        : 'Only approximate location is available.';
+      if (platform === 'android') return 'Only approximate location is allowed. Turn on Precise location in Settings for a better fix.';
+      if (platform === 'ios') return 'Only approximate location is allowed. Turn on Precise Location for Barangayan in Settings for a better fix.';
+      return 'Only approximate location is available.';
   }
 }
 
 /**
  * Resident-facing wording for the current state, or null when nothing needs saying
- * (a fresh accepted origin). Shared so Android and web describe states identically.
+ * (a fresh accepted origin). Shared so Android, iOS and web describe states identically.
  */
-export function describeDeviceLocation(state: DeviceLocationState, platform: 'android' | 'web'): LocationStatusMessage | null {
+export function describeDeviceLocation(state: DeviceLocationState, platform: LocationPlatform): LocationStatusMessage | null {
+  const native = platform !== 'web';
   const keptOrigin = state.origin ? ' Your previous location is still being used.' : '';
   switch (state.status) {
     case 'idle':
@@ -209,7 +212,7 @@ export function describeDeviceLocation(state: DeviceLocationState, platform: 'an
       const details = pending.concerns.map((concern) => concernText(concern, pending.fix, platform));
       if (state.activeRequestId !== null) details.push('Still looking for a better fix…');
       const actions: LocationAction[] = ['confirm', 'reject'];
-      if (platform === 'android' && pending.concerns.includes('approximate-permission')) actions.push('open-settings');
+      if (native && pending.concerns.includes('approximate-permission')) actions.push('open-settings');
       return { tone: 'warning', title: 'Confirm your location', detail: details.join(' '), busy: state.activeRequestId !== null, actions };
     }
     case 'ready':
@@ -233,14 +236,17 @@ export function describeDeviceLocation(state: DeviceLocationState, platform: 'an
           actions: ['locate'],
         };
       }
-      return platform === 'android'
+      return native
         ? { tone: 'warning', title: 'Location is blocked for Barangayan', detail: `Allow location in Settings, then come back.${keptOrigin}`, busy: false, actions: ['open-settings'] }
         : { tone: 'warning', title: 'Location is blocked for this site', detail: `Allow location in your browser's site settings, then try again.${keptOrigin}`, busy: false, actions: ['retry'] };
     case 'services-disabled':
       return {
         tone: 'warning',
         title: 'Location services are off',
-        detail: `Turn on location in your phone's settings.${keptOrigin}`,
+        // iOS cannot deep-link to Location Services, so say where it is instead of offering Settings.
+        detail: platform === 'ios'
+          ? `Turn on Location Services in Settings > Privacy & Security, then try again.${keptOrigin}`
+          : `Turn on location in your phone's settings.${keptOrigin}`,
         busy: false,
         actions: platform === 'android' ? ['open-settings', 'retry'] : ['retry'],
       };

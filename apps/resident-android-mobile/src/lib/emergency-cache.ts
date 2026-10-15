@@ -47,18 +47,6 @@ export async function setCachedData<T>(tag: string, data: T): Promise<void> {
   }
 }
 
-export async function clearEmergencyCache(): Promise<void> {
-  try {
-    const keys = await AsyncStorage.getAllKeys();
-    const toRemove = keys.filter((k) => k.startsWith(CACHE_PREFIX));
-    if (toRemove.length > 0) {
-      await AsyncStorage.multiRemove(toRemove);
-    }
-  } catch {
-    // ignore
-  }
-}
-
 export async function enqueueCheckin(tag: string, entry: QueueEntry): Promise<void> {
   try {
     const existing = await getQueuedCheckins(tag);

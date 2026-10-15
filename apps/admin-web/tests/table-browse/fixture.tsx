@@ -8,9 +8,10 @@ import { TableBrowseControls } from '../../src/components/admin/table-browse-con
 import { TablePagination } from '../../src/components/admin/table-pagination';
 import { SegmentedFilter } from '../../src/components/admin/segmented-filter';
 import { useTableBrowseNavigation } from '../../src/hooks/use-table-browse-navigation';
+import { AdminSelect } from '../../src/components/admin/dropdown/admin-select';
 import { pageRange, queryIdentity, type BrowseConfig } from '../../src/lib/admin-tables/browse-state';
 
-const config: BrowseConfig = { defaultSort: 'name', filters: { tab: { values: ['all', 'active'], defaultValue: 'active' } }, sorts: [
+const config: BrowseConfig = { defaultSort: 'name', filters: { tab: { values: ['all', 'active'], defaultValue: 'active' }, category: { values: ['', 'alpha', 'beta'], defaultValue: '' } }, sorts: [
   { key: 'name', columnId: 'name', label: 'Name', category: 'text', directions: ['asc', 'desc'], initialDirection: 'asc' },
   { key: 'created', label: 'Date created', category: 'date', directions: ['asc', 'desc'], initialDirection: 'desc' },
 ] };
@@ -39,6 +40,9 @@ function Fixture() {
       announcement={`Name ${state.dir}; Showing ${range.start}–${range.end} of ${matches.length}`}
       controls={<TableBrowseControls state={state} sorts={config.sorts} searchDraft={browse.searchDraft}
         onSearchChange={browse.changeSearch} onChange={browse.commit}
+        category={<label className="table-browse-field">Category<AdminSelect aria-label="Category" value={state.filters.category}
+          onValueChange={category => void browse.commit({ filters: { category } })}
+          options={[{ value: '', label: 'All categories' }, { value: 'alpha', label: 'Alpha category' }, { value: 'beta', label: 'Beta category' }]} /></label>}
         filters={<SegmentedFilter label="Status" value={state.filters.tab} options={[{ value: 'all', label: 'All' }, { value: 'active', label: 'Active' }]}
           onChange={tab => void browse.commit({ filters: { tab } })} />} />}
       pagination={<TablePagination total={matches.length} page={range.page} pageSize={state.pageSize}

@@ -1,0 +1,40 @@
+{
+  "sections": 52,
+  "checkpoints": 1218,
+  "breakdownBulletLines": 1218,
+  "wordingDrift": [],
+  "androidRoutes": 54,
+  "iosOnlyRoutes": 10,
+  "modalFamilies": 16,
+  "postBaselineDelta": [
+    "RD01 apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx (untriaged)",
+    "RD02 apps/resident-android-mobile/src/app/emergency-centers.tsx (untriaged)"
+  ],
+  "phases": 21,
+  "tasks": 162,
+  "dxRows": 52,
+  "contractRows": 24,
+  "primaryPerPhase": {
+    "P01": 60,
+    "P02": 24,
+    "P04": 157,
+    "P05": 131,
+    "P06": 62,
+    "P07": 45,
+    "P08": 45,
+    "P09": 66,
+    "P10": 69,
+    "P11": 63,
+    "P12": 69,
+    "P13": 84,
+    "P14": 70,
+    "P15": 55,
+    "P16": 101,
+    "P17": 20,
+    "P18": 97
+  },
+  "nonWorkingAndroidCheckpoints": 63,
+  "namedOwner": "KingJaqar",
+  "rowsWithoutNamedOwner": 0,
+  "failures": []
+}

@@ -20,6 +20,7 @@ export type ModuleKey =
   | 'waste-management'
   | 'hub'
   | 'evacuation-centers'
+  | 'evacuation-routing'
   | 'emergency-qr'
   | 'households-residents'
   | 'staff'
@@ -33,7 +34,6 @@ interface ModuleInfo {
   label: string;
   /** null = not linkable (system/auth events have no page to jump to). */
   href: string | null;
-  icon: string;
 }
 
 /** Display order for filter chips — mirrors the admin sidebar's module order,
@@ -51,6 +51,7 @@ export const MODULE_ORDER: ModuleKey[] = [
   'waste-management',
   'hub',
   'evacuation-centers',
+  'evacuation-routing',
   'emergency-qr',
   'households-residents',
   'staff',
@@ -62,25 +63,26 @@ export const MODULE_ORDER: ModuleKey[] = [
 ];
 
 export const MODULE_META: Record<ModuleKey, ModuleInfo> = {
-  services: { label: 'Services', href: '/services', icon: '📄' },
-  announcements: { label: 'Announcements', href: '/announcements', icon: '📢' },
-  requests: { label: 'Requests', href: '/requests', icon: '📋' },
-  transactions: { label: 'Transactions', href: '/transactions', icon: '💳' },
-  residents: { label: 'Resident Directory', href: '/residents', icon: '👤' },
-  'incident-reports': { label: 'Incident Reports', href: '/incident-reports', icon: '⚠️' },
-  health: { label: 'Health', href: '/health', icon: '🏥' },
-  'health-applicants': { label: 'Medical Applicants', href: '/health', icon: '🩺' },
-  'waste-management': { label: 'Waste Management', href: '/waste-management', icon: '♻️' },
-  hub: { label: 'Hub', href: '/hub', icon: '🚨' },
-  'evacuation-centers': { label: 'Evacuation Centers', href: '/evacuation-centers', icon: '🏠' },
-  'emergency-qr': { label: 'Emergency QR', href: '/emergency-qr', icon: '🆔' },
-  'households-residents': { label: 'Households & Residents', href: '/households-residents', icon: '🏘️' },
-  staff: { label: 'Staff Member', href: '/staff', icon: '👔' },
-  faq: { label: 'FAQ Content', href: '/faq', icon: '❓' },
-  'terms-privacy': { label: 'Terms & Privacy', href: '/terms-privacy', icon: '📜' },
-  'about-us': { label: 'About Us', href: '/about-us', icon: 'ℹ️' },
-  settings: { label: 'Settings', href: '/settings', icon: '⚙️' },
-  system: { label: 'System (Login/Logout)', href: null, icon: '🔒' },
+  services: { label: 'Services', href: '/services' },
+  announcements: { label: 'Announcements', href: '/announcements' },
+  requests: { label: 'Requests', href: '/requests' },
+  transactions: { label: 'Transactions', href: '/transactions' },
+  residents: { label: 'Resident Directory', href: '/residents' },
+  'incident-reports': { label: 'Incident Reports', href: '/incident-reports' },
+  health: { label: 'Health', href: '/health' },
+  'health-applicants': { label: 'Medical Applicants', href: '/health' },
+  'waste-management': { label: 'Waste Management', href: '/waste-management' },
+  hub: { label: 'Hub', href: '/hub' },
+  'evacuation-centers': { label: 'Evacuation Centers', href: '/evacuation-centers' },
+  'evacuation-routing': { label: 'Evacuation Routing', href: '/evacuation-routing' },
+  'emergency-qr': { label: 'Emergency QR', href: '/emergency-qr' },
+  'households-residents': { label: 'Households & Residents', href: '/households-residents' },
+  staff: { label: 'Staff Member', href: '/staff' },
+  faq: { label: 'FAQ Content', href: '/faq' },
+  'terms-privacy': { label: 'Terms & Privacy', href: '/terms-privacy' },
+  'about-us': { label: 'About Us', href: '/about-us' },
+  settings: { label: 'Settings', href: '/settings' },
+  system: { label: 'System (Login/Logout)', href: null },
 };
 
 /**
@@ -103,6 +105,7 @@ export const MODULE_ENTITY_TYPES: Record<ModuleKey, AdminEntityType[]> = {
   'waste-management': ['waste_zone', 'waste_schedule', 'incident'],
   hub: ['emergency_information'],
   'evacuation-centers': ['evacuation_center'],
+  'evacuation-routing': ['road_closure', 'routing_area'],
   'emergency-qr': ['emergency_qr'],
   'households-residents': ['household'],
   staff: ['staff'],
@@ -154,6 +157,9 @@ export function entityTypeToModule(row: Pick<AdminAuditLogRow, 'entity_type' | '
       return 'hub';
     case 'evacuation_center':
       return 'evacuation-centers';
+    case 'road_closure':
+    case 'routing_area':
+      return 'evacuation-routing';
     case 'emergency_qr':
       return 'emergency-qr';
     case 'household':
@@ -209,32 +215,8 @@ export const CATEGORY_LABELS: Record<keyof AdminAuditLogCategory, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Display helpers (presentation layer — emoji/labels stay here, not in the DB)
+// Display helpers (presentation layer — labels stay here, not in the DB)
 // ---------------------------------------------------------------------------
-
-export const ENTITY_ICONS: Record<string, string> = {
-  service_request: '📋',
-  announcement: '📢',
-  incident: '⚠️',
-  resident: '👤',
-  waste_zone: '♻️',
-  waste_schedule: '♻️',
-  medical_drive: '🏥',
-  drive_registration: '🩺',
-  evacuation_center: '🏠',
-  document_type: '📄',
-  faq_article: '❓',
-  emergency_information: '🚨',
-  payment: '💳',
-  staff: '👔',
-  system: '🔒',
-  site_content: '📜',
-  about_us: 'ℹ️',
-  developer_profile: 'ℹ️',
-  household: '🏘️',
-  emergency_qr: '🆔',
-  settings: '⚙️',
-};
 
 export const ACTION_VERBS: Record<string, string> = {
   create: 'Created',
@@ -246,7 +228,7 @@ export const ACTION_VERBS: Record<string, string> = {
 };
 
 export interface AdminAuditNotification extends AdminAuditLogRow {
-  /** Formatted label for display, e.g. "📋 Created: Request #REQ-001" */
+  /** Formatted label for display, e.g. "Created: Request #REQ-001" */
   displayLabel: string;
   /** Relative time string, e.g. "3 minutes ago" */
   relativeTime: string;
@@ -261,12 +243,11 @@ export interface AdminAuditNotification extends AdminAuditLogRow {
 }
 
 export function buildDisplayLabel(row: AdminAuditLogRow): string {
-  const icon = ENTITY_ICONS[row.entity_type] ?? '📝';
   const verb = ACTION_VERBS[row.action] ?? row.action;
   const label = row.entity_label ?? row.entity_type;
   const adminName = (row.metadata as Record<string, unknown> | null)?.admin_name as string | undefined;
   const byLine = adminName ? ` — ${adminName}` : '';
-  return `${icon} ${verb}: ${label}${byLine}`;
+  return `${verb}: ${label}${byLine}`;
 }
 
 /** Derives the click-through href from the row's module, with a couple of

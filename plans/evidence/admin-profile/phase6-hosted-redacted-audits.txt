@@ -1,0 +1,6 @@
+redacted_audit
+{"changes":null,"metadata":{"operation":"unlink_resident"},"operation":"unlink_resident"}
+{"changes":null,"metadata":{"operation":"link_resident"},"operation":"link_resident"}
+{"changes":null,"metadata":{"fields":[],"operation":"change_admin_email"},"operation":"change_admin_email"}
+{"changes":null,"metadata":{"fields":[],"operation":"change_admin_password"},"operation":"change_admin_password"}
+{"changes":null,"metadata":{"fields":["full_name","email"],"operation":"save_admin_profile"},"operation":"save_admin_profile"}

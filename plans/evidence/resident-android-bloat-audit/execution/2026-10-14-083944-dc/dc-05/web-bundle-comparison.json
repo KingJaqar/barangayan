@@ -1,0 +1,8 @@
+{
+  "baselineEntry": "C:/Users/User/barangayan/plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-00/web-export/_expo/static/js/web/entry-8f49dc1e49d61d6bf578f7b0c4d17aa0.js",
+  "finalEntry": "C:/Users/User/barangayan/plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-05/web-export-unrestricted/_expo/static/js/web/entry-12c2b22e9330ad3828d53d09c23e0f19.js",
+  "baselineBytes": 5307827,
+  "finalBytes": 5307039,
+  "delta": -788,
+  "sharedChunksUnchanged": true
+}

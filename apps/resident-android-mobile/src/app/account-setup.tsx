@@ -1,7 +1,9 @@
 import { Redirect, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountSetupStatus } from '@/components/account-setup-status';
+import { EmergencyEntryLink } from '@/components/emergency-entry-link';
 import { ResidentDetailsForm } from '@/components/resident-details-form';
 import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
 import { ThemedText } from '@/components/themed-text';
@@ -11,8 +13,17 @@ import { authSetupRequests, profileSetupRequests } from '@/lib/setup-request';
 
 export default function AccountSetup() {
   const { session } = useAuth();
-  // In-memory drafts survive wizard back/forward, but never cross accounts.
-  return <OwnedAccountSetup key={session?.user.id ?? 'signed-out'} />;
+  const insets = useSafeAreaInsets();
+  // In-memory drafts survive wizard back/forward, but never cross accounts. A resident held
+  // in setup can still open the public evacuation centers (DRRM routing plan R6).
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <OwnedAccountSetup key={session?.user.id ?? 'signed-out'} />
+      </View>
+      <EmergencyEntryLink style={{ paddingBottom: insets.bottom }} />
+    </View>
+  );
 }
 function OwnedAccountSetup() {
   const { session, setupRoute: route, refreshCompletion, setSetupIntent, logout, setPasswordRecovery, signedOutEntry } = useAuth();

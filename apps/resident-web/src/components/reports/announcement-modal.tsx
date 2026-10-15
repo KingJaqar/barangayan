@@ -1,13 +1,14 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { useRef } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion';
 import { X, Clock } from 'lucide-react';
 import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory, type Tables } from '@barangayan/shared';
 
 import { renderIonicon } from '@/lib/ionicon-map';
 import { drawerTransition } from '@/lib/motion';
+import styles from './announcements.module.css';
 
 type AnnouncementRow = Tables<'announcements'>;
 
@@ -51,7 +52,7 @@ export function AnnouncementModal({ visible, announcement, onClose }: Announceme
           <DialogPrimitive.Portal forceMount>
             <DialogPrimitive.Overlay asChild forceMount>
               <motion.div
-                className="fixed inset-0 z-50 bg-black/45"
+                className={styles.overlay}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: drawerTransition.enter }}
                 exit={{ opacity: 0, transition: drawerTransition.exit }}
@@ -68,7 +69,7 @@ export function AnnouncementModal({ visible, announcement, onClose }: Announceme
                 returnFocus.current?.focus();
               }}>
               <motion.div
-                className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-2xl rounded-t-3xl bg-background pb-safe-bottom shadow-2xl outline-none"
+                className={styles.sheet}
                 initial={{ y: '100%' }}
                 animate={{ y: 0, transition: drawerTransition.enter }}
                 exit={{ y: '100%', transition: drawerTransition.exit }}>
@@ -94,38 +95,36 @@ function SheetBody({ announcement }: { announcement: AnnouncementRow }) {
     <div inert={!isPresent}>
       {/* Handle */}
       <div aria-hidden className="flex justify-center pt-3 pb-1">
-        <div className="h-1 w-9 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+        <div className="h-1 w-9 rounded-full bg-border" />
       </div>
 
-      <div className="flex max-h-[80dvh] flex-col gap-3 overflow-y-auto px-5 pb-6 pt-3">
+      <div className={`${styles.sheetBody} ${styles.categoryTheme}`} style={{ '--announcement-category': color } as CSSProperties}>
         {/* Header: category chip + close button */}
         <div className="flex items-center justify-between">
-          <div
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
-            style={{ backgroundColor: `${color}1A`, color }}>
-            {renderIonicon(icon, { size: 13, color })}
+          <div className={styles.category}>
+            {renderIonicon(icon, { size: 14, 'aria-hidden': true })}
             {label}
           </div>
           <DialogPrimitive.Close
             aria-label="Close"
-            className="flex size-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-muted/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            className={styles.closeButton}>
             <X aria-hidden size={18} />
           </DialogPrimitive.Close>
         </div>
 
         {/* Title */}
-        <DialogPrimitive.Title className="text-lg font-bold leading-snug tracking-tight">{announcement.title}</DialogPrimitive.Title>
+        <DialogPrimitive.Title className={styles.sheetTitle}>{announcement.title}</DialogPrimitive.Title>
 
         {/* Timestamp */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock aria-hidden size={13} />
+        <div className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+          <Clock aria-hidden size={14} className="mt-0.5 shrink-0" />
           <span>{timeAgo(announcement.published_at)} · {formatDateTime(announcement.published_at)}</span>
         </div>
 
         <hr className="border-border" />
 
         {/* Full body */}
-        <DialogPrimitive.Description className="whitespace-pre-line text-sm leading-relaxed">{detail}</DialogPrimitive.Description>
+        <DialogPrimitive.Description className={styles.detail}>{detail}</DialogPrimitive.Description>
       </div>
     </div>
   );

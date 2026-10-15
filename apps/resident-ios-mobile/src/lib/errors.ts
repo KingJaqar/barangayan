@@ -1,20 +1,42 @@
 import { ZodError } from 'zod';
+import { classifyFailure, DataError, type FailureKind } from '../data/outcome';
 
 export class PublicError extends Error {}
+
+/** Code-specific copy from the existing contracts; codes win over the generic kind copy. */
+const CODE_MESSAGES: Record<string, string> = {
+  '23505': 'This may already have been submitted. Refresh your records before trying again.',
+  P0002: 'This activity is no longer available.',
+  P0003: 'There are no remaining slots for this activity.',
+  P0004: 'You are already registered for this activity.',
+  P0010: 'This action is not available for your account or barangay.',
+  P0011: 'This action is not available for your account or barangay.',
+  P0012: 'This action is not available for your account or barangay.',
+  invalid_credentials: 'The email or password is incorrect.',
+};
+
+const KIND_MESSAGES: Record<FailureKind, string> = {
+  cancelled: 'This action was cancelled.',
+  offline: 'You appear to be offline. Check your connection and try again.',
+  timeout: 'The server took too long to respond. Check your connection and try again.',
+  session: 'Your session has expired. Sign in again.',
+  authorization: 'You do not have access to this action. Refresh or contact your barangay.',
+  'not-found': 'This record is no longer available.',
+  conflict: 'This may already have been submitted. Refresh your records before trying again.',
+  'rate-limited': 'Please wait a moment before trying again.',
+  validation: 'Some details were not accepted. Check your entries and try again.',
+  schema: 'The app received an unexpected response. Update the app or try again later.',
+  http: 'The server could not complete this action. Try again later.',
+  'unknown-commit': 'We could not confirm whether this was saved. Refresh your records before trying again.',
+  // Raw provider errors can contain private data, URLs or internal SQL details.
+  unknown: 'Unable to complete this action. Check your connection and retry. If you submitted a form, refresh your records first.',
+};
 
 export function residentError(error: unknown): string {
   if (error instanceof ZodError) return error.issues.map((issue) => issue.message).join('\n');
   if (error instanceof PublicError) return error.message;
-  const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
-  if (['PGRST301', 'bad_jwt', 'refresh_token_not_found', 'session_not_found'].includes(code)) return 'Your session has expired. Sign in again.';
-  if (code === '23505') return 'This may already have been submitted. Refresh your records before trying again.';
-  if (code === '42501') return 'You do not have access to this action. Refresh or contact your barangay.';
-  if (code === 'P0002') return 'This activity is no longer available.';
-  if (code === 'P0003') return 'There are no remaining slots for this activity.';
-  if (code === 'P0004') return 'You are already registered for this activity.';
-  if (['P0010', 'P0011', 'P0012'].includes(code)) return 'This action is not available for your account or barangay.';
-  if (code === 'invalid_credentials') return 'The email or password is incorrect.';
-  if (code.includes('rate_limit')) return 'Please wait a moment before trying again.';
-  // Raw provider errors can contain private data, URLs or internal SQL details.
-  return 'Unable to complete this action. Check your connection and retry. If you submitted a form, refresh your records first.';
+  const code = error instanceof DataError ? error.code ?? '' : error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
+  if (CODE_MESSAGES[code]) return CODE_MESSAGES[code];
+  if (code.includes('rate_limit')) return KIND_MESSAGES['rate-limited'];
+  return KIND_MESSAGES[classifyFailure(error)];
 }

@@ -53,7 +53,8 @@ export type RequestFoundationFields = {
 export type IdSubmissionRow = {
   evidence_origin: string;
   id: string; resident_id: string; barangay_id: string; version: number; id_type: string;
-  front_path: string; back_path: string; submitted_at: string; decision: string;
+  front_path: string; back_path: string | null; submitted_at: string; decision: string;
+  confirmed_details: { fullName: string; idNumber: string; birthDate: string; address: string } | null;
   reviewed_by: string | null; reviewed_at: string | null; rejection_reason: string | null;
 }
 export type RequestAttachmentRow = {
@@ -98,6 +99,8 @@ export type FoundationFunctions = ResidentAccountSetupFunctions & {
   service_request_sla_tracking: { Args: { p_request_id: string }; Returns: Json };
   service_request_sla_metrics: { Args: { p_request_id: string; p_at?: string }; Returns: Json };
   service_sla_report_rows: { Args: Record<string, never>; Returns: Json };
+  set_service_request_pages: { Args: { p_request_id: string; p_total_pages: number }; Returns: undefined };
+  collect_tax_code_pickup_payment: { Args: { p_request_id: string; p_amount_centavos: number }; Returns: string };
   start_pickup_payment: { Args: { p_request_id: string }; Returns: string };
   collect_pickup_payment: { Args: { p_request_id: string }; Returns: string };
   complete_resident_profile: FoundationOperation;

@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { ANNOUNCEMENT_CATEGORIES, ANNOUNCEMENT_CATEGORY_META, type Tables } from '@barangayan/shared';
 import { useMemo, useState } from 'react';
 
@@ -24,55 +27,29 @@ export function AnnouncementCatalog({ announcements }: { announcements: Announce
     });
   }, [announcements, query, category]);
 
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by title…"
-          className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-        />
-        <div className="flex shrink-0 flex-wrap gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          <button
-            type="button"
-            onClick={() => setCategory('all')}
-            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-              category === 'all'
-                ? 'bg-[var(--accent)] text-white'
-                : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-            }`}>
-            All
-          </button>
-          {ANNOUNCEMENT_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setCategory(cat)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                category === cat
-                  ? 'text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-              }`}
-              style={category === cat ? { backgroundColor: ANNOUNCEMENT_CATEGORY_META[cat].color } : undefined}>
-              {ANNOUNCEMENT_CATEGORY_META[cat].label}
-            </button>
-          ))}
-        </div>
-      </div>
+  const hasFilters = query.trim() !== '' || category !== 'all';
+  const reset = () => { setQuery(''); setCategory('all'); };
 
-      <div className="flex flex-col gap-2">
-        {filtered.map((a) => (
-          <AnnouncementRow key={a.id} announcement={a} />
-        ))}
-        {filtered.length === 0 && announcements.length > 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No announcements match your search.</p>
-        ) : null}
-        {announcements.length === 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No announcements yet — create one above.</p>
-        ) : null}
+  return <>
+    <ContentSummary items={[
+      { label: 'Announcements', value: announcements.length, detail: 'In your publication feed' },
+      { label: 'Categories', value: new Set(announcements.map(a => a.category)).size, detail: 'Represented in your feed' },
+      { label: 'Emergency', value: announcements.filter(a => a.category === 'emergency').length, detail: 'Urgent community updates' },
+    ]} />
+    <ContentSection title="Published announcements" description="Keep residents informed with timely community updates.">
+      <ContentToolbar label="Search announcements" query={query} onQueryChange={setQuery} placeholder="Search announcements…">
+        <ContentFilters<CategoryFilter> label="Announcement category" options={[
+          { value: 'all', label: 'All categories', count: announcements.length },
+          ...ANNOUNCEMENT_CATEGORIES.map(cat => ({ value: cat, label: ANNOUNCEMENT_CATEGORY_META[cat].label, count: announcements.filter(a => a.category === cat).length })),
+        ]} value={category} onChange={setCategory} />
+      </ContentToolbar>
+      <ContentResults count={filtered.length} total={announcements.length} noun="announcements" filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {filtered.map(a => <AnnouncementRow key={a.id} announcement={a} />)}
+        {filtered.length === 0 ? <ContentEmptyState title={announcements.length ? 'No matching announcements' : 'Keep your community in the loop'}
+          description={announcements.length ? 'Try another title or category.' : 'Create your first announcement to share an update with residents.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
       </div>
-    </div>
-  );
+    </ContentSection>
+  </>;
 }

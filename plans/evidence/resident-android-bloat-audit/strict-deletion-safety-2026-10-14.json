@@ -1,0 +1,2104 @@
+{
+  "date": "2026-10-14",
+  "scope": "Audit only; no application changes; virtual deletion subset excludes routes, dependencies, import optimization, public hook/prop API changes, queues and generated output.",
+  "candidateFiles": [
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "sha256": "eb1ceb98cc3df683291346c460e45ee6918a7648f4cb2bebbb51104b42bf066e"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/app-header.tsx",
+      "sha256": "31629fc603da5d6488f29f06c60ee106d3ba0c573674ea29c6e14c40af9a0786"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/hint-row.tsx",
+      "sha256": "c7c72d5dc5818590bd3055cea1020abd0c7646abcba620b034ea5bd420b387d2"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "sha256": "03a5aff4cbc683389bf752014b477a3e3c61f97ab1b2176dd84129ef9d22bf7a"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/settings-row.tsx",
+      "sha256": "92536521d7e2164557f97cd089518615ca6436dd8fe7a5e945807c2aadac3627"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "sha256": "d1676dee393d066d61ae60760e56a5e080ae15ac0182277a1f31be28dd6cb295"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "sha256": "acc1f4cb532fc7ccfb4cba62ee127289bc1e03f65dc4df1d7c169ce8d6bec052"
+    },
+    {
+      "path": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-family-members.ts",
+      "sha256": "1e0bc6d2adf5cfa1ef2cfb32fe1516958dbeeb18f9793b8aa2480dbe30710156"
+    }
+  ],
+  "modifiedInMemory": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "beforeSha256": "ce43abd671f5fffe3698d7798741479289a6b66f44c3b572f11daf5bec28b577",
+      "virtualAfterSha256": "31b00e57eafa2522bf04523241fc2e63be4880dd0ee47e60ac2fb6f9213377c1",
+      "items": [
+        {
+          "kind": "unused import specifier",
+          "name": "View",
+          "module": "react-native"
+        },
+        {
+          "kind": "declaration",
+          "names": [
+            "ShimmerGroup"
+          ],
+          "line": 50
+        },
+        {
+          "kind": "style property",
+          "name": "group",
+          "line": 59
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "beforeSha256": "f1a7e29597fe2c03e5d79356e781daf0f4ed9c944bfd01344a6cdbbfd0232ea9",
+      "virtualAfterSha256": "6ecbdaa5c7a20478ef8a1071c3d15ea5060ee03a2a3d9c31f3b2cd9aea600551",
+      "items": [
+        {
+          "kind": "unused import specifier",
+          "name": "View",
+          "module": "react-native"
+        },
+        {
+          "kind": "declaration",
+          "names": [
+            "SkeletonGap"
+          ],
+          "line": 49
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "beforeSha256": "c04715dc2589034044065a9da39abce1eb62662b32575e3941546f043fb7e9eb",
+      "virtualAfterSha256": "619328bc6ac08d61bf4d06af04d029cbf33dc70eba7b486d8dcd4e9c50ed246f",
+      "items": [
+        {
+          "kind": "type import",
+          "module": "@barangayan/shared"
+        },
+        {
+          "kind": "declaration",
+          "names": [
+            "PaymentMethodOption"
+          ],
+          "line": 12
+        },
+        {
+          "kind": "declaration",
+          "names": [
+            "PAYMENT_METHOD_OPTIONS"
+          ],
+          "line": 19
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "beforeSha256": "d8f25ddbdb77d491f44cf6a902281b72ba5cea1b24c4f52d984ee54fa094913d",
+      "virtualAfterSha256": "bfd8a46d9a96c40d54cc6f00cd375c85462cb7c6776b24208dbc280c1795adb4",
+      "items": [
+        {
+          "kind": "declaration",
+          "names": [
+            "normalizeHexColor"
+          ],
+          "line": 24
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+      "beforeSha256": "bcdeeed534ba077b4ce281f54caa881d9af4b61c7b0b9011c92fea0db3f2da15",
+      "virtualAfterSha256": "7431128ceaf0302b3e7e0fbe91278a34103fe161712fea02ef3a4b6cd8cfd3da",
+      "items": [
+        {
+          "kind": "declaration",
+          "names": [
+            "notify"
+          ],
+          "line": 46
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "beforeSha256": "d5d6c8f909178be142f18e7b8b56bed1b860dd35a191e8d4a9957b6662f0141e",
+      "virtualAfterSha256": "3c8955cdc73fbab7a159c4cf48550acf2f9ea73bb403a57a0a56f104a695d1c7",
+      "items": [
+        {
+          "kind": "declaration",
+          "names": [
+            "clearEmergencyCache"
+          ],
+          "line": 50
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "beforeSha256": "098934b005ea86ebb22bdc885742d0bc467a9ac4c78e940c5cd785a7b783201c",
+      "virtualAfterSha256": "77f4e4d7251eedd21d3f9f1877f2185a5a91bdab20d713ae8cd095356c150c5c",
+      "items": [
+        {
+          "kind": "declaration",
+          "names": [
+            "getCachedExpoPushToken"
+          ],
+          "line": 87
+        },
+        {
+          "kind": "declaration",
+          "names": [
+            "addNotificationResponseListener"
+          ],
+          "line": 141
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "beforeSha256": "467a301fd7ad85182c30895adf1114c1fae6f49905fed9bf1675aa4648900a68",
+      "virtualAfterSha256": "d40cd25a3bcb80f31aab488226ca1e106f59ee31dca0d0ca39bd0858629fc99d",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "centersList",
+          "line": 917
+        },
+        {
+          "kind": "style property",
+          "name": "centersToolbar",
+          "line": 920
+        },
+        {
+          "kind": "style property",
+          "name": "alertLinkPressable",
+          "line": 1119
+        },
+        {
+          "kind": "style property",
+          "name": "alertLink",
+          "line": 1122
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "beforeSha256": "457f9fb3f7d75e581e96b82f59e2b3b718d5c5324abe166b5288e3e91b945d50",
+      "virtualAfterSha256": "330c97356f42a311ba3b2e86fb8ed2a8359b2ccdaffd3c7f4e2957ff609474a1",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "verificationBanner",
+          "line": 340
+        },
+        {
+          "kind": "style property",
+          "name": "verificationText",
+          "line": 347
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "beforeSha256": "227a1252f1a2b66ce70ec18afdc6603821573e9ec23083b1f2c79e8996854e9a",
+      "virtualAfterSha256": "451b6357fb395e1641d4dc108eb9faaa49c39c370f3d91d392dc81e82ab9f474",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "pillsScroll",
+          "line": 762
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "beforeSha256": "35e0bca926dc821c7c5845dc75d555c4d94d1b35aff6b74422bdff4b9b996a23",
+      "virtualAfterSha256": "16638479ab8bbeb3d7ab615a2fb763fe972332ac6d461be0517900e3d463be5e",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "memberRelation",
+          "line": 433
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "beforeSha256": "9ee1c5a2757d371a07dfd4a07e575b21972a659c6d5f896c043e715d7a28ba1e",
+      "virtualAfterSha256": "801ba3e02b5364e50ecb9a3a87ac01c31a779646de018839830a0a687763b2f6",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "empty",
+          "line": 223
+        }
+      ]
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "beforeSha256": "3d0f767d6e65c08ca3c3c3e90b038964cfd8e9560f0254af5bf88cf1c43a3ef7",
+      "virtualAfterSha256": "b7457489bc4e3b2881100c4ce43f8116743a9cc91dcaaa94808225e3c890bf1b",
+      "items": [
+        {
+          "kind": "style property",
+          "name": "passwordMatchIndicator",
+          "line": 468
+        },
+        {
+          "kind": "style property",
+          "name": "successModalBackdrop",
+          "line": 490
+        },
+        {
+          "kind": "style property",
+          "name": "successModalCard",
+          "line": 496
+        },
+        {
+          "kind": "style property",
+          "name": "successIcon",
+          "line": 502
+        },
+        {
+          "kind": "style property",
+          "name": "successModalTitle",
+          "line": 509
+        },
+        {
+          "kind": "style property",
+          "name": "successModalMessage",
+          "line": 513
+        },
+        {
+          "kind": "style property",
+          "name": "successModalActions",
+          "line": 516
+        },
+        {
+          "kind": "style property",
+          "name": "successModalActionButton",
+          "line": 521
+        },
+        {
+          "kind": "style property",
+          "name": "formError",
+          "line": 551
+        },
+        {
+          "kind": "style property",
+          "name": "submitActions",
+          "line": 552
+        },
+        {
+          "kind": "style property",
+          "name": "footerRow",
+          "line": 556
+        },
+        {
+          "kind": "style property",
+          "name": "footerText",
+          "line": 561
+        }
+      ]
+    }
+  ],
+  "graphChecks": [
+    {
+      "platform": "android",
+      "routeRoots": 56,
+      "reachableModuleCount": 218,
+      "reachableModulesIdentical": true,
+      "externalImportsIdentical": true,
+      "nonliteralLoads": [],
+      "orphanReachable": []
+    },
+    {
+      "platform": "web",
+      "routeRoots": 56,
+      "reachableModuleCount": 219,
+      "reachableModulesIdentical": true,
+      "externalImportsIdentical": true,
+      "nonliteralLoads": [],
+      "orphanReachable": []
+    }
+  ],
+  "bodyChecks": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "retainedFunctions": [
+        "Shimmer"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "retainedFunctions": [
+        "SkeletonBlock"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "retainedFunctions": [],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "retainedFunctions": [
+        "isValidHexColor",
+        "normalizeCustomList",
+        "ThemePreferenceProvider",
+        "useThemePreference"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+      "retainedFunctions": [
+        "confirmAction"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "retainedFunctions": [
+        "keyFor",
+        "queueKeyFor",
+        "getCachedData",
+        "setCachedData",
+        "enqueueCheckin",
+        "getQueuedCheckins",
+        "clearQueuedCheckins"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "retainedFunctions": [
+        "getNotifications",
+        "getExpoPushToken",
+        "registerPushToken",
+        "unregisterPushToken",
+        "presentNotification"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "retainedFunctions": [
+        "isEmergencyInfoTab",
+        "EmergencyInfoScreen",
+        "GuestLoginRequired",
+        "OfflineBadge",
+        "HubContent",
+        "AlertsContent"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "retainedFunctions": [
+        "formatAnnouncementTimestamp",
+        "HomeScreen"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "retainedFunctions": [
+        "MapsScreen"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "retainedFunctions": [
+        "getInitials",
+        "FamilyContent",
+        "QrPlaceholder"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "retainedFunctions": [
+        "SkeletonCard",
+        "EmptyState",
+        "useAnnouncementChips",
+        "AnnouncementsFeed"
+      ],
+      "identical": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "retainedFunctions": [
+        "fmtDate",
+        "RequiredMark",
+        "validateName",
+        "validateMobileNumber",
+        "fieldStatus",
+        "FormSection",
+        "ChoiceChips",
+        "ResidentDetailsForm"
+      ],
+      "identical": true
+    }
+  ],
+  "styleAccessChecks": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "escapes": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "escapes": []
+    }
+  ],
+  "deletedExpressions": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "name": "styles.group",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "name": "PAYMENT_METHOD_OPTIONS",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "name": "styles.centersList",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "name": "styles.centersToolbar",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "name": "styles.alertLinkPressable",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "name": "styles.alertLink",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "name": "styles.verificationBanner",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "name": "styles.verificationText",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "name": "styles.pillsScroll",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "name": "styles.memberRelation",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "name": "styles.empty",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.passwordMatchIndicator",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalBackdrop",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalCard",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successIcon",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalTitle",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalMessage",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalActions",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.successModalActionButton",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.formError",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.submitActions",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.footerRow",
+      "pure": true
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "name": "styles.footerText",
+      "pure": true
+    }
+  ],
+  "baselineDiagnostics": [],
+  "virtualDiagnostics": [],
+  "newDiagnostics": [],
+  "baselineTests": {
+    "files": 14,
+    "tests": 126,
+    "passed": 126,
+    "failed": [],
+    "unhandled": []
+  },
+  "virtualTests": {
+    "files": 14,
+    "tests": 126,
+    "passed": 126,
+    "failed": [],
+    "unhandled": []
+  },
+  "sourceChangesDuringCheck": [],
+  "newSourceFilesDuringCheck": [],
+  "duplicateBoundary": {
+    "unused": "C:/Users/User/barangayan/apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+    "active": "C:/Users/User/barangayan/apps/resident-android-mobile/assets/geojson/ampid1-boundary.json",
+    "identical": true
+  },
+  "inputHashes": [
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/health/index.tsx",
+      "sha256": "31ff62a4331aca04bbab133001896360b13204b7a011c71bb21dd877c91ecc03"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/health/register.tsx",
+      "sha256": "91b73e621c2c7ee096da41885fdbf648abd557c4d9936f67f55cc5b418615495"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/health/_layout.tsx",
+      "sha256": "d726cce2b2e40fee036af4a0f6f73c6e430c4eb4f067170815d39ac996ab88d5"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "sha256": "467a301fd7ad85182c30895adf1114c1fae6f49905fed9bf1675aa4648900a68"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/qr-guide.tsx",
+      "sha256": "42be180239cce6073426ef055d173cc88541f10f90553aa820d91ae7ad0be545"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/scan.tsx",
+      "sha256": "8fd7311080f53087d5a23a1dbe589f32fbc87955197a1c63e24a1bae8cc2c083"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/_layout.tsx",
+      "sha256": "9c035dffd415c9361a5a56385472b656835596f9aef02947795da285dc27b7c7"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "sha256": "457f9fb3f7d75e581e96b82f59e2b3b718d5c5324abe166b5288e3e91b945d50"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/home/_layout.tsx",
+      "sha256": "6149dc87425ffa3196aaf4a503a74da44fe58d132eed0f52c557b94e2121c474"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/index/emergency-info/qr-guide.tsx",
+      "sha256": "fca24af6ca7043f159dffab84b71f4e545ca16de3e83cc7e58012f616fea7e6f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/maps/hotline-directory.tsx",
+      "sha256": "3e30ba756415eeb94cf94e793b78aa8a8526d6c69901894aa23dee54ddafaa37"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "sha256": "227a1252f1a2b66ce70ec18afdc6603821573e9ec23083b1f2c79e8996854e9a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/maps/preparedness-guide.tsx",
+      "sha256": "115b436f4caed52c2aacec841507ae06e889194607c28cf1bdca226ed6eda548"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/maps/_layout.tsx",
+      "sha256": "dfd1110226b0ba0ca82ac9746014738b84b00721962a1c65c56801f5c6fa84aa"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/reports/index.tsx",
+      "sha256": "cb32bf22f3e26dadca97340df5dfd96b514de344326ea0ad426414532d05ece0"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/reports/new.tsx",
+      "sha256": "c4616e03ea07bec69a03c31ae17d8750c4a2e6a157aacaae3eac75c7352cbbc6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/reports/[incidentid].tsx",
+      "sha256": "12d5f83e52423bf7da2dc11d75856267fbc19cda0bed468d02ee7a9a4c0f5fb6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/reports/_layout.tsx",
+      "sha256": "be80c9cf421a59cb79c8c122cbdf7e9c5935bdf7d22cbd358a81e6d15a2ac7a2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/index.tsx",
+      "sha256": "7336bab1b991af3bbc2c1446fd10706c4dce29ae4425dfbeb8026adbb49a2265"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/payment/pickup/[requestid].tsx",
+      "sha256": "534d3f01144a1c6cb93aedca9afccf4476868801b4bbe6ca2fb46052dbd8669f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/payment/qrph/[requestid].tsx",
+      "sha256": "bcf57598473df6c9dc67ce70c122989e7935f5325aff931fa8e1bad65de1958d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/payment/success.tsx",
+      "sha256": "a09599d39b8bd2d50b59cf93be364c7677e58f9079581d36b90246203bd05311"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/payment/[requestid].tsx",
+      "sha256": "2ec722252d77d39e6deaaa1b342b7b26cbbae8ad57a6322d8cbc5f61b0b351bb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/request/[documentid].tsx",
+      "sha256": "adbb7dc6e1b77bea08c0a3c04b130a75ae1897ead32759f576451b604f540424"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/requests/[requestid].tsx",
+      "sha256": "643a7beca1f62d270c5f9885d68ae3e53f756f884723574ce353b897a793b4e6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/[documentid].tsx",
+      "sha256": "0ee1487537faa7a453b10d8a12c5e244aeba820dcb8c9b1f59fc31e9af9d8c00"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/services/_layout.tsx",
+      "sha256": "f29762b050f03aa1d3bda570b6015441cb45c17b088e9e3c6531c3cfd51e5aed"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/about.tsx",
+      "sha256": "6fc30deadcf01f1afc8b45138666a0bfc36146ce945e4a05e53fa21d64a7de30"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/change-password.tsx",
+      "sha256": "1ed7e1badb6e5a9fc724a6b13046f11fa5a894d94ced32f44455c3a709324e74"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/email-verification.tsx",
+      "sha256": "d0239d93c29ab657b65454b3f2fa5d16b4b8c5d0199970b57df0eb3f6b41844b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/help/index.tsx",
+      "sha256": "721a30d2b86a5f5d773cefe77aa041f880003449897eb0c4fe4de765cb5a0c97"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/help/[articleid].tsx",
+      "sha256": "a7fa076f4b48b1cdcda17cce90ff7a6a6e71a4568952834529d5faba56be1bb8"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/index.tsx",
+      "sha256": "ceaf571fd1f98cc3ed68af8ba14a59f98dbaf6f9978b51414b25d785ee1b9106"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/location-verification.tsx",
+      "sha256": "92de2f236a917dfae62b38db624446b830957749f03586077fcae31def8f7387"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/profile.tsx",
+      "sha256": "6b867902c38dfe906ee6e6027c2067016f3379590d429f721bbcb55fe232a581"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/terms-privacy.tsx",
+      "sha256": "516cb4a8af25d4e41bd03fc5d0a2dfc392a1a2e3c1ee0323b33141479566a007"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx",
+      "sha256": "eaa87ca5e6e858c9bbc8df06246555c1660796ceb44dc814b3020201987d55b9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx",
+      "sha256": "fc9af42b5377a5542fa420ba3447c00959fa339e187f8c685cec7b4b1a51ce83"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(app)/_layout.tsx",
+      "sha256": "a86cc01796ccc62bb02799ca71fcd6146ad56af8911039660e1c78d63c5cc6a7"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/auth-choice.tsx",
+      "sha256": "f5b3d52b7af40a1eca73cd5881edf9e54b96b6e7a4b0fc70ddc327ece3da094c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/completion.tsx",
+      "sha256": "1ef144ea28c2d0d94d7f88253656e8a7154f1b3cdee19e70a47c34d980d0e582"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/forgot-password.tsx",
+      "sha256": "2dc66b3bb3f31bbce8e2cebf4d8d144750208f75781d74e6626bdfab9c8926a2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/login.tsx",
+      "sha256": "20759a1439cbb7fef96d0c830d71693993bf204a70caa39adb4199b9d7396be3"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/otp.tsx",
+      "sha256": "8786234c44200d2173b6089b4f6187fe0c085f07c9760c190c046cecdcd332c1"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/personalization.tsx",
+      "sha256": "183913b6950a7fc8a266ead14d701e52f286218626c70a0a68ae34e4e915acb3"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/register.tsx",
+      "sha256": "57ed1b3806dbc9aa666f45486e31cd4c00302a5689e874d4d781e3cc23af2627"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/reset-password.tsx",
+      "sha256": "a6c4a203d83aba917d206cf6998a8495adea1c1f452c3923cc7ef36e1aaa2040"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/value-prop.tsx",
+      "sha256": "cf80dfe0a40fcc0ae2b76d592a269c3398e42d1d7ae866e24aef06feaa838296"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/welcome.tsx",
+      "sha256": "5d3c9847825a85c8854b40708389a4951b476d047785bc9718fd02e7d39481dc"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/(auth)/_layout.tsx",
+      "sha256": "22de541455a70f00e29033ddba4493ad94dcf88ddfa0a28a2d51b5a826361941"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/account-setup.tsx",
+      "sha256": "a277a31f0aaabf56b5b274ce3b5c69607e304a97d7dfdddb461dba38e9f8e9be"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/auth/callback.tsx",
+      "sha256": "790accfc949d56797399a11aade9ea69ad3ca38fb8ac5f9d01070b2918e14c0c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/complete-profile.tsx",
+      "sha256": "813263bad308bfad52ae802360bdb6180cc5cb3913b9935a372b3f81e425d607"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/emergency-centers.tsx",
+      "sha256": "b2896dba882b8b95fb4f33082ddeba42ab6824f9a7fa56b4a44fd092750737c0"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/index.tsx",
+      "sha256": "1397e916f025e386b164c06d2b7340a8242a139d06aa33b5f92c371fdc1bb10f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/app/_layout.tsx",
+      "sha256": "126f25fed0c7c744c018ec88f926225dcf4b1bb073562ee0f1e149f17e7bd1e6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/account-setup-status.tsx",
+      "sha256": "39c210c134d02ce06814d940cb3e816e9b1efa0c946586e2cf176433d97db13b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "sha256": "eb1ceb98cc3df683291346c460e45ee6918a7648f4cb2bebbb51104b42bf066e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/animated-icon.tsx",
+      "sha256": "c8ad782905d33634ec0367c00e13ad6d93496a5bc043c9ebab524745cb696dbd"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/animated-icon.web.tsx",
+      "sha256": "51aeed7246f44c7388c585f50b833d168543cc8c95d610b81864ba115b28fe39"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/app-header.tsx",
+      "sha256": "31629fc603da5d6488f29f06c60ee106d3ba0c573674ea29c6e14c40af9a0786"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/app-tabs.tsx",
+      "sha256": "edd466fb6f502e1a0b0712972f9d16225f515a87538c607dbb2707242da92fce"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/app-tabs.web.tsx",
+      "sha256": "b70b7728817063e5334dffd406388808f6cdd508eefcb694be591f511f00c28f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/auth-header.tsx",
+      "sha256": "18cab895abb7329920ad865bf95b62509fc41215f05b813b73691a7f0ac28226"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/authenticated-scan-view.tsx",
+      "sha256": "ec6d2d8af1aa887e51c6d2dfd0a166c00a3c103f114f9977d0c21f43040d20c9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/avatar.tsx",
+      "sha256": "73f3046e0098bc1eac886858d4d3b2be4ac340fb51f8e2bdb71891a00138037e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/birthday-calendar-modal.tsx",
+      "sha256": "8a403ead45b608bc33ea39e9dbfcd00c56f4f8e22b22e4a3c5b4cd2af53be520"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx",
+      "sha256": "4087cefec1ab0de010284d3cb87693379b70ce52b56bf059d2d0411d0b7a48db"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/card.tsx",
+      "sha256": "fcc5c239b2142630ea20d243d37c18323d36ff62fbde66f338dcf790450cd4c3"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/center-detail-card.tsx",
+      "sha256": "18310f648195b39e8d7fb1dbef75ba544671f6ac008c00bc9438759a333c8a47"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/color-picker.tsx",
+      "sha256": "189b3d0a32f32cb965b7e43f560a3730c2a3fae22224a44e1723dd91348b82bb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/count-badge.tsx",
+      "sha256": "27e8ac2f513302e8c9ed6e176b3cddea260096961415a1abbed5e7dfc6af0980"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/custom-accent-color-modal.tsx",
+      "sha256": "4920a9bd026b8d9e09010517a9905cec5b240908d735141e0d31f9187a46c745"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "sha256": "a3ef2e01f1e025700d7e30566eca2fee5929552f47bfc77fae2de574cf3642d6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/divider.tsx",
+      "sha256": "0eca79d0f4fbfb1fbcd9bf368e6e3e4ded9679f1fa11d85c797b8533a70aa065"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/emergency-accordion.tsx",
+      "sha256": "f2644075a838d484e4fa73af348883185dd2b9f9310a9b80c6611694f847325e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/emergency-entry-link.tsx",
+      "sha256": "a22c3e7d21788f5820f57c46bdb5ec800a00617539199f79dbbf1b96cfdfb734"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/evacuation-center-card.tsx",
+      "sha256": "a1225fff1473ca4939f39f41359296baad7b102228d09f48970957ec03125d0b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx",
+      "sha256": "2e9fcaf06b2af3c50e63b7aca19c93f3dfb90de946b4f2cb5e17e2af67591aa3"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/external-link.tsx",
+      "sha256": "55a7ebe292a9e8b6bda3171123a0b7e21653142e04fafcf62fb8015f0bf0a806"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "sha256": "35e0bca926dc821c7c5845dc75d555c4d94d1b35aff6b74422bdff4b9b996a23"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/family-member-modal.tsx",
+      "sha256": "78ecac38d7f42656862dce86e1368f150dee80beb59011efee04a516f816bdb2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/filter-chips.tsx",
+      "sha256": "add1769707887c28ca8d7a3443be2804923e547442506dc771effdd655d767b3"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/google-button.tsx",
+      "sha256": "b8b25cfd18d71b9bfb8cf8f569f9591359788893f224e52efb15c962388ce203"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/guest-auth-callout-screen.tsx",
+      "sha256": "c54ca919284a2e4e32b463ff8014dfd2e4a7bed6cd6482b8ede99f8fa9a3a5a2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/guest-auth-callout.tsx",
+      "sha256": "7d85f6e24eac592261cefb700f400e77b960935ae30a74de69c36bf338adefc5"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/guest-browse-button.tsx",
+      "sha256": "78a5e5f7eb9132c7c2af3015e1d20f5f068c9eae3ba49e37dc32513b35591b97"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/guest-prompt.tsx",
+      "sha256": "ccb2b4c7b52208471d9ea1bd85109d694f471f103edb4c563cc0143d077ef76e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/hint-row.tsx",
+      "sha256": "c7c72d5dc5818590bd3055cea1020abd0c7646abcba620b034ea5bd420b387d2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/horizontal-center-picker.tsx",
+      "sha256": "dfbb9ca2ab37a6c23336b0bc76697511fc201f786bd7c9b8bcb3d10023a2971d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/hotline-row.tsx",
+      "sha256": "d0a4700782cb02add3e0cfb46259b33fcb2863ed674d2ac771dedf244fd40599"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/household-qr-modal.tsx",
+      "sha256": "dbdb59d0cd39e1500acbe189656d0cf8c7c41331906556e03eb17a3841d8c70a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/leaflet-assets.ts",
+      "sha256": "40f789c463e3e98e6aee4fb227544fcaec5e7e3ee4fa24c3a1d782fa3a0b0bf8"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/loading-overlay.tsx",
+      "sha256": "01297808180b20905bab4c5265d2ccaab47bc4a653e2a47ef3a2e3dd25883d15"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/location-status-card.tsx",
+      "sha256": "d254bd1300c6905758258b3003246c56f428ca009ac1b4e247630641fb7a8266"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/logout-toast.tsx",
+      "sha256": "7f6fd480475285b4eebc08a3dabd010ebf7ada02bbdbe185c444d21d538cfc25"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/map-view.tsx",
+      "sha256": "8e94969800bc33ba6be4cdc1a59aa530e7a6799f662018b3ab570f416cb0bd40"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/notification-bell.tsx",
+      "sha256": "13feb214f6a1d2c4904a50821d8dd376b02c4275705264d319a6eaf1332f2a31"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/offline-route-card.tsx",
+      "sha256": "966742449c7547fc11fb25befc4bbaff243c321ada04808a29aa14eaec165010"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "sha256": "03a5aff4cbc683389bf752014b477a3e3c61f97ab1b2176dd84129ef9d22bf7a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-progress-dots.tsx",
+      "sha256": "0667ed25f21f75bd6c112cd8ee4f4f240e7527fc710d854771e7a676dea095dd"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-screen.tsx",
+      "sha256": "bb817698744ac5ab0637fdb04c1fce680c6a2e100072b4ad719fae452c74e35b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-toast.tsx",
+      "sha256": "2244944f8f06b5ec37f5066bcdb24095f3eeeee6fa4bffc9237ab4061540da0e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/password-recovery-screen.tsx",
+      "sha256": "52ee887c5fe086d9778cb8506925a2b7df02fa6a57b6808f6d546d387963874a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/placeholder-panel.tsx",
+      "sha256": "a0f57a312c91e3c54b1fae6237032d14a0afde3801b06148ef8ec6a0c36e2aae"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/preference-toggle.tsx",
+      "sha256": "1fbec0bd8dd87d43871eb6f582df2f61f03c4154114689fb9a411c904aff94c2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/primary-button.tsx",
+      "sha256": "b0ee110fe20997beae955e7968f7a5140d24b3840e17c9a3a0b7b1f5549bca67"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/profile-completion-banner.tsx",
+      "sha256": "eef671aed57cb3269c37b8b7b112169606112e1c8761c555de3b252e801143fa"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/progress-bar.tsx",
+      "sha256": "cb35d76e013b3ee10a5acd3671c146992fd78ad3fcfd4731fb3aa62212afb6c9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/qr-guide-content.tsx",
+      "sha256": "4356e689e0abc30159ad73f13996896b535386be13cd4a25ff2140acdcd2c91e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/qr-permission-modal.tsx",
+      "sha256": "dd21bbcd918698dbf81b4f5e6604f595543c841c9be768591cdec69d0e1e6f04"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/qr-scanner-overlay.tsx",
+      "sha256": "ca543be2c9103d8fc70fd34523424239d65fb19cad8cd10a7f27e8d1c41c4930"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/qr-show-modal.tsx",
+      "sha256": "3ebdc326ee827445a7742151c719dea2236b18e376f5fd4c43314385ea74dd04"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/registration-map.tsx",
+      "sha256": "903d3d7d9c927e061ddb5889946de7057f0cd8ff7557e5bf970a38c1e2ee43b4"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/announcement-card.tsx",
+      "sha256": "d1814cb276607d97aa644efb8e67f7bd98dc23a7e6a6f754d54ffbab62932b0b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/announcement-modal.tsx",
+      "sha256": "1b00169861f6bd958897ac355419977d92bab2416d396e0e86b7903220162426"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "sha256": "9ee1c5a2757d371a07dfd4a07e575b21972a659c6d5f896c043e715d7a28ba1e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/fade-in-view.tsx",
+      "sha256": "7f20886342f719c4ca3db653a244fc3f51ee3ccac3f2df4e11863999a8d3b4ff"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/feedback-modal.tsx",
+      "sha256": "1734dcbe488df8f213486a469817a8557c619cdd7f49ca3d1e00397b8cf78430"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/incident-card.tsx",
+      "sha256": "2e71e034736e10e70c6c5807e30e5aa556adaf75115b11d0056b43935d64129e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/location-picker-modal.tsx",
+      "sha256": "89c057360be605ce77e27592e91beb5ab2534ccec44a09a01fe1eaa3a3a3962b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/my-incidents-feed.tsx",
+      "sha256": "a4c456e56855ccd1866017a77e2aaf37481567388919e809225e7a9753c79762"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/photo-viewer-modal.tsx",
+      "sha256": "7340f64d735ff422ddc0808fbf1f93578217540455ad9511eb6f175fd6909d9d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "sha256": "ce43abd671f5fffe3698d7798741479289a6b66f44c3b572f11daf5bec28b577"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/resident-action-gate.tsx",
+      "sha256": "ab6e3cd172785715cc8e5337c7abe9d5051cb5630b65e9afb473e58699541b10"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "sha256": "3d0f767d6e65c08ca3c3c3e90b038964cfd8e9560f0254af5bf88cf1c43a3ef7"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/resident-password-step.tsx",
+      "sha256": "f7d5a83d3927fb5cd40d7f02acc4cbedb1c73d156dcea650ae33541ce37dc303"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/road-mark-card.tsx",
+      "sha256": "ae4409300d83448813bb2cb189dc6a703c002f69c63690fca8094cc24330815c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/scrollable-chevron-row.tsx",
+      "sha256": "c621640c6a1b607c0a1d0a6f6f71328f8b23ecb5030dbdead385102e67cb3c28"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/search-bar.tsx",
+      "sha256": "80a697e18d5678fe9dcb91c0519130299b3acd249523181bc8cc120032fb419c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/segmented-control.tsx",
+      "sha256": "8eca2ce565ddfd10f26558d8243e5000fbef68c5d0c7ee5d2bc6e8d30124139e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/action-success-modal.tsx",
+      "sha256": "878ddefc5d04d1e42a07723f585e2e2b547ba3752f8657f84d7501357611071e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/agency-sla-status.tsx",
+      "sha256": "ca6975ad6e2472984e4d596e38209d7294ee8a8ab0dfda62dbb61361ce6a5be0"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/animated-appear.tsx",
+      "sha256": "1a0736532abb5421f887ff6374b9c6ed8f0b925573ab2e3f309e5c10c856e742"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "sha256": "546164c72e8e1f87fce778eafba08baa1cc6dbe66b7911893a7d7ebdc44ade51"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/countdown-timer.tsx",
+      "sha256": "944e417a9ff817f57278e97f96787ccf4325474c10bc9789be32a152808ba66e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/documents-list.tsx",
+      "sha256": "235f0ccf0084ba3379441f30088b0cbee6172f0373ebd01edbc99cc17e848faa"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/logs-list.tsx",
+      "sha256": "19ff380d271572bfe04d8f546125cc4b6073a6cd52c1bc8412b055f2c3f266db"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/payment-success-modal.tsx",
+      "sha256": "1d01bb346a5ee74190826a60f55c11974134d07aae01c907a8bd9fae962aec34"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/purpose-sheet.tsx",
+      "sha256": "c5da7f291441d9ee831834126a19bde80155774d5ffd26d1a807b7bb9e1fbe7f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/qr-generating-indicator.tsx",
+      "sha256": "ba2f9c8e89dffca3c8e345b4fc2abb15a01a026a6ea4decc9fc50a7782be40d1"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/requests-list.tsx",
+      "sha256": "1c52d5f742a67f4d9c8ed49ab4db2c12b6022065169eb23c1231dc5a04e0aa26"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/resident-payment-screen.tsx",
+      "sha256": "49d3a398f2bfb5253a81b6c322fc634370b2c17ab196e64700cb824dc7bea8bc"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/service-screen-header.tsx",
+      "sha256": "933def2b5a17900b170f1da8fd8838b4bd898cc3953ff328a43073f700493b08"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/services-list-states.tsx",
+      "sha256": "e5fd06c8a5bbc9021109dabd4df561d4badd7a3c025b237b830e183af10f6b22"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "sha256": "f1a7e29597fe2c03e5d79356e781daf0f4ed9c944bfd01344a6cdbbfd0232ea9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/settings-icon.tsx",
+      "sha256": "95fa96ca3ecd57bf4ab841cd3743d0275051f7f797b91b94a2b0ebe34465278d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/settings-row.tsx",
+      "sha256": "92536521d7e2164557f97cd089518615ca6436dd8fe7a5e945807c2aadac3627"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/shimmer-skeleton.tsx",
+      "sha256": "d6b191b41d12e207c6d14b7a4ebaa04306d6be012eed1612c100988de7dea570"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/status-badge.tsx",
+      "sha256": "d5de2fdecd66261879dc99aaab408de269c8757b938eba306696cfe9f611a607"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/text-field.tsx",
+      "sha256": "f22076dde1eb84ed7f127ee6b51a6548c4d3d0f17c19c1bdb54fa3cbfd3f0b5a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/themed-text.tsx",
+      "sha256": "67a685942ea851f954621b9708d5d8428e5748b24d04f5016e60a191d149364d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/themed-view.tsx",
+      "sha256": "daea78f228b10b381e6922f96e529570ab1d72c92ad3620313bf2f5dccc68f4c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/components/ui/collapsible.tsx",
+      "sha256": "617b46cd3afec69e3b18f8027967d9a318453defd5ecc79d11e39b853adb3668"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/constants/document-icons.ts",
+      "sha256": "c0774656b60891a8b703726876baadb81e22cd4ee7539da92a6779a858762fbd"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/constants/fonts.ts",
+      "sha256": "f07909e745fe2ed59108546b610f7d43ed55f239e74f69c1b8e78a77696d63e2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/constants/incident-status.ts",
+      "sha256": "4fe3d5c918a91fadbf45ee3ade1f02bc2c672f7e509d2f9c5223802f6f2625ff"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "sha256": "c04715dc2589034044065a9da39abce1eb62662b32575e3941546f043fb7e9eb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/constants/theme.ts",
+      "sha256": "4a0426d756ef2df8b7d66c4db98d6432a8b0943cb28d8c2f1782a57e90385522"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/data/emergency-seed-data.ts",
+      "sha256": "c94b632838384c655dd2b839fd74ef9488e55730f08fc1bf7e8ec37dae0a94b6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/global.css",
+      "sha256": "54627762c74477f0302326c40095b9ff7c2706e8f3e538ef618dca9b52333e7e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-about-us.ts",
+      "sha256": "2efda87b4bf7dbbe7e5117f6d4c6c7bcc12d6e6f053d62174963a503015682af"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-ampid1-boundary.ts",
+      "sha256": "880b6fe38a19bfcdee5dcab5d110758b6ffe23c8b2c264e22e1468aa1371d7d6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-announcements.ts",
+      "sha256": "cb66c50f411cf2a929a01619adbc1170d1832ab397537d83823baa748bc08891"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-auth.tsx",
+      "sha256": "905a5f089130bae377608beef26328d6e13aa0fdc4a2802fb2dab8e6dec73ffd"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "sha256": "d1676dee393d066d61ae60760e56a5e080ae15ac0182277a1f31be28dd6cb295"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "sha256": "acc1f4cb532fc7ccfb4cba62ee127289bc1e03f65dc4df1d7c169ce8d6bec052"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-countdown.ts",
+      "sha256": "13b5e947ffde19821a1d8fbba6c42d2e209a2fc02cc19e2c29b570d2e096da31"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-device-location.ts",
+      "sha256": "7aac4212099255df58c6969570b7c0a3d55e7b63a4b1f58cdb7f948ca6393fef"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-emergency-announcements.ts",
+      "sha256": "537f49f3e14a4cd9b764c2a8d3acdb2f2068dddd31d3f5586df88095c60f3541"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-emergency-guidelines.ts",
+      "sha256": "7120f818941d81145ba5cf090e65e9cb19af2d6601ae8be0220821aa9a2123bf"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-emergency-hotlines.ts",
+      "sha256": "45bfea6f77ead6e729775e0aede04eddde297fe32114c8eb2dde9dfd1dc36deb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-emergency-qr-content.ts",
+      "sha256": "dac7accde26ce4a3b11768d47cabf1ed971125d74fb45c948091654a4edebba7"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts",
+      "sha256": "91a3e26167e27716f8086c9e9ca189ae52f6e3f1c399b1b5d1630a6480932fb8"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-family-members.ts",
+      "sha256": "1e0bc6d2adf5cfa1ef2cfb32fe1516958dbeeb18f9793b8aa2480dbe30710156"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-faq-articles.ts",
+      "sha256": "bce1002ad780fdaa0142a85796a5cead64e8e17062f22aff9f3bcb9abe5bc2ab"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-font-preference.tsx",
+      "sha256": "9630a1107cf6e98a99fe84fc0c3bda71ffa587ce03b17420b558cfc5581ec215"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-incident-categories.ts",
+      "sha256": "e2ab61662ce433e7189df7eeef09a7340ec7ccddebdc532ca90afcdc94d10d5a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-incidents.ts",
+      "sha256": "1172b520e3c032de6e14a88f7d81ba76d99f1937014647818591185ca8ff3865"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-local-route.ts",
+      "sha256": "f449512b03bbc0228df31f777f0dac1368938d0b9ab74b89202ff380c8ce227c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-medical-drives.ts",
+      "sha256": "815b8e454392fcb57f66b86f03f78dee18bc57dcb2c3c4c3248042dbd760e9a1"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-my-incidents.ts",
+      "sha256": "c3b69cc4f80586c94c9c7bf414198d3f8b5f83ef74bfb55ac6839c6ef4c76d05"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-notification-preferences.tsx",
+      "sha256": "4fcd8dee27b6dc20da19652671773da369fd9eadfe83fba44b68c14a1142921a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-notification-realtime.ts",
+      "sha256": "762ef057ca5111957f9d515a0396492243ff2c94b95926fc966ec4144f423cdb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-offline-routing.ts",
+      "sha256": "7515136dae200eb07d5bfef14767d16b4ea5b97996543fb02db11d1b66059c6a"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-paymongo-source.ts",
+      "sha256": "fa200e5c6f1e2588f0933bf01aeafd57feb75a230a83ff2872fe4437121ccf22"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-profile-household-members.ts",
+      "sha256": "6d9d4b05088ed969cf09c09468adf6a9fbf42196ba2a3f691a8cca248aacaebf"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-profile.ts",
+      "sha256": "875f72a9dba7b97558ce87eb38540677d8614161bdab1a870f825bf716ad148e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-qr-checkins.ts",
+      "sha256": "ef8534cef9c9c824fe11c27b158c6eec7f0668c507015b06947478205a28c44d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-resident-route.ts",
+      "sha256": "d2298fd02b79debfe824905ee1651af2a3da8843fd9d2ea6c7d07830fc71d8e4"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-site-content.ts",
+      "sha256": "31ebbe318c4659ade584960a529ab4043d3c8eb61fa20aa23ef5cca587b28cd0"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "sha256": "d8f25ddbdb77d491f44cf6a902281b72ba5cea1b24c4f52d984ee54fa094913d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-theme.ts",
+      "sha256": "a70d2948f8ef1cf9e21370a47964bd7bc45f0aa9b597051009c4294b95ab9250"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-unread-counts.tsx",
+      "sha256": "50cdbea24726f986a383f67336375069998c77478dee0f3f884850971c7596d4"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/hooks/use-waste-zones.ts",
+      "sha256": "59614822017be7ecff3c272a30775dccee06cc94ff3f9152aeebc60b720d0383"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/auth-cleanup.test.ts",
+      "sha256": "829a8b2ef98c7fefba04717fb000303716285af4c329f97276f6cfd43d247e09"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/birthday-wheel.test.ts",
+      "sha256": "5be425679faa2a63d59da12bec1eedd3c990cee7597d1ed54a225447c92adc4c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/birthday-wheel.ts",
+      "sha256": "8650ebb656d154a07fe642fd7c38910c04f2fcf173f29c39e119e5be491567c2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/color-utils.ts",
+      "sha256": "e233cde683dc8b87b0a54dd78ec14f665ed716bc345bc961d847fbbdfde98c1f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/data-export-pdf.ts",
+      "sha256": "f5205dd875e9bd6edc2cde822f9b9ff62bcdd2782b65a6896b4c8de60cedb71f"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+      "sha256": "bcdeeed534ba077b4ce281f54caa881d9af4b61c7b0b9011c92fea0db3f2da15"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "sha256": "d5d6c8f909178be142f18e7b8b56bed1b860dd35a191e8d4a9957b6662f0141e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/google-auth-flow.test.ts",
+      "sha256": "f5e537f7e9ea5b513d1befbf523efc40af93575fc5a993b8d2e6ed971d4fc385"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/google-auth-flow.ts",
+      "sha256": "6241ffb8d633a64cd3039c9131374c44472dcbc849893bbb638980e4886aac7c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/google-auth.test.ts",
+      "sha256": "e5fdc1a9e588219f34e3363785e0c564e20c8f33ae857cec8267b52cce3593d5"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/google-auth.ts",
+      "sha256": "f8cf5713054ebd482c51f5b63ec56ac285cc3de012a66d8ca84543ad4aeb49fc"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/id-photo-bytes.ts",
+      "sha256": "c40de01ab8b872aa85319c8a79b79d0bb23105ea060e77f549033abfcbdaf9fb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/image-upload.ts",
+      "sha256": "933416d7d0dcf42001c24663759ebc55c21a660e36541e04585c828a0dd8bc67"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/leaflet-assets.test.ts",
+      "sha256": "1560b69ee69d75c450fb48d2b143980ba17859c0df91993c159c6996e6e4efa7"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/login-error.test.ts",
+      "sha256": "54765a8d4515cfac8da09bbd451bee6b8d353f57f65a87dcdf99d846f8c552c6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/login-error.ts",
+      "sha256": "4d791a85c976ffe5c0f4fc9fcf3875ed30de8daa8298ccc75cef0a5dac72b9fa"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/native-pkce-crypto.ts",
+      "sha256": "ac8246c9fa598ff2a14c551082a965b0be1a8ef5f9344497f29247bb4bcf4008"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/notification-templates.ts",
+      "sha256": "8dc01cce19da2ccda4c3b7fa5503913c0a375a3c841cc016d0d8e773cc7b6380"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/offline-routing-storage.ts",
+      "sha256": "d491d8b67ce82bdc961eccf48c0f29f2d51964028cfc2a5489fc2ac06331199e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/offline-routing.test.ts",
+      "sha256": "a9aa1719cf1a2de46f06170984401e8d4e1a4621e8bf25ef08e0d4c9e65ce2b8"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/offline-routing.ts",
+      "sha256": "3655ff3047f4235c460f26c87d208dbd593c4c60c97b72258949a998ed5ac474"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/password-recovery.test.ts",
+      "sha256": "f6fae0649729528413b41eb53ca657a9d01194b967dd1248a6f43a314f683bb6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/password-recovery.ts",
+      "sha256": "48ebf163d59d81accba5c6ae982572d38abe824ce776988964b71b0bf482ad64"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/payment-receipt-pdf.ts",
+      "sha256": "fd2af19f0d20c838fa9a7f7dffcf913dee78d1c20302e3e030c087a9bee10f55"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/pkce-crypto.test.ts",
+      "sha256": "953be688fdb7abf72ad3dbd1bea04beef3c81558bd33fbfc5f527e94d00e0c89"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/pkce-crypto.ts",
+      "sha256": "69d23c46797420aef3a6014fe458c1aa566d0bfcd36965c824bfc1a8f3700fcb"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "sha256": "098934b005ea86ebb22bdc885742d0bc467a9ac4c78e940c5cd785a7b783201c"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/realtime-channel.ts",
+      "sha256": "8c95e91735b7bbbf7884337a1783593e1a355c709833844f59311a71155fe3e9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/sensitive-auth.test.ts",
+      "sha256": "096b9bd9be35547412eef16f0bcdd1da3eea77bdb0304cc4105b5b2aea6bf1ed"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/sensitive-auth.ts",
+      "sha256": "808ff77356c7ee205d1ed5f07e9a06178148911fe038b1de762aa79c086441a9"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-navigation.test.ts",
+      "sha256": "d81b537ee6bb46d56e273856d02a6ec15558a69ac4b878479287b5344ae8d46d"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-navigation.ts",
+      "sha256": "d2a0d825354e0c0ee59d012d864a97e0820ded87e535187cbfe016290dbcf418"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-refresh.test.ts",
+      "sha256": "6e80f731083f3aff39962883a81143204e0d242877c1f9c535eacf1afd17bf03"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-refresh.ts",
+      "sha256": "3fa230ee5945047d4cbc48ba71291f3bf11f511e660e5d0f78d5da8d08aa6281"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-request.test.ts",
+      "sha256": "3538366a640e5cf236139a2e96c8f2bbbb21ef250103826553e98fdfa30716c2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/setup-request.ts",
+      "sha256": "473009f7823e531e1f20d8ebddb3fdfff0db7d6f0aafd44b0474e6694c27f3ec"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/supabase.ts",
+      "sha256": "4fc4c2d548454ccf461b13da303b93ab54ff7d973855e386990646c8e535a1c4"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/supporting-upload.ts",
+      "sha256": "7d76b1f5a03ff222ec6d7020d2ffde6c543927321e34421f8c95fbce8266a760"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/valid-id.test.ts",
+      "sha256": "75916b7be0af96e7bbf095c585b7e71f2dc0802f67f82368254e96e723c4e0e2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/src/lib/valid-id.ts",
+      "sha256": "b00c8572526bbb09f7f3f2b8c77a129497b1ec9db9ed76b69f659c161a4ac388"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/announcement-categories.ts",
+      "sha256": "7ef3d63b83a732db59bfaf6f61d78522f894a8802bcb08a94e671f0c379b1c66"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/document-catalog-shape.ts",
+      "sha256": "53ff42d6ef8eeabd2062d0d9c86dc8bab8abff36d1ce0ee97cb550911765f12b"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/drive-types.ts",
+      "sha256": "4461f694eff9a3631382c3537a171fb6ffd59c95840ac0d14e69d02af3262091"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/id-verification.ts",
+      "sha256": "e14dc1fd0d0b2a3858d135c113f64ef38e982bf48d2a827f1d70cf7ee269f6d2"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/incident-categories.ts",
+      "sha256": "c7c00fdb7bee2d2be5a082b8d4f20380b4badfef8b6fe7491e007ee6a48ece6e"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/official-roles.ts",
+      "sha256": "97e4682a0883f7aaeb9589428a4ca312e538b6a0a98f4f8f8aa174d10422a226"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/priority-weights.ts",
+      "sha256": "7087b1e68ec213662e2803793492c11dcf26d573c999395519aeab66b0bb47cb"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/theme-colors.ts",
+      "sha256": "708ded28beaaa5a39d669b427b5e757cc82601def0109c1a1a8b0335a930c579"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/theme-fonts.ts",
+      "sha256": "e3aff76dff22581bfd6feae8b572728ea9c4c45aa38e42a0dfc0460f6cd035cb"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/constants/waste-types.ts",
+      "sha256": "8a65ded8c57085005db02009a2b93e9b77764090b7af5e18500d16fcd48c2401"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/index.ts",
+      "sha256": "225334e7b83107ee48bf0ce8e2207bb6b0066d15742228903e429d51d4f203f8"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/agency-sla.test.ts",
+      "sha256": "f820c00849c5686dd379235cdb842a0148b534d96a464faf9fbdce4fbca46fbb"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/agency-sla.ts",
+      "sha256": "02c21ead3c38cc5d0011d30acd0dda75d6e9f53d5304d808fb305eb8753505f1"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/auth-fetch.test.ts",
+      "sha256": "47728e89e011ef94ff5f2d197516527933ebd8893fe5d0cf81a5f88f309af12d"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/auth-fetch.ts",
+      "sha256": "8915f808f0fea76ea4a9d4f462e3fe117e44dda455bf4f960abc063246d7db72"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/connected-route-client.test.ts",
+      "sha256": "eca9a7486f7f6325751434f9fffaaffbfabec86729d88da6a64340aa3631664c"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/connected-route-client.ts",
+      "sha256": "68945b9b906a4060800a3233e0d33d5fc781d6fe57e7fd439053bb293404d0b7"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/device-location.test.ts",
+      "sha256": "cedb19b0f77c20bb61a623ae812e356e264074e0ab1521acfc0c99fcab956c03"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/device-location.ts",
+      "sha256": "249102dc41edc9d64fa60bf547bb979915cf5ea77529d0c077637e1047ad31ae"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/evacuation-route-service.test.ts",
+      "sha256": "92e8f6cea8c7852b864201ab9d300c2d60a0c0dfa92492cf210b526ea2668faa"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/evacuation-route-service.ts",
+      "sha256": "0726b27672394510f5a561cb840ea241827ff75987242676cbff21333e9f7dfa"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/evacuation-routing.test.ts",
+      "sha256": "bb31c41acd50152da1c41fdea943a7a6e636adbe1f53f9cae8d43408ad708c0d"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/evacuation-routing.ts",
+      "sha256": "1bd6bfefc11894a1f9cdec505411443ac2810a81c8fdda74d97b486cca27e609"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/format.test.ts",
+      "sha256": "ca16e24bea4dc5ad3959d0069dbdfd71ef42e2c4fbad48baeb83cdc2c806a385"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/format.ts",
+      "sha256": "c379a70815fa718dd253ff6a1e024dcccb236f36c1bf6354fb31c5537af396b6"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/geocode.ts",
+      "sha256": "123e5a40b9e38412133febdd0c0e2385c25d0d73fe0c5bc4b796129b953c9b38"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/google-profile.test.ts",
+      "sha256": "bec2fbe4c8584a483ef24aa4aab25ef1e47ba72d6f8dc9f6eef151261990abb0"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/haversine.test.ts",
+      "sha256": "f50e727f7dab3486a37f7c5c848c04bb411ee5cad8028f85ff041e1b81e48107"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/haversine.ts",
+      "sha256": "e85e11a981695cdf970553d90c44fe65f2853b8e08654a51c8f7d81733051c3b"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/id-evidence.test.ts",
+      "sha256": "ec4a6b62f6db672e9012ad50fbf9edd577c11631b25fc580df96ff796fafbe7c"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/id-evidence.ts",
+      "sha256": "7886d7af72df097eff8dc759339c797cba2c986764f5cf313421cefda8d8fe83"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/point-in-polygon.test.ts",
+      "sha256": "55689efd7d66614ca254e4a0b3c7bf26521e3bd607da98f7aea3c1370faf59ba"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/point-in-polygon.ts",
+      "sha256": "35f83d42263177c66db844f8cec3d72b1378e81edb40d59fcfa55801bb46b1ea"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/request-status.ts",
+      "sha256": "1222c4f0680faf10e427865a4dae9d3223823bd7efae27d9191a83f880bf5aee"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-account-setup.test.ts",
+      "sha256": "2027270bd3baa9af5fe2fcd9667316ce8c283afd4f7210dd3cbce97fd83ece9b"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-account-setup.ts",
+      "sha256": "ef6455a6cda0dc8bed101484e9a0f97430b7f5bae3ad317fdb13bdcc75ce9860"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-auth.test.ts",
+      "sha256": "00d596dc723a59d48a01147b9f70d2f9bafbdd14588daa58dd2fe290f8a2d3c7"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-auth.ts",
+      "sha256": "12677f49a3e4f1be63aeb38eb439c12e6637134dfdd76c44f83cc4e719ad8252"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-email-verification-client.test.ts",
+      "sha256": "4cd418100fa1cba07a6d0301ca308acd37d64a51ee8883a577a9c59e5b16f8bc"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-email-verification.test.ts",
+      "sha256": "bb202ffc5cbd7ba6235a8f00af8ed7034ee51ff612305ec5aa31757af8526d92"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-email-verification.ts",
+      "sha256": "d8025966e97f200db7f053b74dc4c35a3e2b6a6f3e2b6214b148c7befb432164"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-submission.test.ts",
+      "sha256": "9084b3be85be3ce9f2f7488d6ca028bd78966db1bae4a5ad474950c02b9046b6"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/resident-submission.ts",
+      "sha256": "88f27ad13b1c9b8997e94242b623c1eca697e44a44f3eb5454ca0a9b1d73b7af"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/routing-pack-builder.test.ts",
+      "sha256": "225af4619376885be4d7c4651f04a50018116ecb8c83c08c73710a03cd1f0753"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/routing-pack-builder.ts",
+      "sha256": "5bcde2c2e70a8ed22e377491a1ada09aa04897ba16b39be36ab52432ca85a632"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/service-catalog.test.ts",
+      "sha256": "1477a6c657b2494f1c8dc5dcb8ba36eed01f167e4a7a792893718dc76afa6b7f"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/service-catalog.ts",
+      "sha256": "2bb34f2da54e6e67e30a36d493285731d6ee4c3c11112dcdea7d6f3a08704d11"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/service-foundations.ts",
+      "sha256": "e2183519847de248e7821c9177b4580a5f58f9d62030955bec508c10df42ee40"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/service-tracking.test.ts",
+      "sha256": "022b9a3a9a2aac17f85b5a23f00464e936766540698c5f785b064cb9c5c165cf"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/service-tracking.ts",
+      "sha256": "8d0b8b1d7a30958bef68cd2dff16f6a200a94dd7bc3d1711bf7f45efb2805488"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/lib/supabase-client.ts",
+      "sha256": "49697001d89b1dddb7777cf18c0635dbd689a09373bd2ebe966835537efc7f41"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/about-us.ts",
+      "sha256": "4cf5367a57a8438bacdc752e50f1ff8752678f8089d8b854f7ff8872aed4cf69"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/admin-audit-log.ts",
+      "sha256": "955994dfe9a234f0c43bbaaf8103f931f7b5bcf28c2ca563e57f4b918cd8b4e8"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/announcement.test.ts",
+      "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/announcement.ts",
+      "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/auth.ts",
+      "sha256": "eddbde3ded0a8334ba79f0ca39f1425d3cb6f750f9b4f4c05c760bebf221a5d2"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/document-type.test.ts",
+      "sha256": "4dfc69ec8dfdb69ec1ee20f671cb308123058d68d946f9724a4be332ae93ffbb"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/document-type.ts",
+      "sha256": "410c6eb6be1c38c9d9e0a3009fbd4b031a428f81a2cedf9a716529c353643c53"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/drive-registration-result.test.ts",
+      "sha256": "dcac003fe169352376b89a8f34acdfd8fdc060246f4362cec7cee464c5611221"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/drive-registration.test.ts",
+      "sha256": "5c9cc698c0393e6981abef12ec3159500867fe14158d45dcf5f670b34179be52"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/drive-registration.ts",
+      "sha256": "8fc33f90d0c5b0ef87496281684fc4aa09e767862d903876835d283dbf576b78"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/emergency-information.ts",
+      "sha256": "6075267bb490267c526b07afdbb597c5f1bb5faffc45df915db4389c570d09d8"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "b8d7d5cc0baa3080839cfd896fcb1cac90fd87f3d26874c1e87492431b8c47c8"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/evacuation-center.ts",
+      "sha256": "8bba066b3fdbfa272d455c751bc718c09776d9c2142bce2ff11b3a8055cd39a1"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/faq.ts",
+      "sha256": "d3f1a21228b4a5be22f7c1e939d7d8b21958516882943cf8f599a3cd052a1d4f"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/household.ts",
+      "sha256": "649ee31b82fc0d2791ea352a59c3bfc5eef0a711979b04782852596296c0a224"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/incident-map.ts",
+      "sha256": "153a44870e89ebdb1b0a05e11cf0eec9c10dd4879f6dedbd0273136c24aa0cce"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/incident-report.test.ts",
+      "sha256": "f3ce329a4cc7fe7eb24b42178481f5719019db88b6e6a2411639450736bbcce4"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/incident-report.ts",
+      "sha256": "6a900466695019fcc4a194ee0050ed9a6bf369df28546d414e7049900bd1aef6"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/payment.test.ts",
+      "sha256": "b35ddb97c28140c6788b0b992b7b7633881450aed530479d2a8d4c388eb775a4"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/payment.ts",
+      "sha256": "c2cfaa9ebde38c0cafffbeb168f5db5823a84fe8711605b1cae396c4472ef2e7"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/request-form.test.ts",
+      "sha256": "6d4b5d84a9590290ba666ccfd1bcfd08c5df11e7934db5b658fcdc0ea98304eb"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/request-form.ts",
+      "sha256": "1c453b9bde025104254cc48dd4dfaca515a4ea92ad09bc18b4eb320d153dde25"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/routing-conditions.test.ts",
+      "sha256": "0e1f339f057e26b6f9f92f8aa9edd46d0b8e3ee50ca7656117244c69e55267d9"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/routing-conditions.ts",
+      "sha256": "e00cc18ba339166c668f1cea788498d51289f8239dd2e8fffc877652a4e95828"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/service-foundations.test.ts",
+      "sha256": "7ac54b1774f9d2f1f9dc0a3db88ce716535ba5d06fe5718cb99d1d49b833e7fe"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "21eed2f4149d670f8f15538a514ef61b66b02e51f90df4cf09585982c3b1eac1"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/settings.ts",
+      "sha256": "a2d65c3f66a196c4d31b88817861c4bdad719b0dc31d1bb0c3b11d8e0b2235b1"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/site-content.ts",
+      "sha256": "e6eb06f781fb626e39a8bbb180dde4db603b70de15c6388966d62dec1c995324"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/staff.test.ts",
+      "sha256": "14f69f79e948e83f6dda87f010c6dc27275a3e8342d77654bc4a0da76de18bd3"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/staff.ts",
+      "sha256": "bb5677337d59300902b562b01c60ebe480aab522dd9d9af54526cf1c4b437eb4"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/schemas/waste-management.ts",
+      "sha256": "4dfdff85e02a35fa3ede629f69c126415337f80800aa238db14f0371172ea708"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/database.ts",
+      "sha256": "67468644695170be9129ff743a1b2935dd5c22188f7aaf7e4f49183a4a7cf30a"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/domain.ts",
+      "sha256": "51a0121512bd2133984ac4c91995396d82cb8aa1466e8655f500d47df68187d4"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/map-bridge.ts",
+      "sha256": "d2afa4b8a547d27642ec1fb199d2cfff38118a3a1be63885275ae64a7020b988"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/resident-account-setup.database.ts",
+      "sha256": "a0bf108939da40f57a24f50d92c029eab6e3eb28e8a23f109b32cdda4e12359b"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/routing-conditions.database.ts",
+      "sha256": "00e663290412a899a19c3067dec585802982a03c2702bb7d6a96900a10aa23a5"
+    },
+    {
+      "file": "c:/users/user/barangayan/packages/shared/src/types/service-foundations.ts",
+      "sha256": "758081f27ec1d5fccea5465865ac96c30c9183e5648f0ebba4c5e83eb547d753"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/package.json",
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/app.json",
+      "sha256": "de2a4bcee6bf2352fa3d24b5387a9eb95f857fc2fac4d2ab2d6fc662acb216f5"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/app.config.js",
+      "sha256": "e5e40c5ce355e7ecae13a5de27e0f2a6cb44d12e988f6e73ad201527302e13d6"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/metro.config.js",
+      "sha256": "a115031592d874d6f6cab841343647c74720debe71e9071f3d3aa49c8cfd3d68"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/tsconfig.json",
+      "sha256": "09570b139a14ee71947b40b6ef8d639323603fd031bf253d32f449a77d3ab58e"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/vitest.config.ts",
+      "sha256": "a7f3d3e3aab95dc604fdb1ab95e8584d5d47ce6331f606716ae8a080230c2ee2"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/sanmateo_ampid1_geojson.geojson",
+      "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4"
+    },
+    {
+      "file": "c:/users/user/barangayan/apps/resident-android-mobile/assets/geojson/ampid1-boundary.json",
+      "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4"
+    }
+  ],
+  "lintChecks": [
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "baselineErrors": 1,
+      "baselineWarnings": 0,
+      "virtualErrors": 1,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "baselineErrors": 2,
+      "baselineWarnings": 0,
+      "virtualErrors": 2,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+      "baselineErrors": 0,
+      "baselineWarnings": 0,
+      "virtualErrors": 0,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "baselineErrors": 3,
+      "baselineWarnings": 0,
+      "virtualErrors": 3,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+      "baselineErrors": 0,
+      "baselineWarnings": 0,
+      "virtualErrors": 0,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "baselineErrors": 0,
+      "baselineWarnings": 0,
+      "virtualErrors": 0,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "baselineErrors": 1,
+      "baselineWarnings": 0,
+      "virtualErrors": 1,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "baselineErrors": 18,
+      "baselineWarnings": 0,
+      "virtualErrors": 18,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "baselineErrors": 15,
+      "baselineWarnings": 0,
+      "virtualErrors": 15,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "baselineErrors": 8,
+      "baselineWarnings": 0,
+      "virtualErrors": 8,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+      "baselineErrors": 8,
+      "baselineWarnings": 0,
+      "virtualErrors": 8,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+      "baselineErrors": 9,
+      "baselineWarnings": 0,
+      "virtualErrors": 9,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    },
+    {
+      "file": "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+      "baselineErrors": 6,
+      "baselineWarnings": 0,
+      "virtualErrors": 6,
+      "virtualWarnings": 0,
+      "newDiagnostics": []
+    }
+  ],
+  "historicalVerifierDependency": {
+    "script": "C:/Users/User/barangayan/scripts/phase0-verify.cjs",
+    "index": "C:/Users/User/barangayan/plans/evidence/phase0/source-index.json",
+    "indexedOrphans": [
+      "apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "apps/resident-android-mobile/src/components/app-header.tsx",
+      "apps/resident-android-mobile/src/components/hint-row.tsx",
+      "apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "apps/resident-android-mobile/src/components/settings-row.tsx",
+      "apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "apps/resident-android-mobile/src/hooks/use-family-members.ts"
+    ],
+    "behavior": "Verifier directly reads indexed file paths and compares hashes. Deletion/modification changes that historical evidence check and can cause missing-file errors. Historical evidence and scripts were not changed or run."
+  },
+  "recordedAtUtc": "2026-10-14T05:41:48.395Z",
+  "sourceChangesDuringLintCheck": []
+}

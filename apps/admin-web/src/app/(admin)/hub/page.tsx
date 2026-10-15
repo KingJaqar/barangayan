@@ -1,3 +1,6 @@
+import styles from '@/components/admin/content-workspace.module.css';
+import { ContentCreatePanel } from '@/components/admin/content-create-panel';
+import { RecordArchiveLink } from '@/components/admin/record-archive-link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { EmergencyCatalog } from './emergency-catalog';
@@ -17,21 +20,18 @@ export default async function HubPage() {
     .order('published_at', { ascending: false });
 
   return (
-    <div className="mx-auto max-w-4xl">
-      {/* Section 1: header + description */}
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold">Emergency Hub</h1>
-        <p className="text-sm text-zinc-500">Manage emergency guidelines and hotlines pushed to residents.</p>
-      </div>
+    <div className={styles.page}>
+      <ContentCreatePanel
+        title="Emergency Hub"
+        description="Manage emergency guidelines and hotlines pushed to residents."
+        forms={[
+          { label: "Create new entry", title: "New emergency entry",
+            description: "Add guidelines or hotlines and configure how they appear to residents.",
+            content: <EmergencyForm barangayId={profile?.barangay_id ?? ''} /> },
+        ]}
+      />
 
-      {/* Section 2: add item form */}
-      <div className="mb-6 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">New Entry</h2>
-        <EmergencyForm barangayId={profile?.barangay_id ?? ''} />
-      </div>
-
-      {/* Sections 3 + 4: filter controls / search bar, and existing items */}
-      <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">Published Entries</h2>
+      <RecordArchiveLink name="hub" />
       <EmergencyCatalog items={items ?? []} />
     </div>
   );

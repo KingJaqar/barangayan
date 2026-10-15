@@ -5,6 +5,7 @@ import { AlertCircle, LocateFixed, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/loading';
+import styles from './emergency.module.css';
 
 const ACTION_LABELS: Record<LocationAction, string> = {
   locate: 'Use my location',
@@ -29,7 +30,7 @@ export function LocationStatusCard({
   const Icon = message.tone === 'info' ? LocateFixed : message.tone === 'warning' ? AlertCircle : XCircle;
 
   return (
-    <div role="status" aria-live="polite" className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
+    <div role="status" aria-live="polite" className={styles.locationCard}>
       <div className="flex items-start gap-2.5">
         {message.busy ? (
           <Spinner className="mt-0.5 text-primary" />
@@ -44,7 +45,7 @@ export function LocationStatusCard({
       {message.actions.length > 0 ? (
         <div className="flex flex-wrap gap-2">
           {message.actions.map((action, index) => (
-            <Button key={action} type="button" size="sm" variant={index === 0 ? 'default' : 'outline'} onClick={() => onAction(action)}>
+            <Button key={action} type="button" size="sm" variant={index === 0 ? 'default' : 'outline'} className={index === 0 ? styles.primaryButton : styles.secondaryButton} onClick={() => onAction(action)}>
               {ACTION_LABELS[action]}
             </Button>
           ))}

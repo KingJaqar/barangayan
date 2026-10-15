@@ -1,0 +1,39 @@
+ok 1 - Backfill retains unknown legacy credential provenance
+ok 2 - Backfill recognizes absent credential
+ok 3 - Backfill never writes existing credentials
+ok 4 - Server Google creation metadata records Google origin
+ok 5 - Generated OTP hash is not a chosen password
+ok 6 - Unknown initial hash is never assumed chosen
+ok 7 - Creation transaction hash rewrites remain unset
+ok 8 - Metadata changes cannot change origin
+ok 9 - Later Auth credential write is observed atomically
+ok 10 - Google linking retains immutable email origin
+ok 11 - Backfill replay does not overwrite known origin
+ok 12 - Backfill replay preserves positively observed credential
+ok 13 - Private table unreadable to clients
+ok 14 - Private state not writable by clients
+ok 15 - Anonymous cannot execute status
+b6070000-0000-0000-0000-000000000002
+ok 16 - Caller status reports only four safe fields
+ok 17 - No other-user status argument exists
+ok 18 - Private rows are inaccessible
+ok 19 - Profile-less OTP/legacy account uses existing tenant completion
+ok 20 - Status agrees with completed profile
+ok 21 - Completion uses configured tenant
+b6070000-0000-0000-0000-000000000001
+ok 22 - Google state uses Auth identities
+ok 23 - Linked identity cannot erase credential evidence
+b6070000-0000-0000-0000-000000000003
+ok 24 - Google-only identity has no password
+
+ok 25 - Missing authenticated identity fails closed
+b6070000-0000-0000-0000-000000000003
+ok 26 - Staff is not converted to resident
+b6070000-0000-0000-0000-000000000002
+ok 27 - Deleted resident cannot resume setup
+b6070000-0000-0000-0000-000000000004
+ok 28 - Anonymous Auth identity cannot enter resident setup
+b6070000-0000-0000-0000-000000000005
+ok 29 - Banned identity fails even with earlier caller claims
+ok 30 - Missing authoritative state fails without invented defaults
+1..30

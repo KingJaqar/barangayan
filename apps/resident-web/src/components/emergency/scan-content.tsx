@@ -8,12 +8,14 @@ import { AuthGate } from '@/components/shared/auth-gate';
 import { QrScannerDialog } from '@/components/emergency/qr-scanner-dialog';
 import { QrShowDialog } from '@/components/emergency/qr-show-dialog';
 import { QrUploadFallback } from '@/components/emergency/qr-upload-fallback';
+import { EmergencyPageHeader } from '@/components/emergency/emergency-page-header';
 import { InlineReadError } from '@/components/shared/inline-read-error';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Skeleton } from '@/components/ui/loading';
 import { useEmergencyQrContent } from '@/hooks/use-emergency-qr-content';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { renderIonicon } from '@/lib/ionicon-map';
+import styles from './emergency.module.css';
 
 /** Web port of qr-guide-content.tsx — instructional "Why Scan" / "How It Works" cards
  * [C-014] plus Scan/Show entry points [C-011, C-012]. Guests see EmergencyAuthGate
@@ -39,11 +41,8 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
   const steps = (howItWorks?.content as unknown as { step: number; title: string; desc: string }[] | undefined) ?? [];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-lg font-bold text-primary">QR Check-In Guide</h1>
-        <p className="text-sm text-muted-foreground">Follow these quick steps to register your presence securely.</p>
-      </div>
+    <div className={styles.content}>
+      <EmergencyPageHeader title="QR Check-In Guide" />
 
       {isInitialLoading ? (
         <div aria-busy className="flex flex-col gap-3">
@@ -55,15 +54,15 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
       ) : (
         <>
           {whyScan ? (
-            <div className="flex items-start gap-3 rounded-2xl border p-4" style={{ backgroundColor: whyScan.icon_bg ?? '#FEF9E7', borderColor: '#F3E8C7' }}>
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: whyScan.icon_bg ?? '#FEF9E7', color: whyScan.icon_color ?? undefined }}>
+            <div className={styles.whyScan}>
+              <span className={styles.qrIcon}>
                 {renderIonicon(whyScan.icon ?? 'qr-code-outline', { size: 26, strokeWidth: 1.75 })}
               </span>
               <div>
-                <p className="font-bold" style={{ color: '#1F2937' }}>
+                <p className="font-semibold">
                   {whyScan.title}
                 </p>
-                <p className="mt-1 text-sm" style={{ color: '#4B5563' }}>
+                <p className={styles.sectionDescription}>
                   {whyScan.body}
                 </p>
               </div>
@@ -71,24 +70,26 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
           ) : null}
 
           {howItWorks ? (
-            <div>
-              <h2 className="font-bold">{howItWorks.title}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{howItWorks.body}</p>
-              <div className="mt-4 flex flex-col gap-4">
+            <section className={styles.panel}>
+              <p className={styles.sectionNumber}>YOUR CHECK-IN, STEP BY STEP</p>
+              <div className={styles.panelHeading}>
+                <div>
+                  <h2>{howItWorks.title}</h2>
+                  <p className={styles.sectionDescription}>{howItWorks.body}</p>
+                </div>
+              </div>
+              <div className={styles.steps}>
                 {steps.map((step, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <div className="flex flex-col items-center">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">{step.step}</span>
-                      {idx < steps.length - 1 ? <span className="mt-1 h-full w-0.5 flex-1 bg-primary/30" /> : null}
-                    </div>
-                    <div className="pb-4">
-                      <p className="text-sm font-bold">{step.title}</p>
-                      <p className="text-sm text-muted-foreground">{step.desc}</p>
+                  <div key={idx} className={styles.step}>
+                    <span className={styles.stepNumber}>{String(step.step).padStart(2, '0')}</span>
+                    <div>
+                      <p className={styles.stepTitle}>{step.title}</p>
+                      <p className={styles.stepDescription}>{step.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
           ) : null}
         </>
       )}
@@ -102,14 +103,20 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
       ) : null}
       <LoadingStatus active={isInitialLoading} label="Loading check-in instructions…" />
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="button" className="flex-1" onClick={() => setShowScanner(true)}>
-          <QrCode size={20} /> Scan QR
-        </Button>
-        <Button type="button" variant="outline" className="flex-1" onClick={() => setShowQr(true)}>
-          <CheckSquare size={20} /> Show QR
-        </Button>
-      </div>
+      <section className={styles.actionPanel}>
+        <div className={styles.actionCopy}>
+          <h2>Ready to check in?</h2>
+          <p className={styles.sectionDescription}>Scan or display a check-in QR code.</p>
+        </div>
+        <div className={styles.actionButtons}>
+          <Button type="button" className={styles.primaryButton} onClick={() => setShowScanner(true)}>
+            <QrCode size={20} /> Scan QR
+          </Button>
+          <Button type="button" variant="outline" className={styles.secondaryButton} onClick={() => setShowQr(true)}>
+            <CheckSquare size={20} /> Show QR
+          </Button>
+        </div>
+      </section>
 
       <QrUploadFallback userId={userId} barangayId={barangayId} userBarangayId={barangayId} />
 

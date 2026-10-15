@@ -78,7 +78,7 @@ export default function ServicesScreen() {
               {isLoading ? 'Checking ID verification…' : error ?? idVerificationMessages[idVerificationState(profile)]}
             </ThemedText>
           </View>
-          <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
+          <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/valid-id')} />
           {error ? <PrimaryButton label="Retry verification check" variant="secondary" onPress={refetch} /> : null}
         </View>
       ) : null}

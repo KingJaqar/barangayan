@@ -1,4 +1,6 @@
 'use client';
+
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Tables } from '@barangayan/shared';
@@ -17,11 +19,11 @@ export function NewRequestForm({ documentTypes }: { documentTypes: Tables<'docum
       <VerificationNotice client={client} profileHref="/resident/profile#upload-valid-id" />
       <label>
         Document type
-        <select
+        <AdminSelect
           aria-label="Document type"
           className="block w-full rounded-lg border p-3"
           value={id}
-          onChange={(event) => setId(event.target.value)}
+          onValueChange={(nextValue) => setId(nextValue)}
         >
           <option value="">Choose a document</option>
           {documentTypes.map((doc) => (
@@ -29,7 +31,7 @@ export function NewRequestForm({ documentTypes }: { documentTypes: Tables<'docum
               {doc.name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       {selected ? (
         <ResidentServiceForm

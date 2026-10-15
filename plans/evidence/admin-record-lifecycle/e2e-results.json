@@ -1,0 +1,269 @@
+{
+  "checks": [
+    {
+      "screen": "authentication",
+      "status": "passed",
+      "checks": [
+        "real local Supabase Auth",
+        "admin session cookies",
+        "server route guard"
+      ]
+    },
+    {
+      "screen": "requests",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "transactions",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "residents",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "incidents",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "health",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "applicants",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "households",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "staff",
+      "status": "passed",
+      "checks": [
+        "actual route and projection",
+        "read-only sheet",
+        "Server Action save",
+        "independent database readback",
+        "archive route",
+        "archived details",
+        "restore",
+        "active list refreshed"
+      ]
+    },
+    {
+      "screen": "staff self-protection",
+      "status": "passed",
+      "checks": [
+        "own Archive/Delete actions disabled"
+      ]
+    },
+    {
+      "screen": "related-record constraint",
+      "status": "passed",
+      "checks": [
+        "real foreign-key constraint",
+        "clear retryable feedback",
+        "record retained"
+      ]
+    },
+    {
+      "screen": "request workflow",
+      "status": "passed",
+      "checks": [
+        "processing",
+        "pickup readiness",
+        "payment ledger collection",
+        "completion",
+        "all independently read back"
+      ]
+    },
+    {
+      "screen": "incident workflow",
+      "status": "passed",
+      "checks": [
+        "in progress",
+        "withdrawal",
+        "persisted withdrawn status"
+      ]
+    },
+    {
+      "screen": "incident terminal transitions",
+      "status": "passed",
+      "checks": [
+        "old open-report withdrawal",
+        "resolution after processing",
+        "unresolved transition",
+        "persisted status"
+      ]
+    },
+    {
+      "screen": "request cancellation",
+      "status": "passed",
+      "checks": [
+        "required note",
+        "guarded RPC",
+        "persisted cancellation",
+        "cancelled request deletion"
+      ]
+    },
+    {
+      "screen": "applicant workflow",
+      "status": "passed",
+      "checks": [
+        "confirmed registration cancellation",
+        "persisted status"
+      ]
+    },
+    {
+      "screen": "transactions deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "requests deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "applicants deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "health deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "incidents deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "households deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "staff deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    },
+    {
+      "screen": "residents deletion",
+      "status": "passed",
+      "checks": [
+        "irreversible confirmation",
+        "Server Action",
+        "database record absent"
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "httpErrors": [],
+  "limitations": [
+    "Local Supabase with synthetic accounts and records; no live payment/refund provider request."
+  ],
+  "status": "passed",
+  "fixtureCleanup": "passed"
+}

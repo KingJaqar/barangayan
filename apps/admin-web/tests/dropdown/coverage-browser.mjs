@@ -1,0 +1,131 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { preview } from './preview.mjs';
+
+const evidence = path.resolve(import.meta.dirname, '../../../../plans/evidence/admin-dropdown-ui');
+const server = await preview({ coverage: path.join(import.meta.dirname, 'coverage.tsx') }, { uiMocks: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const report = { checks: [], errors: [], warnings: [], limitations: ['Compatibility/modals/header/content archives use actual components and synthetic data. Database, image, navigation and audit-write adapters are local mocks.'] };
+const save = () => fs.writeFileSync(path.join(evidence, 'coverage-results.json'), JSON.stringify(report, null, 2));
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  page.setDefaultTimeout(8000);
+  page.on('pageerror', error => report.errors.push(error.message));
+  page.on('console', msg => { if (msg.type() === 'error') report.errors.push(msg.text()); if (msg.type() === 'warning') report.warnings.push(msg.text()); });
+  await page.route('**/assets/**', route => route.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"/>' }));
+  async function choose(control, name) { await control.click(); await page.getByRole('listbox').getByRole('option', { name, exact: true }).click(); }
+  async function settleMotion(control) {
+    await control.evaluate(el => Promise.all(el.getAnimations({ subtree: true }).filter(animation => animation.effect?.getTiming().iterations !== Infinity).map(animation => animation.finished)));
+  }
+  await page.goto(`${server.url}/coverage`);
+  const controls = page.getByRole('combobox');
+  await controls.first().waitFor();
+  assert.equal(await controls.count(), 4);
+  await choose(controls.nth(0), 'Male');
+  await choose(controls.nth(1), 'Employed');
+  await choose(controls.nth(2), 'Other'); await page.getByRole('textbox', { name: 'Specify ID type' }).waitFor();
+  await controls.nth(3).click(); assert.equal(await page.getByRole('option', { name: 'Choose a document' }).count(), 1); await page.keyboard.press('Escape');
+  assert.equal(await page.getByTestId('compatibility-writes').textContent(), '0');
+  report.checks.push('All four actual resident compatibility selects; employment conditional field; Other ID field; empty document list; no submission'); save();
+  await page.getByRole('button', { name: 'Fixture member modal' }).click();
+  const member = page.getByTestId('member-modal');
+  await choose(member.getByRole('combobox').nth(0), 'Child'); await choose(member.getByRole('combobox').nth(1), 'Child');
+  await page.keyboard.press('Escape');
+  if (await member.count()) await member.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.getByRole('button', { name: 'Fixture applicant modal' }).click();
+  const applicant = page.getByRole('dialog');
+  await applicant.getByRole('button', { name: 'Edit', exact: true }).click();
+  await choose(applicant.getByRole('combobox', { name: 'PWD' }), 'Yes');
+  await choose(applicant.getByRole('combobox', { name: 'Status' }), 'Confirmed');
+  await applicant.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Fixture QR instructions' }).click();
+  const qr = page.getByRole('combobox', { name: 'Icon' });
+  await choose(qr, 'warning-outline');
+  await qr.click(); await page.keyboard.press('Escape'); assert.ok(await qr.isVisible());
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  report.checks.push('Both unreferenced modal components fixture-verified: all four selectors; cancel without submission; no production activation'); save();
+  report.checks.push('Actual QR instruction modal Controller field, icon selection, innermost Escape and cancel without save'); save();
+  await page.goto(`${server.url}/coverage?mode=popups`);
+  const account = page.getByRole('button', { name: 'Account menu' });
+  await account.press('ArrowDown');
+  const menu = page.getByRole('menu', { name: 'Account menu' });
+  assert.equal(await menu.getByRole('menuitem', { name: 'Theme' }).getAttribute('href'), '/theme');
+  await settleMotion(menu);
+  await page.screenshot({ path: path.join(evidence, 'after-account-menu.png') });
+  await page.keyboard.press('End'); assert.ok(await menu.getByRole('menuitem', { name: 'Logout' }).evaluate(el => el === document.activeElement));
+  await page.keyboard.press('Escape'); assert.ok(await account.evaluate(el => el === document.activeElement));
+  await account.click(); await menu.getByRole('menuitem', { name: 'Logout' }).click(); assert.equal(await page.getByTestId('popup-calls').textContent(), '1');
+  await page.getByRole('button', { name: 'Notifications', exact: true }).click();
+  const notifications = page.getByRole('region', { name: 'Notifications', exact: true });
+  await notifications.getByText(/Fixture Announcement/).waitFor();
+  await settleMotion(notifications);
+  await page.screenshot({ path: path.join(evidence, 'after-notification-popover.png') });
+  await notifications.getByRole('button', { name: 'More', exact: true }).click();
+  const drawer = page.getByRole('dialog');
+  await drawer.getByRole('button', { name: 'Date range', exact: true }).click();
+  const calendar = page.getByRole('dialog', { name: 'Date range', exact: true });
+  await calendar.getByRole('button', { name: '10', exact: true }).click();
+  await settleMotion(calendar);
+  await page.screenshot({ path: path.join(evidence, 'after-calendar.png') });
+  await page.keyboard.press('Escape'); assert.ok(await drawer.first().isVisible());
+  await drawer.getByRole('button', { name: 'Date range', exact: true }).click();
+  await calendar.getByRole('button', { name: '12', exact: true }).click(); await calendar.getByRole('button', { name: 'Save', exact: true }).click();
+  await drawer.getByRole('button', { name: /Oct 12/ }).waitFor();
+  assert.ok(await drawer.getByRole('button', { name: /Oct 12/ }).evaluate(el => el === document.activeElement));
+  await drawer.getByRole('button', { name: /Oct 12/ }).click(); await calendar.getByRole('button', { name: 'Reset', exact: true }).click();
+  await drawer.getByRole('button', { name: 'Date range', exact: true }).waitFor();
+  assert.ok(await drawer.getByRole('button', { name: 'Date range', exact: true }).evaluate(el => el === document.activeElement));
+  await page.screenshot({ path: path.join(evidence, 'after-notifications-drawer.png') });
+  await page.keyboard.press('Escape');
+  await drawer.waitFor({ state: 'detached' });
+  report.checks.push('Actual account menu navigation href, arrows/Home/End/Escape, mocked logout once; notification popover and More drawer; nested calendar Escape, Save and Reset'); save();
+  const reference = page.getByRole('combobox', { name: 'Free reference' });
+  await reference.fill('arbitrary free text'); assert.equal(await page.getByTestId('reference').textContent(), 'arbitrary free text');
+  await reference.fill('REQ'); await reference.press('ArrowDown'); await reference.press('Enter');
+  assert.equal(await page.getByTestId('reference').textContent(), 'REQ-2026-00001');
+  report.checks.push('Reference combobox retains free text and keyboard suggestion selection');
+  await page.route('**/api/search?**', async route => {
+    const q = new URL(route.request().url()).searchParams.get('q');
+    await route.fulfill({ json: { query: q, category: 'all', page: 1, pageSize: 10, groups: [], total: 0, hasMore: false, countsExact: true } });
+  });
+  const search = page.getByRole('combobox', { name: 'Search admin content' });
+  await search.fill('Fixture');
+  await page.getByRole('option', { name: /Search for/ }).waitFor();
+  await page.locator('[role="listbox"][aria-busy="false"]').waitFor();
+  await settleMotion(page.getByRole('listbox', { name: 'Search suggestions' }));
+  await page.screenshot({ path: path.join(evidence, 'after-search-suggestions.png') });
+  await search.press('ArrowDown'); await search.press('Enter');
+  assert.equal(await page.evaluate(() => window.popupNavigation), '/search?q=Fixture');
+  await search.fill(''); await search.focus(); await page.getByRole('option', { name: 'Fixture', exact: true }).waitFor();
+  await search.press('Escape');
+  report.checks.push('Actual navbar typing, no-results response, keyboard destination navigation and recent search'); save();
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await account.click();
+    const bounds = await menu.boundingBox();
+    assert.ok(bounds.x >= 7 && bounds.x + bounds.width <= width - 7);
+    await page.keyboard.press('Escape');
+    await search.fill('Fixture');
+    const suggestions = page.getByRole('listbox', { name: 'Search suggestions' });
+    await suggestions.waitFor();
+    const box = await suggestions.boundingBox();
+    assert.ok(box.x >= 0 && box.x + box.width <= width + 1);
+    await search.press('Escape');
+  }
+  report.checks.push('Account and actual navbar popup bounds at 320/390/768/1024/1440'); save();
+  for (const section of ['services', 'announcements', 'waste-management', 'hub', 'evacuation-centers']) {
+    await page.goto(`${server.url}/coverage?mode=archive&section=${section}`);
+    await page.getByRole('combobox', { name: 'Sort by', exact: true }).click();
+    assert.equal(await page.getByRole('listbox').getByRole('option', { name: 'Archived on' }).count(), 1);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.getByRole('combobox', { name: 'Rows per page' }).count(), 1);
+    assert.equal(await page.getByRole('button', { name: /^Edit / }).count(), 0);
+    if (section === 'waste-management') assert.equal(await page.getByRole('group', { name: 'Archived waste records' }).getByRole('button').count(), 3);
+  }
+  report.checks.push('All five content archive sections: Archived on, direction/page size; waste kind tabs preserved; read-only tables');
+  assert.deepEqual(report.errors, []); assert.deepEqual(report.warnings, []); save();
+} catch (error) { report.failure = error.stack; save(); throw error; }
+finally { await browser.close(); await server.close(); }

@@ -1,0 +1,53 @@
+// TEMPORARY R6 device probe — plants a fabricated test session (local simulated backend only). Removed after the run.
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+
+import { supabase } from '@/lib/supabase';
+
+function b64url(value: object) {
+  return btoa(JSON.stringify(value)).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+export default function AuthProbe() {
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
+  const [line, setLine] = useState('working');
+  useEffect(() => {
+    void (async () => {
+      const key = (supabase.auth as unknown as { storageKey: string }).storageKey;
+      if (mode === 'show') {
+        const keys = await AsyncStorage.getAllKeys();
+        setLine(`KEYS ${JSON.stringify(keys)}`);
+        return;
+      }
+      const now = Math.floor(Date.now() / 1000);
+      const expiresAt = mode === 'expired' ? now - 3600 : now + 86400;
+      const userId = '0000aaaa-bbbb-4000-8000-000000000001';
+      const session = {
+        access_token: `${b64url({ alg: 'HS256', typ: 'JWT' })}.${b64url({ sub: userId, exp: expiresAt, role: 'authenticated', aud: 'authenticated' })}.r6-test-signature`,
+        token_type: 'bearer',
+        expires_in: 3600,
+        expires_at: expiresAt,
+        refresh_token: 'r6-test-refresh-token',
+        user: {
+          id: userId,
+          aud: 'authenticated',
+          role: 'authenticated',
+          email: 'r6-test@example.test',
+          app_metadata: { provider: 'email', providers: ['email'] },
+          user_metadata: {},
+          identities: [],
+          created_at: '2026-10-14T00:00:00Z',
+        },
+      };
+      await AsyncStorage.setItem(key, JSON.stringify(session));
+      setLine(`SEEDED ${mode} key=${key} expiresAt=${expiresAt}`);
+    })().catch((e: unknown) => setLine(`ERROR ${String(e)}`));
+  }, [mode]);
+  return (
+    <View style={{ flex: 1, padding: 24, paddingTop: 80, backgroundColor: '#FFFFFF' }}>
+      <Text style={{ color: '#000000', fontSize: 16 }}>{line}</Text>
+    </View>
+  );
+}

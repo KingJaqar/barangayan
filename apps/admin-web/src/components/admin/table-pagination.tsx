@@ -1,8 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { PAGE_SIZES, pageRange, type PageSize } from '@/lib/admin-tables/browse-state';
 
-/** Inline chevrons, like the search icon: the browse chrome stays free of icon-library imports. */
+/** Pager chevrons remain inline; value selectors use the shared dropdown. */
 const Chevrons = ({ d }: { d: string }) => <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"
   fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
 
@@ -15,10 +17,10 @@ export function TablePagination({ total, page, pageSize, pending = false, onPage
   const atEnd = pending || total === 0 || range?.page === range?.pages;
   return <div className="table-browse-pagination">
     <span className="ab-muted">Showing {range?.start ?? 0}–{range?.end ?? 0} of {total}</span>
-    <label className="table-browse-page-size"><span className="ab-label">Rows per page</span> <select value={pageSize} disabled={pending}
-      onChange={event => onPageSizeChange(Number(event.target.value) as PageSize)}>
+    <label className="table-browse-page-size"><span className="ab-label">Rows per page</span> <AdminSelect kind="page" width="auto" value={pageSize} disabled={pending}
+      onValueChange={nextValue => onPageSizeChange(Number(nextValue) as PageSize)}>
       {PAGE_SIZES.map(size => <option key={size} value={size}>{size}</option>)}
-    </select></label>
+    </AdminSelect></label>
     <nav aria-label="Table pages" className="table-browse-pager">
       <button type="button" aria-label="First" title="First" data-edge disabled={atStart} onClick={() => onPageChange(1)}>
         <Chevrons d="m11 17-5-5 5-5M18 17l-5-5 5-5" /></button>

@@ -1,0 +1,17 @@
+ok 1 - Residents cannot invoke invalidation trigger
+ok 2 - No anonymous invalidation execution
+b6090000-0000-0000-0000-000000000001
+{"sub":"b6090000-0000-0000-0000-000000000001","role":"authenticated"}
+ok 3 - Address casing alone preserves verification
+ok 4 - Same normalized address remains verified
+ok 5 - Permitted profile email edit is server-invalidated
+ok 6 - New address never inherits the badge
+ok 7 - Old timestamps cleared
+ok 8 - Direct resident verification remains denied
+ok 9 - Address change cannot mask a forged verification write
+ok 10 - Rejected forgery rolls back the email edit
+ok 11 - Invalidation does not alter authorization
+{"role":"service_role"}
+ok 12 - Server endpoint retains verification write access
+ok 13 - Server-confirmed status persists
+1..13

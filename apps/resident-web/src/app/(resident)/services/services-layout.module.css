@@ -1,0 +1,103 @@
+.layout {
+  /* The segment nav is 60px tall, followed by its existing bottom spacing. */
+  --services-navigation-height: 88px;
+}
+
+.navigation {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flow-root;
+}
+
+.requestFilters {
+  --requests-border: color-mix(in srgb, var(--foreground) 23%, var(--background));
+  --requests-ink: color-mix(in srgb, var(--foreground) 80%, var(--background));
+  --requests-accent: color-mix(in srgb, var(--accent) 85%, var(--foreground));
+  position: sticky;
+  top: var(--services-navigation-height);
+  z-index: 10;
+  padding-bottom: 20px;
+}
+
+:global(.dark) .requestFilters {
+  --requests-accent: color-mix(in srgb, var(--accent) 60%, var(--foreground));
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--requests-border);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--requests-ink);
+  font-size: 13px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background 180ms, color 180ms, border-color 180ms;
+}
+
+.filter:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.filter[aria-current='page'] {
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--requests-border));
+  background: color-mix(in srgb, var(--accent) 14%, var(--card));
+  color: var(--foreground);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--requests-accent);
+}
+
+.filterDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--requests-ink);
+}
+
+.filter[aria-current='page'] .filterDot {
+  background: var(--requests-accent);
+}
+
+.filter:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .layout {
+    --services-navigation-height: 84px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters {
+    width: 100%;
+    gap: 3px;
+  }
+
+  .filter {
+    flex: 1;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter {
+    transition: none;
+  }
+}

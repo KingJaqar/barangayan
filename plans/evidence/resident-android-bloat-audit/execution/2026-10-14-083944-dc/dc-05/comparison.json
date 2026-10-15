@@ -1,0 +1,117 @@
+{
+  "graphs": {
+    "android": {
+      "roots": true,
+      "reachable": true,
+      "externals": true,
+      "edges": true,
+      "dynamic": true
+    },
+    "web": {
+      "roots": true,
+      "reachable": true,
+      "externals": true,
+      "edges": true,
+      "dynamic": true
+    }
+  },
+  "styles": {
+    "apps/resident-android-mobile/src/components/reports/shimmer.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/components/services/skeleton.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/constants/payment.ts": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/lib/dialog.ts": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/lib/emergency-cache.ts": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/lib/push-notifications.ts": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/app/(app)/home/index.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/app/(app)/maps/index.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/components/family-content.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": []
+    },
+    "apps/resident-android-mobile/src/components/resident-details-form.tsx": {
+      "retainedStatementsUnchanged": true,
+      "retainedStylesUnchanged": true,
+      "usesUnchanged": true,
+      "removed": [
+        "passwordMatchIndicator",
+        "successModalBackdrop",
+        "successModalCard",
+        "successIcon",
+        "successModalTitle",
+        "successModalMessage",
+        "successModalActions",
+        "successModalActionButton",
+        "formError",
+        "submitActions",
+        "footerRow",
+        "footerText"
+      ]
+    }
+  },
+  "assetsUnchanged": true,
+  "lintUnchanged": true,
+  "changedOriginalFiles": [
+    "apps/resident-android-mobile/src/components/resident-details-form.tsx"
+  ],
+  "expectedOnlyOriginalChange": true
+}

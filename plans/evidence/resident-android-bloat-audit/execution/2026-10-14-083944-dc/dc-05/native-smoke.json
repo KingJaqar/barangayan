@@ -1,0 +1,36 @@
+{
+  "status": "Pending manual verification",
+  "baseline": "Captured existing installed login screen. No source/bundle match established for that pre-existing instance; not counted as a qualified baseline.",
+  "attempts": [
+    {
+      "name": "initial-adb",
+      "result": "Sandbox adb daemon startup failed; unsandboxed devices check found two emulators"
+    },
+    {
+      "name": "uiautomator",
+      "result": "Null root node; screenshot fallback works"
+    },
+    {
+      "name": "preview-options",
+      "result": "Offline/localhost flags mutually exclusive; corrected after reading installed Expo CLI"
+    },
+    {
+      "name": "sandbox-preview",
+      "result": "DevLauncher SocketException connection reset before loading bundle; next attempt uses unrestricted local server"
+    },
+    {
+      "name": "unrestricted-preview",
+      "result": "Local server status was running, but /json/list had no attached runtime. App logcat showed cached assets from port 8083; fresh 8144 bundle attribution failed. Visible auth/guest screenshots do not qualify final smoke."
+    }
+  ],
+  "safety": "No app data reset, authentication write, payment, database mutation, migration, installation or native rebuild performed",
+  "restoration": "Stopped both run-created preview servers and removed only their 8143/8144 reverse mappings; returned app to login route without resetting app data.",
+  "manualSteps": [
+    "Use the saved dc-05/android-export-temp output in a matching SDK 57 native shell, or run a dedicated local Metro instance and confirm its inspector sees the emulator and its assets/bundle use that instance. Do not accept a fallback to cached port 8083.",
+    "On controlled local/synthetic accounts, compare cold/warm startup, guest/login/recovery/setup restoration, Home/Services/Maps/Health/Reports/Settings against the preserved pre-cleanup source. Record screenshots, console and device logs.",
+    "Exercise Emergency Hub hotlines/guidelines, Centers/offline maps, allow/deny location/camera, family/QR guide/scanner and queued check-in recovery without changing production records.",
+    "Exercise request/payment gating, synthetic error/empty states, receipts/data export and sharing, profile/account settings, valid ID and both birthday controls; preserve pending writes and queues.",
+    "Open every old placeholder/compatibility route and verify the same registration/content/redirect/auth guard.",
+    "Serve dc-05/web-export-unrestricted with SPA fallback; compare mobile-web tabs, splash, external links, feeds/filters, PDF dynamic chunks and the same guest/authenticated/error journeys against dc-00/web-export."
+  ]
+}

@@ -1,0 +1,20 @@
+1..19
+ok 1 - Anonymous callers cannot count requests
+ok 2 - Anonymous callers cannot read the counters
+ok 3 - Signed-in callers cannot count requests
+ok 4 - Signed-in callers cannot read the counters
+ok 5 - The service role reaches counters only through the function
+ok 6 - First request is allowed
+ok 7 - Second request within the limit is allowed
+ok 8 - A request over the limit waits at least one second
+ok 9 - A request over the limit waits at most until the next window
+ok 10 - Another client has its own count
+ok 11 - A raw address is refused; only hashes are stored
+ok 12 - Hashes are lowercase hex
+ok 13 - A missing hash is refused
+ok 14 - A zero limit is refused
+ok 15 - A missing limit is refused
+ok 16 - Refused requests still count
+ok 17 - Counters store only a hash, a window and a count
+ok 18 - A new client is allowed
+ok 19 - Finished windows are pruned

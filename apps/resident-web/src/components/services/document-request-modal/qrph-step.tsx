@@ -4,16 +4,15 @@
  * Step 4b (QR PH branch) — ported from payment/qrph/[requestId]/qrph-payment.tsx.
  * usePaymongoSource is reused as-is (it's already navigation-free — polling and
  * Realtime are keyed off `requestId`/the payment row, not the route). The only changes
- * from the original: the 'paid' effect calls `onPaid` instead of router.replace to
+ * from the original: the paid confirmation's OK button calls `onPaid` instead of router.replace to
  * /services/payment/success, "Go Back" on error calls `onBack` instead of router.back(),
  * and a cancelled payment returns to payment-method-step (`onCancelled`) instead of
  * navigating to the request-tracking route — the resident can just pick a different
  * method without leaving the modal.
  *
  * Notification ownership (RW-LT-06): this screen owns every terminal notification for
- * the attempt. A confirmed paid or expired status is announced once per payment attempt
- * (the ID combines account, payment attempt and terminal state, so a poll and a Realtime
- * event observing the same transition notify once). Cancellation success is announced
+ * the attempt. Confirmed payment opens a dialog until OK; an expired status is announced
+ * once per payment attempt. Cancellation success is announced
  * only when the server confirmed it; a cancel that lost the race to payment follows the
  * paid outcome. Failures also stay on the page, because payment guidance must outlive a
  * toast. A countdown reaching zero is only a display condition.
@@ -23,6 +22,7 @@ import { formatCentavosAsPHP } from '@barangayan/shared';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
+import { PaymentConfirmedDialog } from '../payment-confirmed-dialog';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
@@ -30,7 +30,6 @@ import { Skeleton } from '@/components/ui/loading';
 import { useCountdown } from '@/hooks/use-countdown';
 import { usePaymongoSource } from '@/hooks/use-paymongo-source';
 import { beginAttempt, eventId, notify } from '@/lib/notify';
-import type { SuccessPayload } from './types';
 
 const PAYMENT_STEPS = [
   'Open your GCash, Maya, or bank’s app',
@@ -68,7 +67,7 @@ export function QrphStep({
   referenceNumber: string;
   documentName: string;
   documentFeeCentavos: number;
-  onPaid: (payload: SuccessPayload) => void;
+  onPaid: () => void;
   onCancelled: () => void;
   onBack: () => void;
 }) {
@@ -79,28 +78,6 @@ export function QrphStep({
   // Synchronous guard: a second activation before React re-renders must not start a
   // second cancel request.
   const cancelBusy = useRef(false);
-
-  // Advances to the success step the moment settlement is observed — same 900ms beat as
-  // the standalone route so the "Payment received — redirecting…" message is legible.
-  useEffect(() => {
-    if (status !== 'paid') return;
-    if (paymentId) {
-      notify.success('Payment received.', {
-        description: 'Your receipt is next.',
-        id: eventId('payment', paymentId, 'paid'),
-      });
-    }
-    const timer = setTimeout(() => {
-      onPaid({
-        amountCentavos: totalDue,
-        documentFeeCentavos: source?.documentFeeCentavos ?? documentFeeCentavos,
-        method: 'QR PH',
-        sourceId: source?.paymentIntentId ?? null,
-      });
-    }, 900);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
 
   // Confirmed expiry (server status, not the countdown): one warning per attempt. The
   // inline guidance below stays on the page after the toast is gone.
@@ -143,6 +120,7 @@ export function QrphStep({
 
   return (
     <div className="flex flex-col gap-4">
+      <PaymentConfirmedDialog open={status === 'paid'} onConfirm={onPaid} />
       <div>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
@@ -189,7 +167,7 @@ export function QrphStep({
         ) : status === 'cancelled' ? (
           <p className="text-sm text-muted-foreground">Payment cancelled. Go back and try again if you&apos;d like to pay.</p>
         ) : status === 'paid' ? (
-          <p className="text-sm font-semibold text-primary">Payment received — redirecting…</p>
+          <p className="text-sm font-semibold text-primary">Payment received</p>
         ) : source ? (
           // PayMongo's image_url is either a data: URI or an arbitrary PayMongo-hosted
           // https URL, neither of which next/image's remotePatterns (Supabase Storage

@@ -1,5 +1,9 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { wasteScheduleSchema, WASTE_TYPES, WASTE_TYPE_CONFIG, DAY_NAMES, type Tables, type WasteType } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -163,24 +167,24 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
 
   if (isEditing) {
     return (
-      <form onSubmit={handleSave} className="rounded-xl border border-[var(--accent)] bg-white p-3 dark:border-[var(--accent)] dark:bg-zinc-900">
+      <form onSubmit={handleSave} className={styles.rowEdit}>
         <div className="grid grid-cols-4 gap-3">
           <label className="text-sm">
             <span className={labelClass}>Waste Type</span>
-            <select className={inputClass} value={wasteType} onChange={(e) => setWasteType(e.target.value)}>
+            <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
               {WASTE_TYPES.map((t) => (
                 <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
 
           <label className="text-sm">
             <span className={labelClass}>Day</span>
-            <select className={inputClass} value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)}>
+            <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
               {DAY_NAMES.map((d, i) => (
                 <option key={d} value={i}>{d}</option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
 
           <label className="text-sm">
@@ -215,30 +219,31 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
   }
 
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-900">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+    <div className={styles.row}>
+      <div className={styles.rowHeader}>
+        <div className={styles.rowMain}>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold" style={{ backgroundColor: typeConfig.color + '20', color: typeConfig.color }}>
+            <span className={styles.badge}>
+              <span className={styles.categoryDot} style={{ backgroundColor: typeConfig.color }} aria-hidden="true" />
               {typeConfig.label}
             </span>
-            <span className="text-sm font-semibold">{dayName}</span>
+            <h3 className={styles.rowTitle}>{dayName}</h3>
             <span className="text-xs text-zinc-500">{schedule.start_time} – {schedule.end_time}</span>
             {!schedule.is_active ? (
-              <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">Inactive</span>
+              <span className={styles.badge}>Inactive</span>
             ) : null}
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">
+          <p className={styles.rowMeta}>
             {zoneName} {schedule.notes ? `· ${schedule.notes}` : ''}
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className={styles.rowActions}>
           <button onClick={toggleActive} className={`rounded-full px-3 py-1 text-xs font-semibold ${schedule.is_active ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' : 'bg-[var(--accent)]/15 text-[var(--accent)]'}`}>
             {schedule.is_active ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={startEdit} title="Edit" className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">Edit</button>
-          <ConfirmButton label="Archive" confirmLabel="Archive schedule?" onConfirm={archive} title="Archive Schedule" className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300" />
+          <button onClick={startEdit} title="Edit" className={styles.primaryAction}>Edit</button>
+          <ConfirmButton label="Archive" confirmLabel="Archive schedule?" onConfirm={archive} title="Archive Schedule" className={styles.dangerAction} />
         </div>
       </div>
     </div>

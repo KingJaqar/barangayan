@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -88,29 +90,29 @@ export function MemberFormModal({
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Relation *</span>
-            <select
+            <AdminSelect kind="people"
               className={inputCls}
               value={relation}
-              onChange={(e) => setRelation(e.target.value as (typeof HOUSEHOLD_MEMBER_RELATIONS)[number])}>
+              onValueChange={(nextValue) => setRelation(nextValue as (typeof HOUSEHOLD_MEMBER_RELATIONS)[number])}>
               {RELATION_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Role *</span>
-            <select
+            <AdminSelect kind="people"
               className={inputCls}
               value={role}
-              onChange={(e) => setRole(e.target.value as (typeof HOUSEHOLD_MEMBER_ROLES)[number])}>
+              onValueChange={(nextValue) => setRole(nextValue as (typeof HOUSEHOLD_MEMBER_ROLES)[number])}>
               {ROLE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex items-center gap-2">

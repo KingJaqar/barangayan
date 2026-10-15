@@ -1,6 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Building2, MapPin } from 'lucide-react';
+import styles from './maps.module.css';
 
 /** Incidents / Evacuation tab switcher — same layoutId-pill pattern as
  * emergency-segment-nav.tsx, rather than admin-web's ref-measured indicator, to match
@@ -8,12 +10,17 @@ import { motion } from 'framer-motion';
 export function MapSegmentToggle({
   activeTab,
   onChange,
+  incidentCount,
+  evacuationCount,
 }: {
   activeTab: 'incidents' | 'evacuation';
   onChange: (tab: 'incidents' | 'evacuation') => void;
+  incidentCount: number;
+  evacuationCount: number;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
-    <div className="absolute left-4 top-16 z-[1000] flex gap-1 rounded-full border border-border bg-card/95 p-1 backdrop-blur-sm">
+    <div className={styles.segments} role="group" aria-label="Map view">
       {(['incidents', 'evacuation'] as const).map((tab) => {
         const active = activeTab === tab;
         return (
@@ -21,16 +28,19 @@ export function MapSegmentToggle({
             key={tab}
             type="button"
             onClick={() => onChange(tab)}
-            className="relative rounded-full px-3.5 py-1.5 text-xs font-semibold">
+            aria-pressed={active}
+            className={styles.segment}>
             {active ? (
               <motion.span
                 layoutId="map-segment-pill"
-                className="absolute inset-0 rounded-full bg-primary"
-                transition={{ type: 'spring', bounce: 0.25, duration: 0.35 }}
+                className={styles.segmentIndicator}
+                transition={reducedMotion ? { duration: 0 } : { type: 'spring', bounce: 0.15, duration: 0.35 }}
               />
             ) : null}
-            <span className={`relative ${active ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+            <span className={styles.segmentLabel}>
+              {tab === 'incidents' ? <MapPin size={18} aria-hidden /> : <Building2 size={18} aria-hidden />}
               {tab === 'incidents' ? 'Incidents' : 'Evacuation'}
+              <span className={styles.segmentCount}>{tab === 'incidents' ? incidentCount : evacuationCount}</span>
             </span>
           </button>
         );

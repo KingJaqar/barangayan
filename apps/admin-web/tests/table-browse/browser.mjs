@@ -13,10 +13,12 @@ if (!process.env.PLAYWRIGHT_BROWSERS_PATH && fs.existsSync(taskBrowsers)) proces
 const { chromium, firefox, webkit } = require('playwright');
 const root = path.resolve(import.meta.dirname, '../../../..');
 const app = path.join(root, 'apps/admin-web');
+const appRequire = createRequire(path.join(app, 'package.json'));
 const evidence = process.env.TABLE_TEST_EVIDENCE_DIR ?? path.join(root, 'plans/evidence/admin-table-phase1');
 fs.mkdirSync(evidence, { recursive: true });
-const bundle = await build({ entryPoints: [path.join(import.meta.dirname, 'fixture.tsx')], bundle: true, write: false,
+const bundle = await build({ entryPoints: [path.join(import.meta.dirname, 'fixture.tsx')], bundle: true, write: false, outdir: 'table-browse-preview',
   jsx: 'automatic', define: { 'process.env.NODE_ENV': '"development"' },
+  alias: { react: path.dirname(appRequire.resolve('react/package.json')), 'react-dom': path.dirname(appRequire.resolve('react-dom/package.json')) },
   tsconfig: path.join(app, 'tsconfig.json'),
   plugins: [{ name: 'fixture-navigation', setup(builder) {
     builder.onResolve({ filter: /^next\/navigation$/ }, () => ({ path: path.join(import.meta.dirname, 'navigation-mock.ts') }));
@@ -25,7 +27,7 @@ const cssFile = path.join(app, 'src/app/globals.css');
 const css = (await postcss([tailwind({ base: app })]).process(fs.readFileSync(cssFile, 'utf8'), { from: cssFile })).css;
 const server = http.createServer((req, res) => {
   if (req.url === '/fixture.js') { res.setHeader('content-type', 'text/javascript'); res.end(bundle.outputFiles[0].contents); }
-  else if (req.url === '/fixture.css') { res.setHeader('content-type', 'text/css'); res.end(css); }
+  else if (req.url === '/fixture.css') { res.setHeader('content-type', 'text/css'); res.end(css + '\n' + (bundle.outputFiles.find(file => file.path.endsWith('.css'))?.text ?? '')); }
   else { res.setHeader('content-type', 'text/html'); res.end('<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/fixture.css"></head><body><div id="root"></div><script src="/fixture.js"></script></body></html>'); }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -40,6 +42,7 @@ async function exercise(browser, result) {
   const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
   page.setDefaultTimeout(10000);
   const errors = [];
+  result.pageErrors = errors;
   page.on('pageerror', error => errors.push(error.message));
   await page.addInitScript(() => {
     window.fixtureListeners = {};
@@ -78,11 +81,17 @@ async function exercise(browser, result) {
   const body = page.getByRole('region', { name: 'Fixture rows and columns', exact: true });
   await body.waitFor();
   const check = async (name, run) => { await run(); result.checks.push(name); save(); };
+  async function selectBrowse(label, value, rapid = false) {
+    const control = page.getByRole('combobox', { name: label, exact: true });
+    if (rapid) await control.dispatchEvent('click'); else await control.click();
+    const option = page.getByRole('listbox').getByRole('option', { name: label === 'Sort by' ? (value === 'created' ? 'Date created' : 'Name') : value, exact: true });
+    if (rapid) await option.dispatchEvent('click'); else await option.click();
+  }
   await check('empty/partial pages and all 45 size/count combinations', async () => {
     for (const count of [0, 1, 7, 10, 11, 23, 100, 101, 1505]) {
       await page.getByLabel('Fixture count').selectOption(String(count));
       for (const size of [10, 20, 30, 50, 100]) {
-        await page.getByLabel('Rows per page').selectOption(String(size));
+        await selectBrowse("Rows per page", String(size));
         await page.waitForFunction(size => document.querySelector('.table-browse-pagination select')?.value === String(size), size);
         assert.equal(await body.locator('tbody tr:not([data-filler-row])').count(), Math.max(1, Math.min(size, count)));
         assert.ok(await body.locator('tbody tr').count() >= 10, 'table body always has at least 10 rows');
@@ -95,7 +104,7 @@ async function exercise(browser, result) {
     }
   });
   await page.getByLabel('Fixture count').selectOption('101');
-  await page.getByLabel('Rows per page').selectOption('100');
+  await selectBrowse("Rows per page", '100');
   await check('bounded layout, last row/column, sticky aligned headers and exact mirror range', async () => {
     await body.evaluate(el => { el.scrollTop = el.scrollHeight; el.scrollLeft = el.scrollWidth; });
     await page.waitForTimeout(80);
@@ -148,11 +157,27 @@ async function exercise(browser, result) {
     await handle.focus(); await page.keyboard.press('ArrowRight');
     assert.equal(Number(await handle.getAttribute('aria-valuenow')), initial + 10);
     await body.getByRole('button', { name: 'Name', exact: true }).click();
-    assert.equal(await page.getByLabel('Direction', { exact: true }).inputValue(), 'desc');
+    assert.match(await page.getByRole('combobox', { name: 'Direction', exact: true }).textContent(), /Z–A/);
     assert.equal(await body.locator('th[aria-sort=descending]').count(), 1);
-    await page.getByLabel('Sort by').selectOption('created');
+    await selectBrowse("Sort by", 'created');
     assert.equal(await body.locator('th[aria-sort]').count(), 0);
-    await page.getByLabel('Sort by').selectOption('name');
+    await selectBrowse("Sort by", 'name');
+  });
+  await check('direction and category selection reset page and survive Back/Forward independently', async () => {
+    await page.getByRole('button', { name: 'Last', exact: true }).click();
+    const direction = page.getByRole('combobox', { name: 'Direction', exact: true });
+    const ascending = (await direction.textContent()).includes('A–Z');
+    await direction.click();
+    await page.getByRole('listbox').getByRole('option', { name: ascending ? 'Z–A' : 'A–Z', exact: true }).click();
+    assert.equal(new URL(page.url()).searchParams.get('dir'), ascending ? 'desc' : 'asc');
+    assert.equal(new URL(page.url()).searchParams.get('page'), '1');
+    await page.getByRole('button', { name: 'Last', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Category', exact: true }).click();
+    await page.getByRole('listbox').getByRole('option', { name: 'Alpha category', exact: true }).click();
+    assert.equal(new URL(page.url()).searchParams.get('category'), 'alpha');
+    assert.equal(new URL(page.url()).searchParams.get('page'), '1');
+    await page.goBack(); assert.notEqual(new URL(page.url()).searchParams.get('category'), 'alpha');
+    await page.goForward(); assert.equal(new URL(page.url()).searchParams.get('category'), 'alpha');
   });
   await check('failed save retains draft, blocks navigation, Retry/Cancel and focus restoration', async () => {
     await page.getByRole('button', { name: 'Fail save: false', exact: true }).click();
@@ -162,7 +187,7 @@ async function exercise(browser, result) {
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     assert.equal(await page.getByRole('textbox', { name: 'Edit Name' }).inputValue(), 'Preserved draft');
     const before = page.url();
-    await page.getByLabel('Rows per page').selectOption('20');
+    await selectBrowse("Rows per page", '20');
     assert.equal(page.url(), before);
     await page.getByRole('button', { name: 'Retry save', exact: true }).click();
     await page.getByRole('button', { name: 'Cancel edit', exact: true }).click();
@@ -172,7 +197,9 @@ async function exercise(browser, result) {
   await check('rapid search/control commits one query, Back cancels pending debounce, no scroll reset', async () => {
     const initial = await page.evaluate(() => window.fixtureNavigations.length);
     await page.getByLabel('Search', { exact: true }).fill('Resident 00');
-    await page.getByLabel('Rows per page').selectOption('20');
+    // Dispatch accessible control clicks without Playwright's offscreen scrolling delay,
+    // keeping the second input inside the existing search debounce window.
+    await selectBrowse("Rows per page", '20', true);
     await page.waitForTimeout(400);
     assert.equal(await page.evaluate(() => window.fixtureNavigations.length), initial + 1);
     assert.equal(new URL(page.url()).searchParams.get('q'), 'Resident 00');
@@ -195,20 +222,20 @@ async function exercise(browser, result) {
   });
   await check('successive controls merge while a previous route is still pending', async () => {
     await page.evaluate(() => window.fixtureNavigationDelay = 200);
-    await page.getByLabel('Rows per page').selectOption('30');
-    await page.getByLabel('Sort by').selectOption('created');
+    await selectBrowse("Rows per page", '30');
+    await selectBrowse("Sort by", 'created');
     await page.getByRole('button', { name: 'All', exact: true }).click();
     await page.waitForTimeout(300);
     const params = new URL(page.url()).searchParams;
     assert.equal(params.get('pageSize'), '30'); assert.equal(params.get('sort'), 'created'); assert.equal(params.get('tab'), 'all');
     await page.evaluate(() => window.fixtureNavigationDelay = 0);
-    await page.getByLabel('Sort by').selectOption('name');
+    await selectBrowse("Sort by", 'name');
   });
   await check('narrow/short/200%/400% equivalent widths, sidebar, dark and forced colors', async () => {
     for (const viewport of [{ width: 1200, height: 900 }, { width: 600, height: 450 }, { width: 300, height: 225 }]) {
       await page.setViewportSize(viewport); await page.waitForTimeout(80);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
-      assert.ok(await page.locator('main').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+      assert.ok(await page.locator('main').evaluate(el => el.scrollWidth <= el.clientWidth + 1), JSON.stringify(await page.locator('main').evaluate(el => ({ width: el.clientWidth, scroll: el.scrollWidth, oversized: Array.from(el.querySelectorAll('*')).filter(item => item.getBoundingClientRect().right > el.getBoundingClientRect().right + 1 && !item.closest('.table-browse-viewport, #legacy')).map(item => ({ tag: item.tagName, cls: item.className, right: item.getBoundingClientRect().right })).slice(0, 15) }))));
       assert.equal(await page.getByRole('button', { name: /Scroll columns/ }).count(), 0);
       await body.evaluate(el => { el.scrollLeft = 0; el.scrollBy({ left: 120 }); });
       assert.ok(await body.evaluate(el => el.scrollLeft > 0));
@@ -227,7 +254,7 @@ async function exercise(browser, result) {
     await page.locator('#sidebar').click(); await page.waitForTimeout(80);
     assert.ok(await page.locator('main').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
     await page.evaluate(() => document.documentElement.classList.add('dark'));
-    assert.equal(await page.getByLabel('Sort by').evaluate(el => getComputedStyle(el).colorScheme), 'dark', 'native dropdown lists follow the dark theme');
+    assert.equal(await page.getByLabel('Sort by').evaluate(el => getComputedStyle(el).colorScheme), 'dark', 'dropdown controls follow the dark theme');
     assert.equal(await body.locator('th').first().evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(39, 39, 42)');
     await page.emulateMedia({ forcedColors: 'active' }); await body.focus();
     await page.getByRole('region', { name: 'Fixture horizontal scroll', exact: true }).focus();

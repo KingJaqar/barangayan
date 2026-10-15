@@ -4,9 +4,10 @@ import { Check, ChevronDown, ChevronLeft, Copy, ExternalLink } from 'lucide-reac
 import { useState } from 'react';
 
 import { useMountTransition } from '@/hooks/use-mount-transition';
+import { NotificationIconBadge } from './notification-icon';
+
 import {
   ACTION_VERBS,
-  ENTITY_ICONS,
   formatChangesDiff,
   formatMetadataEntries,
   MODULE_META,
@@ -44,7 +45,6 @@ export function NotificationDetailPanel({ notification: n, open, widthVw, fullOv
 
   if (!rendered) return null;
 
-  const icon = ENTITY_ICONS[n.entity_type] ?? '📝';
   const verb = ACTION_VERBS[n.action] ?? n.action;
   const moduleMeta = MODULE_META[n.module];
   const adminName = (n.metadata as Record<string, unknown> | null)?.admin_name as string | undefined;
@@ -95,7 +95,7 @@ export function NotificationDetailPanel({ notification: n, open, widthVw, fullOv
 
       <div className={`flex-1 overflow-y-auto px-5 py-5 ${THEMED_SCROLLBAR_CLASS}`}>
         <div className="flex items-start gap-3">
-          <span className="text-2xl">{icon}</span>
+          <NotificationIconBadge module={n.module} />
           <div className="min-w-0 flex-1">
             <p className="text-base font-semibold leading-snug">
               {verb}: {n.entity_label ?? n.entity_type}

@@ -11,9 +11,8 @@
  *                        Number, and Occupation are edited directly in the display form
  *                        (plain TextInput, no modal); Sex/Employment Status/Birthday use
  *                        their pickers (Sex/Employment Status share the Reanimated-driven
- *                        SlideSheetModal bottom sheet, also used by the ID Type picker).
+ *                        SlideSheetModal bottom sheet, used by the choice pickers).
  *  ⑤ Household         — JSONB member list; Add / edit / remove via bottom modal
- *  ⑥ Identification    — ID type picker + stored ID photo display + re-upload
  *  ⑦ Save Changes CTA  — fixed green pill at bottom
  *
  * DB columns added in migration 0039:
@@ -42,28 +41,22 @@ import {
   EMAIL_REGEX,
   EMPLOYMENT_STATUSES,
   EMPLOYMENT_STATUSES_WITH_OCCUPATION,
-  ID_TYPES,
   MOBILE_NUMBER_REGEX,
   NAME_REGEX,
-  OTHER_ID_TYPE_PREFIX,
   SEXES,
-  idPhotoSide,
-  publishIdEvidence,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { GoogleButton } from '@/components/google-button';
 import { Image } from 'expo-image';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Modal,
   Pressable,
   ScrollView,
-  AccessibilityInfo,
   StyleSheet,
   TextInput,
   View,
@@ -358,73 +351,6 @@ function InlineFieldInput({
     </View>
   );
 }
-
-/** One upload slot for a single ID side (front/back) — exactly one photo each; tapping
- * either the frame or the action label re-opens the picker, so a re-upload simply
- * replaces the photo in place (handleIdUpload uses upsert:true against a fixed
- * `id-front`/`id-back` path — see its doc comment). */
-function IdPhotoSlot({
-  label,
-  uri,
-  uploading,
-  onUpload,
-}: {
-  label: string;
-  uri: string | null;
-  uploading: boolean;
-  onUpload: () => void;
-}) {
-  const theme = useTheme();
-  return (
-    <View style={idPhotoSlotStyles.slot}>
-      <ThemedText themeColor="textSecondary" style={idPhotoSlotStyles.label}>{label}</ThemedText>
-      <Pressable
-        onPress={onUpload}
-        disabled={uploading}
-        style={[idPhotoSlotStyles.frame, { borderColor: theme.backgroundSelected, backgroundColor: theme.backgroundSelected }]}
-        accessibilityRole="button"
-        accessibilityLabel={`${uri ? 'Re-upload' : 'Upload'} ${label}`}>
-        {uri ? (
-          <Image source={{ uri }} style={idPhotoSlotStyles.image} contentFit="cover" transition={200} />
-        ) : (
-          <Ionicons name="cloud-upload-outline" size={22} color={theme.textSecondary} />
-        )}
-        {uploading && (
-          <View style={idPhotoSlotStyles.spinnerOverlay}>
-            <ActivityIndicator size="small" color="#fff" />
-          </View>
-        )}
-      </Pressable>
-      <Pressable onPress={onUpload} disabled={uploading} accessibilityRole="button" hitSlop={6}>
-        <ThemedText type="small" themeColor="primary" style={idPhotoSlotStyles.actionText}>
-          {uri ? 'Re-upload' : 'Upload'}
-        </ThemedText>
-      </Pressable>
-    </View>
-  );
-}
-
-const idPhotoSlotStyles = StyleSheet.create({
-  slot: { flex: 1, gap: 6, alignItems: 'center' },
-  label: { fontSize: 12, fontWeight: '600' },
-  frame: {
-    width: '100%',
-    aspectRatio: 4 / 3,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  image: { width: '100%', height: '100%' },
-  spinnerOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.35)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  actionText: { fontSize: 12, fontWeight: '700' },
-});
 
 /** Household member list item */
 function MemberRow({
@@ -752,42 +678,6 @@ function OptionRow({ options, value, onChange }: { options: readonly string[]; v
   );
 }
 
-// ─── ID Type Modal ────────────────────────────────────────────────────────────
-
-function IdTypeModal({
-  visible,
-  current,
-  onClose,
-  onSelect,
-}: {
-  visible: boolean;
-  current: string | null;
-  onClose: () => void;
-  onSelect: (t: string) => void;
-}) {
-  const theme = useTheme();
-  return (
-    // Capped at 50% of the screen instead of the shared default (~70%) so it never
-    // covers the whole screen — ID_TYPES has 16 entries, so the list scrolls
-    // (ScrollView below) rather than growing the sheet past that cap.
-    <SlideSheetModal visible={visible} onClose={onClose} maxHeight="50%">
-      <ThemedText style={idModalStyles.title}>Select ID Type</ThemedText>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {ID_TYPES.map((t) => (
-          <Pressable
-            key={t}
-            onPress={() => { onSelect(t); onClose(); }}
-            style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
-            <ThemedText style={[idModalStyles.optionText, current === t && { color: PRIMARY_GREEN, fontWeight: '700' }]}>{t}</ThemedText>
-            {current === t && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
-          </Pressable>
-        ))}
-        <GoogleButton label="Link Google to this account" link />
-      </ScrollView>
-    </SlideSheetModal>
-  );
-}
-
 const idModalStyles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.45)' },
   sheet: {
@@ -872,32 +762,8 @@ export default function ProfileScreen() {
 
 function ProfileScreenContent() {
   const router   = useRouter();
-  const {focus} = useLocalSearchParams<{focus?:string}>();
-  const profileScroll = useRef<ScrollView>(null);
-  const idHeading = useRef<View>(null);
-  const idFocusDone = useRef(false);
-  const idSectionY = useRef<number | null>(null);
-  const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { session, refreshCompletion } = useAuth();
   const { profile, isLoading, refetch } = useProfile();
-  const focusIdSection = useCallback(() => {
-    if (focus !== 'id' || !profile || isLoading || idFocusDone.current) return;
-    if (focusTimer.current) clearTimeout(focusTimer.current);
-    // Debounce content layout and route animation so focus follows the loaded section.
-    focusTimer.current = setTimeout(() => {
-      if (idSectionY.current === null || !idHeading.current || !profileScroll.current) return;
-      profileScroll.current.scrollTo({ y: idSectionY.current, animated: false });
-      requestAnimationFrame(() => {
-        if (idHeading.current) AccessibilityInfo.sendAccessibilityEvent(idHeading.current, 'focus');
-      });
-      idFocusDone.current = true;
-    }, 300);
-  }, [focus, profile, isLoading]);
-  useFocusEffect(useCallback(() => {
-    idFocusDone.current = false;
-    focusIdSection();
-    return () => { if (focusTimer.current) clearTimeout(focusTimer.current); };
-  }, [focusIdSection]));
   const insets   = useSafeAreaInsets();
   const theme    = useTheme();
   // Shadows the module-level PRIMARY_GREEN fallback with the resident's live accent color
@@ -939,74 +805,13 @@ function ProfileScreenContent() {
   const [avatarUrl, setAvatarUrl]         = useState<string | null>(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
 
-  // ── Identification ────────────────────────────────────────────────────────
-  // idType is the raw picker selection — "Other" selects the free-text flow below.
-  // The value actually persisted to profiles.id_type is composed at save time (see
-  // composeIdType) as `Other: <otherIdType>` (OTHER_ID_TYPE_PREFIX, shared with
-  // resident-web's Profile form — see the id-verification convention in @barangayan/shared).
-  const [idType, setIdType]           = useState<string | null>(null);
-  const [otherIdType, setOtherIdType] = useState('');
-  // Exactly one photo per side — disambiguated by filename (idPhotoSide), not array
-  // position, so profiles.id_photo_urls always holds at most [frontPath, backPath].
-  const [idFrontPath, setIdFrontPath] = useState<string | null>(null);
-  const [idBackPath, setIdBackPath]   = useState<string | null>(null);
-  const [idUploadingFront, setIdUploadingFront] = useState(false);
-  const [idUploadingBack, setIdUploadingBack]   = useState(false);
-  // Tracks whether the user uploaded a new ID photo (either side) in this session so
-  // that handleSave knows to (re-)set id_verification_status to 'pending'.
-  const [newIdUploaded, setNewIdUploaded]         = useState(false);
-  const [idVerificationStatus, setIdVerifStatus]  =
-    useState<'pending' | 'verified' | 'verification_failed' | null>(null);
-
   // Tracks whether the user changed their email address this session so
   // handleSave knows to reset email_verification_status (an edited email
   // is no longer the one that was verified).
   const [emailVerificationStatus, setEmailVerifStatus] = useState<string | null>(null);
 
-  /** Composes the value actually written to profiles.id_type. */
-  function composeIdType(type: string | null, other: string): string | null {
-    if (!type) return null;
-    if (type === 'Other') return `${OTHER_ID_TYPE_PREFIX}${other.trim()}`;
-    return type;
-  }
-
-  // ── Resolved signed URLs for ID photos ───────────────────────────────────
-  // id-documents is a private bucket (government ID photos) — short-lived
-  // signed URLs replace getPublicUrl() so a leaked/guessed path alone can't
-  // serve the image.
-  const [idFrontSignedUrl, setIdFrontSignedUrl] = useState<string | null>(null);
-  const [idBackSignedUrl, setIdBackSignedUrl]   = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const paths = [idFrontPath, idBackPath].filter((p): p is string => !!p);
-    if (paths.length === 0) {
-      setIdFrontSignedUrl(null);
-      setIdBackSignedUrl(null);
-      return;
-    }
-    supabase.storage
-      .from('id-documents')
-      .createSignedUrls(paths, 60 * 10) // 10 minutes — just long enough to render
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error || !data) {
-          setIdFrontSignedUrl(null);
-          setIdBackSignedUrl(null);
-          return;
-        }
-        const bySrcPath = new Map(paths.map((p, i) => [p, data[i]?.signedUrl ?? null]));
-        setIdFrontSignedUrl(idFrontPath ? (bySrcPath.get(idFrontPath) ?? null) : null);
-        setIdBackSignedUrl(idBackPath ? (bySrcPath.get(idBackPath) ?? null) : null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [idFrontPath, idBackPath]);
-
   // ── UI state ──────────────────────────────────────────────────────────────
   const [saving, setSaving]   = useState(false);
-  const publication = useRef<{ signature: string; id: string } | null>(null);
   const [toast, setToast]     = useState<{ message: string; type: ToastType } | null>(null);
   // Populated by validateRequiredFields() on a Save Changes attempt — the "required"
   // messages shown under empty required fields (fieldStatus below handles the
@@ -1034,9 +839,6 @@ function ProfileScreenContent() {
   // Household member modal
   const [memberModal, setMemberModal] = useState<{ member: HouseholdMember | null } | null>(null);
 
-  // ID type modal
-  const [idTypeModal, setIdTypeModal] = useState(false);
-
   // Sex / Employment Status modals
   const [sexModal, setSexModal] = useState(false);
   const [employmentModal, setEmploymentModal] = useState(false);
@@ -1059,19 +861,6 @@ function ProfileScreenContent() {
     setBirthDateIso(profile.birth_date ?? null);
     setAvatarUrl((profile as any).avatar_url ?? null);
     setEmailVerifStatus((profile as any).email_verification_status ?? null);
-    // "Other" ID type is encoded as `Other: <text>` (OTHER_ID_TYPE_PREFIX) — split it
-    // back into the picker selection + free-text box.
-    const rawIdType: string | null = (profile as any).id_type ?? null;
-    const isOtherId = !!rawIdType && rawIdType.startsWith(OTHER_ID_TYPE_PREFIX);
-    setIdType(isOtherId ? 'Other' : rawIdType);
-    setOtherIdType(isOtherId ? rawIdType!.slice(OTHER_ID_TYPE_PREFIX.length) : '');
-    // Front/back photos are disambiguated by filename, not array position — a legacy
-    // single unlabeled photo (from before the front/back split) is treated as front.
-    const rawIdPhotos: string[] = (profile as any).id_photo_urls ?? [];
-    setIdFrontPath(rawIdPhotos.find((p) => idPhotoSide(p) === 'front') ?? rawIdPhotos.find((p) => idPhotoSide(p) === null) ?? null);
-    setIdBackPath(rawIdPhotos.find((p) => idPhotoSide(p) === 'back') ?? null);
-    setIdVerifStatus((profile as any).id_verification_status ?? null);
-    setNewIdUploaded(false); // reset on every profile sync
     setFieldErrors({}); // reset any stale save-attempt errors on a fresh profile sync
     // Parse JSONB members array
     const raw = (profile as any).household_members;
@@ -1102,14 +891,10 @@ function ProfileScreenContent() {
     const rawMembers = (profile as any).household_members;
     const profileMembersJson = JSON.stringify(Array.isArray(rawMembers) ? rawMembers : []);
     if (JSON.stringify(members) !== profileMembersJson) return true;
-    // ID type (including the composed "Other: <text>" value)
-    if (composeIdType(idType, otherIdType) !== ((profile as any).id_type ?? null)) return true;
-    // New ID photo uploaded this session
-    if (newIdUploaded) return true;
     return false;
   }, [
     profile, firstName, lastName, middleName, suffix, sex, email, houseNo, street, city,
-    employmentStatus, occupation, mobileNumber, birthDateIso, members, idType, otherIdType, newIdUploaded,
+    employmentStatus, occupation, mobileNumber, birthDateIso, members,
   ]);
 
   // ── Required-field / format validation ───────────────────────────────────
@@ -1143,15 +928,6 @@ function ProfileScreenContent() {
     if (!street.trim()) errors.street = 'Street is required';
     if (!city.trim()) errors.city = 'City is required';
     if (!employmentStatus) errors.employmentStatus = 'Select employment status';
-
-    // ID verification — only enforced once the resident has started one (an ID
-    // type is optional overall; Identification isn't in the required-fields list).
-    if (idType === 'Other' && !otherIdType.trim()) {
-      errors.otherIdType = 'Please specify your exact ID type';
-    }
-    if (idType && (!idFrontPath || !idBackPath)) {
-      errors.idPhotos = 'Upload both the front and back photos of your ID';
-    }
 
     return errors;
   }
@@ -1208,44 +984,6 @@ function ProfileScreenContent() {
     }
   }
 
-  // ── ID photo upload (front / back) ────────────────────────────────────────
-  // Each selection uses a fresh immutable path. Publication copies both selected
-  // sides into one reviewed version, including when only the ID type changes.
-  async function handleIdUpload(side: 'front' | 'back') {
-    if (!session) return;
-    const picked = await pickImageAsset();
-    if (!picked) return;
-
-    const setUploading = side === 'front' ? setIdUploadingFront : setIdUploadingBack;
-    setUploading(true);
-    try {
-      const bytes = await readImageBytes(picked);
-      const ext   = imageExtension(picked.mimeType);
-      if (!bytes.length || bytes.length > 5 * 1024 * 1024) throw new Error('ID images must be at most 5 MB.');
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(picked.mimeType)) throw new Error('Choose a JPG, PNG, or WebP image.');
-      const path  = `${session.user.id}/versions/${genId()}/id-${side}.${ext}`;
-      const { error: uploadErr } = await supabase.storage
-        .from('id-documents')
-        .upload(path, bytes, { contentType: picked.mimeType, upsert: false });
-      if (uploadErr) throw uploadErr;
-      if (side === 'front') setIdFrontPath(path);
-      else setIdBackPath(path);
-      // Any new ID upload must be re-verified by an admin, even if previously
-      // 'verified' or 'verification_failed'.
-      setNewIdUploaded(true);
-      setFieldErrors((prev) => {
-        if (!prev.idPhotos) return prev;
-        const next = { ...prev };
-        delete next.idPhotos;
-        return next;
-      });
-    } catch (e: unknown) {
-      Alert.alert('Upload Failed', e instanceof Error ? e.message : `Could not upload the ${side} of your ID.`);
-    } finally {
-      setUploading(false);
-    }
-  }
-
   // ── Save all changes ──────────────────────────────────────────────────────
   async function handleSave() {
     if (!session || !isDirty) return;
@@ -1259,9 +997,6 @@ function ProfileScreenContent() {
     setFieldErrors({});
 
     setSaving(true);
-
-    const nextIdType   = composeIdType(idType, otherIdType);
-    const evidenceChanged = newIdUploaded || nextIdType !== profile?.id_type;
 
     // Editing the email address invalidates whatever verification was
     // previously recorded for the old address — clear it so the "Verified
@@ -1300,27 +1035,8 @@ function ProfileScreenContent() {
       showToast(updateErr.message, 'error');
       return;
     }
-    // Details are committed; server-derived completeness drives the Settings
-    // "Personal details incomplete" warning even if ID publication below fails.
     void refreshCompletion();
-    if (evidenceChanged && nextIdType && idFrontPath && idBackPath) {
-      const signature = JSON.stringify([nextIdType, idFrontPath, idBackPath]);
-      if (publication.current?.signature !== signature) publication.current = { signature, id: genId() };
-      try {
-        const result = await publishIdEvidence(supabase, { submissionId: publication.current.id, idType: nextIdType, frontPath: idFrontPath, backPath: idBackPath });
-        setIdFrontPath(result.frontPath); setIdBackPath(result.backPath);
-        setIdVerifStatus('pending'); setNewIdUploaded(false); publication.current = null;
-      } catch (error) {
-        setSaving(false);
-        showToast(error instanceof Error ? error.message : 'Profile details saved; ID submission failed. Please retry.', 'error');
-        return;
-      }
-    }
-    // Reflect the computed status locally right away so the badge updates
-    // before the next refetch resolves.
-    setIdVerifStatus(evidenceChanged ? 'pending' : idVerificationStatus);
     setEmailVerifStatus(nextEmailStatus);
-    setNewIdUploaded(false);
     setSaving(false);
     showToast('Profile saved successfully ✓');
     refetch();
@@ -1353,8 +1069,7 @@ function ProfileScreenContent() {
         </View>
       </View>
 
-      <ScrollView ref={profileScroll}
-        onContentSizeChange={focusIdSection}
+      <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 100 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
@@ -1572,86 +1287,6 @@ function ProfileScreenContent() {
           )}
         </SectionCard>
 
-        {/* ── ⑥ Identification ─────────────────────────────────────────── */}
-        <View onLayout={event => {
-          idSectionY.current = event.nativeEvent.layout.y;
-          focusIdSection();
-        }}>
-        <SectionCard>
-          <View style={styles.sectionHeaderRow}>
-            <View ref={idHeading} accessible accessibilityRole="header" accessibilityLabel="Upload Valid ID"><ThemedText style={styles.sectionTitle}>Upload Valid ID</ThemedText></View>
-            {idVerificationStatus === 'verified' && (
-              <View style={idStatusStyles.verified}>
-                <Ionicons name="checkmark-circle" size={13} color={PRIMARY_GREEN} />
-                <ThemedText style={idStatusStyles.verifiedText}>Verified ID</ThemedText>
-              </View>
-            )}
-            {idVerificationStatus === 'pending' && (
-              <View style={idStatusStyles.pending}>
-                <Ionicons name="time-outline" size={13} color="#B45309" />
-                <ThemedText style={idStatusStyles.pendingText}>Pending Verification</ThemedText>
-              </View>
-            )}
-            {idVerificationStatus === 'verification_failed' && (
-              <View style={idStatusStyles.failed}>
-                <Ionicons name="close-circle" size={13} color="#93000A" />
-                <ThemedText style={idStatusStyles.failedText}>Verification Failed, Try Again</ThemedText>
-              </View>
-            )}
-          </View>
-
-          {/* ID Type */}
-          <Pressable
-            style={fieldStyles.row}
-            onPress={() => setIdTypeModal(true)}
-            accessibilityRole="button"
-            accessibilityLabel="Select ID type">
-            <View style={[fieldStyles.body, { flexDirection: 'row', alignItems: 'center', gap: Spacing.two }]}>
-              <Ionicons name="card-outline" size={22} color={theme.text} />
-              <ThemedText style={[fieldStyles.value, !idType && { color: theme.textSecondary }]}>
-                {idType ?? 'Select ID Type'}
-              </ThemedText>
-            </View>
-            <Ionicons name="create-outline" size={18} color={PRIMARY_GREEN} />
-          </Pressable>
-
-          {/* "Other" ID type — require the resident to specify the exact ID name;
-              saved as `Other: <text>` (composeIdType) into the same id_type column. */}
-          {idType === 'Other' && (
-            <InlineFieldInput
-              label="Specify ID Type"
-              required
-              value={otherIdType}
-              placeholder="e.g. Barangay Certification"
-              onChangeText={(v) => {
-                setOtherIdType(v);
-                if (v.trim()) clearFieldError('otherIdType');
-              }}
-              error={fieldErrors.otherIdType}
-              success={otherIdType.trim() ? ' ' : undefined}
-            />
-          )}
-
-          {/* Front / back photos — exactly one upload per side, re-uploadable independently. */}
-          <ThemedText themeColor="textSecondary" style={[fieldStyles.label, styles.idPhotosLabel]}>ID Photos</ThemedText>
-          <View style={styles.idPhotoRow}>
-            <IdPhotoSlot
-              label="Front Side"
-              uri={idFrontSignedUrl}
-              uploading={idUploadingFront}
-              onUpload={() => handleIdUpload('front')}
-            />
-            <IdPhotoSlot
-              label="Back Side"
-              uri={idBackSignedUrl}
-              uploading={idUploadingBack}
-              onUpload={() => handleIdUpload('back')}
-            />
-          </View>
-          <FieldStatusRow error={fieldErrors.idPhotos} />
-        </SectionCard>
-        </View>
-
       </ScrollView>
 
       {/* ── ⑦ Fixed Save button ──────────────────────────────────────────── */}
@@ -1701,16 +1336,6 @@ function ProfileScreenContent() {
         onDelete={(id) => setMembers((prev) => prev.filter((x) => x.id !== id))}
       />
 
-      <IdTypeModal
-        visible={idTypeModal}
-        current={idType}
-        onClose={() => setIdTypeModal(false)}
-        onSelect={(t) => {
-          setIdType(t);
-          if (t !== 'Other') setOtherIdType('');
-        }}
-      />
-
       <ChoiceListModal
         visible={sexModal}
         title="Select Sex"
@@ -1741,43 +1366,6 @@ function ProfileScreenContent() {
     </SafeAreaView>
   );
 }
-
-// ─── ID status badge styles ────────────────────────────────────────────────────
-
-const idStatusStyles = StyleSheet.create({
-  verified: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: PRIMARY_GREEN + '1E',
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  verifiedText: { fontSize: 11, fontWeight: '600', color: PRIMARY_GREEN },
-  pending: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#FEF3C7',
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  pendingText: { fontSize: 11, fontWeight: '600', color: '#B45309' },
-  failed: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#93000A1E',
-    borderRadius: 20,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  failedText: { fontSize: 11, fontWeight: '600', color: '#93000A' },
-});
-
-// ─── Screen styles ─────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
@@ -1874,15 +1462,6 @@ const styles = StyleSheet.create({
 
   /* Household empty */
   emptyHousehold: { fontSize: 14, paddingVertical: Spacing.three, textAlign: 'center' },
-
-  /* ID photos — front/back side-by-side slots */
-  idPhotosLabel: { marginTop: Spacing.two, marginBottom: 2 },
-  idPhotoRow: {
-    flexDirection: 'row',
-    gap: Spacing.three,
-    marginTop: Spacing.one,
-    marginBottom: Spacing.one,
-  },
 
   /* Fixed save bar */
   saveBar: {

@@ -1,0 +1,18 @@
+{
+  "requestedAt": "2026-10-15T06:20:29.331Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "disposableEmail": "barangayan.ampid1+profile-phase6-20261015@gmail.com",
+  "operation": "existing-only signInWithOtp",
+  "accountCreationDisabled": true,
+  "redirect": "https://barangayan-admin-web.vercel.app/profile/security-callback",
+  "accepted": true,
+  "error": null,
+  "inboxReceiptVerified": true,
+  "receiptObservation": {
+    "inbox": "barangayan.ampid1@gmail.com",
+    "recipientAliasConfirmed": true,
+    "sender": "Barangayan",
+    "displayedTime": "2026-10-15 14:21 Asia/Manila",
+    "tokenRecorded": false
+  }
+}

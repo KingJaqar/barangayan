@@ -1,0 +1,37 @@
+{
+  "runtime": "node v24.13.1",
+  "graphVersion": "ampid-1@2026-10-12#fc7101b6227d",
+  "graphBytes": 436991,
+  "loadAndPrepareMs": 13.1,
+  "origins": 671,
+  "statuses": {
+    "ok": 599,
+    "attachment_ambiguous": 39,
+    "no_nearby_path": 31,
+    "no_route_within_coverage": 2
+  },
+  "bestCenter": {
+    "00000000-0000-0000-0000-00000000c002": 483,
+    "00000000-0000-0000-0000-00000000c004": 60,
+    "00000000-0000-0000-0000-00000000c003": 56
+  },
+  "routeMs": {
+    "p50": 0.75,
+    "p95": 1.31,
+    "max": 12.44
+  },
+  "noRoute": [
+    {
+      "lat": 14.6831,
+      "lng": 121.1258,
+      "street": "Alberto Drive",
+      "edgeId": "w557498391:1141819404-1141819501"
+    },
+    {
+      "lat": 14.6835,
+      "lng": 121.1238,
+      "street": "Denmark Street",
+      "edgeId": "w98695577:1141819412-1141819498"
+    }
+  ]
+}

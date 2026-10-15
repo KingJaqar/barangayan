@@ -1,0 +1,9 @@
+{
+  "baseline": [
+    "warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set."
+  ],
+  "final": [
+    "warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set."
+  ],
+  "identical": true
+}

@@ -7,6 +7,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Spinner } from '@/components/loading/spinner';
+import { useRowAction } from '@/hooks/use-row-action';
 
 interface IncidentActionsProps {
   incidentId: string;
@@ -17,14 +18,15 @@ interface IncidentActionsProps {
   incidentDescription?: string | null;
   variant?: 'compact' | 'full';
   onBeforeAction?: () => Promise<boolean>; onChanged?: () => void;
+  showRemove?: boolean;
 }
 
-// Mirrors the guarded FSM in update_incident_status (0026): open -> in_progress -> resolved,
-// with a branch to "unresolved" (admin cancel/close) from open or in_progress. Resolved,
+// Mirrors the guarded FSM in update_incident_status (0116): open -> in_progress -> resolved,
+// with branches to "withdrawn" and "unresolved" from open or in_progress. Resolved,
 // withdrawn, and unresolved are terminal — no guided-action buttons render for those.
 const NEXT_STEP: Record<string, { next: string; label: string; color: string } | null> = {
-  open: { next: 'in_progress', label: 'Mark In Progress', color: 'bg-blue-600 text-white' },
-  in_progress: { next: 'resolved', label: 'Mark Resolved', color: 'bg-[var(--accent)] text-white' },
+  open: { next: 'in_progress', label: 'Mark as In Progress', color: 'bg-blue-600 text-white' },
+  in_progress: { next: 'resolved', label: 'Mark as Resolved', color: 'bg-[var(--accent)] text-white' },
   resolved: null,
   withdrawn: null,
   unresolved: null,
@@ -33,29 +35,24 @@ const NEXT_STEP: Record<string, { next: string; label: string; color: string } |
 const CAN_MARK_UNRESOLVED = new Set(['open', 'in_progress']);
 
 /** Admin-side status transition buttons for a single incident row/page. */
-export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full', onBeforeAction, onChanged }: IncidentActionsProps) {
+export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full', onBeforeAction, onChanged, showRemove = true }: IncidentActionsProps) {
   const router = useRouter();
   const toast  = useToast();
-  const [busy, setBusy] = useState(false);
+  const { busy, runAction } = useRowAction();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const btnClass =
     variant === 'compact'
-      ? 'rounded-full px-3 py-1 text-xs font-semibold disabled:opacity-50'
+      ? 'inline-flex min-h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-xs font-semibold transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
       : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
 
   const step = NEXT_STEP[status] ?? null;
 
   async function setStatus(next: string, successLabel: string) {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('update_incident_status', {
-      p_incident_id: incidentId,
-      p_status: next,
-    });
+    const { error } = await supabase.rpc('update_incident_status', { p_incident_id: incidentId, p_status: next });
     if (error) {
-      setBusy(false);
       toast.showError(`Failed: ${error.message}`);
       return;
     }
@@ -67,7 +64,6 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       .select('id, status')
       .eq('id', incidentId)
       .maybeSingle();
-    setBusy(false);
     if (readError || !updated || updated.status !== next) {
       toast.showError(`Failed: ${readError?.message ?? 'The incident status was not updated.'}`);
       return;
@@ -83,11 +79,11 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
 
     toast.showSuccess(successLabel);
     if (onChanged) onChanged(); else router.refresh();
+    }, onBeforeAction);
   }
 
   async function softDelete() {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('incidents')
@@ -95,7 +91,6 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       .eq('id', incidentId)
       .select('id, deleted_at')
       .maybeSingle();
-    setBusy(false);
     setShowDeleteConfirm(false);
     if (error) {
       toast.showError(`Failed: ${error.message}`);
@@ -116,6 +111,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
 
     toast.showSuccess('Incident removed.');
     if (onChanged) onChanged(); else router.refresh();
+    }, onBeforeAction);
   }
 
   return (
@@ -135,11 +131,14 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
             onClick={() => setStatus('unresolved', 'Incident marked as unresolved.')}
             disabled={busy}
             className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-            Mark Unresolved
+            Mark as Unresolved
           </button>
         )}
 
-        {!showDeleteConfirm ? (
+        {CAN_MARK_UNRESOLVED.has(status) && <button type="button" onClick={() => setStatus('withdrawn', 'Report withdrawn.')} disabled={busy}
+          className={`${btnClass} bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200`}>Withdraw</button>}
+
+        {showRemove && (!showDeleteConfirm ? (
           <button
             onClick={() => setShowDeleteConfirm(true)}
             disabled={busy}
@@ -156,12 +155,13 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
               Confirm
             </button>
             <button
+              disabled={busy}
               onClick={() => setShowDeleteConfirm(false)}
               className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
               Cancel
             </button>
           </div>
-        )}
+        ))}
       </div>
       <p
         aria-live="polite"

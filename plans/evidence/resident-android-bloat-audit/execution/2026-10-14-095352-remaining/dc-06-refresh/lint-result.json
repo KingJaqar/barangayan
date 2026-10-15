@@ -1,0 +1,29 @@
+{
+  "id": "lint",
+  "stage": "dc-06-refresh",
+  "args": [
+    "C:\\Users\\User\\barangayan\\node_modules\\eslint\\bin\\eslint.js",
+    "src\\components\\reports\\shimmer.tsx",
+    "src\\components\\services\\skeleton.tsx",
+    "src\\constants\\payment.ts",
+    "src\\hooks\\use-theme-preference.tsx",
+    "src\\lib\\dialog.ts",
+    "src\\lib\\emergency-cache.ts",
+    "src\\lib\\push-notifications.ts",
+    "src\\app\\(app)\\home\\emergency-info\\index.tsx",
+    "src\\app\\(app)\\home\\index.tsx",
+    "src\\app\\(app)\\maps\\index.tsx",
+    "src\\components\\family-content.tsx",
+    "src\\components\\reports\\announcements-feed.tsx",
+    "src\\components\\resident-details-form.tsx",
+    "--format",
+    "json",
+    "--output-file",
+    "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-bloat-audit\\execution\\2026-10-14-095352-remaining\\dc-06-refresh\\lint.json"
+  ],
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "startedAt": "2026-10-14T10:54:45.010Z",
+  "finishedAt": "2026-10-14T10:55:10.221Z",
+  "exitCode": 0,
+  "signal": null
+}

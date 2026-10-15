@@ -1,6 +1,5 @@
 'use client';
 import { formatCentavosAsPHP, requestFee, type Tables } from '@barangayan/shared';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { InlineReadError } from '@/components/shared/inline-read-error';
@@ -11,14 +10,15 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { PaymentMethodStep } from './document-request-modal/payment-method-step';
 import { PickupStep } from './document-request-modal/pickup-step';
 import { QrphStep } from './document-request-modal/qrph-step';
+import { RequestPageCount } from './request-page-count';
 import { SuccessStep } from './document-request-modal/success-step';
 
 type Request = Tables<'service_requests'> & {
-  document_types: { name: string; fee_centavos: number } | null;
+  document_types: { name: string; fee_centavos: number; service_kind: string | null } | null;
   payments: { status: string; document_fee_centavos: number | null; amount_centavos: number }[];
 };
 
-/** Mirrors the destination step's blocks so nothing shifts when the assessment arrives. */
+/** Mirrors the destination step's blocks so nothing shifts when the payment details arrive. */
 function JourneySkeleton() {
   return (
     <div aria-hidden className="flex flex-col gap-4">
@@ -37,13 +37,10 @@ function JourneySkeleton() {
 export function RequestPaymentJourney({
   requestId,
   initialStep = 'method',
-  onDone,
 }: {
   requestId: string;
   initialStep?: 'method' | 'pickup' | 'qrph';
-  onDone?: () => void;
 }) {
-  const router = useRouter();
   const [client] = useState(createSupabaseBrowserClient);
   const [step, setStep] = useState<'method' | 'pickup' | 'qrph' | 'success'>(initialStep);
   // True once the QR step has been on screen for a request that was NOT yet paid. Only
@@ -52,13 +49,13 @@ export function RequestPaymentJourney({
   // summary and never mounts the step (no payment attempt is created).
   const [qrEngaged, setQrEngaged] = useState(false);
 
-  // Read state is scoped to this request: a refresh keeps the last valid assessment on
+  // Read state is scoped to this request: a refresh keeps the last valid payment details on
   // screen (a failed refresh shows a warning instead of replacing it), and an obsolete
   // response can never replace a newer one.
   const read = useScopedRead<Request>(requestId, () =>
     client
       .from('service_requests')
-      .select('*, document_types(name, fee_centavos), payments(status, document_fee_centavos, amount_centavos)')
+      .select('*, document_types(name, fee_centavos, service_kind), payments(status, document_fee_centavos, amount_centavos)')
       .eq('id', requestId)
       .single() as unknown as PromiseLike<{ data: Request | null; error: { message: string } | null }>,
   );
@@ -86,7 +83,7 @@ export function RequestPaymentJourney({
     if (read.error)
       return (
         <InlineReadError
-          message="We couldn't load the fee assessment. Reconnect and try again."
+          message="We couldn't load the payment details. Reconnect and try again."
           retrying={read.isRefreshing}
           onRetry={refetch}
         />
@@ -94,7 +91,7 @@ export function RequestPaymentJourney({
     return (
       <div aria-busy>
         <JourneySkeleton />
-        <LoadingStatus active label="Loading request and fee assessment…" />
+        <LoadingStatus active label="Loading request and payment details…" />
       </div>
     );
   }
@@ -102,7 +99,7 @@ export function RequestPaymentJourney({
     <InlineReadError
       tone="warning"
       className="mb-4"
-      message="We couldn't refresh the assessment. What you see may be out of date."
+      message="We couldn't refresh the payment details. What you see may be out of date."
       retrying={read.isRefreshing}
       onRetry={refetch}
     />
@@ -119,36 +116,17 @@ export function RequestPaymentJourney({
       View My Request
     </a>
   );
-  if (amount === null)
-    return (
-      <section className="space-y-4 rounded-xl border p-5">
-        {staleWarning}
-        <h2 className="text-xl font-semibold">Request submitted</h2>
-        <p>Ref #{request.reference_number}</p>
-        <p role="status">Awaiting fee assessment</p>
-        <p>
-          Staff will review your requirements and confirm the amount or fee exemption. Payment becomes
-          available after assessment.
-        </p>
-        <button
-          className="min-h-12 underline disabled:opacity-60"
-          type="button"
-          disabled={read.isRefreshing}
-          aria-busy={read.isRefreshing || undefined}
-          onClick={refetch}
-        >
-          {read.isRefreshing ? 'Refreshing…' : 'Refresh assessment'}
-        </button>
-        {track}
-      </section>
-    );
+  const pickupOnly = request.document_types?.service_kind === 'business' || request.fee_assessment_state === 'pickup_due';
+  if (request.fee_assessment_state === 'page_count_required' && !['cancelled', 'completed'].includes(request.status))
+    return <RequestPageCount requestId={requestId} onSaved={refetch} />;
+  const feeDescription = pickupOnly ? 'See Attached Tax Code (depends on the kind of transaction)' : undefined;
   // A paid request normally shows this summary. While the QR PH step (or its receipt) is
-  // on screen, that step owns the paid transition — it announces it once, keeps its own
-  // 900 ms beat, and then shows the confirmed receipt — so a background refresh that
+  // on screen, that step owns the paid transition and waits for OK before showing the
+  // confirmed receipt, so a background refresh that
   // observes `paid` first must not swap it out from under the resident.
   const paidHandledByStep = request.payment_status === 'paid' && ((step === 'qrph' && qrEngaged) || step === 'success');
   if (
-    amount === 0 ||
+    (!pickupOnly && amount === 0) ||
     request.fee_assessment_state === 'waived' ||
     (request.payment_status === 'paid' && !paidHandledByStep) ||
     ['cancelled', 'completed'].includes(request.status)
@@ -167,8 +145,7 @@ export function RequestPaymentJourney({
                 ? 'No payment required'
                 : `Request ${request.status}`}
         </p>
-        <p>Confirmed amount: {formatCentavosAsPHP(amount)}</p>
-        {request.fee_basis ? <p>{request.fee_basis}</p> : null}
+        <p>Confirmed amount: {amount === null ? feeDescription : formatCentavosAsPHP(amount)}</p>
         {track}
       </section>
     );
@@ -177,23 +154,17 @@ export function RequestPaymentJourney({
     step === 'pickup' ? (
       <PickupStep
         requestId={requestId}
-        barangayId={request.barangay_id}
         referenceNumber={request.reference_number}
         documentName={name}
         feeCentavos={amount}
-        onDone={
-          onDone ??
-          (() => {
-            router.push(`/services/requests/${requestId}`);
-          })
-        }
+        feeDescription={feeDescription}
       />
-    ) : step === 'qrph' ? (
+    ) : step === 'qrph' && !pickupOnly ? (
       <QrphStep
         requestId={requestId}
         referenceNumber={request.reference_number}
         documentName={name}
-        documentFeeCentavos={amount}
+        documentFeeCentavos={amount!}
         onPaid={() => setStep('success')}
         onCancelled={() => setStep('method')}
         onBack={() => setStep('method')}
@@ -202,12 +173,6 @@ export function RequestPaymentJourney({
       <SuccessStep
         requestId={requestId}
         referenceNumber={request.reference_number}
-        onClose={
-          onDone ??
-          (() => {
-            router.push(`/services/requests/${requestId}`);
-          })
-        }
       />
     ) : (
       <>
@@ -216,9 +181,11 @@ export function RequestPaymentJourney({
           referenceNumber={request.reference_number}
           documentName={name}
           feeCentavos={amount}
+          feeDescription={feeDescription}
+          pickupOnly={pickupOnly}
           onMethodChosen={(method) => setStep(method)}
         />
-        {request.fee_basis ? <p className="mt-4 text-sm">Fee basis: {request.fee_basis}</p> : null}
+        {request.billable_pages ? <p className="mt-4 text-sm">{request.billable_pages} pages × ₱10.00 per page</p> : null}
         {track}
       </>
     );

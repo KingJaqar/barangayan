@@ -1,0 +1,241 @@
+{
+  "completedAt": "2026-10-14T11:00:15.230Z",
+  "sourceImplementation": "complete",
+  "overallPhaseAcceptance": "partially complete solely for required manual runtime baseline/smoke",
+  "removed": {
+    "orphanFileIds": [
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O05",
+      "O06",
+      "O07",
+      "O08"
+    ],
+    "duplicateBoundary": "F01",
+    "runtimeExports": [
+      "U01",
+      "U02",
+      "U03",
+      "U04",
+      "U05",
+      "U06",
+      "U07",
+      "U08"
+    ],
+    "dependentInterface": "PaymentMethodOption",
+    "localStyleKeys": 21,
+    "dependentStyle": "group",
+    "newDependencies": [],
+    "editedFilesThisRun": [
+      "apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+      "apps/resident-android-mobile/src/components/services/skeleton.tsx",
+      "apps/resident-android-mobile/src/constants/payment.ts",
+      "apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+      "apps/resident-android-mobile/src/lib/dialog.ts",
+      "apps/resident-android-mobile/src/lib/emergency-cache.ts",
+      "apps/resident-android-mobile/src/lib/push-notifications.ts",
+      "apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+      "apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+      "apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+      "apps/resident-android-mobile/src/components/family-content.tsx",
+      "apps/resident-android-mobile/src/components/reports/announcements-feed.tsx"
+    ]
+  },
+  "checks": [
+    {
+      "id": "types",
+      "baseline": 0,
+      "final": 0
+    },
+    {
+      "id": "tests",
+      "baseline": 0,
+      "final": 0
+    },
+    {
+      "id": "lint",
+      "baseline": 0,
+      "final": 0
+    },
+    {
+      "id": "android-export-temp",
+      "baseline": 0,
+      "final": 0
+    },
+    {
+      "id": "web-export-unrestricted",
+      "baseline": 0,
+      "final": 0
+    }
+  ],
+  "finalTypeCheckAfterPreview": 0,
+  "refreshedChecksAfterConcurrentSharedChanges": [
+    {
+      "id": "types",
+      "exitCode": 0
+    },
+    {
+      "id": "tests",
+      "exitCode": 0
+    },
+    {
+      "id": "lint",
+      "exitCode": 0
+    },
+    {
+      "id": "android-export-temp",
+      "exitCode": 0
+    },
+    {
+      "id": "web-export-unrestricted",
+      "exitCode": 0
+    }
+  ],
+  "structuralChecks": {
+    "passed": true,
+    "count": 46,
+    "retainedStatementsIdentical": true,
+    "wholeSnapshotGatePassed": false
+  },
+  "metrics": {
+    "web": {
+      "before": 5307039,
+      "after": 5305154,
+      "delta": -1885,
+      "retainedChunksIdentical": true
+    },
+    "android": {
+      "before": 8085535,
+      "after": 8081904,
+      "delta": -3631,
+      "assetsIdentical": true
+    },
+    "source": {
+      "newAndroidWarningMessages": [],
+      "currentRunBytesRemoved": 40177,
+      "cumulativeSourceBytesRemoved": 41261
+    },
+    "apkMeasurement": "Not performed",
+    "androidAssetsIdentical": true
+  },
+  "preservation": {
+    "protectedInputs": 5042,
+    "selectedPlanUpdates": [
+      "plans/Resident_Android_Code_and_File_Bloat_Audit_2026_10_14.md",
+      "plans/Resident_Android_Unused_Code_Deletion_Execution_Plan_2026_10_14.md"
+    ],
+    "concurrentChangesPreserved": [
+      "plans/evidence/resident-ios-parity/execution-ledger.csv",
+      "plans/evidence/resident-ios-parity/phase-00/README.md",
+      "plans/evidence/resident-ios-parity/phase-00/build-ledgers.mjs",
+      "plans/evidence/resident-ios-parity/phase-00/decision-register.md",
+      "plans/evidence/resident-ios-parity/phase-00/fixtures-and-captures.md",
+      "plans/evidence/resident-ios-parity/phase-00/ledger-check.json",
+      "plans/evidence/resident-ios-parity/phase-00/prerequisite-register.md",
+      "plans/evidence/resident-ios-parity/phase-00/route-ledger.csv",
+      "plans/Resident_iOS_Implementation_Plan.md",
+      "apps/admin-web/src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx",
+      "apps/resident-ios-mobile/app.config.ts",
+      "apps/resident-ios-mobile/package.json",
+      "apps/resident-ios-mobile/src/app/(tabs)/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/health/[id].tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/health/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/health/index.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/home/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/home/index.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/maps/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/reports/[id].tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/reports/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/reports/index.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/services/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx",
+      "apps/resident-ios-mobile/src/app/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/health/register/[id].tsx",
+      "apps/resident-ios-mobile/src/app/index.tsx",
+      "apps/resident-ios-mobile/src/app/profile.tsx",
+      "apps/resident-ios-mobile/src/app/request/[id].tsx",
+      "apps/resident-ios-mobile/src/app/requests.tsx",
+      "apps/resident-ios-mobile/src/app/services/request/[id].tsx",
+      "apps/resident-ios-mobile/src/app/settings/_layout.tsx",
+      "apps/resident-ios-mobile/src/app/settings/change-password.tsx",
+      "apps/resident-ios-mobile/src/app/settings/help/[id].tsx",
+      "apps/resident-ios-mobile/src/app/settings/help/index.tsx",
+      "apps/resident-ios-mobile/src/app/settings/index.tsx",
+      "apps/resident-ios-mobile/src/app/settings/information.tsx",
+      "apps/resident-ios-mobile/src/components/resident-stack.tsx",
+      "apps/resident-ios-mobile/src/components/resource-list.tsx",
+      "apps/resident-ios-mobile/src/components/ui.tsx",
+      "apps/resident-ios-mobile/src/data/resident-api.ts",
+      "apps/resident-ios-mobile/src/features/auth/register-screen.tsx",
+      "apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx",
+      "apps/resident-web/src/app/(resident)/reports/my-reports-tabs.tsx",
+      "apps/resident-web/src/components/reports/incident-card.tsx",
+      "apps/resident-web/src/components/reports/incident-drawer.tsx",
+      "package-lock.json",
+      "packages/shared/src/schemas/evacuation-center.ts"
+    ],
+    "cleanupInputConflict": false,
+    "historicalScriptAndIndexUnchanged": true,
+    "backendOrStoredDataMutatedByCleanup": false,
+    "rawWholeSnapshotResult": "flagged external concurrent source/lockfile/documentation changes; preserved without overwrite"
+  },
+  "native": {
+    "status": "pending manual verification",
+    "freshBundleExecuted": false,
+    "reason": "Existing native shell rejected the fresh development-client cold-launch VIEW link: Intent does not match any activities. Verified normal launcher was reopened. No new bundle/flow is counted as passed.",
+    "previewTerminated": true,
+    "temporaryForwardingRemoved": [
+      8160
+    ],
+    "appDataReset": false,
+    "nativeShellChangedOrInstalled": false,
+    "manualSteps": "REPORT.md pending manual steps; all nine DC-05 journey rows remain unqualified"
+  },
+  "acceptance": [
+    {
+      "criterion": "Every deleted item has no active app/backend/test/build/CI consumer",
+      "status": "met"
+    },
+    {
+      "criterion": "Exact qualified deletion-only scope and recoverable before-bytes",
+      "status": "met"
+    },
+    {
+      "criterion": "Retained code/styles/contracts/routes/assets/config/backend/queues preserved",
+      "status": "met"
+    },
+    {
+      "criterion": "Normal type/test/lint/build checks introduce no regression",
+      "status": "met"
+    },
+    {
+      "criterion": "All nine fresh-bundle native/mobile-web journey baseline and smoke rows",
+      "status": "pending manual verification"
+    },
+    {
+      "criterion": "Exact diff, source/bundle measurements, archival limitation and concurrent changes documented",
+      "status": "met"
+    }
+  ],
+  "phases": {
+    "DC-00": "automated baseline complete; journey baseline pending",
+    "DC-01": "complete",
+    "DC-02": "complete",
+    "DC-03": "complete",
+    "DC-04": "complete",
+    "DC-05": "automated checks complete; full smoke pending",
+    "DC-06": "source review/evidence complete; full runtime closure pending"
+  },
+  "excludedWorkPreserved": [
+    "cancelled Android usability phase",
+    "route retirement/redirect changes",
+    "dependency/native/font optimization",
+    "public hook/prop API cleanup",
+    "queue deletion",
+    "generated-output cleanup",
+    "shared/backend/migrations"
+  ]
+}

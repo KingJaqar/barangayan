@@ -4,8 +4,8 @@ import styles from './admin-navigation.module.css';
 
 import type { LucideIcon } from 'lucide-react';
 import {
+  Archive,
   Building2,
-  CalendarDays,
   CircleHelp,
   FileText,
   Heart,
@@ -19,18 +19,25 @@ import {
   QrCode,
   ReceiptText,
   Recycle,
+  Route,
   ScrollText,
   Settings,
   Sun,
   TriangleAlert,
-  Users,
+  UserRoundCog,
+  UserRound,
   UsersRound,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 import { useThemeController } from '@/components/ui/theme-controller';
 import { LinkPendingIndicator } from '@/components/navigation/link-pending-indicator';
+import { MedicalApplicantIcon } from './medical-applicant-icon';
+import { HouseholdResidentsIcon } from './household-residents-icon';
+import { useProfileNavigation } from './profile-navigation-guard';
+import { useRouter } from 'next/navigation';
 
 interface NavItem {
   href: string;
@@ -49,7 +56,7 @@ interface NavGroup {
 const NAV_GROUPS: NavGroup[] = [
   {
     title: 'Overview',
-    items: [{ href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }],
+    items: [{ href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }, { href: '/profile', label: 'Profile', icon: UserRound }],
   },
   {
     title: 'Operations',
@@ -67,7 +74,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/incident-reports', label: 'Incident reports', icon: TriangleAlert },
       { href: '/incident-map', label: 'Incident map', icon: MapPin },
       { href: '/health', label: 'Health', icon: Heart, exactMatch: true },
-      { href: '/health/applicants', label: 'Medical Applicants', icon: Users },
+      { href: '/health/applicants', label: 'Medical Applicants', icon: MedicalApplicantIcon },
       { href: '/waste-management', label: 'Waste Management', icon: Recycle },
     ],
   },
@@ -76,24 +83,28 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/hub', label: 'Hub', icon: Building2 },
       { href: '/evacuation-centers', label: 'Evacuation Centers', icon: MapPin },
+      { href: '/evacuation-routing', label: 'Evacuation Routing', icon: Route },
       { href: '/emergency-qr', label: 'Emergency QR', icon: QrCode },
-      { href: '/households-residents', label: 'Households & Residents', icon: Users },
+      { href: '/households-residents', label: 'Households & Residents', icon: HouseholdResidentsIcon },
     ],
   },
   {
     title: 'Administration',
     items: [
-      { href: '/staff', label: 'Staff member', icon: CalendarDays },
+      { href: '/staff', label: 'Staff member', icon: UserRoundCog },
       { href: '/faq', label: 'FAQ content', icon: CircleHelp },
       { href: '/terms-privacy', label: 'Terms & Privacy', icon: ScrollText },
       { href: '/about-us', label: 'About Us', icon: Info },
       { href: '/settings', label: 'Settings', icon: Settings },
+      { href: '/archive', label: 'Archives', icon: Archive },
     ],
   },
 ];
 
 function ThemeRow({ collapsed }: { collapsed: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { blockNavigation } = useProfileNavigation();
   const { theme, setTheme } = useThemeController();
   const isThemePage = pathname === '/theme';
 
@@ -101,6 +112,8 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
     <div className={`flex items-center ${styles.themeRow}`}>
       <Link
         href="/theme"
+        onNavigate={event => { if (blockNavigation(() => router.push('/theme'))) event.preventDefault(); }}
+        aria-current={isThemePage ? 'page' : undefined}
         title={collapsed ? 'Theme' : undefined}
         aria-label={collapsed ? 'Theme' : undefined}
         className={`flex min-w-0 flex-1 items-center gap-[13px] rounded-xl text-[13px] font-semibold transition-colors ${
@@ -159,9 +172,28 @@ function ThemeRow({ collapsed }: { collapsed: boolean }) {
 
 export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogout: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { blockNavigation } = useProfileNavigation();
+  const sidebar = useRef<HTMLElement>(null);
+  const archiveLink = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (pathname !== '/archive' && !pathname?.startsWith('/archive/')) return;
+    const container = sidebar.current;
+    const link = archiveLink.current;
+    if (!container || !link) return;
+    const bounds = container.getBoundingClientRect();
+    const item = link.getBoundingClientRect();
+    if (item.top < bounds.top || item.bottom > bounds.bottom) {
+      // Scroll only the sidebar; the archived records keep their page position.
+      container.scrollTo({ top: container.scrollTop + item.bottom - bounds.bottom + 24,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+  }, [pathname, collapsed]);
 
   return (
     <aside
+      ref={sidebar}
       id="admin-sidebar"
       className={`flex min-h-0 shrink-0 flex-col overflow-y-auto ${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
       <nav className="flex flex-col gap-[16px]" aria-label="Admin navigation">
@@ -179,7 +211,9 @@ export function SidebarNav({ collapsed, onLogout }: { collapsed: boolean; onLogo
                 return (
                   <Link
                     key={item.href}
+                    ref={item.href === '/archive' ? archiveLink : undefined}
                     href={item.href}
+                    onNavigate={event => { if (blockNavigation(() => router.push(item.href))) event.preventDefault(); }}
                     title={collapsed ? item.label : undefined}
                     aria-label={collapsed ? item.label : undefined}
                     aria-current={isActive ? 'page' : undefined}

@@ -13,16 +13,27 @@ export function PasswordRecoveryScreen({ step, title, description, children }: {
   description: string;
   children: ReactNode;
 }) {
+  return <StepFlowScreen step={step} totalSteps={3} flowLabel="Password recovery" title={title} description={description}>{children}</StepFlowScreen>;
+}
+
+export function StepFlowScreen({ step, totalSteps, flowLabel, title, description, children }: {
+  step: number;
+  totalSteps: number;
+  flowLabel: string;
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
   const theme = useTheme();
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: theme.background }]} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <ScrollView key={step} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            <View style={styles.progress} accessibilityLabel={`Password recovery, step ${step} of 3`}>
-              <ThemedText type="small" themeColor="textSecondary">Step {step} of 3</ThemedText>
+            <View style={styles.progress} accessibilityLabel={`${flowLabel}, step ${step} of ${totalSteps}`}>
+              <ThemedText type="small" themeColor="textSecondary">Step {step} of {totalSteps}</ThemedText>
               <View style={styles.progressTrack} importantForAccessibility="no-hide-descendants">
-                {[1, 2, 3].map((index) => (
+                {Array.from({ length: totalSteps }, (_, i) => i + 1).map((index) => (
                   <View key={index} style={[styles.progressSegment, { backgroundColor: index <= step ? theme.primary : theme.backgroundSelected }]} />
                 ))}
               </View>

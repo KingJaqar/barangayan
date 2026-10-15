@@ -41,23 +41,3 @@ export function confirmAction({
     ]);
   });
 }
-
-/** Shows a message and resolves once the user dismisses it. */
-export function notify({
-  title,
-  message,
-  okLabel = 'OK',
-}: {
-  title: string;
-  message: string;
-  okLabel?: string;
-}): Promise<void> {
-  if (Platform.OS === 'web') {
-    window.alert(`${title}\n\n${message}`);
-    return Promise.resolve();
-  }
-
-  return new Promise((resolve) => {
-    Alert.alert(title, message, [{ text: okLabel, onPress: () => resolve() }]);
-  });
-}

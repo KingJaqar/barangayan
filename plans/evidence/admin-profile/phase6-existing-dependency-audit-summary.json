@@ -1,0 +1,45 @@
+{
+  "exitStatus": 1,
+  "counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 16,
+    "high": 33,
+    "critical": 4,
+    "total": 53
+  },
+  "critical": [
+    {
+      "name": "next",
+      "isDirect": true,
+      "nodes": [
+        "node_modules/next"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "shell-quote",
+      "isDirect": false,
+      "nodes": [
+        "node_modules/shell-quote"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "tinypool",
+      "isDirect": false,
+      "nodes": [
+        "node_modules/tinypool"
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "vitest",
+      "isDirect": true,
+      "nodes": [
+        "node_modules/vitest"
+      ],
+      "fixAvailable": true
+    }
+  ]
+}

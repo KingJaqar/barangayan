@@ -12,8 +12,8 @@ export type EvacuationCenterRow = Tables<'evacuation_centers'>;
 export type EvacuationCenterWithDistance = EvacuationCenterRow & {
   distanceMeters?: number;
   /** Estimated walking time in minutes (assumes ~1.2 m/s walking pace) — a straight-line
-   * estimate, refined per-center by the real OSRM route once selected (see
-   * lib/osrm.ts's getWalkingRoute, used in centers-map.tsx). */
+   * estimate from `userPosition`. The Centers screen does not use it: it shows walking
+   * distances from the route service instead (use-connected-route.ts). */
   estimatedMinutes?: number;
   /** Parsed from the `position` JSON column for convenience. */
   position: LatLng;

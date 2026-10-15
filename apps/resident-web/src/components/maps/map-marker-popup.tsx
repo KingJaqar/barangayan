@@ -34,8 +34,8 @@ export function EvacuationPopupContent({ marker }: { marker: MapEvacuationMarker
   return (
     <div className="min-w-56 space-y-2 p-1">
       <div className="flex items-start gap-2">
-        <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10">
-          <MapPin className="h-3 w-3 text-emerald-600" strokeWidth={2.5} />
+        <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+          <MapPin className="h-3 w-3 text-primary" strokeWidth={2.5} />
         </div>
         <p className="text-sm font-semibold leading-snug">{marker.label}</p>
       </div>

@@ -3,9 +3,11 @@
 import { ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './health.module.css';
+
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const DAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
@@ -84,13 +86,14 @@ export function DriveCalendar({
   const rows = Array.from({ length: 6 }, (_, i) => cells.slice(i * 7, i * 7 + 7));
 
   return (
-    <div className="relative rounded-xl border border-black/8 bg-white px-4 py-4 shadow-sm dark:border-white/8 dark:bg-zinc-900">
+    <div className={styles.calendar}>
       {/* Header */}
-      <div className="mb-3 flex items-center justify-between">
+      <div className={styles.calendarHeader}>
         <button
           type="button"
           onClick={openPicker}
-          className="flex items-center gap-1 text-[15px] font-bold tracking-tight"
+          className="flex min-h-9 items-center gap-1 text-[15px] font-semibold tracking-tight"
+          aria-expanded={pickerOpen}
           aria-label={`Open month and year picker, currently ${MONTH_NAMES[month - 1]} ${year}`}>
           {MONTH_NAMES[month - 1]} {year}
           <ChevronDown size={14} className={`text-muted-foreground transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
@@ -121,25 +124,27 @@ export function DriveCalendar({
             const isSelected = cell.date === selectedDate;
             const isToday = cell.date === today;
             const eventColors = eventDateMap[cell.date] ?? [];
+            const hasEvents = eventColors.length > 0;
 
             return (
               <button
                 key={ci}
                 type="button"
                 onClick={() => onDateSelect(cell.date)}
-                className="flex items-center justify-center py-0.5"
-                aria-label={cell.date}
+                className={`${styles.calendarDay} flex min-h-10 items-center justify-center py-0.5`}
+                aria-label={`${cell.date}${hasEvents ? ', drives scheduled' : ''}`}
+                aria-pressed={isSelected}
                 aria-current={isSelected ? 'date' : undefined}>
                 <span
-                  className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full transition-colors ${isSelected ? 'bg-primary' : isToday ? 'border border-primary' : 'hover:bg-muted'}`}>
+                  className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full transition-colors ${isSelected ? 'border border-primary bg-primary/15' : isToday ? 'border border-primary' : 'hover:bg-muted'}`}>
                   <span
-                    className={`text-[13px] font-semibold ${!cell.inMonth ? 'text-muted-foreground opacity-40' : isSelected ? 'text-primary-foreground' : isToday ? 'text-primary' : 'text-foreground'}`}>
+                    className={`text-[13px] font-semibold ${isSelected ? 'text-foreground' : !cell.inMonth ? 'text-muted-foreground opacity-60' : isToday ? 'text-primary' : 'text-foreground'}`}>
                     {cell.day}
                   </span>
-                  {eventColors.length > 0 ? (
+                  {hasEvents ? (
                     <span className="absolute bottom-[3px] flex items-center justify-center gap-[2px]">
-                      {eventColors.slice(0, 3).map((color, idx) => (
-                        <span key={idx} className="h-[3px] w-[3px] rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.75)' : color }} />
+                      {eventColors.slice(0, 3).map((color, index) => (
+                        <span key={index} className="h-1 w-1 rounded-full" style={{ backgroundColor: color }} />
                       ))}
                     </span>
                   ) : null}
@@ -149,10 +154,11 @@ export function DriveCalendar({
           })}
         </div>
       ))}
+      <p className={styles.calendarLegend}>Scheduled drives · dots match drive categories</p>
 
       {/* Month/year picker overlay */}
       {pickerOpen ? (
-        <div className="absolute inset-0 z-10 flex items-start justify-center rounded-xl border border-black/8 bg-white/98 p-3 backdrop-blur-sm dark:border-white/8 dark:bg-zinc-900/98">
+        <div className={styles.calendarPicker}>
           <div className="w-full max-w-xs">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-bold">Select Month &amp; Year</p>
@@ -166,6 +172,7 @@ export function DriveCalendar({
                 type="button"
                 onClick={() => setPickerYear((y) => Math.max(y - 1, MIN_YEAR))}
                 disabled={pickerYear <= MIN_YEAR}
+                aria-label="Previous year"
                 className="rounded-lg p-1.5 text-primary disabled:opacity-30">
                 <ChevronLeft size={20} />
               </button>
@@ -174,6 +181,7 @@ export function DriveCalendar({
                 type="button"
                 onClick={() => setPickerYear((y) => Math.min(y + 1, MAX_YEAR))}
                 disabled={pickerYear >= MAX_YEAR}
+                aria-label="Next year"
                 className="rounded-lg p-1.5 text-primary disabled:opacity-30">
                 <ChevronRight size={20} />
               </button>
@@ -195,7 +203,7 @@ export function DriveCalendar({
                       setPickerOpen(false);
                     }}
                     className={`rounded-lg py-2.5 text-sm font-medium ${
-                      isSelected ? 'bg-primary font-bold text-primary-foreground' : isToday ? 'border-[1.5px] border-primary font-bold text-primary' : 'text-foreground hover:bg-muted'
+                      isSelected ? 'border border-primary bg-primary/15 font-bold text-foreground' : isToday ? 'border-[1.5px] border-primary font-bold text-primary' : 'text-foreground hover:bg-muted'
                     }`}>
                     {abbr}
                   </button>

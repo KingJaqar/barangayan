@@ -1,5 +1,17 @@
-import { Stack } from 'expo-router/stack';
 import { Link } from 'expo-router';
-export function ResidentStack({ title }: { title: string }) {
-  return <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal', headerRight: () => <Link href="/settings" accessibilityLabel="Open settings" style={{ padding: 12, fontSize: 17, color: '#0F6E5B' }}>Settings</Link> }}><Stack.Screen name="index" options={{ title, headerLargeTitleEnabled: true }} /></Stack>;
+import { Stack } from 'expo-router/stack';
+import { layout, typeScale, useColors } from '../lib/theme';
+
+/** One destination's nested native stack. Child titles are declared here so every pushed screen has a real header. */
+export function ResidentStack({ title, screens = {}, settingsShortcut = true }: { title: string; screens?: Record<string, string>; settingsShortcut?: boolean }) {
+  const colors = useColors();
+  return <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal', headerTintColor: colors.primary, contentStyle: { backgroundColor: colors.canvas } }}>
+    <Stack.Screen name="index" options={{ title, headerLargeTitleEnabled: true, headerRight: settingsShortcut ? () => <SettingsShortcut /> : undefined }} />
+    {Object.entries(screens).map(([name, screenTitle]) => <Stack.Screen key={name} name={name} options={{ title: screenTitle }} />)}
+  </Stack>;
+}
+/** Supplemental toolbar link; Settings remains a full destination (possibly inside More). */
+function SettingsShortcut() {
+  const colors = useColors();
+  return <Link href="/settings" accessibilityRole="link" accessibilityLabel="Open Settings" style={[typeScale.body, { color: colors.primary, minHeight: layout.controlMin, paddingVertical: 10, paddingHorizontal: 4 }]}>Settings</Link>;
 }

@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
 import { renderIonicon } from '@/lib/ionicon-map';
+import styles from './emergency.module.css';
 
 export interface AccordionItem {
   title: string;
@@ -19,35 +20,36 @@ export function EmergencyAccordion({ items }: { items: AccordionItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
+    <div className={styles.rows}>
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div key={index}>
+          <div key={index} className={styles.accordionItem}>
             <button
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpenIndex((prev) => (prev === index ? null : index))}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left">
+              className={styles.accordionTrigger}>
               <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: item.iconBg ?? undefined, color: item.iconColor ?? undefined }}>
+                className={styles.rowIcon}>
                 {renderIonicon(item.icon, { size: 20, strokeWidth: 1.75 })}
               </span>
               <span className="flex-1 text-sm font-semibold">{item.title}</span>
               <ChevronDown size={18} className={`shrink-0 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {isOpen ? (
-              <div className="flex flex-col gap-2 px-4 pb-3 pl-[3.75rem]">
-                {item.content.map((step, stepIndex) => (
-                  <div key={stepIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
-                    <span className="leading-relaxed">{step}</span>
-                  </div>
-                ))}
+            <div className={styles.accordionContent} data-open={isOpen} aria-hidden={!isOpen} inert={!isOpen}>
+              <div className={styles.accordionClip}>
+                <div className={styles.accordionBody}>
+                  {item.content.map((step, stepIndex) => (
+                    <div key={stepIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
+                      <span className="leading-relaxed">{step}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ) : null}
+            </div>
           </div>
         );
       })}

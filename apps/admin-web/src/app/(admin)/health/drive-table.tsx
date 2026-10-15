@@ -1,24 +1,24 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+
 import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
-import { Eye, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { OperationsTableSummary } from '@/components/admin/operations-table-summary';
 import { ProfileTablePanel } from '@/components/admin/profile-table-panel';
 import { SegmentedFilter } from '@/components/admin/segmented-filter';
 import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
-import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
 import { operationsConfig } from '@/lib/admin-tables/operations-config';
 import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
-import { DriveDetailModal } from './drive-detail-modal';
 import type { DriveRow } from './types';
 import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
@@ -152,13 +152,13 @@ function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string; 
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
-        <select className={inputClass} value={type} onChange={(e) => setType(e.target.value as typeof type)}>
+        <AdminSelect className={inputClass} value={type} onValueChange={(nextValue) => setType(nextValue as typeof type)}>
           {DRIVE_TYPES.map((t) => (
             <option key={t} value={t}>
               {DRIVE_TYPE_CONFIG[t].label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Date</span>
@@ -224,12 +224,11 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
   result: QueryOutcome<BrowseResult<DriveRow>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   barangayId: string;
 }) {
-  const toast = useToast();
   const config = useMemo(() => operationsConfig('health'), []);
   const browse = useConfiguredTableBrowse(config, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = config.sorts.find(sort => sort.key === state.sort)!;
-  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<DriveRow>('health', result, browse.settle);
+
   const [addOpen, setAddOpen] = useState(false);
   const [channelName] = useState(() => 'admin-health-' + Math.random().toString(36).slice(2));
   useEffect(() => {
@@ -270,42 +269,7 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
     return { error: null };
   }
 
-  async function removeDrive(drive: DriveRow) {
-    if (!await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    // No soft_delete RPC exists for medical_drives (unlike incidents) — the 0036 admin
-    // update policy covers a plain soft-delete via deleted_at directly.
-    const { data: removed, error } = await supabase
-      .from('medical_drives')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', drive.id)
-      .select('id')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to remove drive: ${error.message}`);
-      return;
-    }
-    if (!removed) {
-      toast.showError('Failed to remove drive: no medical drive was updated. Check that you still have access to this barangay.');
-      return;
-    }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'medical_drive',
-      entityId: drive.id,
-      entityLabel: drive.title,
-      metadata: {
-        title: drive.title,
-        type: drive.type,
-        drive_date: drive.drive_date,
-        location: drive.location,
-      },
-    }).catch(() => {});
-
-    toast.showSuccess('Drive removed.');
-    browse.refresh();
-  }
+  const lifecycle = useRecordWorkspace<DriveRow>('health', browse.refresh, browse.settle);
 
   const columns: EditableDataTableColumn<DriveRow>[] = [
     {
@@ -413,62 +377,32 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
         commitOnChange: true,
       },
     },
-    {
-      header: 'Actions',
-      initialWidth: 112,
-      minWidth: 104,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      // Stop propagation so the surrounding EditableDataTable's onRowClick doesn't
-      // also fire and reopen the modal underneath these buttons.
-      render: (r) => (
-        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            onClick={event => void openDetail(r, event.currentTarget)}
-            title={`View ${r.title}`}
-            aria-label={`View ${r.title}`}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-          </button>
-          <ConfirmButton
-            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
-            confirmLabel="Remove?"
-            onConfirm={() => removeDrive(r)}
-            title={`Remove ${r.title}`}
-            ariaLabel={`Remove ${r.title}`}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        </div>
-      ),
-    },
+    lifecycle.column,
   ];
 
-  return <div ref={containerRef}>
+  return <div >
+    <RecordArchiveLink name="health" beforeOpen={browse.settle} />
     <OperationsTableSummary name="health" summary={summary} onRetry={browse.refresh} />
-    
+
     {addOpen && <fieldset disabled={browse.pending}><AddDriveForm barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
-    <ProfileTablePanel label="Medical drives" browse={browse} 
+    <ProfileTablePanel label="Medical drives" browse={browse}
       category={<label className="table-browse-field">Category
-        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
+        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
           <option value="">All categories</option>
           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
-        </select></label>}
+        </AdminSelect></label>}
       filters={<SegmentedFilter label="Drive schedule" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
         disabled={browse.pending || !barangayId}>+ Add Drive</button>}>
-      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No medical drives found."
-        onRowClick={(row, trigger) => void openDetail(row, trigger)} resizableColumns pinLastColumn density="compact"
+        onRowClick={row => lifecycle.open(row)} resizableColumns pinLastColumn density="compact"
         tableMinWidth={900} cellOverflow="hidden"
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
           onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />
     </ProfileTablePanel>
-    {selectedDetail && <DriveDetailModal drive={selectedDetail} key={selectedDetail.id}
-      detailStatus={detailStatus} onRetry={retryDetail} onClose={closeDetail}
-      onChanged={browse.refresh} onEditingChange={browse.onEditingChange} />}
+    {lifecycle.view}
   </div>;
 }

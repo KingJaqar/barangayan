@@ -1,0 +1,83 @@
+▲ Next.js 16.3.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 57ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 15.4s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/48) ...
+  Generating static pages using 31 workers (12/48) 
+  Generating static pages using 31 workers (24/48) 
+  Generating static pages using 31 workers (36/48) 
+✓ Generating static pages using 31 workers (48/48) in 3.2s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /announcements
+├ ƒ /announcements/[announcementId]
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /auth/callback
+├ ƒ /auth/email-change
+├ ○ /auth/error
+├ ƒ /complete-profile
+├ ƒ /emergency
+├ ƒ /emergency/alerts
+├ ƒ /emergency/centers
+├ ƒ /emergency/family
+├ ƒ /emergency/scan
+├ ƒ /forgot-password
+├ ƒ /health
+├ ƒ /health/drives/[driveId]
+├ ƒ /health/my-registrations
+├ ƒ /health/register/[driveId]
+├ ƒ /home
+├ ○ /icon.png
+├ ƒ /login
+├ ƒ /maps
+├ ƒ /maps/directory
+├ ƒ /maps/preparedness
+├ ƒ /onboarding
+├ ƒ /register
+├ ƒ /reports
+├ ƒ /reports/[incidentId]
+├ ƒ /reports/new
+├ ƒ /reset-password
+├ ƒ /search
+├ ƒ /services
+├ ƒ /services/[documentId]
+├ ƒ /services/documents
+├ ƒ /services/logs
+├ ƒ /services/payment/[requestId]
+├ ƒ /services/payment/pickup/[requestId]
+├ ƒ /services/payment/qrph/[requestId]
+├ ƒ /services/payment/success
+├ ƒ /services/requests
+├ ƒ /services/requests/[requestId]
+├ ƒ /services/requests/new/[documentId]
+├ ƒ /settings
+├ ƒ /settings/about
+├ ƒ /settings/change-password
+├ ƒ /settings/delete-account
+├ ƒ /settings/download-data
+├ ƒ /settings/email-verification
+├ ƒ /settings/help
+├ ƒ /settings/help/[articleId]
+├ ƒ /settings/location-verification
+├ ƒ /settings/notifications
+├ ƒ /settings/profile
+├ ƒ /settings/terms-privacy
+├ ƒ /settings/theme
+└ ƒ /verify-otp
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

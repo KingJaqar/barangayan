@@ -1,0 +1,24 @@
+ok 1 - Admin incident transitions enforce caller RLS
+ok 2 - Anonymous callers cannot execute admin transitions
+ok 3 - Admin withdraws another reporter's old open report
+ok 4 - Admin withdraws another reporter's old in-progress report
+ok 5 - Withdrawal persists as a status change
+ok 6 - Withdrawal persists as a status change
+ok 7 - Withdrawal retains report details, reporter and confirmations
+ok 8 - Withdrawal retains report details, reporter and confirmations
+ok 9 - Resolved/unresolved reports cannot be withdrawn
+ok 10 - Resolved/unresolved reports cannot be withdrawn
+ok 11 - Withdrawn report cannot re-enter processing
+ok 12 - Archived report cannot be withdrawn
+ok 13 - Null status is rejected
+ok 14 - Existing progress transition is preserved
+ok 15 - Existing resolution transition is preserved
+ok 16 - Repeated withdrawal is an idempotent no-op
+ok 17 - Other barangay admin cannot withdraw this report
+ok 18 - Removed admin cannot withdraw reports
+ok 19 - Resident cannot use the admin withdrawal operation
+ok 20 - Resident self-withdrawal still rejects in-progress reports
+ok 21 - Resident self-withdrawal still has a 24-hour limit
+ok 22 - Resident can still withdraw their own recent open report
+ok 23 - Resident self-withdrawal still persists
+1..23

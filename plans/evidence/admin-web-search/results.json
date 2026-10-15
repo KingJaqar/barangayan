@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "checks": [
+    "Empty query guidance and minimum query length",
+    "Keyboard submission, grouped real-data results across all 15 categories, tenant and archive boundaries",
+    "Real title-prefix ranking, body fallback, and response-time budgets with 500 additional residents",
+    "All 15 result categories navigate to corresponding record content",
+    "Specific record previews, return to results, category filters, complete pagination, and deep-page clamping",
+    "Literal punctuation and multi-word query semantics against PostgreSQL",
+    "No-result and empty results-page states",
+    "Rapid typing race protection, Escape, clearing, and recent-search management",
+    "Debounced typing stays within paint budget at 4x CPU throttle; IME composition causes one committed search",
+    "Navbar and results-page outage recovery; partial failures remain explicit",
+    "Malformed responses recover without rendering errors; slow loading and reduced-motion animations are verified",
+    "Anonymous and resident rejection, archived-admin rejection, cross-tenant search and direct-record access denial",
+    "Dark theme and compact admin-web layout"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Synthetic fixtures in the real local Supabase stack. Hosted data was not changed. Delays and HTTP failures are injected only for recovery tests."
+  ],
+  "performance": {
+    "suggestions": [
+      191,
+      193,
+      178,
+      174,
+      176
+    ],
+    "results": [
+      178,
+      180,
+      167,
+      168,
+      159
+    ],
+    "fixtureResidents": 500,
+    "inputPaintMs": [
+      17,
+      27,
+      12,
+      11,
+      8,
+      10,
+      9,
+      9,
+      10,
+      12,
+      13
+    ],
+    "cpuThrottle": 4
+  },
+  "fixtureCleanup": "passed"
+}

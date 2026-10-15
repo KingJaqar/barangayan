@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { wasteScheduleSchema, WASTE_TYPES, WASTE_TYPE_CONFIG, DAY_NAMES, type Tables, type WasteType } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -97,34 +102,36 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-5 gap-3">
-      <label className="col-span-5 text-sm sm:col-span-1">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="text-sm">
         <span className={labelClass}>Zone</span>
-        <select className={inputClass} value={zoneId} onChange={(e) => setZoneId(e.target.value)} required>
+        <AdminSelect className={inputClass} value={zoneId} onValueChange={(nextValue) => setZoneId(nextValue)} required>
           <option value="">Select a zone</option>
           {zones.map((z) => (
             <option key={z.id} value={z.id}>{z.name}</option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
-      <label className="col-span-5 text-sm sm:col-span-1">
+      <label className="text-sm">
         <span className={labelClass}>Waste Type</span>
-        <select className={inputClass} value={wasteType} onChange={(e) => setWasteType(e.target.value)}>
+        <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
           {WASTE_TYPES.map((t) => (
             <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">
         <span className={labelClass}>Day</span>
-        <select className={inputClass} value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)}>
+        <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
           {DAY_NAMES.map((d, i) => (
             <option key={d} value={i}>{d}</option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
+
+      <div className={styles.groupHeading}><h3>Collection window</h3></div>
 
       <label className="text-sm">
         <span className={labelClass}>Start Time</span>
@@ -136,19 +143,19 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
         <input type="time" className={inputClass} value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
       </label>
 
-      <label className="col-span-5 text-sm">
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Notes</span>
         <input className={inputClass} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional instructions or reminders" />
       </label>
 
-      {error ? <p className="col-span-5 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-5">
+      <ContentFormActions busy={submitting}>
         <button type="submit" disabled={submitting || !barangayId} className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
         aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Schedule</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

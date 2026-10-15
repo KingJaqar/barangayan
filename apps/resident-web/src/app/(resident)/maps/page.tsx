@@ -3,6 +3,7 @@ import type { MultiPolygon, Polygon } from 'geojson';
 
 import { MapClientWrapper } from '@/components/maps/map-client-wrapper';
 import { MapSidebar } from '@/components/maps/map-sidebar';
+import styles from '@/components/maps/maps.module.css';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
 import { withBoundaryFallback } from '@/lib/barangay-boundary';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -89,10 +90,11 @@ export default async function MapsPage() {
   const boundary = withBoundaryFallback((barangay?.boundary as Polygon | MultiPolygon | null) ?? null);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-4">
-      <div>
-        <h1 className="text-lg font-bold">Maps</h1>
-        <p className="text-xs text-muted-foreground">
+    <div className={styles.page}>
+      <h1 className="sr-only">Maps</h1>
+      <div className={styles.summary}>
+        <span className={styles.summaryLabel}>Community overview</span>
+        <p>
           {incidentMarkers.length} {incidentMarkers.length === 1 ? 'incident' : 'incidents'} · {evacuationMarkers.length}{' '}
           {evacuationMarkers.length === 1 ? 'evacuation center' : 'evacuation centers'}
         </p>
@@ -102,7 +104,7 @@ export default async function MapsPage() {
           Emergency/Report shortcuts move out from under the map into the unused space
           beside it); the sidebar naturally falls below the map on narrow viewports since
           it's a single-column grid there. */}
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_300px]">
+      <div className={styles.workspace}>
         <MapClientWrapper
           incidentMarkers={incidentMarkers}
           evacuationMarkers={evacuationMarkers}

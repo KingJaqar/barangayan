@@ -1,0 +1,64 @@
+{
+  "status": "staging-stopped",
+  "browser": "chrome",
+  "database": "admin_profile_test_ff9f811010",
+  "containers": [
+    "admin-profile-db-ff9f811010",
+    "admin-profile-inbucket-ff9f811010",
+    "admin-profile-auth-ff9f811010",
+    "admin-profile-rest-ff9f811010",
+    "admin-profile-storage-ff9f811010"
+  ],
+  "checks": [
+    "Fresh empty-schema and representative-schema migration rehearsal with real caller roles",
+    "Expired/rate-limited proof, commit-time target retirement and atomic mandatory link/unlink audit failure",
+    "Existing resident_profile_conflict database regression checks",
+    "Existing resident_email_verification database regression checks",
+    "Existing resident_account_setup database regression checks",
+    "Simultaneous conditional saves, competing verified links and duplicate unlinks commit exactly one winner",
+    "Direct protected route, Dashboard -> Profile -> Theme order and active state",
+    "Dirty navigation preserves drafts; real save affects only admin and preserves legacy address",
+    "Dirty Cancel restores saved values through explicit confirmation",
+    "Atomic stale-save rejection keeps draft and requires deliberate reload",
+    "Theme destination, dirty browser Back cancellation/discard and Forward restoration",
+    "Committed replacement survives old-photo cleanup failure with one save and explicit partial-success feedback",
+    "Oversized avatar rejected; real upload, reference commit and retirement pass",
+    "Uncertain upload response leaves the saved profile untouched and retires only its confirmed unreferenced object",
+    "Avatar reference failure preserves saved state and removes only the new unreferenced object",
+    "Lost commit response reconciled by fresh read with exactly one mutation",
+    "Optional audit failure reports partial success without repeating persistence",
+    "Resident read failure stays isolated and recovers through its own Retry",
+    "Closed and expired ownership windows cancel challenges, create no link and restore usable admin controls",
+    "Both-account proof reconciles a lost link response once, preserves admin sign-in and retires temporary resident session",
+    "Stale unavailable-account unlink rejects a newer association and presents recoverable conflict",
+    "Banned resident details suppressed; restored account can be read at narrow width",
+    "Dedicated local staging inbox receives real synthetic Auth mail"
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "limitations": [
+    "Dedicated local database cloned from the local 0117 schema; 0118 and 0119 are applied only to this test database.",
+    "Hosted settings are inventoried separately; hosted SMTP delivery and admin callbacks remain unverified.",
+    "Test containers are stopped on completion. The isolated database is preserved; no existing data is deleted."
+  ],
+  "localAuthSettings": {
+    "GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED": "true",
+    "GOTRUE_MFA_TOTP_VERIFY_ENABLED": "true",
+    "GOTRUE_PASSWORD_REQUIRED_CHARACTERS": "abcdefghijklmnopqrstuvwxyz:ABCDEFGHIJKLMNOPQRSTUVWXYZ:0123456789:!\"#$%&'()*+,-./\\:;<=>?@[\\]^_`{|}~",
+    "GOTRUE_MFA_TOTP_ENROLL_ENABLED": "true",
+    "GOTRUE_MAILER_AUTOCONFIRM": "true",
+    "GOTRUE_JWT_EXP": "3600",
+    "GOTRUE_PASSWORD_MIN_LENGTH": "6",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_REAUTHENTICATION": "false",
+    "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_CURRENT_PASSWORD": "false"
+  },
+  "nextPid": 3404,
+  "webOrigin": "http://127.0.0.1:65053",
+  "staging": {
+    "origin": "http://127.0.0.1:65053",
+    "mailOrigin": "http://127.0.0.1:65056",
+    "apiOrigin": "http://127.0.0.1:65052",
+    "releaseFile": "local-staging-ff9f811010.stop",
+    "expiresAt": "2026-10-15T05:57:15.102Z"
+  }
+}

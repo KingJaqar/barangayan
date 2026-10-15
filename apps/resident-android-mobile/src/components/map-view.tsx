@@ -3,8 +3,10 @@
  *
  * Architecture:
  *   - The WebView loads an inline HTML string (no file server needed).
- *   - Leaflet JS + CSS are loaded from the unpkg CDN. For production offline-first
- *     support, replace the CDN URLs with assets bundled via expo-asset.
+ *   - Leaflet JS + CSS are inlined from the app bundle (leaflet-assets.ts), so the page
+ *     makes no script/style CDN requests (DRRM routing plan R6). Online OpenStreetMap tiles
+ *     are optional (`showTiles`); the Centers map draws the routing pack's vector roads
+ *     instead when offline.
  *   - Communication uses the typed bridge from @barangayan/shared/types/map-bridge:
  *       RN → WebView: injectJavaScript(JSON.stringify(MapBridgeInboundMessage))
  *       WebView → RN: window.ReactNativeWebView.postMessage(JSON.stringify(MapBridgeOutboundMessage))
@@ -12,20 +14,17 @@
  *     is rendered instead.
  */
 
-import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapMarker } from '@barangayan/shared';
+import type { LatLng, MapBridgeInboundMessage, MapBridgeOutboundMessage, MapLngLat, MapMarker } from '@barangayan/shared';
 import { isPointInPolygon } from '@barangayan/shared';
-import type { MultiPolygon, Polygon } from 'geojson';
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { ViewStyle } from 'react-native';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
+import { LEAFLET_CSS, LEAFLET_JS, LEAFLET_LICENSE } from '@/components/leaflet-assets';
+
 export interface MapViewHandle {
   fitAll: () => void;
-  /** Draws a route polyline (ticket 17 — real OSRM road-following route, or a
-   *  straight two-point fallback line) and fits the map to it. */
-  drawRoute: (points: LatLng[]) => void;
-  /** Removes any route drawn by drawRoute(). */
-  clearRoute: () => void;
 }
 
 /**
@@ -53,7 +52,7 @@ if (Platform.OS !== 'web') {
 }
 
 // ── Leaflet inline HTML ──────────────────────────────────────────────────────
-// Self-contained page: loads Leaflet from CDN, exposes a postMessage listener for
+// Self-contained page: inlines the bundled Leaflet, exposes a postMessage listener for
 // MapBridgeInboundMessage commands, and sends MapBridgeOutboundMessage back via
 // window.ReactNativeWebView.postMessage.
 //
@@ -65,7 +64,8 @@ const LEAFLET_HTML = `
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet ${LEAFLET_LICENSE} -->
+  <style>${LEAFLET_CSS}</style>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, #map { width: 100%; height: 100%; }
@@ -78,7 +78,7 @@ const LEAFLET_HTML = `
 <body>
   <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>${LEAFLET_JS}</script>
   <script>
     window.addEventListener('error', function () {
       if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_ERROR' }));
@@ -90,6 +90,17 @@ const LEAFLET_HTML = `
     var routeLayer = L.layerGroup();
     var pickerLayer = L.layerGroup();
     var userLayer = L.layerGroup();
+    var basemapLayer = L.layerGroup();
+    var roadMarksLayer = L.layerGroup();
+    var tileLayer = null;
+    // Off until React Native sends SET_TILES after MAP_READY, so a map that must stay offline
+    // never requests a tile while loading.
+    var tilesEnabled = false;
+    // SET_TAP_MODE: report plain taps as MAP_TAPPED (marking a blocked segment).
+    var tapEnabled = false;
+    // Created on load: the pack basemap draws in its own pane below routes, marks and markers.
+    var basemapRenderer = null;
+    var marksRenderer = null;
     // The draggable pin placed by SET_PICKER / a picker-mode tap — Incident Reports'
     // "pin your location" flow (location-picker-modal.tsx). Null when no pin is shown.
     var pickerMarker = null;
@@ -189,13 +200,23 @@ const LEAFLET_HTML = `
     window.addEventListener('load', function () {
       map = L.map('map', {
         zoomControl: true,
-        attributionControl: false,
+        attributionControl: true,
       }).setView([${DEFAULT_CENTER.lat}, ${DEFAULT_CENTER.lng}], ${DEFAULT_ZOOM}); // default: Barangay Ampid I
+      // OpenStreetMap data (tiles and routing packs) is ODbL: attribution must stay visible.
+      map.attributionControl.setPrefix(false);
+      map.attributionControl.addAttribution('© OpenStreetMap contributors');
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-      }).on('tileerror', function () { postToRN({ type: 'MAP_ERROR' }); }).addTo(map);
+      }).on('tileerror', function () { postToRN({ type: 'MAP_ERROR' }); });
+      if (tilesEnabled) tileLayer.addTo(map);
 
+      map.createPane('packBasemap');
+      map.getPane('packBasemap').style.zIndex = 350;
+      basemapRenderer = L.canvas({ pane: 'packBasemap', padding: 0.5 });
+      marksRenderer = L.canvas({ padding: 0.5 });
+      basemapLayer.addTo(map);
+      roadMarksLayer.addTo(map);
       markerLayer.addTo(map);
       boundaryLayer.addTo(map);
       routeLayer.addTo(map);
@@ -211,6 +232,10 @@ const LEAFLET_HTML = `
 
       // Picker mode: a plain tap places/moves the pin (SET_PICKER payload.enabled).
       map.on('click', function (e) {
+        if (tapEnabled) {
+          postToRN({ type: 'MAP_TAPPED', payload: { lat: e.latlng.lat, lng: e.latlng.lng } });
+          return;
+        }
         if (!pickerEnabled) return;
         placePickerMarker(e.latlng, true);
       });
@@ -332,7 +357,22 @@ const LEAFLET_HTML = `
             lineJoin: 'round',
           });
           routeLayer.addLayer(line);
-          map.fitBounds(line.getBounds().pad(0.15));
+          // Frame the route in the part of the map not covered by floating controls; if they
+          // leave less than 120 px, shrink both paddings so the route stays visible.
+          var pad = msg.payload.padding;
+          var top = pad && pad.top > 0 ? pad.top : 0;
+          var bottom = pad && pad.bottom > 0 ? pad.bottom : 0;
+          var height = map.getSize().y;
+          if (top + bottom > height - 120) {
+            var scale = Math.max(0, height - 120) / (top + bottom);
+            top = top * scale;
+            bottom = bottom * scale;
+          }
+          map.fitBounds(line.getBounds(), {
+            paddingTopLeft: [24, top + 24],
+            paddingBottomRight: [24, bottom + 24],
+            maxZoom: 18,
+          });
           break;
         }
         case 'CLEAR_ROUTE': {
@@ -356,6 +396,57 @@ const LEAFLET_HTML = `
             }));
           }
           userLayer.addLayer(L.marker(userLatLng, { icon: makePersonIcon(), opacity: loc.pending ? 0.6 : 1, interactive: false }));
+          break;
+        }
+        case 'SET_TILES': {
+          tilesEnabled = !!(msg.payload && msg.payload.enabled);
+          if (!map || !tileLayer) break;
+          if (tilesEnabled && !map.hasLayer(tileLayer)) tileLayer.addTo(map);
+          if (!tilesEnabled && map.hasLayer(tileLayer)) map.removeLayer(tileLayer);
+          break;
+        }
+        case 'SET_PACK_BASEMAP': {
+          basemapLayer.clearLayers();
+          var packMap = msg.payload && msg.payload.map;
+          if (!map || !packMap || !Array.isArray(packMap.features)) break;
+          basemapLayer.addLayer(L.geoJSON(packMap, {
+            filter: function (f) { return f.properties && (f.properties.layer === 'road' || f.properties.layer === 'water'); },
+            renderer: basemapRenderer,
+            pane: 'packBasemap',
+            interactive: false,
+            style: function (f) {
+              var p = f.properties;
+              if (p.layer === 'water') {
+                return { color: '#60A5FA', weight: 2, opacity: 0.9, fillColor: '#BFDBFE', fillOpacity: 0.7 };
+              }
+              var major = p.kind === 'primary' || p.kind === 'secondary' || p.kind === 'tertiary' || p.kind === 'secondary_link';
+              return {
+                color: p.walkable ? (major ? '#6B7280' : '#9CA3AF') : '#D1D5DB',
+                weight: major ? 5 : 3,
+                opacity: 0.95,
+                dashArray: p.walkable ? null : '4 4',
+              };
+            },
+          }));
+          break;
+        }
+        case 'SET_ROAD_MARKS': {
+          roadMarksLayer.clearLayers();
+          var marks = msg.payload;
+          if (!map || !marks) break;
+          var addLines = function (lines, style) {
+            (lines || []).forEach(function (line) {
+              if (!Array.isArray(line) || line.length < 2) return;
+              roadMarksLayer.addLayer(L.polyline(line.map(function (p) { return [p[1], p[0]]; }), Object.assign({ renderer: marksRenderer, interactive: false, lineCap: 'round' }, style)));
+            });
+          };
+          addLines(marks.closures, { color: '#DC2626', weight: 7, opacity: 0.9 });
+          addLines(marks.avoided, { color: '#7C3AED', weight: 7, opacity: 0.85, dashArray: '8 6' });
+          if (marks.selected) addLines([marks.selected], { color: '#F59E0B', weight: 9, opacity: 0.95 });
+          break;
+        }
+        case 'SET_TAP_MODE': {
+          tapEnabled = !!(msg.payload && msg.payload.enabled);
           break;
         }
         case 'SET_PICKER': {
@@ -427,6 +518,18 @@ export interface MapViewProps {
   onMapError?: () => void;
   /** Overrides the default 158px top clearance of Leaflet's zoom (+/-) control. */
   zoomControlTop?: number;
+  /** Online OpenStreetMap tiles (default on). Off = no tile requests at all. */
+  showTiles?: boolean;
+  /** Vector roads and water from the installed routing pack, drawn as the offline basemap. */
+  packMap?: FeatureCollection<Geometry, { layer: string; kind: string | null; walkable: boolean | null }> | null;
+  /** Verified closures, the resident's blocked segments and the segment being marked ([lng, lat] lines). */
+  roadMarks?: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } | null;
+  /** Route polyline, fitted into view when it changes; null clears it. */
+  route?: LatLng[] | null;
+  /** Map area (px) covered by floating controls at the top and bottom; the route is fitted between them. */
+  routePadding?: { top: number; bottom: number };
+  /** While set, plain taps are reported here instead of placing the picker pin. */
+  onMapTap?: ((position: LatLng) => void) | null;
   style?: ViewStyle;
 }
 
@@ -441,9 +544,12 @@ function userLocationMessage(location: MapUserLocation | null | undefined): MapB
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, style }, ref) => {
+const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center, focusPosition, kindColors, boundary, boundaryRefitKey, picker, constrainPicker = true, onPickerMoved, onPickerRejected, userLocation, onMarkerTap, onMapReady, onMapError, zoomControlTop, showTiles = true, packMap = null, roadMarks = null, route = null, routePadding, onMapTap = null, style }, ref) => {
   const webViewRef = useRef<any>(null);
   const isReadyRef = useRef(false);
+  // Read when a route is drawn; changing the padding alone does not refit (the resident may have panned).
+  const routePaddingRef = useRef(routePadding);
+  routePaddingRef.current = routePadding;
   // Last picker position that passed the boundary check — what an out-of-boundary
   // tap/drag snaps back to. Seeded from `picker.position` so the very first fix
   // (already trusted — GPS or a barangay centroid) has somewhere valid to revert to.
@@ -466,15 +572,33 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       if (!isReadyRef.current) return;
       sendMessage({ type: 'FIT_ALL' });
     },
-    drawRoute: (points: LatLng[]) => {
-      if (!isReadyRef.current) return;
-      sendMessage({ type: 'DRAW_ROUTE', payload: { points } });
-    },
-    clearRoute: () => {
-      if (!isReadyRef.current) return;
-      sendMessage({ type: 'CLEAR_ROUTE' });
-    },
   }));
+
+  const tapMode = onMapTap !== null;
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage({ type: 'SET_TILES', payload: { enabled: showTiles } });
+  }, [showTiles]);
+
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage({ type: 'SET_PACK_BASEMAP', payload: { map: packMap } });
+  }, [packMap]);
+
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage({ type: 'SET_ROAD_MARKS', payload: roadMarks ?? { closures: [], avoided: [], selected: null } });
+  }, [roadMarks]);
+
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage({ type: 'SET_TAP_MODE', payload: { enabled: tapMode } });
+  }, [tapMode]);
+
+  useEffect(() => {
+    if (!isReadyRef.current) return;
+    sendMessage(route && route.length >= 2 ? { type: 'DRAW_ROUTE', payload: { points: route, padding: routePaddingRef.current } } : { type: 'CLEAR_ROUTE' });
+  }, [route]);
 
   // Push new markers whenever the prop changes (after the map is ready).
   useEffect(() => {
@@ -540,6 +664,10 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
       case 'MAP_READY': {
         isReadyRef.current = true;
         onMapReady?.();
+        sendMessage({ type: 'SET_TILES', payload: { enabled: showTiles } });
+        if (packMap) sendMessage({ type: 'SET_PACK_BASEMAP', payload: { map: packMap } });
+        if (roadMarks) sendMessage({ type: 'SET_ROAD_MARKS', payload: roadMarks });
+        if (tapMode) sendMessage({ type: 'SET_TAP_MODE', payload: { enabled: true } });
         sendMessage({
           type: 'SET_MARKERS',
           payload: { markers },
@@ -558,6 +686,11 @@ const MapViewInner = forwardRef<MapViewHandle, MapViewProps>(({ markers, center,
         if (userLocation) {
           sendMessage(userLocationMessage(userLocation));
         }
+        if (route && route.length >= 2) sendMessage({ type: 'DRAW_ROUTE', payload: { points: route, padding: routePaddingRef.current } });
+        break;
+      }
+      case 'MAP_TAPPED': {
+        onMapTap?.(msg.payload);
         break;
       }
       case 'MARKER_TAPPED': {

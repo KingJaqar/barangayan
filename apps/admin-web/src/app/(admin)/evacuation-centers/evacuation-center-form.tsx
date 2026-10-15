@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { evacuationCenterSchema, EVACUATION_CENTER_FACILITIES, type EvacuationCenterFacility } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -116,8 +121,8 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3">
-      <label className="col-span-4 text-sm sm:col-span-2">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Name *</span>
         <input
           className={inputClass}
@@ -128,7 +133,7 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      <label className="col-span-4 text-sm sm:col-span-2">
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Address</span>
         <input
           className={inputClass}
@@ -137,6 +142,8 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
           placeholder="Street / landmark"
         />
       </label>
+
+      <div className={styles.groupHeading}><h3>Location coordinates</h3></div>
 
       <label className="text-sm">
         <span className={labelClass}>Latitude *</span>
@@ -164,6 +171,8 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
+      <div className={styles.groupHeading}><h3>Capacity & occupancy</h3></div>
+
       <label className="text-sm">
         <span className={labelClass}>Capacity</span>
         <input
@@ -188,6 +197,8 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
+      <div className={styles.groupHeading}><h3>Contact & status</h3></div>
+
       <label className="text-sm">
         <span className={labelClass}>Contact Number</span>
         <input
@@ -200,13 +211,13 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
 
       <label className="text-sm">
         <span className={labelClass}>Status</span>
-        <select
+        <AdminSelect kind="status"
           className={inputClass}
           value={isActive ? 'active' : 'inactive'}
-          onChange={(e) => setIsActive(e.target.value === 'active')}>
+          onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
@@ -219,9 +230,9 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         <span className="font-medium">Verified</span>
       </label>
 
-      <fieldset className="col-span-4">
+      <fieldset className="sm:col-span-2 rounded-xl border border-zinc-200 p-5 dark:border-zinc-700">
         <legend className={labelClass}>Facilities</legend>
-        <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+        <div className="flex flex-wrap gap-x-6 gap-y-3">
           {EVACUATION_CENTER_FACILITIES.map((facility) => (
             <label key={facility} className="flex items-center gap-1.5 text-xs">
               <input
@@ -236,9 +247,9 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
         </div>
       </fieldset>
 
-      {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-4">
+      <ContentFormActions busy={submitting}>
         <button
           type="submit"
           disabled={submitting || !barangayId}
@@ -246,7 +257,7 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Creating…">Create Center</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components/ui/loading';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { cn } from '@/lib/utils';
+import homeStyles from '@/components/home/home.module.css';
 
 export type PageSkeletonVariant = 'home' | 'list' | 'form' | 'detail' | 'settings' | 'map';
 
@@ -31,14 +32,24 @@ function Body({ variant }: { variant: PageSkeletonVariant }) {
   switch (variant) {
     case 'home':
       return (
-        <div className="mx-auto flex max-w-5xl flex-col gap-6">
-          <Heading wide />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+        <div className={homeStyles.home}>
+          <Skeleton className={homeStyles.skeletonHero} />
+          <Skeleton className="mb-4 h-6 w-44" />
+          <div className={homeStyles.actions}>
+            {[0, 1, 2, 3].map((i) => <Skeleton key={i} className={homeStyles.skeletonAction} />)}
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Skeleton className="h-64 rounded-2xl" />
-            <Skeleton className="h-64 rounded-2xl" />
+          <div className={`${homeStyles.dashboardLayout} mt-7`}>
+            <div>
+              <Skeleton className="mb-4 h-6 w-44" />
+              <Skeleton className={homeStyles.skeletonPanel} />
+            </div>
+            <div className={homeStyles.activitySidebar}>
+              <Skeleton className="mb-4 h-6 w-44" />
+              <div className={homeStyles.activity}>
+                <Skeleton className={homeStyles.skeletonPanel} />
+                <Skeleton className={homeStyles.skeletonPanel} />
+              </div>
+            </div>
           </div>
         </div>
       );

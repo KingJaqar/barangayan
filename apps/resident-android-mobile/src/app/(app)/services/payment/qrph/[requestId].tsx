@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { requestFee } from '@barangayan/shared';
 import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
@@ -245,12 +246,12 @@ export default function QrPhPaymentScreen() {
             <View style={styles.breakdown}>
               <View style={styles.breakdownRow}>
                 <ThemedText type="small" themeColor="textSecondary">Document Fee</ThemedText>
-                <ThemedText type="small">{source?.documentFeeCentavos != null ? formatCentavosAsPHP(source.documentFeeCentavos) : documentFee === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(documentFee)}</ThemedText>
+                <ThemedText type="small">{source?.documentFeeCentavos != null ? formatCentavosAsPHP(source.documentFeeCentavos) : documentFee === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(documentFee)}</ThemedText>
               </View>
             </View>
 
             <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
-              {totalDue === 0 ? 'Free' : totalDue === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(totalDue)}
+              {totalDue === 0 ? 'Free' : totalDue === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(totalDue)}
             </ThemedText>
             {source ? (
               <>

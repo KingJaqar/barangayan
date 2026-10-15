@@ -1,0 +1,9 @@
+{
+  "source": "supabase/seed.sql (evacuation_centers c001-c004). Positions are placeholders until DRRM confirms each center's real location and entrance (R0 finding; R3 review sheet section 1).",
+  "centers": [
+    { "id": "00000000-0000-0000-0000-00000000c001", "name": "Ampid 1 Elementary", "lat": 14.684583, "lng": 121.112071 },
+    { "id": "00000000-0000-0000-0000-00000000c002", "name": "San Mateo Civic Center", "lat": 14.6835, "lng": 121.1155 },
+    { "id": "00000000-0000-0000-0000-00000000c003", "name": "Dulong Bayan Covered Court", "lat": 14.682, "lng": 121.114 },
+    { "id": "00000000-0000-0000-0000-00000000c004", "name": "Malanday National High School", "lat": 14.681, "lng": 121.113 }
+  ]
+}

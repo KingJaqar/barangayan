@@ -1,0 +1,16 @@
+id
+role
+email
+full_name
+ed0ef34f-4bdc-4d8c-9f60-93515f7e217b
+admin
+barangayan.ampid1+profile-phase6-20261015@gmail.com
+Disposable Admin Profile Verification
+fad11fec-be21-486d-a8c5-0e0d7638e611
+admin
+barangayan.ampid1@gmail.com
+Phase Tester
+b9c774a9-2128-45ba-8278-01b0ed836c29
+resident
+barangayan.ampid1+profile-phase6-resident-20261015@gmail.com
+Disposable Resident

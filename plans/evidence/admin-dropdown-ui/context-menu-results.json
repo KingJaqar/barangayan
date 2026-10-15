@@ -1,0 +1,32 @@
+{
+  "checks": [
+    "requests: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "transactions: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "residents: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "incidents: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "health: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "applicants: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "households: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "staff: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls",
+    "requests: Move to Processing invokes existing workflow once",
+    "requests: Mark as Ready for Pickup invokes existing workflow once",
+    "requests: Mark as Completed invokes existing workflow once",
+    "incidents: Mark as In Progress invokes existing workflow once",
+    "incidents: Mark as Resolved invokes existing workflow once",
+    "incidents: Mark as Unresolved invokes existing workflow once",
+    "incidents: Withdraw invokes existing workflow once",
+    "Requests: cancellation retains reason validation and existing form state",
+    "Requests: review guards, busy state, single execution, pickup payment collection",
+    "Transactions: refund method/status visibility and provider minimum disabled state",
+    "applicants: Cancel Registration preserves confirmation and executes existing handler",
+    "transactions: Refund Payment preserves confirmation and executes existing handler",
+    "transactions: Retry Refund preserves confirmation and executes existing handler",
+    "Staff: own-record actions remain disabled",
+    "Shared menu: hidden/disabled items, keyboard navigation, links, row/table switching, unsupported targets, viewport edges, stale controls, scroll/resize/unmount dismissal"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Actual screen components with synthetic data and mocked backend/navigation; live authenticated routes and database writes were not exercised."
+  ],
+  "status": "passed"
+}

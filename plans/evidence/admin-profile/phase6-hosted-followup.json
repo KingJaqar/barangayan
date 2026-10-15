@@ -1,0 +1,186 @@
+{
+  "verified_on": "2026-10-15",
+  "project_ref": "pwjbucnyqexiepoinoke",
+  "owner_authorized_hosted_configuration_deployment_and_test_emails": true,
+  "callbacks_applied": true,
+  "redirect_count_before": 5,
+  "redirect_count_after": 17,
+  "site_url": "https://barangayan-resident-web.vercel.app",
+  "site_url_preserved": true,
+  "original_redirects_preserved": true,
+  "added_redirects": [
+    "http://localhost:3000/profile/security-callback",
+    "http://localhost:3000/profile-proof\\?purpose=admin&request=*",
+    "http://localhost:3000/profile-proof\\?purpose=resident&request=*&challenge=*",
+    "https://barangayan-admin-mljmo9xhp-barangayan.vercel.app/profile/security-callback",
+    "https://barangayan-admin-mljmo9xhp-barangayan.vercel.app/profile-proof\\?purpose=admin&request=*",
+    "https://barangayan-admin-mljmo9xhp-barangayan.vercel.app/profile-proof\\?purpose=resident&request=*&challenge=*",
+    "https://barangayan-admin-web.vercel.app/profile/security-callback",
+    "https://barangayan-admin-web.vercel.app/profile-proof\\?purpose=admin&request=*",
+    "https://barangayan-admin-web.vercel.app/profile-proof\\?purpose=resident&request=*&challenge=*",
+    "https://barangayan-admin-profile-review.vercel.app/profile/security-callback",
+    "https://barangayan-admin-profile-review.vercel.app/profile-proof\\?purpose=admin&request=*",
+    "https://barangayan-admin-profile-review.vercel.app/profile-proof\\?purpose=resident&request=*&challenge=*"
+  ],
+  "screenshot": "phase6-hosted-callbacks-applied.png",
+  "deployments_created": true,
+  "hosted_test_emails_sent": true,
+  "hosted_accounts_created": true,
+  "paid_resources_created": false,
+  "remote_migrations_applied": false,
+  "vercel_access": {
+    "owner_signed_in": true,
+    "cli_authorized": true,
+    "team": "barangayan",
+    "target_project": "barangayan-admin-web"
+  },
+  "canonical_origin": "https://barangayan-admin-web.vercel.app",
+  "canonical_callbacks_applied": true,
+  "deployment_id": "dpl_Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+  "deployment_gates": {
+    "ADMIN_PROFILE_ENABLED": false,
+    "ADMIN_PROFILE_AUTH_VERIFIED": false
+  },
+  "deployment_ready": true,
+  "deployment_origin": "https://barangayan-admin-web.vercel.app",
+  "first_failed_deployment": "dpl_A8XYRTiiyY8JtoMD2P3e2BpqA3T9",
+  "hosted_email_send_kind": "Existing staff invitation endpoint accepted one disposable invitation",
+  "hosted_email_receipt_verified": true,
+  "disposable_admin_email": "barangayan.ampid1+profile-phase6-20261015@gmail.com",
+  "hosted_smoke_passes": [
+    "existing admin sign-in",
+    "dashboard",
+    "profile disabled state",
+    "Theme",
+    "Requests",
+    "Financial Transactions",
+    "callback safe disabled-state recovery",
+    "proof disabled-state gate"
+  ],
+  "browser_console_warnings_or_errors": 0,
+  "remaining": [
+    "Separate dependency remediation before public enablement: existing 53 advisories, including four critical",
+    "Pending manual verification before public enablement: normal-browser hosted ownership popup"
+  ],
+  "phase6_acceptance": {
+    "met": 9,
+    "pending_manual_verification": 0,
+    "not_met": 0
+  },
+  "canonical_callback_screenshot": "phase6-hosted-canonical-callbacks-final.png",
+  "final_runtime_errors_or_warnings": 0,
+  "hosted_invitation_receipt_verified": false,
+  "inbox_owner_signed_in": true,
+  "delivered_mail_kinds": [
+    "existing-only sign-in OTP",
+    "review-origin existing-only sign-in OTP",
+    "disposable recovery code"
+  ],
+  "protected_review": {
+    "deployment_id": "dpl_CsbeiHLPgXuMY7X71KDvuNmhwC9A",
+    "origin": "https://barangayan-admin-profile-review.vercel.app",
+    "ready": true,
+    "profile_enabled": true,
+    "credentials_enabled": true,
+    "anonymous_status": 302,
+    "anonymous_redirect": "https://vercel.com/sso-api",
+    "production_gates_unchanged": true
+  },
+  "new_credentials_entered_by_agent": false,
+  "owner_handoff": "Final verification record accepted; owner chose to keep public rollout disabled.",
+  "existing_dependency_audit": {
+    "status": "pre-existing failure",
+    "exitCode": 1,
+    "total": 53,
+    "moderate": 16,
+    "high": 33,
+    "critical": 4,
+    "packagesUnchanged": true,
+    "record": "phase6-existing-dependency-audit-summary.json"
+  },
+  "review_console_warnings_or_errors": 0,
+  "preview_source_input_hashes_match": 350,
+  "review_callback_screenshot": "phase6-review-callbacks-saved.png",
+  "owner_disposable_password_bootstrap_verified": true,
+  "owner_correct_disposable_browser_sign_in_verified": true,
+  "hosted_profile_save_isolation": {
+    "verifiedAt": "2026-10-15T06:56:04.316Z",
+    "source": "Read-only visible Supabase SQL result, public.profiles only",
+    "before": {
+      "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b": {
+        "fingerprint": "1327e0ad4bf22d85d89083d52d7f8c1a",
+        "role": "admin"
+      },
+      "fad11fec-be21-486d-a8c5-0e0d7638e611": {
+        "fingerprint": "311ce80837553217cd49f0606edec4d8",
+        "role": "admin"
+      },
+      "b9c774a9-2128-45ba-8278-01b0ed836c29": {
+        "fingerprint": "a900ab2e5d419709aeff6fc2e7ef36f4",
+        "role": "resident"
+      }
+    },
+    "after": {
+      "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b": {
+        "fingerprint": "2c1aedac580114fd2dfe6e7600e6a33c",
+        "role": "admin"
+      },
+      "fad11fec-be21-486d-a8c5-0e0d7638e611": {
+        "fingerprint": "311ce80837553217cd49f0606edec4d8",
+        "role": "admin"
+      },
+      "b9c774a9-2128-45ba-8278-01b0ed836c29": {
+        "fingerprint": "a900ab2e5d419709aeff6fc2e7ef36f4",
+        "role": "resident"
+      }
+    },
+    "disposableAdminChanged": true,
+    "mainAdminUnchanged": true,
+    "residentUnchanged": true,
+    "contactEmail": "barangayan.ampid1+profile-phase6-contact@gmail.com",
+    "signInEmailUnchanged": "barangayan.ampid1+profile-phase6-20261015@gmail.com",
+    "screenshot": "phase6-hosted-profile-saved.png"
+  },
+  "hosted_session_probe": "phase6-hosted-session-probe.json",
+  "review_runtime_warning_error_records": 0,
+  "owner_handoff_screenshot": "phase6-hosted-password-owner-handoff.png",
+  "hosted_link_attempt": {
+    "status": "API link/projection/replay/unlink verified; hosted in-app popup remains unverified",
+    "popupExposed": false,
+    "pendingPagesClosed": true
+  },
+  "verified_at": "2026-10-15T07:11:57.720Z",
+  "disposable_current_auth_email": "barangayan.ampid1+profile-phase6-updated-20261015@gmail.com",
+  "owner_profile_password_change_and_relogin_reported": true,
+  "owner_both_email_confirmations_reported": true,
+  "confirmed_updated_email_observed": true,
+  "pending_email_change": "",
+  "security_callback_success_observed": true,
+  "independent_contact_preserved": true,
+  "main_and_resident_profiles_unchanged": true,
+  "other_admin_session_revoked": true,
+  "resident_session_preserved": true,
+  "session_probe_cleanup": "both local sign-outs passed",
+  "hosted_association_probe": "phase6-hosted-association-probe.json",
+  "hosted_association_checks_passed": [
+    "Fresh admin authenticated and caller-bound challenge created; no existing link replaced",
+    "Fresh resident authenticated after challenge creation; admin access denied",
+    "Both-account proof committed the exact disposable one-to-one relationship",
+    "Owner reads the verified resident projection through the hosted authorization boundary",
+    "Consumed proof replay rejected with 22023",
+    "Versioned unlink preserves both entire profiles, Auth emails and independent sessions"
+  ],
+  "redacted_feature_audit_entries": 5,
+  "final_review_runtime_warning_error_records": 0,
+  "release_recommendation": "Owner accepted: keep public rollout disabled pending separate dependency remediation and normal-browser hosted popup verification",
+  "phase6_status": "Complete for verified scope; public rollout withheld",
+  "owner_release_decision": {
+    "recorded_on": "2026-10-15",
+    "timezone": "Asia/Manila",
+    "response": "Accept record; keep rollout disabled (Recommended)",
+    "verification_record_accepted": true,
+    "public_rollout": "withheld",
+    "public_enablement_authorized": false,
+    "dependency_remediation_authorized": false
+  }
+}

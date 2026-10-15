@@ -3,8 +3,8 @@ import type { LatLng } from '../types/map-bridge';
 /**
  * Reverse geocoding for the Incident Reports location picker (Module 3) — turns a map
  * pin's { lat, lng } into a human-readable address. Uses OpenStreetMap's Nominatim, the
- * same free/no-API-key service family as the Leaflet tiles and OSRM routing already used
- * elsewhere in this app (map-view.tsx, lib/osrm.ts), so no new API key or paid map vendor
+ * same free/no-API-key service family as the Leaflet tiles already used elsewhere in this
+ * app (map-view.tsx), so no new API key or paid map vendor
  * is introduced.
  *
  * Nominatim's usage policy caps this at ~1 request/second for a pilot barangay's traffic —

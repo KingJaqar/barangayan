@@ -1,0 +1,23 @@
+Mutation check (2026-10-13): each mutant applied with sed, unit tests rerun
+(supabase/functions/evacuation-route + packages/shared evacuation-route-service.test.ts),
+file restored and compared byte-for-byte (cmp) afterwards.
+
+drop unmapped closures: 2 failing tests
+route on a non-active graph: 4 failing tests
+ignore client revision: 2 failing tests
+ignore the rate limit: 1 failing tests
+fail closed on limiter error: 2 failing tests
+ignore client disconnect: 1 failing tests
+skip graph hash: 1 failing tests
+accept other graph versions: 1 failing tests
+both restored byte-for-byte
+
+SQL (0114 consume_routing_rate_limit, applied with create or replace on r5_disposable,
+routing_rate_limits.test.sql rerun, original restored and rerun with 0 failures):
+
+no increment: 2 not ok
+never refuse: 1 not ok
+no pruning: 1 not ok
+accept any hash: 2 not ok
+grant to anon/authenticated: 5 not ok
+restore original: 0 not ok

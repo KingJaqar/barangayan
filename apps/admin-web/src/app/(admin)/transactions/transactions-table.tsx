@@ -1,7 +1,12 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+import { AdminSuggestions } from '@/components/admin/dropdown/admin-suggestions';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+
 import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
-import { RotateCcw, Trash2 } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { TableBrowsePanel } from '@/components/admin/table-browse-panel';
@@ -235,7 +240,6 @@ function AddTransactionForm({
     onChanged();
   }
 
-
   const residentDisplay =
     lookupState === 'loading' ? 'Looking up…' : lookupState === 'error' ? 'Lookup failed — type the reference again to retry' : lookupState === 'not_found' ? 'No matching request' : (matchedRequest?.residentName ?? '');
   const documentDisplay =
@@ -248,19 +252,15 @@ function AddTransactionForm({
     >
       <label className="col-span-2 text-sm sm:col-span-1">
         <span className="mb-1 block font-medium">Request Reference</span>
-        <input
+        <AdminSuggestions
           className={inputClass}
           value={reference}
-          onChange={(e) => handleReferenceChange(e.target.value)}
+          onValueChange={handleReferenceChange}
           placeholder="REQ-2026-00001"
-          list="transaction-reference-options"
+          options={referenceOptions}
+          aria-label="Request Reference"
           required
         />
-        <datalist id="transaction-reference-options">
-          {referenceOptions.map((ref) => (
-            <option key={ref} value={ref} />
-          ))}
-        </datalist>
       </label>
 
       <label className="text-sm">
@@ -295,13 +295,13 @@ function AddTransactionForm({
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Method</span>
-        <select className={inputClass} value={method} onChange={(e) => setMethod(e.target.value as 'pickup' | 'qrph')}>
+        <AdminSelect className={inputClass} value={method} onValueChange={(nextValue) => setMethod(nextValue as 'pickup' | 'qrph')}>
           {METHOD_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Amount (₱)</span>
@@ -317,23 +317,23 @@ function AddTransactionForm({
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Status</span>
-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as 'pending' | 'paid')}>
+        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as 'pending' | 'paid')}>
           <option value="pending">Pending</option>
           <option value="paid">Paid</option>
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">{method === 'pickup' ? 'Collected By' : 'Source (PayMongo)'}</span>
         {method === 'pickup' ? (
-          <select className={inputClass} value={collectedBy} onChange={(e) => setCollectedBy(e.target.value)}>
+          <AdminSelect kind="people" className={inputClass} value={collectedBy} onValueChange={(nextValue) => setCollectedBy(nextValue)}>
             <option value="">— Not yet collected —</option>
             {admins.map((a) => (
               <option key={a.id} value={a.id}>
                 {a.full_name}
               </option>
             ))}
-          </select>
+          </AdminSelect>
         ) : (
           <input
             className={inputClass}
@@ -501,36 +501,6 @@ export function TransactionsTable({
     return { error: null, row: updated };
   }
 
-  async function archive(payment: Payment) {
-    if (!await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    const { data: archived, error } = await supabase
-      .from('payments')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', payment.id)
-      .select('id, deleted_at')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to archive transaction: ${error.message}`);
-      return;
-    }
-    if (!archived) {
-      toast.showError('Failed to archive transaction: no transaction was updated. Check that you still have access to this barangay.');
-      return;
-    }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'payment',
-      entityId: archived.id,
-      entityLabel: `#${payment.service_requests?.reference_number ?? '—'}`,
-      metadata: { reference_number: payment.service_requests?.reference_number ?? null, method: payment.method, amount_centavos: payment.amount_centavos, status: payment.status },
-    }).catch(() => {});
-
-    toast.showSuccess('Transaction archived.');
-    browse.refresh();
-  }
-
   // Full-amount only (no partial refunds) — see the refund-payment Edge Function.
   // Refunds settle asynchronously on PayMongo's side, so this only submits the request;
   // refund_status moves from 'pending' to 'refunded'/'failed' once the paymongo-webhook
@@ -542,7 +512,10 @@ export function TransactionsTable({
       body: { paymentId: payment.id, reason: 'requested_by_customer' },
     });
     if (error) {
-      toast.showError(`Failed to submit refund: ${error.message}`);
+      const context = (error as { context?: unknown }).context;
+      const details = context instanceof Response ? await context.clone().json().catch(() => null) : null;
+      toast.showError(`Failed to submit refund: ${typeof details?.error === 'string' ? details.error : error.message}`);
+      browse.refresh();
       return;
     }
 
@@ -568,6 +541,21 @@ export function TransactionsTable({
     toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
     browse.refresh();
   }
+
+  function refundAction(payment: Payment) {
+    if (payment.method !== 'qrph' || payment.status !== 'paid'
+      || ['refunded', 'pending', 'processing', 'refunding'].includes(payment.refund_status ?? '')) return null;
+    const retry = payment.refund_status === 'failed';
+    return <ConfirmButton label={<><RotateCcw size={16} aria-hidden="true" />{retry ? 'Retry Refund' : 'Refund Payment'}</>}
+      confirmLabel={retry ? 'Retry refund?' : 'Refund full amount?'} onConfirm={() => refund(payment)}
+      disabled={!payment.paymongo_payment_id || payment.amount_centavos < 100}
+      title={!payment.paymongo_payment_id ? 'Waiting for PayMongo payment confirmation before a refund can be issued.' : payment.amount_centavos < 100 ? 'The minimum refundable payment is PHP 1.00.' : retry ? 'Retry this payment refund' : 'Refund this payment'} ariaLabel={retry ? 'Retry Refund' : 'Refund Payment'}
+      className="inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-950 dark:text-red-200" />;
+  }
+
+  const lifecycle = useRecordWorkspace<Payment>('transactions', browse.refresh, browse.settle, {
+    actionsMinWidth: 360, workflowActions: refundAction,
+  });
 
   const columns: EditableDataTableColumn<Payment>[] = [
     {
@@ -744,50 +732,18 @@ export function TransactionsTable({
           return (
             <div className="flex items-center gap-2">
               <StatusPill status="failed" />
-              <ConfirmButton
-                label={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
-                confirmLabel="Refund?"
-                onConfirm={() => refund(p)}
-                title="Retry refund"
-                ariaLabel={`Retry refund for ${p.service_requests?.reference_number ?? 'transaction'}`}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-700 transition-colors hover:bg-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:bg-red-900/40 dark:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-              />
+              {claimLink}
             </div>
           );
         }
-        return (
-          <ConfirmButton
-            label={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
-            confirmLabel="Refund full amount?"
-            onConfirm={() => refund(p)}
-            title="Refund this payment"
-            ariaLabel={`Refund ${p.service_requests?.reference_number ?? 'transaction'}`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:bg-red-900/30 dark:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        );
+        return claimLink ?? '—';
       },
     },
-    {
-      id: 'actions',
-      header: 'Actions',
-      initialWidth: 76,
-      minWidth: 72,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      render: (p) => (
-        <ConfirmButton
-          label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
-          confirmLabel="Archive?"
-          onConfirm={() => archive(p)}
-          title="Archive transaction"
-          ariaLabel={`Archive ${p.service_requests?.reference_number ?? 'transaction'}`}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-        />
-      ),
-    },
+    lifecycle.column,
   ];
 
   return <>
+    <RecordArchiveLink name="transactions" beforeOpen={browse.settle} />
     <PilotSummary name="transactions" summary={summary} onRetry={browse.refresh} />
     {optionsError && <div role="alert" className="mb-4 rounded-xl border p-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}
     {addOpen && <fieldset disabled={!!optionsError || browse.pending}><AddTransactionForm referenceOptions={referenceOptions} admins={admins} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
@@ -797,21 +753,22 @@ export function TransactionsTable({
       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
         category={<div className="table-browse-field"><label htmlFor="transactions-method">Method</label>
-          <select id="transactions-method" value={state.filters.method} onChange={event => void browse.commit({ filters: { method: event.target.value } })}>
+          <AdminSelect id="transactions-method" value={state.filters.method} onValueChange={nextValue => void browse.commit({ filters: { method: nextValue } })}>
             <option value="">All Methods</option>
             {METHOD_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select></div>}
+          </AdminSelect></div>}
         filters={<SegmentedFilter label="Payment status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
           onChange={tab => void browse.commit({ filters: { tab } })} />}
         actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
           onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Transaction</button>} />}
       pagination={value && <TablePagination total={value.total} page={state.page} pageSize={state.pageSize} pending={browse.pending}
         onPageChange={page => void browse.commit({ page })} onPageSizeChange={pageSize => void browse.commit({ pageSize })} />}>
-      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
         emptyLabel={browse.pending ? 'Updating results…' : 'No transactions in this view.'}
         resizableColumns density="compact" tableMinWidth={1650} cellOverflow="hidden" />
     </TableBrowsePanel>
+    {lifecycle.view}
   </>;
 }

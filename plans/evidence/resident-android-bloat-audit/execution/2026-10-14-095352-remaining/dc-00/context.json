@@ -1,0 +1,31 @@
+{
+  "runId": "2026-10-14-095352-remaining",
+  "startedAt": "2026-10-14T09:53:59.819Z",
+  "head": "2e5681cd329df2b70a0591895cc1e5656a55506c",
+  "candidates": [
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/app-header.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/hint-row.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/settings-row.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-family-members.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/shimmer.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/services/skeleton.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/constants/payment.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/dialog.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/emergency-cache.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/lib/push-notifications.ts",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/home/index.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/app/(app)/maps/index.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/family-content.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx",
+    "C:/Users/User/barangayan/apps/resident-android-mobile/src/components/resident-details-form.tsx",
+    "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile\\SanMateo_Ampid1_GEOjson.geojson"
+  ],
+  "previousRun": "2026-10-14-083944-dc",
+  "authorization": "User instructed: if deletion is fully safe, then do it; ensure the deleted code/files is completely unused. Revalidate all active app/test/build/backend consumers and preserve historical candidate bytes. Historical verifier/index remain unchanged as archival records; no backend data deletion is permitted."
+}

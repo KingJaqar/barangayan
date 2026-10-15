@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { formatCentavosAsPHP, formatDateTime, requestFee, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useState } from 'react';
@@ -121,7 +122,7 @@ function LogsListContent({ onRetry }: { onRetry: () => void }) {
                   ) : (
                     <View style={[styles.pricePill, { backgroundColor: `${theme.primary}26` }]}>
                       <ThemedText type="smallBold" style={{ color: theme.primary }}>
-                        {amount === null ? 'Awaiting fee assessment' : formatCentavosAsPHP(amount)}
+                        {amount === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(amount)}
                       </ThemedText>
                     </View>
                   )}

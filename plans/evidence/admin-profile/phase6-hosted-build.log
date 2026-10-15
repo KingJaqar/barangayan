@@ -1,0 +1,91 @@
+Vercel CLI 64.2.0 (Node.js 24.13.1)
+Fetching deployment "dpl_A8XYRTiiyY8JtoMD2P3e2BpqA3T9" in barangayan
+2026-10-15T05:52:03.651Z  Running build in Washington, D.C., USA (East) – iad1
+2026-10-15T05:52:03.652Z  Build machine configuration: 2 cores, 8 GB
+2026-10-15T05:52:03.661Z  Retrieving list of deployment files...
+2026-10-15T05:52:04.123Z  Downloading 339 deployment files...
+2026-10-15T05:52:05.932Z  Restored build cache from previous deployment (24Stgdd6zdQywi3nVVtk6yRcx6aW)
+2026-10-15T05:52:08.094Z  Running "vercel build"
+2026-10-15T05:52:08.103Z  Vercel CLI 62.7.0
+2026-10-15T05:52:08.331Z  Running "install" command: `cd ../.. && npm install`...
+2026-10-15T05:52:08.849Z  npm warn Unknown env config "cache-dir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+2026-10-15T05:52:24.388Z  
+2026-10-15T05:52:24.388Z  added 4 packages, and audited 1134 packages in 16s
+2026-10-15T05:52:24.388Z  
+2026-10-15T05:52:24.390Z  272 packages are looking for funding
+2026-10-15T05:52:24.390Z  run `npm fund` for details
+2026-10-15T05:52:24.604Z  
+2026-10-15T05:52:24.604Z  53 vulnerabilities (16 moderate, 33 high, 4 critical)
+2026-10-15T05:52:24.604Z  
+2026-10-15T05:52:24.604Z  To address issues that do not require attention, run:
+2026-10-15T05:52:24.604Z  npm audit fix
+2026-10-15T05:52:24.604Z  
+2026-10-15T05:52:24.604Z  To address all issues possible (including breaking changes), run:
+2026-10-15T05:52:24.605Z  npm audit fix --force
+2026-10-15T05:52:24.605Z  
+2026-10-15T05:52:24.605Z  Some issues need review, and may require choosing
+2026-10-15T05:52:24.605Z  a different dependency.
+2026-10-15T05:52:24.605Z  
+2026-10-15T05:52:24.605Z  Run `npm audit` for details.
+2026-10-15T05:52:24.645Z  Detected Next.js version: 16.3.0
+2026-10-15T05:52:24.646Z  Running "cd ../.. && npm run build --workspace=@barangayan/web -- --webpack"
+2026-10-15T05:52:24.765Z  npm warn Unknown env config "cache-dir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+2026-10-15T05:52:24.816Z  
+2026-10-15T05:52:24.816Z  > @barangayan/web@0.1.0 build
+2026-10-15T05:52:24.817Z  > next build --webpack
+2026-10-15T05:52:24.817Z  
+2026-10-15T05:52:25.405Z  ▲ Next.js 16.3.0 (webpack)
+2026-10-15T05:52:25.632Z  Applying modifyConfig from Vercel
+2026-10-15T05:52:25.634Z  ✓ Running next.config.ts took 228ms
+2026-10-15T05:52:25.651Z  
+2026-10-15T05:52:25.719Z  Creating an optimized production build ...
+2026-10-15T05:52:42.329Z  Failed to compile.
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  ./src/app/resident/requests/new/new-request-form.tsx
+2026-10-15T05:52:42.329Z  Module not found: Can't resolve '../../../../../../resident-web/src/components/services/resident-service-form'
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  https://nextjs.org/docs/messages/module-not-found
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  ./src/lib/routing-packs.ts
+2026-10-15T05:52:42.329Z  Module not found: Can't resolve '../../../../data/routing-packs/ampid-1/pack/manifest.json'
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  https://nextjs.org/docs/messages/module-not-found
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  Import trace for requested module:
+2026-10-15T05:52:42.329Z  ./src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx
+2026-10-15T05:52:42.329Z  
+2026-10-15T05:52:42.329Z  ./src/lib/routing-packs.ts
+2026-10-15T05:52:42.329Z  Module not found: Can't resolve '../../../../data/routing-packs/ampid-1/pack/graph.json'
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  https://nextjs.org/docs/messages/module-not-found
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  Import trace for requested module:
+2026-10-15T05:52:42.330Z  ./src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  ./src/lib/routing-packs.ts
+2026-10-15T05:52:42.330Z  Module not found: Can't resolve '../../../../data/routing-packs/ampid-1/pack/manifest.json'
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  https://nextjs.org/docs/messages/module-not-found
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  Import trace for requested module:
+2026-10-15T05:52:42.330Z  ./src/app/(admin)/evacuation-routing/page.tsx
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  ./src/lib/routing-packs.ts
+2026-10-15T05:52:42.330Z  Module not found: Can't resolve '../../../../data/routing-packs/ampid-1/pack/graph.json'
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  https://nextjs.org/docs/messages/module-not-found
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.330Z  Import trace for requested module:
+2026-10-15T05:52:42.330Z  ./src/app/(admin)/evacuation-routing/page.tsx
+2026-10-15T05:52:42.330Z  
+2026-10-15T05:52:42.831Z  
+2026-10-15T05:52:42.831Z  > Build failed because of webpack errors
+2026-10-15T05:52:42.849Z  npm error Lifecycle script `build` failed with error:
+2026-10-15T05:52:42.852Z  npm error code 1
+2026-10-15T05:52:42.852Z  npm error path /vercel/path0/apps/admin-web
+2026-10-15T05:52:42.852Z  npm error workspace @barangayan/web@0.1.0
+2026-10-15T05:52:42.852Z  npm error location /vercel/path0/apps/admin-web
+2026-10-15T05:52:42.852Z  npm error command failed
+2026-10-15T05:52:42.852Z  npm error command sh -c next build --webpack
+2026-10-15T05:52:42.874Z  Error: Command "cd ../.. && npm run build --workspace=@barangayan/web -- --webpack" exited with 1
+status	● Error

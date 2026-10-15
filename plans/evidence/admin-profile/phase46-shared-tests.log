@@ -1,0 +1,19 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run src/lib/auth-fetch.test.ts src/lib/google-profile.test.ts src/lib/resident-account-setup.test.ts src/lib/resident-email-verification.test.ts src/lib/resident-email-verification-client.test.ts src/lib/resident-auth.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/lib/auth-fetch.test.ts (3 tests) 17ms
+ ✓ src/lib/resident-email-verification.test.ts (15 tests) 29ms
+ ✓ src/lib/resident-email-verification-client.test.ts (7 tests) 19ms
+ ✓ src/lib/resident-auth.test.ts (43 tests) 22ms
+ ✓ src/lib/resident-account-setup.test.ts (15 tests) 24ms
+ ✓ src/lib/google-profile.test.ts (9 tests) 51ms
+
+ Test Files  6 passed (6)
+      Tests  92 passed (92)
+   Start at  12:23:06
+   Duration  1.90s (transform 715ms, setup 0ms, collect 1.64s, tests 161ms, environment 1ms, prepare 2.27s)
+

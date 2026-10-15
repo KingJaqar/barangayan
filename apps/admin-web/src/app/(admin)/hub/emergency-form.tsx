@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { emergencyInformationSchema, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -176,8 +181,8 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3">
-      <label className="col-span-4 text-sm sm:col-span-2">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="text-sm">
         <span className={labelClass}>Title</span>
         <input
           className={inputClass}
@@ -190,36 +195,27 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
 
       <label className="text-sm">
         <span className={labelClass}>Category</span>
-        <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
+        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
           <option value="guidelines">Guidelines</option>
           <option value="hotlines">Hotlines</option>
-        </select>
+        </AdminSelect>
       </label>
 
-      <label className="text-sm">
-        <span className={labelClass}>Sort Order</span>
-        <input
-          type="number"
-          className={inputClass}
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-          placeholder="0"
-        />
-      </label>
 
-      <label className="col-span-4 text-sm sm:col-span-2">
+
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>Body</span>
         <textarea
           className={inputClass}
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          rows={1}
+          rows={3}
           placeholder="Short description visible to residents…"
           required
         />
       </label>
 
-      <label className="col-span-4 text-sm sm:col-span-2">
+      <label className="sm:col-span-2 text-sm">
         <span className={labelClass}>
           Content (one item per line) —{' '}
           {category === 'guidelines' ? 'each line is a bullet' : 'Label | Number, e.g. Police | 911'}
@@ -228,10 +224,12 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
           className={inputClass}
           value={contentLines}
           onChange={(e) => setContentLines(e.target.value)}
-          rows={2}
+          rows={5}
           placeholder={category === 'guidelines' ? 'Step 1\nStep 2\nStep 3' : 'Police | 911\nFire | 911'}
         />
       </label>
+
+      <div className={styles.groupHeading}><h3>Appearance</h3></div>
 
       <label className="text-sm">
         <span className={labelClass}>Icon</span>
@@ -248,6 +246,19 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         <input className={inputClass} value={iconBg} onChange={(e) => setIconBg(e.target.value)} placeholder="#E6F2EF" />
       </label>
 
+      <div className={styles.groupHeading}><h3>Publication</h3></div>
+
+      <label className="text-sm">
+        <span className={labelClass}>Sort Order</span>
+        <input
+          type="number"
+          className={inputClass}
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          placeholder="0"
+        />
+      </label>
+
       <label className="text-sm">
         <span className={labelClass}>Publish At (optional)</span>
         <input
@@ -258,7 +269,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         />
       </label>
 
-      <label className="col-span-4 flex items-center gap-2 text-sm">
+      <label className="sm:col-span-2 flex items-center gap-2 text-sm">
         <input
           type="checkbox"
           checked={isActive}
@@ -268,9 +279,9 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
         <span className="font-medium">Active</span>
       </label>
 
-      {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-4">
+      <ContentFormActions busy={submitting}>
         <button
           type="submit"
           disabled={submitting || !barangayId}
@@ -278,7 +289,7 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel={isEditing ? 'Saving…' : 'Publishing…'}>{isEditing ? 'Save Changes' : 'Publish'}</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

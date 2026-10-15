@@ -1,6 +1,17 @@
 import { z } from 'zod';
 
-export const EVACUATION_CENTER_FACILITIES = ['medical_desk', 'pet_friendly', 'generator'] as const;
+// Every facility code the resident apps render (ionicon-map.tsx on web, evacuation-center-card.tsx
+// on Android). A stored code missing here would fail validation on every edit of that center.
+export const EVACUATION_CENTER_FACILITIES = [
+  'medical_desk',
+  'medical',
+  'pet_friendly',
+  'generator',
+  'catering',
+  'children',
+  'toilets',
+  'internet',
+] as const;
 
 export type EvacuationCenterFacility = (typeof EVACUATION_CENTER_FACILITIES)[number];
 

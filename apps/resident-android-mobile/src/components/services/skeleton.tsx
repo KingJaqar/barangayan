@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, type StyleProp, type ViewStyle } from 'react-native';
+import { type StyleProp, type ViewStyle } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 import { Spacing } from '@/constants/theme';
@@ -42,10 +42,4 @@ export function SkeletonBlock({
       ]}
     />
   );
-}
-
-/** Thin fixed-size spacer for skeleton layouts, so composed skeletons don't need to reach
- * into the real screen's `styles` object (kept purely local/presentational). */
-export function SkeletonGap({ size = Spacing.two }: { size?: number }) {
-  return <View style={{ height: size, width: size }} />;
 }

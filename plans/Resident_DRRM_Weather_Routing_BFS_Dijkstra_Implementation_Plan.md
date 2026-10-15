@@ -14,8 +14,21 @@ This plan replaces earlier proposals. It is **not** a continuation of the cancel
 | R3 exit gate, R10 device matrix and 72-hour drill | Feasible, but require DRRM reviewers and a **physical** Android phone. Emulated GPS (LDPlayer) does not satisfy R1/R10. |
 | R8 BFS shadow model | Code is feasible. Requires three inputs not in the repository: PAGASA feed access and station coordinates, a licensed DEM, and a verified vertical datum. |
 | R9 activation, R10 enablement | Externally gated on ≥2 held-out flood events and DRRM acceptance. |
+| R9 tooling, activation configuration, holdover and clearance logic, failure handling; R10 items that do not read model output | Feasible without any PAGASA, DEM or flood-event data (synthetic fixtures only). They enable nothing. See R9 and R10 for the split. |
 
 Closure-based routing can release before any model activation. Do not claim project completion while device acquisition or model prerequisites remain unverified.
+
+### What works without PAGASA data (owner Q&A, 2026-10-15)
+
+| Capability | Needs PAGASA / DEM data? | State |
+|---|---|---|
+| Dijkstra routing (best and shortest walking path to a center, online and offline) | No | Done (R2–R7). |
+| DRRM-verified closures and center availability (authoritative hard blocks) | No | Done (R4–R7). |
+| BFS flood extent from gauge levels, road flood flags, sensor penalty, BFS advisory/exclusion | **Yes** (gauge levels and coordinates, licensed DEM, verified datum) | Code done in R2/R8; reports `modelStatus: unavailable` until the inputs exist. |
+
+Without the data nothing in a resident's route reacts to river levels; DRRM must publish closures. The model stays off rather than guess (invariant 4). This is the supported first release, not a fault. Phases R9 and R10 may proceed only as split below: nothing that needs real events, thresholds or calibration may be written with invented values, and no phase may be marked complete on synthetic evidence.
+
+Where the data can come from (searched 2026-10-15): **PAGASA's own Pasig-Marikina-Tullahan flood-warning site serves the gauge data publicly.** Its HTTPS host fails certificate verification, but the same site answers over plain HTTP at `http://121.58.193.173:8080/` (the address PAGASA's flood page links as "Flood Monitoring for Metro Manila"). Its pages call two undocumented JSON endpoints, `/water/table_list.do` (POST `ymdhm=YYYYMMDDHHmm`, PHT) and `/water/map_list.do` (GET `ymdhm`, `basin`; Marikina = 111). Read once on 2026-10-15 (21 stations): thresholds match RRL Table 1 for San Mateo-1 (18.00 / 19.00 / 20.00), Montalban (22.40 / 23.00 / 23.60), Nangka (16.50 / 17.10 / 17.70) and Rodriguez (28.80 / 29.80 / 30.70); the 2018 bulletin's "Montalban" values were Tumana Bridge's (17.26 / 18.26 / 19.26). Coordinates: San Mateo-1 14.67955, 121.10973; Nangka 14.67402, 121.10932 (both beside the west edge of Ampid I); Montalban 14.73308, 121.13058; Rodriguez 14.73755, 121.15467. Readings carry 10-minute timestamps. Snapshot: `plans/evidence/resident-drrm-routing/r8-shadow/pagasa-ffws-snapshot-2026-10-15.json`. **Not yet usable as a production source:** the endpoints are undocumented, publish no terms, run over unauthenticated HTTP (a path attacker could forge levels), and the vertical datum ("EL.m"), the meaning of the "(*)" marker, the historical baseline and the supported cadence are unverified. Use needs PAGASA's permission (the "Hydromet Data" request portal) and an integrity plan. Still missing entirely: the licensed DEM and datum match. Community mirrors exist but are unofficial; UP DREAM/LiPAD 1 m LiDAR is reported open but Rizal coverage, vertical accuracy and licence are unconfirmed.
 
 ### Scope focus (owner decision, 2026-10-12)
 
@@ -32,6 +45,7 @@ Routing exists **only inside Barangay Ampid I** (San Mateo, Rizal). The single u
 | Cell size | **Production grid 50 m** (profile `ampid-fine`); the RRL's 500 m exists only as `rrl-reference` for conformance tests and paper comparison, never shipped | ~1,000 cells over the barangay box; trivial BFS cost; RRL §7.5 itself calls for sub-100 m for hyperlocal flooding. |
 | Sensor penalty / exclusion for residents | **Staged:** closures ON at release → sensor warning banner + soft penalty once station data is verified → BFS "advisory" overlay → BFS exclusion only after validation | A wrong exclusion can strand people; ignoring an official critical gauge is unrealistic. DRRM-verified closures are the authoritative hard block. |
 | Who supplies data | Owner/developer obtains station coordinates and thresholds; barangay DRRM supplies ground truth and verifies closures; DEM licence is the owner's request | Fixed owners, with a fallback: if unavailable, BFS stays pending and closure routing still ships. |
+| Model data gating (owner Q&A, 2026-10-15) | Closure-based routing is the supported first release. R9/R10 proceed only for work that needs no external data (R9a below); everything else stays pending until PAGASA/DEM/DRRM inputs exist | Prevents invented thresholds or fabricated validation; keeps the safety logic (holdover, clearance, failure handling) testable now. |
 | iOS | **Out of scope for now.** Android and web only; `apps/resident-ios-mobile` is not touched. Revisit as a separate plan once Android and web are verified | Owner decision, 2026-10-12. The shared contracts and Edge Function keep the door open without iOS work. |
 
 ## 1. Product contract and boundaries
@@ -451,11 +465,78 @@ R-prefix phases, executed sequentially. A phase is not complete while its exit g
 **Verification:** review real bridge approaches and every center entrance; incomplete references, barriers, coordinate order, pack budgets.
 **Exit gate:** reproducible pack build plus DRRM-reviewed topology evidence.
 
+**Status (2026-10-12): Partially complete — builder, tests and the real Ampid I pack done; exit gate pending DRRM review of the topology report.** Evidence: `plans/evidence/resident-drrm-routing/r3-pack-builder/README.md`; review sheet `plans/evidence/resident-drrm-routing/r3-pack-builder/build/report.md`.
+
+| R3 item | Status |
+|---|---|
+| OSM import clipped to boundary + 150 m | Done — `packages/shared/src/lib/routing-pack-builder.ts` (Overpass JSON); coverage buffer ±6 m. Extract fetched with owner approval (OSM base 2026-10-12T13:29:57Z, `data/routing-packs/ampid-1/source/osm-extract.json`). |
+| Pedestrian topology | Done — 900 nodes, 1,064 walkable edges (54.3 km); shared-node splits, grade separation by topology, blocking barriers as dead ends, pedestrian-only direction rules, loops, zero-length joins; accepted by `prepareRoutingGraph`. |
+| Spatial indexes | Not added, by measurement: full route plan p95 1.31 ms (Node) on the real graph; recheck on Hermes in R6. |
+| Manifests | Done — `RoutingPackManifest` (in the core, for R6 verification); sizes, SHA-256, device/server audience. |
+| Simplified map resources | Done — vector roads/water/boundary/coverage GeoJSON (`map.json`, 188 KB). |
+| Stable segment mappings | Done — OSM-derived edge ids; `mapEdgesAcrossGraphs` (same / remapped / unresolved). |
+| Connectivity / entrance / coverage reports | Done — real `report.json` + DRRM review sheet `report.md` with sign-off table. |
+| Bundled starter data | Done as pack files in `data/routing-packs/ampid-1/pack/` (graph `ampid-1@2026-10-12#fc7101b6227d`); bundling into the APK is R6. |
+| Server-side `ampid-fine` and `rrl-reference` grids from one builder | Done — terrain unknown (no DEM, R8). |
+| Station-to-edge 2 km tables | Done in code; table empty (`stations: unavailable`) until verified station positions exist. |
+| Every center vs boundary | Done — all four inside; Ampid 1 Elementary on the line, its seeded position is the boundary trace's first vertex (placeholder) and its proposed entrance lies on a margin-only group. |
+| Reachable from every residential street | Done (automated) — every walkable edge inside the boundary reaches at least one center. Route probe: 2 of 671 inside-boundary origins (east edge, Alberto Drive / Denmark Street) attach to margin-only groups and have no route. |
+| Verification: incomplete references, barriers, coordinate order | Done (automated, fixture and real extract: no missing references). |
+| Verification: pack budgets | Done — graph 436,991 B (target 1 MB), device pack 626,273 B (target 5 MB). |
+| Verification: real bridge approaches and center entrances | **Pending** — DRRM review: 14 bridges, 4 center entrances. |
+| Reproducible pack build | Done — byte-identical rebuild of the real pack and report (`diff -r`). |
+| Exit gate: DRRM-reviewed topology evidence | **Pending** — sign-off of `report.md` (centers/entrances, east-edge connectivity, bridges, 37 barrier nodes, 81 private-access ways). |
+
+**R3 decisions and discrepancies**
+
+- **Private roads and gates stay walkable and are listed for DRRM.** Excluding them could strand residents of gated areas; DRRM blocks any of them with verified closures (R4). `foot=no`, `access=no`, locked gates and walls block.
+- **Routing clip is node-level** (stable OSM ids; edges end at the last inside node, within the margin). Water and walls are clipped geometrically (a river with distant nodes was dropped by an earlier vertex test; fixed and tested).
+- **Margin-only groups:** 18 components lie entirely in the margin (neighbouring subdivisions whose links leave the coverage). They are reported, not treated as cut-off Ampid streets. Whether the 150 m margin must widen in the east is a DRRM review item (plan section 2: widen only if the review shows a cut-off area).
+- **No `layer` on `RoutingEdge`:** grade separation is topological. `layer`/`bridge`/`tunnel` only separate over/underpasses from probable missing junctions in the report.
+- **Entrances are proposals** (nearest walkable node ≤ 50 m), flagged when they fall on a margin-only group; stored mappings belong to R4. Seeded centers are still placeholders (R0).
+- **Pack location** `data/routing-packs/<area>/` (no prior convention).
+- **Overpass:** requests reserving `timeout:90` were refused with HTTP 504; the documented query uses `timeout:25` and `maxsize` 64 MiB.
+- **Tooling:** `rewriteRelativeImportExtensions` in `packages/shared/tsconfig.json` so Node runs the CLI natively. The CLI is `.mts`. The npm script silences Node's MODULE_TYPELESS_PACKAGE_JSON notice rather than adding `"type": "module"` to a package Metro and Next consume.
+
+*Progress note, 2026-10-12 (R3):* Ran `npx vitest run` (packages/shared: 27 files / 354 tests pass; baseline 329; 25 new), `npx tsc --noEmit` for packages/shared (now including the CLI), apps/resident-web and apps/resident-android-mobile (0 errors each), and the R2 digest (`217d8e6a`, unchanged). Mutation check: 5/5 targeted mutants fail tests. Fetched the Ampid I extract (overpass-api.de, 1,099,002 B). Built the real pack with `npm run build:routing-pack`; a second build was byte-identical. Ran `route-probe.mts` over 671 inside-boundary origins (599 ok, 39 chooser, 31 no nearby path, 2 no route; p95 1.31 ms). No app file changed (lint baselines unaffected). Remaining: DRRM review and sign-off of `report.md`, then rebuild with corrected center positions and any OSM or margin fixes.
+
 ### R4 — Conditions migrations and admin management
 - Canonical closures, center availability, revisions, audit history; admin publishing/reopening; public complete snapshots; tombstones and graph-version mappings.
 
 **Verification:** cross-barangay authorization, forbidden writes, concurrent publication; closure/center removal reaches cached clients; use `0113` and onward, tested on a disposable database first.
 **Exit gate:** consistent snapshots and security checks pass.
+
+**Status (2026-10-13): Complete — exit gate met on disposable databases; `0113` applied to the hosted project by the owner and verified read-only.** Evidence: `plans/evidence/resident-drrm-routing/r4-conditions/README.md`.
+
+| R4 item | Status |
+|---|---|
+| Canonical closures | Done — `supabase/migrations/0113_routing_conditions.sql`: `road_closures` (label, reason, `[lng, lat]` geometry, pack source refs, observation time separate from publication) + `road_closure_edges` per graph version. Never deleted or edited; only active → reopened (guard trigger, also against superusers). |
+| Center availability | Done — `evacuation_centers.availability` (`available` / `unknown` / `unavailable`, default `unknown`), separate from `is_active`, with `availability_updated_at`. |
+| Revisions | Done — `routing_areas.revision` taken under the area row lock for every snapshot-visible change; centers carry `routing_revision` (trigger-maintained, client values ignored). |
+| Audit history | Done — append-only `routing_condition_events` (revision, actor, details); RPCs also write `admin_audit_log` (`road_closure`, `routing_area` entity types). |
+| Admin publishing / reopening | Done — admin-web Evacuation Routing page (`apps/admin-web/src/app/(admin)/evacuation-routing/`): activate bundled map data, select segments on the pack graph, publish, reopen with a reason, availability, entrance editor, history. |
+| Public complete snapshots | Done — `get_routing_conditions_snapshot` (anon), one `STABLE` read; shared `routingConditionsSnapshotSchema`. |
+| Tombstones | Done — reopened closures, archived and hard-deleted centers (`routing_tombstones`); deactivated centers stay listed as inactive. |
+| Graph-version mappings | Done — `routing_graph_versions`, closure edge and center entrance-node mappings per version; activation refused while any active closure or entrance is unmapped; unmapped closures reported with `edgeIds: null`. |
+| Verification: cross-barangay authorization, forbidden writes | Done — pgTAP 81/81; mutation check 5/5. |
+| Verification: concurrent publication | Done — parallel sessions serialize (revisions 3, 4), mid-transaction reader sees the prior state, double reopen → one success. |
+| Verification: removal reaches cached clients | Done at the snapshot API (tombstones/inactive entries at newer revisions); consumption by clients is R5–R7. |
+| `0113` tested on a disposable database first | Done — full clone of the local DB and a seeded schema-only copy; local dev DB untouched. Applied to the hosted project by the owner afterwards (see the hosted note below). |
+
+**R4 decisions and discrepancies**
+
+- **Migration numbering:** used `0113` as recorded in R0; `AGENTS.md` ("last pushed 0094") remains stale. Next new migration: `0114`.
+- **Write path:** all routing writes go through security-definer RPCs or the center trigger; table write privileges are revoked from `anon`/`authenticated`. Availability uses the existing admin update policy on `evacuation_centers`.
+- **Moving a center clears its entrance** (plan 4: "moved entrances remain visible but unroutable"); an entrance > 250 m from the center is refused. Re-saving the existing center form with an unchanged position changes nothing.
+- **Graph versions** are registered from the admin build's bundled pack; publishing requires the active version, so a stale admin page cannot map a closure to an old graph.
+- **Remapping UI for a new graph version** is not built: the mapping RPCs and activation guard exist and are tested; proposing mappings with `mapEdgesAcrossGraphs` belongs to the graph-update flow (R6).
+- **Pre-existing failures (not R4):** admin-web `tsc` (4 errors) and `next build` fail on `src/app/resident/requests/new/new-request-form.tsx` importing a resident-web form whose `@/` aliases don't resolve in admin-web. `agency_sla.test.sql` needs `pg_cron`, absent in cloned databases (passes 62/62 on the original).
+
+*Progress note, 2026-10-13 (R4):* Ran `npx vitest run` (packages/shared: 28 files / 365 pass; baseline 354), `npx tsc --noEmit` for packages/shared, apps/resident-web and apps/resident-android-mobile (0 errors), apps/admin-web (4 pre-existing errors, identical to baseline), `npx eslint` (admin-web: 0 problems), `npm run test:tables` (68/68), `next build` (admin-web: pre-existing failure only). Applied `0110`–`0113` to a disposable clone; ran `routing_conditions.test.sql` (81/81), all other SQL suites (pass; `agency_sla` cron-only), a 5-mutant check, `concurrency.sh`, and `seed.sql` on a schema-only copy. Exercised the admin page in the built-in browser against an isolated GoTrue/PostgREST on the disposable DB: activation, publish (including future-time validation), anonymous snapshot and refused anonymous writes, availability, entrance, closed-segment click, reopen (including empty-reason validation), and the existing center form's update path. No console errors besides the test proxy's unsupported realtime WebSocket.
+
+*Hosted note, 2026-10-13 (R4):* The owner applied `0113`. Read-only checks on the hosted project: migrations `0110`–`0113` are recorded; all 7 routing tables, 4 new center columns and 6 guard triggers exist. Grants are correct: `anon` can execute the snapshot but not `publish_road_closure` and can't read `road_closures`; `authenticated` can't insert closures. The snapshot returns area `ampid-1` at revision 0 with graph status `none`, 7 centers (all `unknown`), no closures and no tombstones. The security advisors raise only the expected security-definer lints for the intended public snapshot and the admin RPCs, which check the role inside. No routing table lacks RLS policies. Next operational step: an administrator activates the bundled map data on the hosted Evacuation Routing page before publishing closures or entrances. The hosted area has 7 centers against 4 in the local seed, so DRRM should review all 7 positions and entrances (R3 review).
+
+*Hosted REST check, 2026-10-13 (R4, anon key, no writes):* The snapshot returns schema 1, revision 0, 7 active centers with valid positions, and parses with `routingConditionsSnapshotSchema`. An unknown area gets `P0002` and a malformed graph version `22023`. All 7 admin RPCs refuse `anon` (42501). Anonymous reads of `road_closures`, `routing_areas`, `routing_condition_events` and `road_closure_edges`, and an anonymous insert into `road_closures`, are refused (42501). Not run on hosted: the 81-test suite (it would write inside a rolled-back transaction, and the permission system blocked it) and the admin UI flows (they need an administrator to sign in, and closures there are permanent records).
 
 ### R5 — Connected route service
 - Pure core in Edge Functions with profile `ampid-fine`; request validation, rate limits, snapshot selection, response provenance; closure-only and degraded-model modes; returns the best route, the shortest route, and per-center route distances in one response.
@@ -463,11 +544,75 @@ R-prefix phases, executed sequentially. A phase is not complete while its exit g
 **Verification:** cold/warm CPU and memory; parallel requests, oversized input, outdated snapshots, client cancellation; no coordinate leakage in logs.
 **Exit gate:** route correctness, resource budgets and public API failure behavior pass.
 
+**Status (2026-10-13): Partially complete — exit gate met locally (real supabase-edge-runtime with the CLI's worker limits, disposable seeded database); hosted migration, deploy and hosted checks pending owner authorization.** Evidence: `plans/evidence/resident-drrm-routing/r5-route-service/README.md`.
+
+| R5 item | Status |
+|---|---|
+| Pure core in Edge Functions, profile `ampid-fine` | Done — `supabase/functions/evacuation-route/` (`index.ts` Deno entry, `handler.ts` runtime-agnostic) imports `evacuation-routing.ts` and the new import-free contract `packages/shared/src/lib/evacuation-route-service.ts` by relative `.ts` path (R0 decision); routes with `planEvacuationRouteAsync` (yields, 1 s compute deadline, client-disconnect cancellation). |
+| Request validation | Done — POST only, 16 KiB body (declared or streamed), strict keys, 0113 id/graph-version patterns, ≤ 200 avoided segments, segment ids need their graph version (409 when it is not the service's). |
+| Rate limits | Done — `0114_routing_rate_limits.sql`: service-role-only `consume_routing_rate_limit` over a private per-window table of HMAC-hashed client addresses; 300 requests/minute/address, 429 + `Retry-After`; fails open and reports when the limiter is down. Hosted client-address header: **pending**. |
+| Snapshot selection | Done — per-request `get_routing_conditions_snapshot` for the bundled graph; routes only on the area's active graph, never on a snapshot older than the client's newest revision, never with an unmapped closure. |
+| Response provenance | Done — route provenance (graph, conditions revision, profile, config, origin revision) plus graph SHA-256, OSM time, ODbL attribution, conditions revised/generated times, `modelStatus`. |
+| Closure-only and degraded-model modes | Done — closure-only (stage 1) with `modelStatus: 'unavailable'`: no model input exists before R8/R9, and missing model data never blocks routing or counts as dry. |
+| Best route, shortest route and per-center distances in one response | Done — `best`, `shortest` (`null` while weight = distance), `centers` one-to-many walking distances. |
+| Verification: cold/warm CPU and memory | Done (local runtime) — cold pack import 6–13 ms + verification/preparation 13–23 ms, route p95 ≤ 2.9 ms (max 11 ms), heap ≤ 15.4 MB; cold first request 270–314 ms, warm p95 60 ms end to end. Hosted: **pending** deploy. |
+| Verification: parallel requests, oversized input, outdated snapshots, client cancellation | Done — 50 parallel identical to sequential; 413/400/405/409; `snapshot_outdated` and `graph_not_active` 503; abort stops the search (unit) and leaves the runtime healthy (real). |
+| Verification: no coordinate leakage in logs | Done (local) — handler never logs; fixed event names only; edge runtime, PostgREST, database and proxy logs free of coordinates; responses `no-store`. Hosted logs: **pending** deploy. |
+| Exit gate: route correctness | Done — service output byte-identical to the Node core on the same snapshot (25 origins); closures, reopening and availability changes served on the next request. |
+| Exit gate: resource budgets | Done locally (CPU < 50 ms cold work vs 1.5 s, memory ~15 MB vs 192 MB, bundle 621 KB vs 5 MB). |
+| Exit gate: public API failure behavior | Done — every failure is a typed error (never a route or straight line); 503 family for conditions/graph/deadline problems. |
+
+**R5 decisions and discrepancies**
+
+- **Pack loading:** bundled as JSON modules from `data/routing-packs/ampid-1/pack/` (static files must sit inside the function folder, which would duplicate the pack); R0's "load packs as separate resources" concern was the 5 MB bundle cap, and the bundle is 621 KB. The worker re-verifies `graph.json` against the manifest SHA-256 and byte count before routing.
+- **Rate limit policy:** 300/minute per address because mobile carriers share public addresses (CGNAT) and residents request routes together during floods; no recognisable address → not limited; limiter failure → fail open with a logged event. Emergency availability takes precedence over abuse resistance here; revisit after the R10 pilot load test.
+- **Active graph only:** a registered-but-inactive graph is refused (`graph_not_active`) because activation is DRRM's acceptance and a deactivated graph may be wrong. Until an administrator activates the map data on hosted (R4 hosted note), the hosted service will answer `503 graph_not_active`.
+- **Errors vs routes:** HTTP 200 carries every core route outcome (`ok`, `no_route_within_coverage`, `attachment_ambiguous`, `outside_coverage`, `no_nearby_path`, `center_unavailable`, `invalid_origin`, `restrictions_unmapped` for client avoidance); everything else is `{ error, message }` (400/405/409/413/429/499/503) and is a service failure for clients (R7).
+- **Authentication:** `verify_jwt = false` for this function in `supabase/config.toml` (invariant 9).
+- **Migration numbering:** `0114`; `AGENTS.md` ("last pushed 0094") remains stale. Next new migration: `0115`.
+- **Left for R7:** client deadlines (10 s route, 8 s conditions), connected/local mode, and consuming this API on Android and web.
+
+*Progress note, 2026-10-13 (R5):* Ran `npx vitest run` (packages/shared: 29 files / 409 pass; baseline 365), `npx vitest run supabase/functions` (2 files / 38 pass; baseline 11), `npx tsc` for packages/shared, the function handler and tests (evidence tsconfig), apps/resident-web and apps/resident-android-mobile (0 errors each), and the R2 digest (`217d8e6a`, unchanged). Applied `0110`–`0114` to a full clone of the local DB: all SQL suites pass, including `routing_rate_limits` 19/19 and `routing_conditions` 81/81 (`agency_sla` cron-only, pre-existing). Mutation check: 8/8 TypeScript and 5/5 SQL mutants caught. In supabase-edge-runtime 1.76.2 with the CLI's main service and limits, against a seeded schema-only clone (graph activated and entrances set through the 0113 RPCs), I ran an in-worker resource probe on three fresh workers and the HTTP service probe: cold/warm latency, Node/Deno route agreement, parallel requests, invalid input, outdated snapshot, closure publish/reopen, availability change, graph deactivation, the 300/minute limit, cancellation and log scans. All matched the expected behavior. `edge-runtime bundle` produced a 621 KB eszip that boots and routes. The local stack (`supabase functions serve`) also returned the expected 503 against the dev DB, which lacks the routing schema. All test containers, the proxy and both disposable databases were removed; the local dev DB is unchanged (still `0109`). Remaining: owner-authorized hosted `0114` apply and function deploy, then hosted latency, client-address-header and log checks.
+
 ### R6 — Android durable offline operation
 - Bundled map assets, typed bridge for local geometry, pack staging/journal/recovery/rollback, local avoidance, public emergency access, restrictions preserved across graph updates and sign-out.
 
 **Verification:** clean-install airplane-mode start; force-stop/reopen, corrupt pack, interrupted update, unresolved remapping; session-restoration failure cannot block the emergency map.
 **Exit gate:** new routes calculate after an offline cold start without network assets.
+
+**Status (2026-10-14): Complete — exit gate and every R6 verification item met on an Android 12 emulator release build (embedded Hermes bundle, airplane mode, simulated conditions backend, fabricated test session). Operational follow-ups outside R6: on hosted, routes stay unavailable until an administrator activates the bundled graph and maps center entrances (R3/R4); physical-phone timing is R10.** Evidence: `plans/evidence/resident-drrm-routing/r6-offline/README.md`.
+
+| R6 item | Status |
+|---|---|
+| Bundled map assets | Done — Leaflet 1.9.4 JS/CSS/licence inlined from `src/components/leaflet-assets.ts` (generated by `scripts/generate-leaflet-assets.mjs`, drift test); no unpkg. The Centers map draws the pack's vector roads/water as the basemap; OSM tiles load only while the internet is reachable (NetInfo) and never during page load. OSM attribution is visible on every map. Starter data is the bundled `ampid-1` pack. |
+| Typed bridge for local geometry | Done — `SET_PACK_BASEMAP`, `SET_TILES`, `SET_ROAD_MARKS`, `SET_TAP_MODE`, `MAP_TAPPED` in `packages/shared/src/types/map-bridge.ts`; route is a declarative prop replayed after map-ready. Measured: 205,551-char basemap message, 17–21 ms round trip on the emulator. |
+| Pack staging / journal / recovery / rollback | Done — `src/lib/offline-routing.ts`: document storage `routing/v1/ampid-1/` (active + previous packs, `state.json` journal), stage → verify exact bytes/schema/area/config → journaled pointer switch; recovery promotes or discards deterministically; corrupt active pack is reinstalled from the bundle or rolled back to the previous pack. Unit-tested at every crash point; verified on device (corrupt pack, interrupted update). |
+| Local avoidance | Done — tap a road in the Centers map (≤ 25 m) → confirm; stored with source refs, geometry, graph version, creation time; both directions blocked; listed with explicit Remove; never expires or is published. Remapped by source reference on graph changes; unmapped marks are kept and block routing (`restrictions_unmapped`). |
+| Public emergency access | Done — `/emergency-centers` outside every `Stack.Protected` guard; splash lifts on that route or after 3 s of restoration; the restoring screen and the restoration-error overlay offer the entry; account setup shows the link under every step. Device: offline cold start into it, from a resident held in account setup, during an offline restoration and after it failed. |
+| Restrictions preserved across graph updates | Done — activation requires a snapshot of the candidate graph that the area has activated with every closure mapped, and every mark mapped; otherwise deferred with the current pack active (status card says why). |
+| Restrictions preserved across sign-out | Done — device: after Sign out the routing store (pack, conditions, blocked road) and the durable center rows remain and the public map shows them; only the session key is removed. |
+| Hermes digest (R2 pending item) | Done — `217d8e6a` on the installed release build, identical to Node and edge-runtime. |
+| Cooperative yielding on Hermes, p95 ≤ 2 s | Done — `planEvacuationRouteAsync` with `setTimeout(0)` yields; emulator p95 12–15 ms (sync), 65–90 ms (yielding), max 150 ms. Physical-phone measurement remains for R10. |
+| Verification: clean-install airplane-mode start | Done (emulator). |
+| Verification: force-stop/reopen, corrupt pack, interrupted update, unresolved remapping | Done (emulator + unit tests). |
+| Verification: session-restoration failure cannot block the emergency map | Done — expired test session, airplane mode: splash lifts to "Restoring your session…" with the entry; after the refresh fails (~40 s) the error overlay offers it and never covers the map. |
+| Exit gate: new routes after an offline cold start without network assets | Met on the emulator release build: airplane mode, route 659 m / 21 edges computed from stored conditions (identical to Node); with a published closure 923 m / 22 edges, also after a corrupt-pack repair. |
+
+**R6 decisions and discrepancies**
+
+- **Pack source:** the app bundle is the only trusted distribution origin today, so the staging pipeline installs and repairs from it and activates a newer bundled graph only when its restrictions map. Network pack downloads are not built: no distribution endpoint exists (owner decision when one is needed).
+- **Graph activation rule on devices:** a candidate graph is activated only from a snapshot in which the area has activated it and every closure is mapped (same rule as the R5 service). Offline, with known conditions, activation is deferred rather than losing the compatible snapshot.
+- **Local routes replaced OSRM on Android:** the Centers screen now computes walking routes on the installed pack, so the Android OSRM call and its straight-line fallback (R7 targets) are gone from Android. `packages/shared/src/lib/osrm.ts` and web usage remain for R7. Connected (Edge Function) routes, mode banners and list ranking by walking distance stay in R7.
+- **Center rows offline:** the last fetched `evacuation_centers` rows are kept without the 30-minute expiry so the list and routes work after a long offline period.
+- **No starter centers:** centers, availability and entrances come only from the conditions snapshot; a never-online install shows the map and says data has not been downloaded (no bundled placeholders).
+- **`mapEdgesAcrossGraphs` moved into the import-free core** (re-exported by the builder) so Android can remap restrictions; R2 digest unchanged.
+- **Centers panel extracted** to `src/components/evacuation-centers-panel.tsx` for reuse by the public screen; existing control sizes and positions are unchanged; new controls: blocked-road button (third map button), status card and mark card at the top of the bottom overlay.
+- **Migration numbering:** no migration in R6; `AGENTS.md` ("last pushed 0094") remains stale. Other sessions have since added `0115`–`0117`.
+- **Out of scope noticed:** facility chips render icon names as text (e.g. "medkit-outline Medical Desk") in `EvacuationCenterCard`; the centers fetch error banner shows raw transport errors (R7 messaging).
+
+*Progress note, 2026-10-14 (R6):* Ran `npx vitest run` (Android: 12 files / 104 pass; baseline 88), `npx tsc --noEmit` (Android, packages/shared, resident-web, admin-web: 0 errors each), `npx expo lint` (0 errors; the 2 pre-existing warnings), `npx vitest run` (packages/shared 409/409), `npx vitest run supabase/functions` (38/38), R2 digest on Node (`217d8e6a`), a 7-mutant check on the store tests (7/7 killed), and `npx expo export --platform android` (Hermes bundle builds; no CDN URLs). Built release APKs in the gitignored test shell `.expo/r6-offline-native` (application id `com.barangayan.resident.r6offline`) and ran them on MuMu (Android 12): clean install in airplane mode, hosted online (graph not activated → routes refused), offline cold-start routes with a simulated activated-graph backend, closure propagation, corrupt pack, interrupted update, unmapped mark, blocked-road marking and persistence, plus Hermes digest/timing/bridge measurements through a temporary probe screen (removed). The emulator was restored afterwards. Remaining: owner-attended session-restoration-failure, account-setup and sign-out checks on a device; hosted graph activation and entrance mapping before routes work against hosted data; physical-phone timing in R10.
+
+*Progress note, 2026-10-14 (R6, authentication checks, owner-approved):* Built APK C in the same test shell with a temporary probe that writes a fabricated test session (test user and tokens, no real account; the build talks only to the local simulated backend) into the app's auth storage. On MuMu: a signed-in resident held on the account-setup error screen sees the evacuation-centers link, which opens the public map with the saved centers and blocked road; Sign out returns to Log In and leaves the routing store and durable center rows intact (only the session key is removed); with an expired session in airplane mode the splash lifts to "Restoring your session…" with the link, and after restoration fails the error overlay offers the link and the map stays usable. Probe removed, emulator restored (airplane mode off, test app and files removed). Rechecked the final tree: Android `tsc` 0 errors, `expo lint` 0 errors (2 pre-existing warnings), `vitest` 14 files / 126 pass (two files added meanwhile by concurrent settings work). Remaining outside R6: hosted graph activation and entrance mapping; physical-phone timing (R10).
 
 ### R7 — Resident integration and mode transitions
 - Connected responses on Android and web; revision ownership and route invalidation; freshness, mode, availability and failure messages; keep existing Centers layouts; **remove the straight-line fallback** (`index.tsx:540-543`) and the public OSRM demo dependency (`packages/shared/src/lib/osrm.ts`).
@@ -475,11 +620,95 @@ R-prefix phases, executed sequentially. A phase is not complete while its exit g
 **Verification:** network flapping, stale responses, rapid origin/center changes; Android connected-to-local transition; web offline prevention; remount/fullscreen/list changes preserve state.
 **Exit gate:** platform behavior matches the product contract in end-to-end tests.
 
+**Status (2026-10-14): Complete for the emulator exit gate — web and Android verified end to end against the deployed `evacuation-route` service and hosted conditions (revision 10). Physical-phone runs stay with R10; two centers are routable, the other five await DRRM-confirmed entrances. The later map-layout follow-up is done in code and awaits a device check.** Evidence is the progress notes below (no evidence folder was created).
+
+| R7 item | Status |
+|---|---|
+| Connected responses on web | Done — `packages/shared/src/lib/connected-route-client.ts` (POST body only, 10 s deadline, typed outcome, failure wording); `apps/resident-web/src/hooks/use-connected-route.ts`; `route-status-card.tsx`; `centers-content.tsx` ranks and draws from the response. Verified in browser. |
+| Connected responses on Android | Done — `hooks/use-resident-route.ts` wraps the local route; `evacuation-centers-panel.tsx` and `offline-route-card.tsx` show mode and failures. Verified on the EAS release build against the hosted service (device note below). |
+| Revision ownership and invalidation | Done — a result is keyed by graph, origin revision, center, street choice, avoidance set and conditions revision; any change drops it immediately (Android falls back to the local route; web shows loading). Web sends the newest conditions revision seen, so an older snapshot is refused. |
+| Freshness, mode, availability, failure messages | Done — conditions checked-age, "route service" vs "calculated on this phone", stale-route label on web, unconfirmed-availability and shortest-vs-recommended lines, plain-language failures. |
+| Keep existing Centers layouts | Done — new status card only; no existing control size or position changed. |
+| Remove straight-line fallback and OSRM | Done — Android's fallback was removed in R6; `packages/shared/src/lib/osrm.ts` and its test are deleted and the index export removed. Web no longer calls OSRM. |
+| List ranked by walking distance | Done on both — from the one-to-many `centers` summaries; a center with no route shows no distance rather than a straight line. |
+| Verification: web offline prevention | Done — with the service down no route is calculated or drawn; a previous route for the same selection is kept only with a stale warning. |
+| Verification: stale responses, rapid center changes | Done in code (abort per key; result for another key never shown); web observed with center switches. |
+| Verification: network flapping, Android connected-to-local, remount/fullscreen/list changes | Done on emulators — connected → airplane mode → local → recovered to connected (MuMu); cold start, list/map toggle, signed-in tab and rapid center switches (LDPlayer); web against the deployed function. Fullscreen applies to web only and was covered in R1. |
+| Exit gate: end-to-end tests against the deployed service | Met on emulators and the web dev server (notes below). Physical phone: R10. |
+
+**R7 decisions and discrepancies**
+
+- **Automatic request:** with no center selected the client still requests a route (`centerId: null`) to obtain the ranking; only the route to a selected center is drawn.
+- **Web has no origin chooser state before the first answer:** the street choice carries the graph version from the `attachment_ambiguous` answer that offered it.
+- **Retry policy:** refresh every 30 s while visible; failures back off 60 s, 120 s, 240 s up to 5 minutes; the web "Try again" button retries at once. Android skips requests while NetInfo reports the internet unreachable, and any success restores connected mode.
+- **Line reference drift:** the plan's `index.tsx:540-543` fallback no longer exists (R6). OSRM was also referenced by `geocode.ts` comments only.
+- **Out of scope noticed:** `packages/shared` `tsc` reports `FileReader` missing in `id-evidence.ts` (another session's file); web `useEvacuationCenters` still offers a haversine `userPosition` option used by other screens.
+- **Not done:** the Android "unknown availability" label on the center card beyond the status line; a dedicated `lib` test for the Android hook (hooks have no test harness in that app).
+
+*Progress note, 2026-10-14 (R7):* Baseline before edits: `packages/shared` vitest 29 files / 414 pass; Android and web `tsc` 0 errors. After: shared vitest 29 files / 419 pass (osrm tests removed, 5+ client tests added: body-only origin, service error, rate limit, unreadable 200, network, timeout, cancellation); Android `tsc` 0 errors, `vitest` 14 files / 126 pass, `expo lint` 0 errors (same 2 pre-existing warnings); web `tsc` 0 errors, `eslint` on the touched folders 0 problems. In the built-in browser on the existing resident-web dev server (port 3001) with a stubbed geolocation and a local stand-in for the service (real routing core and real Ampid I pack over the 7 hosted centers): automatic ranking, selection route and drawn path, `minConditionsRevision` carried, service-down failure with retry and recovery, and a stale route kept with its warning after a refresh failure. Console showed only the simulated 503s. The stand-in and its temporary script were removed. Not run: Android emulator/device, hosted function (not deployed).
+
+*Device note, 2026-10-14 (R7, owner-requested EAS build):* EAS preview build `5a333d69-f5bb-4639-a66e-28633172747d` (versionCode 5, eas-cli 24.13.0 because eas.json requires >= 24.12.1) was installed on MuMu (`com.barangayan.resident`, location permission granted) and opened through `barangayan://emergency-centers`. Observed against the hosted backend, where the function is not deployed and the graph is not activated: Centers map with the offline pack's vector roads, "Road closures checked just now", the connected request failure shown as "The route service had a problem… Showing the route calculated on this phone", and "The barangay has not activated this map version yet, so routes are not available". That confirms the failure and local-mode wording on a device; connected success and connected-to-local transitions remain pending the deploy and activation.
+
+*Hosted note, 2026-10-14 (R7):* The owner deployed `evacuation-route`, activated graph `ampid-1@2026-10-12#fc7101b6227d` and, through admin-web, moved two center pins to their OpenStreetMap buildings (Ampid Ⅰ Elementary School `way/857478797`; Bahay Pamahalaan ng Barangay Ampid Ⅰ `way/561462871`), set their entrances (`n1141792181` Jupiter Street, `n8310796062` Mayor Jose F. Diaz Avenue) and marked both Available (conditions revision 10). The other five centers stay unroutable: three are in other barangays and two have no confirmed location. DRRM still has to confirm both entrances. Live probes (made-up origins inside Ampid I, anon key): automatic route → Hall 483 m / ~7 min, ranking Hall 483 m then Elementary 721 m; selected Elementary 884 m from another origin; `center_unavailable` for an unrouted center; `outside_coverage` outside the boundary + 150 m; `attachment_ambiguous` at 60 m accuracy with street candidates; `503 snapshot_outdated` for a newer client revision; `400` malformed; `405` GET; 0.3–1.0 s round trips. Function logs were not inspected (production reads are blocked for this session).
+
+*Device and web note, 2026-10-14 (R7):* EAS build `5a333d69…` (versionCode 5). **LDPlayer** (Android 9, owner's candidate 3 upgraded in place, GPS set with `ldconsole locate` to 14.6800, 121.1160): the public Centers map showed "Route calculated by the Barangayan route service with current road conditions", the picker ranked the Hall 483 m, selecting it drew the route line and the card read 7 min · 0.5 km; the list showed Hall 0.5 km / 7 min, Elementary 0.7 km / 10 min and no distance for the five unrouted centers; after a full emulator restart (cold start) the connected route returned; on the signed-in Emergency → Centers tab a Hall → Elementary switch 0.3 s apart ended on Elementary 10 min · 0.7 km, and the drawn line matched the service geometry (Daang Bakal → J. F. Diaz → De Los Angeles → Jupiter). **MuMu** (Android 12, GPS fixed in Manila, outside coverage): online → "route service" wording; airplane mode through the root shell → tiles dropped to the pack's vector map, "Offline: road closures and center status from just now", no service line; airplane mode off → service wording back within ~40 s. **Web** (built-in browser, existing dev server :3001, stubbed geolocation, real hosted function, no other mocks): HTTP 200, list ranked Hall 0.5 km / 7 min and Elementary 0.7 km / 10 min, unrouted centers without distance; Hall selection drew the route; switching to Dulong Bayan removed the line and showed "This center cannot be routed to…"; no console errors. Not run: an offline drawn route from inside Ampid I in the same session (LDPlayer's adb rides on its network and it has no root; covered by the R6 offline exit gate with the same engine), and a physical phone (R10).
+
+**Observations (not fixed, out of R7 scope):** facility chips show icon names ("medkit-outline Medical", R6 note); selecting an unroutable center drops the walking-distance ranking until another routable selection (the ranking comes from the same answer); the `AGENTS.md` migration note ("last pushed 0094") remains stale. The map-overlap observation from the device run is addressed in the follow-up below.
+
+**Device state after testing:** LDPlayer runs `com.barangayan.resident` versionCode 5 (upgraded from 3, data kept) with its GPS left at the Ampid I test point; LDPlayer restarted itself with a 1920×1080 display at the end of the run (not caused by these tests). MuMu: airplane mode off, temporary screenshot removed, instance shut down for an adb port clash (both emulators bind 127.0.0.1:5555) and relaunched.
+
+*Follow-up, 2026-10-14 (R7, owner-requested):*
+
+| Change | Status |
+|---|---|
+| Admin-web entrance form: latitude/longitude fields with **Find road point** (same 40 m snap as a map click), the snapped node's coordinates and its distance from the pin, a 250 m warning, and **Save entrance** disabled while the point is over 250 m (the server refuses it anyway) | Done — `tsc`/`eslint` clean; used by the owner to set both hosted entrances. |
+| Admin-web **Clear entrance** asks for confirmation in the existing native modal (`TableDetailDialog`): explains that residents get no route to the center until a new entrance is set; stays open on failure | Done — `tsc`/`eslint` clean; not exercised in a browser (needs an administrator sign-in). |
+| Admin-web **Recent changes** shown as a borderless table (Revision · Change · When; time column never wraps; scrolls sideways on narrow screens) | Done — `tsc`/`eslint` clean; not exercised in a browser. |
+| Set entrance / Change entrance scrolls the map and form into view | Already present (another session, 18:42); unchanged. |
+| Facility codes: `EVACUATION_CENTER_FACILITIES` lists every code the resident apps render (`medical`, `catering`, `children`, `toilets`, `internet` added). The admin center form failed validation on any edit of a center holding those codes (the Barangay Hall) | Done — shared vitest 419/419, admin-web `tsc`/`eslint` clean; all seven hosted centers' codes are accepted. |
+| Android Centers map: the route is fitted into the area not covered by the search bar and the bottom overlay (measured with `onLayout`, passed as `DRAW_ROUTE` padding; padding shrinks proportionally if under 120 px would remain; a later overlay resize does not refit). The selected-pin framing uses the same measurement instead of a fixed 120 px card estimate that ignored the status card, and stops once the route is drawn | Done in code — Android `tsc` 0 errors, `expo lint` 0 errors (2 pre-existing warnings), `vitest` 126/126. **Device check pending.** |
+| Android Centers map: the status card is compact over the map (one summary line, warnings first, then a running calculation, then the route outcome or mode; `+N` hidden lines; tap to expand, **Show less** to collapse); never collapses while the street chooser is shown; the List view keeps the full card | Done in code — same checks. **Device check pending.** |
+
+No existing control changed size or position (cancelled Phase 8 boundary).
+
+**Pending device check for the map follow-up:** LDPlayer's configuration was rewritten at 22:35 (not by this session or the iOS session): 1920×1080 at 280 dpi and no adb listener, where it had been 1080×1920 at 480 dpi with local adb. Waiting on the owner to either restore those settings (then: dev build `com.barangayan.resident.dev` with Metro on 8083, GPS via `ldconsole locate`, select the Hall and confirm the whole route sits between the search bar and the cards without panning, expand/collapse the status card, trigger the street chooser at 60 m accuracy) or to check it on the next EAS build.
+
+
 ### R8 — Sensor ingestion and BFS shadow
 - Permitted source adapters, RRL §7.4 validators, immutable sensor snapshots; calibrated grid eligibility, FIFO BFS, road intersection compilation; model-health and unknown-coverage reporting. Shadow output reports seeds used and stations ignored (out of grid, stale, flagged). Sensor penalties and exclusions stay disabled for residents.
 
 **Verification:** missing/stale readings, invalid datum, barriers, multiple seeds, source failure; preprocessing and traversal budgets measured separately; superseded computations cannot publish.
 **Exit gate:** reproducible shadow output and documented input readiness. Missing external data leaves this phase **pending**; do not fabricate completion.
+
+**Status (2026-10-14): Partially complete — code, storage and tests done and verified on synthetic inputs and a disposable database; real shadow output is pending external data (stations, licensed DEM, datum, feed). Nothing deployed or applied to hosted.** Evidence: `plans/evidence/resident-drrm-routing/r8-shadow/README.md`.
+
+| R8 item | Status |
+|---|---|
+| Permitted source adapters | Done as a reviewed-feed contract (`parseSensorFeed`, HTTPS fetch from the owner-configured `FLOOD_SENSOR_FEED_URL`, bounded, no redirects). A live PAGASA adapter is **not built**: access terms, format and cadence are unverified (the PMT-FFWS certificate did not verify and was not bypassed). |
+| RRL §7.4 validators | Done — ±5 m range, 2 m change scaled to the declared cadence, robust outlier test, staleness at 10 intervals, datum and future-time checks; rejected, stale and missing readings are unknown. Constants beyond the RRL's are provisional (evidence decisions 3–4). |
+| Immutable sensor snapshots | Done — deep-frozen, SHA-256 id of canonical content, reproducible. |
+| Calibrated grid eligibility | Done — verified station set matching the pack, licensed terrain, equal datum, known vertical RMSE ≤ 0.25 × the smallest Alert→Critical span (provisional ratio), known elevations. |
+| FIFO BFS | Done in R2; reused unchanged. |
+| Road intersection compilation | Done — `compileRoadFlooding` over the exact cell walk `floodGridCellsOnPolyline`; bridge decks assessed separately (never flooded by cells beneath). |
+| Model-health and unknown-coverage reporting | Done — `modelStatus`, eligibility reasons, unknown terrain/frontier cells, unknown edges, source status, input times. |
+| Shadow output reports seeds used and stations ignored (out of grid, stale, flagged) | Done. |
+| Sensor penalties and exclusions disabled for residents | Done — reports carry `residentInfluence: 'none'`; storage refuses anything else; nothing reads shadow runs but administrators. |
+| Superseded computations cannot publish | Done — `0120_flood_shadow_runs.sql`: per-area lock, newest-evaluation and active-graph checks; pgTAP 37/37, real parallel sessions. |
+| Scheduled area-bounded function | Done in code (`supabase/functions/flood-shadow`); verified in edge-runtime 1.76.2 locally; **not deployed or scheduled**. |
+| Preprocessing and traversal budgets measured separately | Done — whole run p95 3.7 ms (Node) / 3.3 ms (Deno), BFS p95 under 0.4 ms. |
+| Reproducible shadow output | Done — byte-identical rebuild, Node = Deno = edge runtime. Real inputs give `unavailable`. |
+| Documented input readiness | Done — table in the evidence README. |
+| Real shadow output / exit gate | **Pending** external data: PAGASA station coordinates and levels, a licensed DEM with documented vertical error and a verified datum (plan section 7). |
+
+**R8 decisions and discrepancies**
+
+- **RRL range check vs Critical:** a baseline more than 5 m below Critical would make the literal §7.4 check discard genuine Critical readings, so station sets with such a baseline are refused at parse. The 2018 PAGASA bulletin lists Montalban at 17.26 / 18.26 / 19.26 m, not Table 1's values; do not hard-code unverified thresholds.
+- **Lease** is a transaction-scoped advisory lock inside the publish RPC; the input-version check is evaluation time plus active graph.
+- **Failure policy:** failed or invalid feed → honest `unavailable` run; missing history → no run (503).
+- **Migration numbering:** `0120`; `AGENTS.md` ("last pushed 0094") remains stale. Other sessions have since added `0121`–`0124` (iOS and upload work); the next new migration is the one after the highest prefix in `supabase/migrations`, currently `0125`.
+- **Out of scope noticed:** `packages/shared` `tsc` still reports `FileReader` missing in `id-evidence.ts` (another session's file); the DEM-to-grid resampler is not built because the DEM format and licence are unknown.
+
+*Progress note, 2026-10-14 (R8):* Baseline before edits: `packages/shared` vitest 29 files / 420 pass, `tsc` 2 pre-existing errors (`id-evidence.ts`), `supabase/functions` vitest 3 files / 48 pass. After: shared 30 files / 477 pass (+57), same 2 `tsc` errors; `supabase/functions` 5 files / 72 pass (+20 flood-shadow); handler/test `tsc` 0 errors; Android `tsc` 0 errors and `vitest` 14 / 126; web `tsc` 0 errors; R2 digest `217d8e6a` unchanged. Applied `0118`–`0120` to a full clone of the dev DB (`r8_disposable`, dropped afterwards; the dev DB was only read): pgTAP `flood_shadow_runs` 37/37; 16/16 TypeScript and 7/8 SQL mutants killed (the survivor is equivalent, see evidence). Ran the real function in supabase-edge-runtime 1.76.2 with PostgREST: published, duplicate, superseded, unauthorized, method errors, real bundled inputs → `unavailable`; 10 parallel publishers stayed ordered. Node 24.13.1, Deno 2.9.7 and the edge runtime agree on report hashes. Remaining: owner-authorized hosted apply/deploy/schedule, station and terrain data, and DRRM/PAGASA confirmation of the open constants.
 
 ### R9 — Model validation and controlled activation
 - Replay/comparison tooling and versioned activation configuration; held-out event reports (candidates: Kristine Oct 2024, Ulysses Nov 2020); bridge/approach validation; model replacement, holdover restrictions, explicit clearance.
@@ -487,11 +716,26 @@ R-prefix phases, executed sequentially. A phase is not complete while its exit g
 **Verification:** false positives/negatives and calibration sensitivity documented; accepted revisions clear only their own exclusions; degraded operation when sensor or model services fail.
 **Exit gate:** DRRM acceptance evidence exists before enabling sensor penalties or BFS exclusions.
 
+**Scope split (owner Q&A, 2026-10-15).** R9 may be started without external data, but only for R9a. R9 as a whole cannot be complete until R9b is done.
+
+| Part | Items | External data | Rule |
+|---|---|---|---|
+| **R9a — buildable now** | Replay/comparison tooling (verified on synthetic events only); versioned activation configuration with the stage order (closures → sensor warning/penalty → BFS advisory → BFS exclusion, none skippable) and every model stage **off**; model replacement, holdover restrictions and explicit clearance (a valid newer model clears only its own exclusions, never a verified closure or a resident avoidance mark); degraded operation when the sensor or model service fails; precision/recall/IoU computation code | None | Enables nothing and changes no resident behavior. No thresholds, calibration values or accuracy claims; `modelStatus` stays `unavailable`. Evidence is labelled synthetic. |
+| **R9b — data-gated** | Held-out event reports (≥ 2 events with archived gauge series and extents); precision/recall/IoU numbers; road-level false positives/negatives; bridge/approach validation; calibration sensitivity; DRRM acceptance of a versioned exclusion policy | Station data, licensed DEM, datum, flood-event ground truth, DRRM review | Stays **pending**. Not started, not simulated, not marked passed. |
+
+**Status (2026-10-15): Not started.** R9a may start without external data but has not been requested by the owner; R9b is pending the inputs in section 7. The exit gate is unmet and cannot be met by R9a.
+
 ### R10 — Storm drill, release and recovery runbook
 - Rollout flags, model/ingestion health indicators, privacy-preserving telemetry; preparedness and recovery instructions; acceptance evidence and feature documentation.
 
 **Verification:** 72-hour simulated Android outage; real-device location matrix; closure/bridge/center changes during active use; connected/local route agreement for identical snapshots; p95 local ≤ 2 s; connected ≤ 3 s under documented pilot load; Android map usable within 5 s of cold start without waiting for GPS; CPU, memory, storage budgets within limits.
 **Exit gate:** all required evidence passes; rollout and rollback rehearsed.
+
+**Dependency split (owner Q&A, 2026-10-15).**
+
+- **Not model-gated** (need a physical phone, DRRM drills or hosted access only): 72-hour simulated Android outage; real-device location matrix; closure/bridge/center changes during active use; connected/local agreement; p95 and budget measurements; cold-start map within 5 s; rollout flags and rollback rehearsal for closure routing; preparedness and recovery instructions.
+- **Model-gated** (stay pending until R9b): enabling sensor penalties, BFS advisory or exclusion for residents; storm drills that rely on live model output; model-health indicators showing real (not `unavailable`) status.
+- A closure-only release is complete only when its own evidence passes; it must not describe itself as weather-aware.
 
 ## 6. Completion evidence and release rules
 

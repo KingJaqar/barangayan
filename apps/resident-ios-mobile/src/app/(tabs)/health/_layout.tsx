@@ -1,2 +1,2 @@
 import { ResidentStack } from '../../../components/resident-stack';
-export default function Layout() { return <ResidentStack title="Health" />; }
+export default function Layout() { return <ResidentStack title="Health" screens={{ '[id]': 'Medical drive' }} />; }

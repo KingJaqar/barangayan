@@ -27,11 +27,13 @@ interface ZoneOption {
   name: string;
 }
 
-interface NewReportFormProps {
+export interface NewReportFormProps {
   categories: CategoryOption[];
   zones: ZoneOption[];
   barangayId: string;
   boundary: Polygon | MultiPolygon;
+  onCancel?: () => void;
+  onSubmitted?: () => void;
 }
 
 /**
@@ -43,7 +45,7 @@ interface NewReportFormProps {
  *
  * The original form hardcoded `photo_urls: []` — this build wires the real upload.
  */
-export function NewReportForm({ categories, zones, barangayId, boundary }: NewReportFormProps) {
+export function NewReportForm({ categories, zones, barangayId, boundary, onCancel, onSubmitted }: NewReportFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -212,7 +214,8 @@ export function NewReportForm({ categories, zones, barangayId, boundary }: NewRe
     }
 
     toast.success('Report submitted successfully.');
-    router.replace('/reports');
+    if (onSubmitted) onSubmitted();
+    else router.replace('/reports');
     router.refresh();
   }
 
@@ -225,7 +228,7 @@ export function NewReportForm({ categories, zones, barangayId, boundary }: NewRe
       <div>
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={onCancel ?? (() => router.back())}
           aria-label="Go back"
           className="mb-3 flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <ChevronLeft size={16} />

@@ -1,0 +1,78 @@
+{
+    "areaId": "ampid-1",
+    "centers": [
+        {
+            "id": "00000000-0000-0000-0000-00000000c001",
+            "name": "Ampid 1 Elementary",
+            "active": true,
+            "position": {
+                "lat": 14.684583,
+                "lng": 121.112071
+            },
+            "revision": 1,
+            "availability": "unknown",
+            "entranceNodeId": null,
+            "entrancePosition": null,
+            "availabilityUpdatedAt": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000c002",
+            "name": "San Mateo Civic Center",
+            "active": true,
+            "position": {
+                "lat": 14.6836,
+                "lng": 121.1155
+            },
+            "revision": 11,
+            "availability": "available",
+            "entranceNodeId": null,
+            "entrancePosition": null,
+            "availabilityUpdatedAt": "2026-10-13T01:19:17.525677+00:00"
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000c003",
+            "name": "Dulong Bayan Covered Court",
+            "active": true,
+            "position": {
+                "lat": 14.682000,
+                "lng": 121.114000
+            },
+            "revision": 3,
+            "availability": "unknown",
+            "entranceNodeId": null,
+            "entrancePosition": null,
+            "availabilityUpdatedAt": null
+        },
+        {
+            "id": "00000000-0000-0000-0000-00000000c004",
+            "name": "Malanday National High School",
+            "active": true,
+            "position": {
+                "lat": 14.681000,
+                "lng": 121.113000
+            },
+            "revision": 4,
+            "availability": "unknown",
+            "entranceNodeId": null,
+            "entrancePosition": null,
+            "availabilityUpdatedAt": null
+        }
+    ],
+    "closures": [
+    ],
+    "revision": 11,
+    "revisedAt": "2026-10-13T01:22:17.815541+00:00",
+    "tombstones": [
+        {
+            "id": "5a08e60b-4514-4ead-aacc-63482aae7e65",
+            "revision": 10,
+            "removedAt": "2026-10-13T01:20:50.537126+00:00",
+            "entityType": "road_closure"
+        }
+    ],
+    "generatedAt": "2026-10-13T01:25:59.191508+00:00",
+    "graphStatus": "active",
+    "graphVersion": "ampid-1@2026-10-12#fc7101b6227d",
+    "schemaVersion": 1,
+    "activeGraphVersion": "ampid-1@2026-10-12#fc7101b6227d"
+}

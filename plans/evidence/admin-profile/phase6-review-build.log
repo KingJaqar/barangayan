@@ -1,0 +1,117 @@
+Vercel CLI 64.2.0 (Node.js 24.13.1)
+Fetching deployment "dpl_CsbeiHLPgXuMY7X71KDvuNmhwC9A" in barangayan
+2026-10-15T06:24:56.262Z  Running build in Washington, D.C., USA (East) – iad1
+2026-10-15T06:24:56.262Z  Build machine configuration: 2 cores, 8 GB
+2026-10-15T06:24:56.278Z  Retrieving list of deployment files...
+2026-10-15T06:24:56.757Z  Downloading 349 deployment files...
+2026-10-15T06:24:59.312Z  Restored build cache from previous deployment (Gkw5BJqqpzDqETXK2S8UxC8xmeY7)
+2026-10-15T06:25:02.099Z  Running "vercel build"
+2026-10-15T06:25:02.113Z  Vercel CLI 62.7.0
+2026-10-15T06:25:02.416Z  Running "install" command: `cd ../.. && npm install`...
+2026-10-15T06:25:02.935Z  npm warn Unknown env config "cache-dir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+2026-10-15T06:25:19.261Z  
+2026-10-15T06:25:19.262Z  up to date, audited 1134 packages in 17s
+2026-10-15T06:25:19.262Z  
+2026-10-15T06:25:19.263Z  272 packages are looking for funding
+2026-10-15T06:25:19.263Z  run `npm fund` for details
+2026-10-15T06:25:19.571Z  
+2026-10-15T06:25:19.571Z  53 vulnerabilities (16 moderate, 33 high, 4 critical)
+2026-10-15T06:25:19.571Z  
+2026-10-15T06:25:19.571Z  To address issues that do not require attention, run:
+2026-10-15T06:25:19.571Z  npm audit fix
+2026-10-15T06:25:19.571Z  
+2026-10-15T06:25:19.571Z  To address all issues possible (including breaking changes), run:
+2026-10-15T06:25:19.571Z  npm audit fix --force
+2026-10-15T06:25:19.572Z  
+2026-10-15T06:25:19.572Z  Some issues need review, and may require choosing
+2026-10-15T06:25:19.572Z  a different dependency.
+2026-10-15T06:25:19.573Z  
+2026-10-15T06:25:19.573Z  Run `npm audit` for details.
+2026-10-15T06:25:19.634Z  Detected Next.js version: 16.3.0
+2026-10-15T06:25:19.635Z  Running "cd ../.. && npm run build --workspace=@barangayan/web -- --webpack"
+2026-10-15T06:25:19.746Z  npm warn Unknown env config "cache-dir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+2026-10-15T06:25:19.788Z  
+2026-10-15T06:25:19.789Z  > @barangayan/web@0.1.0 build
+2026-10-15T06:25:19.789Z  > next build --webpack
+2026-10-15T06:25:19.789Z  
+2026-10-15T06:25:20.290Z  ▲ Next.js 16.3.0 (webpack)
+2026-10-15T06:25:20.519Z  Applying modifyConfig from Vercel
+2026-10-15T06:25:20.521Z  ✓ Running next.config.ts took 231ms
+2026-10-15T06:25:20.536Z  
+2026-10-15T06:25:20.610Z  Creating an optimized production build ...
+2026-10-15T06:25:31.615Z  ✓ Compiled successfully in 8.0s
+2026-10-15T06:25:31.617Z  Running TypeScript ...
+2026-10-15T06:25:35.444Z  Finished TypeScript in 3.8s ...
+2026-10-15T06:25:35.449Z  Collecting page data using 1 worker ...
+2026-10-15T06:25:36.640Z  Generating static pages using 1 worker (0/45) ...
+2026-10-15T06:25:37.428Z  Generating static pages using 1 worker (11/45)
+2026-10-15T06:25:37.428Z  Generating static pages using 1 worker (22/45)
+2026-10-15T06:25:37.428Z  Generating static pages using 1 worker (33/45)
+2026-10-15T06:25:37.429Z  ✓ Generating static pages using 1 worker (45/45) in 789ms
+2026-10-15T06:25:39.785Z  Finalizing page optimization ...
+2026-10-15T06:25:39.785Z  Collecting build traces ...
+2026-10-15T06:25:47.721Z  Running onBuildComplete from Vercel
+2026-10-15T06:25:47.859Z  
+2026-10-15T06:25:47.862Z  Route (app)
+2026-10-15T06:25:47.862Z  ┌ ○ /
+2026-10-15T06:25:47.862Z  ├ ○ /_not-found
+2026-10-15T06:25:47.862Z  ├ ƒ /about-us
+2026-10-15T06:25:47.862Z  ├ ƒ /announcements
+2026-10-15T06:25:47.862Z  ├ ƒ /api/admin/residents
+2026-10-15T06:25:47.862Z  ├ ƒ /api/admin/staff/invite
+2026-10-15T06:25:47.862Z  ├ ƒ /api/search
+2026-10-15T06:25:47.862Z  ├ ○ /apple-icon.png
+2026-10-15T06:25:47.862Z  ├ ƒ /archive
+2026-10-15T06:25:47.862Z  ├ ƒ /archive/[screen]
+2026-10-15T06:25:47.862Z  ├ ƒ /dashboard
+2026-10-15T06:25:47.862Z  ├ ƒ /emergency-qr
+2026-10-15T06:25:47.862Z  ├ ƒ /evacuation-centers
+2026-10-15T06:25:47.862Z  ├ ƒ /evacuation-routing
+2026-10-15T06:25:47.863Z  ├ ƒ /faq
+2026-10-15T06:25:47.863Z  ├ ○ /forgot-password
+2026-10-15T06:25:47.864Z  ├ ƒ /health
+2026-10-15T06:25:47.864Z  ├ ƒ /health/applicants
+2026-10-15T06:25:47.864Z  ├ ƒ /households-residents
+2026-10-15T06:25:47.864Z  ├ ƒ /hub
+2026-10-15T06:25:47.864Z  ├ ○ /icon.png
+2026-10-15T06:25:47.865Z  ├ ƒ /incident-map
+2026-10-15T06:25:47.866Z  ├ ƒ /incident-reports
+2026-10-15T06:25:47.866Z  ├ ƒ /login
+2026-10-15T06:25:47.866Z  ├ ƒ /profile
+2026-10-15T06:25:47.866Z  ├ ƒ /profile-proof
+2026-10-15T06:25:47.866Z  ├ ○ /profile/security-callback
+2026-10-15T06:25:47.866Z  ├ ƒ /requests
+2026-10-15T06:25:47.867Z  ├ ƒ /requests/[requestId]
+2026-10-15T06:25:47.867Z  ├ ○ /reset-password
+2026-10-15T06:25:47.867Z  ├ ƒ /resident
+2026-10-15T06:25:47.867Z  ├ ƒ /resident/profile
+2026-10-15T06:25:47.867Z  ├ ƒ /resident/reports
+2026-10-15T06:25:47.868Z  ├ ƒ /resident/reports/new
+2026-10-15T06:25:47.868Z  ├ ƒ /resident/requests
+2026-10-15T06:25:47.868Z  ├ ƒ /resident/requests/[requestId]
+2026-10-15T06:25:47.868Z  ├ ƒ /resident/requests/new
+2026-10-15T06:25:47.871Z  ├ ƒ /residents
+2026-10-15T06:25:47.871Z  ├ ƒ /search
+2026-10-15T06:25:47.871Z  ├ ƒ /search/[category]/[recordId]
+2026-10-15T06:25:47.872Z  ├ ƒ /services
+2026-10-15T06:25:47.872Z  ├ ƒ /services/sla
+2026-10-15T06:25:47.872Z  ├ ƒ /settings
+2026-10-15T06:25:47.872Z  ├ ƒ /staff
+2026-10-15T06:25:47.872Z  ├ ƒ /terms-privacy
+2026-10-15T06:25:47.872Z  ├ ƒ /theme
+2026-10-15T06:25:47.873Z  ├ ƒ /transactions
+2026-10-15T06:25:47.873Z  └ ƒ /waste-management
+2026-10-15T06:25:47.873Z  
+2026-10-15T06:25:47.873Z  
+2026-10-15T06:25:47.873Z  ƒ Proxy (Middleware)
+2026-10-15T06:25:47.874Z  
+2026-10-15T06:25:47.874Z  ○  (Static)   prerendered as static content
+2026-10-15T06:25:47.874Z  ƒ  (Dynamic)  server-rendered on demand
+2026-10-15T06:25:47.875Z  
+2026-10-15T06:25:48.150Z  Build Completed in /vercel/output [46s]
+2026-10-15T06:25:48.175Z  Deploying outputs...
+2026-10-15T06:25:55.098Z  Deployment completed
+2026-10-15T06:25:55.102Z  Creating build cache...
+2026-10-15T06:26:30.594Z  Created build cache: 35s
+2026-10-15T06:26:30.595Z  Uploading build cache [580.40 MB]
+status	● Ready

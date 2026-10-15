@@ -1,0 +1,110 @@
+{
+  "verified_on": "2026-10-15",
+  "timezone": "Asia/Manila",
+  "method": "Read-only signed-in Supabase dashboard inspection and catalog SELECT queries; no hosted settings/data writes.",
+  "project_ref": "pwjbucnyqexiepoinoke",
+  "environment": "main PRODUCTION",
+  "auth_version": "v2.197.0",
+  "postgres_version": "17.6",
+  "providers": {
+    "email": true,
+    "google": true,
+    "phone": false,
+    "apple": false,
+    "anonymous": false,
+    "allow_signup": true,
+    "allow_manual_identity_linking": true
+  },
+  "email": {
+    "signup_confirmation": false,
+    "secure_email_change": true,
+    "otp_expiry_seconds": 3600,
+    "otp_digits": 6,
+    "magic_template_token": true,
+    "magic_template_confirmation_url": true,
+    "email_change_template_confirmation_url": true,
+    "delivery_tested": false
+  },
+  "password": {
+    "minimum_hosted_length": 6,
+    "required_classes": [
+      "lowercase",
+      "uppercase",
+      "digits",
+      "symbols"
+    ],
+    "secure_password_change": false,
+    "require_current_password": false,
+    "leaked_password_protection": false,
+    "admin_minimum_length": 8
+  },
+  "sessions": {
+    "access_token_expiry_seconds": 3600,
+    "refresh_rotation": true,
+    "refresh_reuse_seconds": 10,
+    "single_session": false,
+    "timebox_hours": 0,
+    "inactivity_timeout_hours": 0
+  },
+  "mfa": {
+    "totp": "Enabled",
+    "phone": "Disabled",
+    "max_factors": 10,
+    "terminate_low_aal_after_minutes": 15
+  },
+  "smtp": {
+    "custom_enabled": true,
+    "host": "smtp-relay.brevo.com",
+    "port": 587,
+    "sender_name": "Barangayan",
+    "minimum_interval_seconds": 1,
+    "emails_per_hour": 25,
+    "credentials": "Not recorded or changed"
+  },
+  "rate_limits": {
+    "refreshes_per_five_minutes": 150,
+    "token_verifications_per_five_minutes": 30,
+    "signups_signins_per_five_minutes": 30
+  },
+  "site_url": "https://barangayan-resident-web.vercel.app",
+  "redirect_urls": [
+    "https://barangayan-resident-web.vercel.app/auth/callback",
+    "https://barangayan-resident-web.vercel.app/auth/callback?next=**",
+    "http://localhost:3000/auth/callback",
+    "http://localhost:3000/auth/callback?next=**",
+    "barangayan://auth/callback"
+  ],
+  "release_blockers": [
+    "The owner-supplied admin deployment is protected by Vercel; hosted app/backend/version access is unverified.",
+    "No admin /profile/security-callback or /profile-proof redirect allowlist entry is present; unchanged five-entry list reread after owner follow-up.",
+    "The supplied local app connects to PRODUCTION, not isolated staging; no explicitly disposable hosted target/accounts and old/new/resident test inboxes have been established.",
+    "External configuration changes and hosted mutation/email testing remain separately authorization-gated."
+  ],
+  "schema_observation": {
+    "migration_0119_present": true,
+    "applied_by_this_task": false,
+    "later_migrations": [
+      "0120",
+      "0121",
+      "0122",
+      "0123",
+      "0124",
+      "20261015003812"
+    ],
+    "live_feature_functions_compared": 19,
+    "matching_tested_definitions": 19,
+    "authoritative_feature_association": "public.admin_resident_associations",
+    "historical_external_import": "Owner explicitly confirmed none on 2026-10-15; no external registry/backfill required."
+  },
+  "owner_followup": {
+    "date": "2026-10-15",
+    "admin_origin": "https://barangayan-admin-mljmo9xhp-barangayan.vercel.app",
+    "local_origin": "http://localhost:3000",
+    "local_existing_account_signin": "Succeeded",
+    "local_profile": "Disabled verification gate displayed",
+    "local_backend": "Inspected PRODUCTION project",
+    "hosted_access": "Vercel You Need Access; no request sent",
+    "callback_changes": "Prepared only; not applied",
+    "credentials_recorded": false
+  }
+}

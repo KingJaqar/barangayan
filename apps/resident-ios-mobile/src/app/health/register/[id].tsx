@@ -1,9 +1,9 @@
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
-import { Redirect, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { RequireResident } from '../../../components/require-resident';
 import { useMemo, useState } from 'react';
 import { Action, Body, Card, Field, Notice, ResourceState, Screen, Toggle, Unavailable } from '../../../components/ui';
 import { useApi } from '../../../data/use-api';
-import { routeId } from '../../../data/resident-api';
 import { useResource } from '../../../data/use-resource';
 import { residentError } from '../../../lib/errors';
 import { releaseGates } from '../../../lib/release-gates';
@@ -18,15 +18,17 @@ function ageFrom(value: string | null) {
   return age;
 }
 
-export default function DriveRegistration() {
+export default function DriveRegistrationRoute() {
+  return <RequireResident purpose="register for medical drives"><DriveRegistration /></RequireResident>;
+}
+function DriveRegistration() {
   const { id } = useLocalSearchParams();
-  const { session, profile } = useResident(); const api = useApi();
-  const resource = useResource(`register-drive:${id}`, async (signal) => { const valid = routeId(id); return (await api.drives(signal)).find((row) => row.id === valid) ?? null; });
+  const { profile } = useResident(); const api = useApi();
+  const resource = useResource(`register-drive:${id}`, (signal) => api.drive(id, signal));
   const profileAge = useMemo(() => ageFrom(profile?.birth_date ?? null), [profile?.birth_date]);
   const [age, setAge] = useState(profileAge === null ? '' : String(profileAge)); const [pwd, setPwd] = useState(false);
   const [conditions, setConditions] = useState(''); const [hasPriorDose, setHasPriorDose] = useState(false); const [priorDoseDate, setPriorDoseDate] = useState(new Date());
   const [consent, setConsent] = useState(false); const [busy, setBusy] = useState(false); const [message, setMessage] = useState(''); const [result, setResult] = useState('');
-  if (!session) return <Redirect href="/auth" />;
   if (!releaseGates.medicalRegistration) return <Screen><Unavailable service="Medical drive registration" /></Screen>;
   async function submit() {
     if (busy) return;

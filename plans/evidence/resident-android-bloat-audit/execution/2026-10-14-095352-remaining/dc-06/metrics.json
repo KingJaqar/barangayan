@@ -1,0 +1,21 @@
+{
+  "web": {
+    "before": 5307039,
+    "after": 5305154,
+    "delta": -1885,
+    "retainedChunksIdentical": true
+  },
+  "android": {
+    "before": 8085535,
+    "after": 8081904,
+    "delta": -3631,
+    "assetsIdentical": true
+  },
+  "source": {
+    "newAndroidWarningMessages": [],
+    "currentRunBytesRemoved": 40177,
+    "cumulativeSourceBytesRemoved": 41261
+  },
+  "apkMeasurement": "Not performed",
+  "androidAssetsIdentical": true
+}

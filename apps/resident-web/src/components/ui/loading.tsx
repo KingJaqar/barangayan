@@ -1,6 +1,6 @@
 import type * as React from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 /**
  * Server-compatible loading primitives (no client boundary). Animation, the 120 ms

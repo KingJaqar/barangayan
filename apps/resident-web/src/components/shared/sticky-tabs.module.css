@@ -1,0 +1,14 @@
+.primary {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flow-root;
+  min-width: 0;
+}
+
+.secondary {
+  position: sticky;
+  top: var(--resident-primary-tabs-height, 88px);
+  z-index: 10;
+  min-width: 0;
+}

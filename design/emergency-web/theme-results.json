@@ -1,0 +1,337 @@
+{
+  "screens": [
+    {
+      "accent": "Default accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.915294 0.948824 0.942118)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.923059 0.944941 0.992941)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.971059 0.917059 0.940706)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.0417647 0.0901961 0.0805098)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.0529804 0.0845882 0.153922)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.122314 0.0443137 0.0784706)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.915294 0.948824 0.942118)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.923059 0.944941 0.992941)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.971059 0.917059 0.940706)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.0417647 0.0901961 0.0805098)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.0529804 0.0845882 0.153922)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/centers",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.122314 0.0443137 0.0784706)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.915294 0.948824 0.942118)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.923059 0.944941 0.992941)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.971059 0.917059 0.940706)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.0417647 0.0901961 0.0805098)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.0529804 0.0845882 0.153922)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/scan",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.122314 0.0443137 0.0784706)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/family",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.915294 0.948824 0.942118)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/family",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.923059 0.944941 0.992941)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/family",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.971059 0.917059 0.940706)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/family",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.0417647 0.0901961 0.0805098)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/family",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.0529804 0.0845882 0.153922)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/family",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.122314 0.0443137 0.0784706)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.974588 0.94 0.942353)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.974588 0.94 0.942353)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": false,
+      "mode": "Light theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.974588 0.94 0.942353)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "accent": "Default accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(15, 110, 91)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#0F6E5B",
+      "surface": "color(srgb 0.0799216 0.0591686 0.0605804)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Blue accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(37, 99, 235)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#2563EB",
+      "surface": "color(srgb 0.0799216 0.0591686 0.0605804)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "accent": "Custom accent",
+      "dark": true,
+      "mode": "Dark theme",
+      "pill": "rgb(173, 20, 87)",
+      "route": "/emergency/alerts",
+      "selectedAccent": "#AD1457",
+      "surface": "color(srgb 0.0799216 0.0591686 0.0605804)",
+      "text": "rgb(237, 237, 237)"
+    }
+  ],
+  "dialogs": [
+    {
+      "choice": "rgb(15, 110, 91)",
+      "state": {
+        "accent": "Default accent",
+        "mode": "Light theme"
+      },
+      "surface": "rgb(255, 255, 255)",
+      "text": "rgb(23, 23, 23)"
+    },
+    {
+      "choice": "rgb(37, 99, 235)",
+      "state": {
+        "accent": "Blue accent",
+        "mode": "Dark theme"
+      },
+      "surface": "rgb(10, 10, 10)",
+      "text": "rgb(237, 237, 237)"
+    },
+    {
+      "choice": "rgb(173, 20, 87)",
+      "state": {
+        "accent": "Custom accent",
+        "mode": "Dark theme"
+      },
+      "surface": "rgb(10, 10, 10)",
+      "text": "rgb(237, 237, 237)"
+    }
+  ],
+  "map": {
+    "blue": "rgb(37, 99, 235)",
+    "custom": "rgb(173, 20, 87)"
+  }
+}

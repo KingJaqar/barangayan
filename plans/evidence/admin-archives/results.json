@@ -1,0 +1,30 @@
+{
+  "checks": [
+    "Anonymous archive entry redirects to login: passed",
+    "Icon-only inactive tabs, active labels, hover expansion/collapse, no overlap at 390–1440px, keyboard navigation, and reduced motion: passed",
+    "Delayed archive navigation shows loading feedback; records settle; reduced motion disables entrance animation: passed",
+    "Services: passed",
+    "Announcements: passed",
+    "Requests: passed",
+    "Transactions: passed",
+    "Resident Directory: passed",
+    "Incident Reports: passed",
+    "Health: passed",
+    "Medical Applicants: passed",
+    "Waste Management: passed",
+    "Hub: passed",
+    "Evacuation Centers: passed",
+    "Households & Residents: passed",
+    "Staff Members: passed",
+    "Default entry, pagination, case-insensitive search, tenant isolation, details: passed",
+    "Waste zones, schedules, and dumping reports: passed",
+    "Touch device labels are visible and all 13 destinations open with one tap: passed",
+    "Narrow layout, selected tab visibility, dark appearance: passed"
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Local Supabase with synthetic records; hosted data was not used."
+  ],
+  "status": "passed",
+  "fixtureCleanup": "passed"
+}

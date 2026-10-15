@@ -1,9 +1,13 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
 import Link from 'next/link';
-import { type Tables } from '@barangayan/shared';
-import { Archive, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { RequestStatusActions } from '@/components/admin/request-status-actions';
+
+import { type Tables } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 
 import { TableBrowsePanel } from '@/components/admin/table-browse-panel';
@@ -18,9 +22,7 @@ import { directionLabel } from '@/lib/admin-tables/sort-definitions';
 import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { RequestStatusActions } from '@/components/admin/request-status-actions';
 import { StatusPill } from '@/components/admin/status-pill';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -139,43 +141,43 @@ function AddRequestForm({
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Resident</span>
-        <select className={inputClass} value={residentId} onChange={(e) => setResidentId(e.target.value)} required>
+        <AdminSelect kind="people" className={inputClass} value={residentId} onValueChange={(nextValue) => setResidentId(nextValue)} required>
           <option value="">Select a resident…</option>
           {residents.map((r) => (
             <option key={r.id} value={r.id}>
               {r.full_name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Document Type</span>
-        <select className={inputClass} value={documentTypeId} onChange={(e) => setDocumentTypeId(e.target.value)} required>
+        <AdminSelect kind="document" className={inputClass} value={documentTypeId} onValueChange={(nextValue) => setDocumentTypeId(nextValue)} required>
           <option value="">Select a document type…</option>
           {documentTypes.filter(d => d.contract_version === 1).map((d) => (
             <option key={d.id} value={d.id}>
               {d.name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Status</span>
-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
+        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as typeof status)}>
           <option value="submitted">Submitted</option>
           <option value="in_progress">Processing</option>
           <option value="ready_for_pickup">Ready for Pickup</option>
           <option value="completed">Completed</option>
           <option value="cancelled">Cancelled</option>
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Payment</span>
-        <select className={inputClass} value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value as typeof paymentStatus)}>
+        <AdminSelect kind="status" className={inputClass} value={paymentStatus} onValueChange={(nextValue) => setPaymentStatus(nextValue as typeof paymentStatus)}>
           <option value="pending">Pending</option>
           <option value="paid">Paid</option>
           <option value="waived">Waived</option>
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Submitted Date</span>
@@ -208,7 +210,6 @@ export function RequestsTable({
   optionsError: string | null; residents: Resident[]; documentTypes: DocumentTypeOption[]; barangayId: string;
 }) {
   const router = useRouter();
-  const toast = useToast();
   const [addOpen, setAddOpen] = useState(false);
   const browse = usePilotTableBrowse('requests', requestedState, result);
   const { state, value } = browse;
@@ -255,35 +256,20 @@ export function RequestsTable({
     return { error: null, row: updated };
   }
 
-  async function archive(request: ServiceRequest) {
-    if (!await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    const { data: updated, error } = await supabase
-      .from('service_requests')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', request.id)
-      .select('id, reference_number, status, payment_status')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to archive request: ${error.message}`);
-      return;
-    }
-    if (!updated) {
-      toast.showError('Failed to archive request: no request was updated. Check that you still have access to this barangay.');
-      return;
-    }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'service_request',
-      entityId: updated.id,
-      entityLabel: updated.reference_number,
-      metadata: { reference_number: updated.reference_number, status: updated.status, payment_status: updated.payment_status },
-    }).catch(() => {});
-
-    toast.showSuccess(`Request #${request.reference_number} archived.`);
-    browse.refresh();
-  }
+  const lifecycle = useRecordWorkspace<ServiceRequest>('requests', browse.refresh, browse.settle, {
+    actionsMinWidth: 920,
+    workflowActions: row => <>
+      <RequestStatusActions requestId={row.id} referenceNumber={row.reference_number} status={row.status}
+        paymentStatus={row.payment_status} paymentMethod={row.payment_method} workflowRequest={row} variant="row" onBeforeAction={browse.settle} onChanged={browse.refresh} />
+      {row.contract_version === 2 && <Link href={`/requests/${row.id}`}
+      className="inline-flex min-h-9 items-center rounded-md bg-[var(--accent)] px-3 text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+      onClick={event => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        void browse.settle().then(saved => { if (saved) router.push(`/requests/${row.id}`); });
+      }}>Details</Link>}
+    </>,
+  });
 
   const columns: EditableDataTableColumn<ServiceRequest>[] = [
     {
@@ -412,56 +398,11 @@ export function RequestsTable({
         onSave: (r, value) => updateField(r, { requester_notes: String(value) || null }),
       },
     },
-    {
-      id: 'actions',
-      header: 'Actions',
-      initialWidth: 208,
-      minWidth: 188,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      render: (r) => (
-        <div className="flex items-center gap-1.5" onClick={(event) => event.stopPropagation()}>
-          <Link
-            href={`/requests/${r.id}`}
-            onClick={event => {
-              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
-              event.preventDefault();
-              void browse.settle().then(saved => { if (saved) router.push('/requests/' + r.id); });
-            }}
-            title="View request details"
-            aria-label={`View request ${r.reference_number}`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-          </Link>
-          {r.contract_version === 2 ? <Link className="text-xs text-[var(--accent)] underline" href={`/requests/${r.id}`} onClick={event => {
-              if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
-              event.preventDefault();
-              void browse.settle().then(saved => { if (saved) router.push('/requests/' + r.id); });
-            }}>Review</Link> : <RequestStatusActions
-            requestId={r.id}
-            referenceNumber={r.reference_number}
-            status={r.status}
-            paymentStatus={r.payment_status}
-            paymentMethod={r.payment_method}
-            variant="compact"
-            onBeforeAction={browse.settle}
-            onChanged={browse.refresh}
-          />}
-          <ConfirmButton
-            label={<Archive aria-hidden="true" className="h-4 w-4" />}
-            confirmLabel="Archive?"
-            onConfirm={() => archive(r)}
-            title="Archive request"
-            ariaLabel={`Archive request ${r.reference_number}`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        </div>
-      ),
-    },
+    lifecycle.column,
   ];
 
   return <>
+    <RecordArchiveLink name="requests" beforeOpen={browse.settle} />
     <PilotSummary name="requests" summary={summary} onRetry={browse.refresh} />
     {optionsError && <div role="alert" className="mb-4 rounded-xl border p-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}
     {addOpen && <fieldset disabled={!!optionsError || browse.pending}><AddRequestForm residents={residents} documentTypes={documentTypes} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
@@ -471,23 +412,24 @@ export function RequestsTable({
       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
         category={<div className="table-browse-field"><label htmlFor="requests-document">Document</label>
-          <select id="requests-document" value={state.filters.doc} disabled={!!optionsError}
-            onChange={event => void browse.commit({ filters: { doc: event.target.value } })}>
+          <AdminSelect id="requests-document" value={state.filters.doc} disabled={!!optionsError}
+            onValueChange={nextValue => void browse.commit({ filters: { doc: nextValue } })}>
             <option value="">All documents</option>
             {state.filters.doc && !documentTypes.some(doc => doc.id === state.filters.doc) && <option value={state.filters.doc}>Selected document</option>}
             {documentTypes.map(doc => <option key={doc.id} value={doc.id}>{doc.name}</option>)}
-          </select></div>}
+          </AdminSelect></div>}
         filters={<SegmentedFilter label="Request status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
           onChange={tab => void browse.commit({ filters: { tab } })} />}
         actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
           onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Request</button>} />}
       pagination={value && <TablePagination total={value.total} page={state.page} pageSize={state.pageSize} pending={browse.pending}
         onPageChange={page => void browse.commit({ page })} onPageSizeChange={pageSize => void browse.commit({ pageSize })} />}>
-      <EditableDataTable rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
         emptyLabel={browse.pending ? 'Updating results…' : 'No requests in this view.'}
         resizableColumns density="compact" tableMinWidth={1360}  />
     </TableBrowsePanel>
+    {lifecycle.view}
   </>;
 }

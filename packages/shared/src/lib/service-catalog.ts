@@ -21,10 +21,22 @@ export function serviceDocumentTypeValues(input: ServiceDocumentTypeInput) {
   const value = serviceDocumentTypeSchema.parse(input);
   return {
     name: value.name, description: value.description || null, contract_version: 2,
-    service_kind: value.catalog.serviceKind, charter: value.catalog.charter,
+    service_kind: value.catalog.serviceKind,
+    charter: {
+      ...value.catalog.charter,
+      feesToBePaid: value.catalog.serviceKind === 'business' ? BUSINESS_FEE_DESCRIPTION
+        : ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? '₱100.00'
+        : value.catalog.serviceKind === 'certified_true_copy' ? '₱10.00 per page' : value.catalog.charter.feesToBePaid,
+    },
     purposes: value.catalog.purposes, requirement_rules: value.catalog.requirementRules,
-    pricing_mode: value.catalog.pricingMode, processing_target_minutes: value.catalog.processingTargetMinutes,
-    fee_centavos: value.catalog.pricingMode === 'per_page' ? 1000 : value.catalog.pricingMode === 'fixed' ? value.feeCentavos : 0,
+    pricing_mode: value.catalog.serviceKind === 'business' ? 'assessment'
+      : ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? 'fixed'
+      : value.catalog.serviceKind === 'certified_true_copy' ? 'per_page' : value.catalog.pricingMode,
+    processing_target_minutes: value.catalog.processingTargetMinutes,
+    fee_centavos: ['indigency', 'first_time_job_seeker'].includes(value.catalog.serviceKind) ? 10000
+      : value.catalog.serviceKind === 'certified_true_copy' ? 1000
+      : value.catalog.serviceKind === 'business' ? 0
+      : value.catalog.pricingMode === 'per_page' ? 1000 : value.catalog.pricingMode === 'fixed' ? value.feeCentavos : 0,
     requirements: value.catalog.charter.checklistOfRequirements.split('\n').map(line => line.trim()).filter(Boolean),
   };
 }
@@ -41,12 +53,21 @@ export function catalogContract(row: Tables<'document_types'>) {
   });
 }
 
+export const BUSINESS_FEE_DESCRIPTION = 'See Attached Tax Code (depends on the kind of transaction)';
+
 export function servicePriceLabel(row: Tables<'document_types'>) {
-  if (row.contract_version === 2 && row.pricing_mode !== 'fixed')
-    return row.pricing_mode === 'per_page'
-      ? '₱10 per confirmed billable page · assessed by staff'
-      : 'Awaiting fee assessment';
+  if (row.service_kind === 'business') return BUSINESS_FEE_DESCRIPTION;
+  if (row.service_kind === 'certified_true_copy' || row.pricing_mode === 'per_page') return '₱10.00 per page';
+  if (['indigency', 'first_time_job_seeker'].includes(row.service_kind ?? '')) return '₱100.00';
   return row.fee_centavos === 0 ? 'No payment required' : `₱${(row.fee_centavos / 100).toFixed(2)}`;
+}
+
+/** A variable tax-code amount is payable at pickup, never treated as a free document. */
+export function requestFeeLabel(request: { fee_assessment_state: string }, amount: number | null) {
+  if (amount !== null) return `₱${(amount / 100).toFixed(2)}`;
+  return request.fee_assessment_state === 'page_count_required'
+    ? '₱10.00 per page — enter total pages to continue'
+    : BUSINESS_FEE_DESCRIPTION;
 }
 
 /** Charter guidance only; elapsed tracking remains a separate timing contract. */
@@ -89,6 +110,7 @@ export function submittedDetailLines(value: Json | null): [string, string][] {
     establishmentAddress: 'Establishment address',
     recordReference: 'Record/document reference',
     copies: 'Number of copies',
+    totalPages: 'Total pages across all copies',
   };
   const lines: [string, string][] = [];
   for (const [key, label] of Object.entries(labels))
@@ -100,7 +122,7 @@ export function submittedDetailLines(value: Json | null): [string, string][] {
   return lines;
 }
 
-/** Historical amounts come from the ledger first. V2 never falls back to a catalog fee. */
+/** Preserve ledger amounts and submission snapshots; variable pickup fees stay unknown. */
 export function requestFee(
   request: Pick<
     Tables<'service_requests'>,
@@ -111,6 +133,6 @@ export function requestFee(
 ) {
   if (recordedPaymentFee != null) return recordedPaymentFee;
   if (request.contract_version === 2)
-    return request.fee_assessment_state === 'pending' ? null : request.assessed_amount_centavos;
+    return request.assessed_amount_centavos;
   return request.legacy_fee_centavos ?? legacyCatalogFee;
 }

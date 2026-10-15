@@ -1,0 +1,1654 @@
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\announcement-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-form.tsx"
+index 4ac39e6..906ac5f 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\announcement-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -128,13 +130,13 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
+ 
+       <label className="text-sm">
+         <span className={labelClass}>Category</span>
+-        <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
++        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+           {ANNOUNCEMENT_CATEGORIES.map((cat) => (
+             <option key={cat} value={cat}>
+               {ANNOUNCEMENT_CATEGORY_META[cat].label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\announcement-row.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-row.tsx"
+index 427adb7..8d4b66e 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\announcement-row.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\announcements\\announcement-row.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import styles from '@/components/admin/content-workspace.module.css';
+ 
+ import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES, type Tables } from '@barangayan/shared';
+@@ -149,13 +151,13 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
+ 
+           <label className="text-sm">
+             <span className={labelClass}>Category</span>
+-            <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
++            <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+               {ANNOUNCEMENT_CATEGORIES.map((cat) => (
+                 <option key={cat} value={cat}>
+                   {ANNOUNCEMENT_CATEGORY_META[cat].label}
+                 </option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+ 
+           <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\qr-codes-tab.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\emergency-qr\\qr-codes-tab.tsx"
+index 7cf6df4..6ad5097 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\qr-codes-tab.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\emergency-qr\\qr-codes-tab.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { useMemo, useState } from 'react';
+ import { logAdminAction } from '@/actions/admin-audit-actions';
+ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+@@ -70,16 +72,16 @@ export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCente
+       <div className="flex items-center justify-between">
+         <div className="flex items-center gap-3">
+           <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Select Center</label>
+-          <select
++          <AdminSelect aria-label="Select Center"
+             value={selectedCenterId}
+-            onChange={(e) => setSelectedCenterId(e.target.value)}
++            onValueChange={(nextValue) => setSelectedCenterId(nextValue)}
+             className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800">
+             {initialCenters.map((center) => (
+               <option key={center.id} value={center.id}>
+                 {center.name}
+               </option>
+             ))}
+-          </select>
++          </AdminSelect>
+         </div>
+         <button
+           onClick={regenerateAll}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\qr-instructions-modal.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\emergency-qr\\qr-instructions-modal.tsx"
+index b0988c1..fa9938d 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\qr-instructions-modal.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\emergency-qr\\qr-instructions-modal.tsx"
+@@ -1,7 +1,8 @@
+ 'use client';
+ 
+ import { useEffect, useState } from 'react';
+-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
++import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+ import { zodResolver } from '@hookform/resolvers/zod';
+ import { logAdminAction } from '@/actions/admin-audit-actions';
+ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+@@ -238,13 +239,12 @@ export function QrInstructionsModal({
+ 
+           <div className="text-sm">
+             <span className="mb-1 block font-medium">Icon</span>
+-            <select {...form.register('icon')} className={inputClass}>
+-              {PRESET_ICONS.map((icon) => (
+-                <option key={icon} value={icon}>
+-                  {icon}
+-                </option>
+-              ))}
+-            </select>
++            <Controller name="icon" control={form.control} render={({ field, fieldState }) => (
++              <AdminSelect ref={field.ref} name={field.name} aria-label="Icon" value={field.value ?? ''}
++                onValueChange={field.onChange} onBlur={field.onBlur} disabled={field.disabled}
++                aria-invalid={fieldState.invalid} className={inputClass}
++                options={PRESET_ICONS.map(icon => ({ value: icon, label: icon }))} />
++            )} />
+           </div>
+ 
+           <div className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\evacuation-center-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-centers\\evacuation-center-form.tsx"
+index aecfd4a..3987742 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\evacuation-center-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-centers\\evacuation-center-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -209,13 +211,13 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
+ 
+       <label className="text-sm">
+         <span className={labelClass}>Status</span>
+-        <select
++        <AdminSelect kind="status"
+           className={inputClass}
+           value={isActive ? 'active' : 'inactive'}
+-          onChange={(e) => setIsActive(e.target.value === 'active')}>
++          onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
+           <option value="active">Active</option>
+           <option value="inactive">Inactive</option>
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\evacuation-center-row.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-centers\\evacuation-center-row.tsx"
+index 7a4938b..8a5eefc 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\evacuation-center-row.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-centers\\evacuation-center-row.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentStatus } from '@/components/admin/content-workspace';
+ import styles from '@/components/admin/content-workspace.module.css';
+ 
+@@ -287,13 +289,13 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
+ 
+           <label className="text-sm">
+             <span className={labelClass}>Status</span>
+-            <select
++            <AdminSelect kind="status"
+               className={inputClass}
+               value={isActive ? 'active' : 'inactive'}
+-              onChange={(e) => setIsActive(e.target.value === 'active')}>
++              onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
+               <option value="active">Active</option>
+               <option value="inactive">Inactive</option>
+-            </select>
++            </AdminSelect>
+           </label>
+ 
+           <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\routing-conditions-editor.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-routing\\routing-conditions-editor.tsx"
+index 9bcef88..87446c7 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\routing-conditions-editor.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\evacuation-routing\\routing-conditions-editor.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import {
+   EVACUATION_CENTER_AVAILABILITIES,
+   haversineDistanceMeters,
+@@ -373,12 +375,12 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
+                 <div className="flex flex-wrap items-center gap-2">
+                   <label className="text-xs">
+                     <span className="sr-only">Availability of {center.name}</span>
+-                    <select
++                    <AdminSelect kind="status"
+                       className={`${inputClass} w-auto`}
+                       value={center.availability}
+                       disabled={busyAction === `availability:${center.id}`}
+-                      onChange={(event) => {
+-                        const parsed = EVACUATION_CENTER_AVAILABILITIES.find((value) => value === event.target.value);
++                      onValueChange={(nextValue) => {
++                        const parsed = EVACUATION_CENTER_AVAILABILITIES.find((value) => value === nextValue);
+                         if (parsed) void setAvailability(center, parsed);
+                       }}>
+                       {EVACUATION_CENTER_AVAILABILITIES.map((value) => (
+@@ -386,7 +388,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
+                           {AVAILABILITY_LABELS[value]}
+                         </option>
+                       ))}
+-                    </select>
++                    </AdminSelect>
+                   </label>
+                   <button
+                     type="button"
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\faq-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\faq\\faq-form.tsx"
+index be7b134..31599fa 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\faq-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\faq\\faq-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -117,16 +119,16 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Category</span>
+-        <select
++        <AdminSelect
+           className={inputClass}
+           value={category}
+-          onChange={(e) => setCategory(e.target.value)}>
++          onValueChange={(nextValue) => setCategory(nextValue)}>
+           {FAQ_CATEGORIES.map((cat) => (
+             <option key={cat} value={cat}>
+               {FAQ_CATEGORY_META[cat].label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\faq-row.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\faq\\faq-row.tsx"
+index fc9db8e..3f42fcd 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\faq-row.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\faq\\faq-row.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import styles from '@/components/admin/content-workspace.module.css';
+ 
+ import { faqArticleSchema, FAQ_CATEGORY_META, type Tables } from '@barangayan/shared';
+@@ -202,11 +204,11 @@ export function FaqRow({ article }: { article: FaqArticle }) {
+ 
+           <label className="text-sm">
+             <span className="mb-1 block font-medium">Category</span>
+-            <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
++            <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+               {Object.entries(FAQ_CATEGORY_META).map(([key, val]) => (
+                 <option key={key} value={key}>{val.label}</option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+ 
+           <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\applicant-detail-modal.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\applicants\\applicant-detail-modal.tsx"
+index 9b8a635..c4f33b4 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\applicant-detail-modal.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\applicants\\applicant-detail-modal.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { formatAdminTimestamp as formatDateTime } from '@/lib/admin-tables/pilot-config';
+ import { useEffect, useRef, useState } from 'react';
+ 
+@@ -228,10 +230,10 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
+                   </label>
+                   <label className="text-sm">
+                     <span className="mb-1 block font-medium">PWD</span>
+-                    <select className={inputClass} value={isPwd} onChange={(e) => setIsPwd(e.target.value)}>
++                    <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
+                       <option value="false">No</option>
+                       <option value="true">Yes</option>
+-                    </select>
++                    </AdminSelect>
+                   </label>
+                 </div>
+                 <label className="text-sm">
+@@ -245,13 +247,13 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
+                   </label>
+                   <label className="text-sm">
+                     <span className="mb-1 block font-medium">Status</span>
+-                    <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as ApplicantRow['status'])}>
++                    <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as ApplicantRow['status'])}>
+                       {REGISTRATION_STATUS_OPTIONS.map((option) => (
+                         <option key={option.value} value={option.value}>
+                           {option.label}
+                         </option>
+                       ))}
+-                    </select>
++                    </AdminSelect>
+                   </label>
+                 </div>
+                 <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\applicants-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\applicants\\applicants-table.tsx"
+index 0ab4c52..4fda5d5 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\applicants-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\applicants\\applicants-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ import { ConfirmButton } from '@/components/admin/confirm-button';
+ 
+@@ -124,25 +126,25 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose:
+     >
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Drive</span>
+-        <select className={inputClass} value={driveId} onChange={(e) => setDriveId(e.target.value)} required>
++        <AdminSelect className={inputClass} value={driveId} onValueChange={(nextValue) => setDriveId(nextValue)} required>
+           <option value="">Select a drive…</option>
+           {drives.map((d) => (
+             <option key={d.id} value={d.id}>
+               {d.title} — {d.drive_date}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Resident</span>
+-        <select className={inputClass} value={residentId} onChange={(e) => setResidentId(e.target.value)} required>
++        <AdminSelect kind="people" className={inputClass} value={residentId} onValueChange={(nextValue) => setResidentId(nextValue)} required>
+           <option value="">Select a resident…</option>
+           {residents.map((r) => (
+             <option key={r.id} value={r.id}>
+               {r.full_name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Age</span>
+@@ -158,10 +160,10 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose:
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Is PWD</span>
+-        <select className={inputClass} value={isPwd} onChange={(e) => setIsPwd(e.target.value)}>
++        <AdminSelect kind="status" className={inputClass} value={isPwd} onValueChange={(nextValue) => setIsPwd(nextValue)}>
+           <option value="false">No</option>
+           <option value="true">Yes</option>
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Comorbidities</span>
+@@ -379,10 +381,10 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
+     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddApplicantForm drives={drives} residents={residents} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+     <ProfileTablePanel label="Medical Applicants" browse={browse}
+       category={<label className="table-browse-field">Category
+-        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
++        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
+           <option value="">All categories</option>
+           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
+-        </select></label>}
++        </AdminSelect></label>}
+       filters={<SegmentedFilter label="Registration status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\drive-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\drive-table.tsx"
+index b32c5f8..e2468c5 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\drive-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\health\\drive-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ 
+ import { DRIVE_TYPE_CONFIG, DRIVE_TYPES, type Tables } from '@barangayan/shared';
+@@ -150,13 +152,13 @@ function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string;
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Category</span>
+-        <select className={inputClass} value={type} onChange={(e) => setType(e.target.value as typeof type)}>
++        <AdminSelect className={inputClass} value={type} onValueChange={(nextValue) => setType(nextValue as typeof type)}>
+           {DRIVE_TYPES.map((t) => (
+             <option key={t} value={t}>
+               {DRIVE_TYPE_CONFIG[t].label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Date</span>
+@@ -385,10 +387,10 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
+     {addOpen && <fieldset disabled={browse.pending}><AddDriveForm barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+     <ProfileTablePanel label="Medical drives" browse={browse}
+       category={<label className="table-browse-field">Category
+-        <select aria-label="Category" value={state.filters.type} onChange={event => void browse.commit({ filters: { type: event.target.value } })}>
++        <AdminSelect aria-label="Category" value={state.filters.type} onValueChange={nextValue => void browse.commit({ filters: { type: nextValue } })}>
+           <option value="">All categories</option>
+           {DRIVE_TYPES.map(type => <option key={type} value={type}>{DRIVE_TYPE_CONFIG[type].label}</option>)}
+-        </select></label>}
++        </AdminSelect></label>}
+       filters={<SegmentedFilter label="Drive schedule" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\households-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\households-residents\\households-table.tsx"
+index 8ed8d67..7cda059 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\households-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\households-residents\\households-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ 
+ import type { Tables } from '@barangayan/shared';
+@@ -219,9 +221,9 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
+     <div>{optionsError && <div role="alert">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}</div>
+     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddMemberForm residents={residents} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
+     <ProfileTablePanel label="Households & Residents" browse={browse}
+-      category={<label className="table-browse-field">Relation <select aria-label="Relation" value={state.filters.relation} onChange={event => void browse.commit({ filters: { relation: event.target.value } })}>
++      category={<label className="table-browse-field">Relation <AdminSelect kind="people" aria-label="Relation" value={state.filters.relation} onValueChange={nextValue => void browse.commit({ filters: { relation: nextValue } })}>
+         <option value="">All relations</option>{RELATION_FILTER_OPTIONS.map(rel => <option key={rel} value={rel}>{rel.charAt(0).toUpperCase() + rel.slice(1)}</option>)}
+-      </select></label>}
++      </AdminSelect></label>}
+       filters={<SegmentedFilter label="Check-in status" value={state.filters.tab}
+         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId || !!optionsError}
+@@ -320,14 +322,14 @@ function AddMemberForm({ residents, onClose, onChanged }: {
+     >
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Resident (Head) *</span>
+-        <select className={inputClass} value={profileId} onChange={(e) => setProfileId(e.target.value)} required>
++        <AdminSelect kind="people" className={inputClass} value={profileId} onValueChange={(nextValue) => setProfileId(nextValue)} required>
+           <option value="">Select a resident…</option>
+           {residents.map((r) => (
+             <option key={r.id} value={r.id}>
+               {r.full_name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Name *</span>
+@@ -335,23 +337,23 @@ function AddMemberForm({ residents, onClose, onChanged }: {
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Relation</span>
+-        <select className={inputClass} value={relation} onChange={(e) => setRelation(e.target.value)}>
++        <AdminSelect kind="people" className={inputClass} value={relation} onValueChange={(nextValue) => setRelation(nextValue)}>
+           {RELATION_OPTIONS.map((opt) => (
+             <option key={opt.value} value={opt.value}>
+               {opt.label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Role</span>
+-        <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value)}>
++        <AdminSelect kind="people" className={inputClass} value={role} onValueChange={(nextValue) => setRole(nextValue)}>
+           {ROLE_OPTIONS.map((opt) => (
+             <option key={opt.value} value={opt.value}>
+               {opt.label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       {error && <p className="sm:col-span-3 text-sm text-red-600">{error}</p>}
+       <div className="flex items-center gap-2 sm:col-span-3">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\member-form-modal.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\households-residents\\member-form-modal.tsx"
+index dbb40c8..ec29f68 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\member-form-modal.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\households-residents\\member-form-modal.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { useState } from 'react';
+ 
+ import { useRouter } from 'next/navigation';
+@@ -88,29 +90,29 @@ export function MemberFormModal({
+           </label>
+           <label className="text-sm">
+             <span className="mb-1 block font-medium">Relation *</span>
+-            <select
++            <AdminSelect kind="people"
+               className={inputCls}
+               value={relation}
+-              onChange={(e) => setRelation(e.target.value as (typeof HOUSEHOLD_MEMBER_RELATIONS)[number])}>
++              onValueChange={(nextValue) => setRelation(nextValue as (typeof HOUSEHOLD_MEMBER_RELATIONS)[number])}>
+               {RELATION_OPTIONS.map((opt) => (
+                 <option key={opt.value} value={opt.value}>
+                   {opt.label}
+                 </option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+           <label className="text-sm">
+             <span className="mb-1 block font-medium">Role *</span>
+-            <select
++            <AdminSelect kind="people"
+               className={inputCls}
+               value={role}
+-              onChange={(e) => setRole(e.target.value as (typeof HOUSEHOLD_MEMBER_ROLES)[number])}>
++              onValueChange={(nextValue) => setRole(nextValue as (typeof HOUSEHOLD_MEMBER_ROLES)[number])}>
+               {ROLE_OPTIONS.map((opt) => (
+                 <option key={opt.value} value={opt.value}>
+                   {opt.label}
+                 </option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+           {error && <p className="text-sm text-red-600">{error}</p>}
+           <div className="flex items-center gap-2">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\emergency-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\hub\\emergency-form.tsx"
+index b786611..8f680c6 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\emergency-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\hub\\emergency-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -193,10 +195,10 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
+ 
+       <label className="text-sm">
+         <span className={labelClass}>Category</span>
+-        <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
++        <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
+           <option value="guidelines">Guidelines</option>
+           <option value="hotlines">Hotlines</option>
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+ 
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\incident-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\incident-reports\\incident-table.tsx"
+index 760337c..70c0252 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\incident-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\incident-reports\\incident-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ import { IncidentActions } from './incident-actions';
+ 
+@@ -182,35 +184,35 @@ function AddIncidentForm({
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Category</span>
+-        <select className={inputClass} value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
++        <AdminSelect className={inputClass} value={categoryId} onValueChange={(nextValue) => setCategoryId(nextValue)}>
+           <option value="">Uncategorized</option>
+           {categories.map((c) => (
+             <option key={c.id} value={c.id}>
+               {c.name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Reporter</span>
+-        <select className={inputClass} value={reporterId} onChange={(e) => setReporterId(e.target.value)}>
++        <AdminSelect kind="people" className={inputClass} value={reporterId} onValueChange={(nextValue) => setReporterId(nextValue)}>
+           <option value="">Anonymous / Walk-in</option>
+           {residents.map((r) => (
+             <option key={r.id} value={r.id}>
+               {r.full_name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Status</span>
+-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
++        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as typeof status)}>
+           {Object.entries(INCIDENT_STATUS).map(([value, cfg]) => (
+             <option key={value} value={value}>
+               {cfg.label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm sm:col-span-3">
+         <span className="mb-1 block font-medium">Submitted Date</span>
+@@ -509,12 +511,12 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
+     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddIncidentForm categories={categories} residents={residents} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+     <ProfileTablePanel label="Incident Reports" browse={browse}
+       category={<label className="table-browse-field">Category
+-        <select aria-label="Category" value={state.filters.category} disabled={!!optionsError}
+-          onChange={event => void browse.commit({ filters: { category: event.target.value } })}>
++        <AdminSelect aria-label="Category" value={state.filters.category} disabled={!!optionsError}
++          onValueChange={nextValue => void browse.commit({ filters: { category: nextValue } })}>
+           <option value="">All categories</option>
+           {state.filters.category && !categories.some(option => option.id === state.filters.category) && <option value={state.filters.category}>Selected category</option>}
+           {categories.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
+-        </select></label>}
++        </AdminSelect></label>}
+       filters={<SegmentedFilter label="Incident status" options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+         value={state.filters.tab} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={<button type="button" onClick={async () => { if (await browse.settle()) setAddOpen(true); }}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\requests-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\requests\\requests-table.tsx"
+index 23b225b..28fc516 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\requests-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\requests\\requests-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ import Link from 'next/link';
+ import { useRouter } from 'next/navigation';
+@@ -139,43 +141,43 @@ function AddRequestForm({
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Resident</span>
+-        <select className={inputClass} value={residentId} onChange={(e) => setResidentId(e.target.value)} required>
++        <AdminSelect kind="people" className={inputClass} value={residentId} onValueChange={(nextValue) => setResidentId(nextValue)} required>
+           <option value="">Select a resident…</option>
+           {residents.map((r) => (
+             <option key={r.id} value={r.id}>
+               {r.full_name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Document Type</span>
+-        <select className={inputClass} value={documentTypeId} onChange={(e) => setDocumentTypeId(e.target.value)} required>
++        <AdminSelect kind="document" className={inputClass} value={documentTypeId} onValueChange={(nextValue) => setDocumentTypeId(nextValue)} required>
+           <option value="">Select a document type…</option>
+           {documentTypes.filter(d => d.contract_version === 1).map((d) => (
+             <option key={d.id} value={d.id}>
+               {d.name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Status</span>
+-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as typeof status)}>
++        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as typeof status)}>
+           <option value="submitted">Submitted</option>
+           <option value="in_progress">Processing</option>
+           <option value="ready_for_pickup">Ready for Pickup</option>
+           <option value="completed">Completed</option>
+           <option value="cancelled">Cancelled</option>
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Payment</span>
+-        <select className={inputClass} value={paymentStatus} onChange={(e) => setPaymentStatus(e.target.value as typeof paymentStatus)}>
++        <AdminSelect kind="status" className={inputClass} value={paymentStatus} onValueChange={(nextValue) => setPaymentStatus(nextValue as typeof paymentStatus)}>
+           <option value="pending">Pending</option>
+           <option value="paid">Paid</option>
+           <option value="waived">Waived</option>
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Submitted Date</span>
+@@ -410,12 +412,12 @@ export function RequestsTable({
+       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
+         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
+         category={<div className="table-browse-field"><label htmlFor="requests-document">Document</label>
+-          <select id="requests-document" value={state.filters.doc} disabled={!!optionsError}
+-            onChange={event => void browse.commit({ filters: { doc: event.target.value } })}>
++          <AdminSelect id="requests-document" value={state.filters.doc} disabled={!!optionsError}
++            onValueChange={nextValue => void browse.commit({ filters: { doc: nextValue } })}>
+             <option value="">All documents</option>
+             {state.filters.doc && !documentTypes.some(doc => doc.id === state.filters.doc) && <option value={state.filters.doc}>Selected document</option>}
+             {documentTypes.map(doc => <option key={doc.id} value={doc.id}>{doc.name}</option>)}
+-          </select></div>}
++          </AdminSelect></div>}
+         filters={<SegmentedFilter label="Request status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+           onChange={tab => void browse.commit({ filters: { tab } })} />}
+         actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\resident-directory.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\residents\\resident-directory.tsx"
+index 8503256..bbc149a 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\resident-directory.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\residents\\resident-directory.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ 
+ import {
+@@ -589,9 +591,9 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId
+ 
+     {addOpen && <fieldset disabled={browse.pending}><AddResidentForm onCreated={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
+     <ProfileTablePanel label="Resident Directory" browse={browse}
+-      category={<label className="table-browse-field">ID presence <select aria-label="ID presence" value={state.filters.verification} onChange={event => void browse.commit({ filters: { verification: event.target.value } })}>
++      category={<label className="table-browse-field">ID presence <AdminSelect aria-label="ID presence" value={state.filters.verification} onValueChange={nextValue => void browse.commit({ filters: { verification: nextValue } })}>
+         <option value="">All ID status</option><option value="with_id">With uploaded ID</option><option value="without_id">Without uploaded ID</option>
+-      </select></label>}
++      </AdminSelect></label>}
+       filters={<SegmentedFilter label="Email verification" value={state.filters.tab}
+         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\document-type-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\services\\document-type-form.tsx"
+index 1c5bee0..977517a 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\document-type-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\services\\document-type-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -103,11 +105,11 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
+       </div>
+       {row && row.contract_version === 1 ? <p className="text-sm text-zinc-500">Complete the charter for future requests. Existing requests keep their recorded fees and previous timing model.</p> : null}
+       <label className="block text-sm">Service workflow
+-        <select className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
+-          onChange={e => setDraft({ ...draft, serviceKind: e.target.value as ServiceCatalogContract['serviceKind'],
++        <AdminSelect kind="document" className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
++          onValueChange={nextValue => setDraft({ ...draft, serviceKind: nextValue as ServiceCatalogContract['serviceKind'],
+             pricingMode: 'assessment', requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: draft.requirementRules.personalAppearance } })}>
+           {kinds.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+-        </select>
++        </AdminSelect>
+         <span className="mt-1 block text-xs text-zinc-500">Determines the resident form and compatible supporting rules. Existing charter workflows remain fixed.</span>
+       </label>
+       <fieldset className="space-y-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+@@ -155,12 +157,12 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
+             {!applicable ? <span className="ml-2 text-xs text-zinc-500">(Requires the corresponding service workflow)</span> : null}
+           </label>)}
+       </fieldset>
+-      <label className="block text-sm">Pricing<select className={control} value={draft.pricingMode}
+-        onChange={e => setDraft({ ...draft, pricingMode: e.target.value as ServiceCatalogContract['pricingMode'] })}>
++      <label className="block text-sm">Pricing<AdminSelect kind="document" className={control} value={draft.pricingMode}
++        onValueChange={nextValue => setDraft({ ...draft, pricingMode: nextValue as ServiceCatalogContract['pricingMode'] })}>
+         <option value="assessment">Staff assessment / exemption confirmation</option>
+         <option value="fixed">Confirmed fixed fee</option>
+         {draft.serviceKind === 'certified_true_copy' ? <option value="per_page">₱10 per confirmed billable page</option> : null}
+-      </select></label>
++      </AdminSelect></label>
+       {draft.pricingMode === 'fixed' ? <label className="block text-sm">Confirmed fee (₱)<input className={control} type="number" min={0}
+         max={21474836.47} step="0.01" required value={fee} onChange={e => setFee(e.target.value)} /></label> :
+         <p className="text-sm text-zinc-500">{draft.pricingMode === 'per_page' ? '₱10 per total confirmed page; staff confirm the billable page count.' :
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\staff-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\staff\\staff-form.tsx"
+index 087eea9..bf62554 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\staff-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\staff\\staff-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, staffInviteSchema } from '@barangayan/shared';
+ import type { OfficialRole } from '@barangayan/shared';
+ import { useState } from 'react';
+@@ -97,13 +99,13 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Barangay Role</span>
+-        <select className={inputClass} value={officialRole} onChange={(e) => setOfficialRole(e.target.value as OfficialRole)}>
++        <AdminSelect kind="people" className={inputClass} value={officialRole} onValueChange={(nextValue) => setOfficialRole(nextValue as OfficialRole)}>
+           {OFFICIAL_ROLES.map((r) => (
+             <option key={r} value={r}>
+               {OFFICIAL_ROLE_LABELS[r]}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\staff-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\staff\\staff-table.tsx"
+index 9e789f8..3608788 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\staff-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\staff\\staff-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ 
+ import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, type OfficialRole, type Tables } from '@barangayan/shared';
+@@ -203,9 +205,9 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
+ 
+     {addOpen && <fieldset disabled={browse.pending}><StaffForm barangayId={barangayId} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
+     <ProfileTablePanel label="Staff Members" browse={browse}
+-      category={<label className="table-browse-field">Official role <select aria-label="Official role" value={state.filters.role} onChange={event => void browse.commit({ filters: { role: event.target.value } })}>
++      category={<label className="table-browse-field">Official role <AdminSelect kind="people" aria-label="Official role" value={state.filters.role} onValueChange={nextValue => void browse.commit({ filters: { role: nextValue } })}>
+         <option value="">All roles</option>{OFFICIAL_ROLES.map(role => <option key={role} value={role}>{OFFICIAL_ROLE_LABELS[role]}</option>)}
+-      </select></label>}
++      </AdminSelect></label>}
+       filters={<SegmentedFilter label="Account type" value={state.filters.tab}
+         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
+       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\transactions-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\transactions\\transactions-table.tsx"
+index 690edcb..4556373 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\transactions-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\transactions\\transactions-table.tsx"
+@@ -1,5 +1,8 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++import { AdminSuggestions } from '@/components/admin/dropdown/admin-suggestions';
++
+ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+ 
+ import { formatCentavosAsPHP, type Tables } from '@barangayan/shared';
+@@ -249,19 +252,15 @@ function AddTransactionForm({
+     >
+       <label className="col-span-2 text-sm sm:col-span-1">
+         <span className="mb-1 block font-medium">Request Reference</span>
+-        <input
++        <AdminSuggestions
+           className={inputClass}
+           value={reference}
+-          onChange={(e) => handleReferenceChange(e.target.value)}
++          onValueChange={handleReferenceChange}
+           placeholder="REQ-2026-00001"
+-          list="transaction-reference-options"
++          options={referenceOptions}
++          aria-label="Request Reference"
+           required
+         />
+-        <datalist id="transaction-reference-options">
+-          {referenceOptions.map((ref) => (
+-            <option key={ref} value={ref} />
+-          ))}
+-        </datalist>
+       </label>
+ 
+       <label className="text-sm">
+@@ -296,13 +295,13 @@ function AddTransactionForm({
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Method</span>
+-        <select className={inputClass} value={method} onChange={(e) => setMethod(e.target.value as 'pickup' | 'qrph')}>
++        <AdminSelect className={inputClass} value={method} onValueChange={(nextValue) => setMethod(nextValue as 'pickup' | 'qrph')}>
+           {METHOD_OPTIONS.map((opt) => (
+             <option key={opt.value} value={opt.value}>
+               {opt.label}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Amount (₱)</span>
+@@ -318,23 +317,23 @@ function AddTransactionForm({
+       </label>
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Status</span>
+-        <select className={inputClass} value={status} onChange={(e) => setStatus(e.target.value as 'pending' | 'paid')}>
++        <AdminSelect kind="status" className={inputClass} value={status} onValueChange={(nextValue) => setStatus(nextValue as 'pending' | 'paid')}>
+           <option value="pending">Pending</option>
+           <option value="paid">Paid</option>
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">{method === 'pickup' ? 'Collected By' : 'Source (PayMongo)'}</span>
+         {method === 'pickup' ? (
+-          <select className={inputClass} value={collectedBy} onChange={(e) => setCollectedBy(e.target.value)}>
++          <AdminSelect kind="people" className={inputClass} value={collectedBy} onValueChange={(nextValue) => setCollectedBy(nextValue)}>
+             <option value="">— Not yet collected —</option>
+             {admins.map((a) => (
+               <option key={a.id} value={a.id}>
+                 {a.full_name}
+               </option>
+             ))}
+-          </select>
++          </AdminSelect>
+         ) : (
+           <input
+             className={inputClass}
+@@ -754,10 +753,10 @@ export function TransactionsTable({
+       controls={<TableBrowseControls state={state} sorts={browse.config.sorts} searchDraft={browse.searchDraft}
+         onSearchChange={browse.changeSearch} onChange={change => void browse.commit(change)}
+         category={<div className="table-browse-field"><label htmlFor="transactions-method">Method</label>
+-          <select id="transactions-method" value={state.filters.method} onChange={event => void browse.commit({ filters: { method: event.target.value } })}>
++          <AdminSelect id="transactions-method" value={state.filters.method} onValueChange={nextValue => void browse.commit({ filters: { method: nextValue } })}>
+             <option value="">All Methods</option>
+             {METHOD_OPTIONS.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+-          </select></div>}
++          </AdminSelect></div>}
+         filters={<SegmentedFilter label="Payment status" value={state.filters.tab} options={TABS.map(tab => ({ value: tab.key, label: tab.label }))}
+           onChange={tab => void browse.commit({ filters: { tab } })} />}
+         actions={!addOpen && <button type="button" disabled={!barangayId || !!optionsError || browse.pending}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\schedule-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\waste-management\\schedule-form.tsx"
+index 7f127cc..3d9568f 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\schedule-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\waste-management\\schedule-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { ContentFormActions } from '@/components/admin/content-create-panel';
+ import styles from '@/components/admin/content-forms.module.css';
+ 
+@@ -103,30 +105,30 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
+     <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+       <label className="text-sm">
+         <span className={labelClass}>Zone</span>
+-        <select className={inputClass} value={zoneId} onChange={(e) => setZoneId(e.target.value)} required>
++        <AdminSelect className={inputClass} value={zoneId} onValueChange={(nextValue) => setZoneId(nextValue)} required>
+           <option value="">Select a zone</option>
+           {zones.map((z) => (
+             <option key={z.id} value={z.id}>{z.name}</option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+         <span className={labelClass}>Waste Type</span>
+-        <select className={inputClass} value={wasteType} onChange={(e) => setWasteType(e.target.value)}>
++        <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
+           {WASTE_TYPES.map((t) => (
+             <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+         <span className={labelClass}>Day</span>
+-        <select className={inputClass} value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)}>
++        <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
+           {DAY_NAMES.map((d, i) => (
+             <option key={d} value={i}>{d}</option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <div className={styles.groupHeading}><h3>Collection window</h3></div>
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\schedule-row.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\waste-management\\schedule-row.tsx"
+index d8349e9..99ac1c8 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\schedule-row.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\(admin)\\waste-management\\schedule-row.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import styles from '@/components/admin/content-workspace.module.css';
+ 
+ import { wasteScheduleSchema, WASTE_TYPES, WASTE_TYPE_CONFIG, DAY_NAMES, type Tables, type WasteType } from '@barangayan/shared';
+@@ -169,20 +171,20 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
+         <div className="grid grid-cols-4 gap-3">
+           <label className="text-sm">
+             <span className={labelClass}>Waste Type</span>
+-            <select className={inputClass} value={wasteType} onChange={(e) => setWasteType(e.target.value)}>
++            <AdminSelect className={inputClass} value={wasteType} onValueChange={(nextValue) => setWasteType(nextValue)}>
+               {WASTE_TYPES.map((t) => (
+                 <option key={t} value={t}>{WASTE_TYPE_CONFIG[t].label}</option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+ 
+           <label className="text-sm">
+             <span className={labelClass}>Day</span>
+-            <select className={inputClass} value={dayOfWeek} onChange={(e) => setDayOfWeek(e.target.value)}>
++            <AdminSelect kind="date" className={inputClass} value={dayOfWeek} onValueChange={(nextValue) => setDayOfWeek(nextValue)}>
+               {DAY_NAMES.map((d, i) => (
+                 <option key={d} value={i}>{d}</option>
+               ))}
+-            </select>
++            </AdminSelect>
+           </label>
+ 
+           <label className="text-sm">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\id-upload.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\profile\\id-upload.tsx"
+index a0f3396..e46f977 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\id-upload.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\profile\\id-upload.tsx"
+@@ -1,4 +1,6 @@
+ 'use client';
++
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+ import { createRequestKey, ID_TYPES, publishIdEvidence, SUPPORTING_FILE_MAX_BYTES } from '@barangayan/shared';
+ import { useEffect, useRef, useState } from 'react';
+ import { useRouter } from 'next/navigation';
+@@ -79,12 +81,12 @@ export function IdUpload() {
+       </h2>
+       <label>
+         ID type
+-        <select
++        <AdminSelect
+           required
+           className="block w-full rounded-lg border p-3"
+           value={type}
+-          onChange={(event) => {
+-            setType(event.target.value);
++          onValueChange={(nextValue) => {
++            setType(nextValue);
+             operation.current = null;
+           }}
+         >
+@@ -92,7 +94,7 @@ export function IdUpload() {
+           {ID_TYPES.map((value) => (
+             <option key={value}>{value}</option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       {type === 'Other' ? (
+         <label>
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\profile-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\profile\\profile-form.tsx"
+index b2ed20b..1ec7747 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\profile-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\profile\\profile-form.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, SEXES, type EmploymentStatus, type Sex } from '@barangayan/shared';
+ import { useRouter } from 'next/navigation';
+ import { useState } from 'react';
+@@ -140,14 +142,14 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Sex</span>
+-        <select value={sex} onChange={(e) => setSex(e.target.value as Sex | '')} className={inputCls}>
++        <AdminSelect kind="people" value={sex} onValueChange={(nextValue) => setSex(nextValue as Sex | '')} className={inputCls}>
+           <option value="">Select sex</option>
+           {SEXES.map((s) => (
+             <option key={s} value={s}>
+               {SEX_LABELS[s]}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       <label className="text-sm">
+@@ -193,10 +195,10 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
+ 
+       <label className="text-sm">
+         <span className="mb-1 block font-medium">Employment Status</span>
+-        <select
++        <AdminSelect kind="people"
+           value={employmentStatus}
+-          onChange={(e) => {
+-            const next = e.target.value as EmploymentStatus | '';
++          onValueChange={(nextValue) => {
++            const next = nextValue as EmploymentStatus | '';
+             setEmploymentStatus(next);
+             if (next === '' || !EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
+           }}
+@@ -207,7 +209,7 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
+               {EMPLOYMENT_STATUS_LABELS[s]}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+ 
+       {showOccupation ? (
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\new-request-form.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\requests\\new\\new-request-form.tsx"
+index efde1a0..6cc644a 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\new-request-form.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\app\\resident\\requests\\new\\new-request-form.tsx"
+@@ -1,4 +1,6 @@
+ 'use client';
++
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+ import { useState } from 'react';
+ import { useRouter } from 'next/navigation';
+ import type { Tables } from '@barangayan/shared';
+@@ -17,11 +19,11 @@ export function NewRequestForm({ documentTypes }: { documentTypes: Tables<'docum
+       <VerificationNotice client={client} profileHref="/resident/profile#upload-valid-id" />
+       <label>
+         Document type
+-        <select
++        <AdminSelect
+           aria-label="Document type"
+           className="block w-full rounded-lg border p-3"
+           value={id}
+-          onChange={(event) => setId(event.target.value)}
++          onValueChange={(nextValue) => setId(nextValue)}
+         >
+           <option value="">Choose a document</option>
+           {documentTypes.map((doc) => (
+@@ -29,7 +31,7 @@ export function NewRequestForm({ documentTypes }: { documentTypes: Tables<'docum
+               {doc.name}
+             </option>
+           ))}
+-        </select>
++        </AdminSelect>
+       </label>
+       {selected ? (
+         <ResidentServiceForm
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\content-create-panel.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\content-create-panel.tsx"
+index ffb595b..6fd7a26 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\content-create-panel.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\content-create-panel.tsx"
+@@ -77,7 +77,7 @@ export function ContentSideSheet({ id, form, open, onClose }: {
+     // horizontally scroll the dialog and cancel out the slide's visible travel.
+     element.scrollLeft = 0;
+     document.body.style.overflow = 'hidden';
+-    element.querySelector<HTMLElement>('input:not([disabled]), select:not([disabled]), textarea:not([disabled])')?.focus({ preventScroll: true });
++    element.querySelector<HTMLElement>('input:not([disabled]):not([type="hidden"]), [data-admin-select-trigger]:not([disabled]), select:not([disabled]):not([data-admin-select-backing]), textarea:not([disabled])')?.focus({ preventScroll: true });
+     return () => {
+       element.close();
+       document.body.style.overflow = previousOverflow;
+@@ -90,7 +90,7 @@ export function ContentSideSheet({ id, form, open, onClose }: {
+     onKeyDown={event => {
+       if (event.key !== 'Tab') return;
+       const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
+-        'button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
++        'button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]):not([data-admin-select-backing]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+       )).filter(element => element.getClientRects().length > 0);
+       const first = controls[0];
+       const last = controls.at(-1);
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\date-range-picker.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\date-range-picker.tsx"
+index 1c137d9..d20e1bb 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\date-range-picker.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\date-range-picker.tsx"
+@@ -1,7 +1,8 @@
+ 'use client';
+ 
+ import { Calendar, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+-import { useEffect, useRef, useState } from 'react';
++import { useCallback, useRef, useState } from 'react';
++import { DropdownSurface } from './dropdown/dropdown-surface';
+ 
+ export interface DateRangeValue {
+   /** yyyy-mm-dd, or '' for unbounded. */
+@@ -57,7 +58,8 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+   const [open, setOpen] = useState(false);
+   const [draft, setDraft] = useState<DateRangeValue>(value);
+   const [viewDate, setViewDate] = useState(() => parseDateStr(value.from) ?? new Date());
+-  const containerRef = useRef<HTMLDivElement>(null);
++  const trigger = useRef<HTMLButtonElement>(null);
++  const dismiss = useCallback(() => setOpen(false), []);
+ 
+   // Re-seed the draft/visible month from the committed value each time the
+   // popover opens, so a previously discarded draft doesn't linger.
+@@ -67,22 +69,6 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+     setOpen(true);
+   }
+ 
+-  useEffect(() => {
+-    if (!open) return;
+-    function onPointerDown(e: MouseEvent) {
+-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
+-    }
+-    function onKey(e: KeyboardEvent) {
+-      if (e.key === 'Escape') setOpen(false);
+-    }
+-    document.addEventListener('mousedown', onPointerDown);
+-    document.addEventListener('keydown', onKey);
+-    return () => {
+-      document.removeEventListener('mousedown', onPointerDown);
+-      document.removeEventListener('keydown', onKey);
+-    };
+-  }, [open]);
+-
+   function handleDayClick(day: Date) {
+     const dateStr = toDateStr(day);
+     if (!draft.from || (draft.from && draft.to)) {
+@@ -99,6 +85,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+     setDraft(cleared);
+     onChange(cleared);
+     setOpen(false);
++    trigger.current?.focus({ preventScroll: true });
+   }
+ 
+   function handleSave() {
+@@ -107,6 +94,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+     const next = draft.from && !draft.to ? { from: draft.from, to: draft.from } : draft;
+     onChange(next);
+     setOpen(false);
++    trigger.current?.focus({ preventScroll: true });
+   }
+ 
+   const label =
+@@ -123,9 +111,13 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+   const todayStr = toDateStr(new Date());
+ 
+   return (
+-    <div className="relative" ref={containerRef}>
++    <div className="relative">
+       <button
++        ref={trigger}
++        aria-expanded={open}
++        aria-haspopup="dialog"
+         type="button"
++        onKeyDown={event => { if (event.key === 'Escape' && open) { event.preventDefault(); event.stopPropagation(); dismiss(); } }}
+         onClick={() => (open ? setOpen(false) : openPicker())}
+         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors ${
+           value.from || value.to
+@@ -138,9 +130,17 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+       </button>
+ 
+       {open ? (
+-        <div className="absolute right-0 z-30 mt-2 w-72 rounded-xl border border-black/10 bg-white p-3 shadow-xl dark:border-white/10 dark:bg-zinc-900">
++        <DropdownSurface anchor={trigger} width={288} onDismiss={dismiss} role="dialog" aria-label="Date range" style={{ padding: 12 }}
++          onKeyDown={event => {
++            if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); dismiss(); trigger.current?.focus({ preventScroll: true }); }
++            if (event.key === 'Tab') {
++              const controls = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
++              if (document.activeElement === (event.shiftKey ? controls[0] : controls[controls.length - 1])) { dismiss(); trigger.current?.focus({ preventScroll: true }); }
++            }
++          }}>
+           <div className="mb-2 flex items-center justify-between">
+             <button
++              autoFocus
+               type="button"
+               onClick={() => setViewDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
+               className="rounded-full p-1 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+@@ -208,7 +208,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+               Save
+             </button>
+           </div>
+-        </div>
++        </DropdownSurface>
+       ) : null}
+     </div>
+   );
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\editable-data-table.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\editable-data-table.tsx"
+index b9ef147..2472379 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\editable-data-table.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\editable-data-table.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
+ 
+ import { TableScrollArea } from '@/components/admin/table-scroll-area';
+@@ -470,24 +472,24 @@ export function EditableDataTable<T>({
+                         }
+                       }}
+                     >
+-                      {isEditing && edit ? <div onClick={event => event.stopPropagation()}>
++                      {isEditing && edit ? <div data-inline-editor onClick={event => event.stopPropagation()}>
+                         {saveError && <div role="alert" className="text-sm text-red-600">{saveError}</div>}
+                         {(
+                         edit.type === 'select' ? (
+                           <div className="space-y-1">
+-                            <select
++                            <AdminSelect compact
+                               aria-label={`Edit ${col.header}`}
+                               autoFocus
+                               value={draft}
+                               disabled={saving}
+                               aria-busy={saving}
+-                              onChange={(e) => {
+-                                const nextDraft = e.target.value;
++                              onValueChange={(nextValue) => {
++                                const nextDraft = nextValue;
+                                 setDraft(nextDraft);
+                                 if (edit.commitOnChange) void commitEdit(row, col, nextDraft);
+                               }}
+                               onBlur={(event) => {
+-                                if (event.relatedTarget instanceof Node && event.currentTarget.parentElement?.parentElement?.contains(event.relatedTarget)) return;
++                                if (event.relatedTarget instanceof Node && event.currentTarget.closest('[data-inline-editor]')?.contains(event.relatedTarget)) return;
+                                 if (!saveError && !edit.commitOnChange) void commitEdit(editSnapshot.current?.row ?? row, col);
+                               }}
+                               onKeyDown={(e) => {
+@@ -502,7 +504,7 @@ export function EditableDataTable<T>({
+                                   {opt.label}
+                                 </option>
+                               ))}
+-                            </select>
++                            </AdminSelect>
+                             {saving && (
+                               <span role="status" aria-live="polite" aria-atomic="true" className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
+                                 <Spinner size="compact" /> Saving…
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\header.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\header.tsx"
+index 0b02076..a42a0c9 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\header.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\header.tsx"
+@@ -2,10 +2,12 @@
+ 
+ import Image from 'next/image';
+ import styles from './admin-navigation.module.css';
+-import { Bell, Check, ChevronDown, Menu } from 'lucide-react';
+-import Link from 'next/link';
++import { Bell, Check, ChevronDown, Menu, Palette, LogOut } from 'lucide-react';
+ import { useRouter } from 'next/navigation';
+-import { useEffect, useRef, useState } from 'react';
++import { useCallback, useRef, useState } from 'react';
++import { AdminActionMenu } from './dropdown/admin-action-menu';
++import { DropdownSurface } from './dropdown/dropdown-surface';
++import dropdown from './dropdown/dropdown.module.css';
+ 
+ import { useAdminAuditNotifications } from '@/hooks/use-admin-audit-notifications';
+ import { MODULE_META, MODULE_ORDER, type ModuleKey } from '@/lib/audit-notifications';
+@@ -42,26 +44,14 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+   const [drawerOpen, setDrawerOpen] = useState(false);
+   const [drawerMounted, setDrawerMounted] = useState(false);
+ 
+-  const menuRef = useRef<HTMLDivElement>(null);
+-  const notifRef = useRef<HTMLDivElement>(null);
++  const accountTrigger = useRef<HTMLButtonElement>(null);
++  const notifTrigger = useRef<HTMLButtonElement>(null);
++  const closeAccount = useCallback(() => setShowProfileMenu(false), []);
++  const closeNotifications = useCallback(() => setShowNotifications(false), []);
+ 
+   const { notifications, unreadCount, loading: notifLoading, markAsRead, markAllAsRead, refetch: refetchNotifications } =
+     useAdminAuditNotifications(barangayId);
+ 
+-  // Close profile menu on outside click.
+-  useEffect(() => {
+-    function handleClickOutside(event: MouseEvent) {
+-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+-        setShowProfileMenu(false);
+-      }
+-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+-        setShowNotifications(false);
+-      }
+-    }
+-    document.addEventListener('mousedown', handleClickOutside);
+-    return () => document.removeEventListener('mousedown', handleClickOutside);
+-  }, []);
+-
+   async function handleNotificationClick(id: string, href: string | null) {
+     await markAsRead(id);
+     setShowNotifications(false);
+@@ -107,8 +97,9 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+       <NavbarSearch className={styles.search} barangayId={barangayId} />
+ 
+       {/* Notification bell */}
+-      <div className="relative" ref={notifRef}>
++      <div className="relative">
+         <button
++          ref={notifTrigger}
+           onClick={() => setShowNotifications((v) => !v)}
+           className={`relative rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 ${styles.bell}`}
+           aria-expanded={showNotifications}
+@@ -123,7 +114,14 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+         </button>
+ 
+         {showNotifications ? (
+-          <div className={`absolute right-0 z-20 mt-2 rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900 ${styles.notificationPopover}`}>
++          <DropdownSurface anchor={notifTrigger} onDismiss={closeNotifications} width={416} role="region" aria-label="Notifications"
++            onKeyDown={event => {
++              if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeNotifications(); notifTrigger.current?.focus({ preventScroll: true }); }
++              if (event.key === 'Tab') {
++                const controls = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
++                if (document.activeElement === (event.shiftKey ? controls[0] : controls[controls.length - 1])) { closeNotifications(); notifTrigger.current?.focus({ preventScroll: true }); }
++              }
++            }}>
+             {/* Header */}
+             <div className="border-b border-black/10 px-4 py-3 dark:border-white/10">
+               <div className="flex items-center justify-between gap-3">
+@@ -139,6 +137,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+                     </button>
+                   ) : null}
+                   <button
++                    autoFocus
+                     onClick={openDrawer}
+                     className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-[var(--accent)] dark:text-zinc-400"
+                   >
+@@ -195,7 +194,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+                   <button
+                     key={n.id}
+                     onClick={() => handleNotificationClick(n.id, n.href)}
+-                    className={`flex w-full flex-col gap-0.5 px-4 py-3 text-left text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
++                    className={`${dropdown.row} flex-col gap-0.5 ${
+                       !n.is_read ? 'bg-[var(--accent)]/5 dark:bg-[var(--accent)]/10' : ''
+                     }`}
+                   >
+@@ -213,7 +212,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+                 ))
+               )}
+             </div>
+-          </div>
++          </DropdownSurface>
+         ) : null}
+ 
+         {drawerMounted ? (
+@@ -229,11 +228,14 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+       </div>
+ 
+       {/* Profile menu */}
+-      <div className="relative" ref={menuRef}>
++      <div className="relative">
+         <button
++          ref={accountTrigger}
+           onClick={() => setShowProfileMenu((v) => !v)}
+           aria-label="Account menu"
+           aria-expanded={showProfileMenu}
++          aria-haspopup="menu"
++          onKeyDown={event => { if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); setShowProfileMenu(true); } }}
+           className={`flex items-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${styles.profile}`}>
+           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold dark:bg-zinc-700">
+             {adminName.charAt(0).toUpperCase() || 'A'}
+@@ -243,16 +245,10 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed,
+         </button>
+ 
+         {showProfileMenu ? (
+-          <div className="absolute right-0 z-10 mt-2 w-40 rounded-lg border border-black/10 bg-white py-1 shadow-lg dark:border-white/10 dark:bg-zinc-900">
+-            <Link href="/theme" onClick={() => setShowProfileMenu(false)} className="block px-4 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800">
+-              Theme
+-            </Link>
+-            <button
+-              onClick={onLogout}
+-              className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20">
+-              Logout
+-            </button>
+-          </div>
++          <AdminActionMenu anchor={accountTrigger} onClose={closeAccount} label="Account menu" items={[
++            { label: 'Theme', icon: <Palette size={17} />, href: '/theme', onSelect: closeAccount },
++            { label: 'Logout', icon: <LogOut size={17} />, destructive: true, onSelect: onLogout },
++          ]} />
+         ) : null}
+       </div>
+     </header>
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\record-workspace.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\record-workspace.tsx"
+index 8dec639..67557f6 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\record-workspace.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\record-workspace.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import Link from 'next/link';
+ import { useCallback, useEffect, useId, useRef, useState, useTransition, type ReactNode } from 'react';
+ import type { SupabaseClient } from '@supabase/supabase-js';
+@@ -171,8 +173,8 @@ function RecordInput({ field, value, onChange }: { field: RecordField; value: un
+   const id = useId();
+   const display = Array.isArray(value) ? value.join(', ') : String(value ?? '');
+   return <label htmlFor={id} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}><span className="block">{field.label}{field.required ? ' *' : ''}</span>
+-    {field.type === 'boolean' ? <select id={id} value={String(value)} onChange={event => onChange(event.target.value === 'true')}><option value="false">No</option><option value="true">Yes</option></select>
+-      : field.type === 'select' ? <select id={id} value={display} required={field.required} onChange={event => onChange(event.target.value)}><option value="">Select…</option>{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select>
++    {field.type === 'boolean' ? <AdminSelect kind="status" id={id} value={String(value)} onValueChange={nextValue => onChange(nextValue === 'true')}><option value="false">No</option><option value="true">Yes</option></AdminSelect>
++      : field.type === 'select' ? <AdminSelect id={id} value={display} required={field.required} onValueChange={nextValue => onChange(nextValue)}><option value="">Select…</option>{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</AdminSelect>
+       : field.type === 'textarea' ? <textarea id={id} rows={4} value={display} required={field.required} onChange={event => onChange(event.target.value)} />
+       : <input id={id} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'time' ? 'time' : 'text'}
+         required={field.required} min={field.min} max={field.max} step={field.type === 'number' ? 1 : undefined} value={field.type === 'time' ? display.slice(0, 5) : display}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\request-review-panel.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\request-review-panel.tsx"
+index 270f987..17e14fb 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\request-review-panel.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\request-review-panel.tsx"
+@@ -1,5 +1,7 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import {
+   formatCentavosAsPHP,
+   formatDateTime,
+@@ -110,15 +112,15 @@ export function RequestReviewPanel({
+           </label>
+           <label className="block text-sm">
+             Eligibility
+-            <select
++            <AdminSelect kind="status"
+               className={input}
+               value={eligibility}
+-              onChange={(e) => setEligibility(e.target.value as typeof eligibility)}
++              onValueChange={(nextValue) => setEligibility(nextValue as typeof eligibility)}
+             >
+               <option value="pending">Awaiting eligibility review</option>
+               <option value="eligible">Eligible — requirements confirmed</option>
+               <option value="ineligible">Ineligible</option>
+-            </select>
++            </AdminSelect>
+           </label>
+           <label className="block text-sm">
+             <input type="checkbox" checked={appearance} onChange={(e) => setAppearance(e.target.checked)} />{' '}
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\row-context-menu.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\row-context-menu.tsx"
+index 14a8f26..6d6ae07 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\row-context-menu.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\row-context-menu.tsx"
+@@ -2,6 +2,7 @@
+ 
+ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+ import { createPortal } from 'react-dom';
++import dropdown from './dropdown/dropdown.module.css';
+ 
+ const OPEN_EVENT = 'admin-row-context-menu-open';
+ type ActionControl = HTMLButtonElement | HTMLAnchorElement;
+@@ -114,11 +115,11 @@ function RowContextMenu({ selection, onClose }: {
+ 
+   return createPortal(<div ref={menuRef} role="menu" aria-label="Row actions"
+     style={{ position: 'fixed', left: x, top: y, zIndex: 100, minWidth: 'min(12rem, calc(100vw - 16px))', maxWidth: 'calc(100vw - 16px)', maxHeight: 'calc(100vh - 16px)', overflowY: 'auto' }}
+-    className="rounded-lg border border-zinc-200 bg-white p-1 text-sm text-zinc-900 shadow-xl dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
++    className={dropdown.surface}
+     onClick={event => event.stopPropagation()} onContextMenu={event => { event.preventDefault(); event.stopPropagation(); }}>
+     {actions.map(({ control, label, disabled }, index) => <button key={index} type="button" role="menuitem" tabIndex={-1}
+       disabled={disabled} title={control.title || undefined}
+-      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800 dark:focus-visible:bg-zinc-800"
++      className={dropdown.row}
+       onClick={() => {
+         onClose();
+         const current = availableActions(cell).find(action => action.control === control);
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\navbar-search.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\search\\navbar-search.tsx"
+index ece7e36..cd6ca4a 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\navbar-search.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\search\\navbar-search.tsx"
+@@ -9,6 +9,7 @@ import { Spinner } from '@/components/loading/spinner';
+ import { HitPreview } from './search-hit';
+ import { SearchSkeleton } from './search-skeleton';
+ import styles from './search.module.css';
++import dropdown from '../dropdown/dropdown.module.css';
+ 
+ export function NavbarSearch({ className, barangayId }: { className: string; barangayId: string }) {
+   const router = useRouter();
+@@ -64,7 +65,7 @@ export function NavbarSearch({ className, barangayId }: { className: string; bar
+         onCompositionStart={() => setComposing(true)} onCompositionEnd={() => setComposing(false)}
+         onChange={event => { setQuery(event.target.value); setActiveIndex(-1); setOpen(true); }} onKeyDown={event => {
+           if (event.nativeEvent.isComposing) return;
+-          if (event.key === 'Escape') { event.preventDefault(); setOpen(false); setActiveIndex(-1); }
++          if (event.key === 'Escape') { event.preventDefault(); if (open) event.stopPropagation(); setOpen(false); setActiveIndex(-1); }
+           if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+             event.preventDefault(); setOpen(true);
+             if (items.length) setActiveIndex(event.key === 'ArrowDown' ? (selected + 1) % items.length : selected < 0 ? items.length - 1 : (selected - 1 + items.length) % items.length);
+@@ -78,7 +79,7 @@ export function NavbarSearch({ className, barangayId }: { className: string; bar
+         <button className={styles.enter} type="submit" aria-label="Submit search and open search screen" title="Submit search"><CornerDownLeft size={16} aria-hidden="true" /></button>
+       </div>
+     </form>
+-    {open ? <div className={styles.popover}>
++    {open ? <div className={`${dropdown.surface} ${styles.popover}`}>
+       <div className={styles.popoverHeading}><strong>{normalized ? 'Search Barangayan' : 'Recent searches'}</strong>
+         {!normalized && recent.length ? <button type="button" onClick={() => { setRecent([]); try { sessionStorage.removeItem(storageKey); } catch {} }}>Clear history</button> : null}
+       </div>
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\search.module.css" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\search\\search.module.css"
+index 8035530..bb53fc7 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\search.module.css"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\search\\search.module.css"
+@@ -16,12 +16,13 @@
+ .clear:hover { background: var(--search-tint); }
+ .enter { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--search-ink); color: var(--search-surface); cursor: pointer; }
+ .enter:hover { filter: brightness(1.1); }
+-.popover { position: absolute; top: calc(100% + 10px); display: flex; flex-direction: column; width: 100%; min-width: 300px; max-height: min(680px, calc(100dvh - 170px)); overflow: hidden; background: var(--search-surface); border: 1px solid var(--search-border); border-radius: 18px; box-shadow: 0 16px 45px #00000024; padding: 8px; animation: searchEnter 140ms ease-out; }
++.popover { position: absolute; top: calc(100% + 7px); display: flex; flex-direction: column; width: 100%; min-width: 0; max-height: min(680px, calc(100dvh - 170px)); overflow: hidden; padding: 5px; }
+ .popoverHeading { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; font-size: 13px; }
+ .suggestions { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--search-border) transparent; }
+ .popoverHeading button, .popoverStatus button, .popoverStatus a { color: var(--search-ink); font-size: 12px; font-weight: 600; }
+-.suggestion { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; font-size: 13px; }
+-.suggestion:hover, .suggestion[aria-selected="true"] { background: var(--search-tint); }
++.suggestion { display: flex; min-height: 44px; align-items: center; gap: 10px; padding: 10px; border-radius: 7px; font-size: 13px; color: var(--dd-text); }
++.suggestion:hover { background: var(--dd-hover); }
++.suggestion[aria-selected="true"] { background: var(--dd-tint); outline: 1px solid var(--dd-border); outline-offset: -1px; }
+ .suggestionContent { width: 100%; min-width: 0; }
+ .suggestionContent > small { display: block; font-size: 10px; color: var(--search-muted); margin-bottom: 6px; }
+ .hit { display: flex; align-items: center; gap: 12px; }
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\table-browse-controls.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\table-browse-controls.tsx"
+index ad7650a..4156522 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\table-browse-controls.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\table-browse-controls.tsx"
+@@ -1,5 +1,8 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++import { ALargeSmall, CalendarDays, Hash, CircleCheck, ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react';
++
+ import { useId, type ReactNode } from 'react';
+ import type { BrowseState, BrowseChange } from '@/lib/admin-tables/browse-state';
+ import { directionLabel, type SortDescriptor, type SortDirection } from '@/lib/admin-tables/sort-definitions';
+@@ -35,13 +38,15 @@ export function TableBrowseControls({ state, sorts, searchDraft, onSearchChange,
+     </div>
+     <div className="table-browse-section" data-section="sort">
+       <div className="table-browse-field"><label htmlFor={`${id}-sort`}>Sort by</label>
+-        <select id={`${id}-sort`} value={state.sort} onChange={event => onChange({ sort: event.target.value })}>
+-          {sorts.map(sort => <option key={sort.key} value={sort.key}>{sort.label}</option>)}
+-        </select></div>
++        <AdminSelect kind="sort" id={`${id}-sort`} value={state.sort} onValueChange={nextValue => onChange({ sort: nextValue })}
++          options={sorts.map(sort => {
++            const Icon = sort.category === 'text' ? ALargeSmall : sort.category === 'date' ? CalendarDays : sort.category === 'boolean' ? CircleCheck : Hash;
++            return { value: sort.key, label: sort.label, icon: <Icon size={17} /> };
++          })} /></div>
+       <div className="table-browse-field"><label htmlFor={`${id}-direction`}>Direction</label>
+-        <select id={`${id}-direction`} value={state.dir} onChange={event => onChange({ dir: event.target.value as SortDirection })}>
+-          {active?.directions.map(direction => <option key={direction} value={direction}>{directionLabel(active, direction)}</option>)}
+-        </select></div>
++        <AdminSelect kind="sort" id={`${id}-direction`} value={state.dir} onValueChange={nextValue => onChange({ dir: nextValue as SortDirection })}
++          options={active?.directions.map(direction => ({ value: direction, label: directionLabel(active, direction),
++            icon: direction === 'asc' ? <ArrowUpWideNarrow size={17} /> : <ArrowDownWideNarrow size={17} /> })) ?? []} /></div>
+       {category}
+     </div>
+     {(filters || actions) && <div className="table-browse-section table-browse-filters" data-section="filters">
+diff --git "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\table-pagination.tsx" "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\table-pagination.tsx"
+index 23a9b7b..4e009d7 100644
+--- "a/C:\\Users\\User\\AppData\\Local\\Packages\\sandbox.{0fee46eb-2b78-4bc5-b89b-6570f092677f}\\AC\\Temp\\admin-dropdown-audit-qzlJfR\\table-pagination.tsx"
++++ "b/C:\\Users\\User\\barangayan\\apps\\admin-web\\src\\components\\admin\\table-pagination.tsx"
+@@ -1,8 +1,10 @@
+ 'use client';
+ 
++import { AdminSelect } from '@/components/admin/dropdown/admin-select';
++
+ import { PAGE_SIZES, pageRange, type PageSize } from '@/lib/admin-tables/browse-state';
+ 
+-/** Inline chevrons, like the search icon: the browse chrome stays free of icon-library imports. */
++/** Pager chevrons remain inline; value selectors use the shared dropdown. */
+ const Chevrons = ({ d }: { d: string }) => <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"
+   fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
+ 
+@@ -15,10 +17,10 @@ export function TablePagination({ total, page, pageSize, pending = false, onPage
+   const atEnd = pending || total === 0 || range?.page === range?.pages;
+   return <div className="table-browse-pagination">
+     <span className="ab-muted">Showing {range?.start ?? 0}–{range?.end ?? 0} of {total}</span>
+-    <label className="table-browse-page-size"><span className="ab-label">Rows per page</span> <select value={pageSize} disabled={pending}
+-      onChange={event => onPageSizeChange(Number(event.target.value) as PageSize)}>
++    <label className="table-browse-page-size"><span className="ab-label">Rows per page</span> <AdminSelect kind="page" width="auto" value={pageSize} disabled={pending}
++      onValueChange={nextValue => onPageSizeChange(Number(nextValue) as PageSize)}>
+       {PAGE_SIZES.map(size => <option key={size} value={size}>{size}</option>)}
+-    </select></label>
++    </AdminSelect></label>
+     <nav aria-label="Table pages" className="table-browse-pager">
+       <button type="button" aria-label="First" title="First" data-edge disabled={atStart} onClick={() => onPageChange(1)}>
+         <Chevrons d="m11 17-5-5 5-5M18 17l-5-5 5-5" /></button>

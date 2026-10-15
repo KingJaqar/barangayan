@@ -21,6 +21,12 @@ insert into public.barangay_localities
 values ('00000000-0000-0000-0000-000000000001', 'Ampid 1', 'San Mateo', 'Rizal', true)
 on conflict (barangay_id) do nothing;
 
+-- 0113 creates this routing area for existing installs; the local pilot is created
+-- afterward. Insert it before the evacuation centers so they carry revisions.
+insert into public.routing_areas (id, barangay_id, name)
+values ('ampid-1', '00000000-0000-0000-0000-000000000001', 'Barangay Ampid I')
+on conflict do nothing;
+
 -- 0023 fills existing tenants during migration. The local pilot is created
 -- afterward, so populate the same categories before the sample incident rows.
 insert into public.incident_categories (barangay_id, name, color, icon, is_trash_related)

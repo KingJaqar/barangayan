@@ -42,6 +42,19 @@ function scripted(replies: { total?: number; ids?: string[]; status?: number; co
 const state = (values: Record<string, string> = {}) => adapter.parseTableState('requests', new URLSearchParams({ tab: 'all', ...values }));
 
 describe('server query contracts', () => {
+  it('uses tenant-scoped archive projections with the same bounded query on every screen', async () => {
+    for (const name of ['requests', 'transactions', 'residents', 'incidents', 'health', 'applicants', 'households', 'staff'] as const) {
+      const f = scripted([{ total: 1, ids: ['fixture'] }]);
+      const s = adapter.parseTableState(name, new URLSearchParams({ tab: 'all' }));
+      const result = await adapter.browseTable(name, s, f.db, AbortSignal.timeout(1000), new Date(), true);
+      expect(result.status).toBe('success');
+      expect(f.urls).toHaveLength(2);
+      for (const url of f.urls) {
+        expect(url.pathname).toContain(`admin_${name}_records`);
+        expect(url.searchParams.get('f_archived')).toBe('eq.true');
+      }
+    }
+  });
   it('validates sort, direction, page sizes, tabs and dynamic IDs without losing literal search', () => {
     const s = state({ sort: 'malicious.sql', dir: 'oops', tab: 'oops', pageSize: '11', doc: 'bad', q: '  _%*  ' });
     expect(s).toMatchObject({ sort: 'reference', dir: 'asc', page: 1, pageSize: 10, q: '  _%*  ', filters: { tab: 'active', doc: '' } });

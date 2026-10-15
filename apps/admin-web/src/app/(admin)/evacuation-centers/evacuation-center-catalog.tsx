@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import type { Tables } from '@barangayan/shared';
 import { useMemo, useState } from 'react';
 
@@ -31,44 +34,29 @@ export function EvacuationCenterCatalog({ centers }: { centers: EvacuationCenter
     });
   }, [centers, query, status]);
 
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name…"
-          className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-        />
-        <div className="flex shrink-0 gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setStatus(f.value)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                status === f.value
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-              }`}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
+  const active = centers.filter(center => center.is_active && !center.deleted_at).length;
+  const hasFilters = query.trim() !== '' || status !== 'all';
+  const reset = () => { setQuery(''); setStatus('all'); };
 
-      <div className="flex flex-col gap-2">
-        {filtered.map((center) => (
-          <EvacuationCenterRow key={center.id} center={center} />
-        ))}
-        {filtered.length === 0 && centers.length > 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No centers match your search.</p>
-        ) : null}
-        {centers.length === 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No evacuation centers yet — create one above.</p>
-        ) : null}
+  return <>
+    <ContentSummary items={[
+      { label: 'Total centers', value: centers.length, detail: 'In your evacuation directory' },
+      { label: 'Active centers', value: active, detail: 'Currently available to residents' },
+      { label: 'Verified centers', value: centers.filter(center => center.verified && !center.deleted_at).length, detail: 'Confirmed center information' },
+    ]} />
+    <ContentSection title="Evacuation center directory" description="Review locations, capacity, facilities, and emergency contact details.">
+      <ContentToolbar label="Search evacuation centers" query={query} onQueryChange={setQuery} placeholder="Search centers…">
+        <ContentFilters label="Center status" options={STATUS_FILTERS.map(f => ({
+          ...f, count: f.value === 'all' ? centers.length : centers.filter(center => center.is_active === (f.value === 'active')).length,
+        }))} value={status} onChange={setStatus} />
+      </ContentToolbar>
+      <ContentResults count={filtered.length} total={centers.length} noun="centers" filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {filtered.map(center => <EvacuationCenterRow key={center.id} center={center} />)}
+        {filtered.length === 0 ? <ContentEmptyState title={centers.length ? 'No matching centers' : 'Build your evacuation directory'}
+          description={centers.length ? 'Try another name or clear your filters.' : 'Create a center with its location and capacity to help residents find shelter.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
       </div>
-    </div>
-  );
+    </ContentSection>
+  </>;
 }

@@ -7,12 +7,15 @@
  * against raw strings — see the plan's "Pre-Development Technical Risk Mitigations".
  */
 
-import type { MultiPolygon, Polygon } from 'geojson';
+import type { FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
 
 export interface LatLng {
   lat: number;
   lng: number;
 }
+
+/** GeoJSON order ([lng, lat], WGS84), as stored in routing packs. */
+export type MapLngLat = readonly [number, number];
 
 /** Messages sent FROM React Native INTO the WebView (via injectedJavaScript / postMessage). */
 export type MapBridgeInboundMessage =
@@ -23,7 +26,11 @@ export type MapBridgeInboundMessage =
   | { type: 'SET_BOUNDARY'; payload: { geometry: Polygon | MultiPolygon | null } }
   /** Fits the map to show all current markers regardless of any previously set boundary. */
   | { type: 'FIT_ALL' }
-  | { type: 'DRAW_ROUTE'; payload: { points: LatLng[] } }
+  /**
+   * Draws the route and fits the map to it. `padding` (CSS px) is the map area covered by
+   * floating controls at the top and bottom, so the route is framed in the visible part.
+   */
+  | { type: 'DRAW_ROUTE'; payload: { points: LatLng[]; padding?: { top: number; bottom: number } } }
   | { type: 'CLEAR_ROUTE' }
   /**
    * Draws (or clears, if null) the resident's location marker and accuracy circle.
@@ -38,7 +45,18 @@ export type MapBridgeInboundMessage =
    * initial GPS fix, or RN snapping the pin back after a rejected out-of-boundary move).
    * `position: null` removes the marker entirely.
    */
-  | { type: 'SET_PICKER'; payload: { enabled: boolean; position: LatLng | null } };
+  | { type: 'SET_PICKER'; payload: { enabled: boolean; position: LatLng | null } }
+  /**
+   * Vector roads and water from the installed routing pack (DRRM routing R6): the offline
+   * basemap, drawn from the pack instead of a tile server. null removes it.
+   */
+  | { type: 'SET_PACK_BASEMAP'; payload: { map: FeatureCollection<Geometry, { layer: string; kind: string | null; walkable: boolean | null }> | null } }
+  /** Adds or removes the online OpenStreetMap tile layer. */
+  | { type: 'SET_TILES'; payload: { enabled: boolean } }
+  /** Verified closures, the resident's own blocked segments and the segment being marked. */
+  | { type: 'SET_ROAD_MARKS'; payload: { closures: readonly (readonly MapLngLat[])[]; avoided: readonly (readonly MapLngLat[])[]; selected: readonly MapLngLat[] | null } }
+  /** While enabled, a plain map tap is reported as MAP_TAPPED (marking a blocked segment). */
+  | { type: 'SET_TAP_MODE'; payload: { enabled: boolean } };
 
 /** Messages sent FROM the WebView's Leaflet page BACK to React Native. */
 export type MapBridgeOutboundMessage =
@@ -47,7 +65,9 @@ export type MapBridgeOutboundMessage =
   | { type: 'MARKER_TAPPED'; payload: { markerId: string } }
   | { type: 'MAP_MOVED'; payload: { center: LatLng; zoom: number } }
   /** The picker pin was placed (tap) or moved (drag) — see SET_PICKER above. */
-  | { type: 'PICKER_MOVED'; payload: LatLng };
+  | { type: 'PICKER_MOVED'; payload: LatLng }
+  /** A plain tap while SET_TAP_MODE is enabled. */
+  | { type: 'MAP_TAPPED'; payload: LatLng };
 
 export interface MapMarker {
   id: string;

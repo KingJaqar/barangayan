@@ -3,12 +3,14 @@
 import { BanknoteArrowDown, Ban, Check, PackageCheck, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { serviceFoundationOperations, type Tables } from '@barangayan/shared';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { useToast } from '@/components/ui/toast';
 import { markPaymentCollected as markPaymentCollectedRequest } from '@/lib/payments';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Spinner } from '@/components/loading/spinner';
+import { useRowAction } from '@/hooks/use-row-action';
 
 interface RequestStatusActionsProps {
   requestId: string;
@@ -18,11 +20,12 @@ interface RequestStatusActionsProps {
   status: string;
   paymentStatus: string;
   paymentMethod: string | null;
-  /** 'compact' renders icon-free small buttons for a table row; 'full' renders the
-   * larger buttons used on the request detail page. Same actions either way. */
-  variant?: 'compact' | 'full';
+  /** 'row' keeps visible labels beside icons in table rows; 'compact' retains
+   * the existing icon-only treatment; 'full' is used on the detail page. */
+  variant?: 'compact' | 'full' | 'row';
   onBeforeAction?: () => Promise<boolean>;
   onChanged?: () => void;
+  workflowRequest?: Tables<'service_requests'> & { document_types?: { name?: string; fee_centavos?: number } | null };
 }
 
 /** The buttons that drive the request FSM the 0002 migration deferred to "admin/backend
@@ -37,21 +40,30 @@ export function RequestStatusActions({
   variant = 'full',
   onBeforeAction,
   onChanged,
+  workflowRequest,
 }: RequestStatusActionsProps) {
   const router = useRouter();
   const toast = useToast();
-  const [busy, setBusy] = useState(false);
+  const { busy, runAction } = useRowAction();
   const [cancelNote, setCancelNote] = useState('');
   const [showCancelForm, setShowCancelForm] = useState(false);
   const refresh = onChanged ?? (() => router.refresh());
+  const versioned = workflowRequest?.contract_version === 2;
+  const legacyFee = workflowRequest?.legacy_fee_centavos ?? workflowRequest?.document_types?.fee_centavos;
+  const paid = paymentStatus === 'paid' || paymentStatus === 'waived' || (!versioned && legacyFee === 0)
+    || (workflowRequest?.fee_assessment_state === 'assessed' && workflowRequest.assessed_amount_centavos === 0);
+  const pickupAssessed = !versioned || (workflowRequest.fee_assessment_state === 'assessed'
+    && (workflowRequest.assessed_amount_centavos ?? 0) > 0);
 
   const btnClass =
     variant === 'compact'
       ? 'inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold transition-colors disabled:cursor-wait disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
-      : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
+      : variant === 'row'
+        ? 'inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-3 py-2 text-xs font-semibold transition-colors disabled:cursor-wait disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900'
+        : 'rounded-full px-4 py-2 text-sm font-semibold disabled:opacity-50';
 
   function actionLabel(label: string, icon: React.ReactNode) {
-    return variant === 'compact' ? <>{icon}<span className="sr-only">{label}</span></> : label;
+    return variant === 'compact' ? <>{icon}<span className="sr-only">{label}</span></> : variant === 'row' ? <>{icon}<span>{label}</span></> : label;
   }
 
   function actionTitle(label: string) {
@@ -59,13 +71,13 @@ export function RequestStatusActions({
   }
 
   async function beginProcessing() {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
     // S0-4: validated submitted -> in_progress transition (barangay + status checked
     // server-side), replacing the previous unguarded raw update.
-    const { error } = await supabase.rpc('begin_processing_request', { request_id: requestId });
-    setBusy(false);
+    const { error } = versioned
+      ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'accept' })
+      : await supabase.rpc('begin_processing_request', { request_id: requestId });
     if (error) {
       toast.showError(`Failed to update status: ${error.message}`);
       return;
@@ -89,15 +101,17 @@ export function RequestStatusActions({
       changes: { before: { status }, after: { status: 'in_progress' } },
     }).catch(() => {});
 
+    toast.showSuccess('Request moved to processing.');
     refresh();
+    }, onBeforeAction);
   }
 
   async function completeRequest() {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('complete_service_request', { p_request_id: requestId });
-    setBusy(false);
+    const { error } = versioned
+      ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'release' })
+      : await supabase.rpc('complete_service_request', { p_request_id: requestId });
     if (error) {
       toast.showError(`Failed to complete request: ${error.message}`);
       return;
@@ -123,14 +137,15 @@ export function RequestStatusActions({
 
     toast.showSuccess('Request marked as completed.');
     refresh();
+    }, onBeforeAction);
   }
 
   async function markReadyForPickup() {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('mark_request_ready_for_pickup', { p_request_id: requestId });
-    setBusy(false);
+    const { error } = versioned
+      ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'ready' })
+      : await supabase.rpc('mark_request_ready_for_pickup', { p_request_id: requestId });
     if (error) {
       toast.showError(`Failed to mark request ready for pickup: ${error.message}`);
       return;
@@ -156,15 +171,16 @@ export function RequestStatusActions({
 
     toast.showSuccess('Request marked ready for pickup.');
     refresh();
+    }, onBeforeAction);
   }
 
   async function handleCancel() {
-    if (onBeforeAction && !await onBeforeAction()) return;
     if (!cancelNote.trim()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.rpc('cancel_service_request', { p_request_id: requestId, p_note: cancelNote.trim() });
-    setBusy(false);
+    const { error } = versioned
+      ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'cancel', reason: cancelNote.trim() })
+      : await supabase.rpc('cancel_service_request', { p_request_id: requestId, p_note: cancelNote.trim() });
     if (error) {
       toast.showError(`Failed to cancel request: ${error.message}`);
       return;
@@ -193,14 +209,13 @@ export function RequestStatusActions({
     setCancelNote('');
     toast.showSuccess('Request cancelled.');
     refresh();
+    }, onBeforeAction);
   }
 
   async function markPaymentCollected() {
-    if (onBeforeAction && !await onBeforeAction()) return;
-    setBusy(true);
+    return runAction(async () => {
     const supabase = createSupabaseBrowserClient();
     const { error, paymentId, wasCreate } = await markPaymentCollectedRequest(supabase, requestId);
-    setBusy(false);
     if (error) {
       toast.showError(`Failed to mark payment collected: ${error}`);
       return;
@@ -235,10 +250,11 @@ export function RequestStatusActions({
 
     toast.showSuccess('Payment marked as collected.');
     refresh();
+    }, onBeforeAction);
   }
 
   if (status === 'cancelled' || status === 'completed') {
-    if (status === 'completed' && paymentStatus !== 'paid' && paymentMethod === 'pickup') {
+    if (status === 'completed' && !paid && paymentMethod === 'pickup') {
       return (
         <button
           onClick={markPaymentCollected}
@@ -270,23 +286,33 @@ export function RequestStatusActions({
         {status === 'in_progress' ? (
           <button
             onClick={markReadyForPickup}
-            disabled={busy}
-            title={actionTitle('Mark ready for pickup')}
+            disabled={busy || (versioned && workflowRequest.sla_state !== 'running')}
+            title={versioned && workflowRequest.sla_state !== 'running' ? 'Resume processing in the request details before marking ready for pickup.' : actionTitle('Mark ready for pickup')}
             aria-label={variant === 'compact' ? `Mark request ${referenceNumber} ready for pickup` : undefined}
             className={`${btnClass} bg-blue-600 text-white`}>
-            {actionLabel('Mark Ready for Pickup', <PackageCheck aria-hidden="true" className="h-4 w-4" />)}
+            {actionLabel('Mark as Ready for Pickup', <PackageCheck aria-hidden="true" className="h-4 w-4" />)}
           </button>
         ) : null}
 
         {status === 'ready_for_pickup' ? (
+          <>
+          {!paid && paymentMethod === 'pickup' && (
+            <button type="button" onClick={markPaymentCollected} disabled={busy || !pickupAssessed}
+              title={!pickupAssessed ? 'Open the request details to record the tax-code amount collected at pickup.' : actionTitle('Mark payment collected')}
+              aria-label={variant === 'compact' ? `Mark payment collected for request ${referenceNumber}` : undefined}
+              className={`${btnClass} bg-[var(--accent)] text-white`}>
+              {actionLabel('Mark Payment Collected', <BanknoteArrowDown aria-hidden="true" className="h-4 w-4" />)}
+            </button>
+          )}
           <button
             onClick={completeRequest}
-            disabled={busy}
-            title={actionTitle('Mark as completed')}
+            disabled={busy || (versioned && !paid)}
+            title={versioned && !paid ? 'Confirmed payment, a waiver, or an assessed zero fee is required before completion.' : actionTitle('Mark as completed')}
             aria-label={variant === 'compact' ? `Mark request ${referenceNumber} as completed` : undefined}
             className={`${btnClass} bg-[var(--accent)] text-white`}>
             {actionLabel('Mark as Completed', <Check aria-hidden="true" className="h-4 w-4" />)}
           </button>
+          </>
         ) : null}
 
         {!showCancelForm ? (
@@ -296,11 +322,14 @@ export function RequestStatusActions({
             title={actionTitle('Cancel request')}
             aria-label={variant === 'compact' ? `Cancel request ${referenceNumber}` : undefined}
             className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-            {actionLabel('Cancel', <Ban aria-hidden="true" className="h-4 w-4" />)}
+            {actionLabel(variant === 'row' ? 'Cancel Request' : 'Cancel', <Ban aria-hidden="true" className="h-4 w-4" />)}
           </button>
         ) : (
           <div className="flex items-center gap-2">
             <input
+              aria-label="Reason for cancellation"
+              maxLength={1000}
+              disabled={busy}
               value={cancelNote}
               onChange={(e) => setCancelNote(e.target.value)}
               placeholder="Reason for cancellation…"
@@ -309,7 +338,7 @@ export function RequestStatusActions({
             <button onClick={handleCancel} disabled={busy || !cancelNote.trim()} className={`${btnClass} bg-red-600 text-white`}>
               Confirm
             </button>
-            <button onClick={() => setShowCancelForm(false)} className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
+            <button type="button" disabled={busy} onClick={() => setShowCancelForm(false)} className={`${btnClass} bg-zinc-200 dark:bg-zinc-700`}>
               Back
             </button>
           </div>

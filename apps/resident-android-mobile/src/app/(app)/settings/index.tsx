@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { idVerificationState } from '@barangayan/shared';
 import Constants from 'expo-constants';
 import { Href, Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
@@ -52,7 +53,10 @@ async function toEdgeFunctionError(error: unknown): Promise<Error> {
 
 export default function SettingsScreen() {
   const { session, logout, setup, setupRefreshError, refreshCompletion } = useAuth();
-  const { profile } = useProfile();
+  const { profile, isLoading: profileLoading, error: profileError, refetch } = useProfile();
+  const idVerified = !profileLoading && !profileError && idVerificationState(profile) === 'verified';
+  const idStatus = idVerified ? 'Verified' : profileLoading ? 'Checking verification…' : profileError ? 'Verification unavailable' : profile?.id_verification_status === 'pending' ? 'Pending verification' : profile?.id_verification_status === 'verification_failed' ? 'Verification failed — try again' : 'Not verified';
+  useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const rows = accountSettingsRows(setup);
   const router = useRouter();
   const theme = useTheme();
@@ -306,6 +310,20 @@ export default function SettingsScreen() {
                   <View style={styles.rowText}>
                     <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
                     <StatusLine text={rows.profile.subtitle} warning={rows.profile.warning} />
+                  </View>
+                  <Chevron />
+                </Pressable>
+              </Link>
+              <Divider />
+              <Link href="/settings/valid-id" asChild>
+                <Pressable style={styles.row} accessibilityRole="button" accessibilityLabel={`Valid ID, ${idStatus}`}>
+                  <SettingsIcon name="card" />
+                  <View style={styles.rowText}>
+                    <ThemedText>Valid ID</ThemedText>
+                    <View style={styles.verifiedStatus}>
+                      <Ionicons name={idVerified ? 'checkmark-circle' : 'warning'} size={16} color={idVerified ? theme.accentGreen : theme.accentRed} accessible={false} />
+                      <ThemedText type="small" style={{ color: idVerified ? theme.accentGreen : theme.accentRed }}>{idStatus}</ThemedText>
+                    </View>
                   </View>
                   <Chevron />
                 </Pressable>

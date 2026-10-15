@@ -3,22 +3,36 @@ import { createClient, type Session, type SupabaseClient } from '@supabase/supab
 import type { Database, Tables } from '@barangayan/shared';
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
+import '../auth/native-pkce-crypto';
+import { AuthFlowProvider } from '../auth/auth-flow';
+import { clearAuthHints } from '../auth/hints';
+import { RECOVERY_HINT_MS } from '../auth/recovery-flow';
 import type { Configuration } from './config';
+import { finishPendingDraftPurge, purgeAllDrafts, purgeOtherAccountDrafts } from './drafts';
 import { newSessionStorage } from './secure-storage';
 
 export type Profile = Tables<'profiles'>;
 type Client = SupabaseClient<Database>;
+/** Why the resident is back at the signed-out entry; shown once as feedback. */
+export type SignedOutNotice = 'logged-out' | 'session-ended' | 'access-denied';
+export type LogoutReason = SignedOutNotice;
 type Runtime = {
   client: Client;
   config: Configuration;
   session: Session | null;
+  /** Null while a signed-in resident has not completed account setup (no profile row yet). */
   profile: Profile | null;
   recovery: boolean;
   epoch: number;
+  notice: SignedOutNotice | null;
+  dismissNotice: () => void;
   refreshProfile: () => Promise<void>;
   setRecovery: (active: boolean) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: (reason?: LogoutReason) => Promise<void>;
 };
+
+/** The signed-in account may not use the resident app (staff, other tenant or deleted). */
+class AccessDenied extends Error {}
 const Context = createContext<Runtime | null>(null);
 export const useResident = () => {
   const context = useContext(Context);
@@ -34,7 +48,7 @@ function connect(config: Configuration) {
   const pending = new Set<AbortController>();
   let closed = false;
   const client = createClient<Database>(config.url, config.anonKey, {
-    auth: { storage, storageKey, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+    auth: { storage, storageKey, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: 'pkce' },
     global: {
       fetch: async (input, options) => {
         if (closed) throw new Error('Session ended');
@@ -59,6 +73,7 @@ function connect(config: Configuration) {
   return {
     client, storage,
     marker: `${prefix}.installation`,
+    recoveryUntil: `${prefix}.recovery-until`,
     close() {
       closed = true;
       storage.disable();
@@ -90,6 +105,11 @@ export function ResidentProvider({ config, children, fallback }: {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [recovery, setRecoveryState] = useState(false);
+  const [notice, setNotice] = useState<SignedOutNotice | null>(null);
+  // True while this app is performing a sign-out, so it is not reported as an unexpected end.
+  const closing = useRef(false);
+  // The current logout, for callbacks created before it is defined (denial found during validation).
+  const logoutRef = useRef<((reason?: LogoutReason) => Promise<void>) | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -99,6 +119,7 @@ export function ResidentProvider({ config, children, fallback }: {
     let validatedUser: string | null = null;
     // Read installation policy BEFORE constructing a client (which restores asynchronously).
     const marker = `resident-ios.${new URL(config.url).hostname}.installation`;
+    const recoveryUntil = `resident-ios.${new URL(config.url).hostname}.recovery-until`;
     async function initialize() {
       setReady(false);
       setError(false);
@@ -108,14 +129,23 @@ export function ResidentProvider({ config, children, fallback }: {
       if (forceClear || (mode !== 'active' && mode !== 'recovery')) {
         await AsyncStorage.setItem(marker, 'closed');
         await Promise.all([key, `${key}-user`, `${key}-code-verifier`].map((name) => storage.removeItem(name)));
+        // Keychain items survive reinstall; a fresh install must not resurrect old private drafts.
+        await purgeAllDrafts();
+        await clearAuthHints();
         await AsyncStorage.setItem(marker, 'active');
+      } else {
+        await finishPendingDraftPurge();
       }
       if (!alive) return;
       const current = connect(config);
       ownedConnection = current;
       connection.current = current;
       setActiveConnection(current);
-      setRecoveryState(mode === 'recovery');
+      // A recovery hint only keeps the recovery stack reachable for a limited time.
+      const until = Number(await AsyncStorage.getItem(recoveryUntil));
+      const recoveryActive = mode === 'recovery' && Number.isFinite(until) && until > Date.now() && until <= Date.now() + RECOVERY_HINT_MS;
+      if (mode === 'recovery' && !recoveryActive) await AsyncStorage.setItem(marker, 'active');
+      setRecoveryState(recoveryActive);
       async function validate(next: Session | null) {
         const version = ++revision.current;
         if (next?.user.id !== validatedUser) {
@@ -123,37 +153,53 @@ export function ResidentProvider({ config, children, fallback }: {
           setProfile(null);
         }
         if (!next) {
+          const ended = validatedUser !== null;
           validatedUser = null;
-          if (alive) { setProfile(null); setSession(null); setReady(true); }
+          if (alive) {
+            setProfile(null); setSession(null); setReady(true);
+            // A session that disappears without the resident's own logout is reported once.
+            if (ended && !closing.current) setNotice('session-ended');
+          }
           return;
         }
         const { data: userData, error: userError } = await current.client.auth.getUser();
         if (userError || userData.user?.id !== next.user.id) throw userError ?? new Error('Session unavailable');
-        const { data, error: profileError } = await current.client.from('profiles').select('*').eq('id', userData.user.id).is('deleted_at', null).single();
-        if (profileError || !data || data.role !== 'resident' || data.barangay_id !== config.barangayId) throw profileError ?? new Error('Resident profile unavailable');
+        // No profile row yet is a valid pre-setup resident; a deleted, staff or foreign-tenant row is not.
+        const { data, error: profileError } = await current.client.from('profiles').select('*').eq('id', userData.user.id).maybeSingle();
+        if (profileError) throw profileError;
+        if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) throw new AccessDenied();
+        if (!alive || version !== revision.current) return;
+        if (validatedUser !== next.user.id) await purgeOtherAccountDrafts({ environment: config.environment, barangayId: config.barangayId, userId: next.user.id });
         if (!alive || version !== revision.current) return;
         validatedUser = next.user.id;
         setSession(next);
         setProfile(data);
+        setNotice(null);
         setError(false);
         setReady(true);
       }
+      function failed(failure: unknown) {
+        if (!alive) return;
+        if (failure instanceof AccessDenied) { void logoutRef.current?.('access-denied'); return; }
+        setError(true); setReady(false);
+      }
       const result = await current.client.auth.getSession();
       if (result.error) throw result.error;
-      await validate(result.data.session);
+      await validate(result.data.session).catch(failed);
       if (!alive) return;
       subscription = current.client.auth.onAuthStateChange((event, next) => {
         if (event === 'INITIAL_SESSION') return;
-        if (event === 'PASSWORD_RECOVERY') setRecoveryState(true);
+        if (event === 'PASSWORD_RECOVERY') {
+          setRecoveryState(true);
+          void AsyncStorage.multiSet([[marker, 'recovery'], [recoveryUntil, String(Date.now() + RECOVERY_HINT_MS)]]);
+        }
         // Supabase warns against awaiting Auth methods inside its callback/lock.
-        setTimeout(() => { if (alive) void validate(next).catch(() => { if (alive) { setError(true); setReady(false); } }); }, 0);
+        setTimeout(() => { if (alive) void validate(next).catch(failed); }, 0);
       }).data.subscription;
       lifecycle = AppState.addEventListener('change', (state) => {
         if (state === 'active') {
           void current.client.auth.startAutoRefresh();
-          void current.client.auth.getSession().then(({ data }) => validate(data.session)).catch(() => {
-            if (alive) { setError(true); setReady(false); }
-          });
+          void current.client.auth.getSession().then(({ data }) => validate(data.session)).catch(failed);
         } else { void current.client.auth.stopAutoRefresh(); }
       });
       if (AppState.currentState !== 'active') void current.client.auth.stopAutoRefresh();
@@ -168,9 +214,10 @@ export function ResidentProvider({ config, children, fallback }: {
     };
   }, [config, epoch, forceClear, retry]);
 
-  async function logout() {
+  async function logout(reason: LogoutReason = 'logged-out') {
     const current = connection.current;
     const token = session?.access_token;
+    closing.current = true;
     setForceClear(true);
     revision.current++;
     setReady(false);
@@ -181,8 +228,13 @@ export function ResidentProvider({ config, children, fallback }: {
     current?.close();
     try {
       await current?.clear();
+      if (current) await AsyncStorage.removeItem(current.recoveryUntil);
+      await clearAuthHints();
+      await purgeAllDrafts();
+      setNotice(reason);
+      closing.current = false;
       setEpoch((value) => value + 1);
-    } catch { setError(true); throw new Error('Local cleanup needs retry.'); }
+    } catch { closing.current = false; setError(true); throw new Error('Local cleanup needs retry.'); }
     // Revocation is separate from the local security transition and cannot resurrect it.
     if (token) {
       const controller = new AbortController();
@@ -192,6 +244,7 @@ export function ResidentProvider({ config, children, fallback }: {
       }).catch(() => undefined).finally(() => clearTimeout(timer));
     }
   }
+  useEffect(() => { logoutRef.current = logout; });
 
   function retryInitialization() {
     setReady(false);
@@ -212,21 +265,27 @@ export function ResidentProvider({ config, children, fallback }: {
     clear: clearDeviceSession,
   });
   const value: Runtime = {
-    client: activeConnection.client, config, session, profile, recovery, epoch,
+    client: activeConnection.client, config, session, profile, recovery, epoch, notice,
+    dismissNotice: () => setNotice(null),
     logout,
     async setRecovery(active) {
+      if (active) await AsyncStorage.setItem(activeConnection.recoveryUntil, String(Date.now() + RECOVERY_HINT_MS));
+      else await AsyncStorage.removeItem(activeConnection.recoveryUntil);
       await AsyncStorage.setItem(activeConnection.marker, active ? 'recovery' : 'active');
       setRecoveryState(active);
     },
     async refreshProfile() {
       if (!session) return;
       const version = revision.current;
-      const { data, error: queryError } = await activeConnection.client.from('profiles').select('*').eq('id', session.user.id).is('deleted_at', null).single();
+      const { data, error: queryError } = await activeConnection.client.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
       if (queryError) throw queryError;
-      if (!data || data.role !== 'resident' || data.barangay_id !== config.barangayId) throw new Error('Resident profile unavailable');
+      if (data && (data.deleted_at !== null || data.role !== 'resident' || data.barangay_id !== config.barangayId)) {
+        void logoutRef.current?.('access-denied');
+        throw new Error('Resident profile unavailable');
+      }
       if (version === revision.current) setProfile(data);
     },
   };
-  return <Context.Provider value={value}><SessionScope key={`${epoch}:${session?.user.id ?? 'guest'}`}>{children}</SessionScope></Context.Provider>;
+  return <Context.Provider value={value}><AuthFlowProvider key={epoch} client={activeConnection.client} session={session} recovery={recovery} logout={logout}><SessionScope key={`${epoch}:${session?.user.id ?? 'guest'}`}>{children}</SessionScope></AuthFlowProvider></Context.Provider>;
 }
 function SessionScope({ children }: { children: ReactNode }) { return children; }

@@ -1,15 +1,11 @@
 'use client';
 
-/**
- * Step 5 (QR PH branch only) — ported from payment/success/page.tsx. "Return to Home"
- * doesn't make sense from inside a modal already sitting on /services/documents, so
- * it's replaced with a "Done" button that just closes the modal — the resident lands
- * back on the (now restored to its normal multi-column) documents grid.
- */
+/** Confirmed QR PH receipt for the request associated with this payment. */
 
 import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
 import { useEffect, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { DownloadReceiptButton } from '../download-receipt-button';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,11 +24,9 @@ type Receipt = { status: 'ready'; payment: Tables<'payments'> } | { status: 'mis
 export function SuccessStep({
   requestId,
   referenceNumber,
-  onClose,
 }: {
   requestId: string;
   referenceNumber: string;
-  onClose: () => void;
 }) {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [retry, setRetry] = useState(0);
@@ -126,15 +120,11 @@ export function SuccessStep({
       </div>
 
       <div className="flex w-full flex-col gap-2">
-        {/* ?open= lands on the Requests list with this request's tracking drawer already
-            open, rather than the standalone /services/requests/[requestId] page — same
-            in-context pattern this whole modal follows instead of a bare navigation. */}
         <Button asChild size="lg">
-          <Link href={`/services/requests?open=${requestId}`}>Track My Request →</Link>
+          <Link href={`/services/requests/${requestId}`}>Track My Request</Link>
         </Button>
-        <Button size="lg" variant="secondary" onClick={onClose}>
-          Done
-        </Button>
+        <DownloadReceiptButton payment={payment} referenceNumber={referenceNumber} />
+        <Button asChild size="lg" variant="secondary"><Link href="/home">Return to Home</Link></Button>
       </div>
     </div>
   );

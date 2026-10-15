@@ -2,6 +2,8 @@ import type { LatLng, MapMarker, Tables } from '@barangayan/shared';
 import { haversineDistanceMeters, sortByDistanceFrom } from '@barangayan/shared';
 import { useCallback, useEffect, useState } from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { supabase } from '@/lib/supabase';
 import { getCachedData, setCachedData } from '@/lib/emergency-cache';
 
@@ -17,6 +19,29 @@ export type EvacuationCenterWithDistance = EvacuationCenterRow & {
 };
 
 const CACHE_TAG = 'evacuation_centers';
+/**
+ * Last successfully fetched centers, kept without the emergency cache's 30-minute expiry so the
+ * Centers screen and offline routes still list them after a long time offline (DRRM routing
+ * plan R6). Public data; it survives sign-out like the routing store.
+ */
+const DURABLE_KEY = 'evacuation_centers_durable_v1';
+
+async function readDurableCenters(): Promise<EvacuationCenterRow[] | null> {
+  try {
+    const raw = await AsyncStorage.getItem(DURABLE_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as EvacuationCenterRow[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeDurableCenters(rows: EvacuationCenterRow[]) {
+  AsyncStorage.setItem(DURABLE_KEY, JSON.stringify(rows)).catch(() => {
+    // Storage full or unavailable: the 30-minute cache and the next fetch still apply.
+  });
+}
 
 /**
  * Fetches active evacuation centers for the barangay. No Realtime subscription —
@@ -67,6 +92,7 @@ export function useEvacuationCenters(options: {
         const parsed = (data ?? []) as EvacuationCenterRow[];
         setRawCenters(parsed);
         setCachedData(CACHE_TAG, parsed);
+        writeDurableCenters(parsed);
         setIsOffline(false);
       }
       setIsLoading(false);
@@ -77,7 +103,7 @@ export function useEvacuationCenters(options: {
     let cancelled = false;
 
     async function init() {
-      const cached = await getCachedData<EvacuationCenterRow[]>(CACHE_TAG);
+      const cached = (await getCachedData<EvacuationCenterRow[]>(CACHE_TAG)) ?? (await readDurableCenters());
       if (cached && cached.length > 0 && !cancelled) {
         setRawCenters(cached);
         setIsLoading(false);

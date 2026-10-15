@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-14",
+  "phases": [
+    {
+      "id": "DC-00",
+      "initial": "not started",
+      "evidence": "Only prior in-memory simulation existed"
+    },
+    {
+      "id": "DC-01",
+      "initial": "not started",
+      "evidence": "No resolved tooling decision or per-candidate eligibility"
+    },
+    {
+      "id": "DC-02",
+      "initial": "not started",
+      "evidence": "All eight exports and dependent declarations present"
+    },
+    {
+      "id": "DC-03",
+      "initial": "not started",
+      "evidence": "All 21 local style keys plus U01-dependent group present"
+    },
+    {
+      "id": "DC-04",
+      "initial": "not started",
+      "evidence": "All eight orphans and F01 present"
+    },
+    {
+      "id": "DC-05",
+      "initial": "not started",
+      "evidence": "No export or smoke for physical cleanup"
+    },
+    {
+      "id": "DC-06",
+      "initial": "not started",
+      "evidence": "No actual cleanup diff or closure"
+    }
+  ],
+  "discrepancies": [
+    "Audit linked execution plan supplies actual DC-00 through DC-06; audit main sections 0–6 are findings rather than phases",
+    "Earlier scoped lint had 71 errors; current scoped baseline has zero errors and warnings",
+    "Earlier graph counts 218/219 used a different shared-barrel traversal; current explicit traversal includes 271/272 modules/assets, with exact final equality",
+    "Native emulator now available outside sandbox, unlike historical record. Fresh-bundle smoke still requires successful load."
+  ],
+  "conflicts": "No conflict with root AGENTS.md or CLAUDE.md. Cancelled Android usability phase remains excluded."
+}

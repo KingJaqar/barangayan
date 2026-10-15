@@ -1,0 +1,11 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90mC:/Users/User/barangayan[39m
+
+ [32m✓[39m supabase/functions/delete-my-account/storage-cleanup.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 12:42:39
+[2m   Duration [22m 4.71s[2m (transform 104ms, setup 0ms, collect 111ms, tests 33ms, environment 0ms, prepare 314ms)[22m
+
+exit 0

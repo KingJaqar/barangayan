@@ -1,0 +1,5 @@
+[
+{"run":1,"runtime":"deno supabase-edge-runtime-1.76.2 (compatible with Deno v2.1.4)","importMs":6.62,"packVerifyAndPrepareMs":13.18,"routes":200,"statuses":{"outside_coverage":32,"ok":144,"no_nearby_path":9,"no_route_within_coverage":9,"attachment_ambiguous":6},"routeMs":{"p50":1.53,"p95":2.94,"max":10.87},"memoryMb":{"rssStart":0,"rssEnd":0,"heapUsedEnd":10.4,"heapTotalEnd":15.4}},
+{"run":2,"runtime":"deno supabase-edge-runtime-1.76.2 (compatible with Deno v2.1.4)","importMs":6.06,"packVerifyAndPrepareMs":13.69,"routes":200,"statuses":{"outside_coverage":32,"ok":144,"no_nearby_path":9,"no_route_within_coverage":9,"attachment_ambiguous":6},"routeMs":{"p50":1.51,"p95":2.73,"max":10.51},"memoryMb":{"rssStart":0,"rssEnd":0,"heapUsedEnd":10.9,"heapTotalEnd":15.2}},
+{"run":3,"runtime":"deno supabase-edge-runtime-1.76.2 (compatible with Deno v2.1.4)","importMs":13.18,"packVerifyAndPrepareMs":23.44,"routes":200,"statuses":{"outside_coverage":32,"ok":144,"no_nearby_path":9,"no_route_within_coverage":9,"attachment_ambiguous":6},"routeMs":{"p50":1.47,"p95":2.44,"max":11.2},"memoryMb":{"rssStart":0,"rssEnd":0,"heapUsedEnd":10.4,"heapTotalEnd":14.9}}
+]

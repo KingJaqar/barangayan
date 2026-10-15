@@ -1,4 +1,6 @@
 'use client';
+
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 import { createRequestKey, ID_TYPES, publishIdEvidence, SUPPORTING_FILE_MAX_BYTES } from '@barangayan/shared';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -79,12 +81,12 @@ export function IdUpload() {
       </h2>
       <label>
         ID type
-        <select
+        <AdminSelect
           required
           className="block w-full rounded-lg border p-3"
           value={type}
-          onChange={(event) => {
-            setType(event.target.value);
+          onValueChange={(nextValue) => {
+            setType(nextValue);
             operation.current = null;
           }}
         >
@@ -92,7 +94,7 @@ export function IdUpload() {
           {ID_TYPES.map((value) => (
             <option key={value}>{value}</option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       {type === 'Other' ? (
         <label>

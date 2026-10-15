@@ -1,0 +1,91 @@
+NOTICE:  extension "pgtap" already exists, skipping
+ok 1 - public.begin_processing_request(uuid): anonymous execution denied
+ok 2 - public.mark_request_ready_for_pickup(uuid): anonymous execution denied
+ok 3 - public.complete_service_request(uuid): anonymous execution denied
+ok 4 - public.cancel_service_request(uuid,text): anonymous execution denied
+ok 5 - Active request controls receive the legacy catalog fee
+ok 6 - Archived request details receive the legacy catalog fee
+ok 7 - Submitted request cannot skip processing
+ok 8 - Submitted request cannot skip pickup
+ok 9 - Cancellation requires a reason
+ok 10 - Legacy processing succeeds
+ok 11 - Processing persisted
+ok 12 - Processing retry is idempotent
+ok 13 - Legacy ready succeeds
+ok 14 - Ready persisted
+ok 15 - Pickup collection succeeds before completion
+ok 16 - Collected payment persisted on request
+ok 17 - Collected amount uses server fee
+ok 18 - Repeated collection is idempotent
+ok 19 - Repeated collection creates no duplicate payment
+ok 20 - Legacy completion succeeds
+ok 21 - Completion persisted
+ok 22 - Completed request cannot be cancelled
+ok 23 - Legacy cancellation succeeds
+ok 24 - Cancellation persisted
+ok 25 - Cancelled request cannot restart
+ok 26 - Archived request rejects public.begin_processing_request('d1170000-0000-0000-0000-000000000003')
+ok 27 - Archived request rejects public.mark_request_ready_for_pickup('d1170000-0000-0000-0000-000000000003')
+ok 28 - Archived request rejects public.complete_service_request('d1170000-0000-0000-0000-000000000003')
+ok 29 - Archived request rejects public.cancel_service_request('d1170000-0000-0000-0000-000000000003','Fixture')
+not ok 30 - Versioned accept delegates to guarded SLA
+# Failed test 30: "Versioned accept delegates to guarded SLA"
+#     died: 22023: complete_requirements_and_appearance_required
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.transition_service_request_sla(jsonb) line 27 at RAISE
+#             SQL statement "SELECT barangayan_private.transition_service_request_sla(jsonb_strip_nulls(jsonb_build_object(
+#                   'requestId',request.id,'action',p_action,'reason',case when p_action='cancel' then btrim(p_note) end,
+#                   'requirementsComplete',true,'personalAppearanceReady',true)))"
+#             PL/pgSQL function barangayan_private.admin_request_transition(uuid,text,text) line 20 at PERFORM
+#             SQL function "begin_processing_request" statement 1
+#             SQL statement "select public.begin_processing_request('d1170000-0000-0000-0000-000000000005')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 31 - Versioned SLA running persisted
+# Failed test 31: "Versioned SLA running persisted"
+#         have: pre_processing
+#         want: running
+not ok 32 - Versioned ready delegates to guarded SLA
+# Failed test 32: "Versioned ready delegates to guarded SLA"
+#     died: 22023: invalid_SLA_transition
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.transition_service_request_sla(jsonb) line 53 at RAISE
+#             SQL statement "SELECT barangayan_private.transition_service_request_sla(jsonb_strip_nulls(jsonb_build_object(
+#                   'requestId',request.id,'action',p_action,'reason',case when p_action='cancel' then btrim(p_note) end,
+#                   'requirementsComplete',true,'personalAppearanceReady',true)))"
+#             PL/pgSQL function barangayan_private.admin_request_transition(uuid,text,text) line 20 at PERFORM
+#             SQL function "mark_request_ready_for_pickup" statement 1
+#             SQL statement "select public.mark_request_ready_for_pickup('d1170000-0000-0000-0000-000000000005')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+ok 33 - Versioned completion requires payment
+not ok 34 - Versioned pickup collection succeeds
+# Failed test 34: "Versioned pickup collection succeeds"
+#     died: 22023: pickup_document_not_ready
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.pickup_payment(uuid,boolean) line 22 at RAISE
+#             SQL function "collect_pickup_payment" statement 1
+#             SQL statement "select public.collect_pickup_payment('d1170000-0000-0000-0000-000000000005')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 35 - Versioned release succeeds after collection
+# Failed test 35: "Versioned release succeeds after collection"
+#     died: 22023: invalid_SLA_transition
+#         CONTEXT:
+#             PL/pgSQL function barangayan_private.transition_service_request_sla(jsonb) line 53 at RAISE
+#             SQL statement "SELECT barangayan_private.transition_service_request_sla(jsonb_strip_nulls(jsonb_build_object(
+#                   'requestId',request.id,'action',p_action,'reason',case when p_action='cancel' then btrim(p_note) end,
+#                   'requirementsComplete',true,'personalAppearanceReady',true)))"
+#             PL/pgSQL function barangayan_private.admin_request_transition(uuid,text,text) line 20 at PERFORM
+#             SQL function "complete_service_request" statement 1
+#             SQL statement "select public.complete_service_request('d1170000-0000-0000-0000-000000000005')"
+#             PL/pgSQL function lives_ok(text,text) line 14 at EXECUTE
+not ok 36 - Versioned released state persisted
+# Failed test 36: "Versioned released state persisted"
+#         have: pre_processing
+#         want: released
+ok 37 - Versioned cancellation succeeds through existing RPC
+ok 38 - Versioned cancellation updates SLA
+ok 39 - Versioned cancellation records its timestamp
+ok 40 - Foreign administrator cannot process request
+ok 41 - Removed administrator cannot process request
+ok 42 - Resident cannot process request
+1..42
+# Looks like you failed 6 tests of 42

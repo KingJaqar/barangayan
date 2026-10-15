@@ -11,6 +11,7 @@ import {
   ResidentSubmissionAttempt,
   servicePriceLabel,
   submissionSchemaForCatalog,
+  supportingAttachmentMetadata,
   SUPPORTING_FILE_MAX_BYTES,
   SUPPORTING_FILE_MIME_TYPES,
   uploadSupportingEvidence,
@@ -22,10 +23,10 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { LoadingStatus } from '@/components/shared/loading-status';
-import { Button } from '@/components/ui/button';
-import { beginAttempt, notify } from '@/lib/notify';
-import { serviceSubmissionFailure } from '@/lib/service-feedback';
+import { LoadingStatus } from '../shared/loading-status';
+import { Button } from '../ui/button';
+import { beginAttempt, notify } from '../../lib/notify';
+import { serviceSubmissionFailure } from '../../lib/service-feedback';
 
 type Client = SupabaseClient<Database>;
 type Requirement = ServiceSubmissionInput['attachments'][number]['requirementCode'];
@@ -71,7 +72,7 @@ export function useResidentEvidence(client: Client) {
         if (approvalError || approved?.decision !== 'verified')
           throw new Error('Could not confirm approved ID. Refresh and try again.');
         const signed = await Promise.all(
-          [approved.front_path, approved.back_path].map((path) =>
+          [approved.front_path, approved.back_path].filter((path): path is string => !!path).map((path) =>
             client.storage.from('id-documents').createSignedUrl(path, 600),
           ),
         );
@@ -81,14 +82,12 @@ export function useResidentEvidence(client: Client) {
         setEvidence(approved);
         setImages(signed.map((result) => result.data!.signedUrl));
       }
-    } catch (failure) {
+    } catch {
       if (ticket === generation.current) {
         setProfile(null);
         setEvidence(null);
         setImages([]);
-        setError(
-          failure instanceof Error ? failure.message : 'Could not refresh verification. Reconnect and retry.',
-        );
+        setError('Could not refresh your approved ID. Check your connection and retry verification.');
       }
     } finally {
       if (ticket === generation.current) setLoading(false);
@@ -214,6 +213,7 @@ export function ResidentServiceForm({
   const [renter, setRenter] = useState(false);
   const [reference, setReference] = useState('');
   const [copies, setCopies] = useState('1');
+  const [totalPages, setTotalPages] = useState('1');
   const [appearance, setAppearance] = useState(false);
   const [files, setFiles] = useState<Partial<Record<Requirement, { file: File; id: string }>>>({});
   const [legacyId, setLegacyId] = useState<File | null>(null);
@@ -241,7 +241,9 @@ export function ResidentServiceForm({
       file.size <= 0 ||
       file.size > SUPPORTING_FILE_MAX_BYTES
     ) {
-      setError('Choose a JPG, PNG, WEBP or PDF file up to 5 MB.');
+      const message = 'Choose a JPG, PNG, WEBP or PDF file up to 5 MB.';
+      setError(message);
+      notify.error(message);
       return;
     }
     setError(null);
@@ -266,27 +268,15 @@ export function ResidentServiceForm({
         (idVerificationState(approved.profile) !== 'verified' || !approved.evidence || approved.loading)
       )
         throw new Error('Your profile ID must be verified before submitting.');
-      const attachments: ServiceSubmissionInput['attachments'] = [];
       const chosen = Object.entries(files).filter(([, selected]) => selected);
-      for (const [position, [code, selected]] of chosen.entries()) {
-        phase = 'upload';
-        setStage(chosen.length > 1 ? `Uploading file ${position + 1} of ${chosen.length}…` : 'Uploading your file…');
-        attachments.push(
-          await uploadSupportingEvidence(client, {
-            uploadId: selected!.id,
-            requirementCode: code as Requirement,
-            mimeType: selected!.file.type,
-            bytes: new Uint8Array(await selected!.file.arrayBuffer()),
-          }),
-        );
-      }
-      phase = 'validate';
       const value: Omit<ServiceSubmissionInput, 'idempotencyKey'> = {
         documentTypeId: doc.id,
         purposeCode: catalog ? purpose : 'legacy',
         requesterNotes: notes.trim() || undefined,
         details: {},
-        attachments,
+        attachments: chosen.map(([code, selected]) => supportingAttachmentMetadata(approved.profile?.id ?? '', {
+          uploadId: selected!.id, requirementCode: code as Requirement, mimeType: selected!.file.type, sizeBytes: selected!.file.size,
+        })),
       };
       if (catalog) {
         if (purposeOption?.requiresExplanation) value.purposeExplanation = explanation.trim();
@@ -295,10 +285,18 @@ export function ResidentServiceForm({
         if (['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind))
           value.details.isRenter = renter;
         if (catalog.serviceKind === 'certified_true_copy')
-          value.details = { recordReference: reference.trim(), copies: Number(copies) };
+          value.details = { recordReference: reference.trim(), copies: Number(copies), totalPages: Number(totalPages) };
         if (catalog.requirementRules.personalAppearance)
           value.details.personalAppearanceAcknowledged = appearance;
         submissionSchemaForCatalog(catalog).parse({ ...value, idempotencyKey: attempt.key });
+        for (const [position, [code, selected]] of chosen.entries()) {
+          phase = 'upload';
+          setStage(chosen.length > 1 ? `Uploading file ${position + 1} of ${chosen.length}…` : 'Uploading your file…');
+          value.attachments[position] = await uploadSupportingEvidence(client, {
+            uploadId: selected!.id, requirementCode: code as Requirement, mimeType: selected!.file.type,
+            bytes: new Uint8Array(await selected!.file.arrayBuffer()),
+          });
+        }
       } else if (legacyId) {
         if (
           !['image/jpeg', 'image/png', 'image/webp'].includes(legacyId.type) ||
@@ -333,21 +331,21 @@ export function ResidentServiceForm({
       phase = 'submit';
       setStage('Submitting your request…');
       const result = await attempt.submit(client, value);
-      // The next view (assessment/payment) is the confirmation. If the form was closed
+      // The next view (payment) is the confirmation. If the form was closed
       // while this ran, the request was still created — say so once.
       if (!mounted.current) {
         notify.success('Request submitted.', { id: attemptId, description: `Reference ${result.reference_number}. Track it in My Requests.` });
       }
       onSubmitted(result.id, result.reference_number);
     } catch (failure) {
-      const outcome = serviceSubmissionFailure(failure, phase, residentServiceError(failure));
+      const outcome = serviceSubmissionFailure(failure, phase, residentServiceError(failure, phase));
       if (outcome.kind === 'validation') {
-        // Inline field/validation message only — no toast.
         if (mounted.current) setError(outcome.message);
+        notify.error(outcome.message, { id: attemptId });
       } else {
         if (mounted.current) setNotice(outcome.message);
         const level = outcome.kind === 'unconfirmed' ? 'warning' : 'error';
-        notify[level](outcome.title ?? 'Could not submit your request.', { id: attemptId });
+        notify[level](outcome.title ?? 'Could not submit your request.', { id: attemptId, description: outcome.message });
       }
     } finally {
       busy.current = false;
@@ -520,8 +518,7 @@ export function ResidentServiceForm({
           {['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind) ? (
             <>
               <p>
-                HOA certification may support or establish residency. Staff will review eligibility and any
-                fee exemption.
+                HOA certification may support or establish residency. The document fee is ₱100.00.
               </p>
               {upload('hoa', 'HOA certification', catalog.requirementRules.hoaRequired)}
               <label className="min-h-12 py-3">
@@ -569,8 +566,13 @@ export function ResidentServiceForm({
                   className={fieldClass}
                 />
               </label>
+              <label>
+                Total pages across all copies
+                <input type="number" required min={1} max={1000000} value={totalPages}
+                  onChange={(event) => setTotalPages(event.target.value)} className={fieldClass} />
+              </label>
               <p>
-                Staff confirms the total billable pages across all copies. Fee: ₱10 × total confirmed pages.
+                Fee: ₱10.00 × total pages across all copies.
               </p>
             </>
           ) : null}

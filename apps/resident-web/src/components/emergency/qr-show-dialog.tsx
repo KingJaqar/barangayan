@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { EvacuationCenterWithDistance } from '@/hooks/use-evacuation-centers';
 import { beginAttempt, notify } from '@/lib/notify';
+import styles from './emergency.module.css';
 
 /**
  * Web port of qr-show-modal.tsx — lets a resident pick an evacuation center and display
@@ -119,7 +120,7 @@ ${qrValue}`;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className={`${styles.dialog} ${styles.qrDialog}`}>
         <DialogHeader>
           <DialogTitle>Show QR Code</DialogTitle>
           <DialogDescription>Show this screen to center staff so they can scan it at the desk.</DialogDescription>
@@ -135,7 +136,7 @@ ${qrValue}`;
             disabled={centers.length === 0}
             value={selectedCenterId ?? ''}
             onChange={(e) => setSelectedCenterId(e.target.value)}
-            className="h-11 rounded-lg border border-input bg-white px-3.5 text-sm text-black outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 dark:bg-zinc-900 dark:text-white [&>option]:bg-white [&>option]:text-black dark:[&>option]:bg-zinc-900 dark:[&>option]:text-white">
+            className="h-11 w-full min-w-0 rounded-lg border border-input bg-card px-3.5 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 [&>option]:bg-card [&>option]:text-foreground">
             {centers.length === 0 ? (
               <option value="">{centersStatus === 'loading' ? 'Loading evacuation centers…' : centersStatus === 'error' ? 'Evacuation centers unavailable' : 'No evacuation centers found'}</option>
             ) : null}
@@ -152,7 +153,7 @@ ${qrValue}`;
             </p>
           ) : null}
 
-          <div ref={canvasWrapperRef} className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border border-border bg-white p-3">
+          <div ref={canvasWrapperRef} className={styles.qrFrame}>
             {!selectedCenter ? (
               <p className="text-center text-xs text-muted-foreground">
                 {centersStatus === 'loading' ? 'Loading evacuation centers…' : centersStatus === 'error' ? 'Evacuation centers could not be loaded' : 'Select a center to generate a QR code'}
@@ -160,15 +161,15 @@ ${qrValue}`;
             ) : !qrValue ? (
               <p className="text-center text-xs text-muted-foreground">Unable to generate QR code</p>
             ) : (
-              <QRCodeCanvas value={qrValue} size={220} bgColor="#FFFFFF" fgColor="#000000" level="M" />
+              <QRCodeCanvas value={qrValue} size={220} level="M" />
             )}
           </div>
 
           <div className="flex gap-2">
-            <Button type="button" variant="outline" className="flex-1" disabled={!qrValue} loading={sharing} loadingLabel="Sharing…" onClick={handleShare}>
+            <Button type="button" variant="outline" className={`${styles.secondaryButton} flex-1`} disabled={!qrValue} loading={sharing} loadingLabel="Sharing…" onClick={handleShare}>
               <Share2 size={16} /> Share
             </Button>
-            <Button type="button" variant="outline" className="flex-1" disabled={!qrValue} onClick={handleDownload}>
+            <Button type="button" variant="outline" className={`${styles.secondaryButton} flex-1`} disabled={!qrValue} onClick={handleDownload}>
               <Download size={16} /> Download
             </Button>
           </div>

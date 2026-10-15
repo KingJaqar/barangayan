@@ -1,0 +1,74 @@
+diff --git a/apps/resident-android-mobile/src/components/resident-details-form.tsx b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+index 25f29a9..ac1616f 100644
+--- a/apps/resident-android-mobile/src/components/resident-details-form.tsx
++++ b/apps/resident-android-mobile/src/components/resident-details-form.tsx
+@@ -465,11 +465,6 @@ const styles = StyleSheet.create({
+   },
+   introTitle: { fontSize: 22, fontWeight: '700' },
+   introSubtitle: { fontSize: 14, marginTop: -Spacing.two, marginBottom: Spacing.one, lineHeight: 20 },
+-  passwordMatchIndicator: {
+-    flexDirection: 'row',
+-    alignItems: 'center',
+-    gap: Spacing.one,
+-  },
+   inlineStatusRow: {
+     flexDirection: 'row',
+     alignItems: 'center',
+@@ -487,40 +482,6 @@ const styles = StyleSheet.create({
+     paddingHorizontal: Spacing.three,
+     paddingVertical: Spacing.two,
+   },
+-  successModalBackdrop: {
+-    flex: 1,
+-    justifyContent: 'center',
+-    padding: Spacing.four,
+-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+-  },
+-  successModalCard: {
+-    padding: Spacing.four,
+-    borderRadius: Spacing.four,
+-    alignItems: 'center',
+-    gap: Spacing.three,
+-  },
+-  successIcon: {
+-    width: 64,
+-    height: 64,
+-    borderRadius: 32,
+-    alignItems: 'center',
+-    justifyContent: 'center',
+-  },
+-  successModalTitle: {
+-    fontSize: 24,
+-    textAlign: 'center',
+-  },
+-  successModalMessage: {
+-    textAlign: 'center',
+-  },
+-  successModalActions: {
+-    flexDirection: 'row',
+-    gap: Spacing.two,
+-    width: '100%',
+-  },
+-  successModalActionButton: {
+-    flex: 1,
+-  },
+   barangayRow: {
+     padding: Spacing.three,
+     borderRadius: Spacing.three,
+@@ -548,16 +509,5 @@ const styles = StyleSheet.create({
+     paddingHorizontal: Spacing.three,
+     paddingVertical: Spacing.two,
+   },
+-  formError: { textAlign: 'center' },
+-  submitActions: {
+-    gap: Spacing.three,
+-    marginTop: Spacing.one,
+-  },
+-  footerRow: {
+-    flexDirection: 'row',
+-    justifyContent: 'center',
+-    flexWrap: 'wrap',
+-  },
+-  footerText: { fontSize: 14 },
+ });
+ 

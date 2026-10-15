@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Home, MapPin, Settings, ClipboardList, Bell, ShieldAlert, Newspaper, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, Home, MapPin, Settings, ClipboardList, Bell, ShieldAlert, TriangleAlert, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -9,10 +9,9 @@ import { useEffect, useRef, useState } from 'react';
 import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
 import { preferredScrollBehavior } from '@/lib/motion';
+import styles from './resident-shell.module.css';
 
-// Icon mapping confirmed 1:1 against apps/resident-android-mobile/src/components/app-
-// tabs.tsx's TabIcon set (home/clipboard/location/heart/notifications/settings) — see
-// the plan's Phase 0 step 4 note. Emergency is a website-only 8th addition, not in
+// Icons match the resident web top navbar. Emergency is a website-only addition, not in
 // mobile's tab set (which folds it into "Maps") — placed right after Home per request.
 // Announcements is likewise website-only (mobile nests it as a sub-tab of Reports) —
 // placed right after Reports, matching top-nav.tsx. `badge` names which live count
@@ -23,8 +22,8 @@ const NAV_ITEMS = [
   { href: '/services', label: 'Services', icon: ClipboardList, exact: false, badge: null },
   { href: '/maps', label: 'Maps', icon: MapPin, exact: false, badge: null },
   { href: '/health', label: 'Health', icon: Heart, exact: false, badge: null },
-  { href: '/reports', label: 'Reports', icon: Bell, exact: false, badge: 'reports' },
-  { href: '/announcements', label: 'Announcements', icon: Newspaper, exact: false, badge: 'announcements' },
+  { href: '/reports', label: 'Reports', icon: TriangleAlert, exact: false, badge: 'reports' },
+  { href: '/announcements', label: 'Announcements', icon: Bell, exact: false, badge: 'announcements' },
   { href: '/settings', label: 'Settings', icon: Settings, exact: false, badge: null },
 ] as const;
 
@@ -78,7 +77,7 @@ export function BottomTabBar() {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-sm sm:hidden">
+    <nav aria-label="Mobile navigation" className={`${styles.mobileNav} fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm sm:hidden`}>
       <div className="relative flex items-center">
         {canScrollLeft ? (
           <button
@@ -103,6 +102,7 @@ export function BottomTabBar() {
                 <Link
                   key={href}
                   href={href}
+                  aria-current={active ? 'page' : undefined}
                   className="relative flex w-16 shrink-0 flex-col items-center gap-0.5 px-2 py-1.5 text-[11px] font-medium">
                   <span className="relative flex h-7 w-9 items-center justify-center">
                     {active ? (

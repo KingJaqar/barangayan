@@ -129,6 +129,19 @@ describe('describeDeviceLocation', () => {
     expect(describeDeviceLocation(blocked, 'web')?.actions).toEqual(['retry']);
   });
 
+  it('describes iOS states with iOS wording and actions, leaving Android and web unchanged', () => {
+    const approximate = { ...initialDeviceLocationState, status: 'confirmation-required' as const, approximate: true, pending: { fix: fix(), concerns: ['approximate-permission' as const] } };
+    expect(describeDeviceLocation(approximate, 'ios')?.detail).toContain('Precise Location for Barangayan');
+    expect(describeDeviceLocation(approximate, 'ios')?.actions).toEqual(['confirm', 'reject', 'open-settings']);
+    expect(describeDeviceLocation(approximate, 'android')?.detail).toBe('Only approximate location is allowed. Turn on Precise location in Settings for a better fix.');
+    expect(describeDeviceLocation(approximate, 'web')?.actions).toEqual(['confirm', 'reject']);
+    const blocked = { ...initialDeviceLocationState, status: 'denied' as const, canAskAgain: false };
+    expect(describeDeviceLocation(blocked, 'ios')?.actions).toEqual(['open-settings']);
+    const servicesOff = { ...initialDeviceLocationState, status: 'services-disabled' as const };
+    expect(describeDeviceLocation(servicesOff, 'ios')).toMatchObject({ actions: ['retry'], detail: expect.stringContaining('Privacy & Security') });
+    expect(describeDeviceLocation(servicesOff, 'android')).toMatchObject({ actions: ['open-settings', 'retry'], detail: "Turn on location in your phone's settings." });
+  });
+
   it('mentions the kept origin after a failure', () => {
     const origin = { lat: 1, lng: 1, accuracyMeters: 10, deviceTimestamp: NOW, source: 'device-auto' as const, fixSource: 'current' as const, revision: 1 };
     expect(describeDeviceLocation({ ...initialDeviceLocationState, status: 'timed-out', origin }, 'web')?.detail)

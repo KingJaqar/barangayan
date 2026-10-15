@@ -1,0 +1,45 @@
+NOTICE:  extension "pgtap" already exists, skipping
+ok 1 - public.begin_processing_request(uuid): anonymous execution denied
+ok 2 - public.mark_request_ready_for_pickup(uuid): anonymous execution denied
+ok 3 - public.complete_service_request(uuid): anonymous execution denied
+ok 4 - public.cancel_service_request(uuid,text): anonymous execution denied
+ok 5 - Active request controls receive the legacy catalog fee
+ok 6 - Archived request details receive the legacy catalog fee
+ok 7 - Submitted request cannot skip processing
+ok 8 - Submitted request cannot skip pickup
+ok 9 - Cancellation requires a reason
+ok 10 - Legacy processing succeeds
+ok 11 - Processing persisted
+ok 12 - Processing retry is idempotent
+ok 13 - Legacy ready succeeds
+ok 14 - Ready persisted
+ok 15 - Pickup collection succeeds before completion
+ok 16 - Collected payment persisted on request
+ok 17 - Collected amount uses server fee
+ok 18 - Repeated collection is idempotent
+ok 19 - Repeated collection creates no duplicate payment
+ok 20 - Legacy completion succeeds
+ok 21 - Completion persisted
+ok 22 - Completed request cannot be cancelled
+ok 23 - Legacy cancellation succeeds
+ok 24 - Cancellation persisted
+ok 25 - Cancelled request cannot restart
+ok 26 - Archived request rejects public.begin_processing_request('d1170000-0000-0000-0000-000000000003')
+ok 27 - Archived request rejects public.mark_request_ready_for_pickup('d1170000-0000-0000-0000-000000000003')
+ok 28 - Archived request rejects public.complete_service_request('d1170000-0000-0000-0000-000000000003')
+ok 29 - Archived request rejects public.cancel_service_request('d1170000-0000-0000-0000-000000000003','Fixture')
+ok 30 - Versioned acceptance still rejects an unreviewed request
+ok 31 - Versioned accept delegates to guarded SLA
+ok 32 - Versioned SLA running persisted
+ok 33 - Versioned ready delegates to guarded SLA
+ok 34 - Versioned completion requires payment
+ok 35 - Versioned pickup collection succeeds
+ok 36 - Versioned release succeeds after collection
+ok 37 - Versioned released state persisted
+ok 38 - Versioned cancellation succeeds through existing RPC
+ok 39 - Versioned cancellation updates SLA
+ok 40 - Versioned cancellation records its timestamp
+ok 41 - Foreign administrator cannot process request
+ok 42 - Removed administrator cannot process request
+ok 43 - Resident cannot process request
+1..43

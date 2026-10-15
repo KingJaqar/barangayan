@@ -1,0 +1,29 @@
+ M apps/admin-web/src/components/admin/header.tsx
+ M apps/admin-web/src/components/admin/sidebar-nav.tsx
+ M apps/admin-web/src/lib/audit-notifications.ts
+ M packages/shared/package.json
+ M packages/shared/src/index.ts
+ M packages/shared/src/lib/evacuation-routing.ts
+ M packages/shared/src/schemas/admin-audit-log.ts
+ M packages/shared/src/types/database.ts
+ M packages/shared/tsconfig.json
+ M plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md
+ M plans/Resident_iOS_Implementation_Plan.md
+ M plans/Resident_iOS_UI_UX_Design_System_Handoff.md
+ M supabase/seed.sql
+?? apps/admin-web/src/app/(admin)/evacuation-routing/
+?? apps/admin-web/src/lib/routing-packs.ts
+?? baseline_and_tsc.log
+?? data/
+?? packages/shared/scripts/
+?? packages/shared/src/lib/routing-pack-builder.test.ts
+?? packages/shared/src/lib/routing-pack-builder.ts
+?? packages/shared/src/schemas/routing-conditions.test.ts
+?? packages/shared/src/schemas/routing-conditions.ts
+?? packages/shared/src/types/routing-conditions.database.ts
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/
+?? plans/evidence/resident-drrm-routing/r4-conditions/
+?? plans/evidence/resident-drrm-routing/r5-route-service/
+?? plans/evidence/resident-ios-parity/
+?? supabase/migrations/0113_routing_conditions.sql
+?? supabase/tests/routing_conditions.test.sql

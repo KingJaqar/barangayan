@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import type { Tables } from '@barangayan/shared';
 import { useMemo, useState } from 'react';
 
@@ -30,44 +33,29 @@ export function EmergencyCatalog({ items }: { items: EmergencyInformation[] }) {
     });
   }, [items, query, category]);
 
-  return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by title…"
-          className="min-w-0 flex-1 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800"
-        />
-        <div className="flex shrink-0 gap-1 rounded-full bg-zinc-100 p-0.5 dark:bg-zinc-800">
-          {CATEGORY_FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setCategory(f.value)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                category === f.value
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
-              }`}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
+  const guidelines = items.filter(item => item.category === 'guidelines').length;
+  const hotlines = items.filter(item => item.category === 'hotlines').length;
+  const hasFilters = query.trim() !== '' || category !== 'all';
+  const reset = () => { setQuery(''); setCategory('all'); };
 
-      <div className="flex flex-col gap-2">
-        {filtered.map((item) => (
-          <EmergencyRow key={item.id} item={item} />
-        ))}
-        {filtered.length === 0 && items.length > 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No entries match your search.</p>
-        ) : null}
-        {items.length === 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-500">No entries yet — create one above.</p>
-        ) : null}
+  return <>
+    <ContentSummary items={[
+      { label: 'Hub entries', value: items.length, detail: 'Emergency resources for residents' },
+      { label: 'Guidelines', value: guidelines, detail: 'Preparedness and safety information' },
+      { label: 'Hotlines', value: hotlines, detail: 'Contact entries for urgent help' },
+    ]} />
+    <ContentSection title="Published entries" description="Manage the emergency information residents can rely on.">
+      <ContentToolbar label="Search hub entries" query={query} onQueryChange={setQuery} placeholder="Search hub entries…">
+        <ContentFilters label="Hub category" options={CATEGORY_FILTERS.map(f => ({ ...f, count: f.value === 'all' ? items.length : f.value === 'guidelines' ? guidelines : hotlines }))}
+          value={category} onChange={setCategory} />
+      </ContentToolbar>
+      <ContentResults count={filtered.length} total={items.length} noun="entries" filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {filtered.map(item => <EmergencyRow key={item.id} item={item} />)}
+        {filtered.length === 0 ? <ContentEmptyState title={items.length ? 'No matching entries' : 'Build your emergency hub'}
+          description={items.length ? 'Try another title or clear your filters.' : 'Add a guideline or hotline so residents can find help quickly.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
       </div>
-    </div>
-  );
+    </ContentSection>
+  </>;
 }

@@ -1,0 +1,14 @@
+{"active": true, "revision": 2, "graphVersion": "conc-c@2026-10-12#eeeeeeeeeeee"}
+revision before: 2
+published 3
+
+published 4
+
+snapshot during open publications: 2 closures=0
+after: revision=4 closures=2 closure_revisions=3,4
+reopened 5
+
+ERROR:  This road closure was already reopened.
+CONTEXT:  PL/pgSQL function public.reopen_road_closure(uuid,text) line 21 at RAISE
+reopen events=1
+event revisions=1,2,3,4,5

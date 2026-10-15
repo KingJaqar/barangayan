@@ -430,10 +430,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  memberRelation: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
   memberRelationRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',

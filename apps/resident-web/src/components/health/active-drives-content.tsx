@@ -9,15 +9,11 @@ import { DriveCard } from '@/components/health/drive-card';
 import { RegisterDrawer } from '@/components/health/register-drawer';
 import { useMedicalDrives } from '@/hooks/use-medical-drives';
 
+import styles from './health.module.css';
+
 function fmtFullDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number);
   return new Date(y, m - 1, d, 12).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-}
-
-/** Plain uppercase section label — web weight (no mobile-style colored bar), matching
- * the rest of resident-web's card-grouped section conventions. */
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{children}</p>;
 }
 
 /**
@@ -71,73 +67,65 @@ export function ActiveDrivesContent({ userId }: { userId: string | null }) {
 
   return (
     <div
-      className={`flex flex-col gap-5 transition-[margin] duration-300 ${
-        drawerOpen ? 'lg:mr-[calc(32rem_+_2rem)]' : ''
-      }`}>
-      <div>
-        <h1 className="text-xl font-bold">Active Medical Drives</h1>
-        <p className="text-sm text-muted-foreground">Upcoming vaccination, medical, and screening drives in your barangay.</p>
-      </div>
+      className={`${styles.page} ${drawerOpen ? styles.drawerOpen : ''}`}>
+      {/* Keep the calendar and list readable as the registration drawer opens. */}
+      <div className={styles.browse}>
+        <aside className={styles.sidebar} aria-label="Drive calendar and filters">
+          <div>
+            <h2 className={styles.sectionLabel}>01 / Choose a date</h2>
+            <DriveCalendar
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
+              eventDateMap={monthEventMap}
+              currentMonth={currentMonth}
+              onMonthChange={handleMonthChange}
+              onJumpTo={handleJumpTo}
+            />
+          </div>
 
-      {/* Two columns at lg+: Calendar + Filter on the left inside one grouped card
-          (narrow, fixed-ish width), Selected Date + drive cards on the right. Stays
-          single-column stacked below lg — and forced back to single-column even at lg+
-          once the RegisterDrawer opens, so the calendar/filter/list stay comfortably
-          readable next to it instead of competing for width. */}
-      <div className={`flex flex-col gap-5 lg:items-start ${drawerOpen ? '' : 'lg:flex-row'}`}>
-        <div className="flex flex-col gap-4 lg:w-[340px] lg:shrink-0">
-          <DriveCalendar
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            eventDateMap={monthEventMap}
-            currentMonth={currentMonth}
-            onMonthChange={handleMonthChange}
-            onJumpTo={handleJumpTo}
-          />
-
-          <div className="flex flex-col gap-2">
-            <SectionLabel>Filter Drives</SectionLabel>
+          <div>
+            <h2 className={styles.sectionLabel}>02 / Filter drives</h2>
             <CategoryFilterPills active={typeFilter} onSelect={setTypeFilter} />
           </div>
-        </div>
+        </aside>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <div className="flex items-center justify-between gap-3">
-            <span className="flex items-center gap-2 text-base font-bold tracking-tight">
-              <CalendarCheck2 size={17} className="text-primary" />
-              {fmtFullDate(selectedDate)}
-            </span>
+        <section className={styles.results} aria-label="Drives on selected date" aria-busy={loadingDrives}>
+          <div className={styles.resultsHeader}>
+            <div>
+              <h2 className={styles.dateTitle}>{fmtFullDate(selectedDate)}</h2>
+              <p className={styles.resultCount} role="status">{loadingDrives ? 'Finding scheduled drives…' : error ? 'Unable to load drives' : `${drives.length} ${drives.length === 1 ? 'drive' : 'drives'} available${typeFilter === 'all' ? '' : ' in this category'}`}</p>
+            </div>
             {selectedDate !== today ? (
-              <button type="button" onClick={() => setSelectedDate(today)} className="shrink-0 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90">
+              <button type="button" onClick={() => setSelectedDate(today)} className={`${styles.today} ${styles.todayButton}`}>
                 Jump to Today
               </button>
             ) : (
-              <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">Today</span>
+              <span className={styles.today}><CalendarCheck2 size={13} aria-hidden="true" /> Today</span>
             )}
           </div>
 
           {error ? (
-            <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+            <div role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
           ) : loadingDrives ? (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className={styles.driveGrid} aria-hidden="true">
               {[0, 1].map((i) => (
-                <div key={i} className="h-32 animate-pulse rounded-xl border border-black/8 bg-muted dark:border-white/8" />
+                <div key={i} className={`${styles.skeleton} rw-skeleton`} />
               ))}
             </div>
           ) : drives.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-black/8 bg-white px-6 py-16 text-center dark:border-white/8 dark:bg-zinc-900">
-              <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-                <HeartPulse size={28} className="text-muted-foreground" />
+            <div className={styles.empty}>
+              <div className={styles.emptyIcon}>
+                <HeartPulse size={24} aria-hidden="true" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold">No drives on this date</p>
-                <p className="text-sm text-muted-foreground">
+                <h2>No drives on this date</h2>
+                <p>
                   {typeFilter === 'all' ? 'Pick another date on the calendar to see scheduled drives.' : 'No drives in this category on this date.'}
                 </p>
               </div>
             </div>
           ) : (
-            <div className={`grid grid-cols-1 gap-3 ${drawerOpen ? '' : 'sm:grid-cols-2'}`}>
+            <div className={styles.driveGrid}>
               {drives.map((drive) => (
                 <DriveCard
                   key={drive.id}
@@ -149,7 +137,7 @@ export function ActiveDrivesContent({ userId }: { userId: string | null }) {
               ))}
             </div>
           )}
-        </div>
+        </section>
       </div>
 
       <RegisterDrawer driveId={selectedDriveId} open={drawerOpen} onClose={() => setSelectedDriveId(null)} userId={userId} />

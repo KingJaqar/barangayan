@@ -1,0 +1,44 @@
+{
+  "startedAt": "2026-10-15T06:46:51.728Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "checks": [
+    "resident: actual inbox code established an isolated Auth session and expected caller permissions",
+    "admin: actual inbox code established an isolated Auth session and expected caller permissions",
+    "Before credential change: separate admin and resident refreshes both succeed",
+    "Before credential change: separate admin and resident refreshes both succeed",
+    "After owner password change: other admin refresh rejected; independent resident refresh succeeds"
+  ],
+  "status": "closed",
+  "credentialMutations": 0,
+  "privilegedKeyUsed": false,
+  "residentSignupEmailAccepted": true,
+  "adminProofEmailAccepted": true,
+  "setupMailReusedWithoutResending": true,
+  "resident": {
+    "email": "barangayan.ampid1+profile-phase6-resident-20261015@gmail.com",
+    "id": "b9c774a9-2128-45ba-8278-01b0ed836c29",
+    "role": "resident",
+    "barangayId": "00000000-0000-0000-0000-000000000001",
+    "verified": true
+  },
+  "admin": {
+    "email": "barangayan.ampid1+profile-phase6-20261015@gmail.com",
+    "id": "ed0ef34f-4bdc-4d8c-9f60-93515f7e217b",
+    "role": "admin",
+    "barangayId": "00000000-0000-0000-0000-000000000001",
+    "verified": true
+  },
+  "residentRefreshPreserved": true,
+  "adminRefreshRevoked": true,
+  "cleanup": [
+    {
+      "scope": "local",
+      "errorCode": null
+    },
+    {
+      "scope": "local",
+      "errorCode": null
+    }
+  ],
+  "finishedAt": "2026-10-15T07:03:23.470Z"
+}

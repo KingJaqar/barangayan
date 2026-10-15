@@ -1,3 +1,5 @@
+import styles from '@/components/admin/content-workspace.module.css';
+import { ContentCreatePanel } from '@/components/admin/content-create-panel';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { FaqForm } from './faq-form';
@@ -18,26 +20,17 @@ export default async function FaqPage() {
     .order('sort_order', { ascending: true });
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">FAQ Content</h1>
-          <p className="text-sm text-zinc-500">
-            Manage Help Center articles visible to residents in your barangay.
-          </p>
-        </div>
-      </div>
+    <div className={styles.page}>
+      <ContentCreatePanel
+        title="FAQ Content"
+        description="Manage Help Center articles visible to residents in your barangay."
+        forms={[
+          { label: "Create new article", title: "New FAQ article",
+            description: "Write a helpful question and answer, then set its category and visibility.",
+            content: <FaqForm barangayId={profile?.barangay_id ?? ''} /> },
+        ]}
+      />
 
-      <div className="mb-8 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="mb-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-          New Article
-        </h2>
-        <FaqForm barangayId={profile?.barangay_id ?? ''} />
-      </div>
-
-      <h2 className="mb-3 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-        Articles
-      </h2>
       <FaqList articles={articles ?? []} />
     </div>
   );

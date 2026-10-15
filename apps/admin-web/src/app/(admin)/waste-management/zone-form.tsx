@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { wasteZoneSchema } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -71,8 +74,8 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3">
-      <label className="col-span-4 text-sm sm:col-span-1">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="text-sm">
         <span className={labelClass}>Zone Name</span>
         <input
           className={inputClass}
@@ -83,7 +86,7 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      <label className="col-span-4 text-sm sm:col-span-3">
+      <label className="text-sm">
         <span className={labelClass}>Description</span>
         <input
           className={inputClass}
@@ -93,9 +96,9 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      {error ? <p className="col-span-4 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-4">
+      <ContentFormActions busy={submitting}>
         <button
           type="submit"
           aria-busy={submitting}
@@ -103,7 +106,7 @@ export function ZoneForm({ barangayId }: { barangayId: string }) {
           className="rounded-full bg-[var(--accent)] px-5 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
           <LoadingButtonContent pending={submitting} pendingLabel="Adding…">Add Zone</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

@@ -1,5 +1,12 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentStatus } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
+import { Archive, Check, MapPin, Pencil, Phone } from 'lucide-react';
+
 import { evacuationCenterSchema, EVACUATION_CENTER_FACILITIES, type EvacuationCenterFacility, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -217,7 +224,7 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
     return (
       <form
         onSubmit={handleSave}
-        className="rounded-xl border border-[var(--accent)] bg-white p-3 dark:border-[var(--accent)] dark:bg-zinc-900">
+        className={styles.rowEdit}>
         <div className="grid grid-cols-4 gap-3">
           <label className="col-span-4 text-sm sm:col-span-2">
             <span className={labelClass}>Name</span>
@@ -282,13 +289,13 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
 
           <label className="text-sm">
             <span className={labelClass}>Status</span>
-            <select
+            <AdminSelect kind="status"
               className={inputClass}
               value={isActive ? 'active' : 'inactive'}
-              onChange={(e) => setIsActive(e.target.value === 'active')}>
+              onValueChange={(nextValue) => setIsActive(nextValue === 'active')}>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
-            </select>
+            </AdminSelect>
           </label>
 
           <label className="flex items-center gap-2 self-end pb-1.5 text-sm">
@@ -342,68 +349,47 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
   }
 
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-900">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold">{center.name}</span>
-            {center.verified ? (
-              <span className="rounded-full bg-[var(--accent)]/15 px-2 py-0.5 text-[11px] font-semibold text-[var(--accent)]">
-                ✓ Verified
-              </span>
-            ) : (
-              <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-500 dark:bg-zinc-800">
-                Unverified
-              </span>
-            )}
-            {!center.is_active && (
-              <span className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
-                Inactive
-              </span>
-            )}
-            {center.deleted_at && (
-              <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[11px] font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
-                Archived
-              </span>
-            )}
+    <article className={styles.row}>
+      <div className={styles.rowHeader}>
+        <div className={styles.rowMain}>
+          <h3 className={styles.rowTitle}>{center.name}</h3>
+          <div className={styles.rowMeta}>
+            <ContentStatus active={center.is_active} />
+            <span className={`${styles.badge} ${center.verified ? styles.activeStatus : styles.warningStatus}`}>
+              {center.verified ? <Check size={14} aria-hidden="true" /> : null}
+              {center.verified ? 'Verified' : 'Unverified'}
+            </span>
+            {center.deleted_at ? <span className={styles.badge}>Archived</span> : null}
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">
-            {center.address ?? 'No address'} · 📍 {formatPosition(center.position)}
+          <p className={styles.rowDescription}>
+            <MapPin size={15} className="mr-1 inline-block" aria-hidden="true" />{center.address ?? 'No address provided'}
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-600 dark:text-zinc-300">
-            <span>Capacity: {center.capacity ?? '—'}</span>
-            <span>Occupancy: {center.current_occupancy}</span>
-            {center.contact_number && <span>📞 {center.contact_number}</span>}
+          <div className={styles.keyDetails}>
+            <span>Capacity <strong>{center.capacity?.toLocaleString() ?? 'Not specified'}</strong></span>
+            <span>Occupancy <strong>{center.current_occupancy.toLocaleString()}</strong></span>
+            {center.capacity !== null && center.current_occupancy >= center.capacity && center.capacity > 0
+              ? <span className={styles.warningStatus}>At capacity</span> : null}
+            {center.contact_number ? <span><Phone size={15} aria-hidden="true" />{center.contact_number}</span> : null}
           </div>
-          {(center.facilities?.length ?? 0) > 0 && (
-            <div className="mt-1.5 flex flex-wrap gap-1">
-              {center.facilities!.map((facility) => (
-                <span
-                  key={facility}
-                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-                  {facility.replace(/_/g, ' ')}
-                </span>
-              ))}
-            </div>
-          )}
+          {(center.facilities?.length ?? 0) > 0 ? <div className={styles.rowMeta}>
+            {center.facilities!.map(facility => <span key={facility} className={styles.badge}>
+              {facility.replace(/_/g, ' ')}
+            </span>)}
+          </div> : null}
+          <details className={styles.details}>
+            <summary>Location coordinates</summary>
+            <p className="mt-2">{formatPosition(center.position)}</p>
+          </details>
         </div>
-
-        <div className="flex shrink-0 items-center gap-1">
-          <button
-            onClick={startEdit}
-            title="Edit"
-            className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">
-            ✏️
+        <div className={styles.rowActions}>
+          <button type="button" onClick={startEdit} aria-label={`Edit ${center.name}`} className={styles.primaryAction}>
+            <Pencil size={15} aria-hidden="true" />Edit
           </button>
-          <ConfirmButton
-            label="🗑"
-            confirmLabel="Archive?"
-            onConfirm={archive}
-            title="Archive"
-            className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
-          />
+          <ConfirmButton label={<><Archive size={15} aria-hidden="true" />Archive</>}
+            ariaLabel={`Archive ${center.name}`} confirmLabel="Archive?" onConfirm={archive}
+            title="Archive center" className={styles.dangerAction} />
         </div>
       </div>
-    </div>
+    </article>
   );
 }

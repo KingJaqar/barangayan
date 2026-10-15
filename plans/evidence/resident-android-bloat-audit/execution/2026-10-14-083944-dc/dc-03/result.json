@@ -1,0 +1,21 @@
+{
+  "file": "apps/resident-android-mobile/src/components/resident-details-form.tsx",
+  "removed": [
+    "passwordMatchIndicator",
+    "successModalBackdrop",
+    "successModalCard",
+    "successIcon",
+    "successModalTitle",
+    "successModalMessage",
+    "successModalActions",
+    "successModalActionButton",
+    "formError",
+    "submitActions",
+    "footerRow",
+    "footerText"
+  ],
+  "beforeSha256": "3d0f767d6e65c08ca3c3c3e90b038964cfd8e9560f0254af5bf88cf1c43a3ef7",
+  "afterSha256": "24915fdfa2f3003ec990f6e48544230d6932e92cb3bd538ea69bb9c494f6f09c",
+  "bytesRemoved": 1084,
+  "onlyDeleted": true
+}

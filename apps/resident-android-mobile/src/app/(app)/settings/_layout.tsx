@@ -17,6 +17,10 @@ export default function SettingsLayout() {
           options={{ headerShown: false, animation: 'slide_from_right' }}
         />
         <Stack.Screen
+          name="valid-id"
+          options={{ headerShown: false, animation: 'slide_from_right', gestureEnabled: false }}
+        />
+        <Stack.Screen
           name="change-password"
           options={{ headerShown: false, animation: 'slide_from_right' }}
         />

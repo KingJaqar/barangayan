@@ -1,0 +1,11 @@
+1|evacuation_center|created|Ampid 1 Elementary
+2|evacuation_center|created|San Mateo Civic Center
+3|evacuation_center|created|Dulong Bayan Covered Court
+4|evacuation_center|created|Malanday National High School
+5|routing_graph|registered|ampid-1@2026-10-12#fc7101b6227d
+6|routing_graph|activated|ampid-1@2026-10-12#fc7101b6227d
+7|road_closure|published|Pitang Street
+8|evacuation_center|updated|San Mateo Civic Center
+9|evacuation_center|updated|San Mateo Civic Center
+10|road_closure|reopened|Pitang Street
+11|evacuation_center|updated|San Mateo Civic Center

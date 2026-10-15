@@ -21,12 +21,16 @@ export function PaymentMethodStep({
   referenceNumber,
   documentName,
   feeCentavos,
+  feeDescription,
+  pickupOnly = false,
   onMethodChosen,
 }: {
   requestId: string;
   referenceNumber: string;
   documentName: string;
-  feeCentavos: number;
+  feeCentavos: number | null;
+  feeDescription?: string;
+  pickupOnly?: boolean;
   onMethodChosen: (method: PaymentMethod) => void;
 }) {
   const [selected, setSelected] = useState<PaymentMethod>('pickup');
@@ -35,10 +39,10 @@ export function PaymentMethodStep({
   const busy = useRef(false);
 
   const totalDue = feeCentavos;
-  const isQrphBlocked = selected === 'qrph' && !PAYMENT_SETTLEMENT_READY;
+  const isQrphBlocked = selected === 'qrph' && (pickupOnly || !PAYMENT_SETTLEMENT_READY);
   // PayMongo rejects QR PH sources with amount < 100 centavos — drop it from the options
   // rather than let the resident hit a confusing error on the next screen.
-  const availableOptions = PAYMENT_METHOD_OPTIONS.filter((opt) => opt.key !== 'qrph' || totalDue >= 100);
+  const availableOptions = PAYMENT_METHOD_OPTIONS.filter((opt) => opt.key !== 'qrph' || (!pickupOnly && totalDue !== null && totalDue >= 100));
 
   async function handleContinue() {
     // Synchronous guard — a second activation before React re-renders must not send a
@@ -82,6 +86,7 @@ export function PaymentMethodStep({
   return (
     <div className="flex flex-col gap-4">
       <div>
+        <p className="text-sm font-semibold">Payment Method</p>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
       </div>
@@ -89,11 +94,11 @@ export function PaymentMethodStep({
       <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Document Fee</span>
-          <span>{feeCentavos === 0 ? 'Free' : formatCentavosAsPHP(feeCentavos)}</span>
+          <span>{feeCentavos === 0 ? 'Free' : feeCentavos === null ? feeDescription : formatCentavosAsPHP(feeCentavos)}</span>
         </div>
         <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
           <span className="font-semibold">Total Amount Due</span>
-          <span className="font-semibold text-primary">{totalDue === 0 ? 'Free' : formatCentavosAsPHP(totalDue)}</span>
+          <span className="font-semibold text-primary">{totalDue === 0 ? 'Free' : totalDue === null ? feeDescription : formatCentavosAsPHP(totalDue)}</span>
         </div>
       </div>
 
@@ -141,7 +146,7 @@ export function PaymentMethodStep({
         </div>
       ) : null}
 
-      {totalDue < 100 ? (
+      {totalDue !== null && totalDue < 100 ? (
         <div className="rounded-xl border border-border bg-card p-3 text-sm text-muted-foreground">
           This request has no payable amount — QR PH is only available above ₱1.00.
         </div>

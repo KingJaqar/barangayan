@@ -1,0 +1,64 @@
+2e5681cd329df2b70a0591895cc1e5656a55506c
+M apps/admin-web/src/components/admin/header.tsx
+ M apps/admin-web/src/components/admin/sidebar-nav.tsx
+ M apps/admin-web/src/lib/audit-notifications.ts
+ M packages/shared/package.json
+ M packages/shared/src/index.ts
+ M packages/shared/src/lib/evacuation-routing.ts
+ M packages/shared/src/schemas/admin-audit-log.ts
+ M packages/shared/src/types/database.ts
+ M packages/shared/tsconfig.json
+ M plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md
+ M plans/Resident_iOS_Implementation_Plan.md
+ M plans/Resident_iOS_UI_UX_Design_System_Handoff.md
+ M supabase/seed.sql
+?? apps/admin-web/src/app/(admin)/evacuation-routing/page.tsx
+?? apps/admin-web/src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx
+?? apps/admin-web/src/app/(admin)/evacuation-routing/routing-map.tsx
+?? apps/admin-web/src/lib/routing-packs.ts
+?? data/routing-packs/ampid-1/README.md
+?? data/routing-packs/ampid-1/pack/graph.json
+?? data/routing-packs/ampid-1/pack/manifest.json
+?? data/routing-packs/ampid-1/pack/map.json
+?? data/routing-packs/ampid-1/pack/server/grid-ampid-fine.json
+?? data/routing-packs/ampid-1/pack/server/grid-rrl-reference.json
+?? data/routing-packs/ampid-1/source/centers.json
+?? data/routing-packs/ampid-1/source/osm-extract.json
+?? packages/shared/scripts/build-routing-pack.mts
+?? packages/shared/src/lib/routing-pack-builder.test.ts
+?? packages/shared/src/lib/routing-pack-builder.ts
+?? packages/shared/src/schemas/routing-conditions.test.ts
+?? packages/shared/src/schemas/routing-conditions.ts
+?? packages/shared/src/types/routing-conditions.database.ts
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/README.md
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/build/report.json
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/build/report.md
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/route-probe.json
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/route-probe.mts
+?? plans/evidence/resident-drrm-routing/r4-conditions/README.md
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_admin_build.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_admin_lint.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_admin_tables.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_admin_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_and_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_shared_test.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_shared_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/after_web_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_admin_lint.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_admin_tables.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_admin_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_and_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_shared_test.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_shared_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/baseline_web_tsc.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/concurrency.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/concurrency.sh
+?? plans/evidence/resident-drrm-routing/r4-conditions/routing_conditions.test.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/snapshot-sample.json
+?? plans/evidence/resident-drrm-routing/r4-conditions/sql_suite.log
+?? plans/evidence/resident-drrm-routing/r4-conditions/ui-run-events.txt
+?? plans/evidence/resident-ios-parity/phase-00/baseline-status.txt
+?? plans/evidence/resident-ios-parity/phase-00/baseline.json
+?? plans/evidence/resident-ios-parity/phase-00/inventory.mjs
+?? supabase/migrations/0113_routing_conditions.sql
+?? supabase/tests/routing_conditions.test.sql

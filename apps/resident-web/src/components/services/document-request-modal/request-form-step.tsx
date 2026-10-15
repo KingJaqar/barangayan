@@ -9,8 +9,6 @@ export function RequestFormStep({
   onSubmitted,
 }: {
   doc: DocumentType;
-  residentName: string | null;
-  residentMobile: string | null;
   onBack: () => void;
   onSubmitted: (id: string, reference: string) => void;
 }) {

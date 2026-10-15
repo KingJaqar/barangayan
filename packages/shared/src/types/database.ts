@@ -1,4 +1,5 @@
 import type { CatalogFoundationFields, ProfileFoundationFields, RequestFoundationFields, FoundationTables, FoundationFunctions } from './service-foundations';
+import type { RoutingConditionsFunctions, RoutingConditionsTables } from './routing-conditions.database';
 
 export type Json =
   | string
@@ -40,7 +41,7 @@ export type Database = {
     }
   }
   public: {
-    Tables: FoundationTables & {
+    Tables: FoundationTables & RoutingConditionsTables & {
       about_us: {
         Row: {
           address: string | null
@@ -711,49 +712,61 @@ export type Database = {
       evacuation_centers: {
         Row: {
           address: string | null
+          availability: string
+          availability_updated_at: string | null
           barangay_id: string
           capacity: number | null
           contact_number: string | null
           created_at: string
           current_occupancy: number
           deleted_at: string | null
+          entrance_position: Json | null
           facilities: string[]
           id: string
           is_active: boolean
           name: string
           position: Json
+          routing_revision: number | null
           updated_at: string
           verified: boolean
         }
         Insert: {
           address?: string | null
+          availability?: string
+          availability_updated_at?: string | null
           barangay_id: string
           capacity?: number | null
           contact_number?: string | null
           created_at?: string
           current_occupancy?: number
           deleted_at?: string | null
+          entrance_position?: Json | null
           facilities?: string[]
           id?: string
           is_active?: boolean
           name: string
           position: Json
+          routing_revision?: number | null
           updated_at?: string
           verified?: boolean
         }
         Update: {
           address?: string | null
+          availability?: string
+          availability_updated_at?: string | null
           barangay_id?: string
           capacity?: number | null
           contact_number?: string | null
           created_at?: string
           current_occupancy?: number
           deleted_at?: string | null
+          entrance_position?: Json | null
           facilities?: string[]
           id?: string
           is_active?: boolean
           name?: string
           position?: Json
+          routing_revision?: number | null
           updated_at?: string
           verified?: boolean
         }
@@ -1641,7 +1654,7 @@ export type Database = {
     Views: {
       [_ in never]: never
     }
-    Functions: FoundationFunctions & {
+    Functions: FoundationFunctions & RoutingConditionsFunctions & {
       ensure_google_resident_profile: { Args: Record<string, never>; Returns: string };
       admin_add_household_member: {
         Args: {

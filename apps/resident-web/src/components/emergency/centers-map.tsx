@@ -14,6 +14,7 @@ import { LocateButton } from '@/components/maps/locate-button';
 import { MapSearchBar } from '@/components/maps/map-search-bar';
 import type { EvacuationCenterWithDistance } from '@/hooks/use-evacuation-centers';
 import { useFullscreen } from '@/hooks/use-fullscreen';
+import styles from './emergency.module.css';
 
 const DEFAULT_CENTER = { lat: 14.680291, lng: 121.1187445 } as const;
 const DEFAULT_ZOOM = 15;
@@ -22,22 +23,22 @@ const FOCUS_ZOOM = 17;
 function createIcon(color: string) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
     <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z" fill="${color}"/>
-    <circle cx="12" cy="12" r="5" fill="white"/>
+    <circle cx="12" cy="12" r="5" fill="var(--primary-foreground)"/>
   </svg>`;
   return L.divIcon({ html: svg, className: '', iconSize: [24, 36], iconAnchor: [12, 36], popupAnchor: [0, -36] });
 }
 
-const centerIcon = createIcon('#10B981');
-const selectedCenterIcon = createIcon('#0F6E5B');
+const centerIcon = createIcon('var(--primary)');
+const selectedCenterIcon = createIcon('var(--accent-strong)');
 const userIcon = L.divIcon({
-  html: `<div style="width:16px;height:16px;border-radius:9999px;background:#2563EB;border:3px solid white;box-shadow:0 0 0 1px rgba(0,0,0,0.15)"></div>`,
+  html: `<div style="width:16px;height:16px;border-radius:9999px;background:var(--primary);border:3px solid var(--primary-foreground);box-shadow:0 0 0 1px var(--border)"></div>`,
   className: '',
   iconSize: [16, 16],
   iconAnchor: [8, 8],
 });
 /** A fix awaiting confirmation — not yet the routing origin. */
 const pendingUserIcon = L.divIcon({
-  html: `<div style="width:16px;height:16px;border-radius:9999px;background:#B45309;opacity:0.7;border:3px dashed white;box-shadow:0 0 0 1px rgba(0,0,0,0.15)"></div>`,
+  html: `<div style="width:16px;height:16px;border-radius:9999px;background:var(--em-warning);opacity:0.7;border:3px dashed var(--primary-foreground);box-shadow:0 0 0 1px var(--border)"></div>`,
   className: '',
   iconSize: [16, 16],
   iconAnchor: [8, 8],
@@ -232,11 +233,11 @@ export function CentersMap({
   return (
     <div
       ref={containerRef}
-      className={
+      className={`${styles.centersMap} ${
         isFullscreen
           ? 'flex h-screen w-screen flex-col overflow-hidden bg-card'
-          : 'flex h-[640px] w-full flex-col overflow-hidden rounded-2xl border border-border shadow-xl shadow-black/5'
-      }>
+          : 'flex h-[640px] w-full flex-col overflow-hidden rounded-2xl border border-border'
+      }`}>
       <div className="relative min-h-0 flex-1">
         <MapContainer center={[DEFAULT_CENTER.lat, DEFAULT_CENTER.lng]} zoom={DEFAULT_ZOOM} className="h-full w-full" zoomControl={true}>
           <TileLayer
@@ -251,7 +252,7 @@ export function CentersMap({
           <FollowLocateResult followRef={followLocateRef} origin={origin} pendingFix={pendingFix} />
 
           {boundary ? (
-            <GeoJSON data={boundary} style={{ color: '#DC2626', weight: 3, opacity: 0.95, fillColor: '#DC2626', fillOpacity: 0.04 }} />
+            <GeoJSON data={boundary} style={{ color: 'var(--em-danger)', weight: 3, opacity: 0.95, fillColor: 'var(--em-danger)', fillOpacity: 0.04 }} />
           ) : null}
 
           {origin ? (
@@ -260,7 +261,7 @@ export function CentersMap({
                 <Circle
                   center={[origin.lat, origin.lng]}
                   radius={origin.accuracyMeters}
-                  pathOptions={{ color: '#2563EB', weight: 1, fillOpacity: 0.12 }}
+                  pathOptions={{ color: 'var(--primary)', weight: 1, fillOpacity: 0.12 }}
                   interactive={false}
                 />
               ) : null}
@@ -276,7 +277,7 @@ export function CentersMap({
                 <Circle
                   center={[pendingFix.lat, pendingFix.lng]}
                   radius={pendingFix.accuracyMeters}
-                  pathOptions={{ color: '#B45309', weight: 1, dashArray: '4 4', fillOpacity: 0.1 }}
+                  pathOptions={{ color: 'var(--em-warning)', weight: 1, dashArray: '4 4', fillOpacity: 0.1 }}
                   interactive={false}
                 />
               ) : null}
@@ -300,7 +301,7 @@ export function CentersMap({
           ))}
 
           {routePoints && routePoints.length > 1 ? (
-            <Polyline positions={routePoints.map((p) => [p.lat, p.lng])} pathOptions={{ color: '#0F6E5B', weight: 4, opacity: 0.85 }} />
+            <Polyline positions={routePoints.map((p) => [p.lat, p.lng])} pathOptions={{ color: 'var(--primary)', weight: 4, opacity: 0.85 }} />
           ) : null}
 
           <MapSearchBar value={search} onChange={setSearch} placeholder="Search evacuation centers…" />
@@ -334,7 +335,7 @@ export function CentersMap({
                   <p role="status" className="mt-1 text-xs text-muted-foreground">Fetching walking route…</p>
                 ) : routeStatus === 'unavailable' ? (
                   <p role="status" className="mt-1 text-xs text-muted-foreground">
-                    Walking route unavailable right now. The distance shown on the list is a straight-line estimate.
+                    Walking route unavailable right now. See the route status above for the reason.
                   </p>
                 ) : (
                   <p className="mt-1 text-xs text-muted-foreground">Set your location to see a walking route.</p>

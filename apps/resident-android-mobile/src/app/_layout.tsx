@@ -1,8 +1,8 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider, useRouter } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname, useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { AuthProvider, useAuth } from '@/hooks/use-auth';
@@ -19,6 +19,7 @@ import { registerPushToken } from '@/lib/push-notifications';
 import { View } from 'react-native';
 import { PrimaryButton } from '@/components/primary-button';
 import { ThemedText } from '@/components/themed-text';
+import { EmergencyEntryLink } from '@/components/emergency-entry-link';
 import { markNativeCallbackHandedOff, nativeCallbackPending, setupAllowsApp } from '@/lib/setup-navigation';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -102,6 +103,11 @@ function ThemedRoot() {
   );
 }
 
+// Session restoration can wait on a token refresh while offline. After this long the splash
+// lifts so the public evacuation-centers entry is reachable (DRRM routing plan R6).
+const SLOW_RESTORATION_MS = 3000;
+const PUBLIC_EMERGENCY_PATH = '/emergency-centers';
+
 // Gates (app) vs (auth) on real Supabase session state — Expo Router's current
 // recommended auth pattern (Stack.Protected), not a manual redirect effect. The splash
 // overlay stays up until the initial session check resolves, so the app never flashes
@@ -109,14 +115,22 @@ function ThemedRoot() {
 function SplashGatedNavigator() {
   const { isLoading, restorationError, retryRestoration } = useAuth();
   const theme = useTheme();
+  // The public emergency screen is never covered by the splash or the restoration error.
+  const onPublicEmergency = usePathname() === PUBLIC_EMERGENCY_PATH;
+  const [restorationSlow, setRestorationSlow] = useState(false);
+  useEffect(() => {
+    if (!isLoading) return;
+    const timer = setTimeout(() => setRestorationSlow(true), SLOW_RESTORATION_MS);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   return (
     <>
-      <AnimatedSplashOverlay ready={!isLoading} />
+      <AnimatedSplashOverlay ready={!isLoading || onPublicEmergency || restorationSlow} />
       {/* Keep the navigation tree mounted so a cold callback survives session
           restoration. Individual screens wait for Auth before doing any work. */}
       <RootNavigator />
-      {!isLoading && restorationError ? <View style={{ position: 'absolute', inset: 0, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}><ThemedText accessibilityLiveRegion="polite">{restorationError}</ThemedText><PrimaryButton label="Retry session restoration" onPress={retryRestoration} /></View> : null}
+      {!isLoading && restorationError && !onPublicEmergency ? <View style={{ position: 'absolute', inset: 0, justifyContent: 'center', padding: 24, gap: 16, backgroundColor: theme.background }}><ThemedText accessibilityLiveRegion="polite">{restorationError}</ThemedText><PrimaryButton label="Retry session restoration" onPress={retryRestoration} /><EmergencyEntryLink /></View> : null}
     </>
   );
 }
@@ -157,6 +171,9 @@ function RootNavigator() {
           actually reachable below, so it doesn't need its own guard. */}
       <Stack.Screen name="index" />
       <Stack.Screen name="auth/callback" />
+      {/* Public emergency entry: outside every guard, so emergency access never depends on
+          authentication (DRRM routing plan R6, invariant 9). */}
+      <Stack.Screen name="emergency-centers" />
       <Stack.Protected guard={!!session && !holdInAuthGroup && !appReachable}>
         <Stack.Screen name="account-setup" />
       </Stack.Protected>

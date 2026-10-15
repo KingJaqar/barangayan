@@ -1,0 +1,1418 @@
+{
+  "destination": "C:\\Users\\User\\barangayan\\tmp\\admin-profile-release-cd723a6e12",
+  "createdAt": "2026-10-15T05:52:15.963Z",
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "f05ea72034cda86e5063e3e1dae73b26bc1f97840e656b3417b9ceaad814f343"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "c08b99415734a15cc5668ecbb818d53ac9f196a1d7e84936f32fecbbbf70fd98"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "6c46d9058f323f04fd38b11dad75c592e4eb6a6f057ef282c6a6a8c87f1f37a3"
+    },
+    {
+      "path": "apps/admin-web/package.json",
+      "sha256": "21e0b7279821bb3f818f591356837c3fdf61d7c17caac86cd6d9ad23e5843760"
+    },
+    {
+      "path": "apps/resident-android-mobile/package.json",
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "path": "apps/resident-ios-mobile/package.json",
+      "sha256": "9578b8e3343740a1af33ce398f5223dfda46722eb030054bc9140086068db384"
+    },
+    {
+      "path": "apps/resident-web/package.json",
+      "sha256": "460b994a5a185ac6497154a5113da3d57a3758f8bb3054d61613d6c25784315e"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee"
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-audit-actions.ts",
+      "sha256": "b0910645a7b04cbf833d00a709a92f1f547ff7bc1306cfa7821344e0fc9dec95"
+    },
+    {
+      "path": "apps/admin-web/src/actions/admin-record-actions.ts",
+      "sha256": "80d76ea7fd293f99c6e8a710f09ed0dd075bdccd2e1eaf15433c7b52c1bdd3a8"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/about-us/about-us-form.tsx",
+      "sha256": "18b483e307f5851b115bebb43de1e5e005591b7508e2e51660bca6d4ccdfd54e"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/about-us/page.tsx",
+      "sha256": "d834092c82e9274371ec73b1c86d48cb1dbb34891e8ed2e6830b96a92c5dcc5e"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-catalog.tsx",
+      "sha256": "93ee7df488b1356fc43cd6c0a104307b3db5e652b68e3744dacf67b8781bfc93"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx",
+      "sha256": "3460ba942e11d8b6012349159e759fd7a29fbc6a92d2c20e49c40286800d2adc"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx",
+      "sha256": "9ff93801ff6d2254636f44968a735827aa15d3b65b1125092578f6bb16366223"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/announcements/page.tsx",
+      "sha256": "47588fb0a0ea3e100cf1cd99a2c56722f8e2373b5c07b4d640ebf4a15f9d4c29"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/archive-tabs.tsx",
+      "sha256": "a5d598182cea3f8812622ec117a451f06ad98e15f08614ea13c7f7a0400ce876"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/archive.module.css",
+      "sha256": "efc8aa807e78f8d95e3353b016a9e4ebda2c8dad1990bb0022e4acf67095fd40"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/layout.tsx",
+      "sha256": "6f230b70702254c165393b60697c297ade0e46d1d594d2937bbc6ed2a60fea9f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/loading.tsx",
+      "sha256": "5d05420f566205bf48a9c64ac46e2489188391a4594aca8679ec3771ce392457"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/page.tsx",
+      "sha256": "9ec8367770a1e4531b59503317462d92b092ef98043d98ab237ecb522a691f60"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/[screen]/content-records.tsx",
+      "sha256": "2c0bda9e86ae528ad300065742381b8631314a2142c00d1ee390df0292f46ed4"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/[screen]/loading.tsx",
+      "sha256": "07276b0bcff829a569040747dbf2c60e24e748b67fb46a4b798fa36d85e95d40"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/[screen]/page.tsx",
+      "sha256": "7c389643da829673cc6c693acae096c6dd3d9ed1bd40ee2b0641c4a9b7b22c75"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/archive/[screen]/records.tsx",
+      "sha256": "0d607d29618d319ca209b1c2633ea2f3e3691378402fd41d6ed3a5cbe261a622"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/dashboard/dashboard-table.tsx",
+      "sha256": "7ed3f0b02f98ea7deb060fcd745dca14387c4a1339d2f6bc0d0d69a57f9dd9a9"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/dashboard/dashboard.module.css",
+      "sha256": "827b791da959a9a2293657dc4e3023eaa88f01901cedde8940f5f0a3423b4150"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/dashboard/loading.tsx",
+      "sha256": "e277878a7f0b6abd6217aca02e6510892397643ddb2a0ef70411a57c016362d5"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/dashboard/page.tsx",
+      "sha256": "11fd87abe710ad801c31f3d3a9d53250351fd4b627f1a07f27238bf5e8e36a42"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/client-wrapper.tsx",
+      "sha256": "3bb016ba9bfc7c29afaf1e28fc7a37482110322df8a1140ad9edcc77abe05b35"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/loading.tsx",
+      "sha256": "b7bc57f431e0d08b3cdda853f1047175ea032a8a28c36dec58cd74ff007cba12"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/mobile-preview-card.tsx",
+      "sha256": "707f5316a5cb1494e66ef6020bb46b5437732cd215b7c4a05b44f144fd69db59"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/page.tsx",
+      "sha256": "6e3742a8d0b5d3c850b05615f7b89a628b73dc7132f37b64ee7f69ea4d518945"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/qr-code-display.tsx",
+      "sha256": "ec783b722ffff0ee7db91ff67b561c14e0d993f11a2007eb4c7687a32055c208"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/qr-codes-tab.tsx",
+      "sha256": "4ce0c59d08ce60a771f1c1c53ed08837f9a1e2fd4d786ae04cd579d9f76c4c03"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-modal.tsx",
+      "sha256": "3417475854b5aea4b4a25f8abe6539961cc86fed533fd421c6bdb14fcd9a6e26"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/emergency-qr/qr-instructions-tab.tsx",
+      "sha256": "668e40e5da3cb80af263ebeb837538eb91e4fec9d7b3f2d921603eedf44df10f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-catalog.tsx",
+      "sha256": "2caf42a5733362d0e8aab1acecc46c7a588f1d60815eaff0b2be878ae5517532"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-form.tsx",
+      "sha256": "fd3277628f033a05d4e1dfe913712ba46a4e8c023a6f3fe8909e0bd5240b66e3"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-row.tsx",
+      "sha256": "0444f718d9957dff6bc1c510df1c21c70d041b808a73cd154b835158021de492"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-centers/page.tsx",
+      "sha256": "e6556bf1843cd387ce126521157d6cbe2b842b9256d1b13da880f3405f65704f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-routing/page.tsx",
+      "sha256": "a7e675ac6d3d029beb828a44a5df2e9ad20bca1a36201e6769c8361d2727f00e"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-routing/routing-conditions-editor.tsx",
+      "sha256": "bae67266546ea820c7b2979db35445e5c35bf982ba3d31241e61633a1cfcccdd"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/evacuation-routing/routing-map.tsx",
+      "sha256": "11528cb13b1aeff37373247a48fa22515e1136ac254614538dd0629f532da0bd"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/faq/faq-form.tsx",
+      "sha256": "fc212a70b4a5615fd28567c8e9cdb060fd67092c314361d57b03245a5885c61a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/faq/faq-list.tsx",
+      "sha256": "bbae16a57cd22a09eedb92a1a241ac69139b34533f43f10a1b37c6bd0b5f2b99"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/faq/faq-row.tsx",
+      "sha256": "8f81fdfee07ab0058075e1e4ee835c1e9a31941936b61c52adb3cbbcde0eb17a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/faq/page.tsx",
+      "sha256": "051cb43be026b3bd0c0929a207a35ff7eb3cf0d237be933f0b809692f8911486"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/applicants/applicant-detail-modal.tsx",
+      "sha256": "300efd0a929335df5ea180e938002573447ef41bf0a08e6315d702c927c872a4"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx",
+      "sha256": "5dfbb726ce199b082a93ac792f7288d8a77e390a0bbbe34121d19efa376871af"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/applicants/page.tsx",
+      "sha256": "3ab7f3d7214f4f9a4253fa0967b31f54f010d26b510c89614c21b02941c28280"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/applicants/types.ts",
+      "sha256": "719916d51f9f60e66e9b98d6ead1bbbe6bc519ad91738c322b2c018c101d9e4d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/drive-detail-modal.tsx",
+      "sha256": "7059f50b121f8a4f9a4047ae777ba418be87f2a558cd425a3ddfa407030e8955"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/drive-table.tsx",
+      "sha256": "ad48008bacbb950b66e3a0d4c4e14b2093d8cb47fc26943f5e8aa8671c660a4a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/page.tsx",
+      "sha256": "46c47ae4b5ffc01030cf6a6d2d6d072ea69bd17a17ab5845368ccf3f157da2f1"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/health/types.ts",
+      "sha256": "768bb7aad683bed024acd14f170b949e429e34148a75a44c20645b8a8a023f38"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/households-table.tsx",
+      "sha256": "d9e412a68b81c15a0a918f000e5125e26e71b79f351e383c80783e4437f9f351"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/member-form-modal.tsx",
+      "sha256": "1038492c61f8490467eb5a35917fd903d05167247f8f17590f239dd864793694"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/page.tsx",
+      "sha256": "d23ee623b915b9217f55662841b17ec39dd93122edc0edc271ea05df784fd553"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/households-residents/types.ts",
+      "sha256": "a1f1c6af9fe0fe2f449d3906a011d009cb02057dc4b7a8d8ec0fad2703ecdc5c"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/hub/emergency-catalog.tsx",
+      "sha256": "92ec9609dd3a74f51e6febd5304c0f13e0c1de3af1ceac1a75fec9e29bed8063"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/hub/emergency-form.tsx",
+      "sha256": "36e95870e457513d5c6f8e9a8cfb179456a3f564196b1435960c411921c7b168"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/hub/emergency-row.tsx",
+      "sha256": "1ea057d4c088f27b07b0d832c4be78cc0039c8c4c28610ea24b71c0feb70f668"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/hub/page.tsx",
+      "sha256": "12e5d9f5127bcb448adb7e366806f3b9bf70bd6c32c8f792abc19e911b22018f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/BoundaryFitButton.tsx",
+      "sha256": "fadc00a5be32749d6ff6d54c71e563623c989940c95f41db78e9ce69f6947fe5"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/IncidentMapClient.tsx",
+      "sha256": "88c80a32b7a4836d3d24992e2319e8e6113dcda9ae19ca5dc37722faa2e0b87e"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/loading.tsx",
+      "sha256": "808e8bcf392e8c86b897cc660da3973102a67f8ce5f2caa69b9a3e8c2f0c0b57"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/MapCanvas.tsx",
+      "sha256": "4bbfd01606ddcd0035f000852f2014e2aaf6f12c2fd112518f0457a8b21ba5f3"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/MapFilterPills.tsx",
+      "sha256": "4aa3a176d06974660761a13ab407f398e7346c7fc1e7d42b8729bf283bdecbed"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/MapMarkerPopup.tsx",
+      "sha256": "3dc204a45e54bb523445921288113b8bce92aaf0b4e911fd425d0b725dce35aa"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/MapSearchBar.tsx",
+      "sha256": "3c56ab6b476d934a6138a902e06caabe8e50f4c40d4199a268fc46f516195adb"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/MapSegmentToggle.tsx",
+      "sha256": "62a5105fb16eddaa99fe6d478e3afcc2c4bd94855ac9cfc045f97180a50c0dfd"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-map/page.tsx",
+      "sha256": "e147ab665f8d5b1d2430db613cc9531ea72860491d94011b813b657dec9def8d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx",
+      "sha256": "e144e23a780d664df4e94515da8e27119530f3055b0d07d1664cb9113bc9c844"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-reports/incident-detail-modal.tsx",
+      "sha256": "752b72fa296b37660bde88de2b82824f9db93c1dbfbb2854c144acc1b66baf88"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx",
+      "sha256": "6f57a4e26dfd3d801300ea1b7b63040156a4baeb04c7dde238299daecb01ab7d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-reports/page.tsx",
+      "sha256": "ec5fcfd6a66cd21aa21ed2a084083fb953962f205f478015a23d38a34ae53e5d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/incident-reports/types.ts",
+      "sha256": "c41b69a9249ae2dfe512eb77dd0d469b825460b0284e1bee35624dbfdeeba40b"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/layout.tsx",
+      "sha256": "f4bf5ec0372c51d8d75f0dbf5fa487f3682f969f73f1a7bb6e48aac51be274c2"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/loading.tsx",
+      "sha256": "34468dfed4e7f0fcb37dcc4007f38c0049a94b04fac273e7347673ccea63fb8e"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/actions.ts",
+      "sha256": "ac96ef5d41fcf666c4f59ffadf3c0fc7469a256efcc233fd354397827db40795"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/admin-mfa.tsx",
+      "sha256": "fd7ec9eb3d30742bfe822b7263124a4f63a6d934ec9cacbfbb9d1fa4967e0f34"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/association-control.tsx",
+      "sha256": "56b725e7d70bacd2d4892658c1520612e12f05a1560288387dff04225d04ce07"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/error.tsx",
+      "sha256": "02dc2ca0ea6b39996ff5433098660813ae6def4604e704b5696e6768cdb94127"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/loading.tsx",
+      "sha256": "e76a79a4d24f43f64f666633fa2de04e5a64c029a68cfc010abc47779df1bb47"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/page.tsx",
+      "sha256": "c6923615ff52918ee5fa202e5dd69fd45dd6489fc479cd2bdf9b9a960483afa3"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/profile-security.tsx",
+      "sha256": "f7bafd1276a0311e5e4470e2bb475333e0cbcbc279719a883931e73617259423"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/profile-workspace.tsx",
+      "sha256": "8ae1e3b7482cb659d567ed62c91c19d68ce38d41bb137f64dccfb56edffe9abc"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/profile/profile.module.css",
+      "sha256": "20b79ab8b61e752af82837f3718d25cc34dd83730cacbba2866e88096c24805d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/page.tsx",
+      "sha256": "7a0f3c519911454e61a370070d3996273d8a3880c857d5580099858eb66c88aa"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/requests-table.tsx",
+      "sha256": "9e40999ee0694059209f468b0d5c05f3e54d57053dcf029195ecf18be4412a74"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/types.ts",
+      "sha256": "f94d2290f18d8c52d826a0c1847e7565edf9ed57d91bc7578bf109d8fcb84dd7"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/[requestId]/loading.tsx",
+      "sha256": "13fec9ad78d6b4486fc6983a7f6c63ec3c85c975094e7193717b54da3b4702c8"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx",
+      "sha256": "6f1904acff84552abaca8b6ca780e9d1c85536158497d9f32361f0b1857b8e5c"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/residents/page.tsx",
+      "sha256": "1ff56169c63fc9bee856e36079a7ed9a7f5779fcc9ca4c14837a32a05d0ce285"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/residents/resident-directory.tsx",
+      "sha256": "7fa86409b5ee85a1fe76017aed2d7f41d9c7ed5d5541c196dec12206163c31c1"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/residents/types.ts",
+      "sha256": "c102cfa1b4eaf1c328e324004a5fc4f521a1db6228f9f4f90d763a69ea7abaaa"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/search/error.tsx",
+      "sha256": "385b7139ca691594d8c03409bdeb648213369f506983b8c0e735d4402277cb02"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/search/loading.tsx",
+      "sha256": "9ed14e0c1fe8ebf70751dba7276ec3d41a17d934d31eaea3e29c39c8ef18849b"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/search/not-found.tsx",
+      "sha256": "e69650b5728a38a1bf1b6ae18cbb618ac02104e26cd115dd78c76e7ba29ce2d9"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/search/page.tsx",
+      "sha256": "072a96dbc6f53b78c4e32d5a16ec77cb0896673b24a22f8073623357129b61a6"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/search/[category]/[recordId]/page.tsx",
+      "sha256": "18eb287ddc807c12867861c5bfc868870074ec055893025c02555584ebbf77a5"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/document-type-catalog.tsx",
+      "sha256": "41e063d4a9a98ea03be7d852d8c350d00e3250f60a6f9b72857830205f352aa2"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/document-type-form.tsx",
+      "sha256": "f97f3f8f3ffaadd65df69fc3d3330d89c5bcbafe93478f206e013c7f00267695"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/document-type-row.tsx",
+      "sha256": "bdcfa6c6c0b2890709c31d070863d1c2f8318121d92ffda98f6b5618ad095e72"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/page.tsx",
+      "sha256": "bb0921b309734cfef4dc7735b91ed9d066ad4b4c5a58d6cdbafa4c361f5ff4d0"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/service-catalog-editor.tsx",
+      "sha256": "ff9aeef0e4e5614911b15d8baa47a643d559163db867df83076a49f679a4be9a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/services/sla/page.tsx",
+      "sha256": "bb124a4108d3913a70a02f8a493383dcac3590af50779720270f29a33fd70450"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/settings/loading.tsx",
+      "sha256": "5b883d52e8ab18a0bfe78fa763d0c9777d42275cd25c391f4abb90fb306a1b21"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/settings/page.tsx",
+      "sha256": "11b50ff1ec28dc6b9a5ade6f940c373de59385cb522740252aa4b5cbedf6509f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/settings/settings-form.tsx",
+      "sha256": "b914f0ffe3eb7455d7c342445eddd75323096b801116533c7c0a73cc1112313d"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/staff/page.tsx",
+      "sha256": "d9ce3bb376b1aba52a45e7cb9f92d108858b654fab3a02e4da9c5a128dd8f1e8"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/staff/staff-form.tsx",
+      "sha256": "f12d01f8a571b3b6c1f3e1ec20285dec7abbd7fdb8d0fa1d6823d3067d07ead0"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+      "sha256": "60a6f7a64e9b8be0f2a882129bed59e785a7b4b608b8f4b4192cb0f067f84557"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/staff/types.ts",
+      "sha256": "0bf6595a05e8d0948a3e7abc122a9d0634235baed85a980256597062de01e715"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/terms-privacy/client-wrapper.tsx",
+      "sha256": "c7e90befb6565654f098f37c0ce654618149cd6485c7368e717999d9cedbf502"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/terms-privacy/content-form.tsx",
+      "sha256": "ee3de15565bab043a2647552c5deac7b07b06f056353d0a33bccbbf5093f25a1"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/terms-privacy/page.tsx",
+      "sha256": "263dc2b7b9ec41228f103ffb61bda67825d83a107f577457fead39a47e20ab8f"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/theme/page.tsx",
+      "sha256": "2cd6661366f0747d996ce75e9b6f44c4ae557a487dc8d55aef69f1a32665b9af"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/theme/theme-form.tsx",
+      "sha256": "6f48a0b5d64aa67c6509e586d99be077a28079a933808e9b05e0823d0cdccbc3"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/theme/theme.module.css",
+      "sha256": "074b5924bd42370748ab1a6e4b2058f57260666a947a6505209b9ef42b68b210"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/transactions/page.tsx",
+      "sha256": "329345dd24e11a8503f4acb636eb968ba09e56ecc4be24ad6c18ec3cb56765ed"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx",
+      "sha256": "ad34a2ba6c9930d55aac2379455e232f65b2f1e0f1cd7ef3646b4dc3ed52bd51"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/transactions/types.ts",
+      "sha256": "f43984b6bedd60a24faaea2b4a7e98653cfa4927db978ab8a4c0d1288029fd17"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/page.tsx",
+      "sha256": "70dcb52a727395d26e88188dfdb89a01809e59b335a10915813664a6d8ce16a3"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/schedule-form.tsx",
+      "sha256": "e53fd4bf701df98394d5cfce92a384adda08e23aa127d095889c15b92ea6469c"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/schedule-row.tsx",
+      "sha256": "363bdf1ab26967c5afe0de805fab7cc11d7bc366eb98fbdd57093e583f11b455"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/trash-incident-table.tsx",
+      "sha256": "030a15ecd3dd740b64e232b4392d6c0e924e17f825dc8b1b30623d9a87008691"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/waste-catalog.tsx",
+      "sha256": "bbdb470a77a108e2cebc7469c8676124894d76d4b5419023bb23dbcc609c2c9a"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/zone-form.tsx",
+      "sha256": "3efec6bb6b91bc41455d4314e0a1d2281c3b0c5487e18f935ab6c4ca099b57e6"
+    },
+    {
+      "path": "apps/admin-web/src/app/(admin)/waste-management/zone-row.tsx",
+      "sha256": "ac536cb46556f90365e6f200614fef80cee1c075d37ce6b9f78d23943fc92c40"
+    },
+    {
+      "path": "apps/admin-web/src/app/(profile-auth)/profile/security-callback/page.tsx",
+      "sha256": "5a5e5109bddc069dc5e2f1f28fe8c680a1040ce22d5b18b2b6901a659e0b3ccc"
+    },
+    {
+      "path": "apps/admin-web/src/app/api/admin/residents/route.ts",
+      "sha256": "59a83eb3b2ea1c33ccc469e692915bcea342a44bb0c6614dd0985e144ff68b83"
+    },
+    {
+      "path": "apps/admin-web/src/app/api/admin/staff/invite/route.ts",
+      "sha256": "7f59fcb84aadb899445028bd830f88e0fd6110133f0dee719323e882732ec2de"
+    },
+    {
+      "path": "apps/admin-web/src/app/api/search/route.ts",
+      "sha256": "761d64a1f1cbf78b6fbd7a8cd70c73941efaad872127710b038f89c310e50c12"
+    },
+    {
+      "path": "apps/admin-web/src/app/apple-icon.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "path": "apps/admin-web/src/app/forgot-password/page.tsx",
+      "sha256": "e04507e74969f71c8e4197559f4d24d5d014a47f26fc4f60dd9f5896e6e13ac2"
+    },
+    {
+      "path": "apps/admin-web/src/app/globals.css",
+      "sha256": "48f9fe03d424a8a2cf8a6cebc1f5959a2e1d326b8329faec465392afaac490e7"
+    },
+    {
+      "path": "apps/admin-web/src/app/icon.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "path": "apps/admin-web/src/app/layout.tsx",
+      "sha256": "025a007534f9fbe8b5c3883380218b1c9bfb566a8c3630281c92306f6db915c9"
+    },
+    {
+      "path": "apps/admin-web/src/app/login/login-form.tsx",
+      "sha256": "135d816c3d8a17464fb129a923f23e3f44027614735d4b590206e86a49c7c6ef"
+    },
+    {
+      "path": "apps/admin-web/src/app/login/page.tsx",
+      "sha256": "c962cf480c33b01c583f0576900a19b4b674e44092b7b74d9d8690ef4248e64e"
+    },
+    {
+      "path": "apps/admin-web/src/app/page.tsx",
+      "sha256": "eb8044397ca63d4ce92cd82903ee7e0bb9f3ad935cfc6ce138cf7a75bf83dab5"
+    },
+    {
+      "path": "apps/admin-web/src/app/profile-proof/page.tsx",
+      "sha256": "287046f83466f6c7a6d0b017e3e2cdcd704cd5e1f3fe5b7d1c50f2c516a3e2b9"
+    },
+    {
+      "path": "apps/admin-web/src/app/profile-proof/proof-panel.tsx",
+      "sha256": "e87be8adce30af22dc4e70578fe9534c8e0f8ed0e467ef876a69c9da71caf348"
+    },
+    {
+      "path": "apps/admin-web/src/app/reset-password/page.tsx",
+      "sha256": "1e7d8ec57082e4c2faf6123daab843cf065edcc8f6fb86e286160d2ea33f0406"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/layout.tsx",
+      "sha256": "ecd4057757aa1826d50d5cf371c9b635ef20cd1cfec66d1d527710fb60ae7814"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/page.tsx",
+      "sha256": "52a91ce41216bec5614737c8c70644ec223a3f49f5df7e1ca088e0c2f5634fc1"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/profile/id-upload.tsx",
+      "sha256": "aa5eff9aff8003c27a8e2390ccf44caa4dbfa4ee7289e01673548b8ebce8d3aa"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/profile/page.tsx",
+      "sha256": "5b51d7722f3f6d53fe0883c4036d98911a865ae5fea39caa5fb548c5af2d4e87"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/profile/profile-form.tsx",
+      "sha256": "e73e3197ec782d442740129108becf591c3405bbfb0e8ff02735b8db901009a8"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/reports/new/new-report-form.tsx",
+      "sha256": "ad8249d81fec8269cdc8ab3ac373c55afba52ea4b0f1c2244079ff0c9985379d"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/reports/new/page.tsx",
+      "sha256": "e2e60bc36c4ebb97cfe3c0ddeb36d5a526a6b2dfcc74036dc81f609d61f5db0d"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/reports/page.tsx",
+      "sha256": "c7de5690457e4f74f3ce0c2a37a1265cf7452ae6228bc6e874423db950192fa2"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/new/new-request-form.tsx",
+      "sha256": "8cae7ea3e7b46c3e1ac33f8a88dc8537f6a83e787b32244a21e9fafacc876bf0"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/new/page.tsx",
+      "sha256": "d27401611576620025a639ce0e4ab6354a280f6007079d31e6fab1609e20b462"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/page.tsx",
+      "sha256": "e351db55f407bb61c16597d727f454e4e553ba8795fbb0b6e4cd0ee904328e46"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/[requestId]/cancel-request-button.tsx",
+      "sha256": "9cc902c172554cc83d9056fba80f1ce91b95d1cbf9d57fb08c3a8e705ea2fd0a"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/[requestId]/page.tsx",
+      "sha256": "a10ae73f4013c4b217c72b00e6554b41b3cc1103ca4a91fc347ae19d5ba29b92"
+    },
+    {
+      "path": "apps/admin-web/src/app/resident/requests/[requestId]/pickup-choice.tsx",
+      "sha256": "14832156369d96d9ecd50733e2f85ef24749a4b8073ab4fefb6845829ecad745"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/admin-navigation.module.css",
+      "sha256": "28843397bfa95604c5f46489a58ba3badf4f26fefe36f15e1360b83a7bf38149"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/admin-page-header.tsx",
+      "sha256": "d03d8acf2e9e129b3e8efe69d10ce8917f6f06f47bdb491656470d48fac74916"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/admin-shell.tsx",
+      "sha256": "e64edd1f3c43005c7858d671049cbdfb083ec19a200fc59d0d0ffacb14df41dc"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/agency-sla-status.tsx",
+      "sha256": "5be4aad4033ebf7c85df08988b64f55bb0c1bea06cb112de86ef601545ebab79"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/confirm-button.tsx",
+      "sha256": "7559a56e319be5b31f390f66cd9d40b3bcac74ae6a954c302827cc5d191838e2"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/content-create-panel.tsx",
+      "sha256": "16b3cbf2f04ad96c227c1995c66ee8c088d92c7e9b3820313ace46cc3093fff6"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/content-forms.module.css",
+      "sha256": "c9ba51e4f323bcba89f1a3149dfadada8f84020ac707ed607919388225c83caa"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/content-workspace.module.css",
+      "sha256": "5b5510987f40a31ee9b988120f4f3a07357890aa11f17c359a8beb4dae8bd3c2"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/content-workspace.tsx",
+      "sha256": "43a60e20635c23e9e8530e6978db76a46605368817914ee1402309c8661b1702"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/data-table.tsx",
+      "sha256": "d3796acfd3969bc83ce599d3078b7ce25bda478d20251d05268d8879247e62e9"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/date-range-picker.tsx",
+      "sha256": "9a03736b76cfa5a4c245c40e602a712e102fcea6bffa44c311c34510b06c8ba3"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/dropdown/admin-action-menu.tsx",
+      "sha256": "2b12d79958e47b5e3e047ca4a89f1be50b68e7b813a1af2cbe6f4eeedd5a950a"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/dropdown/admin-select.tsx",
+      "sha256": "6476759e2b2073deaaba6bd80ef0cf57ffe1689ac04bafd25ada1dd53f465ebf"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/dropdown/admin-suggestions.tsx",
+      "sha256": "4e7fef8b47e14c46741b9f6e88c7cb3a9f2ea648b0a837e1fd9a0d621646f0de"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/dropdown/dropdown-surface.tsx",
+      "sha256": "6936d44de6897a69d7dbc867effef8b7e3d1602f17154b9da5f87755d4b3a5f8"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/dropdown/dropdown.module.css",
+      "sha256": "1d99db6436402a33d1094f94e85a77cfd4c8be424fea576e541e772159339508"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/editable-data-table.tsx",
+      "sha256": "189d8a879c7fe8c800e061caad99bf7225de2a63cb4490c6c889084e4578eae9"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/form-styles.ts",
+      "sha256": "9c2886c9aed9a848310d68604fd326e958691381a68575fb02b94b59c406a26c"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/header.tsx",
+      "sha256": "18c99d0884c9214dd26a7a4f9dd6fee01da49e74f11bb8566f5b089d8fc46388"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/household-residents-icon.tsx",
+      "sha256": "d18b693288a72c8c74f3ba444fe845d243177647340e7de1229a95b37b131b3e"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/medical-applicant-icon.tsx",
+      "sha256": "f646444647325842de1e5b2f7f9daa428b72524cca4089aead89d5490dc4f9a8"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/notification-detail-panel.tsx",
+      "sha256": "3a01615638f61ceb64ce1f01f2f7112e28998328755cad2e2198be266e6649f9"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/notification-icon.tsx",
+      "sha256": "f809c3ee7049304106cbbfbae12a1c9d731698fa714595d2d0128001b937581a"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/notification-item.tsx",
+      "sha256": "dd8ca906c1f843c085196ee6fb74e3fa543b1cbd80e04e9e1f5c358040c2c720"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/notifications-drawer.tsx",
+      "sha256": "45eb350859b17b6a3eae3053687f0abadf338b5c9fcd63c47be72d7b8bf02b34"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/operations-table-summary.tsx",
+      "sha256": "3094eaaef79c2c6bb8aaced39a8425eb59596a646d2038be758fb72f12f17f42"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/payment-refund-action.tsx",
+      "sha256": "3581dc63eea5a8a388b5c98bd7b8bdb3b422cef944db62a94bd476a03f91262e"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/pilot-summary.tsx",
+      "sha256": "f93b98cfce97326a79f3a633b7af448ae3c425bec24a9aedbd7705967f136ad6"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-dialog.tsx",
+      "sha256": "d4db06a881533d4bb16175e8e0dab13c44b41203401eae99576150a139888398"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-mfa-form.tsx",
+      "sha256": "d1a0a1b2fe4de83b289ec9fa1ad0dcd6ef882aea66cb492b320d47e1b21e8c5c"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-navigation-guard.tsx",
+      "sha256": "6a6fe17711df21ed26703b98ef2ef22271fa34d2508da41185203118222abbee"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-panel.tsx",
+      "sha256": "cd67876558ab648c936cbee1fccac7b61451f9279116aec55ad68a1cb41d6150"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/profile-table-summary.tsx",
+      "sha256": "229cde8bcbeab02f2863f19351b728f41622ef4dab5f54eeef626678a7b712f5"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/record-archive-link.tsx",
+      "sha256": "85cd2bdd7ffc3284fe92d66f210ab68844aea3f04977786896592a169db8cf60"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/record-workspace.tsx",
+      "sha256": "0222c767f4f3149604185e1365dd1d9503ea096439eea65fbb05ff593f4c0f46"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/request-fulfillment-panel.tsx",
+      "sha256": "5fe873c06cb1d3b175ec9ae5c8aab1fba82706536a9e306409da4f499eb2c59d"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/request-status-actions.tsx",
+      "sha256": "7108b262b0ac2919bb5f7bae3333c57abfef865c32e7e6d38bff451d3de865e5"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/row-context-menu.tsx",
+      "sha256": "3a83c115b4747a54ce0b2abc99ad1db83919e8db5aa765ad8aae6b1d516297a5"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/scrollable-chip-row.tsx",
+      "sha256": "ed82a7c063c813fdadc54064e080045ff6a05982d6f0087f64fd8c5f3219a971"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/search/navbar-search.tsx",
+      "sha256": "5a080d842cc610c8a2716298dd8fd72d6a09bc226be76298a34579b82cf43ad0"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/search/search-hit.tsx",
+      "sha256": "d2e782fb29813529b1281119c2f570e3ee4a205186ddce01e7257d8305c96729"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/search/search-results.tsx",
+      "sha256": "1ff2f1e46737cac14ed2d74e7012022fdddc07022d952eb34eae0f765e07ed2d"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/search/search-skeleton.tsx",
+      "sha256": "cd3f0f1302da5832e54f9ac129f869d5c345dcf97293f05ea6df65346f5fdabb"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/search/search.module.css",
+      "sha256": "e8e894acdea0d6d374030bed5f80f29a2aaf2ed700aa339ea3f4e13df35def1d"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/segmented-filter.tsx",
+      "sha256": "129433072e4b61d9799efe4f1e88666686cf082c8ab360e14afadb1dde96feb3"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/service-sla-report.tsx",
+      "sha256": "5f473abcd985c50f0924a3d020572a2a95ed6ed79e7865c9c0860a82a0a0a731"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/sidebar-nav.tsx",
+      "sha256": "7fc86028baf36122a98a7b75f9540d21b516a314bb7640a1b10a0b458fccd01a"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/static-placeholder.tsx",
+      "sha256": "f48e89fddcb7120cb5b80c28e70d9da678847cea3328abeaf3d0e771dcbbccad"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/status-pill.tsx",
+      "sha256": "2e6fdbaa952dd2bb4f053836a819676b32bdcdc863a4b7e1b31871eb6699659f"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/summary-cards.tsx",
+      "sha256": "a4a338f9af1b92d9de7a34172946ef1ada214d7544bb1c4e3bca4b4571c10aa5"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-browse-controls.tsx",
+      "sha256": "dc13648c92069eb516b856c78747930e61e10a3663a7378dc89fae230826ca98"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-browse-layout.ts",
+      "sha256": "74aa00c2995be0f2dd94f62fb5d389c99fe1cc45906c2b6a14cfb299fe422c9a"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-browse-panel.tsx",
+      "sha256": "207f107c49cb7fa3d4026fe697ff71784f6e0caa72b43bac4d9aa7c7f34a8974"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-detail-dialog.tsx",
+      "sha256": "580a920a40682c160f1298ae94fdf085602a2af89fa21418adc228738b2e7a1f"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-pagination.tsx",
+      "sha256": "2cb65799895d99cee57dbada42fa26566439288e372e850a5c4a92a7a2fa7cd6"
+    },
+    {
+      "path": "apps/admin-web/src/components/admin/table-scroll-area.tsx",
+      "sha256": "d2b6697776d5cecd1d9a5e31fe57b5ec8dab608783e0ef6884964eccfae47440"
+    },
+    {
+      "path": "apps/admin-web/src/components/loading/loading-button-content.tsx",
+      "sha256": "4f781f82f64c7dea19a964030a23ee64eaf1711f3c04d62d73c477b7f18aeb3b"
+    },
+    {
+      "path": "apps/admin-web/src/components/loading/loading-status.tsx",
+      "sha256": "7f0925701e20b13bbbdc2d09c347caa286e675278e74a0d675ea697771a9be9d"
+    },
+    {
+      "path": "apps/admin-web/src/components/loading/page-skeleton.tsx",
+      "sha256": "89a7c052a81a4a6f3ab755c3faffa99e6e80a3ac92dceaa8317750d65e67bed9"
+    },
+    {
+      "path": "apps/admin-web/src/components/loading/skeleton.tsx",
+      "sha256": "42cbff86d65e1ce02a0d235be0657d68229e12ebd6ccf2505c3dfd9854d0d246"
+    },
+    {
+      "path": "apps/admin-web/src/components/loading/spinner.tsx",
+      "sha256": "04112334839b1710c446b92d286ea3d58c73d26b95004afad6a4d3ff17962690"
+    },
+    {
+      "path": "apps/admin-web/src/components/navigation/link-pending-indicator.tsx",
+      "sha256": "78422ce72efbab8fa6e80190c493e06ea3ccefe01f3f15e9e65f552eca0162ad"
+    },
+    {
+      "path": "apps/admin-web/src/components/resident/resident-shell.tsx",
+      "sha256": "e8e5bc02c8667701246471c6509a59cc953add9d73acef529b0830b48d42722f"
+    },
+    {
+      "path": "apps/admin-web/src/components/ui/accent-controller.tsx",
+      "sha256": "32db7dd93cc1f863c37c04ce4a30307f4ca071dd8582c2b0a3a64cf6586845e0"
+    },
+    {
+      "path": "apps/admin-web/src/components/ui/font-controller.tsx",
+      "sha256": "e5d91b66936f8cc8f024519ce9aa1377ccb94defa3a1021b6c0c3ab365c433db"
+    },
+    {
+      "path": "apps/admin-web/src/components/ui/icon-controller.tsx",
+      "sha256": "990ea79d7ad84af387076a97fc05101e0742969f164ffdf47967b2322867d0cd"
+    },
+    {
+      "path": "apps/admin-web/src/components/ui/theme-controller.tsx",
+      "sha256": "4dc6a4956d6ca466d7ff3538c3072981c724b72cf794c6b30ecd5cbf0dbdff1f"
+    },
+    {
+      "path": "apps/admin-web/src/components/ui/toast.tsx",
+      "sha256": "4284a814acc2f23a6bb9cb6708cd8149464a411af84f2cfa33c15cc5613219a7"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-admin-audit-notifications.ts",
+      "sha256": "7e7eb858d0a57320e541d5cd7855ea224b644ab53a7d92baf2b085887eabe4ec"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-admin-search.ts",
+      "sha256": "e9fdc6747d84177ca5856b7442da27d4a030631faf7e2fe7fef9cfa2e8115e27"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-audit-log-browser.ts",
+      "sha256": "ea53999934686e9b2bdbdbe718f5e3ec2b9405c464c4cf2a443147af97087564"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-barangay-settings.ts",
+      "sha256": "f761a3b660680f5c5664c8504dace009d5be232c8d93ca8c3ec9995cd6c4512c"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-households.ts",
+      "sha256": "67c3d8f41c7fc5ff4e43bb38af295b9584cce8eada39e73a749ad74c7ead7567"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-mount-transition.ts",
+      "sha256": "93824055e390edd51e978b4fc70e00c1d7dde8d5f77686a2f4465fc1ff051a1a"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-pilot-table-browse.ts",
+      "sha256": "779e77709936e306c93e066fdd54b4d5f334eb2399b19377f8303cf2f31028e8"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-profile-table-detail.ts",
+      "sha256": "a131b96ef08cb31736d0d36fd0746e31462c1f21ad5b74c6e918b327bba21d34"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-row-action.ts",
+      "sha256": "b7e9b5afd1f44db05d1c1dd04576f88492d358a44c4bb69240045c0ac9181ca6"
+    },
+    {
+      "path": "apps/admin-web/src/hooks/use-table-browse-navigation.ts",
+      "sha256": "33df063e7303a62b865d95ec7f386bebebd5cfd912b85d2d4e9ef5ce0769d245"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-profile/proof-window.ts",
+      "sha256": "d8eb58b2b20f57abdf3526a4f7ca2b5f254178910482f9f23f4f3d8e4de41566"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-profile/schema.ts",
+      "sha256": "14894ab89b6097ec3d6762d200c35aa4868f10164fd2dc468fe1095b2d9042f3"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-profile/server.ts",
+      "sha256": "22ffa5dff4897fae3c8ddecc88060a1fbc1ec95137e4bb5ff67d90a68c884885"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/archive-config.ts",
+      "sha256": "2f6cca56751d22cdaebdcb544a72eba0fdfc756e57f9c7fdc113cf9bb3b12980"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/archive-sections.ts",
+      "sha256": "9d6a32ebad0cb45b75f7fa364bbf704d0ac33ade20c3409eeefe494cd9248db8"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/browse-coordination.ts",
+      "sha256": "5738d47011a53040588f0e2c11f9205ac83a3e464c2f22ded651d35d618ed9c0"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/browse-state.ts",
+      "sha256": "0561c3cec8e69ca0d45e838e3456585d8241ca4de5fa5e897f1dab0068201e28"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/operations-config.ts",
+      "sha256": "d78c1414cc21ed3c8edd951d9d64c62a59c1893528b875afa7223aa76ec5554f"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/pilot-config.ts",
+      "sha256": "7e548b54dc26c8436d3718ea40066b670c5bb1c1d1f6a881dd68fff9439657e0"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/profile-config.ts",
+      "sha256": "376f157b609538beea0b727f5ec1e0c5f73bf343c09525c1675dbc39243f537f"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/browse.ts",
+      "sha256": "1b970de9b8290b1990183451e372ccbd8628163ed71a6380ccff1f0ccad1b300"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/content-archive.ts",
+      "sha256": "66122f3543838fcb3fbd037d48cb0038b51a3c54c6fc2c9995e57f2e47d645e4"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/operations-options.ts",
+      "sha256": "7429058dfc8a7cf8590920ec67aefcaa6f09e23d8ef0122b0d97ea2ed8671d49"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/pilot-options.ts",
+      "sha256": "e14ec728bc1c3b1a02b2b65acff3cf692b442c278a01082bd0833e57f52412ad"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/queries/schema.ts",
+      "sha256": "3fa16589be81f1046a3f0dbe3e3d1b80bb9b64177c9cfe894f8e173bed285e60"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-config.ts",
+      "sha256": "1cd2498ac24ff03fbd1d4cd99aaab81c89f0684e888bcedc2a03e690c882fbb7"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/record-schema.ts",
+      "sha256": "3e655c5a21d95bc22265469c3a577f96879daae288e3829d0ac2a2432e8e175c"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/sort-definitions.ts",
+      "sha256": "3dec2909797a4eb1b9c2323453247446661183f79d07d7b1f0e018926f7d1a4f"
+    },
+    {
+      "path": "apps/admin-web/src/lib/admin-tables/table-configs.ts",
+      "sha256": "ffa04583b7fe61ddcd11c1bb07b0a83bc7fc53ac006d07212c45df74b74107f3"
+    },
+    {
+      "path": "apps/admin-web/src/lib/audit-notifications.ts",
+      "sha256": "54485be3a188aaf7259810331480f62595899fd2e6bde16625fa41ee7dc78008"
+    },
+    {
+      "path": "apps/admin-web/src/lib/payments.ts",
+      "sha256": "95f02cfc421cec963810585d1634733061eddb1724d0a4e4d1cabc7763dde6bc"
+    },
+    {
+      "path": "apps/admin-web/src/lib/routing-packs.ts",
+      "sha256": "6612c61ebf9b5133a806af057ba0078e798890a417ea69f393adf63a883faedf"
+    },
+    {
+      "path": "apps/admin-web/src/lib/scrollbar.ts",
+      "sha256": "6666e52f7f640148078906dbe9d4d74f783e2d59b52ac334bf236812e5236746"
+    },
+    {
+      "path": "apps/admin-web/src/lib/search/model.ts",
+      "sha256": "03002f5af11ea7b59ff79e3a07e88851c22e3973270f41aaadd2328a82691075"
+    },
+    {
+      "path": "apps/admin-web/src/lib/search/server.ts",
+      "sha256": "52e5f0c197f3148ebe68a7979d234ce9187f15c385acfff6980c4ee2cb2d7301"
+    },
+    {
+      "path": "apps/admin-web/src/lib/side-sheet-motion.ts",
+      "sha256": "a09248b842f434a39c9e934c45802990723abe7439ff903e37a0fa076a097b68"
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/client.ts",
+      "sha256": "23ef59c63bbf0cb541f1d72462367db5de30b9ab492a5f3a68b079686b7fb9ce"
+    },
+    {
+      "path": "apps/admin-web/src/lib/supabase/server.ts",
+      "sha256": "48b8fd87ae7957eb42bd1b628544a8061322e01c3aec4125af5500171216aba6"
+    },
+    {
+      "path": "apps/admin-web/src/proxy.ts",
+      "sha256": "c77dc1ec274f3d3fd411ca525c29b0049896a123f386353f3794eef1aa664d15"
+    },
+    {
+      "path": "apps/admin-web/public/assets/logo/barangayan-logo-1024.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "path": "apps/admin-web/public/file.svg",
+      "sha256": "2b67812c325c199a02536cdbeea0c593a72f707d323b72ee3e08dbab06753bd4"
+    },
+    {
+      "path": "apps/admin-web/public/globe.svg",
+      "sha256": "b614b9bf183925957661ac851498fe1d8029fd43a62fbfed86f9e2624a57e7cf"
+    },
+    {
+      "path": "apps/admin-web/public/next.svg",
+      "sha256": "55995dfad6ecb4945a1e856ddca03c5e16aa5bf13fd21b4df6a74ae79357bcfc"
+    },
+    {
+      "path": "apps/admin-web/public/vercel.svg",
+      "sha256": "f081337b2fee635b455b63275406a3e7f39d6a014e25ad90dab5a67e62a12ac4"
+    },
+    {
+      "path": "apps/admin-web/public/window.svg",
+      "sha256": "644768c4aaeb4767bce293344eeb0c125fb804a94d801440424072202d85e3a1"
+    },
+    {
+      "path": "packages/shared/src/constants/announcement-categories.ts",
+      "sha256": "7ef3d63b83a732db59bfaf6f61d78522f894a8802bcb08a94e671f0c379b1c66"
+    },
+    {
+      "path": "packages/shared/src/constants/document-catalog-shape.ts",
+      "sha256": "53ff42d6ef8eeabd2062d0d9c86dc8bab8abff36d1ce0ee97cb550911765f12b"
+    },
+    {
+      "path": "packages/shared/src/constants/drive-types.ts",
+      "sha256": "4461f694eff9a3631382c3537a171fb6ffd59c95840ac0d14e69d02af3262091"
+    },
+    {
+      "path": "packages/shared/src/constants/id-verification.ts",
+      "sha256": "e14dc1fd0d0b2a3858d135c113f64ef38e982bf48d2a827f1d70cf7ee269f6d2"
+    },
+    {
+      "path": "packages/shared/src/constants/incident-categories.ts",
+      "sha256": "c7c00fdb7bee2d2be5a082b8d4f20380b4badfef8b6fe7491e007ee6a48ece6e"
+    },
+    {
+      "path": "packages/shared/src/constants/official-roles.ts",
+      "sha256": "97e4682a0883f7aaeb9589428a4ca312e538b6a0a98f4f8f8aa174d10422a226"
+    },
+    {
+      "path": "packages/shared/src/constants/priority-weights.ts",
+      "sha256": "7087b1e68ec213662e2803793492c11dcf26d573c999395519aeab66b0bb47cb"
+    },
+    {
+      "path": "packages/shared/src/constants/theme-colors.ts",
+      "sha256": "708ded28beaaa5a39d669b427b5e757cc82601def0109c1a1a8b0335a930c579"
+    },
+    {
+      "path": "packages/shared/src/constants/theme-fonts.ts",
+      "sha256": "e3aff76dff22581bfd6feae8b572728ea9c4c45aa38e42a0dfc0460f6cd035cb"
+    },
+    {
+      "path": "packages/shared/src/constants/waste-types.ts",
+      "sha256": "8a65ded8c57085005db02009a2b93e9b77764090b7af5e18500d16fcd48c2401"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "b25029b04b2b65bbec56d76c26bae36e9a1d4fb6476df266673e23315a14ce24"
+    },
+    {
+      "path": "packages/shared/src/lib/agency-sla.ts",
+      "sha256": "02c21ead3c38cc5d0011d30acd0dda75d6e9f53d5304d808fb305eb8753505f1"
+    },
+    {
+      "path": "packages/shared/src/lib/auth-fetch.ts",
+      "sha256": "8915f808f0fea76ea4a9d4f462e3fe117e44dda455bf4f960abc063246d7db72"
+    },
+    {
+      "path": "packages/shared/src/lib/connected-route-client.ts",
+      "sha256": "68945b9b906a4060800a3233e0d33d5fc781d6fe57e7fd439053bb293404d0b7"
+    },
+    {
+      "path": "packages/shared/src/lib/device-location.ts",
+      "sha256": "8b6328a396a398fbc8f79230828feadb1f9cecd16bae77d3678603ac31dbbd76"
+    },
+    {
+      "path": "packages/shared/src/lib/evacuation-route-service.ts",
+      "sha256": "0726b27672394510f5a561cb840ea241827ff75987242676cbff21333e9f7dfa"
+    },
+    {
+      "path": "packages/shared/src/lib/evacuation-routing.ts",
+      "sha256": "670dd09437c5f8025c922a27abe0bb90d202e762c40a64e619e3f50e90889071"
+    },
+    {
+      "path": "packages/shared/src/lib/flood-shadow.ts",
+      "sha256": "f28b44a608696dbbc7fc82635bc0958a4766789599022ad6f3c0d5a34ee4fa87"
+    },
+    {
+      "path": "packages/shared/src/lib/format.ts",
+      "sha256": "c379a70815fa718dd253ff6a1e024dcccb236f36c1bf6354fb31c5537af396b6"
+    },
+    {
+      "path": "packages/shared/src/lib/geocode.ts",
+      "sha256": "123e5a40b9e38412133febdd0c0e2385c25d0d73fe0c5bc4b796129b953c9b38"
+    },
+    {
+      "path": "packages/shared/src/lib/haversine.ts",
+      "sha256": "e85e11a981695cdf970553d90c44fe65f2853b8e08654a51c8f7d81733051c3b"
+    },
+    {
+      "path": "packages/shared/src/lib/id-evidence.ts",
+      "sha256": "7886d7af72df097eff8dc759339c797cba2c986764f5cf313421cefda8d8fe83"
+    },
+    {
+      "path": "packages/shared/src/lib/point-in-polygon.ts",
+      "sha256": "35f83d42263177c66db844f8cec3d72b1378e81edb40d59fcfa55801bb46b1ea"
+    },
+    {
+      "path": "packages/shared/src/lib/request-status.ts",
+      "sha256": "1222c4f0680faf10e427865a4dae9d3223823bd7efae27d9191a83f880bf5aee"
+    },
+    {
+      "path": "packages/shared/src/lib/resident-account-setup.ts",
+      "sha256": "ef6455a6cda0dc8bed101484e9a0f97430b7f5bae3ad317fdb13bdcc75ce9860"
+    },
+    {
+      "path": "packages/shared/src/lib/resident-auth.ts",
+      "sha256": "12677f49a3e4f1be63aeb38eb439c12e6637134dfdd76c44f83cc4e719ad8252"
+    },
+    {
+      "path": "packages/shared/src/lib/resident-email-verification.ts",
+      "sha256": "d8025966e97f200db7f053b74dc4c35a3e2b6a6f3e2b6214b148c7befb432164"
+    },
+    {
+      "path": "packages/shared/src/lib/resident-submission.ts",
+      "sha256": "01a348e50ee924febcf3b1900c6e004530e3e11e9303dfe9769d4cecfc445367"
+    },
+    {
+      "path": "packages/shared/src/lib/routing-pack-builder.ts",
+      "sha256": "5bcde2c2e70a8ed22e377491a1ada09aa04897ba16b39be36ab52432ca85a632"
+    },
+    {
+      "path": "packages/shared/src/lib/service-catalog.ts",
+      "sha256": "1377c6c75ffbe9527475866c5184b290463a54ddaee21635ca530fc453c5126a"
+    },
+    {
+      "path": "packages/shared/src/lib/service-foundations.ts",
+      "sha256": "957a4e1153b11257aefe138561cb57e52a340ec28d62f0ebdd1355535162fd64"
+    },
+    {
+      "path": "packages/shared/src/lib/service-request-validation.ts",
+      "sha256": "be57ce06b25c4b0db058ffad577ee60de97c3627662d12918265ef284d8cc449"
+    },
+    {
+      "path": "packages/shared/src/lib/service-tracking.ts",
+      "sha256": "8d0b8b1d7a30958bef68cd2dff16f6a200a94dd7bc3d1711bf7f45efb2805488"
+    },
+    {
+      "path": "packages/shared/src/lib/supabase-client.ts",
+      "sha256": "49697001d89b1dddb7777cf18c0635dbd689a09373bd2ebe966835537efc7f41"
+    },
+    {
+      "path": "packages/shared/src/schemas/about-us.ts",
+      "sha256": "4cf5367a57a8438bacdc752e50f1ff8752678f8089d8b854f7ff8872aed4cf69"
+    },
+    {
+      "path": "packages/shared/src/schemas/admin-audit-log.ts",
+      "sha256": "955994dfe9a234f0c43bbaaf8103f931f7b5bcf28c2ca563e57f4b918cd8b4e8"
+    },
+    {
+      "path": "packages/shared/src/schemas/announcement.ts",
+      "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955"
+    },
+    {
+      "path": "packages/shared/src/schemas/auth.ts",
+      "sha256": "eddbde3ded0a8334ba79f0ca39f1425d3cb6f750f9b4f4c05c760bebf221a5d2"
+    },
+    {
+      "path": "packages/shared/src/schemas/document-type.ts",
+      "sha256": "410c6eb6be1c38c9d9e0a3009fbd4b031a428f81a2cedf9a716529c353643c53"
+    },
+    {
+      "path": "packages/shared/src/schemas/drive-registration.ts",
+      "sha256": "8fc33f90d0c5b0ef87496281684fc4aa09e767862d903876835d283dbf576b78"
+    },
+    {
+      "path": "packages/shared/src/schemas/emergency-information.ts",
+      "sha256": "6075267bb490267c526b07afdbb597c5f1bb5faffc45df915db4389c570d09d8"
+    },
+    {
+      "path": "packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "b8d7d5cc0baa3080839cfd896fcb1cac90fd87f3d26874c1e87492431b8c47c8"
+    },
+    {
+      "path": "packages/shared/src/schemas/evacuation-center.ts",
+      "sha256": "5b6ba55f5f73c8164ef78f3d82bddde507cf637f58a62c71e12cfb8dc5b23921"
+    },
+    {
+      "path": "packages/shared/src/schemas/faq.ts",
+      "sha256": "d3f1a21228b4a5be22f7c1e939d7d8b21958516882943cf8f599a3cd052a1d4f"
+    },
+    {
+      "path": "packages/shared/src/schemas/household.ts",
+      "sha256": "649ee31b82fc0d2791ea352a59c3bfc5eef0a711979b04782852596296c0a224"
+    },
+    {
+      "path": "packages/shared/src/schemas/incident-map.ts",
+      "sha256": "153a44870e89ebdb1b0a05e11cf0eec9c10dd4879f6dedbd0273136c24aa0cce"
+    },
+    {
+      "path": "packages/shared/src/schemas/incident-report.ts",
+      "sha256": "6a900466695019fcc4a194ee0050ed9a6bf369df28546d414e7049900bd1aef6"
+    },
+    {
+      "path": "packages/shared/src/schemas/payment.ts",
+      "sha256": "c2cfaa9ebde38c0cafffbeb168f5db5823a84fe8711605b1cae396c4472ef2e7"
+    },
+    {
+      "path": "packages/shared/src/schemas/request-form.ts",
+      "sha256": "1c453b9bde025104254cc48dd4dfaca515a4ea92ad09bc18b4eb320d153dde25"
+    },
+    {
+      "path": "packages/shared/src/schemas/routing-conditions.ts",
+      "sha256": "e00cc18ba339166c668f1cea788498d51289f8239dd2e8fffc877652a4e95828"
+    },
+    {
+      "path": "packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "93ce2539e168bf51b93ebbf4e11c5a6ab24d0fe8b22b7564e5b3bc66575f9662"
+    },
+    {
+      "path": "packages/shared/src/schemas/settings.ts",
+      "sha256": "a2d65c3f66a196c4d31b88817861c4bdad719b0dc31d1bb0c3b11d8e0b2235b1"
+    },
+    {
+      "path": "packages/shared/src/schemas/site-content.ts",
+      "sha256": "e6eb06f781fb626e39a8bbb180dde4db603b70de15c6388966d62dec1c995324"
+    },
+    {
+      "path": "packages/shared/src/schemas/staff.ts",
+      "sha256": "bb5677337d59300902b562b01c60ebe480aab522dd9d9af54526cf1c4b437eb4"
+    },
+    {
+      "path": "packages/shared/src/schemas/waste-management.ts",
+      "sha256": "4dfdff85e02a35fa3ede629f69c126415337f80800aa238db14f0371172ea708"
+    },
+    {
+      "path": "packages/shared/src/types/database.ts",
+      "sha256": "67468644695170be9129ff743a1b2935dd5c22188f7aaf7e4f49183a4a7cf30a"
+    },
+    {
+      "path": "packages/shared/src/types/domain.ts",
+      "sha256": "51a0121512bd2133984ac4c91995396d82cb8aa1466e8655f500d47df68187d4"
+    },
+    {
+      "path": "packages/shared/src/types/map-bridge.ts",
+      "sha256": "a5d3c03ff2a40b0b574c093fb00bd288abd029f46dbfe3d316fdbe932397e2f3"
+    },
+    {
+      "path": "packages/shared/src/types/resident-account-setup.database.ts",
+      "sha256": "1c75c82b27c81bc616dfe288053439688de23a98b1c3ae0f00c74fb00b2bb0cf"
+    },
+    {
+      "path": "packages/shared/src/types/routing-conditions.database.ts",
+      "sha256": "00e663290412a899a19c3067dec585802982a03c2702bb7d6a96900a10aa23a5"
+    },
+    {
+      "path": "packages/shared/src/types/service-foundations.ts",
+      "sha256": "5a669feb8fcde6c3cd070a3cc01f63dbec07d7f4120672941f2fdd71a1abacb3"
+    },
+    {
+      "path": "apps/admin-web/next.config.ts",
+      "sha256": "7aee3ee622e6348d6e32401f8bbbea3898d2b434a14edf6a3e9e5c1e1020b27d"
+    },
+    {
+      "path": "apps/admin-web/tsconfig.json",
+      "sha256": "c43345c499e2354160559118c103f08cac311bfb72ca6fa02783e1299a1530d9"
+    },
+    {
+      "path": "apps/admin-web/postcss.config.mjs",
+      "sha256": "7b299d3d3b16699ddda397c0b2373b3af4f25f8fc9ccc9b3d9e64ef083bc1c21"
+    },
+    {
+      "path": "apps/admin-web/eslint.config.mjs",
+      "sha256": "71e9883d94696f24bf176fb0f7cc96987d0261e04b15d2a956ced03f9cc0ca6f"
+    },
+    {
+      "path": "apps/admin-web/.gitignore",
+      "sha256": "9d3153c8c51ff20665538720edb361bc844e036f9fda8985dfd4438a22ab2356"
+    },
+    {
+      "path": "apps/admin-web/vercel.json",
+      "sha256": "2ff5da66f7eb2d1c88229d56fa3a439b622dce79194abf910ddf19e4e22daefe"
+    },
+    {
+      "path": "apps/resident-web/src/components/services/resident-service-form.tsx",
+      "sha256": "e4163414d2dc0830241968ed9bd8e2c928f1e46f6dc6874e43fdde4e8008cfae"
+    },
+    {
+      "path": "data/routing-packs/ampid-1/pack/manifest.json",
+      "sha256": "6c05a2a3cad8f460be49a591b1c71577e0929604c34f639450a9a980e1b259aa"
+    },
+    {
+      "path": "data/routing-packs/ampid-1/pack/graph.json",
+      "sha256": "e291ec6fa36a9f9d79154403e600a71aa1ca17ce5a2f1f9c7e8f6004c5ddc679"
+    },
+    {
+      "path": "apps/resident-web/src/components/shared/loading-status.tsx",
+      "sha256": "057b02dd1f7f8519a9820357d31c5009c3329dfde33dfcbc0584eedb976c1162"
+    },
+    {
+      "path": "apps/resident-web/src/components/ui/button.tsx",
+      "sha256": "0f4ec9532c322cfa572ad26b29448739dc82194690a5fb2162d359a4ccc30190"
+    },
+    {
+      "path": "apps/resident-web/src/lib/notify.ts",
+      "sha256": "a773a78ac6c9680ba86f99b53a941765e2fb5c75e3b7a8712707dff10ebeb925"
+    },
+    {
+      "path": "apps/resident-web/src/lib/service-feedback.ts",
+      "sha256": "42dba5362bce5c78513aa38145bbb65c18e13944ec10b037b3cae0925b4bfc48"
+    },
+    {
+      "path": "apps/resident-web/src/components/ui/loading.tsx",
+      "sha256": "a414c9bc0e5c79446a8404a5b028ac0246d2ec49e81c82ed75cbc4d1f8c8e406"
+    },
+    {
+      "path": "apps/resident-web/src/lib/motion.ts",
+      "sha256": "8d5473321d4534bcfaebee2db737dfa45edc4686cab68dd2a2b6a91723c516eb"
+    },
+    {
+      "path": "apps/resident-web/src/lib/utils.ts",
+      "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+    }
+  ],
+  "deploymentOnlyOverride": {
+    "buildCommand": "cd ../.. && npm run build --workspace=@barangayan/web -- --webpack"
+  },
+  "excludes": [
+    "credentials and .env files",
+    "plans and evidence",
+    "mobile source and unrelated resident source",
+    "tests",
+    "node_modules",
+    "git history"
+  ],
+  "projectId": "prj_AL0YPMsKg5PIVmnA8JAFL10OwwEM"
+}

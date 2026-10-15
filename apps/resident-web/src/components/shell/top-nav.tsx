@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Home, MapPin, Settings, ClipboardList, Bell, ShieldAlert, Newspaper } from 'lucide-react';
+import { Heart, Home, MapPin, Settings, ClipboardList, Bell, ShieldAlert, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import styles from './resident-shell.module.css';
 
 // `badge` names which live count (from useUnreadCounts) drives this item's badge, if
 // any — mirrors bottom-tab-bar.tsx's split: Reports sums the two incident counts,
@@ -17,8 +18,8 @@ const NAV_ITEMS = [
   { href: '/services', label: 'Services', icon: ClipboardList, exact: false, badge: null },
   { href: '/maps', label: 'Maps', icon: MapPin, exact: false, badge: null },
   { href: '/health', label: 'Health', icon: Heart, exact: false, badge: null },
-  { href: '/reports', label: 'Reports', icon: Bell, exact: false, badge: 'reports' },
-  { href: '/announcements', label: 'Announcements', icon: Newspaper, exact: false, badge: 'announcements' },
+  { href: '/reports', label: 'Reports', icon: TriangleAlert, exact: false, badge: 'reports' },
+  { href: '/announcements', label: 'Announcements', icon: Bell, exact: false, badge: 'announcements' },
   { href: '/settings', label: 'Settings', icon: Settings, exact: false, badge: null },
 ] as const;
 
@@ -34,7 +35,7 @@ export function TopNav() {
   const reportsBadgeCount = activeReportsCount + resolvedUnreadCount;
 
   return (
-    <nav className="hidden items-center gap-1 sm:flex">
+    <nav aria-label="Main navigation" className={styles.nav}>
       {NAV_ITEMS.map(({ href, label, icon: Icon, exact, badge }) => {
         const active = exact ? pathname === href : pathname.startsWith(href);
         const badgeCount = badge === 'reports' ? reportsBadgeCount : badge === 'announcements' ? announcementsUnreadCount : 0;
@@ -42,24 +43,30 @@ export function TopNav() {
           <Link
             key={href}
             href={href}
-            className="relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors">
+            aria-label={badgeCount > 0 ? `${label}, ${badgeCount} ${badge === 'reports' ? 'report updates' : 'unread announcements'}` : label}
+            aria-current={active ? 'page' : undefined}
+            className={styles.navLink}>
             {active ? (
               <motion.span
                 layoutId="top-nav-pill"
-                className="absolute inset-0 rounded-full bg-primary/15"
+                className={styles.navPill}
                 transition={{ type: 'spring', bounce: 0.25, duration: 0.35 }}
               />
             ) : null}
-            <span className={`relative flex items-center gap-1.5 ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
-              <span className="relative flex items-center justify-center">
-                <Icon size={16} strokeWidth={1.75} />
+            <span aria-hidden className={styles.navContent}>
+              <span className={styles.navIcon}>
+                <Icon size={36} strokeWidth={1.75} />
                 {badgeCount > 0 ? (
-                  <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-status-error px-1 text-[9px] font-bold leading-none text-white">
+                  <span className={styles.navBadge}>
                     {badgeCount > 99 ? '99+' : badgeCount}
                   </span>
                 ) : null}
               </span>
-              {label}
+              <span className={styles.navLabel}>
+                <span className={styles.navLabelInner}>
+                  <span className={styles.navLabelText}>{label}</span>
+                </span>
+              </span>
             </span>
             <LinkPendingHint className="bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 text-primary" />
           </Link>

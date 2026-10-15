@@ -84,10 +84,6 @@ export async function getExpoPushToken(): Promise<string | null> {
   }
 }
 
-export function getCachedExpoPushToken(): string | null {
-  return cachedToken;
-}
-
 /**
  * Registers (or refreshes) this device's push token with the backend via the
  * upsert_push_token RPC — idempotent, safe to call on every app foreground.
@@ -135,13 +131,4 @@ export async function presentNotification(title: string, body: string): Promise<
   } catch (error) {
     console.warn('Failed to present notification:', error);
   }
-}
-
-/** Tap handler — logs the payload only; routing is deferred (see plan's Out of Scope). */
-export function addNotificationResponseListener(
-  callback: (response: NotificationsType.NotificationResponse) => void,
-) {
-  const Notifications = getNotifications();
-  if (!Notifications) return { remove: () => {} };
-  return Notifications.addNotificationResponseReceivedListener(callback);
 }

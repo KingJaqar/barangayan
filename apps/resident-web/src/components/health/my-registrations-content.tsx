@@ -1,21 +1,18 @@
 'use client';
 
-import { ClipboardList } from 'lucide-react';
+import { ArrowRight, CalendarDays, ClipboardList, MapPin } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import { RegistrationDrawer } from '@/components/health/registration-drawer';
 import { driveTypeConfig, useMedicalDrives, type DriveRegistrationRow } from '@/hooks/use-medical-drives';
 
+import styles from './health.module.css';
+import stickyStyles from '@/components/shared/sticky-tabs.module.css';
+
 type StatusFilter = 'all' | 'pending' | 'confirmed' | 'attended' | 'cancelled';
 
 const STATUS_KEYS: StatusFilter[] = ['all', 'pending', 'confirmed', 'attended', 'cancelled'];
-const STATUS_COLOR: Record<StatusFilter, string> = {
-  all: 'var(--accent)',
-  pending: '#F59E0B',
-  confirmed: 'var(--accent)',
-  attended: '#6366F1',
-  cancelled: '#EF4444',
-};
 
 function fmtShortDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number);
@@ -38,54 +35,51 @@ export function MyRegistrationsContent({ userId }: { userId: string }) {
 
   return (
     <div
-      className={`flex flex-col gap-4 transition-[max-width] duration-300 ${
-        drawerOpen ? 'lg:mr-[calc(32rem_+_2rem)]' : ''
-      }`}>
-      <div>
-        <h1 className="text-xl font-bold">My Registrations</h1>
-        <p className="text-sm text-muted-foreground">Applications you&apos;ve submitted for medical and vaccination drives.</p>
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      className={`${styles.page} ${drawerOpen ? styles.drawerOpen : ''}`}>
+      <div className={`${styles.filters} ${styles.registrationFilters} ${stickyStyles.secondary}`} role="group" aria-label="Filter registrations by status">
         {STATUS_KEYS.map((key) => {
           const isActive = statusFilter === key;
-          const color = STATUS_COLOR[key];
           return (
             <button
               key={key}
               type="button"
               onClick={() => setStatusFilter(key)}
-              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold capitalize transition-colors"
-              style={isActive ? { backgroundColor: color, color: '#fff' } : { borderWidth: 1, borderStyle: 'solid', borderColor: `${color}55`, color, backgroundColor: `${color}0d` }}>
-              {key}
+              aria-pressed={isActive}
+              className={`${styles.filter} capitalize`}>
+              {key === 'all' ? 'All registrations' : key}
+              {!loadingRegistrations ? <span className={styles.filterCount}>{key === 'all' ? myRegistrations.length : myRegistrations.filter((reg) => reg.status === key).length}</span> : null}
             </button>
           );
         })}
       </div>
+      <div className={styles.resultsHeader}>
+        <h2 className={styles.dateTitle}>{statusFilter === 'all' ? 'Your registrations' : `${statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)} registrations`}</h2>
+        <p className={styles.resultCount} role="status">{loadingRegistrations ? 'Loading registrations…' : `${filtered.length} ${filtered.length === 1 ? 'registration' : 'registrations'}`}</p>
+      </div>
 
       {loadingRegistrations ? (
-        <div className="flex flex-col gap-3">
+        <div className={styles.registrationGrid} aria-hidden="true">
           {[0, 1].map((i) => (
-            <div key={i} className="h-24 animate-pulse rounded-xl border border-black/8 bg-muted dark:border-white/8" />
+            <div key={i} className={`${styles.skeleton} rw-skeleton`} />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-black/8 bg-white px-6 py-16 text-center dark:border-white/8 dark:bg-zinc-900">
-          <div className="flex size-16 items-center justify-center rounded-full bg-muted">
-            <ClipboardList size={28} className="text-muted-foreground" />
+        <div className={styles.empty}>
+          <div className={styles.emptyIcon}>
+            <ClipboardList size={24} aria-hidden="true" />
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-semibold">No registrations yet</p>
-            <p className="text-sm text-muted-foreground">Register for an active medical drive to see it here.</p>
+            <h2>{statusFilter === 'all' ? 'No registrations yet' : `No ${statusFilter} registrations`}</h2>
+            <p>{statusFilter === 'all' ? 'Find an active medical drive and register. Your application will appear here.' : 'Choose another status to see your other applications.'}</p>
           </div>
+          {statusFilter === 'all' ? <Link href="/health" className={styles.cta}>Explore active drives <ArrowRight size={14} aria-hidden="true" /></Link> : <button type="button" className={styles.filter} onClick={() => setStatusFilter('all')}>View all registrations</button>}
         </div>
       ) : (
         // Multi-column when nothing is selected, forced back to a single column once the
         // drawer opens — same reflow as reports/incident-drawer.tsx's IncidentList.
-        <div className={`grid grid-cols-1 gap-3 ${drawerOpen ? '' : 'sm:grid-cols-2 lg:grid-cols-3'}`}>
+        <div className={styles.registrationGrid}>
           {filtered.map((reg: DriveRegistrationRow) => {
             const cfg = reg.drive ? driveTypeConfig(reg.drive.type) : null;
-            const statusColor = STATUS_COLOR[reg.status as StatusFilter] ?? 'var(--accent)';
             const isSelected = reg.id === selectedId;
             return (
               <button
@@ -93,24 +87,20 @@ export function MyRegistrationsContent({ userId }: { userId: string }) {
                 type="button"
                 aria-current={isSelected ? 'true' : undefined}
                 onClick={() => setSelectedId(reg.id)}
-                className={`flex flex-col gap-2 rounded-xl border bg-white p-3.5 text-left shadow-sm transition-shadow hover:shadow-md dark:bg-zinc-900 ${
-                  isSelected ? 'border-[var(--accent)]' : 'border-black/8 dark:border-white/8'
-                }`}>
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-sm font-bold leading-snug">{reg.drive?.title ?? 'Medical Drive'}</h3>
+                className={`${styles.card} ${styles.registration}`}>
+                <div className={styles.cardTop}>
                   {cfg ? (
-                    <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold" style={{ backgroundColor: `${cfg.color}1a`, color: cfg.color }}>
+                    <span className={styles.badge}>
                       {cfg.label}
                     </span>
                   ) : null}
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-primary">{reg.applicant_number}</span>
-                  <span className="rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize" style={{ backgroundColor: `${statusColor}1a`, color: statusColor }}>
+                  <span className={`${styles.badge} ${styles.badgeAccent} capitalize`}>
                     {reg.status}
                   </span>
                 </div>
-                {reg.drive ? <p className="text-xs text-muted-foreground">{fmtShortDate(reg.drive.drive_date)} · {reg.drive.location}</p> : null}
+                <h3 className={styles.cardTitle}>{reg.drive?.title ?? 'Medical Drive'}</h3>
+                {reg.drive ? <div className={styles.details}><p className={styles.detail}><CalendarDays size={14} aria-hidden="true" />{fmtShortDate(reg.drive.drive_date)}</p><p className={styles.detail}><MapPin size={14} aria-hidden="true" /><span>{reg.drive.location}</span></p></div> : null}
+                <div className={styles.registrationFooter}><span className={styles.number}>{reg.applicant_number}</span><span className="flex items-center gap-2">View details <ArrowRight size={14} aria-hidden="true" /></span></div>
               </button>
             );
           })}

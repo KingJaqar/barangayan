@@ -1,0 +1,1472 @@
+diff --git a/apps/resident-android-mobile/src/components/reports/shimmer.tsx b/apps/resident-android-mobile/src/components/reports/shimmer.tsx
+--- a/apps/resident-android-mobile/src/components/reports/shimmer.tsx
++++ b/apps/resident-android-mobile/src/components/reports/shimmer.tsx
+@@ -1,5 +1,5 @@
+ import { useEffect } from 'react';
+-import { StyleSheet, View, type ViewStyle } from 'react-native';
++import { StyleSheet, type ViewStyle } from 'react-native';
+ import Animated, {
+   Easing,
+   useAnimatedStyle,
+@@ -46,17 +46,9 @@ export function Shimmer({ style }: { style?: ViewStyle | ViewStyle[] }) {
+   );
+ }
+ 
+-/** Thin wrapper so skeleton groups fade out together once real content is ready. */
+-export function ShimmerGroup({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
+-  return <View style={[styles.group, style]}>{children}</View>;
+-}
+-
+ const styles = StyleSheet.create({
+   base: {
+     borderRadius: 8,
+     overflow: 'hidden',
+   },
+-  group: {
+-    gap: 8,
+-  },
+ });
+diff --git a/apps/resident-android-mobile/src/components/services/skeleton.tsx b/apps/resident-android-mobile/src/components/services/skeleton.tsx
+--- a/apps/resident-android-mobile/src/components/services/skeleton.tsx
++++ b/apps/resident-android-mobile/src/components/services/skeleton.tsx
+@@ -1,5 +1,5 @@
+ import { useEffect } from 'react';
+-import { View, type StyleProp, type ViewStyle } from 'react-native';
++import { type StyleProp, type ViewStyle } from 'react-native';
+ import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+ 
+ import { Spacing } from '@/constants/theme';
+@@ -43,9 +43,3 @@ export function SkeletonBlock({
+     />
+   );
+ }
+-
+-/** Thin fixed-size spacer for skeleton layouts, so composed skeletons don't need to reach
+- * into the real screen's `styles` object (kept purely local/presentational). */
+-export function SkeletonGap({ size = Spacing.two }: { size?: number }) {
+-  return <View style={{ height: size, width: size }} />;
+-}
+diff --git a/apps/resident-android-mobile/src/constants/payment.ts b/apps/resident-android-mobile/src/constants/payment.ts
+--- a/apps/resident-android-mobile/src/constants/payment.ts
++++ b/apps/resident-android-mobile/src/constants/payment.ts
+@@ -1,4 +1,4 @@
+-import type { PaymentMethod } from '@barangayan/shared';
++
+ 
+ /**
+  * Single source of truth for whether QR PH can complete a real transaction. Flipping
+@@ -8,25 +8,3 @@ import type { PaymentMethod } from '@barangayan/shared';
+  * Defaults to 'false' (any value other than the literal string 'true' stays gated).
+  */
+ export const PAYMENT_SETTLEMENT_READY = process.env.EXPO_PUBLIC_QRPH_SETTLEMENT_READY === 'true';
+-
+-export interface PaymentMethodOption {
+-  key: PaymentMethod;
+-  label: string;
+-  subtitle: string;
+-  icon: 'cash-outline' | 'qr-code-outline';
+-}
+-
+-export const PAYMENT_METHOD_OPTIONS: PaymentMethodOption[] = [
+-  {
+-    key: 'pickup',
+-    label: 'Pay at Pickup',
+-    subtitle: 'Pay in person when you pick up your document at the Barangay Hall.',
+-    icon: 'cash-outline',
+-  },
+-  {
+-    key: 'qrph',
+-    label: 'QR PH',
+-    subtitle: "Pay instantly via GCash, Maya, or your bank's QR PH app.",
+-    icon: 'qr-code-outline',
+-  },
+-];
+diff --git a/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx b/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx
+--- a/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx
++++ b/apps/resident-android-mobile/src/hooks/use-theme-preference.tsx
+@@ -19,13 +19,6 @@ export function isValidHexColor(value: string): boolean {
+   return HEX_RE.test(value);
+ }
+ 
+-/** Normalizes a possibly-partial hex string (e.g. missing `#`, mixed case) to a canonical
+- * `#RRGGBB` form, or null if it can never resolve to a valid hex color. */
+-export function normalizeHexColor(value: string): string | null {
+-  const withHash = value.startsWith('#') ? value : `#${value}`;
+-  return isValidHexColor(withHash) ? withHash : null;
+-}
+-
+ function normalizeCustomList(colors: string[]): string[] {
+   const seen = new Set<string>();
+   const out: string[] = [];
+diff --git a/apps/resident-android-mobile/src/lib/dialog.ts b/apps/resident-android-mobile/src/lib/dialog.ts
+--- a/apps/resident-android-mobile/src/lib/dialog.ts
++++ b/apps/resident-android-mobile/src/lib/dialog.ts
+@@ -41,23 +41,3 @@ export function confirmAction({
+     ]);
+   });
+ }
+-
+-/** Shows a message and resolves once the user dismisses it. */
+-export function notify({
+-  title,
+-  message,
+-  okLabel = 'OK',
+-}: {
+-  title: string;
+-  message: string;
+-  okLabel?: string;
+-}): Promise<void> {
+-  if (Platform.OS === 'web') {
+-    window.alert(`${title}\n\n${message}`);
+-    return Promise.resolve();
+-  }
+-
+-  return new Promise((resolve) => {
+-    Alert.alert(title, message, [{ text: okLabel, onPress: () => resolve() }]);
+-  });
+-}
+diff --git a/apps/resident-android-mobile/src/lib/emergency-cache.ts b/apps/resident-android-mobile/src/lib/emergency-cache.ts
+--- a/apps/resident-android-mobile/src/lib/emergency-cache.ts
++++ b/apps/resident-android-mobile/src/lib/emergency-cache.ts
+@@ -47,18 +47,6 @@ export async function setCachedData<T>(tag: string, data: T): Promise<void> {
+   }
+ }
+ 
+-export async function clearEmergencyCache(): Promise<void> {
+-  try {
+-    const keys = await AsyncStorage.getAllKeys();
+-    const toRemove = keys.filter((k) => k.startsWith(CACHE_PREFIX));
+-    if (toRemove.length > 0) {
+-      await AsyncStorage.multiRemove(toRemove);
+-    }
+-  } catch {
+-    // ignore
+-  }
+-}
+-
+ export async function enqueueCheckin(tag: string, entry: QueueEntry): Promise<void> {
+   try {
+     const existing = await getQueuedCheckins(tag);
+diff --git a/apps/resident-android-mobile/src/lib/push-notifications.ts b/apps/resident-android-mobile/src/lib/push-notifications.ts
+--- a/apps/resident-android-mobile/src/lib/push-notifications.ts
++++ b/apps/resident-android-mobile/src/lib/push-notifications.ts
+@@ -84,10 +84,6 @@ export async function getExpoPushToken(): Promise<string | null> {
+   }
+ }
+ 
+-export function getCachedExpoPushToken(): string | null {
+-  return cachedToken;
+-}
+-
+ /**
+  * Registers (or refreshes) this device's push token with the backend via the
+  * upsert_push_token RPC — idempotent, safe to call on every app foreground.
+@@ -136,12 +132,3 @@ export async function presentNotification(title: string, body: string): Promise<
+     console.warn('Failed to present notification:', error);
+   }
+ }
+-
+-/** Tap handler — logs the payload only; routing is deferred (see plan's Out of Scope). */
+-export function addNotificationResponseListener(
+-  callback: (response: NotificationsType.NotificationResponse) => void,
+-) {
+-  const Notifications = getNotifications();
+-  if (!Notifications) return { remove: () => {} };
+-  return Notifications.addNotificationResponseReceivedListener(callback);
+-}
+diff --git a/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx b/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+--- a/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+@@ -914,15 +914,6 @@ const styles = StyleSheet.create({
+     flexDirection: 'row',
+     alignItems: 'center',
+   },
+-  centersList: {
+-    gap: Spacing.three,
+-  },
+-  centersToolbar: {
+-    flexDirection: 'row',
+-    justifyContent: 'space-between',
+-    alignItems: 'center',
+-    marginTop: Spacing.two,
+-  },
+   alertsContent: {
+     gap: Spacing.two,
+   },
+@@ -1116,13 +1107,6 @@ const styles = StyleSheet.create({
+     lineHeight: 18,
+     color: '#374151',
+   },
+-  alertLinkPressable: {
+-    marginTop: Spacing.three,
+-  },
+-  alertLink: {
+-    fontSize: 14,
+-    fontWeight: '600',
+-  },
+   retryButton: {
+     marginTop: Spacing.two,
+     backgroundColor: '#B91C1C',
+diff --git a/apps/resident-android-mobile/src/app/(app)/home/index.tsx b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+--- a/apps/resident-android-mobile/src/app/(app)/home/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/home/index.tsx
+@@ -337,16 +337,6 @@ const styles = StyleSheet.create({
+     padding: Spacing.three,
+     borderRadius: Spacing.three,
+   },
+-  verificationBanner: {
+-    flexDirection: 'row',
+-    alignItems: 'center',
+-    gap: Spacing.two,
+-    padding: Spacing.two,
+-    borderRadius: Spacing.two,
+-  },
+-  verificationText: {
+-    flex: 1,
+-  },
+   requestRow: {
+     flexDirection: 'row',
+     alignItems: 'center',
+diff --git a/apps/resident-android-mobile/src/app/(app)/maps/index.tsx b/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+--- a/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
++++ b/apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+@@ -757,12 +757,6 @@ const styles = StyleSheet.create({
+     fontSize: 14,
+     fontWeight: '600',
+   },
+-
+-  // ── Filter pills ────────────────────────────────────────────────────────
+-  pillsScroll: {
+-    marginTop: 10,
+-    flexGrow: 0,
+-  },
+   pillsScrollFloating: {
+     position: 'absolute',
+     top: 116,  // below search bar (12+44) + segment toggle (10+40) + 10 gap
+diff --git a/apps/resident-android-mobile/src/components/family-content.tsx b/apps/resident-android-mobile/src/components/family-content.tsx
+--- a/apps/resident-android-mobile/src/components/family-content.tsx
++++ b/apps/resident-android-mobile/src/components/family-content.tsx
+@@ -430,10 +430,6 @@ const styles = StyleSheet.create({
+     fontSize: 14,
+     fontWeight: '600',
+   },
+-  memberRelation: {
+-    fontSize: 13,
+-    lineHeight: 18,
+-  },
+   memberRelationRow: {
+     flexDirection: 'row',
+     flexWrap: 'wrap',
+diff --git a/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx b/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx
+--- a/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx
++++ b/apps/resident-android-mobile/src/components/reports/announcements-feed.tsx
+@@ -220,8 +220,4 @@ const styles = StyleSheet.create({
+   separator: {
+     height: Spacing.two - 2,
+   },
+-  empty: {
+-    textAlign: 'center',
+-    marginTop: Spacing.six,
+-  },
+ });
+diff --git a/apps/resident-android-mobile/src/components/add-family-member-modal.tsx b/apps/resident-android-mobile/src/components/add-family-member-modal.tsx
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/components/add-family-member-modal.tsx
++++ /dev/null
+@@ -1,163 +0,0 @@
+-import { useState } from 'react';
+-import { ActivityIndicator, Modal, Pressable, StyleSheet, TextInput, View } from 'react-native';
+-
+-import { ThemedText } from '@/components/themed-text';
+-import { Colors, Spacing } from '@/constants/theme';
+-import { useTheme } from '@/hooks/use-theme';
+-
+-interface AddFamilyMemberModalProps {
+-  visible: boolean;
+-  onClose: () => void;
+-  onAdd: (input: { name: string; relation: string; role?: string; avatar_url?: string | null }) => Promise<boolean>;
+-}
+-
+-export function AddFamilyMemberModal({ visible, onClose, onAdd }: AddFamilyMemberModalProps) {
+-  const theme = useTheme();
+-  const [name, setName] = useState('');
+-  const [relation, setRelation] = useState('');
+-  const [role, setRole] = useState('member');
+-  const [submitting, setSubmitting] = useState(false);
+-
+-  function reset() {
+-    setName('');
+-    setRelation('');
+-    setRole('member');
+-    setSubmitting(false);
+-  }
+-
+-  async function handleSubmit() {
+-    if (!name.trim() || !relation.trim()) return;
+-    setSubmitting(true);
+-    const ok = await onAdd({
+-      name: name.trim(),
+-      relation: relation.trim(),
+-      role: role.trim() || 'member',
+-    });
+-    setSubmitting(false);
+-    if (ok) {
+-      reset();
+-      onClose();
+-    }
+-  }
+-
+-  function handleClose() {
+-    reset();
+-    onClose();
+-  }
+-
+-  return (
+-    <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
+-      <Pressable style={styles.overlay} onPress={handleClose}>
+-        <View style={[styles.sheet, { backgroundColor: theme.background }]}>
+-          <View style={styles.handle} />
+-          <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
+-            Add Family Member
+-          </ThemedText>
+-
+-          <View style={styles.field}>
+-            <ThemedText type="small" themeColor="textSecondary" style={styles.label}>
+-              Full Name
+-            </ThemedText>
+-            <TextInput
+-              style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text, borderColor: theme.backgroundSelected }]}
+-              value={name}
+-              onChangeText={setName}
+-              placeholder="Enter full name"
+-              placeholderTextColor={theme.textSecondary}
+-            />
+-          </View>
+-
+-          <View style={styles.field}>
+-            <ThemedText type="small" themeColor="textSecondary" style={styles.label}>
+-              Relation
+-            </ThemedText>
+-            <TextInput
+-              style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text, borderColor: theme.backgroundSelected }]}
+-              value={relation}
+-              onChangeText={setRelation}
+-              placeholder="e.g., Wife, Son, Daughter"
+-              placeholderTextColor={theme.textSecondary}
+-            />
+-          </View>
+-
+-          <View style={styles.field}>
+-            <ThemedText type="small" themeColor="textSecondary" style={styles.label}>
+-              Role
+-            </ThemedText>
+-            <TextInput
+-              style={[styles.input, { backgroundColor: theme.backgroundElement, color: theme.text, borderColor: theme.backgroundSelected }]}
+-              value={role}
+-              onChangeText={setRole}
+-              placeholder="member"
+-              placeholderTextColor={theme.textSecondary}
+-            />
+-          </View>
+-
+-          <Pressable
+-            style={[styles.submitButton, { backgroundColor: Colors.light.primary }]}
+-            onPress={handleSubmit}
+-            disabled={submitting || !name.trim() || !relation.trim()}>
+-            {submitting ? (
+-              <ActivityIndicator size="small" color={theme.onPrimary} />
+-            ) : (
+-              <ThemedText style={[styles.submitText, { color: theme.onPrimary }]}>Add Member</ThemedText>
+-            )}
+-          </Pressable>
+-        </View>
+-      </Pressable>
+-    </Modal>
+-  );
+-}
+-
+-const styles = StyleSheet.create({
+-  overlay: {
+-    flex: 1,
+-    backgroundColor: 'rgba(0,0,0,0.4)',
+-    justifyContent: 'flex-end',
+-  },
+-  sheet: {
+-    borderTopLeftRadius: 24,
+-    borderTopRightRadius: 24,
+-    paddingHorizontal: Spacing.four,
+-    paddingTop: Spacing.three,
+-    paddingBottom: Spacing.six,
+-    gap: Spacing.three,
+-  },
+-  handle: {
+-    width: 36,
+-    height: 4,
+-    borderRadius: 2,
+-    backgroundColor: '#D1D5DB',
+-    alignSelf: 'center',
+-    marginBottom: Spacing.two,
+-  },
+-  title: {
+-    fontSize: 18,
+-    fontWeight: '700',
+-    textAlign: 'center',
+-  },
+-  field: {
+-    gap: Spacing.one,
+-  },
+-  label: {
+-    fontSize: 13,
+-    fontWeight: '600',
+-  },
+-  input: {
+-    borderRadius: 12,
+-    borderWidth: 1,
+-    paddingHorizontal: Spacing.three,
+-    paddingVertical: Spacing.two,
+-    fontSize: 15,
+-  },
+-  submitButton: {
+-    borderRadius: 14,
+-    paddingVertical: Spacing.three,
+-    alignItems: 'center',
+-    marginTop: Spacing.two,
+-  },
+-  submitText: {
+-    fontSize: 16,
+-    fontWeight: '700',
+-  },
+-});
+diff --git a/apps/resident-android-mobile/src/components/app-header.tsx b/apps/resident-android-mobile/src/components/app-header.tsx
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/components/app-header.tsx
++++ /dev/null
+@@ -1,47 +0,0 @@
+-import { Image } from 'expo-image';
+-import { StyleSheet, View } from 'react-native';
+-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+-
+-import { ThemedText } from '@/components/themed-text';
+-import { Fonts, Spacing } from '@/constants/theme';
+-import { useTheme } from '@/hooks/use-theme';
+-
+-/** Full-bleed green banner (logo + "Barangayan" wordmark) shared by Home and Services.
+- * Bleeds into the status-bar area via useSafeAreaInsets() — the screen root using this
+- * must be a plain View (not SafeAreaView), same as Home's/Settings' existing pattern. */
+-export function AppHeader() {
+-  const theme = useTheme();
+-  const insets = useSafeAreaInsets();
+-
+-  return (
+-    <View style={[styles.banner, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+-      <Image
+-        source={require('@/assets/logo/barangayan-logo-1024.png')}
+-        style={styles.bannerLogo}
+-        contentFit="contain"
+-      />
+-      <ThemedText type="smallBold" style={[styles.bannerWordmark, { color: theme.onPrimary }]}>
+-        Barangayan
+-      </ThemedText>
+-    </View>
+-  );
+-}
+-
+-const styles = StyleSheet.create({
+-  banner: {
+-    flexDirection: 'row',
+-    alignItems: 'center',
+-    gap: Spacing.two,
+-    paddingHorizontal: Spacing.four,
+-    paddingBottom: Spacing.three,
+-  },
+-  bannerLogo: {
+-    width: 40,
+-    height: 40,
+-    borderRadius: 20,
+-  },
+-  bannerWordmark: {
+-    fontFamily: Fonts.serif,
+-    fontSize: 20,
+-  },
+-});
+diff --git a/apps/resident-android-mobile/src/components/hint-row.tsx b/apps/resident-android-mobile/src/components/hint-row.tsx
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/components/hint-row.tsx
++++ /dev/null
+@@ -1,35 +0,0 @@
+-import type { ReactNode } from 'react';
+-import { View, StyleSheet } from 'react-native';
+-
+-import { ThemedText } from './themed-text';
+-import { ThemedView } from './themed-view';
+-
+-import { Spacing } from '@/constants/theme';
+-
+-type HintRowProps = {
+-  title?: string;
+-  hint?: ReactNode;
+-};
+-
+-export function HintRow({ title = 'Try editing', hint = 'app/index.tsx' }: HintRowProps) {
+-  return (
+-    <View style={styles.stepRow}>
+-      <ThemedText type="small">{title}</ThemedText>
+-      <ThemedView type="backgroundSelected" style={styles.codeSnippet}>
+-        <ThemedText themeColor="textSecondary">{hint}</ThemedText>
+-      </ThemedView>
+-    </View>
+-  );
+-}
+-
+-const styles = StyleSheet.create({
+-  stepRow: {
+-    flexDirection: 'row',
+-    justifyContent: 'space-between',
+-  },
+-  codeSnippet: {
+-    borderRadius: Spacing.two,
+-    paddingVertical: Spacing.half,
+-    paddingHorizontal: Spacing.two,
+-  },
+-});
+diff --git a/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx b/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx
++++ /dev/null
+@@ -1,41 +0,0 @@
+-import { StyleSheet, View } from 'react-native';
+-
+-/**
+- * Purely decorative ambient glow layer shared by the 3 onboarding screens (Welcome,
+- * Value Prop, Personalization) — two large, low-opacity soft circles that add depth
+- * behind the content without a gradient/blur dependency. Absolutely filled and
+- * `pointerEvents="none"` so it never intercepts touches or affects layout of whatever
+- * renders after it; screens control the tint so it reads correctly against both a
+- * solid `theme.primary` hero background and a neutral `theme.background` one.
+- */
+-export function OnboardingAmbientBackground({ tint }: { tint: string }) {
+-  return (
+-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+-      <View style={[styles.blob, styles.blobTop, { backgroundColor: tint }]} />
+-      <View style={[styles.blob, styles.blobBottom, { backgroundColor: tint }]} />
+-    </View>
+-  );
+-}
+-
+-const styles = StyleSheet.create({
+-  blob: {
+-    position: 'absolute',
+-    borderRadius: 999,
+-    opacity: 0.14,
+-  },
+-  blobTop: {
+-    width: 420,
+-    height: 420,
+-    borderRadius: 210,
+-    top: -160,
+-    right: -140,
+-  },
+-  blobBottom: {
+-    width: 300,
+-    height: 300,
+-    borderRadius: 150,
+-    opacity: 0.1,
+-    bottom: -120,
+-    left: -110,
+-  },
+-});
+diff --git a/apps/resident-android-mobile/src/components/settings-row.tsx b/apps/resident-android-mobile/src/components/settings-row.tsx
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/components/settings-row.tsx
++++ /dev/null
+@@ -1,46 +0,0 @@
+-import { Href, Link } from 'expo-router';
+-import { Pressable, StyleSheet, View } from 'react-native';
+-
+-import { ThemedText } from '@/components/themed-text';
+-import { ThemedView } from '@/components/themed-view';
+-import { Spacing } from '@/constants/theme';
+-
+-export function SettingsRow({
+-  label,
+-  href,
+-  subtitle,
+-}: {
+-  label: string;
+-  href: Href;
+-  subtitle?: string;
+-}) {
+-  return (
+-    <Link href={href} asChild>
+-      <Pressable>
+-        <ThemedView type="backgroundElement" style={styles.row}>
+-          <View>
+-            <ThemedText>{label}</ThemedText>
+-            {subtitle ? (
+-              <ThemedText type="small" themeColor="textSecondary">
+-                {subtitle}
+-              </ThemedText>
+-            ) : null}
+-          </View>
+-          <ThemedText themeColor="textSecondary">{'›'}</ThemedText>
+-        </ThemedView>
+-      </Pressable>
+-    </Link>
+-  );
+-}
+-
+-const styles = StyleSheet.create({
+-  row: {
+-    flexDirection: 'row',
+-    justifyContent: 'space-between',
+-    alignItems: 'center',
+-    paddingVertical: Spacing.three,
+-    paddingHorizontal: Spacing.three,
+-    borderRadius: Spacing.three,
+-    marginBottom: Spacing.two,
+-  },
+-});
+diff --git a/apps/resident-android-mobile/src/hooks/use-color-scheme.ts b/apps/resident-android-mobile/src/hooks/use-color-scheme.ts
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/hooks/use-color-scheme.ts
++++ /dev/null
+@@ -1 +0,0 @@
+-export { useColorScheme } from 'react-native';
+diff --git a/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts b/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts
++++ /dev/null
+@@ -1,21 +0,0 @@
+-import { useEffect, useState } from 'react';
+-import { useColorScheme as useRNColorScheme } from 'react-native';
+-
+-/**
+- * To support static rendering, this value needs to be re-calculated on the client side for web
+- */
+-export function useColorScheme() {
+-  const [hasHydrated, setHasHydrated] = useState(false);
+-
+-  useEffect(() => {
+-    setHasHydrated(true);
+-  }, []);
+-
+-  const colorScheme = useRNColorScheme();
+-
+-  if (hasHydrated) {
+-    return colorScheme;
+-  }
+-
+-  return 'light';
+-}
+diff --git a/apps/resident-android-mobile/src/hooks/use-family-members.ts b/apps/resident-android-mobile/src/hooks/use-family-members.ts
+deleted file mode 100644
+--- a/apps/resident-android-mobile/src/hooks/use-family-members.ts
++++ /dev/null
+@@ -1,192 +0,0 @@
+-import { useCallback, useEffect, useState } from 'react';
+-
+-import { supabase } from '@/lib/supabase';
+-import type { Tables } from '@barangayan/shared';
+-import { useAuth } from '@/hooks/use-auth';
+-import { useProfile } from '@/hooks/use-profile';
+-
+-export type HouseholdMember = Tables<'household_members'>;
+-
+-type UseFamilyMembersResult = {
+-  members: HouseholdMember[];
+-  isLoading: boolean;
+-  error: string | null;
+-  refetch: () => Promise<void>;
+-  addMember: (member: { name: string; relation: string; role?: string; avatar_url?: string | null }) => Promise<HouseholdMember | null>;
+-  updateMember: (id: string, updates: Partial<HouseholdMember>) => Promise<HouseholdMember | null>;
+-  removeMember: (id: string) => Promise<boolean>;
+-  checkInMember: (id: string, centerId: string, centerName: string) => Promise<HouseholdMember | null>;
+-  checkOutMember: (id: string) => Promise<HouseholdMember | null>;
+-};
+-
+-export function useFamilyMembers(): UseFamilyMembersResult {
+-  const { session } = useAuth();
+-  const { profile } = useProfile();
+-  const [members, setMembers] = useState<HouseholdMember[]>([]);
+-  const [isLoading, setIsLoading] = useState(false);
+-  const [error, setError] = useState<string | null>(null);
+-
+-  const profileId = profile?.id ?? session?.user?.id ?? null;
+-
+-  async function fetchMembers() {
+-    if (!profileId) {
+-      setMembers([]);
+-      setIsLoading(false);
+-      return;
+-    }
+-    setIsLoading(true);
+-    setError(null);
+-    const { data, error: qErr } = await supabase
+-      .from('household_members')
+-      .select('*')
+-      .eq('profile_id', profileId)
+-      .order('sort_order', { ascending: true })
+-      .order('created_at', { ascending: true });
+-
+-    if (qErr) {
+-      setError(qErr.message);
+-      setMembers([]);
+-    } else {
+-      setMembers((data ?? []) as HouseholdMember[]);
+-    }
+-    setIsLoading(false);
+-  }
+-
+-  useEffect(() => {
+-    let cancelled = false;
+-    async function load() {
+-      if (!profileId) {
+-        setMembers([]);
+-        setIsLoading(false);
+-        return;
+-      }
+-      setIsLoading(true);
+-      setError(null);
+-      const { data, error: qErr } = await supabase
+-        .from('household_members')
+-        .select('*')
+-        .eq('profile_id', profileId)
+-        .order('sort_order', { ascending: true })
+-        .order('created_at', { ascending: true });
+-
+-      if (qErr) {
+-        setError(qErr.message);
+-        setMembers([]);
+-      } else if (!cancelled) {
+-        setMembers((data ?? []) as HouseholdMember[]);
+-      }
+-      if (!cancelled) setIsLoading(false);
+-    }
+-    load();
+-    return () => { cancelled = true; };
+-  }, [profileId]);
+-
+-  const addMember = useCallback(
+-    async (input: { name: string; relation: string; role?: string; avatar_url?: string | null }): Promise<HouseholdMember | null> => {
+-      if (!profileId) return null;
+-      setIsLoading(true);
+-      setError(null);
+-      const { data, error: qErr } = await supabase
+-        .from('household_members')
+-        .insert({
+-          profile_id: profileId,
+-          name: input.name.trim(),
+-          relation: input.relation.trim(),
+-          role: input.role?.trim() || 'member',
+-          avatar_url: input.avatar_url ?? null,
+-        })
+-        .select('*')
+-        .single();
+-
+-      if (qErr) {
+-        setError(qErr.message);
+-        setIsLoading(false);
+-        return null;
+-      }
+-
+-      setMembers((prev) => [...prev, data as HouseholdMember]);
+-      setIsLoading(false);
+-      return data as HouseholdMember;
+-    },
+-    [profileId],
+-  );
+-
+-  const updateMember = useCallback(
+-    async (id: string, updates: Partial<HouseholdMember>): Promise<HouseholdMember | null> => {
+-      setIsLoading(true);
+-      setError(null);
+-      const { data, error: qErr } = await supabase
+-        .from('household_members')
+-        .update(updates)
+-        .eq('id', id)
+-        .select('*')
+-        .single();
+-
+-      if (qErr) {
+-        setError(qErr.message);
+-        setIsLoading(false);
+-        return null;
+-      }
+-
+-      setMembers((prev) => prev.map((m) => (m.id === id ? (data as HouseholdMember) : m)));
+-      setIsLoading(false);
+-      return data as HouseholdMember;
+-    },
+-    [],
+-  );
+-
+-  const removeMember = useCallback(async (id: string): Promise<boolean> => {
+-    setIsLoading(true);
+-    setError(null);
+-    const { error: qErr } = await supabase
+-      .from('household_members')
+-      .delete()
+-      .eq('id', id);
+-
+-    if (qErr) {
+-      setError(qErr.message);
+-      setIsLoading(false);
+-      return false;
+-    }
+-
+-    setMembers((prev) => prev.filter((m) => m.id !== id));
+-    setIsLoading(false);
+-    return true;
+-  }, []);
+-
+-  const checkInMember = useCallback(
+-    async (id: string, centerId: string, centerName: string): Promise<HouseholdMember | null> => {
+-      return updateMember(id, {
+-        is_checked_in: true,
+-        checked_in_at: new Date().toISOString(),
+-        checked_in_center_id: centerId,
+-        checked_in_center_name: centerName,
+-      });
+-    },
+-    [updateMember],
+-  );
+-
+-  const checkOutMember = useCallback(
+-    async (id: string): Promise<HouseholdMember | null> => {
+-      return updateMember(id, {
+-        is_checked_in: false,
+-        checked_in_at: null,
+-        checked_in_center_id: null,
+-        checked_in_center_name: null,
+-      });
+-    },
+-    [updateMember],
+-  );
+-
+-  return {
+-    members,
+-    isLoading,
+-    error,
+-    refetch: fetchMembers,
+-    addMember,
+-    updateMember,
+-    removeMember,
+-    checkInMember,
+-    checkOutMember,
+-  };
+-}
+diff --git a/apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson b/apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson
+deleted file mode 100644
+--- a/apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson
++++ /dev/null
+@@ -1,609 +0,0 @@
+-{
+-    "type": "FeatureCollection",
+-    "features": [
+-        {
+-            "type": "Feature",
+-            "properties": {
+-                "name": "Ampid I",
+-                "municipality": "San Mateo",
+-                "province": "Rizal",
+-                "source": "Google Maps High-Density Trace"
+-            },
+-            "geometry": {
+-                "type": "Polygon",
+-                "coordinates": [
+-                    [
+-                        [
+-                            121.112071,
+-                            14.684583
+-                        ],
+-                        [
+-                            121.111589,
+-                            14.683696
+-                        ],
+-                        [
+-                            121.11119,
+-                            14.682938
+-                        ],
+-                        [
+-                            121.110588,
+-                            14.68167
+-                        ],
+-                        [
+-                            121.110227,
+-                            14.680994
+-                        ],
+-                        [
+-                            121.111337,
+-                            14.680657
+-                        ],
+-                        [
+-                            121.111538,
+-                            14.681181
+-                        ],
+-                        [
+-                            121.11201,
+-                            14.680987
+-                        ],
+-                        [
+-                            121.112639,
+-                            14.68094
+-                        ],
+-                        [
+-                            121.112523,
+-                            14.68067
+-                        ],
+-                        [
+-                            121.113036,
+-                            14.680529
+-                        ],
+-                        [
+-                            121.113198,
+-                            14.68051
+-                        ],
+-                        [
+-                            121.113527,
+-                            14.680559
+-                        ],
+-                        [
+-                            121.113633,
+-                            14.680694
+-                        ],
+-                        [
+-                            121.11395,
+-                            14.680462
+-                        ],
+-                        [
+-                            121.112791,
+-                            14.67911
+-                        ],
+-                        [
+-                            121.113227,
+-                            14.678874
+-                        ],
+-                        [
+-                            121.113615,
+-                            14.678928
+-                        ],
+-                        [
+-                            121.113997,
+-                            14.678685
+-                        ],
+-                        [
+-                            121.114505,
+-                            14.678351
+-                        ],
+-                        [
+-                            121.115052,
+-                            14.677566
+-                        ],
+-                        [
+-                            121.115111,
+-                            14.677538
+-                        ],
+-                        [
+-                            121.115194,
+-                            14.677389
+-                        ],
+-                        [
+-                            121.115264,
+-                            14.677146
+-                        ],
+-                        [
+-                            121.115385,
+-                            14.677176
+-                        ],
+-                        [
+-                            121.115453,
+-                            14.677252
+-                        ],
+-                        [
+-                            121.115714,
+-                            14.677204
+-                        ],
+-                        [
+-                            121.11588,
+-                            14.677342
+-                        ],
+-                        [
+-                            121.115986,
+-                            14.677413
+-                        ],
+-                        [
+-                            121.116078,
+-                            14.67741
+-                        ],
+-                        [
+-                            121.116219,
+-                            14.677329
+-                        ],
+-                        [
+-                            121.116405,
+-                            14.677291
+-                        ],
+-                        [
+-                            121.116744,
+-                            14.677402
+-                        ],
+-                        [
+-                            121.116916,
+-                            14.677441
+-                        ],
+-                        [
+-                            121.117053,
+-                            14.677505
+-                        ],
+-                        [
+-                            121.117137,
+-                            14.677565
+-                        ],
+-                        [
+-                            121.117332,
+-                            14.677586
+-                        ],
+-                        [
+-                            121.1178,
+-                            14.67773
+-                        ],
+-                        [
+-                            121.11835,
+-                            14.67765
+-                        ],
+-                        [
+-                            121.11888,
+-                            14.6776
+-                        ],
+-                        [
+-                            121.1194,
+-                            14.67755
+-                        ],
+-                        [
+-                            121.119699,
+-                            14.677335
+-                        ],
+-                        [
+-                            121.119919,
+-                            14.677606
+-                        ],
+-                        [
+-                            121.120435,
+-                            14.677799
+-                        ],
+-                        [
+-                            121.12057,
+-                            14.677672
+-                        ],
+-                        [
+-                            121.1209,
+-                            14.67746
+-                        ],
+-                        [
+-                            121.121247,
+-                            14.676374
+-                        ],
+-                        [
+-                            121.12285,
+-                            14.675863
+-                        ],
+-                        [
+-                            121.12295,
+-                            14.675833
+-                        ],
+-                        [
+-                            121.123415,
+-                            14.675664
+-                        ],
+-                        [
+-                            121.123538,
+-                            14.675499
+-                        ],
+-                        [
+-                            121.123479,
+-                            14.675243
+-                        ],
+-                        [
+-                            121.123386,
+-                            14.67517
+-                        ],
+-                        [
+-                            121.12333,
+-                            14.675082
+-                        ],
+-                        [
+-                            121.123336,
+-                            14.674932
+-                        ],
+-                        [
+-                            121.123471,
+-                            14.674848
+-                        ],
+-                        [
+-                            121.123541,
+-                            14.674852
+-                        ],
+-                        [
+-                            121.123597,
+-                            14.674788
+-                        ],
+-                        [
+-                            121.123603,
+-                            14.674673
+-                        ],
+-                        [
+-                            121.123664,
+-                            14.674666
+-                        ],
+-                        [
+-                            121.123761,
+-                            14.674695
+-                        ],
+-                        [
+-                            121.123915,
+-                            14.674842
+-                        ],
+-                        [
+-                            121.124053,
+-                            14.674789
+-                        ],
+-                        [
+-                            121.124037,
+-                            14.674652
+-                        ],
+-                        [
+-                            121.123883,
+-                            14.674353
+-                        ],
+-                        [
+-                            121.123905,
+-                            14.67427
+-                        ],
+-                        [
+-                            121.124313,
+-                            14.674157
+-                        ],
+-                        [
+-                            121.124469,
+-                            14.67409
+-                        ],
+-                        [
+-                            121.124697,
+-                            14.674091
+-                        ],
+-                        [
+-                            121.124728,
+-                            14.674169
+-                        ],
+-                        [
+-                            121.124755,
+-                            14.674262
+-                        ],
+-                        [
+-                            121.125185,
+-                            14.673944
+-                        ],
+-                        [
+-                            121.12528,
+-                            14.674032
+-                        ],
+-                        [
+-                            121.125385,
+-                            14.674068
+-                        ],
+-                        [
+-                            121.125577,
+-                            14.674105
+-                        ],
+-                        [
+-                            121.125558,
+-                            14.674687
+-                        ],
+-                        [
+-                            121.125495,
+-                            14.67528
+-                        ],
+-                        [
+-                            121.124963,
+-                            14.67549
+-                        ],
+-                        [
+-                            121.125009,
+-                            14.676367
+-                        ],
+-                        [
+-                            121.124198,
+-                            14.67738
+-                        ],
+-                        [
+-                            121.124843,
+-                            14.678374
+-                        ],
+-                        [
+-                            121.124888,
+-                            14.678732
+-                        ],
+-                        [
+-                            121.124685,
+-                            14.678862
+-                        ],
+-                        [
+-                            121.124612,
+-                            14.67964
+-                        ],
+-                        [
+-                            121.12585,
+-                            14.679571
+-                        ],
+-                        [
+-                            121.125981,
+-                            14.680021
+-                        ],
+-                        [
+-                            121.125871,
+-                            14.68021
+-                        ],
+-                        [
+-                            121.12559,
+-                            14.680595
+-                        ],
+-                        [
+-                            121.125638,
+-                            14.681139
+-                        ],
+-                        [
+-                            121.126124,
+-                            14.681541
+-                        ],
+-                        [
+-                            121.126901,
+-                            14.682126
+-                        ],
+-                        [
+-                            121.127262,
+-                            14.682688
+-                        ],
+-                        [
+-                            121.126457,
+-                            14.683075
+-                        ],
+-                        [
+-                            121.126121,
+-                            14.683093
+-                        ],
+-                        [
+-                            121.125692,
+-                            14.683105
+-                        ],
+-                        [
+-                            121.12548,
+-                            14.683044
+-                        ],
+-                        [
+-                            121.123765,
+-                            14.683534
+-                        ],
+-                        [
+-                            121.12369,
+-                            14.683676
+-                        ],
+-                        [
+-                            121.123708,
+-                            14.683877
+-                        ],
+-                        [
+-                            121.123286,
+-                            14.684046
+-                        ],
+-                        [
+-                            121.122833,
+-                            14.684481
+-                        ],
+-                        [
+-                            121.122726,
+-                            14.684701
+-                        ],
+-                        [
+-                            121.122519,
+-                            14.684869
+-                        ],
+-                        [
+-                            121.122308,
+-                            14.685028
+-                        ],
+-                        [
+-                            121.122303,
+-                            14.685217
+-                        ],
+-                        [
+-                            121.122665,
+-                            14.685424
+-                        ],
+-                        [
+-                            121.122815,
+-                            14.685407
+-                        ],
+-                        [
+-                            121.122906,
+-                            14.685521
+-                        ],
+-                        [
+-                            121.122891,
+-                            14.685635
+-                        ],
+-                        [
+-                            121.122754,
+-                            14.685759
+-                        ],
+-                        [
+-                            121.12263,
+-                            14.685704
+-                        ],
+-                        [
+-                            121.12242,
+-                            14.685849
+-                        ],
+-                        [
+-                            121.122069,
+-                            14.685859
+-                        ],
+-                        [
+-                            121.121842,
+-                            14.686011
+-                        ],
+-                        [
+-                            121.121671,
+-                            14.686372
+-                        ],
+-                        [
+-                            121.120837,
+-                            14.686638
+-                        ],
+-                        [
+-                            121.121109,
+-                            14.685911
+-                        ],
+-                        [
+-                            121.121103,
+-                            14.685602
+-                        ],
+-                        [
+-                            121.120734,
+-                            14.685296
+-                        ],
+-                        [
+-                            121.120329,
+-                            14.684888
+-                        ],
+-                        [
+-                            121.119695,
+-                            14.684664
+-                        ],
+-                        [
+-                            121.119547,
+-                            14.684673
+-                        ],
+-                        [
+-                            121.119482,
+-                            14.684741
+-                        ],
+-                        [
+-                            121.119259,
+-                            14.685274
+-                        ],
+-                        [
+-                            121.119095,
+-                            14.685609
+-                        ],
+-                        [
+-                            121.118907,
+-                            14.685707
+-                        ],
+-                        [
+-                            121.118608,
+-                            14.685578
+-                        ],
+-                        [
+-                            121.118371,
+-                            14.685322
+-                        ],
+-                        [
+-                            121.118247,
+-                            14.685267
+-                        ],
+-                        [
+-                            121.117853,
+-                            14.685243
+-                        ],
+-                        [
+-                            121.117008,
+-                            14.684831
+-                        ],
+-                        [
+-                            121.116345,
+-                            14.684996
+-                        ],
+-                        [
+-                            121.11607,
+-                            14.684951
+-                        ],
+-                        [
+-                            121.115783,
+-                            14.684928
+-                        ],
+-                        [
+-                            121.115285,
+-                            14.685069
+-                        ],
+-                        [
+-                            121.114709,
+-                            14.685565
+-                        ],
+-                        [
+-                            121.114524,
+-                            14.68565
+-                        ],
+-                        [
+-                            121.114468,
+-                            14.685667
+-                        ],
+-                        [
+-                            121.114403,
+-                            14.685704
+-                        ],
+-                        [
+-                            121.11435,
+-                            14.685708
+-                        ],
+-                        [
+-                            121.114233,
+-                            14.685739
+-                        ],
+-                        [
+-                            121.113884,
+-                            14.685586
+-                        ],
+-                        [
+-                            121.113534,
+-                            14.685444
+-                        ],
+-                        [
+-                            121.113411,
+-                            14.685353
+-                        ],
+-                        [
+-                            121.11325,
+-                            14.68532
+-                        ],
+-                        [
+-                            121.112606,
+-                            14.684883
+-                        ],
+-                        [
+-                            121.112071,
+-                            14.684583
+-                        ]
+-                    ]
+-                ]
+-            }
+-        }
+-    ]
+-}
+\ No newline at end of file

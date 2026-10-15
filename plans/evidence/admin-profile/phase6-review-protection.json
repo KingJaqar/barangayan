@@ -1,0 +1,9 @@
+{
+  "verifiedAt": "2026-10-15T06:29:26.036Z",
+  "origin": "https://barangayan-admin-profile-review.vercel.app",
+  "anonymousStatus": 302,
+  "redirectHost": "vercel.com",
+  "redirectPath": "/sso-api",
+  "protected": true,
+  "initialProbeFollowedRedirects": true
+}

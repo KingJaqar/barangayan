@@ -1,0 +1,66 @@
+{
+  "verifiedAt": "2026-10-15T04:49:45.129Z",
+  "runs": [
+    {
+      "browser": "chrome",
+      "checks": 48,
+      "webPortOpen": false,
+      "containers": [
+        {
+          "name": "admin-profile-db-dd5a2aa440",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-inbucket-dd5a2aa440",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-auth-dd5a2aa440",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-rest-dd5a2aa440",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-storage-dd5a2aa440",
+          "status": "exited"
+        }
+      ]
+    },
+    {
+      "browser": "firefox",
+      "checks": 46,
+      "webPortOpen": false,
+      "containers": [
+        {
+          "name": "admin-profile-db-6c205edf77",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-inbucket-6c205edf77",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-auth-6c205edf77",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-rest-6c205edf77",
+          "status": "exited"
+        },
+        {
+          "name": "admin-profile-storage-6c205edf77",
+          "status": "exited"
+        }
+      ]
+    }
+  ],
+  "reviewStaging": {
+    "origin": "http://127.0.0.1:65053",
+    "expiresAt": "2026-10-15T05:57:15.102Z",
+    "webPortOpen": true,
+    "preserved": true
+  },
+  "requestBaselineIdentical": true
+}

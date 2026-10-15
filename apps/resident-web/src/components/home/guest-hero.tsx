@@ -1,6 +1,6 @@
 import Link from 'next/link';
-
-import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import styles from './home.module.css';
 
 /**
  * The actual landing-page hero — real website copy + CTAs (Sign Up / Log In), not a
@@ -9,19 +9,16 @@ import { Button } from '@/components/ui/button';
  */
 export function GuestHero() {
   return (
-    <div className="mb-10 flex flex-col items-start gap-5 py-10 sm:py-16">
-      <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">Your Barangay, Digitized.</h1>
-      <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
+    <div className={`${styles.hero} ${styles.guestHero}`}>
+      <p className={styles.eyebrow}>Connected to your community</p>
+      <h1>Your barangay.<br />Closer than ever.</h1>
+      <p className={styles.heroDescription}>
         Request documents, report incidents, and stay connected with your barangay — all from one place, without
         the trip to the hall.
       </p>
-      <div className="flex flex-wrap items-center gap-3">
-        <Button asChild size="lg">
-          <Link href="/register">Get Started</Link>
-        </Button>
-        <Button asChild size="lg" variant="outline">
-          <Link href="/login">Log In</Link>
-        </Button>
+      <div className={styles.guestCtas}>
+        <Link href="/register" className={styles.primaryCta}>Get Started <ArrowRight aria-hidden size={16} /></Link>
+        <Link href="/login" className={styles.secondaryCta}>Log In</Link>
       </div>
     </div>
   );

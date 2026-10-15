@@ -105,7 +105,7 @@ Deno.serve(async (req: Request) => {
   const { data: request, error: requestError } = await supabase
     .from('service_requests')
     .select(
-      'id, barangay_id, resident_id, status, payment_status, payment_method, reference_number, contract_version, fee_assessment_state, assessed_amount_centavos, legacy_fee_centavos, document_type:document_types(name, fee_centavos)',
+      'id, barangay_id, resident_id, status, payment_status, payment_method, reference_number, contract_version, fee_assessment_state, assessed_amount_centavos, legacy_fee_centavos, document_type:document_types(name, fee_centavos, service_kind)',
     )
     .eq('id', requestId)
     .single();
@@ -152,9 +152,14 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  const paymentDocument = request.document_type as unknown as { service_kind: string | null } | null;
+  if (paymentDocument?.service_kind === 'business') {
+    return new Response(JSON.stringify({ error: 'Pay at Pickup is the only payment method for this document.' }), { status: 422, headers: corsHeaders });
+  }
+
   // V2 payments require a confirmed positive request amount. Never use a catalog placeholder.
   if (request.contract_version === 2 && (request.fee_assessment_state !== 'assessed' || request.assessed_amount_centavos === null || request.assessed_amount_centavos <= 0)) {
-    return new Response(JSON.stringify({ error: request.fee_assessment_state === 'pending' ? 'Awaiting fee assessment' : 'No payment required' }), { status: 422, headers: corsHeaders });
+    return new Response(JSON.stringify({ error: request.fee_assessment_state === 'page_count_required' ? 'Enter total pages before paying' : 'No QR PH payment available' }), { status: 422, headers: corsHeaders });
   }
   // Terminal requests cannot start another payment.
   if (request.status === 'cancelled' || request.status === 'completed') {

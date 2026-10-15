@@ -1,5 +1,9 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { faqArticleSchema, FAQ_CATEGORY_META, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -180,7 +184,7 @@ export function FaqRow({ article }: { article: FaqArticle }) {
     return (
       <form
         onSubmit={handleSave}
-        className="rounded-xl border border-[var(--accent)] bg-white p-4 dark:border-[var(--accent)] dark:bg-zinc-900">
+        className={styles.rowEdit}>
         <div className="grid grid-cols-2 gap-3">
           <label className="col-span-2 text-sm">
             <span className="mb-1 block font-medium">Question</span>
@@ -200,11 +204,11 @@ export function FaqRow({ article }: { article: FaqArticle }) {
 
           <label className="text-sm">
             <span className="mb-1 block font-medium">Category</span>
-            <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
+            <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
               {Object.entries(FAQ_CATEGORY_META).map(([key, val]) => (
                 <option key={key} value={key}>{val.label}</option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
 
           <label className="text-sm">
@@ -251,41 +255,35 @@ export function FaqRow({ article }: { article: FaqArticle }) {
   }
 
   return (
-    <div
-      className={`rounded-xl border bg-white p-4 transition-opacity dark:bg-zinc-900 ${
-        isArchived
-          ? 'border-zinc-200 opacity-60 dark:border-zinc-700'
-          : 'border-black/10 dark:border-white/10'
-      }`}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
+    <div className={styles.row}>
+      <div className={styles.rowHeader}>
+        <div className={styles.rowMain}>
           <div className="flex flex-wrap items-center gap-2">
             <span
               className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
               style={{ backgroundColor: meta?.color }}
             />
             <span
-              className="rounded-full px-2 py-0.5 text-xs font-semibold"
-              style={{ backgroundColor: `${meta?.color}1A`, color: meta?.color }}>
+              className={styles.badge}>
               {meta?.label}
             </span>
-            <span className={`font-semibold ${isArchived ? 'line-through text-zinc-400' : ''}`}>
+            <h3 className={styles.rowTitle}>
               {article.question}
-            </span>
+            </h3>
             {isArchived ? (
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
                 Archived
               </span>
             ) : !article.is_active ? (
-              <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+              <span className={styles.badge}>
                 Draft
               </span>
             ) : null}
           </div>
-          <p className="mt-1 text-xs text-zinc-500">Sort order: {article.sort_order}</p>
+          <p className={styles.rowMeta}>Sort order: {article.sort_order}</p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className={styles.rowActions}>
           {isArchived ? (
             <>
               <ConfirmButton
@@ -293,14 +291,14 @@ export function FaqRow({ article }: { article: FaqArticle }) {
                 confirmLabel="Restore?"
                 onConfirm={unarchive}
                 title="Restore article"
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20"
+                className={styles.primaryAction}
               />
               <ConfirmButton
                 label="Delete"
                 confirmLabel="Delete forever?"
                 onConfirm={handleDelete}
                 title="Permanently delete article"
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+                className={styles.dangerAction}
               />
             </>
           ) : (
@@ -308,7 +306,7 @@ export function FaqRow({ article }: { article: FaqArticle }) {
               <button
                 onClick={startEdit}
                 title="Edit"
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">
+                className={styles.primaryAction}>
                 Edit
               </button>
               <ConfirmButton
@@ -316,15 +314,15 @@ export function FaqRow({ article }: { article: FaqArticle }) {
                 confirmLabel="Archive?"
                 onConfirm={archive}
                 title="Archive article"
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+                className={styles.dangerAction}
               />
             </>
           )}
         </div>
       </div>
 
-      <div className="mt-3 border-t border-black/5 pt-3 dark:border-white/5">
-        <p className="line-clamp-2 text-sm text-zinc-600 dark:text-zinc-300">{article.answer}</p>
+      <div className={styles.rowDescription}>
+        <p className="line-clamp-2">{article.answer}</p>
       </div>
     </div>
   );

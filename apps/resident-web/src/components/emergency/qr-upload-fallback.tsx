@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/loading';
 import { useQrCheckins } from '@/hooks/use-qr-checkins';
 import { beginAttempt, notify } from '@/lib/notify';
 import { completeCheckIn, parseCenterQr } from '@/lib/qr-checkin';
+import styles from './emergency.module.css';
 
 type Stage = 'reading' | 'checking-in';
 
@@ -97,15 +98,15 @@ export function QrUploadFallback({ userId, barangayId, userBarangayId }: { userI
   const busy = stage !== null;
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border p-4 text-center">
+    <div className={styles.upload}>
       <div id="qr-upload-fallback-hidden" className="hidden" />
-      <p className="text-xs text-muted-foreground">No working camera? Upload a photo of the QR code instead.</p>
+      <p>No working camera? Upload a photo of the QR code instead.</p>
       <button
         type="button"
         disabled={busy}
         aria-busy={busy || undefined}
         onClick={() => inputRef.current?.click()}
-        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-muted px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-50">
+        className={`${styles.secondaryButton} inline-flex items-center gap-2 disabled:opacity-50`}>
         {busy ? <Spinner className="size-3.5" /> : <Upload aria-hidden size={14} />}
         <span className="inline-grid">
           <span className={busy ? 'invisible col-start-1 row-start-1' : 'col-start-1 row-start-1'}>Upload QR Image</span>

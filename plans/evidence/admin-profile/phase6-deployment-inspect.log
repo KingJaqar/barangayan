@@ -1,0 +1,41 @@
+Vercel CLI 64.2.0 (Node.js 24.13.1)
+Fetching deployment "dpl_A8XYRTiiyY8JtoMD2P3e2BpqA3T9" in barangayan
+> Fetched deployment "barangayan-admin-b3l8bv5rb-barangayan.vercel.app" in barangayan [424ms]
+
+General
+
+id		dpl_A8XYRTiiyY8JtoMD2P3e2BpqA3T9
+name	barangayan-admin-web
+target	production
+status	● Building
+url		https://barangayan-admin-b3l8bv5rb-barangayan.vercel.app
+created	Thu Oct 15 2026 13:52:03 GMT+0800 (Philippine Standard Time) [-50989ms ago]
+
+
+Build Machine
+
+requested build machine basic
+actual assigned cores   2 vCPU (actual assignment)
+memory                  8192 MiB
+selection type          fixed
+selection source        plan-default
+
+
+Duration
+
+build duration	0ms
+post-build duration	unavailable
+billable duration	unavailable
+CPU Minutes Usage	unavailable
+
+
+Aliases
+
+╶ https://barangayan-admin-web-barangayan.vercel.app
+    
+
+Builds
+
+╶ .        [0ms]
+    
+

@@ -1,6 +1,7 @@
-import { BadgeCheck, MapPin } from 'lucide-react';
+import { ArrowUpRight, BadgeCheck, MapPin } from 'lucide-react';
 
 import { FACILITY_ICON_NAMES, FACILITY_LABELS, renderIonicon } from '@/lib/ionicon-map';
+import styles from './emergency.module.css';
 
 export interface EvacuationCenterCardProps {
   name: string;
@@ -16,7 +17,7 @@ export interface EvacuationCenterCardProps {
 }
 
 /** Web port of evacuation-center-card.tsx — occupancy bar color/threshold logic kept
- * identical (>=100% red/FULL, >=80% amber, else brand green). */
+ * identical (>=100% error/FULL, >=80% warning, else the resident's accent). */
 export function EvacuationCenterCard({
   name,
   address,
@@ -33,7 +34,7 @@ export function EvacuationCenterCard({
   const occupancyPercent = Math.round(occupancyFraction * 100);
   const isFull = occupancyPercent >= 100;
   const isHigh = occupancyPercent >= 80;
-  const barColor = isFull ? '#DC2626' : isHigh ? '#D97706' : '#0F6E5B';
+  const barColor = isFull ? 'var(--em-danger)' : isHigh ? 'var(--em-warning)' : 'var(--em-accent)';
   const displayOccupancy = isFull ? 'FULL' : `${occupancyPercent}%`;
   const capacityText = capacity != null ? `(${currentOccupancy.toLocaleString()}/${capacity.toLocaleString()})` : '';
 
@@ -54,14 +55,14 @@ export function EvacuationCenterCard({
             },
           }
         : {})}
-      className={`flex flex-col gap-3 rounded-2xl border bg-card p-4 ${onClick ? 'cursor-pointer transition-colors hover:border-primary/50' : ''} ${selected ? 'border-primary ring-1 ring-primary' : 'border-border'}`}>
+      className={styles.centerCard}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="truncate font-semibold">{name}</p>
+            <p className={styles.centerName}>{name}</p>
             {verified ? <BadgeCheck size={16} className="shrink-0 text-primary" /> : null}
           </div>
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">{address ?? 'No address provided'}</p>
+          <p className={styles.centerAddress}>{address ?? 'No address provided'}</p>
         </div>
         {distanceKm != null ? (
           <div className="shrink-0 text-right">
@@ -97,6 +98,7 @@ export function EvacuationCenterCard({
           })}
         </div>
       ) : null}
+      {onClick ? <div className={styles.centerFooter}><span>View center on map</span><ArrowUpRight size={16} aria-hidden="true" /></div> : null}
     </div>
   );
 }

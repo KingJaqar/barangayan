@@ -1,0 +1,4 @@
+account_state
+{"role":"resident","email":"barangayan.ampid1+profile-phase6-resident-20261015@gmail.com","confirmed":true,"contact_email":"barangayan.ampid1+profile-phase6-resident-20261015@gmail.com","pending_email":"","profile_fingerprint":"a900ab2e5d419709aeff6fc2e7ef36f4"}
+{"role":"admin","email":"barangayan.ampid1+profile-phase6-updated-20261015@gmail.com","confirmed":true,"contact_email":"barangayan.ampid1+profile-phase6-contact@gmail.com","pending_email":"","profile_fingerprint":"2c1aedac580114fd2dfe6e7600e6a33c"}
+{"role":"admin","email":"barangayan.ampid1@gmail.com","confirmed":true,"contact_email":"barangayan.ampid1@gmail.com","pending_email":"","profile_fingerprint":"311ce80837553217cd49f0606edec4d8"}

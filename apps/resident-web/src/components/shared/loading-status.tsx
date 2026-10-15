@@ -3,9 +3,9 @@
 import type * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Spinner } from '@/components/ui/loading';
-import { MOTION } from '@/lib/motion';
-import { cn } from '@/lib/utils';
+import { Spinner } from '../ui/loading';
+import { MOTION } from '../../lib/motion';
+import { cn } from '../../lib/utils';
 
 /**
  * True once the calling component has stayed mounted for `afterMs` (default 10 s).

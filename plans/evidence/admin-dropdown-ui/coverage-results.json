@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "All four actual resident compatibility selects; employment conditional field; Other ID field; empty document list; no submission",
+    "Both unreferenced modal components fixture-verified: all four selectors; cancel without submission; no production activation",
+    "Actual QR instruction modal Controller field, icon selection, innermost Escape and cancel without save",
+    "Actual account menu navigation href, arrows/Home/End/Escape, mocked logout once; notification popover and More drawer; nested calendar Escape, Save and Reset",
+    "Reference combobox retains free text and keyboard suggestion selection",
+    "Actual navbar typing, no-results response, keyboard destination navigation and recent search",
+    "Account and actual navbar popup bounds at 320/390/768/1024/1440",
+    "All five content archive sections: Archived on, direction/page size; waste kind tabs preserved; read-only tables"
+  ],
+  "errors": [],
+  "warnings": [],
+  "limitations": [
+    "Compatibility/modals/header/content archives use actual components and synthetic data. Database, image, navigation and audit-write adapters are local mocks."
+  ]
+}

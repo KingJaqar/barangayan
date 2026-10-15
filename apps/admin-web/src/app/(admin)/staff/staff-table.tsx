@@ -1,7 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+
 import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, type OfficialRole, type Tables } from '@barangayan/shared';
-import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
@@ -13,9 +16,7 @@ import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state'
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { OfficialWithProfile } from './types';
@@ -41,7 +42,6 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
   result: QueryOutcome<BrowseResult<OfficialWithProfile>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   barangayId: string; currentUserId: string;
 }) {
-  const toast = useToast();
   const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.staff, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
@@ -109,37 +109,11 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
     return { error: null, row: updated };
   }
 
-  async function removeStaff(row: OfficialWithProfile) {
-    if (row.profile.id === currentUserId || !await browse.settle()) return;
-    const supabase = createSupabaseBrowserClient();
-    const { data, error } = await supabase
-      .from('barangay_officials')
-      .update({ deleted_at: new Date().toISOString(), is_active: false })
-      .eq('id', row.id)
-      .select('id, deleted_at, is_active')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to remove: ${error.message}`);
-      return;
-    }
-    if (!data) {
-      toast.showError('Failed to remove: no staff record was updated. Check that you still have access to this account.');
-      return;
-    }
-    logAdminAction({
-      action: 'delete',
-      entityType: 'staff',
-      entityId: row.id,
-      entityLabel: row.profile.full_name,
-      metadata: { full_name: row.profile.full_name, email: row.profile.email, official_role: row.official_role },
-    }).catch(() => {});
-    toast.showSuccess('Staff account removed.');
-    browse.refresh();
-  }
-
   // Every editable cell is locked for the signed-in admin's own row — self-editing role or
   // removing yourself here would be an easy way to accidentally lock yourself out.
   const notSelf = (r: OfficialWithProfile) => r.profile.id !== currentUserId;
+
+  const lifecycle = useRecordWorkspace<OfficialWithProfile>('staff', browse.refresh, browse.settle, { currentUserId });
 
   const columns: EditableDataTableColumn<OfficialWithProfile>[] = [
     {
@@ -222,49 +196,29 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
       wrap: 'nowrap',
       render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateShort(r.date_hired)}</span>,
     },
-    {
-      id: 'actions', header: 'Actions',
-      initialWidth: 136,
-      minWidth: 128,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      render: (r) =>
-        r.profile.id === currentUserId ? (
-          <span className="text-xs text-zinc-400">current user</span>
-        ) : (
-          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-            <ConfirmButton
-              label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
-              confirmLabel="Remove?"
-              onConfirm={() => removeStaff(r)}
-              title="Remove staff account"
-              ariaLabel={`Remove staff account for ${r.profile.full_name}`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-            />
-          </div>
-        ),
-    },
+    lifecycle.column,
   ];
 
   return <div className="min-w-0">
+    <RecordArchiveLink name="staff" beforeOpen={browse.settle} />
     <ProfileTableSummary name="staff" summary={summary} onRetry={browse.refresh} />
 
     {addOpen && <fieldset disabled={browse.pending}><StaffForm barangayId={barangayId} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
-    <ProfileTablePanel label="Staff Members" browse={browse} 
-      category={<label className="table-browse-field">Official role <select aria-label="Official role" value={state.filters.role} onChange={event => void browse.commit({ filters: { role: event.target.value } })}>
+    <ProfileTablePanel label="Staff Members" browse={browse}
+      category={<label className="table-browse-field">Official role <AdminSelect kind="people" aria-label="Official role" value={state.filters.role} onValueChange={nextValue => void browse.commit({ filters: { role: nextValue } })}>
         <option value="">All roles</option>{OFFICIAL_ROLES.map(role => <option key={role} value={role}>{OFFICIAL_ROLE_LABELS[role]}</option>)}
-      </select></label>}
+      </AdminSelect></label>}
       filters={<SegmentedFilter label="Account type" value={state.filters.tab}
         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
         onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Staff</button>}>
-      <EditableDataTable rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
          emptyLabel={browse.pending ? 'Updating results…' : 'No staff accounts found.'}
         resizableColumns pinLastColumn density="compact" tableMinWidth={1215} />
     </ProfileTablePanel>
-
+    {lifecycle.view}
 
   </div>;
 }

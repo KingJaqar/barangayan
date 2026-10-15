@@ -1,4 +1,6 @@
 import { HealthSegmentNav } from '@/components/health/health-segment-nav';
+import { StickyPrimaryTabs } from '@/components/shared/sticky-primary-tabs';
+import styles from '@/components/health/health.module.css';
 
 /**
  * Shell for the 2 Health routes (Active Drives / My Registrations) — same pattern as
@@ -7,8 +9,8 @@ import { HealthSegmentNav } from '@/components/health/health-segment-nav';
  */
 export default function HealthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-5xl">
-      <HealthSegmentNav />
+    <div className={styles.workspace}>
+      <StickyPrimaryTabs><HealthSegmentNav /></StickyPrimaryTabs>
       {children}
     </div>
   );

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-13",
+  "workingDirectory": "C:/Users/User/barangayan",
+  "toolchain": { "node": "v24.13.1", "npm": "11.8.0" },
+  "baseline": [
+    { "command": "npm run typecheck --workspace=@barangayan/resident-ios", "exit": 0 },
+    { "command": "npm run lint --workspace=@barangayan/resident-ios", "exit": 0 },
+    { "command": "npm run test --workspace=@barangayan/resident-ios", "exit": 0, "result": "2 files, 8 tests passed" }
+  ],
+  "final": [
+    { "command": "npm run typecheck --workspace=@barangayan/resident-ios", "exit": 0 },
+    { "command": "npm run lint --workspace=@barangayan/resident-ios", "exit": 0 },
+    { "command": "npm run test --workspace=@barangayan/resident-ios", "exit": 0, "result": "2 files, 8 tests passed" },
+    { "command": "npx eslint plans/evidence/resident-ios-parity/phase-00/inventory.mjs plans/evidence/resident-ios-parity/phase-00/build-ledgers.mjs", "exit": 0 },
+    { "command": "node plans/evidence/resident-ios-parity/phase-00/build-ledgers.mjs", "exit": 0, "result": "1218 checkpoints / 52 sections; 54+10 routes; 16 modal families; 162 tasks; drift 0; failures 0" }
+  ],
+  "notRun": [
+    "export:ios and check:release: Phase 0 changed no application code or configuration; check:release is designed to fail while gates are closed and release identifiers are unset.",
+    "Shared/admin/web/Android checks: no shared or app source was changed by Phase 0.",
+    "Database tests: Phase 0 executed none; Phase 3 owns them."
+  ],
+  "applicationSourceChanged": false
+}

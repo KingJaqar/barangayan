@@ -1,0 +1,87 @@
+{
+  "latencyMs": {
+    "coldFirstRequest": [
+      288,
+      310,
+      314,
+      270,
+      292
+    ],
+    "warm": {
+      "requests": 125,
+      "p50": 35.6,
+      "p95": 59.7,
+      "max": 75.3
+    }
+  },
+  "nodeDenoAgreement": {
+    "origins": 25,
+    "identical": true
+  },
+  "parallel": {
+    "requests": 50,
+    "allOk": true,
+    "sameAsSequential": true,
+    "wallMs": 347,
+    "p95Ms": 339.2
+  },
+  "invalidInput": {
+    "oversizedBody": 413,
+    "tooManyAvoided": 400,
+    "malformedJson": 400,
+    "getWithQuery": 405,
+    "otherGraphVersion": 409
+  },
+  "snapshotFreshness": {
+    "outdatedSnapshot": {
+      "status": 503,
+      "error": "snapshot_outdated"
+    },
+    "closure": {
+      "publishedRevision": 12,
+      "servedRevision": 12,
+      "closedEdgeAvoided": true
+    },
+    "reopen": {
+      "sameAsBefore": true
+    },
+    "centerUnavailable": {
+      "status": "ok",
+      "newCenter": true,
+      "tier": "unknown",
+      "warnings": [
+        {
+          "code": "unknown_center_availability",
+          "centerId": "00000000-0000-0000-0000-00000000c004"
+        }
+      ]
+    }
+  },
+  "graphNotActive": {
+    "status": 503,
+    "error": "graph_not_active",
+    "afterReactivation": 200
+  },
+  "rateLimit": {
+    "sent": 305,
+    "ok": 300,
+    "limited": 5,
+    "retryAfterValues": [
+      "27"
+    ],
+    "otherAddressStatus": 200,
+    "storedRows": 10,
+    "allStoredKeysAreHex64": true
+  },
+  "cancellation": {
+    "abortedByClient": 10,
+    "nextRequestStatus": 200
+  },
+  "logs": {
+    "lines": 461,
+    "coordinateLike": [],
+    "errorEvents": [
+      "[Error] evacuation-route: graph_not_active"
+    ]
+  }
+}

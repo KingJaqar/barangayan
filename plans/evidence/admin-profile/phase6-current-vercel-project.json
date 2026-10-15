@@ -1,0 +1,46 @@
+{
+  "id": "prj_AL0YPMsKg5PIVmnA8JAFL10OwwEM",
+  "name": "barangayan-admin-web",
+  "accountId": "team_6b0TR8mzj8rxhZsgs2DVd1y6",
+  "rootDirectory": "apps/admin-web",
+  "framework": "nextjs",
+  "nodeVersion": "24.x",
+  "buildCommand": null,
+  "installCommand": null,
+  "outputDirectory": null,
+  "environmentKeys": [
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_URL",
+      "target": [
+        "production",
+        "preview"
+      ],
+      "type": "sensitive"
+    },
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "target": [
+        "production",
+        "preview"
+      ],
+      "type": "sensitive"
+    },
+    {
+      "key": "SUPABASE_SERVICE_ROLE_KEY",
+      "target": [
+        "production",
+        "preview"
+      ],
+      "type": "sensitive"
+    }
+  ],
+  "domains": [],
+  "production": [
+    {
+      "id": "dpl_DMYQHtjzyPRPkuoZCQaJbEhH6Qj9",
+      "url": "barangayan-admin-e1tmv8qrd-barangayan.vercel.app",
+      "readyState": "ERROR",
+      "target": "production"
+    }
+  ]
+}

@@ -8,10 +8,12 @@ import { DEFAULT_AUDIT_LOG_FILTERS, hasActiveFilters, useAuditLogBrowser } from 
 import { useMountTransition } from '@/hooks/use-mount-transition';
 import { ACTION_VERBS, MODULE_META, MODULE_ORDER, type AdminAuditNotification, type ModuleKey } from '@/lib/audit-notifications';
 import { THEMED_SCROLLBAR_CLASS } from '@/lib/scrollbar';
+import { SIDE_SHEET_FADE_TRANSITION as FADE_TRANSITION, SIDE_SHEET_SLIDE_TRANSITION as SLIDE_TRANSITION } from '@/lib/side-sheet-motion';
 
 import { DateRangePicker } from './date-range-picker';
 import { NotificationDetailPanel } from './notification-detail-panel';
 import { NotificationItem, type NotificationItemVariant } from './notification-item';
+import { NotificationIcon } from './notification-icon';
 import { ScrollableChipRow } from './scrollable-chip-row';
 
 import type { AdminAuditAction } from '@barangayan/shared';
@@ -37,11 +39,6 @@ const DEFAULT_WIDTH_VW = 80;
 const MIN_WIDTH_VW = 40;
 const MAX_WIDTH_VW = 95;
 const SMALL_SCREEN_BREAKPOINT = 1024;
-
-// Smooth, slightly-decelerated ease-out — noticeably softer than a linear or
-// default-ease transition for a panel this large.
-const SLIDE_TRANSITION = 'transition-transform duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none will-change-transform';
-const FADE_TRANSITION = 'transition-opacity duration-300 ease-out motion-reduce:transition-none';
 
 const ACTION_OPTIONS: AdminAuditAction[] = ['create', 'update', 'delete', 'status_change', 'login', 'logout'];
 
@@ -345,7 +342,8 @@ export function NotificationsDrawer({ open, onClose, onClosed, barangayId, baran
           <ScrollableChipRow className="pb-1" edgeFromClassName="from-white dark:from-zinc-950">
             {MODULE_ORDER.map((key) => (
               <FilterChip key={key} active={filters.modules.has(key)} onClick={() => toggleModule(key)}>
-                {MODULE_META[key].icon} {MODULE_META[key].label}
+                <NotificationIcon module={key} />
+                    {MODULE_META[key].label}
               </FilterChip>
             ))}
           </ScrollableChipRow>
@@ -467,7 +465,7 @@ function FilterChip({ active, onClick, children }: { active: boolean; onClick: (
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
         active
           ? 'bg-[var(--accent)] text-white'
           : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'

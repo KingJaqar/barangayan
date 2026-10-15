@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-14",
+  "phaseStatus": "Partially complete; qualified styles implemented, archival removals and F01 held, required manual smoke remains",
+  "changes": {
+    "files": [
+      "apps/resident-android-mobile/src/components/resident-details-form.tsx"
+    ],
+    "styleKeys": [
+      "passwordMatchIndicator",
+      "successModalBackdrop",
+      "successModalCard",
+      "successIcon",
+      "successModalTitle",
+      "successModalMessage",
+      "successModalActions",
+      "successModalActionButton",
+      "formError",
+      "submitActions",
+      "footerRow",
+      "footerText"
+    ],
+    "sourceBytesRemoved": 1084,
+    "newDependencies": [],
+    "declarationsRemoved": [],
+    "orphanFilesRemoved": [],
+    "boundaryRemoved": false
+  },
+  "checks": {
+    "types": {
+      "baseline": "pass",
+      "final": "pass",
+      "afterNativePreview": "pass"
+    },
+    "tests": {
+      "baseline": 126,
+      "final": 126,
+      "files": 14,
+      "unhandledErrors": 0
+    },
+    "lint": {
+      "baseline": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "final": {
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    "androidExport": {
+      "baseline": "pass after writable temp retry",
+      "final": "pass with same temp setting",
+      "bundleDeltaBytes": -284,
+      "assetsIdentical": true,
+      "warningMessagesIdentical": true
+    },
+    "webExport": {
+      "baseline": "pass",
+      "final": "pass after sandbox write denial retried outside sandbox",
+      "entryDeltaBytes": -788,
+      "dynamicChunksIdentical": true
+    },
+    "structure": {
+      "routes": 56,
+      "androidReachable": 271,
+      "webReachable": 272,
+      "graphsIdentical": true,
+      "retainedFunctionsAndStyleValuesIdentical": true,
+      "assetsIdentical": true
+    },
+    "preservation": {
+      "preexistingFilesHashed": 5038,
+      "cleanupChangedSourceFiles": [
+        "apps/resident-android-mobile/src/components/resident-details-form.tsx"
+      ],
+      "selectedPlanUpdates": [
+        "plans/Resident_Android_Code_and_File_Bloat_Audit_2026_10_14.md",
+        "plans/Resident_Android_Unused_Code_Deletion_Execution_Plan_2026_10_14.md"
+      ],
+      "concurrentDocumentationChanges": [
+        "plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md"
+      ],
+      "unexpectedApplicationChanges": [],
+      "rawPreservationExit": 1,
+      "concurrentWorkRestoredOrOverwritten": false
+    },
+    "nativeSmoke": {
+      "status": "pending manual verification",
+      "reason": "Fresh-bundle attribution failed; cached port 8083 fallback, no inspector target on 8144"
+    }
+  },
+  "acceptance": [
+    {
+      "criterion": "Current recovery material, hashes, baseline checks",
+      "status": "met",
+      "scope": "Automated baseline; original candidate bytes and pre-existing diff saved"
+    },
+    {
+      "criterion": "Every candidate has a tooling/runtime eligibility decision",
+      "status": "met",
+      "scope": "20 historical-indexed candidate files held; 12 unindexed style keys eligible; F01 subsequently approval-held"
+    },
+    {
+      "criterion": "Only permitted declarations removed",
+      "status": "met",
+      "scope": "No eligible declaration; all U01–U08 retained"
+    },
+    {
+      "criterion": "Qualified style definitions removed with retained functions/styles unchanged",
+      "status": "met",
+      "scope": "12 keys in resident-details-form.tsx only; 9 indexed style keys plus dependent group held"
+    },
+    {
+      "criterion": "Only qualified orphan/boundary source absent",
+      "status": "not met",
+      "scope": "No source-file deletion executed; historical compatibility unresolved and F01 review rejected"
+    },
+    {
+      "criterion": "Tests/types/lint/export regressions absent",
+      "status": "met",
+      "scope": "Automated tests/types/lint, Android/web exports and structural comparisons"
+    },
+    {
+      "criterion": "All narrow native/mobile-web smoke journeys unchanged",
+      "status": "pending manual verification",
+      "scope": "Fresh native preview checks in progress; authenticated setup/payment/QR/profile/web flows still unqualified"
+    },
+    {
+      "criterion": "Scope review, preservation, measurements and honest final closure",
+      "status": "met",
+      "scope": "Exact reviewed qualified-style diff; no complete runtime/all-candidate claim"
+    }
+  ],
+  "holds": {
+    "historical": {
+      "indexed": 758,
+      "recovered": 754,
+      "unrecoverable": [
+        "apps/admin-web/next-env.d.ts",
+        "apps/admin-web/src/app/(admin)/staff/staff-table.tsx",
+        "apps/resident-web/next-env.d.ts",
+        "supabase/tests/rls_isolation.test.sql"
+      ],
+      "reason": "Original verifier reads exact indexed paths/hashes and uses original checkout diff boundary. No complete matching snapshot established. Verifier/index/historical evidence kept unchanged."
+    },
+    "boundary": {
+      "file": "apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+      "reason": "Automatic approval review rejected deletion as unauthorized data deletion; explicit owner approval required. Original, active identical asset and rollback copy kept."
+    }
+  },
+  "closedAt": "2026-10-14T09:20:10.249Z"
+}

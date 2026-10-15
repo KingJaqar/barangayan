@@ -19,13 +19,6 @@ export function isValidHexColor(value: string): boolean {
   return HEX_RE.test(value);
 }
 
-/** Normalizes a possibly-partial hex string (e.g. missing `#`, mixed case) to a canonical
- * `#RRGGBB` form, or null if it can never resolve to a valid hex color. */
-export function normalizeHexColor(value: string): string | null {
-  const withHash = value.startsWith('#') ? value : `#${value}`;
-  return isValidHexColor(withHash) ? withHash : null;
-}
-
 function normalizeCustomList(colors: string[]): string[] {
   const seen = new Set<string>();
   const out: string[] = [];

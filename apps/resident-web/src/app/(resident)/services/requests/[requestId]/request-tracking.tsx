@@ -1,4 +1,5 @@
 'use client';
+import { requestFeeLabel } from '@barangayan/shared';
 import { AgencySlaStatus } from '@/components/services/agency-sla-status';
 import { submittedDetailLines, requestFee } from '@barangayan/shared';
 
@@ -313,7 +314,7 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
         </div>
         <div className="flex items-center justify-between px-4 pb-4">
           <span className="text-sm text-muted-foreground">Total Amount Due</span>
-          <span className="font-semibold">{fee === null ? 'Awaiting fee assessment' : fee === 0 ? 'No payment required' : formatCentavosAsPHP(fee)}</span>
+          <span className="font-semibold">{fee === null ? requestFeeLabel(request, null) : fee === 0 ? 'No payment required' : formatCentavosAsPHP(fee)}</span>
         </div>
 
         {showQrPayNow || showCancelSlot ? (
@@ -397,7 +398,7 @@ export function RequestTracking({ requestId, initialRequest }: { requestId: stri
       </div>
 
       {request.purpose_label ? <section className="rounded-xl border p-4"><h2>Purpose</h2><p>{request.purpose_label}</p><p>{request.purpose_explanation}</p><dl>{submittedDetailLines(request.supporting_details).map(([label,value])=><div key={label}><dt className="font-medium">{label}</dt><dd>{value}</dd></div>)}</dl></section> : null}
-      {fee !== null && fee > 0 && !isPaid && !isRefunded && canPayNow ? <Button asChild><a href={`/services/payment/${requestId}`}>Choose or continue payment</a></Button> : null}
+      {(fee === null || fee > 0) && !isPaid && !isRefunded && canPayNow ? <Button asChild><a href={`/services/payment/${requestId}`}>Choose or continue payment</a></Button> : null}
       {request.requester_notes ? (
         <div className="rounded-2xl border border-border bg-card p-5">
           <p className="mb-1 font-semibold">Additional notes</p>

@@ -1,0 +1,41 @@
+{
+  "baseline": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "unitTests": {
+      "status": "passed",
+      "count": 110,
+      "files": 8
+    },
+    "defaultBuild": "Turbopack compile stalled; cancelled",
+    "webpackSandbox": "EPERM creating generated directory"
+  },
+  "final": {
+    "typecheck": "passed",
+    "lint": {
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0
+    },
+    "unitTests": {
+      "status": "passed",
+      "count": 110,
+      "files": 8
+    },
+    "productionBuild": {
+      "status": "passed",
+      "bundler": "webpack",
+      "staticPages": 42
+    },
+    "browseBrowser": "passed (Chrome)",
+    "recordBrowser": "passed (synthetic data, mocked writes)",
+    "contextMenuBrowser": "passed (synthetic data, mocked writes)",
+    "sourceAudit": "58/58 declarations accounted for; no unexpected existing source edits",
+    "whitespace": "passed"
+  },
+  "manual": [
+    "Authenticated read-only appearance/navigation",
+    "Screen-reader announcements",
+    "Physical touch and other browser engines"
+  ]
+}

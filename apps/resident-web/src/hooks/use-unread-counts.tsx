@@ -82,14 +82,13 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
 
   const refetchAnnouncementCounts = useCallback(() => {
     if (!userId) {
-      Promise.resolve().then(() => {
+      return Promise.resolve().then(() => {
         setAnnouncementsUnreadCount(0);
         setUnreadAnnouncementIds([]);
       });
-      return;
     }
     const supabase = createSupabaseBrowserClient();
-    Promise.all([
+    return Promise.all([
       supabase.from('announcements').select('id').is('deleted_at', null),
       supabase.from('announcement_reads').select('announcement_id').eq('resident_id', userId),
     ]).then(([{ data: announcements }, { data: reads }]) => {
@@ -172,13 +171,14 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
   const markAnnouncementsRead = useCallback(async () => {
     if (!userId || unreadAnnouncementIds.length === 0) return;
     const supabase = createSupabaseBrowserClient();
-    await supabase
+    const { error } = await supabase
       .from('announcement_reads')
       .upsert(
         unreadAnnouncementIds.map((announcement_id) => ({ resident_id: userId, announcement_id })),
         { onConflict: 'resident_id,announcement_id' },
       );
-    refetchAnnouncementCounts();
+    if (error) throw error;
+    await refetchAnnouncementCounts();
   }, [userId, unreadAnnouncementIds, refetchAnnouncementCounts]);
 
   const markAnnouncementRead = useCallback(

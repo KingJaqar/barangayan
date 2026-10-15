@@ -156,7 +156,7 @@ export function ApplicantForm({
       <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <h1 className="text-base font-bold leading-snug">{drive.title}</h1>
-          <span className="shrink-0 rounded-full px-2.5 py-1 text-xs font-bold" style={{ backgroundColor: `${cfg.color}22`, color: cfg.color }}>
+          <span className="shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-bold text-foreground">
             {cfg.label}
           </span>
         </div>
@@ -170,7 +170,7 @@ export function ApplicantForm({
           </span>
         </div>
         <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-          <div className="h-full rounded-full bg-[#22C55E]" style={{ width: `${Math.round(fraction * 100)}%` }} />
+          <div className="h-full rounded-full bg-primary" style={{ width: `${Math.round(fraction * 100)}%` }} />
         </div>
       </div>
 

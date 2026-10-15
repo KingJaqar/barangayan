@@ -1,59 +1,96 @@
 'use client';
 
-import type { LatLng, LocationAction, WalkingRoute } from '@barangayan/shared';
-import { getWalkingRoute } from '@barangayan/shared';
+import type { LatLng, LocationAction } from '@barangayan/shared';
+import type { AttachmentCandidate } from '@barangayan/shared/src/lib/evacuation-routing';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { List, Map as MapIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { CentersMapClient } from '@/components/emergency/centers-map-client';
 import { EvacuationCenterCard } from '@/components/emergency/evacuation-center-card';
+import { EmergencyPageHeader } from '@/components/emergency/emergency-page-header';
 import { LocationStatusCard } from '@/components/emergency/location-status-card';
+import { RouteStatusCard } from '@/components/emergency/route-status-card';
 import { InlineReadError } from '@/components/shared/inline-read-error';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { PendingHint, Skeleton } from '@/components/ui/loading';
+import { useConnectedRoute, type SegmentChoice } from '@/hooks/use-connected-route';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import styles from './emergency.module.css';
+import stickyStyles from '@/components/shared/sticky-tabs.module.css';
 
 type View = 'list' | 'map';
 
-/** Web port of CentersContent (mobile index.tsx) — list/map toggle, nearest-first sort
- * from the confirmed device origin (useDeviceLocation), real OSRM walking route on
- * selection [C-010]. `barangayId` is null for guests — evacuation_centers is publicly
- * readable regardless. `boundary` always has a real value (see emergency/centers/page.tsx
- * — falls back to the bundled Ampid I geometry, same as the main Maps screen). */
+/** Web port of CentersContent (mobile index.tsx) — list/map toggle, centers ranked by walking
+ * distance from the confirmed device origin (useDeviceLocation), and the server-calculated
+ * walking route on selection (useConnectedRoute, DRRM routing plan R7). `barangayId` is null
+ * for guests — evacuation_centers is publicly readable regardless. `boundary` always has a
+ * real value (see emergency/centers/page.tsx — falls back to the bundled Ampid I geometry,
+ * same as the main Maps screen). */
 export function CentersContent({ barangayId, boundary }: { barangayId: string | null; boundary: Polygon | MultiPolygon | null }) {
   const [view, setView] = useState<View>('list');
   const location = useDeviceLocation();
   const origin = location.state.origin;
-  const userPosition = useMemo<LatLng | null>(() => (origin ? { lat: origin.lat, lng: origin.lng } : null), [origin]);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
-  // A route belongs to one center + origin revision; results for an older key are ignored.
-  const [route, setRoute] = useState<{ key: string; result: WalkingRoute | null } | null>(null);
+  // A street picked from the attachment chooser belongs to one origin revision.
+  const [choice, setChoice] = useState<(SegmentChoice & { revision: number }) | null>(null);
+  const segment = choice !== null && origin !== null && choice.revision === origin.revision ? choice : null;
+  const connected = useConnectedRoute({ origin, centerId: selectedCenterId, segment });
 
-  const { centers, isInitialLoading, isRefreshing, isReady, error, refetch } = useEvacuationCenters({ barangayId, userPosition });
+  const { centers: fetchedCenters, isInitialLoading, isRefreshing, isReady, error, refetch } = useEvacuationCenters({ barangayId });
 
-  const selectedCenter = centers.find((c) => c.id === selectedCenterId) ?? null;
-  const routeKey = selectedCenter && origin ? `${selectedCenter.id}:${origin.revision}` : null;
-  const centerLat = selectedCenter?.position.lat;
-  const centerLng = selectedCenter?.position.lng;
+  // Walking distance and order come from the route service; without them no distance is shown
+  // rather than a straight-line estimate.
+  const centers = useMemo(() => {
+    const ranking = connected.ranking;
+    if (ranking === null) return fetchedCenters;
+    const order = new Map(ranking.map((summary, index) => [summary.centerId, index]));
+    return fetchedCenters
+      .map((center) => {
+        const summary = ranking.find((s) => s.centerId === center.id);
+        if (!summary || summary.distanceMeters === null || summary.durationSeconds === null) {
+          return { ...center, distanceMeters: undefined, estimatedMinutes: undefined };
+        }
+        return {
+          ...center,
+          distanceMeters: summary.distanceMeters,
+          estimatedMinutes: Math.max(1, Math.round(summary.durationSeconds / 60)),
+        };
+      })
+      .sort((a, b) => (order.get(a.id) ?? Infinity) - (order.get(b.id) ?? Infinity));
+  }, [fetchedCenters, connected.ranking]);
 
-  // Runs when a center is selected or a new origin is accepted, so a position that
-  // arrives after the selection still produces a route.
+  // Ages in the status card are refreshed once a minute.
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    if (!routeKey || !origin || centerLat === undefined || centerLng === undefined) return;
-    let cancelled = false;
-    getWalkingRoute({ lat: origin.lat, lng: origin.lng }, { lat: centerLat, lng: centerLng }).then((result) => {
-      if (!cancelled) setRoute({ key: routeKey, result });
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [routeKey, origin, centerLat, centerLng]);
+    const timer = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const currentRoute = route && route.key === routeKey ? route : null;
-  const routeStatus = !routeKey ? 'idle' : !currentRoute ? 'loading' : currentRoute.result ? 'ready' : 'unavailable';
+  // Only the route to the selected center is drawn; a result for another center is never shown.
+  const selectedRoute =
+    selectedCenterId !== null && connected.result !== null && connected.result.status === 'ok' && connected.result.best.centerId === selectedCenterId
+      ? connected.result.best
+      : null;
+  const routePoints = useMemo<LatLng[] | null>(
+    () => (selectedRoute ? selectedRoute.geometry.map(([lng, lat]) => ({ lat, lng })) : null),
+    [selectedRoute],
+  );
+  const routeStatus: 'idle' | 'loading' | 'ready' | 'unavailable' =
+    selectedCenterId === null || origin === null
+      ? 'idle'
+      : selectedRoute !== null
+        ? 'ready'
+        : connected.status === 'loading'
+          ? 'loading'
+          : 'unavailable';
   const readFailedWithNothing = Boolean(error) && centers.length === 0;
+
+  function handleChooseSegment(candidate: AttachmentCandidate, graphVersion: string) {
+    if (origin === null) return;
+    setChoice({ revision: origin.revision, graphVersion, edgeId: candidate.edgeId });
+  }
 
   function selectCenter(id: string) {
     setSelectedCenterId(id);
@@ -82,31 +119,34 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-bold">Evacuation Centers</h1>
+    <div className={styles.content}>
+      <EmergencyPageHeader title="Evacuation Centers" />
+      <div className={`${styles.toolbar} ${stickyStyles.secondary}`}>
+        <div className={styles.toolbarTitle}>
+          <h2>Center directory</h2>
+          {isReady ? <span className={styles.count}>{centers.length} centers</span> : null}
           <PendingHint pending={isRefreshing}>Updating</PendingHint>
         </div>
-        <div className="flex gap-1 rounded-full border border-border bg-card p-1">
+        <div className={styles.viewToggle} role="group" aria-label="Center view">
           <button
             type="button"
             aria-pressed={view === 'list'}
             onClick={() => setView('list')}
-            className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${view === 'list' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+            className={styles.viewButton}>
             <List size={14} /> List
           </button>
           <button
             type="button"
             aria-pressed={view === 'map'}
             onClick={() => setView('map')}
-            className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${view === 'map' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+            className={styles.viewButton}>
             <MapIcon size={14} /> Map
           </button>
         </div>
       </div>
 
       <LocationStatusCard state={location.state} onAction={handleLocationAction} />
+      <RouteStatusCard state={connected} now={now} onChooseSegment={handleChooseSegment} onRetry={connected.retry} />
 
       {error && !readFailedWithNothing ? (
         <InlineReadError
@@ -131,7 +171,7 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
           retrying={isRefreshing}
         />
       ) : isReady && centers.length === 0 ? (
-        <p className="rounded-2xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">No evacuation centers found.</p>
+        <p className={styles.empty}>No evacuation centers found.</p>
       ) : view === 'map' ? (
         <CentersMapClient
           centers={centers}
@@ -142,13 +182,13 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
           selectedCenterId={selectedCenterId}
           onSelectCenter={selectCenter}
           onShowAll={handleShowAll}
-          routePoints={currentRoute?.result?.points ?? null}
-          routeMeta={currentRoute?.result ?? null}
+          routePoints={routePoints}
+          routeMeta={selectedRoute}
           routeStatus={routeStatus}
           boundary={boundary}
         />
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className={styles.centerGrid}>
           {centers.map((center) => (
             <EvacuationCenterCard
               key={center.id}

@@ -1,0 +1,17 @@
+{
+  "id": "web-export-unrestricted",
+  "stage": "dc-05",
+  "args": [
+    "C:\\Users\\User\\barangayan\\node_modules\\expo\\bin\\cli",
+    "export",
+    "--platform",
+    "web",
+    "--output-dir",
+    "C:\\Users\\User\\barangayan\\plans\\evidence\\resident-android-bloat-audit\\execution\\2026-10-14-095352-remaining\\dc-05\\web-export-unrestricted"
+  ],
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "startedAt": "2026-10-14T10:10:18.661Z",
+  "finishedAt": "2026-10-14T10:10:31.721Z",
+  "exitCode": 0,
+  "signal": null
+}

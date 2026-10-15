@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/button';
 import { AuthGate } from '@/components/shared/auth-gate';
 import { FamilyMemberDialog } from '@/components/emergency/family-member-dialog';
 import { HouseholdQrDialog } from '@/components/emergency/household-qr-dialog';
+import { EmergencyPageHeader } from '@/components/emergency/emergency-page-header';
 import { InlineReadError } from '@/components/shared/inline-read-error';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { PendingHint, Skeleton } from '@/components/ui/loading';
 import { useFamilyMembers, type HouseholdMember } from '@/hooks/use-family-members';
 import { notifyHouseholdOutcome } from '@/lib/household-feedback';
 import { beginAttempt } from '@/lib/notify';
+import styles from './emergency.module.css';
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -73,35 +75,32 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-16">
-      <div>
-        <h1 className="text-lg font-bold">Household: {householdName}</h1>
-        <p className="text-sm text-muted-foreground">View and manage your family members.</p>
-      </div>
+    <div className={styles.content}>
+      <EmergencyPageHeader title={`Household: ${householdName}`} />
 
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-4">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
-              <QrCode size={20} strokeWidth={1.75} />
+      <section className={styles.qrCard}>
+          <div className={styles.qrCopy}>
+            <span className={styles.qrIcon}>
+              <QrCode size={28} strokeWidth={1.5} />
             </span>
-            <p className="font-semibold">My QR Code</p>
+            <div>
+              <h2>My QR Code</h2>
+              <p className={styles.sectionDescription}>Present this QR code at evacuation centers for quick family check-in.</p>
+            </div>
           </div>
-          <Button type="button" variant="outline" size="sm" onClick={() => setShowQr(true)}>
-            Show My Code
+          <Button type="button" variant="outline" className={styles.secondaryButton} onClick={() => setShowQr(true)}>
+            Show My Code <QrCode size={16} aria-hidden="true" />
           </Button>
-        </div>
-        <p className="text-center text-xs text-muted-foreground">Present this QR code at evacuation centers for quick family check-in.</p>
-      </div>
+      </section>
 
-      <div className="flex items-center justify-between">
+      <div className={styles.toolbar}>
         <h2 className="text-base font-bold">Family Members</h2>
         <div className="flex items-center gap-3">
           {/* Quiet refresh hint: decorative, shown only after 120 ms, never announced. */}
           <PendingHint pending={isRefreshing} className="gap-1.5 text-xs text-muted-foreground">
             <RotateCw size={12} className="rw-spinner" /> Updating
           </PendingHint>
-          {isReady ? <span className="text-xs font-medium text-muted-foreground">{members.length} Total</span> : null}
+          {isReady ? <span className={styles.count}>{members.length} Total</span> : null}
         </div>
       </div>
 
@@ -123,11 +122,12 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
       ) : !isReady ? (
         <InlineReadError message="We couldn't load your household members. Check your connection, then try again." onRetry={refetch} />
       ) : members.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card px-4 py-10">
-          <Users size={36} className="text-muted-foreground" strokeWidth={1.5} />
+        <div className={styles.empty}>
+          <span className={styles.emptyIcon}><Users size={28} strokeWidth={1.5} /></span>
           <p className="text-sm text-muted-foreground">No family members added yet.</p>
           <Button
             type="button"
+            className={styles.primaryButton}
             onClick={() => {
               setEditingMember(null);
               setShowMemberDialog(true);
@@ -136,7 +136,7 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className={styles.memberGrid}>
           {members.map((member) => (
             <button
               key={member.id}
@@ -145,13 +145,13 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
                 setEditingMember(member);
                 setShowMemberDialog(true);
               }}
-              className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-3 text-left">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
+              className={styles.member}>
+              <div className={styles.memberCopy}>
+                <span className={styles.avatar}>
                   {getInitials(member.name)}
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">{member.name}</p>
+                  <p className={styles.memberName}>{member.name}</p>
                   <div className="mt-1 flex flex-wrap gap-1">
                     <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">{member.relation}</span>
                     {member.role ? (
@@ -171,7 +171,7 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
       {isReady && members.length > 0 ? (
         <Button
           type="button"
-          className="w-full"
+          className={`${styles.primaryButton} ${styles.addMember}`}
           onClick={() => {
             setEditingMember(null);
             setShowMemberDialog(true);

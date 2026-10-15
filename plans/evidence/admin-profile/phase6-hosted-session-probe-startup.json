@@ -1,0 +1,21 @@
+{
+  "startedAt": "2026-10-15T06:45:31.591Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "checks": [],
+  "status": "input closed",
+  "credentialMutations": 0,
+  "privilegedKeyUsed": false,
+  "residentSignupEmailAccepted": true,
+  "adminProofEmailAccepted": true,
+  "cleanup": [
+    {
+      "scope": "local",
+      "errorCode": null
+    },
+    {
+      "scope": "local",
+      "errorCode": null
+    }
+  ],
+  "finishedAt": "2026-10-15T06:45:37.086Z"
+}

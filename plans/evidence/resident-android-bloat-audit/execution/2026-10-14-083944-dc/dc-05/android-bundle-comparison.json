@@ -1,0 +1,9 @@
+{
+  "baselineBundle": "_expo/static/js/android/entry-29ff4cc051127710a0d8e656cfff4229.hbc",
+  "baselineBytes": 8085813,
+  "finalBundle": "_expo/static/js/android/entry-a5fcffb28a35beca81bf4f70fad1ba68.hbc",
+  "finalBytes": 8085529,
+  "delta": -284,
+  "assetsEqual": true,
+  "apkMeasurement": "Not performed; Hermes bundle delta is not installed APK savings"
+}

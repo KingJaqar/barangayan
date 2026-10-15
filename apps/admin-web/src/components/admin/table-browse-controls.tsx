@@ -1,5 +1,8 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+import { ALargeSmall, CalendarDays, Hash, CircleCheck, ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react';
+
 import { useId, type ReactNode } from 'react';
 import type { BrowseState, BrowseChange } from '@/lib/admin-tables/browse-state';
 import { directionLabel, type SortDescriptor, type SortDirection } from '@/lib/admin-tables/sort-definitions';
@@ -35,13 +38,15 @@ export function TableBrowseControls({ state, sorts, searchDraft, onSearchChange,
     </div>
     <div className="table-browse-section" data-section="sort">
       <div className="table-browse-field"><label htmlFor={`${id}-sort`}>Sort by</label>
-        <select id={`${id}-sort`} value={state.sort} onChange={event => onChange({ sort: event.target.value })}>
-          {sorts.map(sort => <option key={sort.key} value={sort.key}>{sort.label}</option>)}
-        </select></div>
+        <AdminSelect kind="sort" id={`${id}-sort`} value={state.sort} onValueChange={nextValue => onChange({ sort: nextValue })}
+          options={sorts.map(sort => {
+            const Icon = sort.category === 'text' ? ALargeSmall : sort.category === 'date' ? CalendarDays : sort.category === 'boolean' ? CircleCheck : Hash;
+            return { value: sort.key, label: sort.label, icon: <Icon size={17} /> };
+          })} /></div>
       <div className="table-browse-field"><label htmlFor={`${id}-direction`}>Direction</label>
-        <select id={`${id}-direction`} value={state.dir} onChange={event => onChange({ dir: event.target.value as SortDirection })}>
-          {active?.directions.map(direction => <option key={direction} value={direction}>{directionLabel(active, direction)}</option>)}
-        </select></div>
+        <AdminSelect kind="sort" id={`${id}-direction`} value={state.dir} onValueChange={nextValue => onChange({ dir: nextValue as SortDirection })}
+          options={active?.directions.map(direction => ({ value: direction, label: directionLabel(active, direction),
+            icon: direction === 'asc' ? <ArrowUpWideNarrow size={17} /> : <ArrowDownWideNarrow size={17} /> })) ?? []} /></div>
       {category}
     </div>
     {(filters || actions) && <div className="table-browse-section table-browse-filters" data-section="filters">

@@ -12,4 +12,13 @@ export type ResidentAccountSetupFunctions = {
     Args: Record<PropertyKey, never>;
     Returns: Json;
   };
+  // Migration 0122 (resident iOS Phase 3): provider-aware status and Apple provisioning.
+  get_resident_account_setup_status_v2: {
+    Args: Record<PropertyKey, never>;
+    Returns: Json;
+  };
+  ensure_apple_resident_profile: {
+    Args: Record<PropertyKey, never>;
+    Returns: string;
+  };
 };

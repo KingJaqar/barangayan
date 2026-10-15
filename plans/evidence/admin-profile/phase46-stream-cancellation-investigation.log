@@ -1,0 +1,19 @@
+▲ Next.js 16.3.0
+- Local:         http://127.0.0.1:60099
+- Network:       http://127.0.0.1:60099
+✓ Ready in 322ms
+✓ Running next.config.ts took 93ms
+▲ Next.js 16.3.0
+- Local:         http://127.0.0.1:55171
+- Network:       http://127.0.0.1:55171
+✓ Ready in 413ms
+✓ Running next.config.ts took 93ms
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3503127114'
+}
+▲ Next.js 16.3.0
+- Local:         http://127.0.0.1:60099
+- Network:       http://127.0.0.1:60099
+✓ Ready in 340ms
+✓ Running next.config.ts took 81ms

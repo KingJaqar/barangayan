@@ -1,5 +1,8 @@
 'use client';
 
+import { ContentEmptyState, ContentFilters, ContentResults, ContentSection, ContentSummary, ContentToolbar } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { FAQ_CATEGORIES, FAQ_CATEGORY_META, type Tables } from '@barangayan/shared';
 import { useMemo, useState } from 'react';
 
@@ -42,7 +45,7 @@ export function FaqList({ articles }: { articles: FaqArticle[] }) {
     }
 
     if (search.trim()) {
-      const q = search.toLowerCase();
+      const q = search.trim().toLowerCase();
       list = list.filter(
         (a) =>
           a.question.toLowerCase().includes(q) ||
@@ -53,104 +56,33 @@ export function FaqList({ articles }: { articles: FaqArticle[] }) {
     return list;
   }, [articles, segment, search, categoryFilter]);
 
-  return (
-    <div>
-      {/* ── 3-segment pill control ───────────────────────────────── */}
-      <div className="mb-4 flex items-center gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
-        {segments.map((s) => (
-          <button
-            key={s.key}
-            type="button"
-            onClick={() => setSegment(s.key)}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors ${
-              segment === s.key
-                ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-white'
-                : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
-            }`}>
-            {s.label}
-            <span
-              className={`rounded-full px-1.5 py-0.5 text-xs leading-none ${
-                segment === s.key
-                  ? 'bg-zinc-100 text-zinc-600 dark:bg-zinc-600 dark:text-zinc-200'
-                  : 'bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400'
-              }`}>
-              {s.count}
-            </span>
-          </button>
-        ))}
-      </div>
+  const hasFilters = search.trim() !== '' || categoryFilter !== null || segment !== 'all';
+  const reset = () => { setSearch(''); setCategoryFilter(null); setSegment('all'); };
 
-      {/* ── Search ───────────────────────────────────────────────── */}
-      <div className="relative mb-3">
-        <svg
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2.5}
-          stroke="currentColor">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.636 5.636a7.5 7.5 0 0 0 10.607 10.607Z"
-          />
-        </svg>
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search articles…"
-          className="w-full rounded-lg border border-zinc-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
-        />
+  return <>
+    <ContentSummary items={[
+      { label: 'Total articles', value: articles.length, detail: 'Across your help center' },
+      { label: 'Published', value: publishedCount, detail: 'Visible to residents' },
+      { label: 'Archived', value: archivesCount, detail: 'Retained for future reference' },
+    ]} />
+    <ContentSection title="Help center articles" description="Clear answers to your community’s common questions.">
+      <div className={styles.tabs}>
+        <ContentFilters label="Article visibility" value={segment} onChange={setSegment}
+          options={segments.map(s => ({ value: s.key, label: s.label, count: s.count }))} />
       </div>
-
-      {/* ── Category filter pills ─────────────────────────────────── */}
-      <div className="mb-5 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setCategoryFilter(null)}
-          className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-            categoryFilter === null
-              ? 'bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900'
-              : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600'
-          }`}>
-          All Categories
-        </button>
-        {FAQ_CATEGORIES.map((cat) => {
-          const meta = FAQ_CATEGORY_META[cat];
-          const isActive = categoryFilter === cat;
-          return (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setCategoryFilter(isActive ? null : cat)}
-              className="rounded-full px-3 py-1 text-xs font-semibold transition-opacity hover:opacity-100"
-              style={
-                isActive
-                  ? { backgroundColor: meta.color, color: '#fff' }
-                  : { backgroundColor: `${meta.color}22`, color: meta.color, opacity: 0.8 }
-              }>
-              {meta.label}
-            </button>
-          );
-        })}
+      <ContentToolbar label="Search FAQ articles" query={search} onQueryChange={setSearch} placeholder="Search questions and answers…" />
+      <div className={styles.categoryFilters}>
+        <ContentFilters<string> label="Article category" value={categoryFilter ?? 'all'}
+          onChange={value => setCategoryFilter(value === 'all' ? null : value === categoryFilter ? null : value)}
+          options={[{ value: 'all', label: 'All categories' }, ...FAQ_CATEGORIES.map(cat => ({ value: cat, label: FAQ_CATEGORY_META[cat].label }))]} />
       </div>
-
-      {/* ── Article list ─────────────────────────────────────────── */}
-      <div className="flex flex-col gap-3">
-        {filtered.map((a) => (
-          <FaqRow key={a.id} article={a} />
-        ))}
-        {filtered.length === 0 && (
-          <p className="py-10 text-center text-sm text-zinc-500">
-            {search || categoryFilter
-              ? 'No articles match your filters.'
-              : segment === 'archives'
-                ? 'No archived articles.'
-                : 'No articles yet — create one above.'}
-          </p>
-        )}
+      <ContentResults count={filtered.length} total={articles.length} noun="articles" filtered={hasFilters} onReset={reset} />
+      <div className={styles.list}>
+        {filtered.map(a => <FaqRow key={a.id} article={a} />)}
+        {filtered.length === 0 ? <ContentEmptyState title={articles.length ? 'No matching articles' : 'A helpful answer starts here'}
+          description={articles.length ? 'Try another question, category, or visibility filter.' : 'Create your first FAQ article to help residents find answers.'}
+          onReset={hasFilters ? reset : undefined} /> : null}
       </div>
-    </div>
-  );
+    </ContentSection>
+  </>;
 }

@@ -1,0 +1,4 @@
+../resident-web/src/components/services/resident-service-form.tsx(25,31): error TS2307: Cannot find module '@/components/shared/loading-status' or its corresponding type declarations.
+../resident-web/src/components/services/resident-service-form.tsx(26,24): error TS2307: Cannot find module '@/components/ui/button' or its corresponding type declarations.
+../resident-web/src/components/services/resident-service-form.tsx(27,38): error TS2307: Cannot find module '@/lib/notify' or its corresponding type declarations.
+../resident-web/src/components/services/resident-service-form.tsx(28,42): error TS2307: Cannot find module '@/lib/service-feedback' or its corresponding type declarations.

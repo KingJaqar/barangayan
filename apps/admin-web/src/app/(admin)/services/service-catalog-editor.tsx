@@ -1,12 +1,14 @@
 'use client';
 
-import { catalogContract, charterSections, formatCentavosAsPHP, serviceProcessingLabel, type Tables } from '@barangayan/shared';
+import { catalogContract, charterSections, servicePriceLabel, serviceProcessingLabel, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { DocumentTypeForm } from './document-type-form';
+import { ContentStatus } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
 
 type DocumentType = Tables<'document_types'>;
 export function ServiceCatalogEditor({ documentType: row }: { documentType: DocumentType }) {
@@ -32,17 +34,21 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
     } finally { inFlight.current = false; setBusy(false); }
   }
 
-  return <section className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-    <h3 className="font-semibold">{row.name} {!row.is_active ? '(Inactive)' : ''}</h3>
-    <p className="my-2 text-sm text-zinc-500">
-      {catalog?.pricingMode === 'assessment' ? 'Staff assessment required' : catalog?.pricingMode === 'per_page' ? '₱10 per confirmed billable page' : formatCentavosAsPHP(row.fee_centavos)}
-      {' · '}{serviceProcessingLabel(row)}
+  return <section className={editing ? styles.rowEdit : styles.row}>
+    <div className={styles.rowHeader}>
+      <h3 className={styles.rowTitle}>{row.name}</h3>
+      <ContentStatus active={row.is_active} />
+    </div>
+    <p className={styles.keyDetails}>
+      <span>
+      {servicePriceLabel(row)}
+      </span><span>{serviceProcessingLabel(row)}</span>
     </p>
-    <p className="mb-3 whitespace-pre-wrap text-sm">{row.description || 'No description.'}</p>
+    <p className={`${styles.rowDescription} whitespace-pre-wrap`}>{row.description || 'No description.'}</p>
     {error ? <p role="alert" className="mb-3 text-sm text-red-600">{error}</p> : null}
     {editing ? <DocumentTypeForm key={row.id} barangayId={row.barangay_id} documentType={row}
       onSaved={() => setEditing(false)} onCancel={() => setEditing(false)} /> : <>
-      {catalog ? <details className="mb-3 text-sm">
+      {catalog ? <details className={styles.details}>
         <summary className="cursor-pointer font-medium">View document details</summary>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
           {charterSections.map(([key, label]) => <div key={key}><dt className="font-medium">{label}</dt>
@@ -53,16 +59,15 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
             catalog.requirementRules.dtiRequired ? 'DTI attachment' : null, catalog.requirementRules.hoaRequired ? 'HOA certification' : null,
             catalog.requirementRules.lessorForRenter ? 'Lessor endorsement for renters' : null, catalog.requirementRules.personalAppearance ? 'Personal appearance' : null,
           ].filter(Boolean).join('; ') || 'No additional supporting rules'}</dd></div>
-          <div><dt className="font-medium">Pricing</dt><dd>{catalog.pricingMode === 'fixed' ? 'Confirmed fixed fee: ' + formatCentavosAsPHP(row.fee_centavos) :
-            catalog.pricingMode === 'per_page' ? '₱10 per confirmed billable page' : 'Staff assessment / exemption confirmation'}</dd></div>
+          <div><dt className="font-medium">Pricing</dt><dd>{servicePriceLabel(row)}</dd></div>
         </dl>
       </details> : <p className="mb-3 text-sm text-zinc-500">Previous catalog format. Edit to complete its charter for future requests.</p>}
-      <div className="flex flex-wrap gap-2">
-        <button type="button" disabled={busy} className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm text-white" onClick={() => {setError('');setEditing(true);}}>Edit Document Type</button>
+      <div className={`${styles.rowActions} mt-4`}>
+        <button type="button" disabled={busy} className={styles.primaryAction} onClick={() => {setError('');setEditing(true);}}>Edit service</button>
         <button type="button" disabled={busy} className="rounded-lg border px-4 py-2 text-sm" onClick={() => change({ is_active: !row.is_active })}>
           {busy ? 'Updating…' : row.is_active ? 'Deactivate' : 'Activate'}
         </button>
-        <ConfirmButton label="Archive" confirmLabel="Archive?" disabled={busy} className="rounded-lg border px-4 py-2 text-sm"
+        <ConfirmButton label="Archive" confirmLabel="Archive?" disabled={busy} className={styles.dangerAction}
           onConfirm={() => change({ deleted_at: new Date().toISOString() })} />
       </div>
     </>}

@@ -1,5 +1,9 @@
 'use client';
 
+import { MapPin } from 'lucide-react';
+import { ContentEmptyState } from '@/components/admin/content-workspace';
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -98,22 +102,20 @@ export function TrashIncidentTable({
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-300 p-8 text-center dark:border-zinc-700">
-        <p className="text-sm text-zinc-500">No illegal dumping or trash-related reports found.</p>
-      </div>
+      <ContentEmptyState title="No dumping reports" description="Trash-related reports will appear here for review." />
     );
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={styles.list}>
       {rows.map((r) => (
         <div
           key={r.id}
-          className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0 flex-1">
+          className={styles.row}>
+          <div className={styles.rowHeader}>
+            <div className={styles.rowMain}>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold">{r.title}</span>
+                <span className={styles.rowTitle}>{r.title}</span>
                 <ScoreBadge score={r.score} threshold={highPriorityThreshold} />
                 <span
                   className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -125,18 +127,18 @@ export function TrashIncidentTable({
                 </span>
                 {r.waste_zones?.name && (
                   <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                    📍 {r.waste_zones.name}
+                    <MapPin size={13} className="mr-1" aria-hidden="true" />{r.waste_zones.name}
                   </span>
                 )}
                 <span className="text-xs text-zinc-500">{formatDateTime(r.created_at)}</span>
               </div>
-              {r.description && <p className="mt-1 text-xs text-zinc-500 line-clamp-2">{r.description}</p>}
+              {r.description && <p className={`${styles.rowDescription} line-clamp-2`}>{r.description}</p>}
               <p className="mt-1 text-xs text-zinc-400">
                 {r.confirmation_count} confirmation{r.confirmation_count !== 1 ? 's' : ''}
               </p>
             </div>
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className={styles.rowActions}>
               {r.status === 'open' && (
                 <button
                   onClick={() => updateStatus(r.id, r.status, 'in_progress', r.title)}
@@ -158,7 +160,7 @@ export function TrashIncidentTable({
                 confirmLabel="Archive report?"
                 onConfirm={() => archive(r.id, r.title, r.description)}
                 title="Archive Report"
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/30 dark:hover:text-red-300"
+                className={styles.dangerAction}
               />
             </div>
           </div>

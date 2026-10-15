@@ -1,0 +1,35 @@
+{
+  "status": "ok",
+  "deployment": {
+    "id": "dpl_Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+    "url": "https://barangayan-admin-ps10ev7w2-barangayan.vercel.app",
+    "productionUrl": null,
+    "inspectorUrl": "https://vercel.com/barangayan/barangayan-admin-web/Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+    "readyState": "INITIALIZING",
+    "target": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+    "buildMachine": {
+      "machine": "basic",
+      "selectionType": "fixed",
+      "selectionSource": "plan-default"
+    },
+    "deploymentProtection": [
+      "vercel_authentication"
+    ]
+  },
+  "message": "Deployment barangayan-admin-ps10ev7w2-barangayan.vercel.app ready.",
+  "next": [
+    {
+      "command": "vercel curl https://barangayan-admin-ps10ev7w2-barangayan.vercel.app",
+      "when": "Verify deployment, including when Deployment Protection is enabled"
+    },
+    {
+      "command": "vercel inspect barangayan-admin-ps10ev7w2-barangayan.vercel.app --scope barangayan --cwd C:/Users/User/barangayan/tmp/admin-profile-release-cd723a6e12 --no-color",
+      "when": "Inspect deployment"
+    },
+    {
+      "command": "vercel deploy --prod --scope barangayan --cwd C:/Users/User/barangayan/tmp/admin-profile-release-cd723a6e12 --no-color",
+      "when": "Promote to production"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "verifiedAt": "2026-10-15T06:01:47.016Z",
+  "containers": [
+    "/admin-profile-db-87d0eed99e false",
+    "/admin-profile-inbucket-87d0eed99e false",
+    "/admin-profile-auth-87d0eed99e false",
+    "/admin-profile-rest-87d0eed99e false",
+    "/admin-profile-storage-87d0eed99e false",
+    "/admin-profile-db-dabf50bc04 false",
+    "/admin-profile-inbucket-dabf50bc04 false",
+    "/admin-profile-auth-dabf50bc04 false",
+    "/admin-profile-rest-dabf50bc04 false",
+    "/admin-profile-storage-dabf50bc04 false"
+  ],
+  "databasesPreserved": true,
+  "sourceReleaseHashesMatch": 350,
+  "adminUnitTests": 116,
+  "chromeGroups": 48,
+  "firefoxGroups": 46,
+  "baselineFailures": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "gatedDeployment": "dpl_Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+  "phase6Status": "Partially complete: 6 met, 3 pending manual hosted verification"
+}

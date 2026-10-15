@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 
 import { TableScrollArea } from '@/components/admin/table-scroll-area';
@@ -10,6 +12,7 @@ import { useToast } from '@/components/ui/toast';
 import { Spinner } from '@/components/loading/spinner';
 import { useBrowseViewport } from './table-browse-panel';
 import type { SortDescriptor, SortDirection } from '@/lib/admin-tables/sort-definitions';
+import { useRowContextMenu } from './row-context-menu';
 
 // Floor for the last (filler) column under `resizableColumns` — enough room for a small
 // action button or short status label, so it can't be squeezed to invisible by the other
@@ -88,6 +91,8 @@ function fromDatetimeLocal(local: string): string | null {
 }
 
 interface EditableDataTableProps<T> {
+  /** Opt in to right-click menus using the mounted controls in this column. */
+  contextMenuColumnId?: string;
   sorting?: { descriptor: SortDescriptor; direction: SortDirection; choices: readonly SortDescriptor[];
     onChange: (key: string, direction: SortDirection) => void };
   editHandleRef?: RefObject<TableEditHandle | null>;
@@ -119,6 +124,7 @@ interface EditableDataTableProps<T> {
  * Escape cancels. Every save path is wired to useToast — this is also how the
  * "silent failure" mutation gap across the admin panel gets closed, by construction. */
 export function EditableDataTable<T>({
+  contextMenuColumnId,
   columns: columnsProp,
   rows,
   rowKey,
@@ -134,6 +140,7 @@ export function EditableDataTable<T>({
   editHandleRef,
   onEditingChange,
 }: EditableDataTableProps<T>) {
+  const contextMenu = useRowContextMenu();
   const { bounded } = useBrowseViewport();
   // Browse tables always lead with a running row number that continues across pages: page 2 at
   // 10 per page starts at 11. The URL is the source of truth for page/pageSize (same parsing as
@@ -408,6 +415,7 @@ export function EditableDataTable<T>({
             rows.map((row, rowIndex) => (
               <tr
                 key={rowKey(row)}
+                onContextMenu={contextMenuColumnId ? contextMenu.open : undefined}
                 style={bounded ? { height: BROWSE_ROW_HEIGHT } : undefined}
                 className={`${
                   thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/5 dark:border-white/5'
@@ -422,6 +430,7 @@ export function EditableDataTable<T>({
 
                   return (
                     <td
+                      data-context-menu-actions={contextMenuColumnId === columnId(col) ? '' : undefined}
                       tabIndex={bounded && !isEditing && (editable || onRowClick) ? 0 : undefined}
                       aria-label={bounded && editable && !isEditing ? `${col.header}: press Enter to edit` : undefined}
                       onKeyDown={bounded ? event => {
@@ -463,24 +472,24 @@ export function EditableDataTable<T>({
                         }
                       }}
                     >
-                      {isEditing && edit ? <div onClick={event => event.stopPropagation()}>
+                      {isEditing && edit ? <div data-inline-editor onClick={event => event.stopPropagation()}>
                         {saveError && <div role="alert" className="text-sm text-red-600">{saveError}</div>}
                         {(
                         edit.type === 'select' ? (
                           <div className="space-y-1">
-                            <select
+                            <AdminSelect compact
                               aria-label={`Edit ${col.header}`}
                               autoFocus
                               value={draft}
                               disabled={saving}
                               aria-busy={saving}
-                              onChange={(e) => {
-                                const nextDraft = e.target.value;
+                              onValueChange={(nextValue) => {
+                                const nextDraft = nextValue;
                                 setDraft(nextDraft);
                                 if (edit.commitOnChange) void commitEdit(row, col, nextDraft);
                               }}
                               onBlur={(event) => {
-                                if (event.relatedTarget instanceof Node && event.currentTarget.parentElement?.parentElement?.contains(event.relatedTarget)) return;
+                                if (event.relatedTarget instanceof Node && event.currentTarget.closest('[data-inline-editor]')?.contains(event.relatedTarget)) return;
                                 if (!saveError && !edit.commitOnChange) void commitEdit(editSnapshot.current?.row ?? row, col);
                               }}
                               onKeyDown={(e) => {
@@ -495,7 +504,7 @@ export function EditableDataTable<T>({
                                   {opt.label}
                                 </option>
                               ))}
-                            </select>
+                            </AdminSelect>
                             {saving && (
                               <span role="status" aria-live="polite" aria-atomic="true" className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                                 <Spinner size="compact" /> Saving…
@@ -551,6 +560,7 @@ export function EditableDataTable<T>({
             </tr>)}
         </tbody>
       </table>
+      {contextMenu.menu}
     </TableScrollArea>
   );
 }

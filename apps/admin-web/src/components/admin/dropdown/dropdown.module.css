@@ -1,0 +1,37 @@
+.root, .surface {
+  --dd-surface: var(--background);
+  --dd-text: var(--foreground);
+  --dd-border: color-mix(in srgb, var(--foreground) 18%, var(--background));
+  --dd-hover: color-mix(in srgb, var(--foreground) 7%, var(--background));
+  --dd-tint: color-mix(in srgb, var(--accent) 12%, var(--background));
+  --dd-accent: color-mix(in srgb, var(--accent) 35%, var(--foreground));
+  color: var(--dd-text);
+  font-family: var(--font-app);
+}
+.root { display: inline-block; position: relative; width: 100%; min-width: 0; max-width: 100%; vertical-align: middle; }
+.root[data-width='auto'] { width: auto; }
+.root .trigger { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; max-width: 100%; border: 1px solid var(--dd-border); border-radius: 9px; padding: 10px 12px; background: var(--dd-surface); color: var(--dd-text); font: inherit; font-size: 13px; font-weight: 600; line-height: 1.4; text-align: left; cursor: pointer; transition: background 150ms, border-color 150ms; }
+.trigger:hover { background: var(--dd-hover); }
+.root .trigger[aria-expanded='true'] { border-color: var(--dd-accent); background: var(--dd-tint); }
+.trigger:focus-visible, .row:focus-visible { outline: 2px solid var(--dd-accent); outline-offset: 2px; }
+.trigger:disabled { cursor: not-allowed; opacity: .5; }
+.label { min-width: 0; overflow-wrap: anywhere; white-space: normal; }
+.icon { display: inline-flex; flex-shrink: 0; width: 17px; align-items: center; justify-content: center; color: var(--dd-accent); }
+.chevron { margin-left: auto; flex-shrink: 0; transition: transform 180ms ease; }
+.trigger[aria-expanded='true'] .chevron { transform: rotate(180deg); }
+.surface { box-sizing: border-box; margin: 0; padding: 5px; border: 1px solid var(--dd-border); border-radius: 12px; background: var(--dd-surface); box-shadow: 0 8px 24px color-mix(in srgb, var(--foreground) 12%, transparent), 0 2px 5px color-mix(in srgb, var(--foreground) 5%, transparent); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; z-index: 110; animation: dropdownEnter 150ms ease-out; }
+.surface[data-open='false'] { pointer-events: none; animation: dropdownExit 150ms ease-in forwards; }
+.row { display: flex; width: 100%; min-height: 44px; align-items: center; gap: 10px; padding: 10px; border: 0; border-radius: 7px; background: transparent; color: var(--dd-text); font: inherit; font-size: 12px; font-weight: 500; line-height: 1.4; text-align: left; cursor: pointer; white-space: normal; overflow-wrap: anywhere; transition: background 120ms, color 120ms; }
+.row:hover, .row[data-active='true'], .row:focus-visible { background: var(--dd-hover); }
+.row[aria-selected='true'] { background: var(--dd-tint); font-weight: 650; }
+.row[data-active='true'] { outline: 1px solid var(--dd-border); outline-offset: -1px; }
+.row[aria-disabled='true'], .row:disabled { opacity: .5; cursor: not-allowed; }
+.check { margin-left: auto; flex-shrink: 0; color: var(--dd-accent); }
+.compact .trigger, .compact .row { min-height: 32px; padding-block: 6px; }
+.backing { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; padding: 0; border: 0; clip-path: inset(50%); }
+.error { display: block; margin-top: 5px; color: var(--dd-text); font-size: 12px; }
+.destructive { color: var(--foreground); }
+.destructive:hover { background: color-mix(in srgb, var(--foreground) 10%, var(--background)); }
+@keyframes dropdownEnter { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes dropdownExit { to { opacity: 0; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .surface, .surface[data-open='false'] { animation: none; } .trigger, .chevron, .row { transition: none; } .surface[data-open='false'] { opacity: 0; } }

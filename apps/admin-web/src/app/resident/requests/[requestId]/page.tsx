@@ -1,3 +1,4 @@
+import { requestFeeLabel } from '@barangayan/shared';
 import { AgencySlaStatus } from '@/components/admin/agency-sla-status';
 import { requestFee } from '@barangayan/shared';
 import { PickupChoice } from './pickup-choice';
@@ -47,7 +48,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       <div className="mb-6 grid grid-cols-2 gap-4 rounded-xl border border-black/10 bg-white p-5 text-sm dark:border-white/10 dark:bg-zinc-900">
         <div>
           <p className="text-zinc-400">Fee</p>
-          <p className="font-semibold">{amount === null ? 'Awaiting fee assessment' : request.fee_assessment_state === 'waived' ? 'Fee waived — no payment required' : formatCentavosAsPHP(amount)}</p>
+          <p className="font-semibold">{amount === null ? requestFeeLabel(request, null) : request.fee_assessment_state === 'waived' ? 'Fee waived — no payment required' : formatCentavosAsPHP(amount)}</p>
         </div>
         <div>
           <p className="text-zinc-400">Submitted</p>

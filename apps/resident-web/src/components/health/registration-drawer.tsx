@@ -20,12 +20,7 @@ import { ClipboardList, X } from 'lucide-react';
 
 import { driveTypeConfig, type DriveRegistrationRow } from '@/hooks/use-medical-drives';
 
-const STATUS_COLOR: Record<string, string> = {
-  pending: '#F59E0B',
-  confirmed: 'var(--accent)',
-  attended: '#6366F1',
-  cancelled: '#EF4444',
-};
+import styles from './health.module.css';
 
 function fmtDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -34,7 +29,6 @@ function fmtDate(iso: string): string {
 export function RegistrationDrawer({ registration, open, onClose }: { registration: DriveRegistrationRow | null; open: boolean; onClose: () => void }) {
   const drive = registration?.drive;
   const cfg = drive ? driveTypeConfig(drive.type) : null;
-  const statusColor = registration ? (STATUS_COLOR[registration.status] ?? 'var(--accent)') : 'var(--accent)';
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(v) => { if (!v) onClose(); }} modal={false}>
@@ -51,19 +45,19 @@ export function RegistrationDrawer({ registration, open, onClose }: { registrati
               onInteractOutside={(e) => e.preventDefault()}
               onPointerDownOutside={(e) => e.preventDefault()}>
               <motion.div
-                className="pointer-events-auto fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-black/10 bg-white shadow-2xl dark:border-white/10 dark:bg-zinc-900 sm:max-w-lg"
+                className="pointer-events-auto fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-border bg-card text-card-foreground shadow-2xl sm:max-w-lg"
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 32, stiffness: 300 }}>
-                <div className="flex shrink-0 items-center justify-between gap-3 border-b border-black/[0.06] px-5 py-4 dark:border-white/[0.06]">
-                  <DialogPrimitive.Title className="flex items-center gap-1.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-4">
+                  <DialogPrimitive.Title className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
                     <ClipboardList size={14} /> Registration Details
                   </DialogPrimitive.Title>
                   <DialogPrimitive.Description className="sr-only">
                     Status, applicant number, and details for the selected drive registration.
                   </DialogPrimitive.Description>
-                  <DialogPrimitive.Close className="rounded-full p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200">
+                  <DialogPrimitive.Close className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
                     <X size={18} />
                     <span className="sr-only">Close</span>
                   </DialogPrimitive.Close>
@@ -75,7 +69,7 @@ export function RegistrationDrawer({ registration, open, onClose }: { registrati
                       <div className="flex items-start justify-between gap-3">
                         <h2 className="text-base font-bold leading-snug">{drive?.title ?? 'Medical Drive'}</h2>
                         {cfg ? (
-                          <span className="shrink-0 rounded-lg px-2 py-1 text-xs font-bold" style={{ backgroundColor: `${cfg.color}22`, color: cfg.color }}>
+                          <span className={styles.badge}>
                             {cfg.label}
                           </span>
                         ) : null}
@@ -90,7 +84,7 @@ export function RegistrationDrawer({ registration, open, onClose }: { registrati
                         </div>
                       </div>
 
-                      <span className="w-fit rounded-full px-2.5 py-1 text-xs font-bold capitalize" style={{ backgroundColor: `${statusColor}22`, color: statusColor }}>
+                      <span className={`${styles.badge} ${styles.badgeAccent} w-fit capitalize`}>
                         {registration.status}
                       </span>
 

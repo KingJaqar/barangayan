@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:tables": "vitest run --config vitest.config.ts",
-    "test:tables:browser": "node tests/table-browse/browser.mjs"
+    "test:tables:browser": "node tests/table-browse/browser.mjs",
+    "test:search": "vitest run tests/search --config vitest.config.ts",
+    "test:search:e2e": "node tests/search/e2e.mjs"
   },
   "dependencies": {
     "@barangayan/shared": "*",

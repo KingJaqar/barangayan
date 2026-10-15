@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "checks": [
+    "Home query → debounced real-data suggestions → Enter → grouped results",
+    "Real API results enforce tenant, owner, active and archive filters",
+    "Caller-supplied tenant/owner identifiers are ignored; unauthorized direct links show 404 content",
+    "Body matches, literal punctuation and filter-injection resistance",
+    "Multiple search words match in any order",
+    "Personal request reference lookup",
+    "Title relevance precedes body matches across pagination, without duplicates or out-of-range backend errors",
+    "Concurrent real-data suggestion requests complete without backend failures",
+    "documents result opens its corresponding content (864d27f2-39c1-4bec-aeb4-2d5e46367646)",
+    "announcements result opens its corresponding content (69c03863-19be-4455-a873-2143784abac2)",
+    "health result opens its corresponding content (c7cb362d-7ed3-43f0-bb4c-78bb7a0c19bb)",
+    "help result opens its corresponding content (0db39824-c088-483b-a8bf-f3cbb2141a2d)",
+    "reports result opens its corresponding content (c806a0dc-1337-4066-8897-dbaf43cd139b)",
+    "Request result opens existing request tracking",
+    "Category pagination, reload and browser back preserve query/filter state",
+    "Animated loading placeholders and same-query refresh retain useful current results",
+    "Rapid typing stays interactive, debounces requests and scrolls keyboard selection into view",
+    "IME composition does not issue incomplete searches",
+    "Reduced-motion preference disables loading pulses and result entrance motion",
+    "Empty/no-results states and keyboard suggestion selection",
+    "Search errors are distinct from empty results and retry recovers",
+    "Partial category failures preserve available results and recover on retry",
+    "Malformed success responses produce a retryable error and retain last loaded results",
+    "An overtaken suggestion response cannot replace current results",
+    "Clear search, narrow-web layout and theme compatibility",
+    "Guests can browse public search content and cannot search private records"
+  ],
+  "pageErrors": [],
+  "metrics": {
+    "localConcurrentSearch": {
+      "samples": 12,
+      "concurrency": 6,
+      "additionalUnmatchedArticles": 3000,
+      "medianMs": 252,
+      "p95Ms": 314,
+      "maxMs": 314
+    },
+    "rapidTypingMs": 413,
+    "throttledInput": {
+      "cpuSlowdown": 4,
+      "slowInputEvents": 22,
+      "maxInputEventMs": 40
+    }
+  },
+  "limitations": [
+    "Synthetic fixtures in the local Supabase stack; no hosted data or payment provider calls. HTTP failures/delays are injected only for recovery/race checks. Performance measurements describe this local environment, not hosted production latency."
+  ],
+  "fixtureCleanup": "passed"
+}

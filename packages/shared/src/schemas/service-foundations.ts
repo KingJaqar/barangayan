@@ -5,7 +5,6 @@ export const SUPPORTING_FILE_MAX_BYTES = 5 * 1024 * 1024;
 export const SUPPORTING_FILE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] as const;
 export const serviceKinds = ['business', 'indigency', 'first_time_job_seeker', 'certified_true_copy', 'general'] as const;
 export const pricingModes = ['fixed', 'assessment', 'per_page'] as const;
-export const assessmentStates = ['pending', 'assessed', 'waived'] as const;
 export const slaActions = ['accept', 'pause', 'resume', 'ready', 'release', 'cancel'] as const;
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -52,6 +51,7 @@ export const serviceSubmissionSchema = z.object({
   details: z.object({
     businessName: optionalText(200), establishmentAddress: optionalText(1000), isRenter: z.boolean().optional(),
     recordReference: optionalText(1000), copies: z.number().int().min(1).max(1000).optional(),
+    totalPages: z.number().int().min(1).max(1000000).optional(),
     personalAppearanceAcknowledged: z.boolean().optional(),
   }).strict(), attachments: z.array(supportingAttachmentSchema).max(10),
 }).strict().superRefine((value, ctx) => {
@@ -66,14 +66,21 @@ export function submissionSchemaForCatalog(catalog: z.infer<typeof serviceCatalo
     if (purpose?.requiresExplanation && !value.purposeExplanation) issue(['purposeExplanation'], 'Explain the purpose');
     if (!purpose?.requiresExplanation && value.purposeExplanation) issue(['purposeExplanation'], 'Explanation applies only to this catalog’s explanation purposes');
     const has = (code: string) => value.attachments.some(a => a.requirementCode === code);
-    if (catalog.serviceKind === 'business' && (!value.details.businessName || !value.details.establishmentAddress)) issue(['details'], 'Business name and establishment address are required');
+    if (catalog.serviceKind === 'business') {
+      if (!value.details.businessName) issue(['details', 'businessName'], 'Enter the business name');
+      if (!value.details.establishmentAddress) issue(['details', 'establishmentAddress'], 'Enter the establishment address');
+    }
     if (catalog.serviceKind !== 'business' && (value.details.businessName !== undefined || value.details.establishmentAddress !== undefined || has('dti'))) issue(['details'], 'Clear business fields when changing services');
-    if (catalog.serviceKind === 'certified_true_copy' && (!value.details.recordReference || !value.details.copies)) issue(['details'], 'Record reference and copies are required');
-    if (catalog.serviceKind !== 'certified_true_copy' && (value.details.recordReference !== undefined || value.details.copies !== undefined)) issue(['details'], 'Clear record fields when changing services');
+    if (catalog.serviceKind === 'certified_true_copy') {
+      if (!value.details.recordReference) issue(['details', 'recordReference'], 'Enter the record reference');
+      if (!value.details.copies) issue(['details', 'copies'], 'Enter the number of copies');
+      if (!value.details.totalPages) issue(['details', 'totalPages'], 'Enter the total pages');
+    }
+    if (catalog.serviceKind !== 'certified_true_copy' && (value.details.recordReference !== undefined || value.details.copies !== undefined || value.details.totalPages !== undefined)) issue(['details'], 'Clear record fields when changing services');
     if (!['indigency', 'first_time_job_seeker'].includes(catalog.serviceKind) && (value.details.isRenter !== undefined || has('hoa') || has('lessor'))) issue(['details'], 'Clear residency fields when changing services');
-    if (catalog.requirementRules.dtiRequired && !has('dti')) issue(['attachments'], 'DTI attachment required');
-    if (catalog.requirementRules.hoaRequired && !has('hoa')) issue(['attachments'], 'HOA certification required');
-    if (catalog.requirementRules.lessorForRenter && value.details.isRenter && !has('lessor')) issue(['attachments'], 'Lessor endorsement required');
+    if (catalog.requirementRules.dtiRequired && !has('dti')) issue(['attachments', 'dti'], 'DTI attachment required');
+    if (catalog.requirementRules.hoaRequired && !has('hoa')) issue(['attachments', 'hoa'], 'HOA certification required');
+    if (catalog.requirementRules.lessorForRenter && value.details.isRenter && !has('lessor')) issue(['attachments', 'lessor'], 'Lessor endorsement required');
     if (catalog.requirementRules.personalAppearance && !value.details.personalAppearanceAcknowledged) issue(['details', 'personalAppearanceAcknowledged'], 'Acknowledge personal appearance');
   });
 }
@@ -88,16 +95,22 @@ export const profileCompletionSchema = z.object({
     home: z.object({ lat: z.number().finite().min(-90).max(90), lng: z.number().finite().min(-180).max(180) }).strict().nullable(),
   }).strict().optional(),
 }).strict().refine(v => v.birthDate <= new Date().toISOString().slice(0, 10), { path: ['birthDate'], message: 'Birth date cannot be in the future' });
-export const idPublicationSchema = z.object({ submissionId: z.string().uuid(), idType: text(200), frontPath: text(500), backPath: text(500) }).strict();
+export const idConfirmedDetailsSchema = z.object({
+  fullName: text(200),
+  idNumber: z.string().trim().max(200),
+  birthDate: z.union([z.literal(''), z.string().date().refine(value => !value.startsWith('0000-') && value <= new Date().toISOString().slice(0, 10), 'Enter a valid birth date')]),
+  address: z.string().trim().max(1000),
+}).strict();
+export type IdConfirmedDetails = z.infer<typeof idConfirmedDetailsSchema>;
+export const idPublicationSchema = z.object({
+  submissionId: z.string().uuid(), idType: text(200), frontPath: text(500),
+  backPath: text(500).optional(), confirmedDetails: idConfirmedDetailsSchema.optional(),
+}).strict().refine(value => !!value.backPath || !!value.confirmedDetails, { path: ['confirmedDetails'], message: 'Confirm your ID details before submitting' });
 export const idReviewSchema = z.object({ submissionId: z.string().uuid(), decision: z.enum(['verified', 'verification_failed', 'revoked']), reason: optionalText(1000) }).strict()
   .refine(v => v.decision === 'verified' || !!v.reason, { path: ['reason'], message: 'A rejection or revocation reason is required' });
-export const feeAssessmentSchema = z.object({ requestId: z.string().uuid(), state: z.enum(['assessed', 'waived']), amountCentavos: z.number().int().min(0).max(2147483647), basis: text(1000), billablePages: z.number().int().positive().optional() }).strict()
-  .refine(v => v.state !== 'waived' || v.amountCentavos === 0, { path: ['amountCentavos'], message: 'Waiver amount must be zero' });
-export const requestReviewSchema = z.object({ requestId: z.string().uuid(), requirementsComplete: z.boolean(), eligibility: z.enum(['pending', 'eligible', 'ineligible']), note: text(1000), personalAppearancePresent: z.boolean() }).strict();
-export const slaTransitionSchema = z.object({ requestId: z.string().uuid(), action: z.enum(slaActions), reason: optionalText(1000), requirementsComplete: z.boolean().optional(), personalAppearanceReady: z.boolean().optional() }).strict()
+export const slaTransitionSchema = z.object({ requestId: z.string().uuid(), action: z.enum(slaActions), reason: optionalText(1000) }).strict()
   .superRefine((v, ctx) => {
     if (['pause', 'cancel'].includes(v.action) && !v.reason) ctx.addIssue({ code: 'custom', path: ['reason'], message: 'Reason is required' });
-    if (v.action === 'accept' && !v.requirementsComplete) ctx.addIssue({ code: 'custom', path: ['requirementsComplete'], message: 'Complete requirements must be confirmed' });
   });
 
 export type ServiceCatalogContract = z.infer<typeof serviceCatalogContractSchema>;
@@ -105,11 +118,4 @@ export type ServiceSubmissionInput = z.infer<typeof serviceSubmissionSchema>;
 export type ProfileCompletionInput = z.infer<typeof profileCompletionSchema>;
 export type IdPublicationInput = z.infer<typeof idPublicationSchema>;
 export type IdReviewInput = z.infer<typeof idReviewSchema>;
-export type FeeAssessmentInput = z.infer<typeof feeAssessmentSchema>;
-export type RequestReviewInput = z.infer<typeof requestReviewSchema>;
 export type SlaTransitionInput = z.infer<typeof slaTransitionSchema>;
-export type ServiceKind = (typeof serviceKinds)[number];
-export type PricingMode = (typeof pricingModes)[number];
-export type FeeAssessmentState = (typeof assessmentStates)[number];
-export type SlaState = 'pre_processing' | 'running' | 'paused' | 'ready' | 'released' | 'cancelled';
-export type TimingModel = 'legacy_hours' | 'agency_minutes_v1';

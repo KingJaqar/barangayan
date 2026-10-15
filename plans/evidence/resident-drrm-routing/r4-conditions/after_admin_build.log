@@ -1,0 +1,132 @@
+▲ Next.js 16.3.0 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 55ms
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 4 errors:
+./apps/resident-web/src/components/services/resident-service-form.tsx:25:1
+Error: Module not found: Can't resolve '@/components/shared/loading-status'
+  [90m23 |[0m [36mimport[0m { useCallback, useEffect, useRef, useState } [36mfrom[0m [32m'react'[0m;
+  [90m24 |[0m
+[31m[1m>[0m [90m25 |[0m [36mimport[0m { [33mLoadingStatus[0m } [36mfrom[0m [32m'@/components/shared/loading-status'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m26 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+  [90m27 |[0m [36mimport[0m { beginAttempt, notify } [36mfrom[0m [32m'@/lib/notify'[0m;
+  [90m28 |[0m [36mimport[0m { serviceSubmissionFailure } [36mfrom[0m [32m'@/lib/service-feedback'[0m;
+
+Import map: aliased to relative './src/components/shared/loading-status' inside of [project]/apps/admin-web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./apps/resident-web/src/components/services/resident-service-form.tsx:26:1
+Error: Module not found: Can't resolve '@/components/ui/button'
+  [90m24 |[0m
+  [90m25 |[0m [36mimport[0m { [33mLoadingStatus[0m } [36mfrom[0m [32m'@/components/shared/loading-status'[0m;
+[31m[1m>[0m [90m26 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m27 |[0m [36mimport[0m { beginAttempt, notify } [36mfrom[0m [32m'@/lib/notify'[0m;
+  [90m28 |[0m [36mimport[0m { serviceSubmissionFailure } [36mfrom[0m [32m'@/lib/service-feedback'[0m;
+  [90m29 |[0m
+
+Import map: aliased to relative './src/components/ui/button' inside of [project]/apps/admin-web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./apps/resident-web/src/components/services/resident-service-form.tsx:27:1
+Error: Module not found: Can't resolve '@/lib/notify'
+  [90m25 |[0m [36mimport[0m { [33mLoadingStatus[0m } [36mfrom[0m [32m'@/components/shared/loading-status'[0m;
+  [90m26 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+[31m[1m>[0m [90m27 |[0m [36mimport[0m { beginAttempt, notify } [36mfrom[0m [32m'@/lib/notify'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m28 |[0m [36mimport[0m { serviceSubmissionFailure } [36mfrom[0m [32m'@/lib/service-feedback'[0m;
+  [90m29 |[0m
+  [90m30 |[0m [36mtype[0m [33mClient[0m = [33mSupabaseClient[0m<[33mDatabase[0m>;
+
+Import map: aliased to relative './src/lib/notify' inside of [project]/apps/admin-web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./apps/resident-web/src/components/services/resident-service-form.tsx:28:1
+Error: Module not found: Can't resolve '@/lib/service-feedback'
+  [90m26 |[0m [36mimport[0m { [33mButton[0m } [36mfrom[0m [32m'@/components/ui/button'[0m;
+  [90m27 |[0m [36mimport[0m { beginAttempt, notify } [36mfrom[0m [32m'@/lib/notify'[0m;
+[31m[1m>[0m [90m28 |[0m [36mimport[0m { serviceSubmissionFailure } [36mfrom[0m [32m'@/lib/service-feedback'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m29 |[0m
+  [90m30 |[0m [36mtype[0m [33mClient[0m = [33mSupabaseClient[0m<[33mDatabase[0m>;
+  [90m31 |[0m [36mtype[0m [33mRequirement[0m = [33mServiceSubmissionInput[0m[[32m'attachments'[0m][number][[32m'requirementCode'[0m];
+
+Import map: aliased to relative './src/lib/service-feedback' inside of [project]/apps/admin-web
+
+
+Import traces:
+  Client Component Browser:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component Browser]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./apps/resident-web/src/components/services/resident-service-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Client Component SSR]
+    ./apps/admin-web/src/app/resident/requests/new/new-request-form.tsx [Server Component]
+    ./apps/admin-web/src/app/resident/requests/new/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./apps/resident-web/src/components/services/resident-service-form.tsx:25:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./apps/resident-web/src/components/services/resident-service-form.tsx:26:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./apps/resident-web/src/components/services/resident-service-form.tsx:27:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./apps/resident-web/src/components/services/resident-service-form.tsx:28:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

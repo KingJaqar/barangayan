@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "Required validation focuses visible trigger; serialization; disabled fieldset; reset; disabled option skipping; keyboard Home/End/typeahead/Tab/Escape; long-list scrolling; missing/dynamic options; outside dismissal without writes",
+    "React Hook Form Controller: dirty, touched, reset and submitted value",
+    "Native drawer portal ownership, innermost Escape, selection focus restoration",
+    "Actual inline editor: portal selection has no early blur save/row opening; Escape cancels; Enter commits once; commit-on-change writes once",
+    "30 viewport/theme/accent combinations: 320/390/768/1024/1440, light/dark, default/yellow/purple; same-width full-trigger alignment; 7px gap; 44px trigger",
+    "Open surface reacts immediately to theme/accent/font changes; system/Georgia/Verdana inheritance; reduced motion; 200%/400% zoom",
+    "Viewport bottom/right collision flips above and shifts inside; valid empty optional option; selected/highlighted distinction; empty options; disabling an open fieldset dismisses",
+    "Eight actual main tables and eight record archives; all 16 generated selectors; no popup-open/dismiss writes; version-2 request exposes only its permitted select"
+  ],
+  "errors": [],
+  "warnings": [],
+  "limitations": [
+    "Isolated actual frontend components; synthetic records and mocked persistence/navigation. No hosted-data writes."
+  ]
+}

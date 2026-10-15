@@ -1,11 +1,11 @@
 import { ResidentActionGate } from '@/components/resident-action-gate';
-import { catalogContract, ResidentSubmissionAttempt } from '@barangayan/shared';
+import { catalogContract, residentServiceError, ResidentSubmissionAttempt } from '@barangayan/shared';
 import { CharterRequestForm } from '@/components/services/charter-request-form';
 import { formatCentavosAsPHP, requestFormSchema, type Tables } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { PrimaryButton } from '@/components/primary-button';
 import { AnimatedAppear } from '@/components/services/animated-appear';
 import { SkeletonBlock } from '@/components/services/skeleton';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+import { ServiceErrorToast } from '@/components/services/service-error-toast';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -81,7 +82,8 @@ function RequestFormContent() {
   const [attempt] = useState(() => new ResidentSubmissionAttempt());
   const [pickedIdImage, setPickedIdImage] = useState<PickedImage | null>(null);
   const [idUploadError, setIdUploadError] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{ message: string } | null>(null);
+  const dismissNotice = useCallback(() => setNotice(null), []);
   const [submitting, setSubmitting] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
@@ -97,20 +99,26 @@ function RequestFormContent() {
   }, [documentId, reload]);
 
   async function handlePickFile() {
-    const picked = await pickImageAsset();
-    if (!picked) return;
+    try {
+      const picked = await pickImageAsset();
+      if (!picked) return;
 
-    if (!picked.mimeType.startsWith('image/')) {
-      setIdUploadError('Please choose a JPG or PNG image of your valid ID.');
-      return;
-    }
-    if (!isWithinSizeLimit(picked, MAX_ID_BYTES)) {
-      setIdUploadError('Your ID image must be 5MB or smaller.');
-      return;
-    }
+      if (!picked.mimeType.startsWith('image/')) {
+        setIdUploadError('Please choose a JPG or PNG image of your valid ID.');
+        setNotice({ message: 'Please choose a JPG or PNG image of your valid ID.' });
+        return;
+      }
+      if (!isWithinSizeLimit(picked, MAX_ID_BYTES)) {
+        setIdUploadError('Your ID image must be 5MB or smaller.');
+        setNotice({ message: 'Your ID image must be 5 MB or smaller.' });
+        return;
+      }
 
-    setIdUploadError(null);
-    setPickedIdImage(picked); legacyPath.current = null;
+      setIdUploadError(null);
+      setPickedIdImage(picked); legacyPath.current = null;
+    } catch (failure) {
+      setNotice({ message: residentServiceError(failure, 'pick') });
+    }
   }
 
   // S0-8: uploads the picked ID image to Storage *before* the service_requests insert
@@ -133,24 +141,28 @@ function RequestFormContent() {
       if (uploadError) {
         const {data:saved}=await supabase.storage.from('id-documents').download(path);
         const existing=saved?new Uint8Array(await saved.arrayBuffer()):null;
-        if(!existing || existing.length!==bytes.length || existing.some((v,i)=>v!==bytes[i])) return { path: null, error: uploadError.message };
+        if(!existing || existing.length!==bytes.length || existing.some((v,i)=>v!==bytes[i])) return { path: null, error: residentServiceError(uploadError, 'upload') };
       }
       return { path, error: null };
     } catch (readError) {
-      return { path: null, error: (readError as Error).message };
+      return { path: null, error: residentServiceError(readError, 'upload') };
     }
   }
 
   async function handleSubmit() {
     if (!doc || !session) return;
-    setError(null);
+    dismissNotice();
+    if (!profile) {
+      setNotice({ message: residentServiceError(new Error('authentication_required')) });
+      return;
+    }
 
     const result = requestFormSchema.safeParse({
       documentTypeId: doc.id,
       requesterNotes: notes || undefined,
     });
     if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
+      setNotice({ message: 'Keep the purpose of your request within 1,000 characters.' });
       return;
     }
 
@@ -159,14 +171,14 @@ function RequestFormContent() {
     const { path: idDocumentPath, error: uploadError } = await uploadIdDocument(session.user.id);
     if (uploadError) {
       setSubmitting(false);
-      setError(uploadError);
+      setNotice({ message: uploadError });
       return;
     }
 
     try {
       const data = await attempt.submit(supabase, { documentTypeId: doc.id, purposeCode: 'legacy', requesterNotes: result.data.requesterNotes, legacyIdPath: idDocumentPath ?? undefined, details: {}, attachments: [] });
       router.replace(`/services/payment/${data.id}`);
-    } catch (failure) { setError((failure as Error).message); }
+    } catch (failure) { setNotice({ message: residentServiceError(failure) }); }
     finally { setSubmitting(false); }
   }
 
@@ -194,6 +206,7 @@ function RequestFormContent() {
               value={notes}
               onChangeText={setNotes}
               multiline
+              maxLength={1000}
             />
 
           </ThemedView>
@@ -263,11 +276,6 @@ function RequestFormContent() {
             ) : null}
           </ThemedView>
 
-          {error ? (
-            <ThemedText type="small" themeColor="accentRed">
-              {error}
-            </ThemedText>
-          ) : null}
         </ScrollView>
 
         <View style={[styles.footer, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected }]}>
@@ -280,6 +288,7 @@ function RequestFormContent() {
           <PrimaryButton label="Proceed to Payment →" loading={submitting} onPress={handleSubmit} />
         </View>
       </View>
+      <ServiceErrorToast notice={notice} onDismiss={dismissNotice} />
     </SafeAreaView>
   );
 }

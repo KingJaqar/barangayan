@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -238,13 +239,12 @@ export function QrInstructionsModal({
 
           <div className="text-sm">
             <span className="mb-1 block font-medium">Icon</span>
-            <select {...form.register('icon')} className={inputClass}>
-              {PRESET_ICONS.map((icon) => (
-                <option key={icon} value={icon}>
-                  {icon}
-                </option>
-              ))}
-            </select>
+            <Controller name="icon" control={form.control} render={({ field, fieldState }) => (
+              <AdminSelect ref={field.ref} name={field.name} aria-label="Icon" value={field.value ?? ''}
+                onValueChange={field.onChange} onBlur={field.onBlur} disabled={field.disabled}
+                aria-invalid={fieldState.invalid} className={inputClass}
+                options={PRESET_ICONS.map(icon => ({ value: icon, label: icon }))} />
+            )} />
           </div>
 
           <div className="text-sm">

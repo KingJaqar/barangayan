@@ -3,6 +3,7 @@ import { DEFAULT_FONT_ID } from '@barangayan/shared';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import { ThemeForm } from './theme-form';
+import styles from './theme.module.css';
 
 // The admin's personal appearance control — writes the same profiles.theme_preference /
 // accent_color columns the mobile Settings screen already reads/writes (0006 migration),
@@ -20,12 +21,7 @@ export default async function ThemePage() {
     .single();
 
   return (
-    <div className="mx-auto max-w-xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Theme</h1>
-        <p className="text-sm text-zinc-500">Your personal appearance settings for this dashboard.</p>
-      </div>
-
+    <div className={styles.page}>
       <ThemeForm
         initialTheme={(profile?.theme_preference as 'light' | 'dark' | 'system') ?? 'system'}
         initialAccentColor={profile?.accent_color ?? '#0F6E5B'}

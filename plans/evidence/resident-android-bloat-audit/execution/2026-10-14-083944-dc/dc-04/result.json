@@ -1,0 +1,72 @@
+{
+  "status": "Held by automatic approval review; original source retained",
+  "removed": [],
+  "boundaryCopies": [
+    {
+      "file": "apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+      "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4",
+      "bytes": 20316
+    },
+    {
+      "file": "apps/resident-android-mobile/assets/geojson/ampid1-boundary.json",
+      "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4",
+      "bytes": 20316
+    },
+    {
+      "file": "C:/Users/User/barangayan/plans/evidence/resident-android-bloat-audit/execution/2026-10-14-083944-dc/dc-00/before/apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson",
+      "sha256": "c42c1efe1a9d2dd1357d64c197eaa6126ad4a982e29d9dbcef973f0587d13bb4",
+      "bytes": 20316
+    }
+  ],
+  "reason": "Automatic approval review classified source GeoJSON deletion as unauthorized data deletion. Identical active asset and recoverable rollback bytes have been verified; no deletion executed.",
+  "orphansHeld": [
+    {
+      "file": "apps/resident-android-mobile/src/components/add-family-member-modal.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/app-header.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/hint-row.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/settings-row.tsx",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-color-scheme.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-family-members.ts",
+      "runtimeReachable": false,
+      "status": "hold",
+      "reason": "Historical indexed path/hash dependency"
+    }
+  ]
+}

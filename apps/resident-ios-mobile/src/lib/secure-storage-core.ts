@@ -49,7 +49,7 @@ export function createSecureStorage(store: KeyValueStore, prefix: string) {
       const slot = old?.slot === 0 ? 1 : 0;
       const characters = Array.from(value);
       const count = Math.max(1, Math.ceil(characters.length / CHUNK_LENGTH));
-      if (count > MAX_CHUNKS) throw new Error('Session is too large for secure storage.');
+      if (count > MAX_CHUNKS) throw new Error('This value is too large for secure storage.');
       for (let i = 0; i < count; i++) {
         await store.setItem(`${name}.${slot}.${i}`, characters.slice(i * CHUNK_LENGTH, (i + 1) * CHUNK_LENGTH).join(''));
       }

@@ -2,75 +2,27 @@
 
 import Image from 'next/image';
 import styles from './admin-navigation.module.css';
-import type { LucideIcon } from 'lucide-react';
-import {
-  Bell,
-  Building2,
-  CalendarDays,
-  Check,
-  ChevronDown,
-  CircleHelp,
-  FileText,
-  Heart,
-  Info,
-  LayoutDashboard,
-  Mail,
-  MapPin,
-  Megaphone,
-  Menu,
-  Search,
-  QrCode,
-  ReceiptText,
-  ScrollText,
-  Settings,
-  Sun,
-  TriangleAlert,
-  Users,
-  UsersRound,
-} from 'lucide-react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { Bell, Check, ChevronDown, Menu, Palette, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useRef, useState } from 'react';
+import { AdminActionMenu } from './dropdown/admin-action-menu';
+import { DropdownSurface } from './dropdown/dropdown-surface';
+import dropdown from './dropdown/dropdown.module.css';
 
 import { useAdminAuditNotifications } from '@/hooks/use-admin-audit-notifications';
 import { MODULE_META, MODULE_ORDER, type ModuleKey } from '@/lib/audit-notifications';
 import { THEMED_SCROLLBAR_CLASS } from '@/lib/scrollbar';
 
 import { NotificationsDrawer } from './notifications-drawer';
+import { NotificationIcon, NotificationIconBadge } from './notification-icon';
 import { ScrollableChipRow } from './scrollable-chip-row';
 import { Spinner } from '@/components/loading/spinner';
+import { NavbarSearch } from './search/navbar-search';
+import { useProfileNavigation } from './profile-navigation-guard';
 
 type NotificationFilter = 'all' | 'unread' | ModuleKey;
 
 const ICON_STROKE = { strokeWidth: 2.5, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
-
-const SECTION_LABELS: Record<string, { icon: LucideIcon; label: string }> = {
-  '/dashboard': { icon: LayoutDashboard, label: 'Dashboard' },
-  '/theme': { icon: Sun, label: 'Theme' },
-  '/services': { icon: FileText, label: 'Services' },
-  '/announcements': { icon: Megaphone, label: 'Announcements' },
-  '/requests': { icon: Mail, label: 'Requests' },
-  '/transactions': { icon: ReceiptText, label: 'Transactions' },
-  '/residents': { icon: UsersRound, label: 'Resident Directory' },
-  '/incident-reports': { icon: TriangleAlert, label: 'Incident Reports' },
-  '/incident-map': { icon: MapPin, label: 'Incident Map' },
-  '/health': { icon: Heart, label: 'Health' },
-  '/staff': { icon: CalendarDays, label: 'Staff Member' },
-  '/faq': { icon: CircleHelp, label: 'FAQ Content' },
-  '/terms-privacy': { icon: ScrollText, label: 'Terms & Privacy' },
-  '/about-us': { icon: Info, label: 'About Us' },
-  '/settings': { icon: Settings, label: 'Settings' },
-  '/hub': { icon: Building2, label: 'Hub' },
-  '/evacuation-centers': { icon: MapPin, label: 'Evacuation Centers' },
-  '/emergency-qr': { icon: QrCode, label: 'Emergency QR' },
-  '/households-residents': { icon: Users, label: 'Households & Residents' },
-};
-
-interface SearchResult {
-  href: string;
-  primary: string;
-  secondary: string;
-}
 
 interface HeaderProps {
   barangayName: string;
@@ -82,10 +34,8 @@ interface HeaderProps {
 }
 
 export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, onToggleSidebar, onLogout }: HeaderProps) {
-  const pathname = usePathname();
   const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const { requestLeave } = useProfileNavigation();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifFilter, setNotifFilter] = useState<NotificationFilter>('all');
@@ -96,69 +46,18 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerMounted, setDrawerMounted] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
-  const notifRef = useRef<HTMLDivElement>(null);
+  const accountTrigger = useRef<HTMLButtonElement>(null);
+  const notifTrigger = useRef<HTMLButtonElement>(null);
+  const closeAccount = useCallback(() => setShowProfileMenu(false), []);
+  const closeNotifications = useCallback(() => setShowNotifications(false), []);
 
   const { notifications, unreadCount, loading: notifLoading, markAsRead, markAllAsRead, refetch: refetchNotifications } =
     useAdminAuditNotifications(barangayId);
 
-  const section = Object.entries(SECTION_LABELS).find(([href]) => pathname?.startsWith(href))?.[1];
-
-  // Close profile menu on outside click.
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowProfileMenu(false);
-      }
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setShowNotifications(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Debounced search.
-  useEffect(() => {
-    const timeout = setTimeout(async () => {
-      // Clearing happens on the same debounce tick as searching, so an emptied box drops
-      // its stale results without setState running synchronously in the effect body.
-      if (!query.trim()) {
-        setResults([]);
-        return;
-      }
-      const { createSupabaseBrowserClient } = await import('@/lib/supabase/client');
-      const supabase = createSupabaseBrowserClient();
-      const needle = `%${query}%`;
-
-      const [{ data: requests }, { data: residents }] = await Promise.all([
-        supabase
-          .from('service_requests')
-          .select('id, reference_number')
-          .ilike('reference_number', needle)
-          .is('deleted_at', null)
-          .limit(5),
-        supabase
-          .from('profiles')
-          .select('id, full_name')
-          .eq('role', 'resident')
-          .ilike('full_name', needle)
-          .is('deleted_at', null)
-          .limit(5),
-      ]);
-
-      setResults([
-        ...(requests ?? []).map((r) => ({ href: `/requests/${r.id}`, primary: `#${r.reference_number}`, secondary: 'Request' })),
-        ...(residents ?? []).map((r) => ({ href: `/residents?q=${encodeURIComponent(r.full_name)}`, primary: r.full_name, secondary: 'Resident' })),
-      ]);
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [query]);
-
   async function handleNotificationClick(id: string, href: string | null) {
     await markAsRead(id);
     setShowNotifications(false);
-    if (href) router.push(href);
+    if (href) requestLeave(() => router.push(href));
   }
 
   // Badge label — cap at 99+.
@@ -197,41 +96,12 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
         </div>
       </div>
 
-      {section ? (
-        <div className={`hidden items-center md:flex ${styles.currentSection}`}>
-          <section.icon className="size-4" {...ICON_STROKE} />
-          <span>{section.label}</span>
-        </div>
-      ) : null}
-
-      <div className={styles.search}>
-        <Search className={styles.searchIcon} aria-hidden="true" />
-        <input
-          aria-label="Search residents, requests, and incidents"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search residents, requests, incidents..."
-          className="w-full rounded-full border border-zinc-300 bg-zinc-50 px-4 py-2 text-sm outline-none focus:border-[var(--accent)] dark:border-zinc-700 dark:bg-zinc-900"
-        />
-        {query.trim() && results.length > 0 ? (
-          <div className="absolute top-full z-10 mt-1 w-full rounded-lg border border-black/10 bg-white shadow-lg dark:border-white/10 dark:bg-zinc-900">
-            {results.map((r) => (
-              <Link
-                key={r.href}
-                href={r.href}
-                onClick={() => setQuery('')}
-                className="flex items-center justify-between px-4 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800">
-                <span>{r.primary}</span>
-                <span className="text-xs text-zinc-400">{r.secondary}</span>
-              </Link>
-            ))}
-          </div>
-        ) : null}
-      </div>
+      <NavbarSearch className={styles.search} barangayId={barangayId} />
 
       {/* Notification bell */}
-      <div className="relative" ref={notifRef}>
+      <div className="relative">
         <button
+          ref={notifTrigger}
           onClick={() => setShowNotifications((v) => !v)}
           className={`relative rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 ${styles.bell}`}
           aria-expanded={showNotifications}
@@ -246,7 +116,14 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
         </button>
 
         {showNotifications ? (
-          <div className={`absolute right-0 z-20 mt-2 rounded-xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900 ${styles.notificationPopover}`}>
+          <DropdownSurface anchor={notifTrigger} onDismiss={closeNotifications} width={416} role="region" aria-label="Notifications"
+            onKeyDown={event => {
+              if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeNotifications(); notifTrigger.current?.focus({ preventScroll: true }); }
+              if (event.key === 'Tab') {
+                const controls = event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');
+                if (document.activeElement === (event.shiftKey ? controls[0] : controls[controls.length - 1])) { closeNotifications(); notifTrigger.current?.focus({ preventScroll: true }); }
+              }
+            }}>
             {/* Header */}
             <div className="border-b border-black/10 px-4 py-3 dark:border-white/10">
               <div className="flex items-center justify-between gap-3">
@@ -262,6 +139,7 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
                     </button>
                   ) : null}
                   <button
+                    autoFocus
                     onClick={openDrawer}
                     className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-[var(--accent)] dark:text-zinc-400"
                   >
@@ -285,7 +163,8 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
                 </FilterChip>
                 {MODULE_ORDER.map((key) => (
                   <FilterChip key={key} active={notifFilter === key} onClick={() => setNotifFilter(key)}>
-                    {MODULE_META[key].icon} {MODULE_META[key].label}
+                    <NotificationIcon module={key} />
+                    {MODULE_META[key].label}
                   </FilterChip>
                 ))}
               </ScrollableChipRow>
@@ -317,11 +196,12 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
                   <button
                     key={n.id}
                     onClick={() => handleNotificationClick(n.id, n.href)}
-                    className={`flex w-full flex-col gap-0.5 px-4 py-3 text-left text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 ${
+                    className={`${dropdown.row} flex-col gap-0.5 ${
                       !n.is_read ? 'bg-[var(--accent)]/5 dark:bg-[var(--accent)]/10' : ''
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex w-full items-start gap-3">
+                      <NotificationIconBadge module={n.module} />
                       <span className={`flex-1 leading-snug ${!n.is_read ? 'font-medium' : 'text-zinc-500'}`}>
                         {n.displayLabel}
                       </span>
@@ -329,12 +209,12 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
                         <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[var(--accent)]" />
                       ) : null}
                     </div>
-                    <span className="text-xs text-zinc-400">{n.relativeTime}</span>
+                    <span className="pl-12 text-xs text-zinc-400">{n.relativeTime}</span>
                   </button>
                 ))
               )}
             </div>
-          </div>
+          </DropdownSurface>
         ) : null}
 
         {drawerMounted ? (
@@ -350,11 +230,14 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
       </div>
 
       {/* Profile menu */}
-      <div className="relative" ref={menuRef}>
+      <div className="relative">
         <button
+          ref={accountTrigger}
           onClick={() => setShowProfileMenu((v) => !v)}
           aria-label="Account menu"
           aria-expanded={showProfileMenu}
+          aria-haspopup="menu"
+          onKeyDown={event => { if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); setShowProfileMenu(true); } }}
           className={`flex items-center rounded-full border hover:bg-zinc-50 dark:hover:bg-zinc-800 ${styles.profile}`}>
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-xs font-bold dark:bg-zinc-700">
             {adminName.charAt(0).toUpperCase() || 'A'}
@@ -364,16 +247,10 @@ export function Header({ barangayName, adminName, barangayId, sidebarCollapsed, 
         </button>
 
         {showProfileMenu ? (
-          <div className="absolute right-0 z-10 mt-2 w-40 rounded-lg border border-black/10 bg-white py-1 shadow-lg dark:border-white/10 dark:bg-zinc-900">
-            <Link href="/theme" onClick={() => setShowProfileMenu(false)} className="block px-4 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800">
-              Theme
-            </Link>
-            <button
-              onClick={onLogout}
-              className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20">
-              Logout
-            </button>
-          </div>
+          <AdminActionMenu anchor={accountTrigger} onClose={closeAccount} label="Account menu" items={[
+            { label: 'Theme', icon: <Palette size={17} />, href: '/theme', onSelect: closeAccount },
+            { label: 'Logout', icon: <LogOut size={17} />, destructive: true, onSelect: onLogout },
+          ]} />
         ) : null}
       </div>
     </header>
@@ -393,7 +270,7 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
         active
           ? 'bg-[var(--accent)] text-white'
           : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'

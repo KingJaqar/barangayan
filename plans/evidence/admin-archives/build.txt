@@ -1,0 +1,68 @@
+▲ Next.js 16.3.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 57ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 11.5s
+  Running TypeScript ...
+  Finished TypeScript in 18.8s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/41) ...
+  Generating static pages using 31 workers (10/41) 
+  Generating static pages using 31 workers (20/41) 
+  Generating static pages using 31 workers (30/41) 
+✓ Generating static pages using 31 workers (41/41) in 3.5s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /about-us
+├ ƒ /announcements
+├ ƒ /api/admin/residents
+├ ƒ /api/admin/staff/invite
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /archive
+├ ƒ /archive/[screen]
+├ ƒ /dashboard
+├ ƒ /emergency-qr
+├ ƒ /evacuation-centers
+├ ƒ /evacuation-routing
+├ ƒ /faq
+├ ○ /forgot-password
+├ ƒ /health
+├ ƒ /health/applicants
+├ ƒ /households-residents
+├ ƒ /hub
+├ ○ /icon.png
+├ ƒ /incident-map
+├ ƒ /incident-reports
+├ ○ /login
+├ ƒ /requests
+├ ƒ /requests/[requestId]
+├ ○ /reset-password
+├ ƒ /resident
+├ ƒ /resident/profile
+├ ƒ /resident/reports
+├ ƒ /resident/reports/new
+├ ƒ /resident/requests
+├ ƒ /resident/requests/[requestId]
+├ ƒ /resident/requests/new
+├ ƒ /residents
+├ ƒ /services
+├ ƒ /services/sla
+├ ƒ /settings
+├ ƒ /staff
+├ ƒ /terms-privacy
+├ ƒ /theme
+├ ƒ /transactions
+└ ƒ /waste-management
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

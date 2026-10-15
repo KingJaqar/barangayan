@@ -1,0 +1,73 @@
+.workspace { margin-bottom: 24px; }
+.title { color: var(--content-text, #202127); font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -.035em; }
+.header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.header > div:first-child { flex: 1; min-width: min(100%, 280px); }
+.description { margin-top: 6px; max-width: 640px; color: #666976; font-size: 13px; line-height: 1.6; }
+.triggers { display: flex; flex-wrap: wrap; gap: 10px; }
+.createButton, .secondaryButton { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; border: 1px solid transparent; border-radius: 6px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.createButton { background: var(--accent); color: white; box-shadow: 0 2px 4px rgb(0 0 0 / 12%); }
+.createButton:hover { background: var(--accent-strong); }
+.secondaryCreate { background: var(--content-action-surface, #eef1f6); color: var(--content-text, #202127); border-color: var(--content-border, #cdd2dc); }
+.secondaryCreate:hover { background: var(--content-hover, #f5f6f9); }
+.createButton:focus-visible, .secondaryButton:focus-visible, .form button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.sheetDialog { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; overflow: hidden; }
+.sheetDialog::backdrop { background: transparent; }
+.backdrop { position: absolute; inset: 0; background: rgb(0 0 0 / 50%); }
+.sheet { position: relative; display: flex; flex-direction: column; height: 100%; width: min(100%, 760px); margin-left: auto; border-left: 1px solid #e7e8ed; background: white; box-shadow: -12px 0 32px rgb(0 0 0 / 12%); }
+/* Native dialogs enter from display:none. Give their first displayed frame
+ * the same starting position as the notification drawer's mounted panel. */
+@starting-style {
+  .sheetDialog[open] .sheet { transform: translateX(100%); }
+  .sheetDialog[open] .backdrop { opacity: 0; }
+}
+.panelHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-shrink: 0; padding: 24px 28px; border-bottom: 1px solid #e4e4e7; }
+.panelBody { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 28px; }
+.closeButton { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; color: #71717a; cursor: pointer; }
+.closeButton:hover { background: #f4f4f5; }
+.closeButton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.form { gap: 20px; color: #27272a; }
+.form label { min-width: 0; font-size: 14px; font-weight: 500; line-height: 1.5; }
+.form label > span:first-child { margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #3f3f46; }
+.form label > input:not([type='checkbox']), .form label > textarea, .form label > select {
+  width: 100%; min-height: 44px; border: 1px solid #d4d4d8; border-radius: 8px; background: #fafafa; padding: 10px 12px; font-size: 14px; font-weight: 400; line-height: 1.5; outline: none;
+}
+.form textarea { resize: vertical; }
+.form input::placeholder, .form textarea::placeholder { color: #a1a1aa; }
+.form label > input:focus, .form label > textarea:focus, .form label > select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-shadow); }
+.form input[type='checkbox'] { accent-color: var(--accent); width: 16px; height: 16px; vertical-align: middle; }
+.form input:disabled, .form select:disabled, .form button:disabled { cursor: not-allowed; opacity: .5; }
+.form fieldset fieldset { border: 1px solid #e4e4e7; border-radius: 12px; padding: 20px; }
+.form legend { padding: 0 6px; font-size: 14px; font-weight: 600; }
+.groupHeading { grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid #e4e4e7; }
+.groupHeading h3 { padding-top: 12px; font-size: 14px; font-weight: 600; }
+.actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; padding-top: 20px; border-top: 1px solid #e4e4e7; }
+.actions button[type='submit'] { min-height: 42px; border-radius: 6px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.sheet .actions { position: sticky; bottom: -28px; z-index: 1; background: white; padding-bottom: 20px; box-shadow: 0 -12px 20px white; }
+.secondaryButton { border: 1px solid #d4d4d8; background: transparent; color: #3f3f46; }
+.secondaryButton:hover { background: #f4f4f5; }
+.draftHint { flex-basis: 100%; font-size: 12px; line-height: 1.5; color: #71717a; }
+:global(.dark) .sheet { border-color: #3f3f46; background: #09090b; }
+:global(.dark) .sheet .actions { background: #09090b; box-shadow: 0 -12px 20px #09090b; }
+:global(.dark) .closeButton:hover { background: #27272a; }
+:global(.dark) .panelHeader, :global(.dark) .actions, :global(.dark) .groupHeading, :global(.dark) .form fieldset fieldset { border-color: #3f3f46; }
+:global(.dark) .description, :global(.dark) .draftHint { color: #a1a1aa; }
+:global(.dark) .title { color: #eeeff4; }
+:global(.dark) .form { color: #e4e4e7; }
+:global(.dark) .form label > span:first-child { color: #d4d4d8; }
+:global(.dark) .form label > input:not([type='checkbox']), :global(.dark) .form label > textarea, :global(.dark) .form label > select { background: #27272a; border-color: #52525b; }
+:global(.dark) .form label > input:focus, :global(.dark) .form label > textarea:focus, :global(.dark) .form label > select:focus { border-color: var(--accent); }
+:global(.dark) .secondaryButton { color: #e4e4e7; border-color: #52525b; }
+:global(.dark) .secondaryButton:hover { background: #27272a; }
+@media (max-width: 639px) {
+  .panelHeader, .panelBody { padding: 20px; }
+  .sheet .actions { bottom: -20px; }
+  .triggers { width: 100%; }
+  .createButton { flex: 1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .createButton, .secondaryButton, .closeButton { transition: background-color 120ms ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheetDialog[open] .sheet { transform: none; }
+  @starting-style { .sheetDialog[open] .sheet { transform: none; } }
+}

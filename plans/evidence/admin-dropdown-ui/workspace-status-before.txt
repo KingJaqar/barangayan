@@ -1,0 +1,387 @@
+ M apps/admin-web/package.json
+ M apps/admin-web/src/app/(admin)/announcements/announcement-catalog.tsx
+ M apps/admin-web/src/app/(admin)/announcements/announcement-form.tsx
+ M apps/admin-web/src/app/(admin)/announcements/announcement-row.tsx
+ M apps/admin-web/src/app/(admin)/announcements/page.tsx
+ M apps/admin-web/src/app/(admin)/dashboard/dashboard.module.css
+ M apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-catalog.tsx
+ M apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-form.tsx
+ M apps/admin-web/src/app/(admin)/evacuation-centers/evacuation-center-row.tsx
+ M apps/admin-web/src/app/(admin)/evacuation-centers/page.tsx
+ M apps/admin-web/src/app/(admin)/faq/faq-form.tsx
+ M apps/admin-web/src/app/(admin)/faq/faq-list.tsx
+ M apps/admin-web/src/app/(admin)/faq/faq-row.tsx
+ M apps/admin-web/src/app/(admin)/faq/page.tsx
+ M apps/admin-web/src/app/(admin)/health/applicants/applicants-table.tsx
+ M apps/admin-web/src/app/(admin)/health/drive-table.tsx
+ M apps/admin-web/src/app/(admin)/households-residents/households-table.tsx
+ M apps/admin-web/src/app/(admin)/hub/emergency-catalog.tsx
+ M apps/admin-web/src/app/(admin)/hub/emergency-form.tsx
+ M apps/admin-web/src/app/(admin)/hub/emergency-row.tsx
+ M apps/admin-web/src/app/(admin)/hub/page.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/incident-actions.tsx
+ M apps/admin-web/src/app/(admin)/incident-reports/incident-table.tsx
+ M apps/admin-web/src/app/(admin)/requests/[requestId]/page.tsx
+ M apps/admin-web/src/app/(admin)/requests/requests-table.tsx
+ M apps/admin-web/src/app/(admin)/residents/resident-directory.tsx
+ M apps/admin-web/src/app/(admin)/services/document-type-catalog.tsx
+ M apps/admin-web/src/app/(admin)/services/document-type-form.tsx
+ M apps/admin-web/src/app/(admin)/services/page.tsx
+ M apps/admin-web/src/app/(admin)/services/service-catalog-editor.tsx
+ M apps/admin-web/src/app/(admin)/staff/staff-table.tsx
+ M apps/admin-web/src/app/(admin)/theme/page.tsx
+ M apps/admin-web/src/app/(admin)/theme/theme-form.tsx
+ M apps/admin-web/src/app/(admin)/transactions/transactions-table.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/page.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/schedule-form.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/schedule-row.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/trash-incident-table.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/waste-catalog.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/zone-form.tsx
+ M apps/admin-web/src/app/(admin)/waste-management/zone-row.tsx
+ M apps/admin-web/src/components/admin/admin-navigation.module.css
+ M apps/admin-web/src/components/admin/confirm-button.tsx
+ M apps/admin-web/src/components/admin/editable-data-table.tsx
+ M apps/admin-web/src/components/admin/header.tsx
+ M apps/admin-web/src/components/admin/notification-detail-panel.tsx
+ M apps/admin-web/src/components/admin/notification-item.tsx
+ M apps/admin-web/src/components/admin/notifications-drawer.tsx
+ M apps/admin-web/src/components/admin/request-status-actions.tsx
+ M apps/admin-web/src/components/admin/sidebar-nav.tsx
+ M apps/admin-web/src/lib/admin-tables/queries/browse.ts
+ M apps/admin-web/src/lib/audit-notifications.ts
+ M apps/admin-web/tests/table-browse/queries.test.ts
+ M apps/admin-web/vitest.config.ts
+ D apps/resident-android-mobile/SanMateo_Ampid1_GEOjson.geojson
+ M apps/resident-android-mobile/app.json
+ M apps/resident-android-mobile/package.json
+ M apps/resident-android-mobile/src/app/(app)/home/emergency-info/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/home/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/maps/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/services/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/_layout.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/index.tsx
+ M apps/resident-android-mobile/src/app/(app)/settings/profile.tsx
+ M apps/resident-android-mobile/src/app/_layout.tsx
+ M apps/resident-android-mobile/src/app/account-setup.tsx
+ M apps/resident-android-mobile/src/app/index.tsx
+ D apps/resident-android-mobile/src/components/add-family-member-modal.tsx
+ D apps/resident-android-mobile/src/components/app-header.tsx
+ M apps/resident-android-mobile/src/components/family-content.tsx
+ D apps/resident-android-mobile/src/components/hint-row.tsx
+ M apps/resident-android-mobile/src/components/map-view.tsx
+ D apps/resident-android-mobile/src/components/onboarding/onboarding-ambient-background.tsx
+ M apps/resident-android-mobile/src/components/password-recovery-screen.tsx
+ M apps/resident-android-mobile/src/components/reports/announcements-feed.tsx
+ M apps/resident-android-mobile/src/components/reports/shimmer.tsx
+ M apps/resident-android-mobile/src/components/resident-details-form.tsx
+ M apps/resident-android-mobile/src/components/services/charter-request-form.tsx
+ M apps/resident-android-mobile/src/components/services/skeleton.tsx
+ D apps/resident-android-mobile/src/components/settings-row.tsx
+ M apps/resident-android-mobile/src/constants/payment.ts
+ D apps/resident-android-mobile/src/hooks/use-color-scheme.ts
+ D apps/resident-android-mobile/src/hooks/use-color-scheme.web.ts
+ M apps/resident-android-mobile/src/hooks/use-evacuation-centers.ts
+ D apps/resident-android-mobile/src/hooks/use-family-members.ts
+ M apps/resident-android-mobile/src/hooks/use-theme-preference.tsx
+ M apps/resident-android-mobile/src/lib/dialog.ts
+ M apps/resident-android-mobile/src/lib/emergency-cache.ts
+ M apps/resident-android-mobile/src/lib/push-notifications.ts
+ M apps/resident-ios-mobile/app.config.ts
+ M apps/resident-ios-mobile/package.json
+ M apps/resident-ios-mobile/src/app/(tabs)/_layout.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/health/[id].tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/health/_layout.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/health/index.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/home/_layout.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/home/index.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/maps/_layout.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/reports/_layout.tsx
+RM apps/resident-ios-mobile/src/app/(tabs)/reports/[id].tsx -> apps/resident-ios-mobile/src/app/(tabs)/reports/announcements/[announcementId].tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/reports/index.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/services/[id].tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/services/_layout.tsx
+ M apps/resident-ios-mobile/src/app/(tabs)/services/index.tsx
+RM apps/resident-ios-mobile/src/app/settings/_layout.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/_layout.tsx
+RM apps/resident-ios-mobile/src/app/settings/change-password.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/change-password.tsx
+RM apps/resident-ios-mobile/src/app/settings/help/[id].tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/help/[id].tsx
+RM apps/resident-ios-mobile/src/app/settings/help/index.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/help/index.tsx
+RM apps/resident-ios-mobile/src/app/settings/index.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/index.tsx
+RM apps/resident-ios-mobile/src/app/settings/information.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/information.tsx
+RM apps/resident-ios-mobile/src/app/profile.tsx -> apps/resident-ios-mobile/src/app/(tabs)/settings/profile.tsx
+ M apps/resident-ios-mobile/src/app/_layout.tsx
+ M apps/resident-ios-mobile/src/app/emergency.tsx
+ M apps/resident-ios-mobile/src/app/health/register/[id].tsx
+ M apps/resident-ios-mobile/src/app/index.tsx
+ M apps/resident-ios-mobile/src/app/request/[id].tsx
+ M apps/resident-ios-mobile/src/app/requests.tsx
+ M apps/resident-ios-mobile/src/app/services/request/[id].tsx
+ M apps/resident-ios-mobile/src/components/resident-stack.tsx
+ M apps/resident-ios-mobile/src/components/resource-list.tsx
+ M apps/resident-ios-mobile/src/components/ui.tsx
+ M apps/resident-ios-mobile/src/data/resident-api.ts
+ M apps/resident-ios-mobile/src/features/auth/register-screen.tsx
+ M apps/resident-ios-mobile/src/lib/errors.ts
+ M apps/resident-ios-mobile/src/lib/runtime.tsx
+ M apps/resident-ios-mobile/src/lib/secure-storage-core.ts
+ M apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx
+ M apps/resident-web/src/app/(resident)/emergency/layout.tsx
+ M apps/resident-web/src/app/(resident)/health/layout.tsx
+ M apps/resident-web/src/app/(resident)/home/page.tsx
+ M apps/resident-web/src/app/(resident)/maps/page.tsx
+ M apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx
+ M apps/resident-web/src/app/(resident)/reports/my-reports-tabs.tsx
+ M apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx
+ M apps/resident-web/src/app/(resident)/services/layout.tsx
+ M apps/resident-web/src/app/(resident)/services/requests/page.tsx
+ M apps/resident-web/src/components/emergency/alerts-content.tsx
+ M apps/resident-web/src/components/emergency/centers-content.tsx
+ M apps/resident-web/src/components/emergency/centers-map.tsx
+ M apps/resident-web/src/components/emergency/emergency-accordion.tsx
+ M apps/resident-web/src/components/emergency/emergency-segment-nav.tsx
+ M apps/resident-web/src/components/emergency/evacuation-center-card.tsx
+ M apps/resident-web/src/components/emergency/family-content.tsx
+ M apps/resident-web/src/components/emergency/family-member-dialog.tsx
+ M apps/resident-web/src/components/emergency/hotline-row.tsx
+ M apps/resident-web/src/components/emergency/household-qr-dialog.tsx
+ M apps/resident-web/src/components/emergency/hub-content.tsx
+ M apps/resident-web/src/components/emergency/location-status-card.tsx
+ M apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx
+ M apps/resident-web/src/components/emergency/qr-show-dialog.tsx
+ M apps/resident-web/src/components/emergency/qr-upload-fallback.tsx
+ M apps/resident-web/src/components/emergency/scan-content.tsx
+ M apps/resident-web/src/components/health/active-drives-content.tsx
+ M apps/resident-web/src/components/health/applicant-form.tsx
+ M apps/resident-web/src/components/health/category-filter-pills.tsx
+ M apps/resident-web/src/components/health/drive-calendar.tsx
+ M apps/resident-web/src/components/health/drive-card.tsx
+ M apps/resident-web/src/components/health/health-segment-nav.tsx
+ M apps/resident-web/src/components/health/my-registrations-content.tsx
+ M apps/resident-web/src/components/health/register-drawer.tsx
+ M apps/resident-web/src/components/health/registration-drawer.tsx
+ M apps/resident-web/src/components/home/guest-hero.tsx
+ M apps/resident-web/src/components/home/home-search-bar.tsx
+ M apps/resident-web/src/components/home/latest-announcement-card.tsx
+ M apps/resident-web/src/components/home/quick-action-tile.tsx
+ M apps/resident-web/src/components/maps/map-canvas.tsx
+ M apps/resident-web/src/components/maps/map-client-wrapper.tsx
+ M apps/resident-web/src/components/maps/map-filter-pills.tsx
+ M apps/resident-web/src/components/maps/map-marker-popup.tsx
+ M apps/resident-web/src/components/maps/map-search-bar.tsx
+ M apps/resident-web/src/components/maps/map-segment-toggle.tsx
+ M apps/resident-web/src/components/maps/map-sidebar.tsx
+ M apps/resident-web/src/components/reports/announcement-card.tsx
+ M apps/resident-web/src/components/reports/announcement-modal.tsx
+ M apps/resident-web/src/components/reports/incident-card.tsx
+ M apps/resident-web/src/components/reports/incident-drawer.tsx
+ M apps/resident-web/src/components/services/resident-service-form.tsx
+ M apps/resident-web/src/components/services/services-segment-nav.tsx
+ M apps/resident-web/src/components/shared/loading-status.tsx
+ M apps/resident-web/src/components/shared/page-skeleton.tsx
+ M apps/resident-web/src/components/shell/bottom-tab-bar.tsx
+ M apps/resident-web/src/components/shell/resident-shell.tsx
+ M apps/resident-web/src/components/shell/top-nav.tsx
+ M apps/resident-web/src/components/ui/button.tsx
+ M apps/resident-web/src/components/ui/loading.tsx
+ M apps/resident-web/src/hooks/use-evacuation-centers.ts
+ M apps/resident-web/src/hooks/use-unread-counts.tsx
+ M package-lock.json
+ M packages/shared/package.json
+ M packages/shared/src/index.ts
+ M packages/shared/src/lib/device-location.ts
+ M packages/shared/src/lib/evacuation-routing.ts
+ M packages/shared/src/lib/geocode.ts
+ M packages/shared/src/lib/id-evidence.test.ts
+ M packages/shared/src/lib/id-evidence.ts
+ D packages/shared/src/lib/osrm.test.ts
+ D packages/shared/src/lib/osrm.ts
+ M packages/shared/src/schemas/admin-audit-log.ts
+ M packages/shared/src/schemas/evacuation-center.ts
+ M packages/shared/src/schemas/service-foundations.test.ts
+ M packages/shared/src/schemas/service-foundations.ts
+ M packages/shared/src/types/database.ts
+ M packages/shared/src/types/map-bridge.ts
+ M packages/shared/src/types/service-foundations.ts
+ M packages/shared/tsconfig.json
+ M plans/Resident_DRRM_Weather_Routing_BFS_Dijkstra_Implementation_Plan.md
+ M plans/Resident_iOS_Implementation_Plan.md
+ M plans/Resident_iOS_UI_UX_Design_System_Handoff.md
+ M supabase/config.toml
+ M supabase/functions/refund-payment/index.ts
+ M supabase/seed.sql
+?? apps/admin-web/src/actions/admin-record-actions.ts
+?? apps/admin-web/src/app/(admin)/archive/
+?? apps/admin-web/src/app/(admin)/evacuation-routing/
+?? apps/admin-web/src/app/(admin)/search/
+?? apps/admin-web/src/app/(admin)/theme/theme.module.css
+?? apps/admin-web/src/app/api/search/
+?? apps/admin-web/src/components/admin/content-create-panel.tsx
+?? apps/admin-web/src/components/admin/content-forms.module.css
+?? apps/admin-web/src/components/admin/content-workspace.module.css
+?? apps/admin-web/src/components/admin/content-workspace.tsx
+?? apps/admin-web/src/components/admin/household-residents-icon.tsx
+?? apps/admin-web/src/components/admin/medical-applicant-icon.tsx
+?? apps/admin-web/src/components/admin/notification-icon.tsx
+?? apps/admin-web/src/components/admin/record-archive-link.tsx
+?? apps/admin-web/src/components/admin/record-workspace.tsx
+?? apps/admin-web/src/components/admin/row-context-menu.tsx
+?? apps/admin-web/src/components/admin/search/
+?? apps/admin-web/src/hooks/use-admin-search.ts
+?? apps/admin-web/src/hooks/use-row-action.ts
+?? apps/admin-web/src/lib/admin-tables/archive-config.ts
+?? apps/admin-web/src/lib/admin-tables/archive-sections.ts
+?? apps/admin-web/src/lib/admin-tables/queries/content-archive.ts
+?? apps/admin-web/src/lib/admin-tables/record-config.ts
+?? apps/admin-web/src/lib/admin-tables/record-schema.ts
+?? apps/admin-web/src/lib/routing-packs.ts
+?? apps/admin-web/src/lib/search/
+?? apps/admin-web/src/lib/side-sheet-motion.ts
+?? apps/admin-web/tests/content-workspace/
+?? apps/admin-web/tests/dropdown/
+?? apps/admin-web/tests/search/
+?? apps/admin-web/tests/table-browse/archives-e2e.mjs
+?? apps/admin-web/tests/table-browse/content-archive.test.ts
+?? apps/admin-web/tests/table-browse/context-menu-browser.mjs
+?? apps/admin-web/tests/table-browse/context-menu-fixture.tsx
+?? apps/admin-web/tests/table-browse/record-adapters.js
+?? apps/admin-web/tests/table-browse/record-browser.mjs
+?? apps/admin-web/tests/table-browse/record-e2e.mjs
+?? apps/admin-web/tests/table-browse/record-fixture.jsx
+?? apps/admin-web/tests/table-browse/record-lifecycle.test.ts
+?? apps/admin-web/tests/table-browse/refund-handler.test.ts
+?? apps/resident-android-mobile/scripts/generate-leaflet-assets.mjs
+?? apps/resident-android-mobile/src/app/(app)/settings/valid-id.tsx
+?? apps/resident-android-mobile/src/app/emergency-centers.tsx
+?? apps/resident-android-mobile/src/components/birthday-wheel-modal.tsx
+?? apps/resident-android-mobile/src/components/emergency-entry-link.tsx
+?? apps/resident-android-mobile/src/components/evacuation-centers-panel.tsx
+?? apps/resident-android-mobile/src/components/leaflet-assets.ts
+?? apps/resident-android-mobile/src/components/offline-route-card.tsx
+?? apps/resident-android-mobile/src/components/road-mark-card.tsx
+?? apps/resident-android-mobile/src/components/shimmer-skeleton.tsx
+?? apps/resident-android-mobile/src/hooks/use-local-route.ts
+?? apps/resident-android-mobile/src/hooks/use-offline-routing.ts
+?? apps/resident-android-mobile/src/hooks/use-resident-route.ts
+?? apps/resident-android-mobile/src/lib/birthday-wheel.test.ts
+?? apps/resident-android-mobile/src/lib/birthday-wheel.ts
+?? apps/resident-android-mobile/src/lib/id-photo-bytes.ts
+?? apps/resident-android-mobile/src/lib/leaflet-assets.test.ts
+?? apps/resident-android-mobile/src/lib/offline-routing-storage.ts
+?? apps/resident-android-mobile/src/lib/offline-routing.test.ts
+?? apps/resident-android-mobile/src/lib/offline-routing.ts
+?? apps/resident-android-mobile/src/lib/valid-id.test.ts
+?? apps/resident-android-mobile/src/lib/valid-id.ts
+?? apps/resident-ios-mobile/eas.json
+?? apps/resident-ios-mobile/src/app/(tabs)/reports/[id].tsx
+?? apps/resident-ios-mobile/src/app/(tabs)/reports/incidents/
+?? apps/resident-ios-mobile/src/app/profile.tsx
+?? apps/resident-ios-mobile/src/components/request-status.tsx
+?? apps/resident-ios-mobile/src/components/require-resident.tsx
+?? apps/resident-ios-mobile/src/data/boundary.ts
+?? apps/resident-ios-mobile/src/data/mutation.ts
+?? apps/resident-ios-mobile/src/data/outcome.ts
+?? apps/resident-ios-mobile/src/data/pagination.ts
+?? apps/resident-ios-mobile/src/data/public-cache.ts
+?? apps/resident-ios-mobile/src/data/realtime.ts
+?? apps/resident-ios-mobile/src/data/report-counts.tsx
+?? apps/resident-ios-mobile/src/data/schemas.ts
+?? apps/resident-ios-mobile/src/data/scope.ts
+?? apps/resident-ios-mobile/src/data/use-paged-resource.ts
+?? apps/resident-ios-mobile/src/data/use-public-resource.ts
+?? apps/resident-ios-mobile/src/lib/device-location.ts
+?? apps/resident-ios-mobile/src/lib/drafts.ts
+?? apps/resident-ios-mobile/src/lib/file-validation.ts
+?? apps/resident-ios-mobile/src/lib/files.ts
+?? apps/resident-ios-mobile/src/lib/format.ts
+?? apps/resident-ios-mobile/src/lib/location-core.ts
+?? apps/resident-ios-mobile/src/lib/protected-drafts.ts
+?? apps/resident-ios-mobile/src/lib/staged-uploads.ts
+?? apps/resident-ios-mobile/src/lib/theme.ts
+?? apps/resident-ios-mobile/tests/files.test.ts
+?? apps/resident-ios-mobile/tests/format.test.ts
+?? apps/resident-ios-mobile/tests/navigation.test.ts
+?? apps/resident-ios-mobile/tests/outcome.test.ts
+?? apps/resident-ios-mobile/tests/pagination.test.ts
+?? apps/resident-ios-mobile/tests/persistence.test.ts
+?? apps/resident-ios-mobile/tests/resident-api.test.ts
+?? apps/resident-web/src/app/(resident)/announcements/[announcementId]/
+?? apps/resident-web/src/app/(resident)/health/drives/
+?? apps/resident-web/src/app/(resident)/search/
+?? apps/resident-web/src/app/(resident)/services/services-layout.module.css
+?? apps/resident-web/src/app/api/
+?? apps/resident-web/src/components/emergency/emergency-page-header.tsx
+?? apps/resident-web/src/components/emergency/emergency.module.css
+?? apps/resident-web/src/components/emergency/route-status-card.tsx
+?? apps/resident-web/src/components/health/health.module.css
+?? apps/resident-web/src/components/home/home.module.css
+?? apps/resident-web/src/components/maps/map-search.ts
+?? apps/resident-web/src/components/maps/maps.module.css
+?? apps/resident-web/src/components/reports/announcements.module.css
+?? apps/resident-web/src/components/reports/new-report-drawer.tsx
+?? apps/resident-web/src/components/reports/report-sort-menu.tsx
+?? apps/resident-web/src/components/reports/reports.module.css
+?? apps/resident-web/src/components/search/
+?? apps/resident-web/src/components/services/services-segment-nav.module.css
+?? apps/resident-web/src/components/shared/sticky-primary-tabs.tsx
+?? apps/resident-web/src/components/shared/sticky-tabs.module.css
+?? apps/resident-web/src/components/shell/profile-menu.tsx
+?? apps/resident-web/src/components/shell/resident-shell.module.css
+?? apps/resident-web/src/hooks/use-connected-route.ts
+?? apps/resident-web/src/hooks/use-resident-search.ts
+?? apps/resident-web/src/lib/search/
+?? apps/resident-web/tests/map-browser.mjs
+?? apps/resident-web/tests/map-fixture.jsx
+?? apps/resident-web/tests/map-search.test.ts
+?? apps/resident-web/tests/search-api.test.ts
+?? apps/resident-web/tests/search-e2e.mjs
+?? apps/resident-web/tests/search.test.ts
+?? apps/resident-web/vitest.config.ts
+?? baseline_and_tsc.log
+?? "contexts/Barangayan Resident Android \342\200\224 Screens.pdf"
+?? data/
+?? design/
+?? packages/shared/scripts/
+?? packages/shared/src/lib/connected-route-client.test.ts
+?? packages/shared/src/lib/connected-route-client.ts
+?? packages/shared/src/lib/evacuation-route-service.test.ts
+?? packages/shared/src/lib/evacuation-route-service.ts
+?? packages/shared/src/lib/routing-pack-builder.test.ts
+?? packages/shared/src/lib/routing-pack-builder.ts
+?? packages/shared/src/schemas/routing-conditions.test.ts
+?? packages/shared/src/schemas/routing-conditions.ts
+?? packages/shared/src/types/routing-conditions.database.ts
+?? plans/Admin_Web_Dropdown_UI_Consistency_Plan_2026_10_14.md
+?? plans/Resident_Android_Code_and_File_Bloat_Audit_2026_10_14.md
+?? plans/Resident_Android_Unused_Code_Deletion_Execution_Plan_2026_10_14.md
+?? plans/evidence/admin-archives/
+?? plans/evidence/admin-dropdown-ui/
+?? plans/evidence/admin-record-lifecycle/
+?? plans/evidence/admin-web-search/
+?? plans/evidence/resident-android-bloat-audit/
+?? plans/evidence/resident-drrm-routing/r3-pack-builder/
+?? plans/evidence/resident-drrm-routing/r4-conditions/
+?? plans/evidence/resident-drrm-routing/r5-route-service/
+?? plans/evidence/resident-drrm-routing/r6-offline/
+?? plans/evidence/resident-ios-parity/
+?? plans/evidence/resident-web-search/
+?? scripts/valid-id-database.cjs
+?? scripts/valid-id-flow-browser.cjs
+?? supabase/functions/deno.lock
+?? supabase/functions/evacuation-route/
+?? supabase/functions/extract-resident-id/
+?? supabase/migrations/0113_routing_conditions.sql
+?? supabase/migrations/0114_routing_rate_limits.sql
+?? supabase/migrations/0115_admin_record_lifecycle.sql
+?? supabase/migrations/0116_admin_incident_withdrawal.sql
+?? supabase/migrations/0117_admin_request_row_workflows.sql
+?? supabase/migrations/0118_resident_front_id_submission.sql
+?? supabase/tests/admin_incident_withdrawal.test.sql
+?? supabase/tests/admin_record_lifecycle.test.sql
+?? supabase/tests/admin_request_row_workflows.test.sql
+?? supabase/tests/resident_front_id_submission.test.sql
+?? supabase/tests/routing_conditions.test.sql
+?? supabase/tests/routing_rate_limits.test.sql
+?? tmp/admin-context-menu/
+?? tmp/health-ui/
+?? tmp/maps-ui/
+?? tmp/reports-ui/

@@ -192,6 +192,11 @@ function insideRings(lng: number, lat: number, rings: ReadonlyArray<readonly Lng
   return inside;
 }
 
+/** The router's coverage test: inside GeoJSON polygon rings (even-odd, so holes are outside). */
+export function isInsideCoverage(point: RoutingPoint, rings: ReadonlyArray<readonly LngLat[]>): boolean {
+  return insideRings(point.lng, point.lat, rings);
+}
+
 /** Shortest distance in meters from `point` to a [lng, lat] polyline. */
 export function distanceToPolylineMeters(point: RoutingPoint, geometry: readonly LngLat[]): number {
   const line = geometry.map(([lng, lat]) => toXY(lng, lat, point.lat));
@@ -248,6 +253,33 @@ export interface RoutingGraph {
   edges: readonly RoutingEdge[];
   barriers: readonly RoutingBarrier[];
   stationEdges: readonly StationEdgeApplicability[];
+}
+
+/** One file of a routing pack. Hashes detect corruption; a trusted origin is still required (plan section 4). */
+export interface RoutingPackResource {
+  path: string;
+  bytes: number;
+  sha256: string;
+  /** Devices download `device` resources; flood grids stay on the server (plan section 2). */
+  audience: 'device' | 'server';
+}
+
+export interface RoutingPackManifest {
+  schemaVersion: 1;
+  areaId: string;
+  graphVersion: string;
+  configVersion: string;
+  /** OSM database time of the source extract; null when the extract does not state it. */
+  osmBaseTimestamp: string | null;
+  boundarySha256: string;
+  coverageMarginMeters: number;
+  /** ODbL attribution the map must display. */
+  attribution: string;
+  /** Station-to-edge tables stay empty until verified station positions exist (plan 3.8 stage 2). */
+  stations: 'unavailable' | 'verified';
+  /** No licensed DEM yet: every flood-grid elevation is unknown (plan 3.2, R8). */
+  terrain: 'unavailable';
+  resources: RoutingPackResource[];
 }
 
 export type GraphIssueCode =
@@ -1219,6 +1251,64 @@ export function floodGridCellAt(grid: FloodGrid, point: RoutingPoint): number {
 }
 
 /**
+ * Every grid cell a polyline touches (grid-line DDA over each segment), ascending and
+ * unique, in the same frame as `floodGridCellAt`. A line passing exactly through a cell
+ * corner counts all four cells, and `outside` is true when any part leaves the grid. Used to
+ * decide whether an edge's full geometry crosses a flooded cell (plan 3.4).
+ */
+export function floodGridCellsOnPolyline(grid: FloodGrid, geometry: readonly LngLat[]): { cells: number[]; outside: boolean } {
+  const origin = toXY(grid.originLng, grid.originLat, grid.originLat);
+  const points = geometry.map(([lng, lat]) => {
+    const p = toXY(lng, lat, grid.originLat);
+    return { x: (p.x - origin.x) / grid.cellSizeMeters, y: (p.y - origin.y) / grid.cellSizeMeters };
+  });
+  const cells = new Set<number>();
+  let outside = false;
+  const visit = (col: number, row: number): void => {
+    if (col < 0 || row < 0 || col >= grid.cols || row >= grid.rows) outside = true;
+    else cells.add(row * grid.cols + col);
+  };
+
+  if (points.length === 1) visit(Math.floor(points[0].x), Math.floor(points[0].y));
+  for (let i = 0; i + 1 < points.length; i++) {
+    const a = points[i];
+    const b = points[i + 1];
+    let col = Math.floor(a.x);
+    let row = Math.floor(a.y);
+    const endCol = Math.floor(b.x);
+    const endRow = Math.floor(b.y);
+    visit(col, row);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const stepCol = dx > 0 ? 1 : -1;
+    const stepRow = dy > 0 ? 1 : -1;
+    const deltaX = dx === 0 ? Infinity : Math.abs(1 / dx);
+    const deltaY = dy === 0 ? Infinity : Math.abs(1 / dy);
+    let nextX = dx === 0 ? Infinity : (dx > 0 ? col + 1 - a.x : a.x - col) * deltaX;
+    let nextY = dy === 0 ? Infinity : (dy > 0 ? row + 1 - a.y : a.y - row) * deltaY;
+    const maxSteps = Math.abs(endCol - col) + Math.abs(endRow - row) + 2;
+    for (let step = 0; step < maxSteps && (col !== endCol || row !== endRow); step++) {
+      if (nextX < nextY) {
+        col += stepCol;
+        nextX += deltaX;
+      } else if (nextY < nextX) {
+        row += stepRow;
+        nextY += deltaY;
+      } else {
+        visit(col + stepCol, row);
+        visit(col, row + stepRow);
+        col += stepCol;
+        row += stepRow;
+        nextX += deltaX;
+        nextY += deltaY;
+      }
+      visit(col, row);
+    }
+  }
+  return { cells: [...cells].sort((x, y) => x - y), outside };
+}
+
+/**
  * Multi-source FIFO BFS over 4-connected cells. Seeds are cells holding stations at or above
  * Critical. Seeds run in descending surface order with one shared `visited` set (D2), so the
  * result is the union of per-seed fills regardless of input order. `can_flood(n, s)` is
@@ -1291,4 +1381,58 @@ export function runFloodBfs(
     else if (unknown[i] === 1) unknownCells.push(i);
   }
   return { ok: true, result: { floodedCells, unknownCells, seeds, ignored } };
+}
+
+// ---------------------------------------------------------------------------------------
+// Stable segment mappings across graph versions (restrictions must survive updates, plan 4).
+// Used by the pack builder (R3) and by Android pack activation (R6).
+// ---------------------------------------------------------------------------------------
+
+export interface EdgeMapping {
+  edgeId: string;
+  /** same: identical id and geometry; remapped: successors cover the old segment; unresolved: needs review. */
+  status: 'same' | 'remapped' | 'unresolved';
+  successorIds: string[];
+}
+
+function wayOf(edge: RoutingEdge): string {
+  return edge.sourceRef.split('/')[1] ?? '';
+}
+
+/** Same-place tolerance when mapping edges across graph versions. */
+const REMAP_TOLERANCE_METERS = 1;
+
+function within(points: readonly LngLat[], line: readonly LngLat[], tolerance: number): boolean {
+  return points.every(([lng, lat]) => distanceToPolylineMeters({ lat, lng }, line) <= tolerance);
+}
+
+/**
+ * Maps every edge of `previous` onto `next`. Successors are edges of the same OSM way that lie
+ * on the old segment (it was split) or contain it (a junction was removed). A segment whose
+ * successors do not cover it is unresolved, so a restriction on it keeps the previous graph
+ * active instead of being dropped (plan section 4).
+ */
+export function mapEdgesAcrossGraphs(previous: RoutingGraph, next: RoutingGraph): EdgeMapping[] {
+  const nextById = new Map(next.edges.map(edge => [edge.id, edge]));
+  const nextByWay = new Map<string, RoutingEdge[]>();
+  for (const edge of next.edges) {
+    const list = nextByWay.get(wayOf(edge)) ?? [];
+    list.push(edge);
+    nextByWay.set(wayOf(edge), list);
+  }
+  return [...previous.edges]
+    .sort((a, b) => compareIds(a.id, b.id))
+    .map(old => {
+      const same = nextById.get(old.id);
+      if (same !== undefined && within(old.geometry, same.geometry, REMAP_TOLERANCE_METERS) && within(same.geometry, old.geometry, REMAP_TOLERANCE_METERS)) {
+        return { edgeId: old.id, status: 'same', successorIds: [old.id] };
+      }
+      const candidates = nextByWay.get(wayOf(old)) ?? [];
+      const contained = candidates.filter(edge => within(edge.geometry, old.geometry, REMAP_TOLERANCE_METERS));
+      const containing = candidates.filter(edge => !contained.includes(edge) && within(old.geometry, edge.geometry, REMAP_TOLERANCE_METERS));
+      const successorIds = [...contained, ...containing].map(edge => edge.id).sort(compareIds);
+      const coveredMeters = contained.reduce((sum, edge) => sum + edge.lengthMeters, 0);
+      const covered = containing.length > 0 || coveredMeters >= old.lengthMeters - REMAP_TOLERANCE_METERS;
+      return { edgeId: old.id, status: covered && successorIds.length > 0 ? 'remapped' : 'unresolved', successorIds };
+    });
 }

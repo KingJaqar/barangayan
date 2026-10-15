@@ -1,0 +1,42 @@
+{
+ "schemaVersion": 1,
+ "areaId": "ampid-1",
+ "graphVersion": "ampid-1@2026-10-12#fc7101b6227d",
+ "profile": "ampid-fine",
+ "configVersion": "2026-10-14.r8",
+ "gridSha256": "149ea805185db20a7ddc3e8f1ddf4d2d314f1afaea4f569e04124d71693f8519",
+ "snapshotId": "8311ae44954bf27824a101bf56d8388ff6303a638da949cc2f2818fbd17b8b72",
+ "evaluatedAt": 1791936000000,
+ "sourceStatus": "unconfigured",
+ "residentInfluence": "none",
+ "modelStatus": "unavailable",
+ "eligibility": {
+  "eligible": false,
+  "reasons": [
+   "no_stations",
+   "stations_unverified",
+   "no_known_elevation",
+   "terrain_missing"
+  ],
+  "knownElevationShare": 0,
+  "minThresholdSpanMeters": null,
+  "toleratedRmseMeters": null
+ },
+ "inputObservedAt": null,
+ "stations": [],
+ "unconfiguredStationIds": [],
+ "seeds": [],
+ "ignored": [],
+ "floodedCells": [],
+ "unknownFrontierCells": [],
+ "unknownTerrainCells": 1665,
+ "gridCells": 1665,
+ "roads": {
+  "floodedEdgeIds": [],
+  "unknownEdgeIds": [],
+  "bridgeDeckEdgeIds": [],
+  "bridgeDecksOverFloodedCells": []
+ },
+ "readings": [],
+ "reportHash": "e80801957d9c25fbd48b79ec32bd7d6436530e7eddd71b29938e09eee57bb53d"
+}

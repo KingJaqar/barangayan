@@ -1,0 +1,12 @@
+.nav { display: flex; width: fit-content; max-width: 100%; gap: 6px; margin: 0 auto 28px; padding: 6px; border: 1px solid transparent; }
+.link { position: relative; display: flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 24px; border-radius: 9px; background: var(--card); font-size: 14px; font-weight: 700; }
+.pill { position: absolute; inset: 0; border: 2px solid var(--accent); border-radius: 9px; background: color-mix(in srgb, var(--accent) 22%, var(--card)); box-shadow: 0 2px 5px color-mix(in srgb, var(--foreground) 10%, transparent); }
+.label { position: relative; display: flex; align-items: center; gap: 8px; color: color-mix(in srgb, var(--foreground) 76%, var(--background)); }
+.link:hover .label, .link[aria-current='page'] .label { color: var(--foreground); }
+.link[aria-current='page'] svg { color: var(--accent); }
+.link:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+@media (max-width: 600px) {
+  .nav { width: 100%; margin-bottom: 24px; }
+  .link { flex: 1; min-width: 0; padding: 8px 10px; font-size: 12px; }
+  .label { gap: 6px; }
+}

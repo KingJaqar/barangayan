@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, type ViewStyle } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -46,17 +46,9 @@ export function Shimmer({ style }: { style?: ViewStyle | ViewStyle[] }) {
   );
 }
 
-/** Thin wrapper so skeleton groups fade out together once real content is ready. */
-export function ShimmerGroup({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
-  return <View style={[styles.group, style]}>{children}</View>;
-}
-
 const styles = StyleSheet.create({
   base: {
     borderRadius: 8,
     overflow: 'hidden',
-  },
-  group: {
-    gap: 8,
   },
 });

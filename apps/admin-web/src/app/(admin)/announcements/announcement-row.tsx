@@ -1,5 +1,9 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import styles from '@/components/admin/content-workspace.module.css';
+
 import { announcementSchema, ANNOUNCEMENT_CATEGORY_META, ANNOUNCEMENT_CATEGORIES, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -138,7 +142,7 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
     return (
       <form
         onSubmit={handleSave}
-        className="rounded-xl border border-[var(--accent)] bg-white p-3 dark:border-[var(--accent)] dark:bg-zinc-900">
+        className={styles.rowEdit}>
         <div className="grid grid-cols-4 gap-3">
           <label className="col-span-4 text-sm sm:col-span-2">
             <span className={labelClass}>Title</span>
@@ -147,13 +151,13 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
 
           <label className="text-sm">
             <span className={labelClass}>Category</span>
-            <select className={inputClass} value={category} onChange={(e) => setCategory(e.target.value)}>
+            <AdminSelect className={inputClass} value={category} onValueChange={(nextValue) => setCategory(nextValue)}>
               {ANNOUNCEMENT_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
                   {ANNOUNCEMENT_CATEGORY_META[cat].label}
                 </option>
               ))}
-            </select>
+            </AdminSelect>
           </label>
 
           <label className="text-sm">
@@ -213,9 +217,9 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
   }
 
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-900">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+    <div className={styles.row}>
+      <div className={styles.rowHeader}>
+        <div className={styles.rowMain}>
           <div className="flex flex-wrap items-center gap-2">
             {/* Category color dot + badge */}
             <span
@@ -223,34 +227,24 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
               style={{ backgroundColor: meta?.color }}
             />
             <span
-              className="rounded-full px-2 py-0.5 text-xs font-semibold"
-              style={{ backgroundColor: `${meta?.color}1A`, color: meta?.color }}>
+              className={`${styles.badge} ${announcement.category === 'emergency' ? styles.urgentStatus : ''}`}>
               {meta?.label}
             </span>
-            <span className="text-sm font-semibold">{announcement.title}</span>
+            <h3 className={styles.rowTitle}>{announcement.title}</h3>
           </div>
-          <p className="mt-0.5 text-xs text-zinc-500">{formatPublishedAt(announcement.published_at)}</p>
+          <p className={styles.rowMeta}>{formatPublishedAt(announcement.published_at)}</p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
-          <button
-            onClick={startEdit}
-            title="Edit"
-            className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] dark:hover:bg-[var(--accent)]/20">
-            ✏️
-          </button>
-          <ConfirmButton
-            label="🗑"
-            confirmLabel="Archive?"
-            onConfirm={archive}
-            title="Archive"
-            className="rounded-full px-2.5 py-1 text-xs font-semibold text-zinc-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:hover:bg-red-900/30 dark:hover:text-red-300"
-          />
-        </div>
       </div>
 
-      <div className="mt-2 border-t border-black/5 pt-2 dark:border-white/5">
-        <p className="line-clamp-2 text-xs text-zinc-600 dark:text-zinc-300">{announcement.body}</p>
+      <div className={styles.rowDescription}>
+        <p className="line-clamp-2">{announcement.body}</p>
+      </div>
+      <div className={`${styles.rowActions} mt-4`}>
+        <button type="button" onClick={startEdit} aria-label={`Edit ${announcement.title}`}
+          className={styles.primaryAction}>Edit announcement</button>
+        <ConfirmButton label="Archive" ariaLabel={`Archive ${announcement.title}`}
+          confirmLabel="Archive?" onConfirm={archive} className={styles.dangerAction} />
       </div>
     </div>
   );

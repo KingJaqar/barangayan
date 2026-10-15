@@ -24,6 +24,8 @@ export const adminEntityTypeSchema = z.enum([
   'medical_drive',
   'drive_registration',
   'evacuation_center',
+  'road_closure',
+  'routing_area',
   'document_type',
   'faq_article',
   'emergency_information',
@@ -103,6 +105,8 @@ const ENTITY_TO_CATEGORY: Record<AdminEntityType, keyof AdminAuditLogCategory> =
   medical_drive: 'health',
   drive_registration: 'health',
   evacuation_center: 'evacuation_centers',
+  road_closure: 'evacuation_centers',
+  routing_area: 'evacuation_centers',
   document_type: 'service_requests', // lumped under service_requests (document types back services)
   faq_article: 'system',
   emergency_information: 'system',

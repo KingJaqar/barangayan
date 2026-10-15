@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { catalogContract, charterSections, requestFee, serviceDocumentTypeValues } from './service-catalog';
+import { BUSINESS_FEE_DESCRIPTION, catalogContract, charterSections, requestFee, requestFeeLabel, serviceDocumentTypeValues, servicePriceLabel } from './service-catalog';
 import type { Tables } from '../types/database';
 import { serviceDocumentTypeSchema, submissionSchemaForCatalog, type ServiceDocumentTypeInput } from '../schemas/service-foundations';
-import { requestReviewSchema } from '../schemas/service-foundations';
 
-describe('Request amounts and audited review', () => {
+describe('Request amounts and catalog guidance', () => {
+  it('distinguishes variable pickup fees and missing page counts from free requests', () => {
+    expect(requestFeeLabel({ fee_assessment_state: 'pickup_due' }, null)).toBe(BUSINESS_FEE_DESCRIPTION);
+    expect(requestFeeLabel({ fee_assessment_state: 'page_count_required' }, null)).toContain('enter total pages');
+    expect(requestFeeLabel({ fee_assessment_state: 'assessed' }, 10000)).toBe('₱100.00');
+  });
   it('pending pricing cannot masquerade as a free catalog service', () => {
     expect(
       requestFee({ contract_version: 2, fee_assessment_state: 'pending', assessed_amount_centavos: null }, 0),
@@ -47,23 +51,6 @@ describe('Request amounts and audited review', () => {
       ),
     ).toBe(7500);
   });
-  it('requires independent eligibility, findings and appearance decisions', () => {
-    const input = {
-      requestId: '00000000-0000-4000-8000-000000000001',
-      requirementsComplete: true,
-      eligibility: 'eligible',
-      note: ' Six-month residency checked ',
-      personalAppearancePresent: true,
-    };
-    expect(requestReviewSchema.parse(input).note).toBe('Six-month residency checked');
-    for (const change of [
-      { note: ' ' },
-      { eligibility: 'verified' },
-      { personalAppearancePresent: undefined },
-      { reviewerId: input.requestId },
-    ])
-      expect(requestReviewSchema.safeParse({ ...input, ...change }).success).toBe(false);
-  });
   it('includes all eleven readable charter categories with personnel last', () => {
     expect(charterSections).toHaveLength(11);
     expect(new Set(charterSections.map(([key]) => key)).size).toBe(11);
@@ -98,6 +85,17 @@ describe('Unified document charter writes', () => {
   });
   it('does not invent a confirmed charge in assessment mode', () => {
     expect(serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, pricingMode: 'assessment' } }).fee_centavos).toBe(0);
+  });
+  it('uses the specified service fees regardless of the draft amount', () => {
+    for (const serviceKind of ['indigency', 'first_time_job_seeker'] as const) {
+      const values = serviceDocumentTypeValues({ ...input, feeCentavos: 999, catalog: { ...input.catalog, serviceKind } });
+      expect(values.fee_centavos).toBe(10000);
+      expect(servicePriceLabel(values as Tables<'document_types'>)).toBe('₱100.00');
+    }
+    const business = serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, serviceKind: 'business' } });
+    expect(servicePriceLabel(business as Tables<'document_types'>)).toBe(BUSINESS_FEE_DESCRIPTION);
+    const copies = serviceDocumentTypeValues({ ...input, catalog: { ...input.catalog, serviceKind: 'certified_true_copy', pricingMode: 'per_page' } });
+    expect(servicePriceLabel(copies as Tables<'document_types'>)).toBe('₱10.00 per page');
   });
   it('allows multiple ordinary services without specialized resident details', () => {
     const schema = submissionSchemaForCatalog(input.catalog);

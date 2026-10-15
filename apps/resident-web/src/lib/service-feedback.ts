@@ -109,7 +109,8 @@ export function pickupPaymentFailure(error: { message: string }, status: number)
     case 'request_not_payable':
       return { uncertain: false, message: "This request can't be paid right now. It may be cancelled, completed, or already paid." };
     case 'confirmed_pickup_amount_required':
-      return { uncertain: false, message: 'Awaiting fee assessment. Staff must confirm the amount before payment.' };
+    case 'request_amount_unavailable':
+      return { uncertain: false, message: 'Could not load the request amount. Refresh payment details and try again.' };
     case 'forbidden':
     case 'authentication_required':
       return { uncertain: false, message: "We couldn't confirm this request belongs to your account. Sign in again, then retry." };
@@ -133,7 +134,7 @@ export function paymentMethodFailure(error: { message: string; code?: string }, 
     payment_method_locked: 'A payment is already in progress. Continue or cancel it before changing methods.',
     active_online_payment_exists: 'A payment is already in progress. Continue or cancel it before changing methods.',
     request_not_payable: "This request can't be paid right now. It may be cancelled, completed, or already paid.",
-    confirmed_payable_amount_required: 'Awaiting fee assessment. Staff must confirm the amount before payment.',
+    request_amount_unavailable: 'Could not load the request amount. Refresh payment details and try again.',
   };
   const hit = Object.entries(lines).find(([token]) => error.message.includes(token));
   return {

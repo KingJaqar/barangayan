@@ -12,6 +12,7 @@
 // See supabase/migrations/0074_account_deletion.sql for the full rationale.
 
 import { createClient } from '@supabase/supabase-js';
+import { hasFreshAuthentication } from './fresh-authentication.ts';
 import { removeOwnedStorageObjects } from './storage-cleanup.ts';
 
 const corsHeaders = {
@@ -51,6 +52,17 @@ Deno.serve(async (req: Request) => {
 
     if (authErr || !user) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Destructive and irreversible: require a recent Auth authentication proven by
+    // the validated JWT itself, before any Storage object is touched. A stale or
+    // merely refreshed session must re-authenticate first.
+    const accessToken = authHeader.replace(/^Bearer\s+/i, '');
+    if (!hasFreshAuthentication(accessToken, Math.floor(Date.now() / 1000))) {
+      return new Response(JSON.stringify({ error: 'fresh_authentication_required' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });

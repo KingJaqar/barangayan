@@ -135,7 +135,7 @@ export function DocumentRequestModal({
   }, [documentId, retry]);
 
   const stage = step === 'details' ? 0 : step === 'form' ? 1 : 2;
-  const stepLabel = step === 'details' ? 'Document Details' : step === 'form' ? 'Request Form' : 'Assessment and Payment';
+  const stepLabel = step === 'details' ? 'Requirements and Guidelines' : step === 'form' ? 'Request Document' : 'Payment';
 
   return (
     <DialogPrimitive.Root
@@ -224,8 +224,6 @@ export function DocumentRequestModal({
               <RequestFormStep
                 key={doc.id}
                 doc={doc}
-                residentName={null}
-                residentMobile={null}
                 onBack={() => setStep('details')}
                 onSubmitted={(id) => {
                   setRequestId(id);
@@ -233,7 +231,7 @@ export function DocumentRequestModal({
                 }}
               />
             ) : requestId ? (
-              <RequestPaymentJourney key={requestId} requestId={requestId} onDone={onClose} />
+              <RequestPaymentJourney key={requestId} requestId={requestId} />
             ) : null}
                 </div>
               </motion.div>

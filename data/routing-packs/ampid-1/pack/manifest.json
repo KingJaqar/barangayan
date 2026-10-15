@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "areaId": "ampid-1",
+  "graphVersion": "ampid-1@2026-10-12#fc7101b6227d",
+  "configVersion": "2026-10-12.r2",
+  "osmBaseTimestamp": "2026-10-12T13:29:57Z",
+  "boundarySha256": "1b0e0e63c1d42ce89e6e1620cf2239c4aab5bdaa3c46f58a25d982269ba64754",
+  "coverageMarginMeters": 150,
+  "attribution": "© OpenStreetMap contributors (ODbL 1.0)",
+  "stations": "unavailable",
+  "terrain": "unavailable",
+  "resources": [
+    {
+      "path": "graph.json",
+      "bytes": 436991,
+      "sha256": "e291ec6fa36a9f9d79154403e600a71aa1ca17ce5a2f1f9c7e8f6004c5ddc679",
+      "audience": "device"
+    },
+    {
+      "path": "map.json",
+      "bytes": 188111,
+      "sha256": "a3508a88882d0b1fb7ab6312de488a23982c095efd043170289a79ef189b4e59",
+      "audience": "device"
+    },
+    {
+      "path": "server/grid-ampid-fine.json",
+      "bytes": 8428,
+      "sha256": "149ea805185db20a7ddc3e8f1ddf4d2d314f1afaea4f569e04124d71693f8519",
+      "audience": "server"
+    },
+    {
+      "path": "server/grid-rrl-reference.json",
+      "bytes": 312,
+      "sha256": "68ac1446ab222d9dff9dce457e579996c4ddabfec669d3f9199241d2731ffca1",
+      "audience": "server"
+    }
+  ]
+}

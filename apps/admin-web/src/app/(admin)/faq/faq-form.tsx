@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { faqArticleSchema, FAQ_CATEGORIES, FAQ_CATEGORY_META } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -86,8 +91,8 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-      <label className="col-span-2 text-sm">
+    <form onSubmit={handleSubmit} className={`${styles.form} grid grid-cols-1 gap-5 sm:grid-cols-2`}>
+      <label className="sm:col-span-2 text-sm">
         <span className="mb-1 block font-medium">Question</span>
         <input
           className={inputClass}
@@ -98,7 +103,7 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      <label className="col-span-2 text-sm">
+      <label className="sm:col-span-2 text-sm">
         <span className="mb-1 block font-medium">Answer</span>
         <textarea
           className={inputClass}
@@ -110,18 +115,20 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
+      <div className={styles.groupHeading}><h3>Organization & visibility</h3></div>
+
       <label className="text-sm">
         <span className="mb-1 block font-medium">Category</span>
-        <select
+        <AdminSelect
           className={inputClass}
           value={category}
-          onChange={(e) => setCategory(e.target.value)}>
+          onValueChange={(nextValue) => setCategory(nextValue)}>
           {FAQ_CATEGORIES.map((cat) => (
             <option key={cat} value={cat}>
               {FAQ_CATEGORY_META[cat].label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">
@@ -135,7 +142,7 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
         />
       </label>
 
-      <label className="col-span-2 flex items-center gap-2 text-sm">
+      <label className="sm:col-span-2 flex items-center gap-2 text-sm">
         <input
           type="checkbox"
           checked={isActive}
@@ -145,9 +152,9 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
         <span className="font-medium">Published (visible to residents)</span>
       </label>
 
-      {error ? <p className="col-span-2 text-sm text-red-600">{error}</p> : null}
+      {error ? <p role="alert" className="sm:col-span-2 text-sm text-red-600">{error}</p> : null}
 
-      <div className="col-span-2">
+      <ContentFormActions busy={submitting}>
         <button
           type="submit"
           disabled={submitting || !barangayId}
@@ -155,7 +162,7 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
           aria-busy={submitting}>
           <LoadingButtonContent pending={submitting} pendingLabel="Publishing…">Publish Article</LoadingButtonContent>
         </button>
-      </div>
+      </ContentFormActions>
     </form>
   );
 }

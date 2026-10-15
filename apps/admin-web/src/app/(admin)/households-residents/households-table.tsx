@@ -1,7 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
+
 import type { Tables } from '@barangayan/shared';
-import { Eye, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
@@ -11,11 +14,8 @@ import { useConfiguredTableBrowse } from '@/hooks/use-pilot-table-browse';
 import { PROFILE_TABLE_CONFIGS } from '@/lib/admin-tables/profile-config';
 import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state';
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
-import { useProfileTableDetail } from '@/hooks/use-profile-table-detail';
-import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { useToast } from '@/components/ui/toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -61,12 +61,11 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
   barangayId: string;
   residents: { id: string; full_name: string }[]; optionsError: string | null;
 }) {
-  const toast = useToast();
   const browse = useConfiguredTableBrowse(PROFILE_TABLE_CONFIGS.households, requestedState, result, true);
   const { state, value } = browse;
   const activeSort = browse.config.sorts.find(sort => sort.key === state.sort)!;
   const [addOpen, setAddOpen] = useState(false);
-  const { selected: selectedDetail, status: detailStatus, open: openDetail, close: closeDetail, retry: retryDetail, containerRef } = useProfileTableDetail<HouseholdMemberRow>('households', result, browse.settle);
+
   const [channelName] = useState(() => 'admin-household-members-' + Math.random().toString(36).slice(2));
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
@@ -114,36 +113,8 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
 
   /** Shared hard-delete used by both the table row's inline action and the detail modal —
    * kept as one function so the audit log call is only written once. */
-  async function removeMember(row: HouseholdMemberRow): Promise<boolean> {
-    if (!await browse.settle()) return false;
-    const supabase = createSupabaseBrowserClient();
-    const { data: deleted, error } = await supabase
-      .from('household_members')
-      .delete()
-      .eq('id', row.id)
-      .select('id, name, relation, role')
-      .maybeSingle();
-    if (error) {
-      toast.showError(`Failed to remove member: ${error.message}`);
-      return false;
-    }
-    if (!deleted) {
-      toast.showError('Failed to remove member: no household member was deleted. Check that you still have access to this barangay.');
-      return false;
-    }
 
-    logAdminAction({
-      action: 'delete',
-      entityType: 'household',
-      entityId: deleted.id,
-      entityLabel: deleted.name,
-      metadata: { name: deleted.name, relation: deleted.relation, role: deleted.role },
-    }).catch(() => {});
-
-    toast.showSuccess('Household member removed.');
-    browse.refresh();
-    return true;
-  }
+  const lifecycle = useRecordWorkspace<HouseholdMemberRow>('households', browse.refresh, browse.settle);
 
   const columns: EditableDataTableColumn<HouseholdMemberRow>[] = [
     {
@@ -241,59 +212,29 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       wrap: 'nowrap',
       render: (r) => <span className="whitespace-nowrap text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateTimeShort(r.created_at)}</span>,
     },
-    {
-      id: 'actions', header: 'Actions',
-      minWidth: 112,
-      wrap: 'nowrap',
-      overflow: 'visible',
-      render: (r) => (
-        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            onClick={event => void openDetail(r, event.currentTarget)}
-            title={`View household member ${r.name}`}
-            aria-label={`View household member ${r.name}`}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
-          >
-            <Eye aria-hidden="true" className="h-4 w-4" />
-          </button>
-          <ConfirmButton
-            label={<Trash2 aria-hidden="true" className="h-4 w-4" />}
-            confirmLabel="Remove this member?"
-            onConfirm={async () => {
-              await removeMember(r);
-            }}
-            title="Remove household member"
-            ariaLabel={`Remove household member ${r.name}`}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus-visible:ring-offset-zinc-900"
-          />
-        </div>
-      ),
-    },
+    lifecycle.column,
   ];
 
-  return <div ref={containerRef} className="min-w-0">
+  return <div  className="min-w-0">
+    <RecordArchiveLink name="households" beforeOpen={browse.settle} />
     <ProfileTableSummary name="households" summary={summary} onRetry={browse.refresh} />
     <div>{optionsError && <div role="alert">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></div>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddMemberForm residents={residents} onChanged={browse.refresh} onClose={() => setAddOpen(false)} /></fieldset>}
-    <ProfileTablePanel label="Households & Residents" browse={browse} 
-      category={<label className="table-browse-field">Relation <select aria-label="Relation" value={state.filters.relation} onChange={event => void browse.commit({ filters: { relation: event.target.value } })}>
+    <ProfileTablePanel label="Households & Residents" browse={browse}
+      category={<label className="table-browse-field">Relation <AdminSelect kind="people" aria-label="Relation" value={state.filters.relation} onValueChange={nextValue => void browse.commit({ filters: { relation: nextValue } })}>
         <option value="">All relations</option>{RELATION_FILTER_OPTIONS.map(rel => <option key={rel} value={rel}>{rel.charAt(0).toUpperCase() + rel.slice(1)}</option>)}
-      </select></label>}
+      </AdminSelect></label>}
       filters={<SegmentedFilter label="Check-in status" value={state.filters.tab}
         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId || !!optionsError}
         onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Member</button>}>
-      <EditableDataTable rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
+      <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} columns={columns} rowKey={row => row.id}
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
-        onRowClick={(row, trigger) => void openDetail(row, trigger)} emptyLabel={browse.pending ? 'Updating results…' : 'No household members found.'}
+        onRowClick={row => lifecycle.open(row)} emptyLabel={browse.pending ? 'Updating results…' : 'No household members found.'}
         resizableColumns density="compact" tableMinWidth={1280} cellOverflow="hidden" />
     </ProfileTablePanel>
-    {selectedDetail && <TableDetailDialog label="Household member details" onClose={closeDetail}>
-      {detailStatus === 'ready' ? <MemberDetailModal row={selectedDetail} onClose={closeDetail} onDelete={removeMember} />
-        : <TableDetailState status={detailStatus} onClose={closeDetail} onRetry={retryDetail} />}
-    </TableDetailDialog>}
+    {lifecycle.view}
 
   </div>;
 }
@@ -381,14 +322,14 @@ function AddMemberForm({ residents, onClose, onChanged }: {
     >
       <label className="text-sm">
         <span className="mb-1 block font-medium">Resident (Head) *</span>
-        <select className={inputClass} value={profileId} onChange={(e) => setProfileId(e.target.value)} required>
+        <AdminSelect kind="people" className={inputClass} value={profileId} onValueChange={(nextValue) => setProfileId(nextValue)} required>
           <option value="">Select a resident…</option>
           {residents.map((r) => (
             <option key={r.id} value={r.id}>
               {r.full_name}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Name *</span>
@@ -396,23 +337,23 @@ function AddMemberForm({ residents, onClose, onChanged }: {
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Relation</span>
-        <select className={inputClass} value={relation} onChange={(e) => setRelation(e.target.value)}>
+        <AdminSelect kind="people" className={inputClass} value={relation} onValueChange={(nextValue) => setRelation(nextValue)}>
           {RELATION_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       <label className="text-sm">
         <span className="mb-1 block font-medium">Role</span>
-        <select className={inputClass} value={role} onChange={(e) => setRole(e.target.value)}>
+        <AdminSelect kind="people" className={inputClass} value={role} onValueChange={(nextValue) => setRole(nextValue)}>
           {ROLE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
       {error && <p className="sm:col-span-3 text-sm text-red-600">{error}</p>}
       <div className="flex items-center gap-2 sm:col-span-3">
@@ -428,90 +369,5 @@ function AddMemberForm({ residents, onClose, onChanged }: {
         </button>
       </div>
     </form>
-  );
-}
-
-function MemberDetailModal({
-  row,
-  onClose,
-  onDelete,
-}: {
-  row: HouseholdMemberRow;
-  onClose: () => void;
-  /** Shared hard-delete lifted from the table so the audit log call is only written once. */
-  onDelete: (row: HouseholdMemberRow) => Promise<boolean>;
-}) {
-  const [removing, setRemoving] = useState(false);
-
-  async function handleDelete() {
-    setRemoving(true);
-    const success = await onDelete(row);
-    setRemoving(false);
-    if (success) onClose();
-  }
-
-  return (
-      <div
-        className="flex max-h-[calc(95vh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex max-h-[40vh] shrink-0 flex-wrap items-start justify-between gap-3 overflow-y-auto border-b border-black/10 p-6 dark:border-white/10">
-          <div className="min-w-0 flex-[1_1_16rem] break-words">
-            <h2 className="text-xl font-bold">{row.name}</h2>
-            <p className="mt-0.5 text-sm text-zinc-500">
-              {row.profiles?.full_name ?? 'Unknown resident'} · {row.relation} · {row.role}
-            </p>
-          </div>
-          <button
-            onClick={onClose} aria-label="Close details"
-            className="rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
-          >
-            ✕
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-6">
-          <section className="mb-6">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-500 uppercase tracking-wide">Details</h3>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-              <div>
-                <dt className="text-zinc-400">Resident</dt>
-                <dd className="font-medium">{row.profiles?.full_name ?? '—'}</dd>
-              </div>
-              <div>
-                <dt className="text-zinc-400">Relation</dt>
-                <dd className="font-medium">{row.relation}</dd>
-              </div>
-              <div>
-                <dt className="text-zinc-400">Role</dt>
-                <dd className="font-medium">{row.role}</dd>
-              </div>
-              <div>
-                <dt className="text-zinc-400">Checked In</dt>
-                <dd className="font-medium">{row.is_checked_in ? 'Yes' : 'No'}</dd>
-              </div>
-              <div>
-                <dt className="text-zinc-400">Checked-In Center</dt>
-                <dd className="font-medium">{row.checked_in_center_name ?? '—'}</dd>
-              </div>
-              <div>
-                <dt className="text-zinc-400">Added</dt>
-                <dd className="font-medium">{formatDateTimeShort(row.created_at)}</dd>
-              </div>
-            </dl>
-          </section>
-
-          <div className="flex items-center gap-2">
-            <ConfirmButton
-              label="🗑 Remove Member"
-              confirmLabel="Permanently remove this household member?"
-              onConfirm={handleDelete}
-              disabled={removing}
-              title="This action cannot be undone."
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
-            />
-          </div>
-        </div>
-      </div>
   );
 }

@@ -1,0 +1,17 @@
+{
+  "id": "types",
+  "stage": "dc-06",
+  "args": [
+    "C:\\Users\\User\\barangayan\\node_modules\\typescript\\bin\\tsc",
+    "--noEmit",
+    "--project",
+    "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile\\tsconfig.json",
+    "--pretty",
+    "false"
+  ],
+  "cwd": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile",
+  "startedAt": "2026-10-14T10:41:39.356Z",
+  "finishedAt": "2026-10-14T10:42:09.612Z",
+  "exitCode": 0,
+  "signal": null
+}

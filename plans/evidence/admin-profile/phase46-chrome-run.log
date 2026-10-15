@@ -1,0 +1,48 @@
+Passed: Fresh empty-schema and representative-schema migration rehearsal with real caller roles
+Passed: Expired/rate-limited proof, commit-time target retirement and atomic mandatory link/unlink audit failure
+Passed: Existing resident_profile_conflict database regression checks
+Passed: Existing resident_email_verification database regression checks
+Passed: Existing resident_account_setup database regression checks
+Passed: Existing admin_record_lifecycle database regression checks
+Passed: Existing admin_incident_withdrawal database regression checks
+Passed: Request/payment workflow regression output matches its pre-feature baseline; existing failures recorded separately
+Passed: Simultaneous conditional saves, competing verified links and duplicate unlinks commit exactly one winner
+Passed: Existing staff self-edit/archive/delete safeguards and caller-scoped invitation with isolated mail delivery
+Passed: Existing resident self-profile save and verification view preserve legacy fields and the admin record
+Passed: Existing household creation, resident directory, dashboard, requests, payments and notification navigation
+Passed: Direct protected route, Dashboard -> Profile -> Theme order and active state
+Passed: Dirty navigation preserves drafts; real save affects only admin and preserves legacy address
+Passed: Dirty Cancel restores saved values through explicit confirmation
+Passed: Atomic stale-save rejection keeps draft and requires deliberate reload
+Passed: Theme destination, dirty browser Back cancellation/discard and Forward restoration
+Passed: Committed replacement survives old-photo cleanup failure with one save and explicit partial-success feedback
+Passed: Oversized avatar rejected; real upload, reference commit and retirement pass
+Passed: Uncertain upload response leaves the saved profile untouched and retires only its confirmed unreferenced object
+Passed: Avatar reference failure preserves saved state and removes only the new unreferenced object
+Passed: Lost commit response reconciled by fresh read with exactly one mutation
+Passed: Optional audit failure reports partial success without repeating persistence
+Passed: Resident read failure stays isolated and recovers through its own Retry
+Passed: Closed and expired ownership windows cancel challenges, create no link and restore usable admin controls
+Passed: Both-account proof reconciles a lost link response once, preserves admin sign-in and retires temporary resident session
+Passed: Stale unavailable-account unlink rejects a newer association and presents recoverable conflict
+Passed: Banned resident details suppressed; restored account can be read at narrow width
+Passed: Unlink removes only the association and preserves both accounts
+Passed: Passwordless admin sets first password through isolated email proof; other account remains signed in
+Passed: Ambiguous password commit pauses retry, attempts global cleanup and succeeds once with the new credential
+Passed: Low-assurance admin sees only MFA challenge; authenticator upgrades same session before profile access
+Passed: Confirmed password commit with failed global sign-out requires fresh login and reports incomplete session cleanup without retry
+Passed: Real email-link plus authenticator ownership proof preserves main session, retires proof session and creates no unknown account
+Passed: Narrow/tablet/desktop layout screenshots with bounded profile content
+Passed: Theme toggle, reduced-motion rendering and modal keyboard focus containment, Escape and focus restoration
+Passed: Admin password validation matches the inspected hosted character classes without an Auth mutation
+Passed: Mismatched, reused and incorrect-current passwords are rejected without changing Auth credentials
+Passed: Real password change rejects old password, accepts new password and requires fresh admin login
+Passed: Other admin sessions revoked; established resident session remains valid
+Passed: Real local SMTP outage pauses email retries until status reconciliation and preserves both Auth users
+Passed: Occupied sign-in email is rejected by real Auth without changing either account
+Passed: Credential rate limit preserves email draft; ambiguous email commit reconciles pending state without duplicate request
+Passed: Real Auth rejects expired email confirmation without changing the address; callback presents safe recovery
+Passed: Real old/new local mail delivery, single confirmation with autoconfirm enabled and PKCE callback; contact and resident email unchanged
+Passed: Existing logout remains functional, dirty drafts can cancel logout and resident session remains separate
+Passed: Anonymous, resident, inactive-admin and deleted-admin direct route access rejected
+Passed: Operational rollback blocks feature access and new database operations while preserving account records

@@ -1,6 +1,7 @@
 import { ServicesVerification } from '@/components/services/services-verification';
 import { ServicesSegmentNav } from '@/components/services/services-segment-nav';
 import { getOptionalUser } from '@/lib/auth/get-optional-user';
+import styles from './services-layout.module.css';
 
 /**
  * Shared chrome for every route under /services — the plan's Phase 3 3-segment nav
@@ -15,8 +16,10 @@ export default async function ServicesLayout({ children }: { children: React.Rea
   const { user } = await getOptionalUser();
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <ServicesSegmentNav isAuthenticated={user !== null} />
+    <div className={`mx-auto max-w-4xl ${styles.layout}`}>
+      <div className={styles.navigation}>
+        <ServicesSegmentNav isAuthenticated={user !== null} />
+      </div>
       {user ? <ServicesVerification/> : null}
       {children}
     </div>

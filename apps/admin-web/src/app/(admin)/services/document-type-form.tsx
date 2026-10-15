@@ -1,5 +1,10 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
+import { ContentFormActions } from '@/components/admin/content-create-panel';
+import styles from '@/components/admin/content-forms.module.css';
+
 import { catalogContract, charterSections, serviceDocumentTypeSchema, serviceDocumentTypeValues, type ServiceCatalogContract, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -21,7 +26,7 @@ function initialCatalog(row?: DocumentType): ServiceCatalogContract {
       clientSteps: '', agencyActions: '', feesToBePaid: '', processingTime: '', personResponsible: null },
     purposes: [{ code: 'general', label: 'General request', requiresExplanation: false }],
     requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: false },
-    pricingMode: row ? 'fixed' : 'assessment', processingTargetMinutes: row ? row.processing_target_hours * 60 : 15,
+    pricingMode: 'fixed', processingTargetMinutes: row ? row.processing_target_hours * 60 : 15,
   };
 }
 
@@ -92,7 +97,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
   }
 
   const residency = ['indigency', 'first_time_job_seeker'].includes(draft.serviceKind);
-  return <form onSubmit={save} className="space-y-5" aria-busy={busy}>
+  return <form onSubmit={save} className={`${styles.form} space-y-6`} aria-busy={busy}>
     <fieldset disabled={busy} className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-sm">Name<input className={control} required maxLength={200} value={name} onChange={e => setName(e.target.value)} /></label>
@@ -100,11 +105,11 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       </div>
       {row && row.contract_version === 1 ? <p className="text-sm text-zinc-500">Complete the charter for future requests. Existing requests keep their recorded fees and previous timing model.</p> : null}
       <label className="block text-sm">Service workflow
-        <select className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
-          onChange={e => setDraft({ ...draft, serviceKind: e.target.value as ServiceCatalogContract['serviceKind'],
-            pricingMode: 'assessment', requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: draft.requirementRules.personalAppearance } })}>
+        <AdminSelect kind="document" className={control} value={draft.serviceKind} disabled={row?.contract_version === 2}
+          onValueChange={nextValue => setDraft({ ...draft, serviceKind: nextValue as ServiceCatalogContract['serviceKind'],
+            pricingMode: nextValue === 'business' ? 'assessment' : nextValue === 'certified_true_copy' ? 'per_page' : 'fixed', requirementRules: { dtiRequired: false, hoaRequired: false, lessorForRenter: false, personalAppearance: draft.requirementRules.personalAppearance } })}>
           {kinds.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-        </select>
+        </AdminSelect>
         <span className="mt-1 block text-xs text-zinc-500">Determines the resident form and compatible supporting rules. Existing charter workflows remain fixed.</span>
       </label>
       <fieldset className="space-y-3 rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
@@ -152,23 +157,19 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
             {!applicable ? <span className="ml-2 text-xs text-zinc-500">(Requires the corresponding service workflow)</span> : null}
           </label>)}
       </fieldset>
-      <label className="block text-sm">Pricing<select className={control} value={draft.pricingMode}
-        onChange={e => setDraft({ ...draft, pricingMode: e.target.value as ServiceCatalogContract['pricingMode'] })}>
-        <option value="assessment">Staff assessment / exemption confirmation</option>
-        <option value="fixed">Confirmed fixed fee</option>
-        {draft.serviceKind === 'certified_true_copy' ? <option value="per_page">₱10 per confirmed billable page</option> : null}
-      </select></label>
-      {draft.pricingMode === 'fixed' ? <label className="block text-sm">Confirmed fee (₱)<input className={control} type="number" min={0}
-        max={21474836.47} step="0.01" required value={fee} onChange={e => setFee(e.target.value)} /></label> :
-        <p className="text-sm text-zinc-500">{draft.pricingMode === 'per_page' ? '₱10 per total confirmed page; staff confirm the billable page count.' :
-          'Residents submit before assessment; payment waits for a confirmed amount or explicit waiver.'}</p>}
+      {draft.serviceKind === 'general' ? <label className="block text-sm">Document fee (₱)<input className={control} type="number" min={0}
+        max={21474836.47} step="0.01" required value={fee} onChange={e => {setFee(e.target.value);setDraft({...draft,pricingMode:'fixed'});}} /></label> :
+        <p className="text-sm text-zinc-500">{draft.serviceKind === 'business'
+          ? 'See Attached Tax Code (depends on the kind of transaction). Pay at Pickup only.'
+          : draft.serviceKind === 'certified_true_copy'
+            ? '₱10.00 per page. Pay at Pickup or Pay with QR PH.'
+            : '₱100.00. Pay at Pickup or Pay with QR PH.'}</p>}
     </fieldset>
     {error ? <p role="alert" className="text-sm text-red-600">{error}</p> : null}
-    <div className="flex flex-wrap gap-3">
+    <ContentFormActions busy={busy} onCancel={onCancel}>
       <button type="submit" disabled={busy || !barangayId} className="rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
-        <LoadingButtonContent pending={busy} pendingLabel={row ? 'Saving…' : 'Adding…'}>{row ? 'Save Document Type' : 'Add Document Type'}</LoadingButtonContent>
+        <LoadingButtonContent pending={busy} pendingLabel={row ? 'Saving…' : 'Creating…'}>{row ? 'Save service' : 'Create service'}</LoadingButtonContent>
       </button>
-      {onCancel ? <button type="button" disabled={busy} onClick={onCancel} className="rounded border px-4 py-2 text-sm">Cancel</button> : null}
-    </div>
+    </ContentFormActions>
   </form>;
 }

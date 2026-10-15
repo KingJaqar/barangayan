@@ -1,5 +1,7 @@
 'use client';
 
+import { AdminSelect } from '@/components/admin/dropdown/admin-select';
+
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, SEXES, type EmploymentStatus, type Sex } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -140,14 +142,14 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Sex</span>
-        <select value={sex} onChange={(e) => setSex(e.target.value as Sex | '')} className={inputCls}>
+        <AdminSelect kind="people" value={sex} onValueChange={(nextValue) => setSex(nextValue as Sex | '')} className={inputCls}>
           <option value="">Select sex</option>
           {SEXES.map((s) => (
             <option key={s} value={s}>
               {SEX_LABELS[s]}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       <label className="text-sm">
@@ -193,10 +195,10 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
 
       <label className="text-sm">
         <span className="mb-1 block font-medium">Employment Status</span>
-        <select
+        <AdminSelect kind="people"
           value={employmentStatus}
-          onChange={(e) => {
-            const next = e.target.value as EmploymentStatus | '';
+          onValueChange={(nextValue) => {
+            const next = nextValue as EmploymentStatus | '';
             setEmploymentStatus(next);
             if (next === '' || !EMPLOYMENT_STATUSES_WITH_OCCUPATION.includes(next)) setOccupation('');
           }}
@@ -207,7 +209,7 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
               {EMPLOYMENT_STATUS_LABELS[s]}
             </option>
           ))}
-        </select>
+        </AdminSelect>
       </label>
 
       {showOccupation ? (

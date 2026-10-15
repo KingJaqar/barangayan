@@ -1,0 +1,17 @@
+admin_document_type_creation.test.sql: plan=1..14 ok=14 notok=0 
+administrator_scores.test.sql: plan=1..46 ok=46 notok=0 
+agency_sla.test.sql: plan= ok=61 notok=0 psql:/tmp/agency_sla.test.sql:101: ERROR:  relation "cron.job" does not exist
+catalog_staff_workflows.test.sql: plan=1..51 ok=51 notok=0 
+deferred_profile_completion.test.sql: plan=1..18 ok=18 notok=0 
+document_charter_forms.test.sql: plan=1..41 ok=41 notok=0 
+google_minimal_profiles.test.sql: plan=1..42 ok=42 notok=0 
+registration_maps_auth.test.sql: plan=1..23 ok=23 notok=0 
+resident_account_setup.test.sql: plan=1..30 ok=30 notok=0 
+resident_email_verification.test.sql: plan=1..13 ok=13 notok=0 
+resident_ios_tenant_write_guards.test.sql: plan=1..7 ok=7 notok=0 
+resident_profile_conflict.test.sql: plan=1..16 ok=16 notok=0 
+rls_isolation.test.sql: plan=1..17 ok=17 notok=0 
+routing_conditions.test.sql: plan=1..81 ok=81 notok=0 
+routing_rate_limits.test.sql: plan=1..19 ok=19 notok=0 
+service_foundations.test.sql: plan=1..113 ok=113 notok=0 
+trusted_evidence_locality.test.sql: plan=1..11 ok=11 notok=0 

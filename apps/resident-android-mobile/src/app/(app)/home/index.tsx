@@ -337,16 +337,6 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     borderRadius: Spacing.three,
   },
-  verificationBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    padding: Spacing.two,
-    borderRadius: Spacing.two,
-  },
-  verificationText: {
-    flex: 1,
-  },
   requestRow: {
     flexDirection: 'row',
     alignItems: 'center',
