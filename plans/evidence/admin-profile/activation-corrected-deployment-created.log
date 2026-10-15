@@ -1,0 +1,42 @@
+Vercel CLI 64.2.0 (Node.js 24.13.1)
+Deploying barangayan-admin-web
+Uploading [--------------------] (0.0B/24.5KB)
+Uploading [=============-------] (16.0KB/24.5KB)
+Uploading [====================] (24.5KB/24.5KB)
+Inspect         https://vercel.com/barangayan/barangayan-admin-web/HQq2nR7nzYj1Hfopn6zjf5UZ95x4
+▲ Production      https://barangayan-admin-mlhiregk5-barangayan.vercel.app
+{
+  "status": "ok",
+  "deployment": {
+    "id": "dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4",
+    "url": "https://barangayan-admin-mlhiregk5-barangayan.vercel.app",
+    "productionUrl": null,
+    "inspectorUrl": "https://vercel.com/barangayan/barangayan-admin-web/HQq2nR7nzYj1Hfopn6zjf5UZ95x4",
+    "readyState": "INITIALIZING",
+    "target": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4",
+    "buildMachine": {
+      "machine": "basic",
+      "selectionType": "fixed",
+      "selectionSource": "plan-default"
+    },
+    "deploymentProtection": [
+      "vercel_authentication"
+    ]
+  },
+  "message": "Deployment barangayan-admin-mlhiregk5-barangayan.vercel.app ready.",
+  "next": [
+    {
+      "command": "vercel curl https://barangayan-admin-mlhiregk5-barangayan.vercel.app",
+      "when": "Verify deployment, including when Deployment Protection is enabled"
+    },
+    {
+      "command": "vercel inspect barangayan-admin-mlhiregk5-barangayan.vercel.app --scope barangayan --cwd tmp/admin-profile-release-56cfbb1489 --no-color",
+      "when": "Inspect deployment"
+    },
+    {
+      "command": "vercel deploy --prod --scope barangayan --cwd tmp/admin-profile-release-56cfbb1489 --no-color",
+      "when": "Promote to production"
+    }
+  ]
+}

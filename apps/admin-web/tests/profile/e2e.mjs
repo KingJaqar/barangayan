@@ -229,7 +229,7 @@ try {
     update public.barangay_officials set is_active=false where profile_id='${accounts.inactive.id}';`);
   const localSettings = Object.fromEntries(Object.entries({ ...authEnv, ...passwordPolicy, GOTRUE_MAILER_AUTOCONFIRM: singleConfirmation ? 'true' : 'false', GOTRUE_MFA_TOTP_ENROLL_ENABLED: 'true', GOTRUE_MFA_TOTP_VERIFY_ENABLED: 'true' }).filter(([key]) => /SECURE_EMAIL_CHANGE_ENABLED|PASSWORD_MIN_LENGTH|PASSWORD_REQUIRED_CHARACTERS|REQUIRE_REAUTHENTICATION|REQUIRE_CURRENT_PASSWORD|MAILER_AUTOCONFIRM|JWT_EXP|MFA_TOTP/.test(key)));
   report.localAuthSettings = localSettings;
-  const env = { ...process.env, NEXT_PUBLIC_SUPABASE_URL: apiUrl, NEXT_PUBLIC_SUPABASE_ANON_KEY: storageEnv.ANON_KEY,
+  const env = { ...process.env, TZ: 'UTC', NEXT_PUBLIC_SUPABASE_URL: apiUrl, NEXT_PUBLIC_SUPABASE_ANON_KEY: storageEnv.ANON_KEY,
     ADMIN_PROFILE_ENABLED: 'true', ADMIN_PROFILE_AUTH_VERIFIED: 'true', ADMIN_PROFILE_ORIGIN: base,
     BARANGAYAN_PREVIEW_DIST_DIR: `.next-admin-profile-${suffix}`, NEXT_TELEMETRY_DISABLED: '1' };
   // An absent variable would be reloaded from the user's .env.local by Next.
@@ -254,7 +254,7 @@ try {
     });
   }
   async function context(account) {
-    const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 } }); let cookies = [];
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 }, timezoneId: 'Asia/Manila' }); let cookies = [];
     ctx.on('page', monitorPage);
     const db = createServerClient(apiUrl, storageEnv.ANON_KEY, { cookies: { getAll: () => [], setAll: values => { cookies = values; } } });
     const result = await db.auth.signInWithPassword({ email: account.email, password: account.password });
@@ -375,6 +375,10 @@ try {
   const ctx = await context(accounts.admin); const page = await ctx.newPage(); observedPage = page;
   page.setDefaultTimeout(15000);
   await page.goto(`${base}/profile`); await page.getByRole('heading', { name: 'Profile admin', exact: true }).waitFor();
+  await page.waitForLoadState('networkidle');
+  assert.deepEqual(report.consoleErrors, [], 'Profile hydration must match across UTC server and Asia/Manila browser time zones');
+  report.timeZones = { server: 'UTC', browser: 'Asia/Manila' };
+  check('Profile hydration matches across UTC server and Asia/Manila browser time zones');
   const sidebar = page.getByRole('navigation', { name: 'Admin navigation' });
   const overview = await sidebar.locator('a').evaluateAll(links => links.slice(0, 3).map(link => link.getAttribute('href')));
   assert.deepEqual(overview, ['/dashboard', '/profile', '/theme']);

@@ -1,0 +1,89 @@
+{
+  "recordedAt": "2026-10-15T07:43:46.670Z",
+  "authorization": "User explicitly requested: enable it now; supersedes prior hold decision",
+  "status": "enabled and verified",
+  "local": {
+    "origin": "http://localhost:3000",
+    "configFile": "apps/admin-web/.env.local",
+    "enabled": true,
+    "accountSecurityEnabled": true,
+    "profileContentVerified": true,
+    "editCancelVerified": true,
+    "browserWarningsOrErrors": 0,
+    "existingUserServerPreserved": true
+  },
+  "production": {
+    "origin": "https://barangayan-admin-web.vercel.app",
+    "deployment": "dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4",
+    "deploymentUrl": "https://barangayan-admin-mlhiregk5-barangayan.vercel.app",
+    "ready": true,
+    "projectSettingsPersisted": true,
+    "settings": {
+      "ADMIN_PROFILE_ENABLED": "true",
+      "ADMIN_PROFILE_AUTH_VERIFIED": "true",
+      "ADMIN_PROFILE_ORIGIN": "https://barangayan-admin-web.vercel.app"
+    },
+    "profileContentVerified": true,
+    "staffAndSecurityAndResidentSectionsVerified": true,
+    "editCancelVerified": true,
+    "browserWarningsOrErrors": 0,
+    "runtimeWarningsOrErrors": 0,
+    "screenshot": "activation-hosted-profile-final.png"
+  },
+  "correction": {
+    "problem": "Profile timestamps used environment-dependent locale/time-zone rendering and caused React hydration error 418 on a fresh hosted page",
+    "source": "apps/admin-web/src/app/(admin)/profile/profile-workspace.tsx",
+    "solution": "Reuse existing formatAdminTimestamp with explicit en-PH locale and Asia/Manila time zone for created, updated and linked timestamps",
+    "initialDeployment": "dpl_2xWszkgNkDyvCPkNJbY6NheKCCSr",
+    "baselineEvidence": "activation-hydration-baseline-console.json"
+  },
+  "verification": {
+    "baselineTypecheck": "passed",
+    "baselineLint": "passed",
+    "finalTypecheck": "passed",
+    "finalLint": "passed",
+    "adminUnitTests": 116,
+    "unitStatus": "passed",
+    "chromeIntegrationGroups": 47,
+    "integrationStatus": "passed",
+    "serverTimeZone": "UTC",
+    "browserTimeZone": "Asia/Manila",
+    "integrationConsoleWarningsOrErrors": 0,
+    "integrationPageErrors": 0,
+    "webpackBuild": "passed locally and hosted",
+    "deployedSourceHashesMatched": 350,
+    "taskContainers": [
+      {
+        "name": "admin-profile-db-5a71d98f77",
+        "running": false
+      },
+      {
+        "name": "admin-profile-inbucket-5a71d98f77",
+        "running": false
+      },
+      {
+        "name": "admin-profile-auth-5a71d98f77",
+        "running": false
+      },
+      {
+        "name": "admin-profile-rest-5a71d98f77",
+        "running": false
+      },
+      {
+        "name": "admin-profile-storage-5a71d98f77",
+        "running": false
+      }
+    ]
+  },
+  "unchangedBoundaries": {
+    "dependenciesAdded": 0,
+    "remoteMigrationsApplied": false,
+    "existingAccountDataChanged": false,
+    "commitOrPush": false,
+    "paidResourcesCreated": false
+  },
+  "remaining": [
+    "Existing dependency audit advisories are unchanged; remediation was not requested",
+    "Hosted ownership popup in a normal browser remains pending manual verification; hosted API and isolated browser flows are verified"
+  ]
+}

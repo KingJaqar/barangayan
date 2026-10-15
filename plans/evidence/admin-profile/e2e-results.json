@@ -1,13 +1,13 @@
 {
   "status": "passed",
-  "browser": "firefox",
-  "database": "admin_profile_test_dabf50bc04",
+  "browser": "chrome",
+  "database": "admin_profile_test_5a71d98f77",
   "containers": [
-    "admin-profile-db-dabf50bc04",
-    "admin-profile-inbucket-dabf50bc04",
-    "admin-profile-auth-dabf50bc04",
-    "admin-profile-rest-dabf50bc04",
-    "admin-profile-storage-dabf50bc04"
+    "admin-profile-db-5a71d98f77",
+    "admin-profile-inbucket-5a71d98f77",
+    "admin-profile-auth-5a71d98f77",
+    "admin-profile-rest-5a71d98f77",
+    "admin-profile-storage-5a71d98f77"
   ],
   "checks": [
     "Fresh empty-schema and representative-schema migration rehearsal with real caller roles",
@@ -22,6 +22,7 @@
     "Existing staff self-edit/archive/delete safeguards and caller-scoped invitation with isolated mail delivery",
     "Existing resident self-profile save and verification view preserve legacy fields and the admin record",
     "Existing household creation, resident directory, dashboard, requests, payments and notification navigation",
+    "Profile hydration matches across UTC server and Asia/Manila browser time zones",
     "Direct protected route, Dashboard -> Profile -> Theme order and active state",
     "Dirty navigation preserves drafts; real save affects only admin and preserves legacy address",
     "Dirty Cancel restores saved values through explicit confirmation",
@@ -76,6 +77,10 @@
     "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_REAUTHENTICATION": "false",
     "GOTRUE_SECURITY_UPDATE_PASSWORD_REQUIRE_CURRENT_PASSWORD": "false"
   },
-  "nextPid": 4160,
-  "webOrigin": "http://127.0.0.1:64545"
+  "nextPid": 3016,
+  "webOrigin": "http://127.0.0.1:51045",
+  "timeZones": {
+    "server": "UTC",
+    "browser": "Asia/Manila"
+  }
 }

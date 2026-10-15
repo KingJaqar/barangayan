@@ -36,10 +36,10 @@
   },
   "canonical_origin": "https://barangayan-admin-web.vercel.app",
   "canonical_callbacks_applied": true,
-  "deployment_id": "dpl_Gkw5BJqqpzDqETXK2S8UxC8xmeY7",
+  "deployment_id": "dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4",
   "deployment_gates": {
-    "ADMIN_PROFILE_ENABLED": false,
-    "ADMIN_PROFILE_AUTH_VERIFIED": false
+    "ADMIN_PROFILE_ENABLED": true,
+    "ADMIN_PROFILE_AUTH_VERIFIED": true
   },
   "deployment_ready": true,
   "deployment_origin": "https://barangayan-admin-web.vercel.app",
@@ -59,8 +59,8 @@
   ],
   "browser_console_warnings_or_errors": 0,
   "remaining": [
-    "Separate dependency remediation before public enablement: existing 53 advisories, including four critical",
-    "Pending manual verification before public enablement: normal-browser hosted ownership popup"
+    "Existing dependency audit advisories are unchanged; remediation was not requested",
+    "Hosted ownership popup in a normal browser remains pending manual verification; hosted API and isolated browser flows are verified"
   ],
   "phase6_acceptance": {
     "met": 9,
@@ -84,10 +84,10 @@
     "credentials_enabled": true,
     "anonymous_status": 302,
     "anonymous_redirect": "https://vercel.com/sso-api",
-    "production_gates_unchanged": true
+    "production_gates_unchanged_at_time_of_review": true
   },
   "new_credentials_entered_by_agent": false,
-  "owner_handoff": "Final verification record accepted; owner chose to keep public rollout disabled.",
+  "owner_handoff": "Activation complete; no owner action needed beyond refreshing Profile",
   "existing_dependency_audit": {
     "status": "pre-existing failure",
     "exitCode": 1,
@@ -99,7 +99,6 @@
     "record": "phase6-existing-dependency-audit-summary.json"
   },
   "review_console_warnings_or_errors": 0,
-  "preview_source_input_hashes_match": 350,
   "review_callback_screenshot": "phase6-review-callbacks-saved.png",
   "owner_disposable_password_bootstrap_verified": true,
   "owner_correct_disposable_browser_sign_in_verified": true,
@@ -149,7 +148,7 @@
     "popupExposed": false,
     "pendingPagesClosed": true
   },
-  "verified_at": "2026-10-15T07:11:57.720Z",
+  "verified_at": "2026-10-15T07:46:19.053Z",
   "disposable_current_auth_email": "barangayan.ampid1+profile-phase6-updated-20261015@gmail.com",
   "owner_profile_password_change_and_relogin_reported": true,
   "owner_both_email_confirmations_reported": true,
@@ -172,15 +171,29 @@
   ],
   "redacted_feature_audit_entries": 5,
   "final_review_runtime_warning_error_records": 0,
-  "release_recommendation": "Owner accepted: keep public rollout disabled pending separate dependency remediation and normal-browser hosted popup verification",
-  "phase6_status": "Complete for verified scope; public rollout withheld",
+  "release_recommendation": "Superseded by explicit owner activation request; local and production Profile enabled with existing limits still disclosed",
+  "phase6_status": "Complete for verified scope; subsequent owner-authorized local and production activation verified",
   "owner_release_decision": {
     "recorded_on": "2026-10-15",
     "timezone": "Asia/Manila",
-    "response": "Accept record; keep rollout disabled (Recommended)",
+    "response": "enable it now",
     "verification_record_accepted": true,
-    "public_rollout": "withheld",
-    "public_enablement_authorized": false,
+    "public_rollout": "enabled",
+    "public_enablement_authorized": true,
     "dependency_remediation_authorized": false
-  }
+  },
+  "release_decision_history": [
+    {
+      "recorded_on": "2026-10-15",
+      "timezone": "Asia/Manila",
+      "response": "Accept record; keep rollout disabled (Recommended)",
+      "verification_record_accepted": true,
+      "public_rollout": "withheld",
+      "public_enablement_authorized": false,
+      "dependency_remediation_authorized": false
+    }
+  ],
+  "activation_record": "activation.json",
+  "preview_source_input_hashes_match_at_time_of_review": 350,
+  "production_source_input_hashes_match": 350
 }

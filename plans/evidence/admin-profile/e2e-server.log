@@ -1,15 +1,15 @@
 ▲ Next.js 16.3.0
-- Local:         http://127.0.0.1:64545
-- Network:       http://127.0.0.1:64545
-✓ Ready in 348ms
-✓ Running next.config.ts took 85ms
+- Local:         http://127.0.0.1:51045
+- Network:       http://127.0.0.1:51045
+✓ Ready in 1189ms
+✓ Running next.config.ts took 136ms
 ▲ Next.js 16.3.0
-- Local:         http://127.0.0.1:50370
-- Network:       http://127.0.0.1:50370
-✓ Ready in 356ms
-✓ Running next.config.ts took 86ms
+- Local:         http://127.0.0.1:56636
+- Network:       http://127.0.0.1:56636
+✓ Ready in 424ms
+✓ Running next.config.ts took 88ms
 ▲ Next.js 16.3.0
-- Local:         http://127.0.0.1:64545
-- Network:       http://127.0.0.1:64545
-✓ Ready in 482ms
-✓ Running next.config.ts took 94ms
+- Local:         http://127.0.0.1:51045
+- Network:       http://127.0.0.1:51045
+✓ Ready in 318ms
+✓ Running next.config.ts took 75ms

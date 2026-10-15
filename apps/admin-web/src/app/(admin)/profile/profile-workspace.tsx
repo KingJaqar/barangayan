@@ -1,11 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import { ContactRound, Link2, ShieldCheck, UserRound, Pencil, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition, type FormEvent } from 'react';
 import { ProfileDialog } from '@/components/admin/profile-dialog';
 import { useProfileNavigation } from '@/components/admin/profile-navigation-guard';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 import { hasStructuredName, ownedAvatarPath, profilePatchSchema, type Outcome, type ProfileDetails, type ProfilePatch, type ResidentSection, type StaffSummary } from '@/lib/admin-profile/schema';
 import { readAdminProfile, readAssociatedResident, saveAdminProfile, unlinkResidentAssociation } from './actions';
 import { ProfileSecurity } from './profile-security';
@@ -225,9 +227,22 @@ export function ProfileWorkspace({ profile, barangayName, staff, initialResident
   return <div className={styles.page}>
     <header className={styles.header}>
       <ProfileAvatar key={saved.avatar_url} profile={saved} />
-      <div className="min-w-0 flex-1"><p className={styles.subtitle}>Admin account</p><h1 className={styles.title}>{saved.full_name}</h1><p className={styles.subtitle}>{barangayName} · Personal profile, account security and verified resident association.</p></div>
-      {!editing && !accessExpired && <button disabled={accountBusy || conflict || reloading || refreshing} className={`${styles.button} ${styles.primary}`} onClick={() => { if (busy.current) return; setDraft(draftFor(saved)); setEditing(true); setMessage(null); }}>Edit profile</button>}
+      <div className={styles.identity}>
+        <p className={styles.eyebrow}>Your profile <span className={styles.badge}>Admin account</span></p>
+        <div className={styles.identityRow}><h1 className={styles.title}>{saved.full_name}</h1>
+          {!editing && !accessExpired && <button disabled={accountBusy || conflict || reloading || refreshing} className={styles.button} onClick={() => { if (busy.current) return; setDraft(draftFor(saved)); setEditing(true); setMessage(null); }}><Pencil size={15} aria-hidden="true" />Edit profile</button>}
+        </div>
+        <p className={styles.location}><MapPin size={15} aria-hidden="true" />{barangayName}</p>
+        <p className={styles.bio}>Your details, your account. Manage your admin profile and keep your information up to date.</p>
+        <div className={styles.accountFacts}><span><strong>{staff ? staff.official_role.replaceAll('_', ' ') : 'Administrator'}</strong>Staff role</span><span><strong>{staff ? (staff.is_active ? 'Active' : 'Inactive') : 'Not available'}</strong>Staff status</span><span><strong>{resident.state === 'linked' ? 'Linked' : resident.state === 'none' ? 'Not linked' : 'Unavailable'}</strong>Resident account</span></div>
+      </div>
     </header>
+    <nav className={styles.sectionNav} aria-label="Profile sections">
+      <button type="button" onClick={() => document.getElementById('admin-profile-heading')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}><UserRound size={16} aria-hidden="true" />Profile</button>
+      <button type="button" onClick={() => document.getElementById('profile-staff')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}><ContactRound size={16} aria-hidden="true" />Staff info</button>
+      <button type="button" onClick={() => document.getElementById('profile-security')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}><ShieldCheck size={16} aria-hidden="true" />Security</button>
+      <button type="button" onClick={() => document.getElementById('resident-account-heading')?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}><Link2 size={16} aria-hidden="true" />Resident account</button>
+    </nav>
     {message && <p ref={summary} tabIndex={-1} role={error ? 'alert' : 'status'} className={`${styles.message} ${error ? styles.error : ''}`}>{message}</p>}
     {(reloading || refreshing) && <p role="status" className="mb-4">Loading current profile details…</p>}
     {!editing && conflict && <button type="button" disabled={reloading || refreshing} className={styles.button} onClick={reload}>Reload saved profile</button>}
@@ -250,14 +265,14 @@ export function ProfileWorkspace({ profile, barangayName, staff, initialResident
           <div className={styles.actions}><button className={`${styles.button} ${styles.primary}`} disabled={saving || accountBusy || accessExpired || !dirty || !valid || conflict}>{saving ? 'Saving…' : 'Save admin profile'}</button><button type="button" className={styles.button} disabled={saving} onClick={cancel}>Cancel</button>{conflict && <button type="button" className={styles.button} disabled={saving} onClick={() => requestLeave(() => { void reload(); })}>Discard draft and reload</button>}</div>
         </form> : <ProfileValues profile={saved} />}
       </section>
-      <section className={styles.section}><h2>Staff information</h2><p className={styles.subtitle}>Read-only. Staff management controls your role and status.</p>{staff ? <dl className={styles.details}><div><dt>Position</dt><dd>{staff.official_role.replaceAll('_', ' ')}</dd></div><div><dt>Status</dt><dd>{staff.is_active ? 'Active' : 'Inactive'}</dd></div><div><dt>Date hired</dt><dd>{staff.date_hired}</dd></div></dl> : <p className="mt-4">No staff roster information is available.</p>}</section>
-      <ProfileSecurity security={security} enabled={credentialsEnabled && !accessExpired} disabled={editing || saving || unlinking || accountBusy || reloading || refreshing} onBusy={accountOperation} />
+      <section id="profile-staff" className={styles.section}><h2>Staff information</h2><p className={styles.subtitle}>Read-only. Staff management controls your role and status.</p>{staff ? <dl className={styles.details}><div><dt>Position</dt><dd>{staff.official_role.replaceAll('_', ' ')}</dd></div><div><dt>Status</dt><dd>{staff.is_active ? 'Active' : 'Inactive'}</dd></div><div><dt>Date hired</dt><dd>{staff.date_hired}</dd></div></dl> : <p className="mt-4">No staff roster information is available.</p>}</section>
+      <div id="profile-security" className={styles.securitySection}><ProfileSecurity security={security} enabled={credentialsEnabled && !accessExpired} disabled={editing || saving || unlinking || accountBusy || reloading || refreshing} onBusy={accountOperation} /></div>
       <section className={`${styles.section} ${styles.wide}`} aria-labelledby="resident-account-heading"><h2 id="resident-account-heading">Associated resident account</h2><p className={styles.subtitle}>A separate account. These details are read-only; admin changes do not update it.</p>
-        {resident.state === 'linked' ? <><div className="mt-5 flex items-center gap-4"><ProfileAvatar key={resident.profile.avatar_url} profile={resident.profile} /><h3 className="min-w-0 break-words text-lg font-semibold">{resident.profile.full_name}</h3></div><ProfileValues profile={resident.profile} /><p className="mt-4">Household members: {resident.householdCount ?? 'Unavailable'}</p><p className={styles.subtitle}>Linked on {new Date(resident.linkedAt).toLocaleDateString()}.</p></> : <p className="mt-5" role={resident.state === 'error' ? 'alert' : undefined}>{resident.message}</p>}
+        {resident.state === 'linked' ? <><div className="mt-5 flex items-center gap-4"><ProfileAvatar key={resident.profile.avatar_url} profile={resident.profile} /><h3 className="min-w-0 break-words text-lg font-semibold">{resident.profile.full_name}</h3></div><ProfileValues profile={resident.profile} /><p className="mt-4">Household members: {resident.householdCount ?? 'Unavailable'}</p><p className={styles.subtitle}>Linked on {formatAdminTimestamp(resident.linkedAt)}.</p></> : <p className="mt-5" role={resident.state === 'error' ? 'alert' : undefined}>{resident.message}</p>}
         <div className={styles.actions}><button type="button" className={styles.button} disabled={residentLoading || saving || unlinking || reloading || refreshing} onClick={retryResident}>{residentLoading ? 'Loading account…' : 'Retry account details'}</button>{(resident.state === 'linked' || resident.state === 'unavailable') && <button type="button" className={styles.button} disabled={editing || saving || unlinking || accountBusy || accessExpired || reloading || refreshing} onClick={() => setShowUnlink(true)}>Unlink resident account</button>}</div>
         {resident.state === 'none' && <AssociationControl enabled={credentialsEnabled && !accessExpired} disabled={editing || saving || unlinking || accountBusy || reloading || refreshing} onBusy={accountOperation} onLinked={() => { void retryResident(); }} />}
       </section>
-      <details className={`${styles.section} ${styles.wide}`}><summary className="cursor-pointer font-semibold">Additional admin details</summary><dl className={styles.details}><div><dt>Account ID</dt><dd>{saved.id}</dd></div><div><dt>Created</dt><dd>{new Date(saved.created_at).toLocaleString()}</dd></div><div><dt>Last updated</dt><dd>{new Date(saved.updated_at).toLocaleString()}</dd></div><div><dt>Theme / font</dt><dd>{saved.theme_preference} / {saved.font_preference}</dd></div><div><dt>Push notifications</dt><dd>{saved.push_notifications_enabled ? 'Enabled' : 'Disabled'}</dd></div></dl></details>
+      <details className={`${styles.section} ${styles.wide}`}><summary className="cursor-pointer font-semibold">Additional admin details</summary><dl className={styles.details}><div><dt>Account ID</dt><dd>{saved.id}</dd></div><div><dt>Created</dt><dd>{formatAdminTimestamp(saved.created_at)}</dd></div><div><dt>Last updated</dt><dd>{formatAdminTimestamp(saved.updated_at)}</dd></div><div><dt>Theme / font</dt><dd>{saved.theme_preference} / {saved.font_preference}</dd></div><div><dt>Push notifications</dt><dd>{saved.push_notifications_enabled ? 'Enabled' : 'Disabled'}</dd></div></dl></details>
     </div>
     {showUnlink && <ProfileDialog label="Unlink resident account" onClose={() => { if (!unlinking) setShowUnlink(false); }} preventClose={unlinking}><div className={`${styles.section} ${styles.modal}`}><h2>Unlink resident account?</h2><p>{saved.full_name} (Admin account) and {resident.state === 'linked' ? resident.profile.full_name : 'the unavailable linked profile'} (Resident account) will remain separate accounts. Neither account nor its data will be deleted. A new link requires fresh ownership proof.</p><div className={styles.actions}><button autoFocus className={styles.button} disabled={unlinking} onClick={() => setShowUnlink(false)}>Keep association</button><button className={`${styles.button} ${styles.primary}`} disabled={unlinking} onClick={unlink}>{unlinking ? 'Unlinking…' : 'Unlink accounts'}</button></div></div></ProfileDialog>}
   </div>;

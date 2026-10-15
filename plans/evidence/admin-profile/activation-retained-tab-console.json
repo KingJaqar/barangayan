@@ -1,0 +1,8 @@
+[
+  {
+    "level": "error",
+    "message": "Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\n    at r1 (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:37063)\n    at r2 (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:38096)\n    at https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:132969\n    at sk (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:138131)\n    at sy (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:129381)\n    at https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:124199\n    at so (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:124300)\n    at sG (https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js:1:150887)\n    at MessagePort.A (https://barangayan-admin-web.vercel.app/_next/static/chunks/1968-8a29b985c03ee37d.js:1:44197)",
+    "timestamp": "2026-10-15T07:31:10.595Z",
+    "url": "https://barangayan-admin-web.vercel.app/_next/static/chunks/87c73c54-498a0cadb2af30ab.js"
+  }
+]

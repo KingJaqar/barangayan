@@ -1,0 +1,48 @@
+Vercel CLI 64.2.0 (Node.js 24.13.1)
+Fetching deployment "dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4" in barangayan
+> Fetched deployment "barangayan-admin-mlhiregk5-barangayan.vercel.app" in barangayan [887ms]
+
+General
+
+id		dpl_HQq2nR7nzYj1Hfopn6zjf5UZ95x4
+name	barangayan-admin-web
+target	production
+status	● Ready
+url		https://barangayan-admin-mlhiregk5-barangayan.vercel.app
+created	Thu Oct 15 2026 15:38:38 GMT+0800 (Philippine Standard Time) [1m ago]
+
+
+Build Machine
+
+requested build machine basic
+actual assigned cores   2 vCPU (actual assignment)
+memory                  8192 MiB
+selection type          fixed
+selection source        plan-default
+
+
+Duration
+
+build duration	1m 18s
+post-build duration	unavailable
+billable duration	unavailable
+CPU Minutes Usage	unavailable
+
+
+Aliases
+
+╶ https://barangayan-admin-web.vercel.app
+    ╶ https://barangayan-admin-web-barangayan.vercel.app
+    
+
+Builds
+
+┌ .        [0ms]
+    ├── λ index (1.69MB) [iad1]
+    ├── λ _global-error (1.69MB) [iad1]
+    ├── λ _global-error.rsc (1.69MB) [iad1]
+    ├── λ _global-error.segments/_full.segment.rsc (1.69MB) [iad1]
+    ├── λ _global-error.segments/_global-error/__PAGE__.segment.rsc (1.69MB) [iad1]
+    └── 105 output items hidden
+    
+
