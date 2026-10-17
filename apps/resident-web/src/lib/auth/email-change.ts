@@ -1,5 +1,6 @@
 import { EMAIL_REGEX, type Database } from '@barangayan/shared';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { authFailureKind } from './auth-feedback';
 
 /** Auth owns the sign-in address; never write a requested address to profiles. */
 export async function requestResidentEmailChange(
@@ -14,8 +15,10 @@ export async function requestResidentEmailChange(
     throw new Error('Your session changed. Reload this page before changing your email.');
   }
   const redirect = new URL('/auth/email-change', origin);
-  const { data, error } = await client.auth.updateUser({ email: nextEmail }, { emailRedirectTo: redirect.href });
-  if (error) throw new Error(error.status === 429 ? 'Please wait before requesting another email change.' : 'Unable to change your email. Check the address and try again.');
+  const { data, error } = await client.auth.updateUser({ email: nextEmail }, { emailRedirectTo: redirect.href }).catch(() => {
+    throw Object.assign(new Error('Unable to confirm the email change request. Check your inboxes before trying again.'), { uncertain: true });
+  });
+  if (error) throw Object.assign(new Error(error.status === 429 ? 'Please wait before requesting another email change.' : 'Unable to change your email. Check the address and try again.'), { uncertain: authFailureKind(error) === 'connection' });
   if (data.user?.id !== ownerId) throw new Error('Your session changed. Reload this page before changing your email.');
   return nextEmail;
 }

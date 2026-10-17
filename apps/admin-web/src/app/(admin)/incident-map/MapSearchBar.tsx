@@ -1,35 +1,105 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { CornerDownLeft, MapPin, Search, X } from 'lucide-react';
+import { useAdminSearch } from '@/hooks/use-admin-search';
+import { MAX_QUERY_LENGTH, MIN_QUERY_LENGTH, normalizeQuery, rankedSuggestions } from '@/lib/search/model';
+import { Spinner } from '@/components/loading/spinner';
+import styles from './incident-map.module.css';
 
 interface MapSearchBarProps {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
+  layer: 'incidents' | 'evacuation';
+  records: { id: string; label: string }[];
+  onSelect: (id: string, title: string) => void;
 }
 
-export function MapSearchBar({ value, onChange, placeholder = 'Search incidents…' }: MapSearchBarProps) {
-  return (
-    <div className="absolute top-4 left-4 right-4 z-[1000] md:left-auto md:right-auto md:w-80">
-      <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-white/95 px-3.5 py-2.5 shadow-lg shadow-black/5 backdrop-blur-sm transition-all duration-200 focus-within:border-[var(--accent)] focus-within:ring-2 focus-within:ring-[var(--accent)]/10 dark:border-white/10 dark:bg-zinc-900/95 dark:focus-within:ring-[var(--accent)]/20">
-        <Search className="h-4 w-4 shrink-0 text-slate-400" strokeWidth={2.5} />
-        <input
-          type="search"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-slate-400"
-        />
-        {value && (
-          <button
-            onClick={() => onChange('')}
-            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-500 transition-all duration-200 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-            aria-label="Clear search"
-          >
-            <X className="h-3 w-3" strokeWidth={2.5} />
-          </button>
-        )}
+export function MapSearchBar({ value, onChange, layer, records, onSelect }: MapSearchBarProps) {
+  const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [composing, setComposing] = useState(false);
+  const wrapper = useRef<HTMLDivElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const id = useId();
+  const query = normalizeQuery(value);
+  const valid = query.length >= MIN_QUERY_LENGTH;
+  const search = useAdminSearch(query, { category: layer === 'incidents' ? 'incidents' : 'centers', suggestions: true, enabled: open && !composing });
+  const hits = search.data ? rankedSuggestions(search.data.groups, query) : [];
+  const unavailable = search.data?.groups.some(group => group.unavailable);
+  const selected = activeIndex < hits.length ? activeIndex : -1;
+  const loading = valid && (search.loading || composing);
+
+  useEffect(() => {
+    const close = (event: PointerEvent) => {
+      if (!wrapper.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', close);
+    return () => document.removeEventListener('pointerdown', close);
+  }, []);
+
+  function choose(index: number) {
+    const hit = hits[index];
+    if (!hit || !records.some(record => record.id === hit.id)) return;
+    // Keep the full mapped label, rather than the search service's truncated title.
+    onSelect(hit.id, records.find(record => record.id === hit.id)!.label);
+    input.current?.focus({ preventScroll: true });
+    setOpen(false);
+    setActiveIndex(-1);
+  }
+
+  return <div ref={wrapper} className={styles.searchWrapper} onBlur={event => {
+    if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+  }}>
+    <form className={styles.search} role="search" aria-label="Search this map" onSubmit={event => {
+      event.preventDefault();
+      if (composing) return;
+      if (selected >= 0) choose(selected);
+      else { onChange(query); setOpen(false); }
+    }}>
+      <Search size={17} aria-hidden="true" />
+      <input ref={input} role="combobox" aria-label={layer === 'incidents' ? 'Search incidents on map' : 'Search evacuation centers on map'}
+        aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-results` : undefined}
+        aria-activedescendant={open && selected >= 0 ? `${id}-${selected}` : undefined}
+        autoComplete="off" spellCheck={false} maxLength={MAX_QUERY_LENGTH} value={value}
+        placeholder={layer === 'incidents' ? 'Search incidents, places, reporters…' : 'Search evacuation centers…'}
+        onFocus={() => setOpen(true)} onClick={() => setOpen(true)}
+        onCompositionStart={() => setComposing(true)} onCompositionEnd={() => setComposing(false)}
+        onChange={event => { onChange(event.target.value); setActiveIndex(-1); setOpen(true); }}
+        onKeyDown={event => {
+          if (event.nativeEvent.isComposing) return;
+          if (event.key === 'Escape') { event.preventDefault(); setOpen(false); setActiveIndex(-1); }
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault(); setOpen(true);
+            const available = hits.map((hit, index) => records.some(record => record.id === hit.id) ? index : -1).filter(index => index >= 0);
+            if (available.length) {
+              const current = available.indexOf(selected);
+              setActiveIndex(available[(current + (event.key === 'ArrowDown' ? 1 : current < 0 ? 0 : -1) + available.length) % available.length]);
+            }
+          }
+        }} />
+      {value && <button type="button" onClick={() => { onChange(''); setActiveIndex(-1); input.current?.focus(); }} className={styles.clear} aria-label="Clear map search"><X size={15} aria-hidden="true" /></button>}
+      <button type="submit" className={styles.searchSubmit} aria-label="Apply search to map" title="Search this map"><CornerDownLeft size={16} aria-hidden="true" /></button>
+    </form>
+    {open && <div className={styles.searchPopover}>
+      <div className={styles.searchHeading}>Search this map<span>{layer === 'incidents' ? 'Incidents' : 'Evacuation centers'}</span></div>
+      <div id={`${id}-results`} role="listbox" aria-label="Map search results" aria-busy={loading}>
+        {hits.map((hit, index) => {
+          const mapped = records.some(record => record.id === hit.id);
+          return <button type="button" role="option" key={hit.id} id={`${id}-${index}`} aria-selected={selected === index}
+            aria-disabled={!mapped} disabled={!mapped} tabIndex={-1} className={styles.searchResult} onClick={() => choose(index)}>
+            <MapPin size={16} aria-hidden="true" /><span><strong>{hit.title}</strong><small>{mapped ? hit.preview || hit.meta : 'No location in the current map layer'}</small></span>
+          </button>;
+        })}
       </div>
-    </div>
-  );
+      <div className={styles.searchStatus} role="status" aria-live="polite">
+        {!valid ? <p>Type at least 2 characters to find a location.</p>
+          : loading ? <p><Spinner size="compact" /> Searching…</p>
+          : search.error ? <><p>{search.error}</p>{!search.denied && <button type="button" onClick={search.retry}>Try again</button>}</>
+          : unavailable ? <><p>Search is temporarily unavailable.</p><button type="button" onClick={search.retry}>Retry search</button></>
+          : hits.length === 0 ? <p>No results for “{query}”. Try another keyword.</p>
+          : <p>Choose a result to focus its marker. ↑ ↓ to select · Enter to open · Esc to close.</p>}
+      </div>
+    </div>}
+  </div>;
 }

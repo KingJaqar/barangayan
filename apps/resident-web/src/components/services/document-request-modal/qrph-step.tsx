@@ -67,17 +67,22 @@ export function QrphStep({
   referenceNumber: string;
   documentName: string;
   documentFeeCentavos: number;
-  onPaid: () => void;
+  onPaid: (paymentId: string) => void;
   onCancelled: () => void;
   onBack: () => void;
 }) {
-  const { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed } = usePaymongoSource(requestId);
+  const { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed, setupResult } = usePaymongoSource(requestId);
   const remaining = useCountdown(source?.expiresAt ?? null);
   const totalDue = source?.amountCentavos ?? documentFeeCentavos;
   const paymentId = source?.paymentId ?? null;
   // Synchronous guard: a second activation before React re-renders must not start a
   // second cancel request.
   const cancelBusy = useRef(false);
+  useEffect(() => {
+    if (!setupResult) return;
+    if (status === 'pending' && source) notify.success('Payment QR code is ready.', { id: setupResult.id });
+    else if (status === 'error') notify[setupResult.uncertain ? 'warning' : 'error'](setupResult.uncertain ? "We couldn't confirm the payment setup. Check your request before starting another payment." : "Couldn't prepare the payment QR code. Please try again.", { id: setupResult.id });
+  }, [setupResult, status, source]);
 
   // Confirmed expiry (server status, not the countdown): one warning per attempt. The
   // inline guidance below stays on the page after the toast is gone.
@@ -120,7 +125,7 @@ export function QrphStep({
 
   return (
     <div className="flex flex-col gap-4">
-      <PaymentConfirmedDialog open={status === 'paid'} onConfirm={onPaid} />
+      <PaymentConfirmedDialog open={status === 'paid'} onConfirm={() => { if (paymentId) onPaid(paymentId); }} />
       <div>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
@@ -147,7 +152,7 @@ export function QrphStep({
           <Skeleton pulse={false} className="aspect-square w-64 max-w-full rounded-lg" />
         ) : status === 'error' ? (
           <>
-            <p role="alert" className="text-sm text-status-error">
+            <p className="text-sm text-status-error">
               {errorMessage === 'Request is not ready for payment'
                 ? 'This request can no longer be paid (it may have been cancelled or completed).'
                 : (errorMessage ?? 'Could not start a QR PH payment. Please try again.')}

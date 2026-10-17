@@ -3,6 +3,8 @@ import type { Tables } from '@barangayan/shared';
 import type { Polygon, MultiPolygon } from 'geojson';
 
 import { IncidentMapClient } from './IncidentMapClient';
+import { IncidentMapHeader } from './IncidentMapHeader';
+import styles from './incident-map.module.css';
 
 export type IncidentRow = Tables<'incidents'> & {
   incident_categories: Pick<Tables<'incident_categories'>, 'name' | 'color' | 'icon'> | null;
@@ -69,38 +71,8 @@ export default async function IncidentMapPage({
   const centerCount = centers?.length ?? 0;
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <div className="mb-8">
-        <div className="flex items-center gap-3.5 mb-1.5">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-strong)] shadow-lg shadow-[var(--accent)]/20">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-white"
-            >
-              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-[28px] font-bold tracking-tight text-foreground">Incident Map</h1>
-            <p className="text-sm text-muted-foreground">
-              {incidentCount} {incidentCount === 1 ? 'incident' : 'incidents'} · {centerCount}{' '}
-              {centerCount === 1 ? 'evacuation center' : 'evacuation centers'}
-            </p>
-          </div>
-        </div>
-        <p className="text-sm text-muted-foreground/80 ml-[58px]">
-          Geographic view of reported incidents and evacuation centers in your barangay.
-        </p>
-      </div>
+    <div className={styles.page}>
+      <IncidentMapHeader incidentCount={incidentCount} centerCount={centerCount} />
 
       <IncidentMapClient
         incidents={(incidents ?? []) as IncidentRow[]}

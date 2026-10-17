@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 
 import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 import { signOutBrowser } from '@/lib/auth/sign-out';
+import { notifyLoggedOut } from '@/lib/auth/session-feedback';
 import { beginAttempt, notify } from '@/lib/notify';
 
 /**
@@ -12,13 +13,12 @@ import { beginAttempt, notify } from '@/lib/notify';
  * complete-profile). Pending follows the awaited sign-out; repeated activation is
  * ignored. Preferences reset and the move to /login happen only once the browser is
  * signed out. A failure keeps the resident where they are with usable controls and
- * one error notification. Arriving at /login is the success confirmation, so a clean
- * sign-out shows no toast.
+ * one error notification. A successful sign-out shows a toast that survives the move
+ * to /login.
  *
- * `scope` passes through unchanged (header and sidebar keep the supabase-js default,
- * complete-profile keeps its existing `local`).
+ * `scope` defaults to this application's session, including its other browser tabs.
  */
-export function useSignOut(scope?: 'global' | 'local') {
+export function useSignOut(scope: 'global' | 'local' = 'local') {
   const router = useRouter();
   const resetPreferences = useResetPreferencesOnLogout();
   const busy = useRef(false);
@@ -47,6 +47,8 @@ export function useSignOut(scope?: 'global' | 'local') {
         keepOnSessionChange: true,
         description: "We couldn't reach the server to end your other sessions. Devices that were already logged in may stay logged in.",
       });
+    } else {
+      notifyLoggedOut();
     }
     // Stay pending until /login replaces this screen.
     router.replace('/login');

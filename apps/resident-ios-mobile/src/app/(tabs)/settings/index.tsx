@@ -56,8 +56,9 @@ export default function SettingsScreen() {
       {!status.hasGoogleIdentity && <Action label={busy ? 'Waiting for Google…' : 'Link Google account'} secondary disabled={busy || !providers.callbackAvailable} onPress={() => void linkGoogle()} />}
       {linked && <Notice message="Google is now linked to your account." />}
     </Card>}
-    <Card><Body heading>Information</Body><Destination title="Help and frequently asked questions" href="/settings/help" /><Destination title="Resident information" href="/settings/information" /></Card>
+    <Card><Body heading>Appearance</Body><Destination title="Theme, accent color and font" detail="Light, dark or system, your colors and font style" href="/settings/appearance" /></Card>
+    <Card><Body heading>Information</Body><Destination title="Help and frequently asked questions" href="/settings/help" /><Destination title="Resident information" href="/settings/information" /><Destination title="Introduction to Barangayan" detail="Replay the welcome tour" href="/onboarding/welcome" /></Card>
     <Card><Body heading>Privacy and notifications</Body><Notice message="Remote notifications, complete data export, and account deletion remain unavailable until their backend and privacy release checks are complete." /></Card>
     {!!error && <Notice tone="danger" message={error} />}<Action label={busy ? 'Logging out…' : 'Log out'} secondary disabled={busy} onPress={() => void signOut()} />
-  </> : <><Card><Body>Log in to manage your resident account.</Body><Destination title="Log in or create an account" href="/auth/choice" /></Card><Card><Destination title="Help and frequently asked questions" href="/settings/help" /><Destination title="Resident information" href="/settings/information" /></Card></>}</Screen>;
+  </> : <><Card><Body>Log in to manage your resident account.</Body><Destination title="Log in or create an account" href="/auth/choice" /></Card><Card><Destination title="Theme, accent color and font" detail="Light, dark or system, your colors and font style" href="/settings/appearance" /><Destination title="Help and frequently asked questions" href="/settings/help" /><Destination title="Resident information" href="/settings/information" /><Destination title="Introduction to Barangayan" detail="Replay the welcome tour" href="/onboarding/welcome" /></Card></>}</Screen>;
 }

@@ -1,0 +1,191 @@
+{
+  "date": "2026-10-17",
+  "files": [
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/valid-id-flow.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 13,
+      "afterCalls": 13,
+      "parseErrors": [],
+      "sha256": "f57427bd443e90b3d81174421fe00f261587ecaad6d46ee3b160dba29230eeef"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/camera-dialog.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0,
+      "parseErrors": [],
+      "sha256": "1657aea5bccdc37c50d30eb4e4d315f92027a6c6bde855596a7228e1dfb07ff7"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/applicant-form.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1,
+      "parseErrors": [],
+      "sha256": "83924eef39570b38679b33056d2c734bfe9e9d141713450945cd28298a180d65"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-medical-drives.ts",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 24,
+      "afterCalls": 24,
+      "parseErrors": [],
+      "sha256": "64d65e595acc6ecb51b00bed26c1561a349683365226170c9dad63d710723869"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/resident-service-form.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 25,
+      "afterCalls": 25,
+      "parseErrors": [],
+      "sha256": "fa3ac5d8c6e6f5f8b1c26c51280001316c9c8b70da0eec684d531b4599595043"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 5,
+      "afterCalls": 5,
+      "parseErrors": [],
+      "sha256": "764ffa4868d804ccaac2bf6486f7c4ca9e64fa73382596b8b46ae02325f383cb"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/request-page-count.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1,
+      "parseErrors": [],
+      "sha256": "50dec7fa21f0a2171ce885ae6fd4d1bfdece34e104a43b6531b015ea68c6f90f"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1,
+      "parseErrors": [],
+      "sha256": "b65e5790c995a154d94d66799d2f1e83818483892e873af716cf6a04ccd10147"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/pickup-step.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1,
+      "parseErrors": [],
+      "sha256": "9f4625903b1f2f1439628c06471d09752440ed1e01b49603aca11092a3f244eb"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0,
+      "parseErrors": [],
+      "sha256": "10d96a209b0e4a521325f3b293d758f819077bee77056569e6754b65c49807bb"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/success-step.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 7,
+      "afterCalls": 7,
+      "parseErrors": [],
+      "sha256": "f488245b08f38da8e10f21bcad2285423d028e3215046f505f21e49f24587261"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/request-payment-journey.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6,
+      "parseErrors": [],
+      "sha256": "12a0256bc4817ff7213d678e75d2c536918b8c8834960c042099a40c4c4e579a"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-paymongo-source.ts",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 12,
+      "afterCalls": 12,
+      "parseErrors": [],
+      "sha256": "2f00c5228c050326b4659a4e574bb95c7b9803056239adb188466f74f7fcd04d"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/download-receipt-button.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0,
+      "parseErrors": [],
+      "sha256": "339b336464638b12edba447f6f420dcea49bdead3f35d995892b25b4b695f253"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/download-data/page.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1,
+      "parseErrors": [],
+      "sha256": "614f0709abba006f73d678079d6dca20c14dd0b17b204d2171c73a6879c9f7f0"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/saved-id.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 8,
+      "afterCalls": 8,
+      "parseErrors": [],
+      "sha256": "bfe6ac24c871e76f18308a3aab62a8f24cbd5de795090a6f78c0d399b179b2d8"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/details-step.tsx",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0,
+      "parseErrors": [],
+      "sha256": "4929a122c80ac85d4d6bb8508ceecc6c4a58e44ec89a83bc08534a57c434aa59"
+    },
+    {
+      "file": "apps/resident-web/src/lib/service-feedback.ts",
+      "changed": true,
+      "networkSignaturesUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0,
+      "parseErrors": [],
+      "sha256": "9e5a3956c5c087b435f67f1f03974c4ef98da6f785a675ebe819f092e42a5e0c"
+    }
+  ],
+  "scopeNotes": [
+    "The saved source predates this execution. Concurrent Valid ID scrolling imports/ref/effect markup are preserved; they are not toast changes.",
+    "details-step.tsx and service-feedback.ts were clean at initial git status; HEAD is their baseline.",
+    "2026-10-17 continuation: user approved necessary actions; one narrow cancel-payment response-proof prerequisite was implemented locally. It is an explicit exception to this plan's frontend-only boundary, recorded under Phase 5. No remote deployment, migration, configuration, or other-platform edit."
+  ],
+  "allClientNetworkSignaturesUnchanged": true,
+  "backendFiles": [
+    {
+      "file": "supabase/functions/cancel-payment/index.ts",
+      "sha256": "edbed2d32bddbf345d14ebef0653ddceb948054c1a6a843cffc7b676283d1988",
+      "changes": [
+        "Validate JSON/payment UUID before payment access",
+        "Bound provider cancellation to 10 seconds; require documented HTTP 200 before local cancellation",
+        "Return the conditional updated row; on zero rows, one caller-RLS read of the terminal winner",
+        "Provider/write/read uncertainty returns 5xx; existing client polling resumes"
+      ],
+      "guardsPreserved": [
+        "Caller JWT getUser",
+        "Owned service_requests.resident_id",
+        "Service-role update restricted by payment ID and pending status"
+      ],
+      "newMigrations": 0
+    }
+  ]
+}

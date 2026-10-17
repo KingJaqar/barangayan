@@ -33,7 +33,7 @@ function GuardedAdminShell({ barangayName, adminName, adminAvatarUrl, barangayId
     // Log the logout event before the session is destroyed.
     await logAdminLogout();
     const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
     router.replace('/login');
     router.refresh();
   }

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "migrations": 128,
+  "latestMigration": "0130_resident_directory_admin_visibility.sql",
+  "counts": {
+    "resident_front_id_submission.test.sql": 26,
+    "administrator_scores.test.sql": 46,
+    "automatic_document_payments.test.sql": 65
+  },
+  "environment": "Disposable network-disabled PostgreSQL 17.6.1.155; real migrations and RLS, repository SQL bootstrap for Auth/Storage; no hosted HTTP/provider."
+}

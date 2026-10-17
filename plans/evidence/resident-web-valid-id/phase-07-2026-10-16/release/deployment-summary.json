@@ -1,0 +1,62 @@
+{
+  "verifiedAt": "2026-10-16T11:58:05.691Z",
+  "resident": {
+    "canonicalUrl": "https://barangayan-resident-web.vercel.app/settings/valid-id",
+    "deploymentId": "dpl_CJ5cohLsZAYMqZfpYKUdBJpKoFKp",
+    "uniqueUrl": "https://barangayan-resident-ibc79s0gl-barangayan.vercel.app",
+    "target": "production",
+    "status": "READY",
+    "projectId": "prj_zmYV8TadUEXY5NOEvFDJqUcP1s4e",
+    "teamId": "team_6b0TR8mzj8rxhZsgs2DVd1y6",
+    "priorDeploymentId": "dpl_CCd2A9bNhRbqs4icKzJFBoL9RuTq",
+    "baseCommit": "e860743184916ff287fe5daf142240af78fd15bf",
+    "scope": "Exact production base plus selected Valid ID files and required transport/guard support; no commit/push",
+    "sourceFilesVerified": 417,
+    "build": "Vercel production Webpack/TypeScript passed"
+  },
+  "supabase": {
+    "passed": true,
+    "checkedAt": "2026-10-16T07:53:54.548Z",
+    "project": "pwjbucnyqexiepoinoke",
+    "function": {
+      "name": "extract-resident-id-ocrspace",
+      "version": 2,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "bundleSha256": "1d556d242807f3786b0d4063b7b0017efaa8bce8bcbc12f7ff1159d0d7d32db5"
+    },
+    "downloadedSourceMatchesLocal": true,
+    "legacyFunctionUnchanged": true
+  },
+  "hosted": {
+    "passed": true,
+    "checks": 5,
+    "browser": "155.0.8059.80",
+    "pageErrors": 0,
+    "intentionalConsoleErrors": 2,
+    "preloadWarnings": 40,
+    "accountsDisabled": 2,
+    "reviewerRoleRemoved": true,
+    "sessionsEnded": true,
+    "recordsRetained": true,
+    "deletedData": false
+  },
+  "observability": {
+    "residentRuntimeQueries": [
+      "runtime-initial.jsonl",
+      "runtime-final.jsonl"
+    ],
+    "logDrains": 0,
+    "fullWindowUnavailable": "Vercel Hobby retention rejected the complete 07:59Z-to-final window; initial and final retained-window scans are separate, not continuous coverage."
+  },
+  "pendingManual": [
+    "Owner physical-camera/browser report",
+    "Attended real-midnight/UTC-boundary wheel session; automated fixed clocks passed"
+  ],
+  "limitations": [
+    "Existing pricing test failure and two location lint warnings unchanged",
+    "Build reports 53 existing dependency advisories and npm cache-dir warning; no dependency changed",
+    "Existing CSS/logo preload warnings recorded; no warning-free hosted claim",
+    "No remote database migration or old extraction deployment"
+  ]
+}

@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@barangayan/shared';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-vi.mock('expo-crypto', () => ({ randomUUID: () => '99999999-9999-4999-8999-999999999999' }));
-const { residentApi } = await import('../src/data/resident-api');
+import { residentApi } from '../src/data/resident-api';
 
 const TENANT = '22222222-2222-4222-8222-222222222222';
 const USER = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -23,7 +22,10 @@ function harness(replies: Reply[]) {
   const client = createClient<Database>('https://example.supabase.co', 'sb_publishable_test', { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch } });
   return { api: residentApi(client, TENANT, USER), requests };
 }
-const document = { id: REQUEST, name: 'Barangay Clearance', description: null, fee_centavos: 5000, processing_target_hours: 24, requirements: ['Valid ID'] };
+const document = {
+  id: REQUEST, name: 'Barangay Clearance', description: null, fee_centavos: 5000, processing_target_hours: 24, requirements: ['Valid ID'],
+  contract_version: 1, service_kind: null, charter: null, purposes: [], requirement_rules: {}, pricing_mode: 'fixed', processing_target_minutes: null,
+};
 
 describe('typed resident adapters against the real query builder (P02-T01/T03)', () => {
   it('selects explicit columns, scopes to the tenant, orders with an id tie-break and reads one page', async () => {
@@ -31,7 +33,7 @@ describe('typed resident adapters against the real query builder (P02-T01/T03)',
     expect(await api.documents('')({ from: 25, to: 49 }, signal())).toEqual([document]);
     const url = requests[0].url;
     expect(url.pathname).toBe('/rest/v1/document_types');
-    expect(url.searchParams.get('select')).toBe('id,name,description,fee_centavos,processing_target_hours,requirements');
+    expect(url.searchParams.get('select')).toBe('id,name,description,fee_centavos,processing_target_hours,requirements,contract_version,service_kind,charter,purposes,requirement_rules,pricing_mode,processing_target_minutes');
     expect(url.searchParams.get('barangay_id')).toBe(`eq.${TENANT}`);
     expect(url.searchParams.get('deleted_at')).toBe('is.null');
     expect(url.searchParams.get('order')).toBe('name.asc,id.asc');
@@ -52,11 +54,63 @@ describe('typed resident adapters against the real query builder (P02-T01/T03)',
   });
   it('scopes private reads to the signed-in owner and tenant', async () => {
     const { api, requests } = harness([{ body: [] }]);
-    await api.requests()({ from: 0, to: 24 }, signal());
+    await api.requests({ group: 'all', sub: 'all' })({ from: 0, to: 24 }, signal());
     const params = requests[0].url.searchParams;
     expect(params.get('resident_id')).toBe(`eq.${USER}`);
     expect(params.get('barangay_id')).toBe(`eq.${TENANT}`);
     expect(params.get('order')).toBe('created_at.desc,id.asc');
+  });
+  it('turns each request filter into a server-side restriction, so paging and counts agree', async () => {
+    const { api, requests } = harness([{ body: [] }, { body: [] }, { body: [] }, { body: [] }, { body: [] }, { body: [] }]);
+    const page = { from: 0, to: 24 };
+    await api.requests({ group: 'active', sub: 'all' })(page, signal());
+    await api.requests({ group: 'active', sub: 'pending_payment' })(page, signal());
+    await api.requests({ group: 'active', sub: 'paid' })(page, signal());
+    await api.requests({ group: 'active', sub: 'processing' })(page, signal());
+    await api.requests({ group: 'pickup', sub: 'all' })(page, signal());
+    await api.requests({ group: 'history', sub: 'all' })(page, signal());
+    const get = (index: number, key: string) => requests[index].url.searchParams.getAll(key);
+    expect(get(0, 'status')).toEqual(['in.(submitted,in_progress)']);
+    expect(get(1, 'status')).toEqual(['in.(submitted)']);
+    expect(get(1, 'payment_status')).toEqual(['not.in.(paid,waived)']);
+    expect(get(2, 'payment_status')).toEqual(['in.(paid,waived)']);
+    expect(get(3, 'status')).toEqual(['in.(in_progress)']);
+    expect(get(4, 'status')).toEqual(['in.(ready_for_pickup)']);
+    expect(get(5, 'status')).toEqual(['in.(completed,cancelled)']);
+    for (let index = 0; index < 6; index++) expect(get(index, 'resident_id')).toEqual([`eq.${USER}`]);
+  });
+  it('counts each group on the server with head requests scoped to the owner', async () => {
+    const reply = (count: number): Reply => ({ status: 200, body: [], headers: { 'content-range': `*/${count}` } });
+    const { api, requests } = harness([reply(9), reply(4), reply(1), reply(4)]);
+    expect(await api.requestCounts(signal())).toEqual({ all: 9, active: 4, pickup: 1, history: 4 });
+    expect(requests.every((request) => request.method === 'HEAD' && request.url.searchParams.get('resident_id') === `eq.${USER}`)).toBe(true);
+  });
+  it('reads the latest activity by last update and the own supporting files of a request', async () => {
+    const { api, requests } = harness([{ body: [] }, { body: [] }]);
+    await api.activity()({ from: 0, to: 24 }, signal());
+    expect(requests[0].url.searchParams.get('order')).toBe('updated_at.desc,id.asc');
+    await api.requestAttachments(REQUEST, signal());
+    expect(requests[1].url.pathname).toBe('/rest/v1/request_attachments');
+    expect(requests[1].url.searchParams.get('request_id')).toBe(`eq.${REQUEST}`);
+    expect(requests[1].url.searchParams.get('resident_id')).toBe(`eq.${USER}`);
+  });
+  it('reads the server clock snapshot through the tracking function and fails closed on a malformed one', async () => {
+    const snapshot = { request: { timing_model: 'agency_minutes_v1', target_minutes_snapshot: 60, sla_state: 'running', created_at: '2026-10-15T01:00:00Z', accepted_at: '2026-10-15T01:05:00Z', ready_at: null, released_at: null, cancelled_at: null, extra: 'ignored' },
+      pauses: [{ started_at: '2026-10-15T01:10:00Z', resumed_at: null, reason: 'Missing form', started_by: 'staff' }], evaluated_at: '2026-10-15T01:20:00.123456Z' };
+    const { api, requests } = harness([{ body: snapshot }, { body: { request: null } }, { body: null }]);
+    const read = await api.slaTracking(REQUEST, signal());
+    expect(requests[0].url.pathname).toBe('/rest/v1/rpc/service_request_sla_tracking');
+    expect(JSON.parse(requests[0].body ?? '{}')).toEqual({ p_request_id: REQUEST });
+    expect(read.pauses).toEqual([{ started_at: '2026-10-15T01:10:00Z', resumed_at: null, reason: 'Missing form' }]);
+    await expect(api.slaTracking(REQUEST, signal())).rejects.toMatchObject({ kind: 'schema' });
+    await expect(api.slaTracking(REQUEST, signal())).rejects.toMatchObject({ kind: 'not-found' });
+  });
+  it('sends the cancellation reason, trimmed, and defaults it when none is given', async () => {
+    const { api, requests } = harness([{ body: null }, { body: null }]);
+    await api.cancelRequest(REQUEST, '  Changed my mind  ');
+    await api.cancelRequest(REQUEST);
+    expect(JSON.parse(requests[0].body ?? '{}')).toEqual({ p_request_id: REQUEST, p_note: 'Changed my mind' });
+    expect(JSON.parse(requests[1].body ?? '{}')).toEqual({ p_request_id: REQUEST, p_note: 'Cancelled by resident' });
   });
   it('treats a malformed link as not found without querying', async () => {
     const { api, requests } = harness([]);
@@ -104,11 +158,21 @@ describe('write reconciliation (P02-T02, F03)', () => {
     const { api } = harness([{ status: 403, body: { code: '42501', message: 'denied' } }, { body: null }]);
     await expect(api.cancelRequest(REQUEST)).rejects.toMatchObject({ kind: 'authorization' });
   });
-  it('recovers the committed request after a lost insert reply using the client-generated id', async () => {
-    const { api, requests } = harness(['network-error', { body: { id: '99999999-9999-4999-8999-999999999999' } }]);
-    expect(await api.createRequest(REQUEST)).toEqual({ id: '99999999-9999-4999-8999-999999999999' });
-    expect(JSON.parse(requests[0].body ?? '{}')).toMatchObject({ id: '99999999-9999-4999-8999-999999999999', resident_id: USER, barangay_id: TENANT });
-    expect(requests[1].url.searchParams.get('id')).toBe('eq.99999999-9999-4999-8999-999999999999');
+  it('has no direct client insert for requests: submission goes through submit_service_request only (P08-T06)', () => {
+    const { api } = harness([]);
+    expect('createRequest' in api).toBe(false);
+  });
+  it('reads the approved ID version scoped to the owner and tenant, and never returns an unverified one', async () => {
+    const version = { id: REQUEST, version: 3, id_type: 'PhilSys', front_path: `${USER}/versions/${REQUEST}/id-front.jpg`, back_path: null, decision: 'verified', submitted_at: '2026-10-01T00:00:00Z', reviewed_at: '2026-10-02T00:00:00Z', rejection_reason: null };
+    const { api, requests } = harness([{ body: version }, { body: { ...version, decision: 'revoked' } }, { body: null }]);
+    expect(await api.approvedIdSubmission(REQUEST, signal())).toMatchObject({ id: REQUEST, version: 3 });
+    const params = requests[0].url.searchParams;
+    expect(requests[0].url.pathname).toBe('/rest/v1/id_submissions');
+    expect(params.get('id')).toBe(`eq.${REQUEST}`);
+    expect(params.get('resident_id')).toBe(`eq.${USER}`);
+    expect(params.get('barangay_id')).toBe(`eq.${TENANT}`);
+    expect(await api.approvedIdSubmission(REQUEST, signal())).toBeNull();
+    expect(await api.approvedIdSubmission(REQUEST, signal())).toBeNull();
   });
   it('marks an announcement read with an idempotent upsert', async () => {
     const { api, requests } = harness([{ status: 201 }]);

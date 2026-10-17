@@ -1,0 +1,125 @@
+{
+  "scope": "Comparison against the session starting client files; hashes identify reviewed sources.",
+  "files": [
+    {
+      "file": "src/components/auth/google-button.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "8a9d93a861ee14aaf534aeba192662b964ffc622ab7d96c8a0132960eadcc674"
+    },
+    {
+      "file": "src/app/(auth)/register/register-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "34821defba73ccb5d23178bb766c0dfe3466259c55fcb68ed42c8f5f5cec7231"
+    },
+    {
+      "file": "src/app/(auth)/forgot-password/page.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "b2cd8328c58aab7f214810dd0aad10449861943b34f914ad1d0fbfdfc3a5bc53"
+    },
+    {
+      "file": "src/app/(auth)/verify-otp/verify-otp-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "b028e3cd62d4d5e0ca264365591b438b060e2edf4075baa8b79029fd926e72c5"
+    },
+    {
+      "file": "src/app/(auth)/reset-password/reset-password-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "2184922a68e4e73f796a9d6e70a867ab4c29229f3102643079363465ea0fbb65"
+    },
+    {
+      "file": "src/app/(resident)/settings/change-password/forgot-password-dialog.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "0b0c26b57244651f65514141e02512df9b73f2fc04fffd5e6e613eae72273bd5"
+    },
+    {
+      "file": "src/app/(resident)/settings/email-verification/verification-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "f25c9c69bf1888d72210296d0bd88ecfa4f0713326af24c543286bdc8391cebb"
+    },
+    {
+      "file": "src/app/(resident)/settings/email-verification/change-email-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "5fa54e173f16e0532211bc051d60f587cd48fcf7d05d626ccab3061b94f0166c"
+    },
+    {
+      "file": "src/app/(resident)/settings/delete-account/delete-account-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "a01f898573a7066c9a4ee4abe3d75e21a8159ce0b5e819f386caa788db88f2fe"
+    },
+    {
+      "file": "src/lib/auth/email-change.ts",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "9b30cbf34470a09767fc890ad6bf94bb1d63a75a660a45a05c4f3f74adad3762"
+    },
+    {
+      "file": "src/lib/auth/session-feedback.ts",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "7f2cb0be9706f90f50fd09879c101b0cdcfcd090ab1beccbc5826659da3b32b2"
+    },
+    {
+      "file": "src/app/(resident)/settings/theme/theme-form.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "0c53c72ba7f01f97b5421be98a40bd1104696c491218022cfae67b771cf876fa"
+    },
+    {
+      "file": "src/components/theme/theme-controller.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "2f5ab384f67b720997dd6a94a66568673a3cc962feda8625c81e34b6f0926f1c"
+    },
+    {
+      "file": "src/components/theme/accent-controller.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "837cee81e2ecddf26945c665fb706f7e237212150cd9f9d8e555baf6496f5316"
+    },
+    {
+      "file": "src/components/theme/font-controller.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "73ced06e3f0d5ff4ccc1bd6f82fd3c063285f5360dcb82b71375652f756b4fa1"
+    },
+    {
+      "file": "src/hooks/use-unread-counts.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "cfea41dfad42de6ba8b031ecb4b5cd5ecd63d92689162381a34bb6a42efffa5b"
+    },
+    {
+      "file": "src/components/reports/announcement-card.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "9b70af3a406941ca4e25928102a00a5b03c2c3836e78c76ebd9246fbde7af74e"
+    },
+    {
+      "file": "src/components/reports/incident-card.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "b9a3987f40753f074f7207aaed4c57b8d661600b3791c947acde8196c351579e"
+    },
+    {
+      "file": "src/app/(resident)/announcements/announcements-feed.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "0b1f81296d2c9f0e045f3b4a2098d003e1f6428adb3e259b37839d809fd00fd5"
+    },
+    {
+      "file": "src/components/shared/notification-session.tsx",
+      "changed": true,
+      "queryAndMutationArgumentsUnchanged": true,
+      "sha256": "79da1abccf7c506811b442658ae58994e75d49c9a9a1a3c6b61ddede63f1162c"
+    }
+  ]
+}

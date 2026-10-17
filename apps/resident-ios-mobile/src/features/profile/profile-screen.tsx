@@ -9,7 +9,7 @@ import { useApi } from '../../data/use-api';
 import { useResource } from '../../data/use-resource';
 import { residentError } from '../../lib/errors';
 import { useResident, type Profile } from '../../lib/runtime';
-import { layout, radius, space, typeScale, useColors } from '../../lib/theme';
+import { layout, radius, space, useType, useColors } from '../../lib/theme';
 import { AvatarCard } from './avatar-card';
 import { birthdayLabel } from './birthday';
 import { BirthdaySheet } from './birthday-sheet';
@@ -43,6 +43,7 @@ function ProfileScreen({ profile }: { profile: Profile }) {
   const { client, refreshProfile } = useResident();
   const api = useApi();
   const colors = useColors();
+  const type = useType();
   const context = useResource('barangay-profile', (signal) => api.barangayProfile(signal));
   const locality = context.data?.locality ?? null;
   // Until the locality is known the city is treated as server-owned, so it is never written by mistake.
@@ -123,11 +124,11 @@ function ProfileScreen({ profile }: { profile: Profile }) {
       <Selector label="Sex" required options={SEX_OPTIONS} selected={draft.sex} disabled={!view.editable} error={errors.sex}
         onChange={(sex) => { setDraft((current) => ({ ...current, sex })); setResult(null); }} />
       <View style={{ gap: space[2] }}>
-        <Text accessibilityElementsHidden style={[typeScale.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>Date of birth <Text style={{ color: colors.danger }}>*</Text></Text>
+        <Text accessibilityElementsHidden style={[type.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>Date of birth <Text style={{ color: colors.danger }}>*</Text></Text>
         <Pressable accessibilityRole="button" accessibilityLabel="Date of birth, required" accessibilityValue={{ text: birthdayLabel(draft.birthDate) || 'Not selected' }} accessibilityHint="Opens the date picker"
           accessibilityState={{ disabled: !view.editable }} disabled={!view.editable} onPress={() => setBirthdayOpen(true)}
           style={{ minHeight: layout.buttonMinHeight, justifyContent: 'center', paddingHorizontal: space[3], borderWidth: 1, borderColor: errors.birthDate ? colors.danger : colors.border, borderRadius: radius.sm, borderCurve: 'continuous', backgroundColor: colors.surface, opacity: view.editable ? 1 : 0.5 }}>
-          <Text style={[typeScale.body, { color: draft.birthDate ? colors.textPrimary : colors.textTertiary }]}>{birthdayLabel(draft.birthDate) || 'Select date of birth'}</Text>
+          <Text style={[type.body, { color: draft.birthDate ? colors.textPrimary : colors.textTertiary }]}>{birthdayLabel(draft.birthDate) || 'Select date of birth'}</Text>
         </Pressable>
         {!!issue('birthDate') && <Notice tone="danger" message={issue('birthDate') as string} />}
       </View>

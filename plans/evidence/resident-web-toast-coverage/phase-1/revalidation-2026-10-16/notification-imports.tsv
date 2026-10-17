@@ -1,0 +1,51 @@
+file	line	module	binding
+apps/resident-web/src/app/(auth)/forgot-password/page.tsx	11	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(auth)/login/page.tsx	16	@/lib/auth/session-feedback	{ queueLoginNotification }
+apps/resident-web/src/app/(auth)/login/page.tsx	17	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	35	@/lib/auth/session-feedback	{ notifyLoggedOut }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	36	@/lib/notify	{ beginAttempt, notify, type OperationId }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	12	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	15	@/lib/auth/session-feedback	{ notifyLoggedOut }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	9	@/lib/notify	{ beginAttempt, eventId, notify, setNotificationSession }
+apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx	6	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx	9	sonner	{ toast }
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	7	sonner	{ toast }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	17	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	14	sonner	{ toast }
+apps/resident-web/src/app/(resident)/settings/change-password/forgot-password-dialog.tsx	13	@/lib/auth/session-feedback	{ notifyLoggedOut }
+apps/resident-web/src/app/(resident)/settings/change-password/forgot-password-dialog.tsx	14	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(resident)/settings/delete-account/delete-account-form.tsx	19	@/lib/notify	{ beginAttempt, notify, setNotificationSession }
+apps/resident-web/src/app/(resident)/settings/download-data/page.tsx	20	sonner	{ toast }
+apps/resident-web/src/app/(resident)/settings/email-verification/change-email-form.tsx	10	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(resident)/settings/email-verification/verification-form.tsx	11	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx	24	sonner	{ toast }
+apps/resident-web/src/app/(resident)/settings/notifications/page.tsx	13	sonner	{ toast }
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	47	sonner	{ toast }
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	56	@/lib/household-feedback	{ notifyHouseholdOutcome }
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	57	@/lib/notify	{ beginAttempt }
+apps/resident-web/src/app/(resident)/settings/theme/theme-form.tsx	17	@/lib/notify	{ beginAttempt, notify, type OperationId }
+apps/resident-web/src/components/auth/google-button.tsx	8	@/lib/auth/session-feedback	{ queueLoginNotification }
+apps/resident-web/src/components/auth/google-button.tsx	10	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/emergency/family-content.tsx	15	@/lib/household-feedback	{ notifyHouseholdOutcome }
+apps/resident-web/src/components/emergency/family-content.tsx	16	@/lib/notify	{ beginAttempt }
+apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx	10	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx	11	@/lib/qr-checkin	{ completeCheckIn, parseCenterQr }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	12	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/emergency/qr-upload-fallback.tsx	9	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/emergency/qr-upload-fallback.tsx	10	@/lib/qr-checkin	{ completeCheckIn, parseCenterQr }
+apps/resident-web/src/components/maps/locate-button.tsx	7	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/reports/announcement-card.tsx	4	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/reports/incident-card.tsx	4	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx	15	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx	32	@/lib/notify	{ beginAttempt, eventId, notify }
+apps/resident-web/src/components/services/resident-service-form.tsx	28	../../lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/components/shared/notification-session.tsx	6	@/lib/auth/session-feedback	{ showPendingLoginNotification }
+apps/resident-web/src/components/shared/notification-session.tsx	7	@/lib/notify	{ eventId, notify, setNotificationSession }
+apps/resident-web/src/components/ui/sonner.tsx	4	sonner	{ Toaster as Sonner }
+apps/resident-web/src/components/ui/sonner.tsx	7	@/lib/notify	{ adapterToastIdOf, holdToast, releaseToast }
+apps/resident-web/src/hooks/use-sign-out.ts	8	@/lib/auth/session-feedback	{ notifyLoggedOut }
+apps/resident-web/src/hooks/use-sign-out.ts	9	@/lib/notify	{ beginAttempt, notify }
+apps/resident-web/src/lib/auth/session-feedback.ts	1	@/lib/notify	{ beginAttempt, notify, setNotificationSession }
+apps/resident-web/src/lib/household-feedback.ts	2	@/lib/notify	{ notify, type OperationId }
+apps/resident-web/src/lib/notify.ts	1	sonner	{ toast }
+apps/resident-web/src/lib/qr-checkin.ts	4	@/lib/notify	{ notify, type OperationId }

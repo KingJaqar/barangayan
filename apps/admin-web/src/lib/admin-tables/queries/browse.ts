@@ -80,7 +80,12 @@ export async function browseTable<K extends TableName>(name: K, requested: Brows
     const tab = f.tab;
     if (name === 'requests' && tab !== 'all') query = query.eq('f_status', REQUEST_STATUS_BY_TAB[tab]);
     if (['transactions', 'incidents', 'applicants'].includes(name) && tab !== 'all') query = query.eq('f_status', tab);
-    if (name === 'residents' && tab !== 'all') query = query.eq('f_email_verified', tab === 'verified');
+    if (name === 'residents') {
+      if (tab === 'verified' || tab === 'unverified') query = query.eq('f_email_verified', tab === 'verified');
+      if (tab === 'id_verified') query = query.eq('f_id_status', 'verified');
+      // Include residents without a submitted ID as well as pending/failed IDs.
+      if (tab === 'id_unverified') query = query.or('f_id_status.is.null,f_id_status.neq.verified');
+    }
     if (name === 'residents' && f.verification) query = query.eq('f_with_id', f.verification === 'with_id');
     if (name === 'households' && tab !== 'all') query = query.eq('f_checked_in', tab === 'checked_in');
     if (name === 'staff' && tab === 'admin') query = query.eq('f_role', 'admin');

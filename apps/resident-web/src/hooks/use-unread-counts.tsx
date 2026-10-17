@@ -1,10 +1,11 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
 
+type ReadWriteResult = 'confirmed' | 'accepted' | 'rejected' | 'uncertain' | 'skipped';
 interface UnreadCountsValue {
   /** Live status count — the resident's own open + in_progress incidents. Not an
    * unread/notification count, so there's no mark-as-read for it. */
@@ -17,11 +18,11 @@ interface UnreadCountsValue {
   /** Ids of announcements not yet marked read by this resident. */
   unreadAnnouncementIds: string[];
   markResolvedRead: () => Promise<void>;
-  markIncidentRead: (incidentId: string) => Promise<void>;
-  markIncidentUnread: (incidentId: string) => Promise<void>;
-  markAnnouncementsRead: () => Promise<void>;
-  markAnnouncementRead: (announcementId: string) => Promise<void>;
-  markAnnouncementUnread: (announcementId: string) => Promise<void>;
+  markIncidentRead: (incidentId: string) => Promise<ReadWriteResult>;
+  markIncidentUnread: (incidentId: string) => Promise<ReadWriteResult>;
+  markAnnouncementsRead: () => Promise<ReadWriteResult>;
+  markAnnouncementRead: (announcementId: string) => Promise<ReadWriteResult>;
+  markAnnouncementUnread: (announcementId: string) => Promise<ReadWriteResult>;
 }
 
 const UnreadCountsContext = createContext<UnreadCountsValue>({
@@ -30,11 +31,11 @@ const UnreadCountsContext = createContext<UnreadCountsValue>({
   announcementsUnreadCount: 0,
   unreadAnnouncementIds: [],
   markResolvedRead: async () => {},
-  markIncidentRead: async () => {},
-  markIncidentUnread: async () => {},
-  markAnnouncementsRead: async () => {},
-  markAnnouncementRead: async () => {},
-  markAnnouncementUnread: async () => {},
+  markIncidentRead: async () => 'skipped',
+  markIncidentUnread: async () => 'skipped',
+  markAnnouncementsRead: async () => 'skipped',
+  markAnnouncementRead: async () => 'skipped',
+  markAnnouncementUnread: async () => 'skipped',
 });
 
 /**
@@ -52,6 +53,11 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
   const [resolvedUnreadCount, setResolvedUnreadCount] = useState(0);
   const [announcementsUnreadCount, setAnnouncementsUnreadCount] = useState(0);
   const [unreadAnnouncementIds, setUnreadAnnouncementIds] = useState<string[]>([]);
+  const current = useRef<symbol | null>(null);
+  useEffect(() => {
+    current.current = Symbol();
+    return () => { current.current = null; };
+  }, [userId]);
 
   // Both refetchers always resolve through a .then() callback, even the "no user"
   // case (a resolved Promise instead of an early synchronous setState) — the effect
@@ -68,16 +74,18 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
       return;
     }
     const supabase = createSupabaseBrowserClient();
-    supabase
+    const owner = current.current;
+    return Promise.resolve(supabase
       .from('incidents')
       .select('status, resolved_read_at')
       .is('deleted_at', null)
-      .eq('reporter_id', userId)
-      .then(({ data }) => {
+      .eq('reporter_id', userId))
+      .then(({ data, error }) => {
+        if (error || !owner || current.current !== owner) return;
         const rows = data ?? [];
         setActiveReportsCount(rows.filter((r) => r.status === 'open' || r.status === 'in_progress').length);
         setResolvedUnreadCount(rows.filter((r) => r.status === 'resolved' && !r.resolved_read_at).length);
-      });
+      }).catch(() => { /* Retain the last counts on a failed background refresh. */ });
   }, [userId]);
 
   const refetchAnnouncementCounts = useCallback(() => {
@@ -88,15 +96,17 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
       });
     }
     const supabase = createSupabaseBrowserClient();
+    const owner = current.current;
     return Promise.all([
       supabase.from('announcements').select('id').is('deleted_at', null),
       supabase.from('announcement_reads').select('announcement_id').eq('resident_id', userId),
-    ]).then(([{ data: announcements }, { data: reads }]) => {
+    ]).then(([{ data: announcements, error: announcementError }, { data: reads, error: readError }]) => {
+      if (announcementError || readError || !owner || current.current !== owner) return;
       const readIds = new Set((reads ?? []).map((r) => r.announcement_id));
       const unreadIds = (announcements ?? []).map((a) => a.id).filter((id) => !readIds.has(id));
       setUnreadAnnouncementIds(unreadIds);
       setAnnouncementsUnreadCount(unreadIds.length);
-    });
+    }).catch(() => { /* Retain the last counts; a failed refresh is not a failed write. */ });
   }, [userId]);
 
   useEffect(() => {
@@ -149,56 +159,88 @@ export function UnreadCountsProvider({ userId, children }: { userId: string | nu
   }, [userId, refetchIncidentCounts]);
 
   const markIncidentRead = useCallback(
-    async (incidentId: string) => {
-      if (!userId) return;
+    async (incidentId: string): Promise<ReadWriteResult> => {
+      if (!userId) return 'skipped';
       const supabase = createSupabaseBrowserClient();
-      await supabase.from('incidents').update({ resolved_read_at: new Date().toISOString() }).eq('id', incidentId).eq('reporter_id', userId);
-      refetchIncidentCounts();
+      const owner = current.current;
+      try {
+        const readAt = new Date().toISOString();
+        const { data, error, status } = await supabase.from('incidents').update({ resolved_read_at: readAt }).eq('id', incidentId).eq('reporter_id', userId).select('id,status,resolved_read_at');
+        if (error) return status === 0 ? 'uncertain' : 'rejected';
+        if (!owner || current.current !== owner) return 'skipped';
+        await refetchIncidentCounts();
+        return data?.length === 1 && data[0].id === incidentId && data[0].status === 'resolved' && typeof data[0].resolved_read_at === 'string' ? 'confirmed' : 'accepted';
+      } catch { return 'uncertain'; }
     },
     [userId, refetchIncidentCounts],
   );
 
   const markIncidentUnread = useCallback(
-    async (incidentId: string) => {
-      if (!userId) return;
+    async (incidentId: string): Promise<ReadWriteResult> => {
+      if (!userId) return 'skipped';
       const supabase = createSupabaseBrowserClient();
-      await supabase.from('incidents').update({ resolved_read_at: null }).eq('id', incidentId).eq('reporter_id', userId);
-      refetchIncidentCounts();
+      const owner = current.current;
+      try {
+        const { data, error, status } = await supabase.from('incidents').update({ resolved_read_at: null }).eq('id', incidentId).eq('reporter_id', userId).select('id,status,resolved_read_at');
+        if (error) return status === 0 ? 'uncertain' : 'rejected';
+        if (!owner || current.current !== owner) return 'skipped';
+        await refetchIncidentCounts();
+        return data?.length === 1 && data[0].id === incidentId && data[0].status === 'resolved' && data[0].resolved_read_at === null ? 'confirmed' : 'accepted';
+      } catch { return 'uncertain'; }
     },
     [userId, refetchIncidentCounts],
   );
 
-  const markAnnouncementsRead = useCallback(async () => {
-    if (!userId || unreadAnnouncementIds.length === 0) return;
+  const markAnnouncementsRead = useCallback(async (): Promise<ReadWriteResult> => {
+    if (!userId || unreadAnnouncementIds.length === 0) return 'skipped';
     const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
-      .from('announcement_reads')
-      .upsert(
-        unreadAnnouncementIds.map((announcement_id) => ({ resident_id: userId, announcement_id })),
-        { onConflict: 'resident_id,announcement_id' },
-      );
-    if (error) throw error;
-    await refetchAnnouncementCounts();
+    const owner = current.current;
+    const requestedIds = [...unreadAnnouncementIds];
+    try {
+      const { data, error, status } = await supabase
+        .from('announcement_reads')
+        .upsert(
+          requestedIds.map((announcement_id) => ({ resident_id: userId, announcement_id })),
+          { onConflict: 'resident_id,announcement_id' },
+        ).select('announcement_id');
+      if (error) return status === 0 ? 'uncertain' : 'rejected';
+      if (!owner || current.current !== owner) return 'skipped';
+      await refetchAnnouncementCounts();
+      const returnedIds = new Set(data?.map(row => row.announcement_id));
+      return data?.length === requestedIds.length && requestedIds.every(id => returnedIds.has(id)) ? 'confirmed' : 'accepted';
+    } catch { return 'uncertain'; }
   }, [userId, unreadAnnouncementIds, refetchAnnouncementCounts]);
 
   const markAnnouncementRead = useCallback(
-    async (announcementId: string) => {
-      if (!userId) return;
+    async (announcementId: string): Promise<ReadWriteResult> => {
+      if (!userId) return 'skipped';
       const supabase = createSupabaseBrowserClient();
-      await supabase
-        .from('announcement_reads')
-        .upsert({ resident_id: userId, announcement_id: announcementId }, { onConflict: 'resident_id,announcement_id' });
-      refetchAnnouncementCounts();
+      const owner = current.current;
+      try {
+        const { data, error, status } = await supabase
+          .from('announcement_reads')
+          .upsert({ resident_id: userId, announcement_id: announcementId }, { onConflict: 'resident_id,announcement_id' }).select('announcement_id');
+        if (error) return status === 0 ? 'uncertain' : 'rejected';
+        if (!owner || current.current !== owner) return 'skipped';
+        await refetchAnnouncementCounts();
+        return data?.length === 1 && data[0].announcement_id === announcementId ? 'confirmed' : 'accepted';
+      } catch { return 'uncertain'; }
     },
     [userId, refetchAnnouncementCounts],
   );
 
   const markAnnouncementUnread = useCallback(
-    async (announcementId: string) => {
-      if (!userId) return;
+    async (announcementId: string): Promise<ReadWriteResult> => {
+      if (!userId) return 'skipped';
       const supabase = createSupabaseBrowserClient();
-      await supabase.from('announcement_reads').delete().eq('resident_id', userId).eq('announcement_id', announcementId);
-      refetchAnnouncementCounts();
+      const owner = current.current;
+      try {
+        const { data, error, status } = await supabase.from('announcement_reads').delete().eq('resident_id', userId).eq('announcement_id', announcementId).select('announcement_id');
+        if (error) return status === 0 ? 'uncertain' : 'rejected';
+        if (!owner || current.current !== owner) return 'skipped';
+        await refetchAnnouncementCounts();
+        return data?.length === 1 && data[0].announcement_id === announcementId ? 'confirmed' : 'accepted';
+      } catch { return 'uncertain'; }
     },
     [userId, refetchAnnouncementCounts],
   );

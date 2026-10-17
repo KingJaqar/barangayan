@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/loading';
+import { eventId, notify } from '@/lib/notify';
 
 /**
  * Settled receipt read for this request: `missing` means the read succeeded but there is
@@ -24,14 +25,17 @@ type Receipt = { status: 'ready'; payment: Tables<'payments'> } | { status: 'mis
 export function SuccessStep({
   requestId,
   referenceNumber,
+  announcePaymentId = null,
 }: {
   requestId: string;
   referenceNumber: string;
+  announcePaymentId?: string | null;
 }) {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     let active = true;
+    const notification = announcePaymentId ? eventId('payment', announcePaymentId, 'paid-receipt') : null;
     // Microtask-wrapped state reset (react-hooks/set-state-in-effect).
     void Promise.resolve().then(() => {
       if (active) setReceipt(null);
@@ -48,8 +52,13 @@ export function SuccessStep({
         ({ data, error: queryError }) => {
           if (!active) return;
           if (queryError) setReceipt({ status: 'error' });
-          else if (!data) setReceipt({ status: 'missing' });
-          else setReceipt({ status: 'ready', payment: data });
+          else if (!data || data.service_request_id !== requestId || data.status !== 'paid' || (announcePaymentId && data.id !== announcePaymentId)) setReceipt({ status: 'missing' });
+          else {
+            setReceipt({ status: 'ready', payment: data });
+            if (notification && data.id === announcePaymentId && data.service_request_id === requestId && data.status === 'paid') {
+              notify.success('Payment received. Your receipt is ready.', { id: notification });
+            }
+          }
         },
         () => {
           if (active) setReceipt({ status: 'error' });
@@ -58,7 +67,7 @@ export function SuccessStep({
     return () => {
       active = false;
     };
-  }, [requestId, retry]);
+  }, [requestId, retry, announcePaymentId]);
   if (receipt?.status !== 'ready')
     return (
       <div className="flex flex-col gap-4" aria-busy={receipt === null || undefined}>

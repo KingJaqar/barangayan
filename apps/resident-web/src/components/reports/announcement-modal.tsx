@@ -7,7 +7,7 @@ import { X, Clock } from 'lucide-react';
 import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory, type Tables } from '@barangayan/shared';
 
 import { renderIonicon } from '@/lib/ionicon-map';
-import { drawerTransition } from '@/lib/motion';
+import { dialogTransition } from '@/lib/motion';
 import styles from './announcements.module.css';
 
 type AnnouncementRow = Tables<'announcements'>;
@@ -28,21 +28,20 @@ function formatDateTime(iso: string): string {
 
 interface AnnouncementModalProps {
   visible: boolean;
-  /** Kept populated while visible=false so the sheet can slide down without blanking — same
-   * pattern as mobile's AnnouncementModal. */
+  /** Kept populated during the exit animation so the dialog never blanks. */
   announcement: AnnouncementRow | null;
   onClose: () => void;
 }
 
 /**
- * Bottom-sheet detail for an announcement — web counterpart of mobile's AnnouncementModal.
+ * Centered announcement detail dialog.
  * A Radix modal dialog (focus moves in and is trapped, Escape and the backdrop close it,
  * focus returns to the card that opened it, and the title names the dialog), with
- * Framer Motion driving the shared drawer timing: 240 ms slide-up, 180 ms exit, no
- * bounce. Props only — opening it never fetches anything.
+ * Framer Motion driving a gentle fade and scale with the shared dialog timing.
+ * Props only — opening it never fetches anything.
  */
 export function AnnouncementModal({ visible, announcement, onClose }: AnnouncementModalProps) {
-  // The sheet has no Radix trigger, so remember what had focus (the opening card) and
+  // The dialog has no Radix trigger, so remember what had focus (the opening card) and
   // give it back on close.
   const returnFocus = useRef<HTMLElement | null>(null);
   return (
@@ -54,8 +53,8 @@ export function AnnouncementModal({ visible, announcement, onClose }: Announceme
               <motion.div
                 className={styles.overlay}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: drawerTransition.enter }}
-                exit={{ opacity: 0, transition: drawerTransition.exit }}
+                animate={{ opacity: 1, transition: dialogTransition.enter }}
+                exit={{ opacity: 0, transition: dialogTransition.exit }}
               />
             </DialogPrimitive.Overlay>
             <DialogPrimitive.Content
@@ -69,11 +68,11 @@ export function AnnouncementModal({ visible, announcement, onClose }: Announceme
                 returnFocus.current?.focus();
               }}>
               <motion.div
-                className={styles.sheet}
-                initial={{ y: '100%' }}
-                animate={{ y: 0, transition: drawerTransition.enter }}
-                exit={{ y: '100%', transition: drawerTransition.exit }}>
-                <SheetBody announcement={announcement} />
+                className={styles.dialog}
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0, transition: dialogTransition.enter }}
+                exit={{ opacity: 0, scale: 0.98, y: 8, transition: dialogTransition.exit }}>
+                <DialogBody announcement={announcement} />
               </motion.div>
             </DialogPrimitive.Content>
           </DialogPrimitive.Portal>
@@ -83,8 +82,8 @@ export function AnnouncementModal({ visible, announcement, onClose }: Announceme
   );
 }
 
-function SheetBody({ announcement }: { announcement: AnnouncementRow }) {
-  // While the sheet slides out, its controls are inert so nothing hidden stays focusable.
+function DialogBody({ announcement }: { announcement: AnnouncementRow }) {
+  // Exiting controls are inert so nothing hidden stays focusable.
   const isPresent = useIsPresent();
   const category = (announcement.category ?? 'general') as AnnouncementCategory;
   const meta = ANNOUNCEMENT_CATEGORY_META[category] ?? ANNOUNCEMENT_CATEGORY_META.general;
@@ -92,38 +91,33 @@ function SheetBody({ announcement }: { announcement: AnnouncementRow }) {
   const detail = announcement.detailed_description?.trim() || announcement.body || '';
 
   return (
-    <div inert={!isPresent}>
-      {/* Handle */}
-      <div aria-hidden className="flex justify-center pt-3 pb-1">
-        <div className="h-1 w-9 rounded-full bg-border" />
-      </div>
-
-      <div className={`${styles.sheetBody} ${styles.categoryTheme}`} style={{ '--announcement-category': color } as CSSProperties}>
+    <div inert={!isPresent} className={`${styles.dialogBody} ${styles.categoryTheme}`} style={{ '--announcement-category': color } as CSSProperties}>
+      <div className={styles.dialogHeader}>
         {/* Header: category chip + close button */}
         <div className="flex items-center justify-between">
-          <div className={styles.category}>
+          <div className={`${styles.category} ${styles.dialogCategory}`}>
             {renderIonicon(icon, { size: 14, 'aria-hidden': true })}
             {label}
           </div>
           <DialogPrimitive.Close
             aria-label="Close"
-            className={styles.closeButton}>
+            className={`${styles.closeButton} ${styles.dialogClose}`}>
             <X aria-hidden size={18} />
           </DialogPrimitive.Close>
         </div>
 
         {/* Title */}
-        <DialogPrimitive.Title className={styles.sheetTitle}>{announcement.title}</DialogPrimitive.Title>
+        <DialogPrimitive.Title className={styles.dialogTitle}>{announcement.title}</DialogPrimitive.Title>
 
         {/* Timestamp */}
         <div className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
           <Clock aria-hidden size={14} className="mt-0.5 shrink-0" />
           <span>{timeAgo(announcement.published_at)} · {formatDateTime(announcement.published_at)}</span>
         </div>
+      </div>
 
-        <hr className="border-border" />
-
-        {/* Full body */}
+      {/* Full body scrolls independently so the title and close control stay visible. */}
+      <div className={styles.dialogContent}>
         <DialogPrimitive.Description className={styles.detail}>{detail}</DialogPrimitive.Description>
       </div>
     </div>

@@ -213,6 +213,7 @@ export function MapCanvas({
       <div
         ref={containerRef}
         className={`${styles.mapFrame} ${isFullscreen ? styles.fullscreen : ''}`}>
+        <div className={styles.mapOverlay}>
         <div className={styles.toolbar}>
           <MapSegmentToggle activeTab={activeTab} incidentCount={incidentMarkers.length} evacuationCount={evacuationMarkers.length}
             onChange={(tab) => { setActiveTab(tab); setSearch(''); setSelectedMarker(null); }} />
@@ -240,6 +241,7 @@ export function MapCanvas({
             <MapPinOff aria-hidden size={14} className="shrink-0" /> {geoNotice}
           </p>
         ) : null}
+        </div>
         <div className={styles.mapViewport}>
           <MapContainer
             center={[DEFAULT_CENTER.lat, DEFAULT_CENTER.lng]}

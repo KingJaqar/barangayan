@@ -1,8 +1,8 @@
 # Phase 10 — Fee assessment, pickup, QR PH settlement, payment cancellation and receipts (`P10`)
 
-**Status:** Planned. Not started; no evidence recorded.
+**Status (2026-10-16):** Partially complete. T01–T03 and T05–T07 Verified (non-device scope, OD-06/OD-07: typecheck, lint, 62 new tests, export, generated configuration, read-only hosted contract check); T04 is an evidence task with the owner approval recorded (OD-09) and settlement/webhook evidence open; T08 Skipped (OD-07). `qrph` and `pickup` opened by OD-09. See `P10_2026-10-16_implementation-and-verification.md`.
 
-**Entry dependencies:** Phase 3, Phase 8, Phase 9. Do not start until those exits are verified (plan §4.2). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
+**Entry dependencies:** Phase 3, Phase 8, Phase 9. Phases 3, 8 and 9 are Partially complete; their open exits would be carried as blockers (plan Phase 10 entry status). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 
 **Lead owner role:** Payments/backend + iOS/services + barangay operations. **Named owner:** KingJaqar (decision-register OD-01).
 
@@ -12,4 +12,6 @@
 
 ## Evidence
 
-None yet. Add records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.
+- [P10_2026-10-16_implementation-and-verification.md](P10_2026-10-16_implementation-and-verification.md) — implementation, decisions P10-D01…D12, baseline versus final, acceptance and open items.
+
+Add further records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.

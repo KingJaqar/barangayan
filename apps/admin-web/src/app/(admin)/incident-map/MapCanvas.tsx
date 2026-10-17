@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore, useTransition } from 'react';
+import { MapPin } from 'lucide-react';
+import styles from './incident-map.module.css';
 import { MapContainer, TileLayer, Marker, Popup, LayerGroup, GeoJSON, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
@@ -9,12 +11,28 @@ import { MapSearchBar } from './MapSearchBar';
 import { MapSegmentToggle } from './MapSegmentToggle';
 import { MapFilterPills } from './MapFilterPills';
 import { IncidentPopupContent, EvacuationPopupContent } from './MapMarkerPopup';
-import { BoundaryFitButton } from './BoundaryFitButton';
+import { MapViewportControls } from './MapViewportControls';
+import { Spinner } from '@/components/loading/spinner';
+import { matchesMapQuery } from './map-search';
 import type { IncidentRow } from '../incident-reports/page';
 import type { MapIncidentMarker, MapEvacuationMarker, CategoryRow, EvacuationCenterRow } from '@barangayan/shared';
 
 const DEFAULT_CENTER = { lat: 14.680291, lng: 121.1187445 } as const;
 const DEFAULT_ZOOM = 16;
+type ClusterHandle = L.FeatureGroup & { zoomToShowLayer: (marker: L.Marker, onVisible: () => void) => void };
+
+function subscribeToMotion(callback: () => void) {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  media.addEventListener('change', callback);
+  return () => media.removeEventListener('change', callback);
+}
+const readReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function subscribeToCompactLayout(callback: () => void) {
+  const media = window.matchMedia('(max-width: 700px)');
+  media.addEventListener('change', callback);
+  return () => media.removeEventListener('change', callback);
+}
+const readCompactLayout = () => window.matchMedia('(max-width: 700px)').matches;
 
 function MapFitter({
   boundary,
@@ -29,6 +47,12 @@ function MapFitter({
 }) {
   const map = useMap();
   const fittedRef = useRef(false);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => map.invalidateSize({ pan: false }));
+    observer.observe(map.getContainer());
+    return () => observer.disconnect();
+  }, [map]);
 
   useEffect(() => {
     if (fittedRef.current) return;
@@ -65,18 +89,35 @@ export function MapCanvas({
   const urlTab = searchParams.get('tab') === 'evacuation' ? 'evacuation' : 'incidents';
   const urlCategoryIds = useMemo(() => searchParams.get('category')?.split(',').filter(Boolean) ?? [], [searchParams]);
   const urlQuery = searchParams.get('q') ?? '';
+  const urlState = searchParams.toString();
+  const latestParamsRef = useRef(urlState);
 
   const activeTab = urlTab;
   const activeCategoryIds = urlCategoryIds;
   const [localSearch, setLocalSearch] = useState(urlQuery);
+  const deferredSearch = useDeferredValue(localSearch);
+  const [navigationPending, startNavigation] = useTransition();
+  const [tilesLoading, setTilesLoading] = useState(false);
+  const [selection, setSelection] = useState<{ id: string } | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const viewportRef = useRef<HTMLElement | null>(null);
+  const markerRefs = useRef(new Map<string, L.Marker>());
+  const clusterRef = useRef<ClusterHandle | null>(null);
+  const reducedMotion = useSyncExternalStore(subscribeToMotion, readReducedMotion, () => true);
+  const compactLayout = useSyncExternalStore(subscribeToCompactLayout, readCompactLayout, () => false);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  useEffect(() => () => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+  }, []);
+
   useEffect(() => {
-    // Sync search input when URL changes (e.g. browser back/forward).
-    // This is a legitimate external-state-to-local-state sync pattern.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (navigationPending) return;
+    latestParamsRef.current = urlState;
+    if (searchTimerRef.current) return;
+    // Keep back/forward navigation in sync without replacing pending input.
     setLocalSearch(urlQuery);
-  }, [urlQuery]);
+  }, [urlQuery, urlState, navigationPending]);
 
   const incidentMarkers = useMemo<MapIncidentMarker[]>(() => {
     return incidents
@@ -124,45 +165,64 @@ export function MapCanvas({
     if (activeCategoryIds.length > 0) {
       markers = markers.filter((m) => activeCategoryIds.includes(m.kind));
     }
-    if (localSearch.trim()) {
-      const q = localSearch.trim().toLowerCase();
+    if (deferredSearch.trim()) {
       markers = markers.filter((m) => {
         const incident = incidents.find((i) => i.id === m.id);
         if (!incident) return false;
         const category = categories.find((c) => c.id === incident.category_id);
         const reporter = incident.profiles?.full_name ?? '';
-        return (
-          incident.title.toLowerCase().includes(q) ||
-          (incident.description ?? '').toLowerCase().includes(q) ||
-          (category?.name ?? '').toLowerCase().includes(q) ||
-          reporter.toLowerCase().includes(q)
-        );
+        return matchesMapQuery([incident.title, incident.description, incident.address,
+          incident.specific_area_details, incident.status.replaceAll('_', ' '), category?.name, reporter], deferredSearch);
       });
     }
     return markers;
-  }, [incidentMarkers, activeCategoryIds, localSearch, incidents, categories]);
+  }, [incidentMarkers, activeCategoryIds, deferredSearch, incidents, categories]);
 
   const visibleEvacuationMarkers = useMemo(() => {
     if (activeTab !== 'evacuation') return [];
-    return evacuationMarkers;
-  }, [evacuationMarkers, activeTab]);
+    return evacuationMarkers.filter(marker => matchesMapQuery([marker.label, centers.find(center => center.id === marker.id)?.address], deferredSearch));
+  }, [evacuationMarkers, activeTab, deferredSearch, centers]);
 
   const allVisibleMarkers = useMemo(() => {
     return activeTab === 'evacuation' ? visibleEvacuationMarkers : visibleIncidentMarkers;
   }, [activeTab, visibleIncidentMarkers, visibleEvacuationMarkers]);
 
-  const createIcon = (color: string, isEvacuation = false) => {
-    const pinColor = isEvacuation ? '#10B981' : color || '#0F6E5B';
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
-      <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 24 12 24S24 21 24 12C24 5.4 18.6 0 12 0z" fill="${pinColor}"/>
-      <circle cx="12" cy="12" r="5" fill="white"/>
+  useEffect(() => {
+    if (!selection) return;
+    const map = mapRef.current;
+    const marker = markerRefs.current.get(selection.id);
+    if (!map || !marker) return;
+    let current = true;
+    const open = () => { if (current) marker.openPopup(); };
+    if (clusterRef.current?.hasLayer(marker)) {
+      clusterRef.current.zoomToShowLayer(marker, open);
+    } else {
+      const position = marker.getLatLng();
+      const zoom = Math.max(map.getZoom(), 17);
+      if (map.getCenter().equals(position) && map.getZoom() === zoom) open();
+      else {
+        map.once('moveend', open);
+        map.flyTo(position, zoom, { animate: !reducedMotion, duration: 0.5 });
+      }
+    }
+    return () => { current = false; map.off('moveend', open); };
+  }, [selection, reducedMotion]);
+
+  const createIcon = (color?: string, evacuation = false) => {
+    // Set category color through the DOM; the SVG inherits the active theme otherwise.
+    const pin = document.createElement('div');
+    pin.className = styles.pin;
+    if (color) pin.style.setProperty('--category-color', color);
+    pin.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 40" width="28" height="40">
+      <path d="M14 1C6.8 1 1 6.8 1 14c0 9 13 25 13 25S27 23 27 14C27 6.8 21.2 1 14 1z" fill="currentColor" stroke="var(--background)" stroke-width="1.5"/>
+      ${evacuation ? '<path d="m7 13 7-5 7 5v8h-5v-5h-4v5H7z" fill="var(--background)"/>' : '<circle cx="14" cy="14" r="5" fill="var(--background)"/>'}
     </svg>`;
     return L.divIcon({
-      html: svg,
+      html: pin,
       className: 'custom-map-marker',
-      iconSize: [24, 36],
-      iconAnchor: [12, 36],
-      popupAnchor: [0, -36],
+      iconSize: [28, 40],
+      iconAnchor: [14, 40],
+      popupAnchor: [0, -40],
     });
   };
 
@@ -172,24 +232,42 @@ export function MapCanvas({
       clearTimeout(searchTimerRef.current);
     }
     searchTimerRef.current = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
+      searchTimerRef.current = null;
+      const params = new URLSearchParams(latestParamsRef.current);
       if (value.trim()) {
         params.set('q', value.trim());
       } else {
         params.delete('q');
       }
-      router.replace(`?${params.toString()}`, { scroll: false });
+      navigate(params);
     }, 300);
   };
 
+  function navigate(params: URLSearchParams) {
+    latestParamsRef.current = params.toString();
+    startNavigation(() => router.replace(`?${params.toString()}`, { scroll: false }));
+  }
+
+  const currentParams = () => {
+    // A pending search must not overwrite a layer or category change.
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = null;
+    const params = new URLSearchParams(latestParamsRef.current);
+    if (localSearch.trim()) params.set('q', localSearch.trim());
+    else params.delete('q');
+    return params;
+  };
+
   const handleTabChange = (tab: 'incidents' | 'evacuation') => {
-    const params = new URLSearchParams(searchParams.toString());
+    setSelection(null);
+    const params = currentParams();
     params.set('tab', tab);
-    router.replace(`?${params.toString()}`, { scroll: false });
+    navigate(params);
   };
 
   const handleCategoryToggle = (id: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    setSelection(null);
+    const params = currentParams();
     const current = params.get('category')?.split(',').filter(Boolean) ?? [];
     const next = current.includes(id) ? current.filter((cid) => cid !== id) : [...current, id];
     if (next.length > 0) {
@@ -197,116 +275,119 @@ export function MapCanvas({
     } else {
       params.delete('category');
     }
-    router.replace(`?${params.toString()}`, { scroll: false });
+    navigate(params);
   };
 
   const hasMarkers = allVisibleMarkers.length > 0;
+  const pending = navigationPending || deferredSearch !== localSearch || tilesLoading;
+  const searchableRecords = activeTab === 'evacuation' ? evacuationMarkers
+    : incidentMarkers.filter(marker => activeCategoryIds.length === 0 || activeCategoryIds.includes(marker.kind));
 
   return (
-    <div className="relative h-[calc(100vh-160px)] min-h-[500px] w-full overflow-hidden rounded-2xl border border-border/60 bg-white shadow-xl shadow-black/5 dark:border-white/10 dark:bg-zinc-900">
-      <MapContainer
-        center={[DEFAULT_CENTER.lat, DEFAULT_CENTER.lng]}
-        zoom={DEFAULT_ZOOM}
-        className="h-full w-full"
-        zoomControl={true}
-        fadeAnimation={true}
-        zoomAnimation={true}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
-        />
-
-        <MapFitter boundary={boundary} markers={allVisibleMarkers} defaultCenter={DEFAULT_CENTER} defaultZoom={DEFAULT_ZOOM} />
-
-        {boundary && (
-          <GeoJSON
-            data={boundary}
-            style={{
-              color: '#DC2626',
-              weight: 3,
-              opacity: 0.95,
-              fillColor: '#DC2626',
-              fillOpacity: 0.04,
-            }}
+    <section ref={viewportRef} className={styles.workspace} aria-label="Community map">
+      <div className={styles.mapFrame}>
+        <div className={styles.mapControls} data-map-controls>
+          <div className={styles.toolbar}>
+            <MapSegmentToggle activeTab={activeTab} onChange={handleTabChange} />
+            <MapSearchBar key={activeTab} value={localSearch} onChange={handleSearchChange} layer={activeTab}
+              records={searchableRecords} onSelect={(id, title) => { handleSearchChange(title); setSelection({ id }); }} />
+          </div>
+          {activeTab === 'incidents' && <MapFilterPills categories={categories} activeIds={activeCategoryIds} onToggle={handleCategoryToggle} />}
+        </div>
+        <MapContainer
+          ref={mapRef}
+          center={[DEFAULT_CENTER.lat, DEFAULT_CENTER.lng]}
+          zoom={DEFAULT_ZOOM}
+          className={styles.map}
+          zoomControl={true}
+          fadeAnimation={!reducedMotion}
+          zoomAnimation={!reducedMotion}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+            eventHandlers={{ loading: () => setTilesLoading(true), load: () => setTilesLoading(false) }}
           />
-        )}
 
-        <LayerGroup>
-          {activeTab === 'incidents' && (
-            // Previously one unbounded <Marker> per incident — clustered so a barangay
-            // with hundreds of reports doesn't render hundreds of overlapping pins at
-            // low zoom. Evacuation centers are few and fixed, so they stay uncustered.
-            <MarkerClusterGroup chunkedLoading maxClusterRadius={60} spiderfyOnMaxZoom>
-              {visibleIncidentMarkers.map((marker) => (
+          <MapFitter boundary={boundary} markers={allVisibleMarkers} defaultCenter={DEFAULT_CENTER} defaultZoom={DEFAULT_ZOOM} />
+
+          {boundary && (
+            <GeoJSON
+              data={boundary}
+              style={{
+                color: 'var(--accent)',
+                weight: 3,
+                dashArray: '6 5',
+                opacity: 0.95,
+                fillColor: 'var(--accent)',
+                fillOpacity: 0.025,
+              }}
+            />
+          )}
+
+          <LayerGroup>
+            {activeTab === 'incidents' && (
+              // Previously one unbounded <Marker> per incident — clustered so a barangay
+              // with hundreds of reports doesn't render hundreds of overlapping pins at
+              // low zoom. Evacuation centers are few and fixed, so they stay uncustered.
+              <MarkerClusterGroup ref={clusterRef} animate={!reducedMotion} chunkedLoading maxClusterRadius={60} spiderfyOnMaxZoom>
+                {visibleIncidentMarkers.map((marker) => (
+                  <Marker
+                    key={marker.id}
+                    ref={instance => { if (instance) markerRefs.current.set(marker.id, instance); else markerRefs.current.delete(marker.id); }}
+                    title={marker.label}
+                    alt={marker.label}
+                    position={[marker.position.lat, marker.position.lng]}
+                    icon={createIcon(marker.categoryColor)}>
+                    <Popup autoPanPaddingTopLeft={[compactLayout ? 8 : 16, compactLayout ? 350 : 150]} autoPanPaddingBottomRight={[compactLayout ? 8 : 64, 80]}>
+                      <IncidentPopupContent marker={marker} />
+                    </Popup>
+                  </Marker>
+                ))}
+              </MarkerClusterGroup>
+            )}
+            {activeTab === 'evacuation' &&
+              visibleEvacuationMarkers.map((marker) => (
                 <Marker
                   key={marker.id}
+                  ref={instance => { if (instance) markerRefs.current.set(marker.id, instance); else markerRefs.current.delete(marker.id); }}
+                  title={marker.label}
+                  alt={marker.label}
                   position={[marker.position.lat, marker.position.lng]}
-                  icon={createIcon(marker.categoryColor || '#0F6E5B')}>
-                  <Popup>
-                    <IncidentPopupContent marker={marker} />
+                  icon={createIcon(undefined, true)}>
+                  <Popup autoPanPaddingTopLeft={[compactLayout ? 8 : 16, compactLayout ? 350 : 150]} autoPanPaddingBottomRight={[compactLayout ? 8 : 64, 80]}>
+                    <EvacuationPopupContent marker={marker} />
                   </Popup>
                 </Marker>
               ))}
-            </MarkerClusterGroup>
-          )}
-          {activeTab === 'evacuation' &&
-            visibleEvacuationMarkers.map((marker) => (
-              <Marker
-                key={marker.id}
-                position={[marker.position.lat, marker.position.lng]}
-                icon={createIcon('', true)}>
-                <Popup>
-                  <EvacuationPopupContent marker={marker} />
-                </Popup>
-              </Marker>
-            ))}
-        </LayerGroup>
+          </LayerGroup>
 
-        <MapSearchBar value={localSearch} onChange={handleSearchChange} />
-        <MapSegmentToggle activeTab={activeTab} onChange={handleTabChange} />
-        <MapFilterPills
-          categories={categories}
-          activeIds={activeCategoryIds}
-          onToggle={handleCategoryToggle}
-        />
-        <BoundaryFitButton
-          boundary={boundary}
-          markers={allVisibleMarkers}
-          defaultCenter={DEFAULT_CENTER}
-          defaultZoom={DEFAULT_ZOOM}
-        />
+          <MapViewportControls
+            viewport={viewportRef}
+            boundary={boundary}
+            markers={allVisibleMarkers}
+            defaultCenter={DEFAULT_CENTER}
+            defaultZoom={DEFAULT_ZOOM}
+          />
 
-        {!hasMarkers && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[400]">
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-border/60 bg-white/90 px-8 py-6 shadow-lg backdrop-blur-sm dark:bg-zinc-900/90 dark:border-white/10">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-slate-400"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 12h8" />
-                  <path d="M12 8v8" />
-                </svg>
-              </div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                {activeTab === 'incidents'
-                  ? 'No incidents match your filters'
-                  : 'No evacuation centers available'}
-              </p>
+        </MapContainer>
+        <div className={styles.mapActivity} data-active={pending || undefined} role="status" aria-live="polite">
+          {pending && <><Spinner size="compact" /> {tilesLoading && !navigationPending ? 'Loading map details…' : 'Updating map…'}</>}
+        </div>
+        {!hasMarkers && !pending && (
+          <div className={styles.empty}>
+            <div className={styles.emptyCard} role="status">
+              <MapPin size={26} aria-hidden="true" />
+              <p>{activeTab === 'incidents' ? 'No incidents match your filters' : 'No evacuation centers available'}</p>
+              <span>{activeTab === 'incidents' ? 'Try another search or adjust your categories to explore the map.' : 'Centers with a mapped location will appear here.'}</span>
             </div>
           </div>
         )}
-      </MapContainer>
-    </div>
+      <footer className={styles.footer}>
+        <p role="status"><strong>{allVisibleMarkers.length}</strong> {activeTab === 'incidents' ? 'of ' + incidentMarkers.length + ' mapped incidents' : 'mapped evacuation centers'} in this layer</p>
+        {boundary && <span className={styles.legend}><span className={styles.boundaryLine} aria-hidden="true" /> Barangay boundary</span>}
+      </footer>
+      </div>
+    </section>
   );
 }

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-16T01:12:53.868Z",
+  "project": "pwjbucnyqexiepoinoke",
+  "function": {
+    "id": "08e4739e-4755-476a-80f5-0fb4452ac8f6",
+    "name": "extract-resident-id-ocrspace",
+    "status": "ACTIVE",
+    "version": 1,
+    "verify_jwt": true,
+    "bundleSha256": "6efe370a58ecfbcd82578df68a9d14f89517051f7cfbf8454717704187d24ddd",
+    "deployedAt": "2026-10-16T01:01:56.599Z"
+  },
+  "deployedFilesMatchLocal": true,
+  "existingExtractionUnchanged": true,
+  "existingExtractionVersion": 9
+}

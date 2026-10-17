@@ -43,8 +43,14 @@ Deno.serve(async (req: Request) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders });
   }
 
-  const { paymentId } = await req.json();
-  if (!paymentId) {
+  let input: unknown;
+  try {
+    input = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid request body' }), { status: 400, headers: corsHeaders });
+  }
+  const paymentId = input && typeof input === 'object' && 'paymentId' in input ? input.paymentId : null;
+  if (typeof paymentId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(paymentId)) {
     return new Response(JSON.stringify({ error: 'paymentId is required' }), { status: 400, headers: corsHeaders });
   }
 
@@ -72,49 +78,60 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  // Best-effort: void the PaymentIntent on PayMongo's side too, so the QR the resident
-  // was shown stops being scannable. If PayMongo refuses (e.g. it already succeeded a
-  // moment ago), fall through and let check-payment-status/the webhook be the source of
-  // truth instead of cancelling a payment that actually went through.
+  // A provider rejection or lost response cannot prove the QR was voided. Leave the
+  // row pending so the existing status check/webhook can establish the actual outcome.
   if (payment.paymongo_payment_intent_id) {
-    const cancelResponse = await fetch(
-      `https://api.paymongo.com/v1/payment_intents/${payment.paymongo_payment_intent_id}/cancel`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${btoa(`${PAYMONGO_SECRET_KEY}:`)}`,
-          'Content-Type': 'application/json',
+    let cancelResponse: Response;
+    try {
+      cancelResponse = await fetch(
+        `https://api.paymongo.com/v1/payment_intents/${payment.paymongo_payment_intent_id}/cancel`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${btoa(`${PAYMONGO_SECRET_KEY}:`)}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ data: { attributes: { cancellation_reason: 'requested_by_customer' } } }),
+          signal: AbortSignal.timeout(10_000),
         },
-        body: JSON.stringify({ data: { attributes: { cancellation_reason: 'requested_by_customer' } } }),
-      },
-    );
-
-    if (!cancelResponse.ok) {
-      const body = await cancelResponse.json().catch(() => null);
-      const status = body?.data?.attributes?.status;
-      // "already succeeded" is the one failure mode that means don't cancel locally —
-      // any other rejection (already cancelled, already expired) is fine to mirror.
-      if (status === 'succeeded') {
-        return new Response(
-          JSON.stringify({ error: 'This payment already went through — refresh to see it.' }),
-          { status: 409, headers: corsHeaders },
-        );
-      }
+      );
+    } catch {
+      return new Response(JSON.stringify({ error: 'Could not confirm payment cancellation' }), { status: 503, headers: corsHeaders });
+    }
+    if (cancelResponse.status !== 200) {
+      return new Response(JSON.stringify({ error: 'Could not confirm payment cancellation' }), { status: 503, headers: corsHeaders });
     }
   }
 
   const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-  const { error: updateError } = await supabaseAdmin
+  const { data: cancelledPayment, error: updateError } = await supabaseAdmin
     .from('payments')
     .update({ status: 'cancelled' })
     .eq('id', paymentId)
-    .eq('status', 'pending');
+    .eq('status', 'pending')
+    .select('id, status')
+    .maybeSingle();
 
   if (updateError) {
     return new Response(JSON.stringify({ error: 'Failed to cancel payment' }), { status: 500, headers: corsHeaders });
   }
 
-  return new Response(JSON.stringify({ status: 'cancelled' }), {
+  // Settlement may win between the initial read and the conditional update. A zero-row
+  // update is not confirmation of cancellation; read the winner through caller RLS.
+  let confirmedStatus = cancelledPayment?.status;
+  if (!cancelledPayment) {
+    const { data: currentPayment, error: currentError } = await supabase
+      .from('payments')
+      .select('status')
+      .eq('id', paymentId)
+      .single();
+    if (currentError || !currentPayment || currentPayment.status === 'pending') {
+      return new Response(JSON.stringify({ error: 'Could not confirm payment cancellation' }), { status: 503, headers: corsHeaders });
+    }
+    confirmedStatus = currentPayment.status;
+  }
+
+  return new Response(JSON.stringify({ status: confirmedStatus === 'refunded' ? 'paid' : confirmedStatus }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });

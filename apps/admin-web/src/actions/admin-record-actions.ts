@@ -8,6 +8,28 @@ import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
 import type { TableName } from '@/lib/admin-tables/table-configs';
 import { logAdminAction } from './admin-audit-actions';
 
+export async function loadAdminRecordOptions(name: TableName, id: string) {
+  try {
+    if (!Object.hasOwn(RECORD_CONFIG, name)) throw new Error('Invalid record.');
+    const session = await createSupabaseServerClient();
+    const { data: { user } } = await session.auth.getUser();
+    if (!user) throw new Error('Your session expired. Sign in again.');
+    const db = session as unknown as SupabaseClient<AdminRecordDatabase>;
+    const record = await db.from(`admin_${name}_records`).select('tenant_id').eq('id', id).maybeSingle();
+    if (record.error || !record.data) throw new Error('This record is unavailable or your access changed.');
+    const tenant = record.data.tenant_id;
+    const lookups = [...new Set(RECORD_CONFIG[name].fields.flatMap(field => field.lookup ? [field.lookup] : []))];
+    const entries = await Promise.all(lookups.map(async lookup => {
+      const result = lookup === 'documents' ? await session.from('document_types').select('id,name').eq('barangay_id', tenant).is('deleted_at', null).order('name')
+        : lookup === 'categories' ? await session.from('incident_categories').select('id,name').eq('barangay_id', tenant).order('name')
+        : await session.from('profiles').select('id,full_name').eq('barangay_id', tenant).eq('role', lookup === 'admins' ? 'admin' : 'resident').is('deleted_at', null).order('full_name');
+      if (result.error) throw new Error('Could not load edit options. Please retry.');
+      return [lookup, result.data.map(item => ({ value: item.id, label: 'name' in item ? item.name : item.full_name }))] as const;
+    }));
+    return { options: Object.fromEntries(entries), error: null };
+  } catch (cause) { return { options: null, error: cause instanceof Error ? cause.message : 'Could not load edit options.' }; }
+}
+
 export async function mutateAdminRecord(name: TableName, id: string, operation: 'save' | 'archive' | 'restore' | 'delete', expected: string, input?: unknown) {
   try {
     if (!Object.hasOwn(RECORD_CONFIG, name) || !['save', 'archive', 'restore', 'delete'].includes(operation)

@@ -6,7 +6,8 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AUTH_MESSAGES, authFailureKind } from '@/lib/auth/auth-feedback';
-import { beginAttempt, notify } from '@/lib/notify';
+import { beginAttempt, eventId, notify, setNotificationSession } from '@/lib/notify';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { startTransition } from 'react';
@@ -40,14 +41,16 @@ function VerifyOtpForm({ settings }: { settings?: SettingsCodeRecovery }) {
   const [accountChanged, setAccountChanged] = useState(false);
   useEffect(() => {
     active.current = true;
-    if (!settings) return;
-    const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((_event, session) => {
-      if (session?.user.id !== settings.owner.userId || session.user.email !== settings.owner.email) {
+    const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((event, session) => {
+      const changed = settings
+        ? session?.user.id !== settings.owner.userId || session.user.email !== settings.owner.email
+        : (session && session.user.email?.trim().toLowerCase() !== email.trim().toLowerCase()) || event === 'SIGNED_OUT';
+      if (changed) {
         active.current = false; setAccountChanged(true); setCode('');
       }
     });
     return () => { active.current = false; data.subscription.unsubscribe(); };
-  }, [settings]);
+  }, [settings, email]);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -67,20 +70,32 @@ function VerifyOtpForm({ settings }: { settings?: SettingsCodeRecovery }) {
     try {
       if (settings) {
         const result = await settings.verify(code);
-        if (!active.current) return;
+        if (!active.current) { verifying.current = false; return; }
         if (!result.ok) {
           setError(result.message);
+          notify.error(result.kind === 'rejected' ? 'Code not accepted. Check the code or request a new one.' : result.kind === 'connection' ? "Couldn't verify the code. Check your connection and try again." : "Couldn't verify the code. Review the message below.", { id: attempt, description: result.message });
           if (result.kind === 'session') setAccountChanged(true);
           verifying.current = false; setLoading(false);
           return;
         }
+        notify.success('Code verified. Choose your new password.', { id: attempt });
         router.replace('/reset-password?source=settings');
         return;
       }
-      ({ error: verifyError } = await createSupabaseBrowserClient().auth.verifyOtp({ type: 'recovery', email, token: code }));
+      const result = await createSupabaseBrowserClient().auth.verifyOtp({ type: 'recovery', email, token: code });
+      verifyError = result.error;
+      if (active.current && !result.error && result.data.user) {
+        setNotificationSession(result.data.user.id);
+        notify.success('Code verified. Choose your new password.', { id: eventId('recovery-code', attempt) });
+      }
     } catch (cause) {
+      if (isRedirectError(cause)) {
+        if (active.current) notify.success('Code verified. Choose your new password.', { id: attempt });
+        throw cause;
+      }
       verifyError = cause;
     }
+    if (!active.current) { verifying.current = false; return; }
 
     if (verifyError) {
       verifying.current = false;
@@ -117,11 +132,13 @@ function VerifyOtpForm({ settings }: { settings?: SettingsCodeRecovery }) {
     try {
       if (settings) {
         const result = await settings.resend();
-        if (!active.current) return;
+        if (!active.current) { resendBusy.current = false; return; }
         resendBusy.current = false; setResending(false);
         setSecondsLeft(RESEND_COOLDOWN_SECONDS);
         if (!result.ok) {
           setError(result.message);
+          if (result.kind === 'connection') notify.warning("We couldn't confirm a new code was sent. Check your email first.", { id: attempt });
+          else notify.error("Couldn't send a new code. Please try again.", { id: attempt, description: result.message });
           if (result.kind === 'session') setAccountChanged(true);
         } else {
           setCode('');
@@ -134,6 +151,7 @@ function VerifyOtpForm({ settings }: { settings?: SettingsCodeRecovery }) {
       resendError = cause;
     }
     resendBusy.current = false;
+    if (!active.current) return;
     setResending(false);
 
     if (resendError) {
@@ -183,7 +201,7 @@ function VerifyOtpForm({ settings }: { settings?: SettingsCodeRecovery }) {
           className="mb-4 text-center text-lg tracking-[0.5em]"
         />
 
-        {error || accountChanged ? <p role="alert" className="mb-3 text-sm text-destructive">{accountChanged ? 'Your recovery session changed or ended. Return to Change Password and start again.' : error}</p> : null}
+        {error || accountChanged ? <p role={accountChanged ? "alert" : undefined} className="mb-3 text-sm text-destructive">{accountChanged ? settings ? 'Your recovery session changed or ended. Return to Change Password and start again.' : 'Your recovery session changed or ended. Request a new reset code.' : error}</p> : null}
 
         <div className="mb-4 text-sm">
           {secondsLeft > 0 ? (

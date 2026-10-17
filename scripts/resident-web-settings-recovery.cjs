@@ -89,7 +89,6 @@ async function test() {
   }
   async function login(page, account) {
     await page.goto(`${base}/login?next=/settings/change-password`);
-    await page.evaluate(id => localStorage.setItem(`barangayan-resident-web-onboarded:${id}`, '1'), account.id);
     await page.locator('input[type=email]').fill(account.email);
     await page.locator('input[type=password]').fill(account.password);
     await page.getByRole('button', { name: 'Log In', exact: true }).click();

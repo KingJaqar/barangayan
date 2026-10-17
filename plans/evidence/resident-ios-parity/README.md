@@ -34,7 +34,6 @@ It exits 1 if any checkpoint, route, modal family, phase or task is missing, mis
 ## Status vocabulary
 
 Phases and tasks: `Planned`, `In progress`, `Blocked` (with reason, owner and next prerequisite), `Implemented-unverified`, `Verified`, `Reopened` (plan §4.2).
-
 Checkpoints: `Planned`, `implemented-unverified`, `verified`, `blocked`, `corrective-equivalent-verified` (plan C.5). "Not applicable" needs a source-state explanation and cannot suppress a working feature.
 
 Android source state (`android_state` column): `working-source` (traced in source; not device-verified), `partial`, `defective`, `conditional`, `unconnected`, `inert-control`, `local-only`, `placeholder`, `unreachable`, `partial-reachability`, `not-wired`, `platform-specific`.

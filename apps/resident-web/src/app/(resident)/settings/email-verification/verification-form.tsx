@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { ChangeEmailForm } from './change-email-form';
 import { syncResidentSignInEmail } from './actions';
+import { beginAttempt, notify } from '@/lib/notify';
 
 export function EmailVerificationForm({ userId, email, profileEmail, initialStatus, pendingEmail = '', changeEmail = false }: { userId: string; email: string; profileEmail: string | null; initialStatus: string; pendingEmail?: string; changeEmail?: boolean }) {
   const router = useRouter();
@@ -34,25 +35,39 @@ export function EmailVerificationForm({ userId, email, profileEmail, initialStat
   async function run(action: 'send' | 'verify') {
     if (busy.current || !active.current || !matches || (action === 'send' && deadline > Date.now())) return;
     busy.current = true; setLoading(true); setMessage(null);
+    const attempt = beginAttempt(`email-${action}`);
     if (action === 'send') { setDeadline(Date.now() + 60000); setClock(Date.now()); setCode(''); }
     try {
       const result = await residentEmailVerification(client, userId, action, code);
       if (!active.current) return;
       setStatus(result);
+      if (result === 'verified') notify.success('Email verified.', { id: attempt });
+      else if (action === 'send') notify.success('Verification code sent. Check your email.', { id: attempt });
+      else notify.info('Your email is still awaiting verification.', { id: attempt });
       if (result === 'verified') { setCode(''); setMessage('Your email is verified.'); router.refresh(); }
       else setMessage('Code sent. Enter the six-digit code from your email. It expires after one hour.');
-    } catch (error) { if (active.current) setMessage(error instanceof Error ? error.message : 'Unable to verify your email. Retry.'); }
+    } catch (error) {
+      if (active.current) {
+        const message = error instanceof Error ? error.message : 'Unable to verify your email. Retry.';
+        setMessage(message);
+        // The shared helper supplies these controlled messages, but erases transport metadata.
+        const knownRejection = ['This code is invalid or expired. Request a new code.', 'Sign in again to verify your email.', 'This account cannot verify a resident email.', 'Your profile email must match your sign-in email. Reload Profile and check it before retrying.', 'Please wait before trying again.', 'Your session changed. Sign in again to verify your email.', 'Enter the six-digit email code.'].includes(message);
+        if (action === 'send' && !knownRejection) notify.warning("We couldn't confirm the code was sent. Check your email before trying again.", { id: attempt });
+        else notify.error(message === 'This code is invalid or expired. Request a new code.' ? 'Code not accepted. Check the code or request a new one.' : action === 'send' ? "Couldn't send the verification code. Please try again." : "Couldn't verify your email. Please try again.", { id: attempt, description: knownRejection ? message : undefined });
+      }
+    }
     finally { busy.current = false; if (active.current) setLoading(false); }
   }
   async function syncEmail() {
     if (busy.current || !active.current) return;
     busy.current = true; setLoading(true); setMessage(null);
+    const attempt = beginAttempt('sync-profile-email');
     try {
       const result = await syncResidentSignInEmail(userId);
       if (!active.current) return;
-      if (!result.ok) setMessage(result.message);
-      else router.refresh();
-    } catch { if (active.current) setMessage('Unable to update your email details. Try again.'); }
+      if (!result.ok) { setMessage(result.message); notify.error("Couldn't update your profile email. Please try again.", { id: attempt }); }
+      else { notify.success('Profile email updated to your sign-in email.', { id: attempt }); router.refresh(); }
+    } catch { if (active.current) { setMessage('Unable to update your email details. Try again.'); notify.error("Couldn't update your profile email. Please try again.", { id: attempt }); } }
     finally { busy.current = false; if (active.current) setLoading(false); }
   }
   return (
@@ -110,7 +125,7 @@ export function EmailVerificationForm({ userId, email, profileEmail, initialStat
             <p className="text-center text-xs leading-5 text-zinc-600 dark:text-zinc-400">Verification keeps your account and password unchanged.</p>
           </div>
         ) : null}
-        {message ? <p role="status" aria-live="polite" className="rounded-xl border border-border bg-muted/40 p-4 text-sm leading-6">{message}</p> : null}
+        {message ? <p className="rounded-xl border border-border bg-muted/40 p-4 text-sm leading-6">{message}</p> : null}
       </div>
       <ChangeEmailForm userId={userId} email={email} initialPendingEmail={pendingEmail} initiallyOpen={changeEmail && !pendingEmail} disabled={loading} />
     </div>

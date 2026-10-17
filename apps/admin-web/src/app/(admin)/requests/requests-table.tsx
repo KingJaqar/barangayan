@@ -256,8 +256,14 @@ export function RequestsTable({
     return { error: null, row: updated };
   }
 
-  const lifecycle = useRecordWorkspace<ServiceRequest>('requests', browse.refresh, browse.settle, {
-    actionsMinWidth: 920,
+  const lifecycle = useRecordWorkspace<ServiceRequest>('requests', browse.refresh, browse.settle, { editHandle: browse.editHandle,
+    // Reserve room for the widest workflow on this page instead of a fixed 920px.
+    actionsMinWidth: Math.max(240, ...(value?.rows ?? []).map(row => {
+      if (row.status === 'ready_for_pickup') return 720;
+      if (row.status === 'submitted' || row.status === 'in_progress') return 560;
+      if (row.status === 'completed') return 420;
+      return 240;
+    })),
     workflowActions: row => <>
       <RequestStatusActions requestId={row.id} referenceNumber={row.reference_number} status={row.status}
         paymentStatus={row.payment_status} paymentMethod={row.payment_method} workflowRequest={row} variant="row" onBeforeAction={browse.settle} onChanged={browse.refresh} />
@@ -295,7 +301,7 @@ export function RequestsTable({
     },
     {
       id: 'resident',
-      header: 'Resident',
+      header: 'Resident', frozen: true,
       initialWidth: 190,
       minWidth: 158,
       wrap: 'break-word',
@@ -357,6 +363,14 @@ export function RequestsTable({
       minWidth: 106,
       wrap: 'nowrap',
       render: (r) => <StatusPill status={r.payment_status} />,
+      rowEdit: [
+        { label: 'Payment', edit: { type: 'select', selectKind: 'status', canEdit: r => r.contract_version === 1,
+          options: [{ value: 'pending', label: 'Pending' }, { value: 'paid', label: 'Paid' }, { value: 'waived', label: 'Waived' }],
+          getValue: r => r.payment_status, onSave: (r, value) => updateField(r, { payment_status: String(value) }) } },
+        { label: 'Payment method', edit: { type: 'select', selectKind: 'payment', canEdit: r => r.contract_version === 2,
+          options: [{ value: 'pickup', label: 'Pay at Pickup' }, { value: 'qrph', label: 'QR PH' }],
+          getValue: r => r.payment_method ?? 'pickup', onSave: (r, value) => updateField(r, { payment_method: String(value) }) } },
+      ],
       edit: {
         canEdit: r => r.contract_version === 1,
         type: 'select', selectKind: 'status',

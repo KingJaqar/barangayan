@@ -5,7 +5,6 @@
  * and heavily extended per Phase 7 spec:
  *  - Avatar upload (profile-photos bucket, C-040)
  *  - Household member CRUD (reuses useFamilyMembers from Phase 2, same hook, CC-003)
- *  - ID type picker + ID photo upload (id-documents bucket, C-041, signed-URL only)
  *  - Proper sex/employment selects (shadcn-style native selects for now — no RadioGroup needed)
  *
  * WRITE GUARDS (§7, C-001):
@@ -24,7 +23,6 @@ import {
   MOBILE_NUMBER_REGEX,
   NAME_REGEX,
   SEXES,
-  publishIdEvidence,
   type EmploymentStatus,
   type Sex,
 } from '@barangayan/shared';
@@ -35,25 +33,19 @@ import {
   Briefcase,
   Calendar as CalendarIcon,
   Camera,
-  Check,
   CheckCircle2,
-  ChevronDown,
-  IdCard,
   MailCheck,
   MapPin,
   Plus,
   Trash2,
-  Upload,
   User as UserIcon,
   Users,
-  X,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import { getIdDocumentSignedUrl } from '@/actions/id-document-signed-url';
 import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/birthday-calendar-modal';
 import { FamilyMemberDialog } from '@/components/emergency/family-member-dialog';
 import { InlineReadError } from '@/components/shared/inline-read-error';
@@ -86,10 +78,7 @@ type ProfileFields = Pick<
   | 'province'
   | 'employment_status'
   | 'occupation'
-  | 'id_verification_status'
   | 'avatar_url'
-  | 'id_type'
-  | 'id_photo_urls'
   | 'barangay_id'
   | 'household_members'
   | 'email_verification_status'
@@ -108,17 +97,6 @@ const EMPLOYMENT_STATUS_LABELS: Record<EmploymentStatus, string> = {
   self_employed: 'Self-Employed',
   retired: 'Retired',
 };
-
-const ID_TYPES = [
-  'PhilSys', 'Digital PhilSys', "Driver's License", 'Passport', 'SSS ID',
-  "Voter's ID", 'PhilHealth ID', 'PRC ID', 'UMID', 'Postal ID',
-  'Senior Citizen ID', 'PWD ID', 'GSIS ID', 'TIN ID', 'Barangay ID', 'Other',
-] as const;
-
-/** profiles.id_type has no enum constraint — when the resident picks "Other" we persist
- * their exact ID name under this prefix (e.g. "Other: Barangay Certification") instead
- * of adding a new column, and strip it back off when re-populating the form. */
-const OTHER_ID_TYPE_PREFIX = 'Other: ';
 
 /** YYYY-MM-DD → "August 8, 2000" */
 function fmtDate(iso: string | null): string {
@@ -179,17 +157,6 @@ function FieldStatus({ error, success }: { error?: string; success?: string }) {
   return null;
 }
 
-/** Which side of the ID a stored id-documents path belongs to, based on the
- * `id-front.<ext>` / `id-back.<ext>` filename convention used by handleUpload below. */
-function idPhotoSide(path: string): 'front' | 'back' | null {
-  const name = path.split('/').pop() ?? '';
-  if (name.startsWith('id-front.')) return 'front';
-  if (name.startsWith('id-back.')) return 'back';
-  return null;
-}
-
-/** 5 MB — resident-web matches mobile's limit for id-documents. */
-const MAX_ID_PHOTO_BYTES = 5 * 1024 * 1024;
 /** 3 MB — for avatar photos. */
 const MAX_AVATAR_BYTES = 3 * 1024 * 1024;
 
@@ -321,460 +288,7 @@ function AvatarSection({ profileId, currentUrl }: { profileId: string; currentUr
   );
 }
 
-// ─── ID Document section ──────────────────────────────────────────────────────
-
-/** One upload slot for a single ID side — exactly one photo each for Front/Back;
- * re-uploading replaces it in place (handleUpload below uses upsert:true against a
- * fixed `id-front`/`id-back` path, never accumulating extra files). The photo itself
- * renders inline via its signed URL — no click needed to see it — and shows a
- * top-right "×" only while it's a staged, not-yet-saved upload (isStaged). */
-function IdPhotoSlot({
-  label,
-  path,
-  signedUrl,
-  uploading,
-  isStaged,
-  onUpload,
-  onRemoveStaged,
-  onView,
-}: {
-  label: string;
-  path: string | null;
-  signedUrl: string | null;
-  uploading: boolean;
-  isStaged: boolean;
-  onUpload: (file: File) => void;
-  onRemoveStaged: () => void;
-  onView: () => void;
-}) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  return (
-    <div className="flex-1 space-y-1.5">
-      <p className={labelCls}>{label}</p>
-      {path ? (
-        <div className="relative">
-          <button
-            type="button"
-            onClick={onView}
-            className="flex h-28 w-full items-center justify-center overflow-hidden rounded-xl border-2 border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
-            {signedUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={signedUrl} alt={`${label} of ID document`} className="h-full w-full object-cover" />
-            ) : (
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" />
-            )}
-          </button>
-          {isStaged ? (
-            <button
-              type="button"
-              onClick={onRemoveStaged}
-              aria-label={`Remove uploaded ${label.toLowerCase()} photo`}
-              title="Remove this upload"
-              className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-900 text-white shadow-sm transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900">
-              <X size={11} />
-            </button>
-          ) : null}
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="flex h-28 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-zinc-200 bg-zinc-50/60 text-zinc-500 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800/30 dark:text-zinc-400">
-          {uploading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" /> : <><Upload size={16} /><span className="text-[10px]">Upload</span></>}
-        </button>
-      )}
-      {path ? (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="flex w-full items-center justify-center gap-1 rounded-lg border border-dashed border-zinc-300 py-1.5 text-xs text-zinc-500 transition hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-50 dark:border-zinc-700">
-          {uploading ? <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" /> : <><Upload size={12} /> Reupload</>}
-        </button>
-      ) : null}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) onUpload(f);
-          e.target.value = '';
-        }}
-      />
-    </div>
-  );
-}
-
-/** Bottom-sheet style picker for ID Type — capped at 50% of the viewport height (never
- * covers the whole screen, per spec) with its own vertical scroll, sliding up from the
- * bottom on open and back down on close. Mirrors the shape of the mobile app's
- * SlideSheetModal/IdTypeModal (react-native-reanimated there; a CSS transition here). */
-function IdTypeSheet({
-  open,
-  current,
-  onClose,
-  onSelect,
-}: {
-  open: boolean;
-  current: string;
-  onClose: () => void;
-  onSelect: (value: string) => void;
-}) {
-  const [mounted, setMounted] = useState(open);
-  const [entered, setEntered] = useState(false);
-
-  useEffect(() => {
-    let raf: number | undefined;
-    let timeout: ReturnType<typeof setTimeout> | undefined;
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
-    // react-hooks/set-state-in-effect.
-    Promise.resolve().then(() => {
-      if (open) {
-        setMounted(true);
-        // Deferred another tick so the initial (offscreen) transform actually paints
-        // before switching to translate-y-0 — otherwise both style changes land in the
-        // same frame and the slide-up never animates.
-        raf = requestAnimationFrame(() => setEntered(true));
-      } else {
-        setEntered(false);
-        timeout = setTimeout(() => setMounted(false), 200);
-      }
-    });
-    return () => {
-      if (raf !== undefined) cancelAnimationFrame(raf);
-      if (timeout !== undefined) clearTimeout(timeout);
-    };
-  }, [open]);
-
-  if (!mounted) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center" role="dialog" aria-modal="true" aria-label="Select ID type">
-      <div
-        className={`absolute inset-0 bg-black/50 transition-opacity duration-200 ${entered ? 'opacity-100' : 'opacity-0'}`}
-        onClick={onClose}
-      />
-      <div
-        style={{ maxHeight: '50vh' }}
-        className={`relative flex w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-xl transition-transform duration-200 ease-out dark:bg-zinc-900 sm:mb-6 sm:max-w-md sm:rounded-2xl ${
-          entered ? 'translate-y-0' : 'translate-y-full'
-        }`}>
-        <div className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-        <div className="flex shrink-0 items-center justify-between border-b border-black/10 px-4 py-3 dark:border-white/10">
-          <h4 className="text-sm font-semibold">Select ID Type</h4>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="rounded-full p-1 text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
-            <X size={16} />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto py-1">
-          {ID_TYPES.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => {
-                onSelect(t);
-                onClose();
-              }}
-              className="flex w-full items-center justify-between px-4 py-3 text-left text-sm transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800">
-              <span className={current === t ? 'font-semibold text-[var(--accent)]' : ''}>{t}</span>
-              {current === t ? <Check size={16} className="text-[var(--accent)]" /> : null}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function IdDocumentSection({
-  profileId,
-  idType: initialIdTypeRaw,
-  idPhotoUrls: initialUrls,
-  verificationStatus,
-}: {
-  profileId: string;
-  idType: string | null;
-  idPhotoUrls: string[] | null;
-  verificationStatus: string | null;
-}) {
-  const initialIsOther = (initialIdTypeRaw ?? '').startsWith(OTHER_ID_TYPE_PREFIX);
-  const [idType, setIdType] = useState(initialIsOther ? 'Other' : (initialIdTypeRaw ?? ''));
-  const [otherType, setOtherType] = useState(initialIsOther ? (initialIdTypeRaw as string).slice(OTHER_ID_TYPE_PREFIX.length) : '');
-
-  const initialFrontPath = (initialUrls ?? []).find((p) => idPhotoSide(p) === 'front') ?? null;
-  const initialBackPath = (initialUrls ?? []).find((p) => idPhotoSide(p) === 'back') ?? null;
-
-  // "saved*" mirrors what's actually persisted in the DB right now (only advances on a
-  // successful handleSave); the plain state below is the draft the resident is editing —
-  // uploads land here immediately (the file itself has to go to Storage right away to get
-  // a path) but nothing is written to profiles until Save is clicked. Diffing draft vs.
-  // saved is what lets a fresh upload show a "×" to undo it pre-save (see isStaged below).
-  const [savedIdType, setSavedIdType] = useState(initialIdTypeRaw ?? '');
-  const [savedFrontPath, setSavedFrontPath] = useState<string | null>(initialFrontPath);
-  const [savedBackPath, setSavedBackPath] = useState<string | null>(initialBackPath);
-
-  const [frontPath, setFrontPath] = useState<string | null>(initialFrontPath);
-  const [backPath, setBackPath] = useState<string | null>(initialBackPath);
-  const [frontSignedUrl, setFrontSignedUrl] = useState<string | null>(null);
-  const [backSignedUrl, setBackSignedUrl] = useState<string | null>(null);
-  const [uploadingFront, setUploadingFront] = useState(false);
-  const [uploadingBack, setUploadingBack] = useState(false);
-  const [saving, setSaving] = useState(false);
-  useEffect(() => {
-    if (window.location.hash === '#upload-valid-id') {
-      const heading = document.getElementById('upload-valid-id');
-      heading?.scrollIntoView({ block: 'start' }); heading?.focus({ preventScroll: true });
-    }
-  }, []);
-  const publication = useRef<{ signature: string; id: string } | null>(null);
-  const [enlargedUrl, setEnlargedUrl] = useState<string | null>(null);
-  const router = useRouter();
-
-  // Resolve each side's signed URL (id-documents is a private bucket) whenever its draft
-  // path changes — covers the initial load and every upload/undo, so the photo is always
-  // visible inline without the resident having to click anything first.
-  useEffect(() => {
-    let cancelled = false;
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on react-hooks/set-state-in-effect.
-    Promise.resolve().then(async () => {
-      if (!frontPath) {
-        if (!cancelled) setFrontSignedUrl(null);
-        return;
-      }
-      const result = await getIdDocumentSignedUrl(frontPath);
-      if (!cancelled) setFrontSignedUrl(result.url ?? null);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [frontPath]);
-
-  useEffect(() => {
-    let cancelled = false;
-    // Microtask-wrapped — see use-unread-counts.tsx's doc comment on react-hooks/set-state-in-effect.
-    Promise.resolve().then(async () => {
-      if (!backPath) {
-        if (!cancelled) setBackSignedUrl(null);
-        return;
-      }
-      const result = await getIdDocumentSignedUrl(backPath);
-      if (!cancelled) setBackSignedUrl(result.url ?? null);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [backPath]);
-
-  const [idTypeSheetOpen, setIdTypeSheetOpen] = useState(false);
-
-  // A "valid" ID — for gating the Pending badge below — means an ID type and both photo
-  // sides are actually persisted, not just staged in this session.
-  const hasValidId = Boolean(savedIdType) && Boolean(savedFrontPath) && Boolean(savedBackPath);
-  const showPending = verificationStatus === 'pending' && hasValidId;
-  const showVerified = verificationStatus === 'verified';
-  // Admin-set outcome (guard_id_verification_status, migration 0089) — the resident just
-  // re-uploads to retry, same handleSave flow as a first-time submission.
-  const showFailed = verificationStatus === 'verification_failed';
-
-  const statusLabel = showVerified
-    ? 'Verified ID'
-    : showFailed
-      ? 'Verification Failed, Try Again'
-      : showPending
-        ? 'Pending Verification'
-        : 'Not Submitted';
-
-  const statusColor = showVerified
-    ? 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30'
-    : showFailed
-      ? 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30'
-      : showPending
-        ? 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30'
-        : 'text-zinc-500 bg-zinc-100 dark:bg-zinc-800';
-
-  async function handleUpload(side: 'front' | 'back', file: File) {
-    if (!isWithinSizeLimit(file, MAX_ID_PHOTO_BYTES)) {
-      toast.error('File too large (max 5 MB).');
-      return;
-    }
-    if (!(ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).includes(file.type)) {
-      toast.error('Please upload a JPG, PNG, or WebP image.');
-      return;
-    }
-    const setUploading = side === 'front' ? setUploadingFront : setUploadingBack;
-    setUploading(true);
-    const supabase = createSupabaseBrowserClient();
-    const path = `${profileId}/versions/${crypto.randomUUID()}/id-${side}.${imageExtension(file.type)}`;
-    // Stage a fresh immutable object. Publication binds both selected sides to a
-    // single version when Save is pressed; undo changes only the local selection.
-    const { error: upErr } = await supabase.storage.from('id-documents').upload(path, file, { upsert: false });
-    if (upErr) {
-      toast.error(`Upload failed: ${upErr.message}`);
-      setUploading(false);
-      return;
-    }
-    if (side === 'front') setFrontPath(path);
-    else setBackPath(path);
-    setUploading(false);
-  }
-
-  /** Undo the local selection. Immutable files remain available for safe retries
-   * and the existing owner-scoped account-deletion cleanup. */
-  async function handleRemoveStaged(side: 'front' | 'back') {
-    const current = side === 'front' ? frontPath : backPath;
-    const saved = side === 'front' ? savedFrontPath : savedBackPath;
-    if (!current || current === saved) return;
-    if (side === 'front') setFrontPath(saved);
-    else setBackPath(saved);
-  }
-
-  const nextIdTypeValue = idType === 'Other' ? (otherType.trim() ? `${OTHER_ID_TYPE_PREFIX}${otherType.trim()}` : '') : idType;
-
-  // Active only once an ID type is filled in AND both photo sides are uploaded, and only
-  // while there's actually something new to persist (vs. what's already saved).
-  const saveDisabled =
-    saving ||
-    uploadingFront ||
-    uploadingBack ||
-    !nextIdTypeValue ||
-    !frontPath ||
-    !backPath ||
-    (nextIdTypeValue === savedIdType && frontPath === savedFrontPath && backPath === savedBackPath);
-
-  async function handleSave() {
-    if (saveDisabled || !frontPath || !backPath) return;
-    setSaving(true);
-    const supabase = createSupabaseBrowserClient();
-    const signature = JSON.stringify([nextIdTypeValue, frontPath, backPath]);
-    if (publication.current?.signature !== signature) publication.current = { signature, id: crypto.randomUUID() };
-    try {
-      const result = await publishIdEvidence(supabase, { submissionId: publication.current.id, idType: nextIdTypeValue, frontPath, backPath });
-      setFrontPath(result.frontPath); setBackPath(result.backPath);
-      setSavedIdType(nextIdTypeValue); setSavedFrontPath(result.frontPath); setSavedBackPath(result.backPath);
-      publication.current = null;
-    } catch (error) {
-      toast.error(`Failed to save: ${error instanceof Error ? error.message : 'Please retry.'}`);
-      setSaving(false);
-      return;
-    }
-    setSaving(false);
-    toast.success('ID verification details saved. Your status has been reset to Pending Verification.');
-    router.refresh();
-  }
-
-  return (
-    <div className={`${cardCls} space-y-3`}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-tint)] text-[var(--accent)]">
-            <IdCard size={15} />
-          </span>
-          <h3 id="upload-valid-id" tabIndex={-1} className="scroll-mt-24 text-sm font-bold">Upload Valid ID</h3>
-        </div>
-        <span className={`max-w-full rounded-lg px-2.5 py-1 text-[11px] font-semibold ${statusColor}`}>{statusLabel}</span>
-      </div>
-
-      {showFailed ? (
-        <p className="flex items-start gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-900/20 dark:text-red-300">
-          <AlertTriangle size={13} className="mt-0.5 shrink-0" />
-          Your ID wasn&apos;t approved. Review the photos below and re-upload to try again.
-        </p>
-      ) : null}
-
-      <div>
-        <label className={labelCls}>
-          ID Type
-          <RequiredMark />
-        </label>
-        <IdTypeSheet
-          open={idTypeSheetOpen}
-          current={idType}
-          onClose={() => setIdTypeSheetOpen(false)}
-          onSelect={setIdType}
-        />
-        <button
-          type="button"
-          onClick={() => setIdTypeSheetOpen(true)}
-          className={`${inputCls} flex items-center justify-between text-left`}>
-          <span className={idType ? undefined : 'text-zinc-400'}>{idType || 'Select ID type…'}</span>
-          <ChevronDown size={14} className="shrink-0 text-zinc-400" />
-        </button>
-        {idType === 'Other' ? (
-          <>
-            <input
-              type="text"
-              value={otherType}
-              onChange={(e) => setOtherType(e.target.value)}
-              placeholder="Specify your exact ID type"
-              className={`${inputCls} mt-2`}
-            />
-            {!otherType.trim() ? <FieldStatus error="Please specify your exact ID type" /> : null}
-          </>
-        ) : null}
-      </div>
-
-      <div>
-        <label className={labelCls}>
-          ID Photos
-          <RequiredMark />
-        </label>
-        <p className="mb-2 text-xs text-zinc-500 dark:text-zinc-400">
-          Upload one clear photo of the front and one of the back of your government-issued ID — you can re-upload
-          either side any time. Stored privately — only you and barangay staff can view them.
-        </p>
-        <div className="flex gap-3">
-          <IdPhotoSlot
-            label="Front Side"
-            path={frontPath}
-            signedUrl={frontSignedUrl}
-            uploading={uploadingFront}
-            isStaged={frontPath !== savedFrontPath}
-            onUpload={(f) => handleUpload('front', f)}
-            onRemoveStaged={() => handleRemoveStaged('front')}
-            onView={() => frontSignedUrl && setEnlargedUrl(frontSignedUrl)}
-          />
-          <IdPhotoSlot
-            label="Back Side"
-            path={backPath}
-            signedUrl={backSignedUrl}
-            uploading={uploadingBack}
-            isStaged={backPath !== savedBackPath}
-            onUpload={(f) => handleUpload('back', f)}
-            onRemoveStaged={() => handleRemoveStaged('back')}
-            onView={() => backSignedUrl && setEnlargedUrl(backSignedUrl)}
-          />
-        </div>
-      </div>
-
-      <Button type="button" onClick={handleSave} disabled={saveDisabled} size="sm" className="w-full rounded-xl">
-        {saving ? 'Saving…' : 'Save ID Verification'}
-      </Button>
-
-      {/* Enlarged photo preview modal — a bonus on top of the always-visible inline
-          thumbnails above, not required to see the photo in the first place. */}
-      {enlargedUrl ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setEnlargedUrl(null)}>
-          <div className="relative max-h-[80vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={enlargedUrl} alt="ID document" className="max-h-[80vh] max-w-[90vw] rounded-lg shadow-2xl" />
-            <button onClick={() => setEnlargedUrl(null)} className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md dark:bg-zinc-800">
-              <X size={16} />
-            </button>
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-// ─── Household members section ─────────────────────────────────────────────────
+// ─── Household section ──────────────────────────────────────────────────────
 
 function HouseholdSection({ profileId }: { profileId: string }) {
   const { members, isInitialLoading, isReady, error, refetch, addMember, updateMember, removeMember, lastWriteFailure } = useFamilyMembers(profileId);
@@ -892,6 +406,14 @@ function HouseholdSection({ profileId }: { profileId: string }) {
 
 export function ProfileForm({ profile, barangayName, fixedLocality = false }: { profile: ProfileFields; barangayName: string; fixedLocality?: boolean }) {
   const router = useRouter();
+  useEffect(() => {
+    const handoff = () => {
+      if (window.location.hash === '#upload-valid-id') router.replace('/settings/valid-id');
+    };
+    handoff();
+    window.addEventListener('hashchange', handoff);
+    return () => window.removeEventListener('hashchange', handoff);
+  }, [router]);
 
   const [firstName, setFirstName] = useState(profile.first_name ?? '');
   const [lastName, setLastName] = useState(profile.last_name ?? '');
@@ -1228,15 +750,10 @@ export function ProfileForm({ profile, barangayName, fixedLocality = false }: { 
           </div>
         </form>
 
-        {/* Household + ID verification */}
+        {/* Household */}
         <div className="min-w-0 space-y-6">
           <HouseholdSection profileId={profile.id} />
-          <IdDocumentSection
-            profileId={profile.id}
-            idType={profile.id_type ?? null}
-            idPhotoUrls={Array.isArray(profile.id_photo_urls) ? (profile.id_photo_urls as string[]) : null}
-            verificationStatus={profile.id_verification_status ?? null}
-          />
+
         </div>
       </div>
     </div>

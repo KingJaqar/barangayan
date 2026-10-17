@@ -3,7 +3,7 @@
 import { useRef, useState, type CSSProperties } from 'react';
 import { MailCheck, Megaphone, RotateCw, TriangleAlert } from 'lucide-react';
 import { ANNOUNCEMENT_CATEGORIES, ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory } from '@barangayan/shared';
-import { toast } from 'sonner';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { AnnouncementCard } from '@/components/reports/announcement-card';
 import { FadeIn } from '@/components/shared/fade-in';
@@ -79,6 +79,7 @@ export function AnnouncementsFeed({ barangayId }: { barangayId: string | null })
   const [selected, setSelected] = useState<AnnouncementRow | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [markingAllRead, setMarkingAllRead] = useState(false);
+  const marking = useRef(false);
 
   const { announcements, isInitialLoading, isRefreshing, isReady, error, refetch } = useAnnouncements({
     barangayId,
@@ -101,13 +102,20 @@ export function AnnouncementsFeed({ barangayId }: { barangayId: string | null })
   }
 
   async function handleMarkAllRead() {
-    if (markingAllRead || announcementsUnreadCount === 0) return;
+    if (marking.current || announcementsUnreadCount === 0) return;
+    marking.current = true;
+    const attempt = beginAttempt('all-announcements-read');
     setMarkingAllRead(true);
     try {
-      await markAnnouncementsRead();
+      const result = await markAnnouncementsRead();
+      if (result === 'confirmed') notify.success('All announcements marked as read.', { id: attempt });
+      else if (result === 'accepted') notify.info('Read-status update sent. Refresh to confirm.', { id: attempt });
+      else if (result === 'rejected') notify.error("Couldn't mark announcements as read. Please try again.", { id: attempt });
+      else if (result === 'uncertain') notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt });
     } catch {
-      toast.error("Couldn't mark announcements as read. Please try again.");
+      notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt });
     } finally {
+      marking.current = false;
       setMarkingAllRead(false);
     }
   }

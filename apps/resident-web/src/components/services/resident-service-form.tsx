@@ -6,7 +6,7 @@ import {
   catalogContract,
   charterSections,
   createRequestKey,
-  idVerificationMessages,
+  idVerificationMessages as legacyIdVerificationMessages,
   idVerificationState,
   ResidentSubmissionAttempt,
   servicePriceLabel,
@@ -25,12 +25,18 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { LoadingStatus } from '../shared/loading-status';
 import { Button } from '../ui/button';
-import { beginAttempt, notify } from '../../lib/notify';
+import { beginAttempt, eventId, notify } from '../../lib/notify';
 import { serviceSubmissionFailure } from '../../lib/service-feedback';
 
 type Client = SupabaseClient<Database>;
 type Requirement = ServiceSubmissionInput['attachments'][number]['requirementCode'];
 const fieldClass = 'w-full rounded-lg border border-input bg-background p-3 text-sm';
+const idVerificationMessages = {
+  verified: 'Your approved ID will be reused for this request.',
+  pending: 'Your ID is awaiting verification. Requests are available after approval.',
+  failed: 'Your ID needs attention. Open Valid ID in Settings to review the reason and submit a replacement.',
+  missing: 'Open Valid ID in Settings and have your ID verified before requesting a document.',
+};
 
 /** Fresh approval only: account changes, failed refreshes and stale responses clear it. */
 export function useResidentEvidence(client: Client) {
@@ -40,8 +46,10 @@ export function useResidentEvidence(client: Client) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const generation = useRef(0);
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (explicit = false) => {
     const ticket = ++generation.current;
+    const attempt = explicit ? beginAttempt('approved-id-check') : null;
+    let outcome: 'verified' | 'unapproved' | 'failed' = 'failed';
     setLoading(true);
     setProfile(null);
     setEvidence(null);
@@ -81,7 +89,8 @@ export function useResidentEvidence(client: Client) {
           throw new Error('Could not load ID previews. Refresh and try again.');
         setEvidence(approved);
         setImages(signed.map((result) => result.data!.signedUrl));
-      }
+        outcome = 'verified';
+      } else outcome = 'unapproved';
     } catch {
       if (ticket === generation.current) {
         setProfile(null);
@@ -90,13 +99,20 @@ export function useResidentEvidence(client: Client) {
         setError('Could not refresh your approved ID. Check your connection and retry verification.');
       }
     } finally {
-      if (ticket === generation.current) setLoading(false);
+      if (ticket === generation.current) {
+        setLoading(false);
+        if (attempt) {
+          if (outcome === 'verified') notify.success('Approved ID confirmed. You can continue.', { id: attempt });
+          else if (outcome === 'unapproved') notify.warning("Your ID isn't approved yet. Open Valid ID in Settings for details.", { id: attempt });
+          else notify.error("Couldn't check your approved ID. Please try again.", { id: attempt });
+        }
+      }
     }
   }, [client]);
   useEffect(() => {
     const requestGeneration = generation;
     let channel: ReturnType<Client['channel']> | null = null;
-    void Promise.resolve().then(refresh);
+    void Promise.resolve().then(() => refresh());
     const {
       data: { subscription },
     } = client.auth.onAuthStateChange((_event, session) => {
@@ -116,7 +132,7 @@ export function useResidentEvidence(client: Client) {
             .subscribe()
         : null;
       // Avoid another auth operation inside the auth callback's lock.
-      void Promise.resolve().then(refresh);
+      void Promise.resolve().then(() => refresh());
     });
     const focused = () => void refresh();
     window.addEventListener('focus', focused);
@@ -132,7 +148,7 @@ export function useResidentEvidence(client: Client) {
 
 export function VerificationNotice({
   client,
-  profileHref = '/settings/profile#upload-valid-id',
+  profileHref = '/settings/valid-id',
 }: {
   client: Client;
   profileHref?: string;
@@ -148,18 +164,18 @@ export function VerificationNotice({
   const state = idVerificationState(profile);
   if (state === 'verified')
     return (
-      <p role="status" className="my-4 rounded-xl border p-4 font-semibold">
+      <p className="my-4 rounded-xl border p-4 font-semibold">
         Valid ID Verified
       </p>
     );
   return (
-    <aside role="status" className="my-4 rounded-xl border border-amber-500 bg-amber-50 p-4 text-zinc-900">
-      <p>{error ?? idVerificationMessages[state]}</p>
+    <aside className="my-4 rounded-xl border border-amber-500 bg-amber-50 p-4 text-zinc-900">
+      <p>{error ?? (profileHref === '/settings/valid-id' ? idVerificationMessages : legacyIdVerificationMessages)[state]}</p>
       <a className="mt-2 inline-block font-semibold underline" href={profileHref}>
         Verify Now
       </a>
       {error ? (
-        <button type="button" onClick={() => void refresh()} className="ml-4 underline">
+        <button type="button" onClick={() => void refresh(true)} className="ml-4 underline">
           Retry verification check
         </button>
       ) : null}
@@ -196,12 +212,14 @@ export function ResidentServiceForm({
   doc,
   client,
   onSubmitted,
-  profileHref = '/settings/profile#upload-valid-id',
+  profileHref = '/settings/profile',
+  idVerificationHref = profileHref === '/settings/profile' ? '/settings/valid-id' : profileHref,
 }: {
   doc: Tables<'document_types'>;
   client: Client;
   onSubmitted: (id: string, reference: string) => void;
   profileHref?: string;
+  idVerificationHref?: string;
 }) {
   const catalog = catalogContract(doc);
   const approved = useResidentEvidence(client);
@@ -255,6 +273,7 @@ export function ResidentServiceForm({
     if (busy.current) return;
     busy.current = true;
     const attemptId = beginAttempt('service-request');
+    const successId = eventId('service-request', attempt.key, 'submitted');
     // How far this attempt got, so the failure is described truthfully: before a request
     // is sent nothing reached the server.
     let phase: 'validate' | 'upload' | 'submit' = 'validate';
@@ -331,12 +350,11 @@ export function ResidentServiceForm({
       phase = 'submit';
       setStage('Submitting your request…');
       const result = await attempt.submit(client, value);
-      // The next view (payment) is the confirmation. If the form was closed
-      // while this ran, the request was still created — say so once.
-      if (!mounted.current) {
-        notify.success('Request submitted.', { id: attemptId, description: `Reference ${result.reference_number}. Track it in My Requests.` });
+      notify.success(`Request submitted. Reference: ${result.reference_number}.`, { id: successId });
+      if (mounted.current) {
+        try { onSubmitted(result.id, result.reference_number); }
+        catch { if (mounted.current) setNotice('Your request was submitted. Open My Requests to continue.'); }
       }
-      onSubmitted(result.id, result.reference_number);
     } catch (failure) {
       const outcome = serviceSubmissionFailure(failure, phase, residentServiceError(failure, phase));
       if (outcome.kind === 'validation') {
@@ -412,7 +430,7 @@ export function ResidentServiceForm({
           <p role="status">
             {approved.loading
               ? 'Checking verification…'
-              : (approved.error ?? idVerificationMessages[idVerificationState(approved.profile)])}
+              : (approved.error ?? (idVerificationHref === '/settings/valid-id' ? idVerificationMessages : legacyIdVerificationMessages)[idVerificationState(approved.profile)])}
           </p>
           {approved.evidence ? (
             <>
@@ -433,11 +451,11 @@ export function ResidentServiceForm({
               </div>
             </>
           ) : (
-            <a href={profileHref} className="inline-block min-h-12 py-3 underline">
+            <a href={idVerificationHref} className="inline-block min-h-12 py-3 underline">
               Verify Now
             </a>
           )}
-          <button type="button" onClick={() => void approved.refresh()} className="underline">
+          <button type="button" onClick={() => void approved.refresh(true)} className="underline">
             Refresh verification
           </button>
         </section>
@@ -599,7 +617,7 @@ export function ResidentServiceForm({
         />
       </label>
       {error ? (
-        <p role="alert" className="text-red-600">
+        <p className="text-red-600">
           {error}
         </p>
       ) : null}

@@ -553,7 +553,7 @@ export function TransactionsTable({
       className="inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-950 dark:text-red-200" />;
   }
 
-  const lifecycle = useRecordWorkspace<Payment>('transactions', browse.refresh, browse.settle, {
+  const lifecycle = useRecordWorkspace<Payment>('transactions', browse.refresh, browse.settle, { editHandle: browse.editHandle,
     actionsMinWidth: 360, workflowActions: refundAction,
   });
 
@@ -586,7 +586,7 @@ export function TransactionsTable({
     },
     {
       id: 'resident',
-      header: 'Resident',
+      header: 'Resident', frozen: true,
       initialWidth: 190,
       minWidth: 160,
       wrap: 'break-word',

@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { boundedAuthFetch } from '@barangayan/shared';
+import { getAuthCookieOptions } from './lib/supabase/cookie-options';
 
 /**
  * Refreshes the Supabase session cookie on every request so Server Components (which
@@ -25,6 +26,7 @@ export async function proxy(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      cookieOptions: getAuthCookieOptions(),
       global: { fetch: boundedAuthFetch },
       cookies: {
         getAll() {
@@ -32,6 +34,8 @@ export async function proxy(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          // Forward the refreshed session to this render as well as the browser.
+          requestHeaders.set('cookie', request.cookies.toString());
           response = NextResponse.next({ request: { headers: requestHeaders } });
           cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },

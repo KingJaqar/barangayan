@@ -52,8 +52,7 @@ export function RequestReview({ data, embedded = false, onChanged }: {
 
       {embedded && <nav className={styles.navigation} aria-label="Request review sections">
         <a href={`#${sectionId}-overview`}>Overview</a>
-        {request.contract_version === 2 && <a href={`#${sectionId}-submission`}>Submission</a>}
-        {hasRequirements && <a href={`#${sectionId}-requirements`}>Requirements</a>}
+        <a href={`#${sectionId}-requirements`}>Requirements</a>
         <a href={`#${sectionId}-history`}>History</a>
       </nav>}
 
@@ -97,9 +96,9 @@ export function RequestReview({ data, embedded = false, onChanged }: {
         </> : <p role="alert">Referenced ID evidence is unavailable.</p>}
       </section>}
 
-      {hasRequirements && <section id={`${sectionId}-requirements`} className={`${styles.card} ${styles.requirements} ${card}`}>
+      {(embedded || hasRequirements) && <section id={`${sectionId}-requirements`} className={`${styles.card} ${styles.requirements} ${card}`}>
         <h2 className={heading}>{embedded && <FileCheck2 size={16} aria-hidden="true" />}Requirements</h2>
-        <ul className="list-inside list-disc text-sm text-zinc-600 dark:text-zinc-300">{request.document_types!.requirements!.map(req => <li key={req}>{req}</li>)}</ul>
+        {hasRequirements ? <ul className="list-inside list-disc text-sm text-zinc-600 dark:text-zinc-300">{request.document_types!.requirements!.map(req => <li key={req}>{req}</li>)}</ul> : <p className={styles.secondary}>No requirements listed for this document.</p>}
       </section>}
 
       {request.requester_notes && <section className={`${styles.card} ${card}`}>

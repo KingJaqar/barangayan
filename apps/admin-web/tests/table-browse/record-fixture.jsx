@@ -15,7 +15,7 @@ import { parseBrowseState, queryIdentity } from '../../src/lib/admin-tables/brow
 import { RECORD_CONFIG } from '../../src/lib/admin-tables/record-config';
 
 const profile = { id: 'b1150000-0000-0000-0000-000000000003', full_name: 'Fixture Resident', first_name: 'Fixture', last_name: 'Resident',
-  middle_name: null, suffix: null, sex: 'female', avatar_url: null, email: 'fixture@test.local', mobile_number: '09171234567',
+  middle_name: 'Santos', suffix: 'Jr.', sex: 'female', avatar_url: null, email: 'fixture@test.local', mobile_number: '09171234567',
   home_address: '1 Fixture Street', house_no: '1', street: 'Fixture Street', city: 'San Mateo', employment_status: 'student', occupation: 'Student',
   birth_date: '2000-01-01', email_verification_status: 'unverified', household_members: [], id_photo_urls: [], id_type: null,
   id_verification_status: null, current_id_submission_id: null, id_repair_required: false, location_verified: true, verified_location: null,
@@ -23,13 +23,15 @@ const profile = { id: 'b1150000-0000-0000-0000-000000000003', full_name: 'Fixtur
 const base = { id: 'f1150000-0000-0000-0000-000000000001', barangay_id: 'a1150000-0000-0000-0000-000000000001',
   created_at: '2026-10-13T08:00:00Z', updated_at: '2026-10-13T08:00:00Z', deleted_at: null };
 const request = { ...base, reference_number: 'LC-001', profiles: profile, document_types: { name: 'Fixture Service' }, contract_version: 1,
+  resident_id: base.id, document_type_id: 'c1150000-0000-0000-0000-000000000001',
   status: 'submitted', payment_status: 'pending', payment_method: 'pickup', requester_notes: 'Fixture note' };
 window.recordFixture = { name: new URLSearchParams(location.search).get('screen') ?? 'requests', failNext: false, unavailable: false, reads: 0, mutations: [],
   rows: {
     requests: request,
-    transactions: { ...base, service_requests: request, method: 'pickup', status: 'pending', amount_centavos: 5000, document_fee_centavos: 5000, collector: profile, refund_status: 'none', paymongo_payment_id: 'pay_fixture' },
+    transactions: { ...base, service_request_id: request.id, service_requests: request, method: 'pickup', status: 'pending', amount_centavos: 5000, document_fee_centavos: 5000, collector: profile, refund_status: 'none', paymongo_payment_id: 'pay_fixture' },
     residents: { ...profile, ...base },
     incidents: { ...base, title: 'Fixture Incident', description: 'Fixture description', address: 'Fixture Street', specific_area_details: 'Near the park', profiles: profile,
+      category_id: 'c1150000-0000-0000-0000-000000000002', reporter_id: base.id,
       incident_categories: { name: 'Fixture category', color: '#166534', icon: 'warning' }, status: 'open', confirmation_count: 0, photo_urls: [], location: { lat: 14.7, lng: 121.1 } },
     health: { ...base, title: 'Fixture Medical Drive', type: 'vaccination', drive_date: '2026-10-20', time_start: '08:00', time_end: '12:00', location: 'Fixture Health Center',
       eligible_criteria: 'Residents', stock_total: 10, stock_remaining: 9, stock_label: 'Remaining slots', stock_unit: 'slots', is_active: true, registration_count: 0 },

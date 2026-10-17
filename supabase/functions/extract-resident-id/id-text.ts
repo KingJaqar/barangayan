@@ -3,6 +3,28 @@ export type IdDetails = { fullName: string; idNumber: string; birthDate: string;
 /** Conservative label-based extraction: unknown values remain blank for review.
  * No profile data is substituted for text actually present on the front photo. */
 export function parseIdText(text: string): IdDetails {
+  const details = extractIdFields(text);
+  return { fullName: details.fullName.slice(0, 200), idNumber: details.idNumber.slice(0, 200), birthDate: normalizeBirthDate(details.birthDate), address: details.address.slice(0, 1000) };
+}
+
+/** Web suggestions reject excessive/uncertain values without changing old clients. */
+export function parseIdTextSuggestions(text: string): { details: IdDetails; warnings: string[] } {
+  const details = extractIdFields(text);
+  const warnings: string[] = [];
+  for (const [key, label, limit] of [['fullName', 'Full name', 200], ['idNumber', 'ID number', 200], ['address', 'Address', 1000]] as const) {
+    if (details[key].length > limit) { details[key] = ''; warnings.push(`${label} could not be suggested within its field limit. Enter it manually.`); }
+  }
+  const numeric = details.birthDate.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  const ambiguous = numeric && Number(numeric[1]) <= 12 && Number(numeric[2]) <= 12 && Number(numeric[1]) !== Number(numeric[2]);
+  const monthName = '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)';
+  const recognizable = /^\d{4}[-/]\d{1,2}[-/]\d{1,2}$/.test(details.birthDate) || numeric || new RegExp(`^(?:\\d{1,2} ${monthName}|${monthName} \\d{1,2}),? \\d{4}$`, 'i').test(details.birthDate);
+  const birth = !recognizable || ambiguous ? '' : normalizeBirthDate(details.birthDate);
+  if (details.birthDate && !birth) warnings.push('Birthday could not be read reliably. Choose it manually if shown on your ID.');
+  details.birthDate = birth;
+  return { details, warnings };
+}
+
+function extractIdFields(text: string): IdDetails {
   const lines = text.split(/\r?\n/).map(line => line.trim().replace(/\s+/g, ' ')).filter(Boolean);
   const labels = {
     fullName: /^(?:full name|name|pangalan|pangalan\s*\/\s*name)\s*[:.-]?\s*/i,
@@ -34,10 +56,10 @@ export function parseIdText(text: string): IdDetails {
   let idNumber = field(labels.idNumber);
   if (!idNumber) idNumber = lines.find(line => /^\d{4}[- ]\d{4}[- ]\d{4}[- ]\d{4}$/.test(line)) ?? '';
   return {
-    fullName: (grouped || field(labels.fullName) || structured).slice(0, 200),
-    idNumber: idNumber.slice(0, 200),
-    birthDate: normalizeBirthDate(field(labels.birthDate)),
-    address: field(labels.address, true).slice(0, 1000),
+    fullName: grouped || field(labels.fullName) || structured,
+    idNumber,
+    birthDate: field(labels.birthDate),
+    address: field(labels.address, true),
   };
 }
 

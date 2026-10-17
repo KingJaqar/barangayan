@@ -7,6 +7,7 @@ import {
   FileText,
   HelpCircle,
   Info,
+  IdCard,
   KeyRound,
   LogIn,
   LogOut,
@@ -24,6 +25,8 @@ import { LinkPendingHint } from '@/components/shell/link-pending-hint';
 import { LoadingStatus, PendingText } from '@/components/shared/loading-status';
 import { Spinner } from '@/components/ui/loading';
 import { useSignOut } from '@/hooks/use-sign-out';
+import { idVerificationState } from '@barangayan/shared';
+import { useSettingsIdStatus } from './settings-id-status';
 
 interface NavItem {
   href: string;
@@ -51,6 +54,7 @@ const NAV_GROUPS: NavGroup[] = [
     guestAccessible: false,
     items: [
       { href: '/settings/profile', icon: User, label: 'Profile' },
+      { href: '/settings/valid-id', icon: IdCard, label: 'Valid ID' },
       { href: '/settings/email-verification', icon: MailCheck, label: 'Email Verification' },
       { href: '/settings/location-verification', icon: MapPin, label: 'Location Verification' },
       { href: '/settings/change-password', icon: KeyRound, label: 'Change Password' },
@@ -99,6 +103,8 @@ interface SettingsSidebarProps {
 export function SettingsSidebar({ emailVerified, locationVerified, isAuthenticated }: SettingsSidebarProps) {
   const pathname = usePathname();
   const { signOut, pending: signingOut } = useSignOut();
+  const idStatus = useSettingsIdStatus();
+  const idLabel = idStatus.loading ? 'Checking verification' : idStatus.error ? 'Verification unavailable' : idVerificationState(idStatus.profile) === 'verified' ? 'Verified' : 'Not verified';
   const visibleGroups = isAuthenticated ? NAV_GROUPS : NAV_GROUPS.filter((g) => g.guestAccessible);
 
   return (
@@ -122,8 +128,11 @@ export function SettingsSidebar({ emailVerified, locationVerified, isAuthenticat
                       label={item.label}
                       active={!!active}
                       destructive={item.destructive}
+                      badgeLabel={item.href === '/settings/valid-id' ? idLabel : undefined}
                       badge={
-                        item.href === '/settings/email-verification'
+                        item.href === '/settings/valid-id'
+                          ? !idStatus.loading && !idStatus.error && idVerificationState(idStatus.profile) === 'verified' ? 'verified' : 'unverified'
+                          : item.href === '/settings/email-verification'
                           ? emailVerified
                             ? 'verified'
                             : 'unverified'
@@ -188,6 +197,7 @@ function NavRow({
   active,
   destructive,
   badge,
+  badgeLabel,
 }: {
   href: string;
   icon: React.ElementType;
@@ -195,6 +205,7 @@ function NavRow({
   active: boolean;
   destructive?: boolean;
   badge?: 'verified' | 'unverified';
+  badgeLabel?: string;
 }) {
   const activeClasses = destructive
     ? 'bg-white text-red-600 shadow-[0_1px_3px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.04] dark:bg-zinc-800 dark:text-red-400 dark:ring-white/[0.06]'
@@ -207,7 +218,7 @@ function NavRow({
     <Link
       href={href}
       scroll={false}
-      aria-label={label}
+      aria-label={badgeLabel ? `${label}: ${badgeLabel}` : label}
       title={label}
       aria-current={active ? 'page' : undefined}
       className={`relative flex h-11 shrink-0 items-center gap-3 whitespace-nowrap rounded-xl px-3 text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
@@ -219,8 +230,8 @@ function NavRow({
       <span className="hidden flex-1 truncate lg:inline">{label}</span>
       {badge ? (
           <span
-            title={badge === 'verified' ? 'Verified' : 'Not verified'}
-            aria-label={badge === 'verified' ? 'Verified' : 'Not verified'}
+            title={badgeLabel ?? (badge === 'verified' ? 'Verified' : 'Not verified')}
+            aria-label={badgeLabel ?? (badge === 'verified' ? 'Verified' : 'Not verified')}
             className={`absolute left-6 top-1 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold leading-none ring-2 ring-[#f4f4f3] lg:static lg:size-4 lg:ring-0 dark:ring-zinc-900 ${
               badge === 'verified' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
             }`}>

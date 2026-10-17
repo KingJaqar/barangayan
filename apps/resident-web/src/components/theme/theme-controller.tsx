@@ -28,7 +28,7 @@ interface ThemeControllerValue {
    * visual effect) and remembers the choice in localStorage so it survives a reload
    * without a flash of the wrong theme. Phase 7's theme-form.tsx additionally persists
    * to profiles.theme_preference for cross-device sync. */
-  setTheme: (theme: ResolvedTheme) => void;
+  setTheme: (theme: ResolvedTheme) => boolean;
   /** Forgets the saved choice and reverts to the OS/browser preference, as if this
    * browser had never picked a theme — called on logout (see use-reset-preferences.ts)
    * so a signed-out browser never keeps showing the *previous* resident's theme.
@@ -87,8 +87,10 @@ export function ThemeControllerProvider({ children }: { children: ReactNode }) {
     applyThemeClass(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);
+      return true;
     } catch {
       // Private browsing / storage disabled — the class still applies for this session.
+      return false;
     }
   }, []);
 

@@ -14,6 +14,7 @@ import { Spinner } from '@/components/loading/spinner';
 import { useBrowseViewport } from './table-browse-panel';
 import type { SortDescriptor, SortDirection } from '@/lib/admin-tables/sort-definitions';
 import { useRowContextMenu } from './row-context-menu';
+import styles from './editable-data-table.module.css';
 
 // Floor for the last (filler) column under `resizableColumns` — enough room for a small
 // action button or short status label, so it can't be squeezed to invisible by the other
@@ -35,7 +36,7 @@ export interface EditableCellConfig<T> {
   selectKind?: AdminSelectKind;
   getValue: (row: T) => string | number;
   /** Return { error: null } on success, { error: <message> } on failure — never throw. */
-  onSave: (row: T, value: string | number) => Promise<{ error: string | null }>;
+  onSave: (row: T, value: string | number) => Promise<{ error: string | null; row?: unknown }>;
   /** Commit a select as soon as its value changes instead of waiting for blur. */
   commitOnChange?: boolean;
   /** Optional guard evaluated before entering edit mode, e.g. lock amount once paid. */
@@ -53,6 +54,8 @@ export interface EditableDataTableColumn<T> {
    * but a free-text PayMongo source id for QR PH rows) — return undefined to make that
    * row's cell non-editable. */
   edit?: EditableCellConfig<T> | ((row: T) => EditableCellConfig<T> | undefined);
+  /** Editors for multiple stored values displayed together in a single cell. */
+  rowEdit?: { label: string; edit: EditableCellConfig<T> }[];
   /** Only used when `resizableColumns` is on: pins this column's starting width (px)
    * instead of auto-measuring it from its rendered content — e.g. giving Role/Address
    * more starting room than their header text alone would naturally claim. The user can
@@ -65,13 +68,16 @@ export interface EditableDataTableColumn<T> {
   wrap?: 'normal' | 'nowrap' | 'break-word';
   /** Override the table-level cell overflow behavior for this column. */
   overflow?: 'hidden' | 'visible';
+  /** Keep this column visible at the left edge during horizontal scrolling. */
+  frozen?: boolean;
 }
 
 function positive(value: string | null, fallback = 1) {
   return value && /^[1-9]\d*$/.test(value) && Number.isSafeInteger(Number(value)) ? Number(value) : fallback;
 }
 function columnId<T>(col: EditableDataTableColumn<T>) { return col.id ?? col.header; }
-export interface TableEditHandle { settle: () => Promise<boolean>; cancel: () => void }
+export interface TableEditHandle { settle: () => Promise<boolean>; cancel: () => void; editRow: (key: string) => Promise<void> }
+type RowEditField<T> = { owner: string; col: EditableDataTableColumn<T>; edit: EditableCellConfig<T>; saved: string };
 
 function resolveEdit<T>(col: EditableDataTableColumn<T>, row: T): EditableCellConfig<T> | undefined {
   if (!col.edit) return undefined;
@@ -150,10 +156,13 @@ export function EditableDataTable<T>({
   const params = useSearchParams();
   const rowOffset = (positive(params.get('page')) - 1) * (PAGE_SIZES.includes(positive(params.get('pageSize'), 10) as PageSize) ? positive(params.get('pageSize'), 10) : 10);
   const columns = useMemo<EditableDataTableColumn<T>[]>(() => bounded ? [{ id: '__row', header: '#', initialWidth: 64, minWidth: 48,
+    frozen: columnsProp.some(col => col.frozen),
     wrap: 'nowrap', className: 'tabular-nums text-zinc-500', render: (_row, index) => rowOffset + index + 1 }, ...columnsProp] : columnsProp,
     [bounded, columnsProp, rowOffset]);
   const toast = useToast();
   const [editing, setEditing] = useState<{ row: string; col: string } | null>(null);
+  const [rowEditing, setRowEditing] = useState<{ key: string; drafts: Record<string, string>; fields: RowEditField<T>[] } | null>(null);
+  const rowSnapshot = useRef<{ row: T; fields: RowEditField<T>[] } | null>(null);
   const [draft, setDraft] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const savingRef = useRef(false);
@@ -169,7 +178,8 @@ export function EditableDataTable<T>({
     mounted.current = true;
     return () => { mounted.current = false; resizeCleanup.current?.(); cancelAnimationFrame(focusFrame.current); };
   }, []);
-  useEffect(() => { onEditingChange?.(editing !== null); }, [editing, onEditingChange]);
+  const editingActive = editing !== null || rowEditing !== null;
+  useEffect(() => { onEditingChange?.(editingActive); }, [editingActive, onEditingChange]);
 
   // ── Resizable columns (opt-in) ────────────────────────────────────────────
   // Each header's width starts at its natural auto-layout size (measured right after
@@ -184,6 +194,27 @@ export function EditableDataTable<T>({
   const thRefs = useRef<Record<string, HTMLTableCellElement | null>>({});
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
   const pinnedColumns = resizableColumns ? (pinLastColumn ? columns : columns.slice(0, -1)) : [];
+
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    const frozenHeaders = columns.flatMap((col, index) => {
+      const header = thRefs.current[columnId(col)];
+      return col.frozen && header ? [{ header, index }] : [];
+    });
+    if (!table || !frozenHeaders.length) return;
+    function updateOffsets() {
+      let left = 0;
+      for (const { header, index } of frozenHeaders) {
+        table!.style.setProperty(`--frozen-left-${index}`, `${left}px`);
+        // Use rendered CSS widths: table floors can stretch columns beyond colWidths.
+        left += parseFloat(getComputedStyle(header).width);
+      }
+    }
+    updateOffsets();
+    const observer = new ResizeObserver(updateOffsets);
+    for (const { header } of frozenHeaders) observer.observe(header);
+    return () => observer.disconnect();
+  }, [columns]);
 
   useLayoutEffect(() => {
     if (!resizableColumns) return;
@@ -234,7 +265,7 @@ export function EditableDataTable<T>({
   const cellPadding = density === 'compact' ? 'px-3 py-2.5' : 'px-5 py-3.5';
 
   function startEdit(row: T, col: EditableDataTableColumn<T>) {
-    if (savingRef.current || (bounded && editing)) return;
+    if (savingRef.current || rowEditing || (bounded && editing)) return;
     const edit = resolveEdit(col, row);
     if (!edit || (edit.canEdit && !edit.canEdit(row))) return;
     setEditing({ row: rowKey(row), col: columnId(col) });
@@ -247,15 +278,91 @@ export function EditableDataTable<T>({
   function cancelEdit() {
     if (savingRef.current) return;
     setEditing(null);
+    setRowEditing(null);
+    rowSnapshot.current = null;
     setDraft('');
     setSaveError(null);
     editSnapshot.current = null;
     if (bounded) {
       cancelAnimationFrame(focusFrame.current);
       focusFrame.current = requestAnimationFrame(() => {
-      if (editTrigger.current?.isConnected) editTrigger.current.focus();
-      else tableRef.current?.closest<HTMLElement>('[role=region]')?.focus();
+      if (editTrigger.current?.isConnected) editTrigger.current.focus({ preventScroll: true });
+      else tableRef.current?.closest<HTMLElement>('[role=region]')?.focus({ preventScroll: true });
       });
+    }
+  }
+
+  async function startRowEdit(key: string) {
+    if (savingRef.current) return;
+    if (rowEditing?.key === key) return;
+    if (!await settleEdit()) return;
+    const row = rows.find(item => rowKey(item) === key);
+    if (!row) return;
+    const fields = columns.flatMap(col => {
+      const single = resolveEdit<T>(col, row);
+      const configs = col.rowEdit ?? (single ? [{ label: col.header, edit: single }] : []);
+      return configs.flatMap(({ label, edit }, index) => {
+        if (edit.canEdit && !edit.canEdit(row)) return [];
+        const raw = String(edit.getValue(row));
+        return [{ owner: columnId(col), col: { ...col, id: `${columnId(col)}:${index}`, header: label }, edit, saved: edit.type === 'datetime' ? toDatetimeLocal(raw) : raw }];
+      });
+    });
+    if (!fields.length) return;
+    editTrigger.current = tableRef.current?.querySelector<HTMLElement>('button:focus') ?? null;
+    rowSnapshot.current = { row, fields };
+    setSaveError(null);
+    setRowEditing({ key, fields, drafts: Object.fromEntries(fields.map(({ col, saved }) => [columnId(col), saved])) });
+  }
+
+  function settleEdit(): Promise<boolean> {
+    if (rowSnapshot.current) return commitRow();
+    const snapshot = editSnapshot.current;
+    return snapshot ? commitEdit(snapshot.row, snapshot.col) : Promise.resolve(true);
+  }
+
+  function commitRow(): Promise<boolean> {
+    if (savePromise.current) return savePromise.current;
+    const promise = performRowCommit();
+    savePromise.current = promise;
+    void promise.finally(() => { if (savePromise.current === promise) savePromise.current = null; });
+    return promise;
+  }
+
+  async function performRowCommit(): Promise<boolean> {
+    const snapshot = rowSnapshot.current;
+    if (!snapshot || !rowEditing || savingRef.current) return false;
+    // Parse numeric and datetime drafts before writing. Reuse the existing field handlers;
+    // successful fields are marked so retrying a later failure never resubmits them.
+    const changes: { field: typeof snapshot.fields[number]; draft: string; value: string | number }[] = [];
+    for (const field of snapshot.fields) {
+      const next = rowEditing.drafts[columnId(field.col)];
+      if (next === field.saved) continue;
+      const value = field.edit.type === 'number' ? Number(next) : field.edit.type === 'datetime' ? fromDatetimeLocal(next) : next;
+      if (value === null || (field.edit.type === 'number' && (!next.trim() || !Number.isFinite(value)))) {
+        setSaveError(`Enter a valid ${field.col.header.toLowerCase()}.`);
+        return false;
+      }
+      changes.push({ field, draft: next, value });
+    }
+    savingRef.current = true; setSaving(true); setSaveError(null);
+    try {
+      for (const { field, draft: next, value } of changes) {
+        const result = await field.edit.onSave(snapshot.row, value);
+        if (result.error) throw new Error(`${field.col.header}: ${result.error}`);
+        field.saved = next;
+        if (result.row && typeof result.row === 'object' && 'id' in result.row && result.row.id === rowKey(snapshot.row)) {
+          snapshot.row = { ...snapshot.row, ...result.row };
+        }
+      }
+      if (mounted.current) { savingRef.current = false; cancelEdit(); }
+      return true;
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'The update could not be completed.';
+      if (mounted.current) { setSaveError(message); toast.showError(`Update failed: ${message}`); }
+      return false;
+    } finally {
+      savingRef.current = false;
+      if (mounted.current) setSaving(false);
     }
   }
 
@@ -309,11 +416,9 @@ export function EditableDataTable<T>({
   useLayoutEffect(() => {
     if (!editHandleRef) return;
     editHandleRef.current = {
-      settle: async () => {
-        const snapshot = editSnapshot.current;
-        return snapshot ? commitEdit(snapshot.row, snapshot.col) : true;
-      },
+      settle: settleEdit,
       cancel: cancelEdit,
+      editRow: startRowEdit,
     };
     return () => { editHandleRef.current = null; };
   });
@@ -325,7 +430,7 @@ export function EditableDataTable<T>({
         // w-full only kicks in once the pinned columns are measured and the table is on
         // fixed layout — applying it during the brief unmeasured auto-layout pass would
         // stretch the very widths startColumnResize is trying to capture as "natural".
-        className={`text-left text-sm ${!resizableColumns ? 'w-full min-w-max' : columnsMeasured ? 'w-full' : ''}`}
+        className={`${styles.table} text-left text-sm ${!resizableColumns ? 'w-full min-w-max' : columnsMeasured ? 'w-full' : ''}`}
         style={{
           ...(columnsMeasured ? { tableLayout: 'fixed' as const } : {}),
           ...(tableMinWidth ? { minWidth: tableMinWidth } : {}),
@@ -352,6 +457,7 @@ export function EditableDataTable<T>({
           <tr>
             {columns.map((col, colIndex) => (
               <th
+                data-frozen={col.frozen || undefined}
                 scope="col"
                 aria-sort={sorting?.descriptor.columnId === columnId(col) ? (sorting.direction === 'asc' ? 'ascending' : 'descending') : undefined}
                 key={columnId(col)}
@@ -362,6 +468,7 @@ export function EditableDataTable<T>({
                 // invisible by the other columns' pinned/initial widths adding up to more
                 // than the table's available space.
                 style={{
+                  left: col.frozen ? `var(--frozen-left-${colIndex}, 0px)` : undefined,
                   minWidth:
                     Math.max(
                       col.minWidth ?? 0,
@@ -417,7 +524,9 @@ export function EditableDataTable<T>({
             rows.map((row, rowIndex) => (
               <tr
                 key={rowKey(row)}
-                onContextMenu={contextMenuColumnId ? contextMenu.open : undefined}
+                data-clickable={onRowClick ? '' : undefined}
+                data-context-menu-open={contextMenu.activeRowKey === rowKey(row) ? '' : undefined}
+                onContextMenu={contextMenuColumnId ? event => contextMenu.open(event, rowKey(row)) : undefined}
                 style={bounded ? { height: BROWSE_ROW_HEIGHT } : undefined}
                 className={`${
                   thickBorders ? 'border-b-2 border-zinc-300 dark:border-zinc-600' : 'border-b border-black/5 dark:border-white/5'
@@ -426,12 +535,16 @@ export function EditableDataTable<T>({
                 }`}
               >
                 {columns.map((col, colIndex) => {
-                  const isEditing = editing?.row === rowKey(row) && editing?.col === columnId(col);
-                  const edit = resolveEdit(col, row);
+                  const rowFields = rowEditing?.key === rowKey(row) ? rowEditing.fields.filter(field => field.owner === columnId(col)) : [];
+                  const rowField = rowFields[0];
+                  const isEditing = !!rowField || (editing?.row === rowKey(row) && editing?.col === columnId(col));
+                  const edit = rowField?.edit ?? resolveEdit(col, row);
                   const editable = !!edit && (!edit.canEdit || edit.canEdit(row));
 
                   return (
                     <td
+                      data-frozen={col.frozen || undefined}
+                      data-editable={col.frozen && editable && !isEditing ? '' : undefined}
                       data-context-menu-actions={contextMenuColumnId === columnId(col) ? '' : undefined}
                       tabIndex={bounded && !isEditing && (editable || onRowClick) ? 0 : undefined}
                       aria-label={bounded && editable && !isEditing ? `${col.header}: press Enter to edit` : undefined}
@@ -439,10 +552,11 @@ export function EditableDataTable<T>({
                         if (event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return;
                         event.preventDefault();
                         if (editable) { editTrigger.current = event.currentTarget; startEdit(row, col); }
-                        else onRowClick?.(row, event.currentTarget);
+                        else if (contextMenuColumnId !== columnId(col) && !rowEditing) onRowClick?.(row, event.currentTarget);
                       } : undefined}
                       key={columnId(col)}
                       style={{
+                        left: col.frozen ? `var(--frozen-left-${colIndex}, 0px)` : undefined,
                         minWidth:
                           Math.max(
                             col.minWidth ?? 0,
@@ -465,6 +579,7 @@ export function EditableDataTable<T>({
                         onRowClick && !editable ? 'cursor-pointer' : ''
                       }`}
                       onClick={(e) => {
+                        if (contextMenuColumnId === columnId(col) || rowEditing || (e.target instanceof Element && e.target.closest('button,a,input,select,textarea,[role=combobox]'))) return;
                         if (editable) {
                           e.stopPropagation();
                           editTrigger.current = e.currentTarget;
@@ -474,7 +589,28 @@ export function EditableDataTable<T>({
                         }
                       }}
                     >
-                      {isEditing && edit ? <div data-inline-editor onClick={event => event.stopPropagation()}>
+                      {rowEditing?.key === rowKey(row) && contextMenuColumnId === columnId(col) ? <div onClick={event => event.stopPropagation()}>
+                        {saveError && <p role="alert" className="whitespace-normal text-sm text-red-600">{saveError}</p>}
+                        <div className="flex gap-3">
+                          <button type="button" disabled={saving} onClick={() => void commitRow()}>{saving ? 'Saving…' : saveError ? 'Retry save' : 'Save row'}</button>
+                          <button type="button" disabled={saving} onClick={cancelEdit}>Cancel edit</button>
+                        </div>
+                      </div> : rowField && rowEditing ? <div data-inline-editor onClick={event => event.stopPropagation()} onKeyDown={event => {
+                        if (event.key === 'Escape' && !event.defaultPrevented) { event.stopPropagation(); cancelEdit(); }
+                      }}>
+                        {rowFields.map(field => <div key={columnId(field.col)} className="mb-1 last:mb-0">
+                          {rowFields.length > 1 && <span className="text-xs text-zinc-500">{field.col.header}</span>}
+                          {field.edit.type === 'select' ? <AdminSelect compact kind={field.edit.selectKind} aria-label={`Edit ${field.col.header}`}
+                            value={rowEditing.drafts[columnId(field.col)]} disabled={saving}
+                            onValueChange={value => setRowEditing(current => current && ({ ...current, drafts: { ...current.drafts, [columnId(field.col)]: value } }))}
+                            options={field.edit.options} /> : <input aria-label={`Edit ${field.col.header}`}
+                            type={field.edit.type === 'datetime' ? 'datetime-local' : field.edit.type}
+                            value={rowEditing.drafts[columnId(field.col)]} disabled={saving}
+                            onChange={event => setRowEditing(current => current && ({ ...current, drafts: { ...current.drafts, [columnId(field.col)]: event.target.value } }))}
+                            onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void commitRow(); } }}
+                            className="w-full rounded border border-[var(--accent)] bg-white px-2 py-1 text-sm outline-none dark:bg-zinc-800" />}
+                        </div>)}
+                      </div> : isEditing && edit ? <div data-inline-editor onClick={event => event.stopPropagation()}>
                         {saveError && <div role="alert" className="text-sm text-red-600">{saveError}</div>}
                         {(
                         edit.type === 'select' ? (

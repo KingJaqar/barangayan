@@ -48,6 +48,7 @@ export function RequestPaymentJourney({
   // paid transition; opening the QR route for an already-paid request shows the paid
   // summary and never mounts the step (no payment attempt is created).
   const [qrEngaged, setQrEngaged] = useState(false);
+  const [confirmedPaymentId, setConfirmedPaymentId] = useState<string | null>(null);
 
   // Read state is scoped to this request: a refresh keeps the last valid payment details on
   // screen (a failed refresh shows a warning instead of replacing it), and an obsolete
@@ -165,7 +166,7 @@ export function RequestPaymentJourney({
         referenceNumber={request.reference_number}
         documentName={name}
         documentFeeCentavos={amount!}
-        onPaid={() => setStep('success')}
+        onPaid={(paymentId) => { setConfirmedPaymentId(paymentId); setStep('success'); }}
         onCancelled={() => setStep('method')}
         onBack={() => setStep('method')}
       />
@@ -173,6 +174,7 @@ export function RequestPaymentJourney({
       <SuccessStep
         requestId={requestId}
         referenceNumber={request.reference_number}
+        announcePaymentId={confirmedPaymentId}
       />
     ) : (
       <>

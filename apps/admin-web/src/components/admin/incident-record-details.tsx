@@ -80,11 +80,5 @@ export function IncidentRecordDetails({ row }: { row: RecordData }) {
       <h4 className={styles.heading}><span className={styles.number}>04</span>Reported by<UserRound size={16} aria-hidden="true" /></h4>
       <p className={styles.reporter}>{text(profile?.full_name, 'Anonymous report')}</p>
     </section>
-    <section className={styles.section} aria-label="Record timestamps">
-      <dl className={styles.details}>
-        <div><dt>Created on</dt><dd>{timestamp(row.created_at)}</dd></div>
-        <div><dt>Last updated</dt><dd>{timestamp(row.updated_at)}</dd></div>
-      </dl>
-    </section>
   </article>;
 }

@@ -114,11 +114,11 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
   /** Shared hard-delete used by both the table row's inline action and the detail modal —
    * kept as one function so the audit log call is only written once. */
 
-  const lifecycle = useRecordWorkspace<HouseholdMemberRow>('households', browse.refresh, browse.settle);
+  const lifecycle = useRecordWorkspace<HouseholdMemberRow>('households', browse.refresh, browse.settle, { editHandle: browse.editHandle });
 
   const columns: EditableDataTableColumn<HouseholdMemberRow>[] = [
     {
-      id: 'name', header: 'Name',
+      id: 'name', header: 'Name', frozen: true,
       initialWidth: 210,
       minWidth: 170,
       wrap: 'break-word',
@@ -130,7 +130,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
       },
     },
     {
-      id: 'head', header: 'Resident (Head)',
+      id: 'head', header: 'Resident (Head)', frozen: true,
       initialWidth: 220,
       minWidth: 180,
       wrap: 'break-word',

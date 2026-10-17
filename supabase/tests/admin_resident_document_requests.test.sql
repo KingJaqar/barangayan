@@ -13,7 +13,7 @@ insert into auth.users(id,email,raw_user_meta_data) values
 ('b1270000-0000-4000-8000-000000000004','ordinary-request@test.local','{}'),
 ('b1270000-0000-4000-8000-000000000005','dual-unverified@test.local','{}');
 insert into public.profiles(id,barangay_id,role,first_name,last_name,house_no,street,sex,employment_status,mobile_number,birth_date) values
-('b1270000-0000-4000-8000-000000000001','a1270000-0000-4000-8000-000000000001','admin','Dual','Resident','12','Main Street','female','student','09171234567','2000-02-29'),
+('b1270000-0000-4000-8000-000000000001','a1270000-0000-4000-8000-000000000001','resident','Dual','Resident','12','Main Street','female','student','09171234567','2000-02-29'),
 ('b1270000-0000-4000-8000-000000000002','a1270000-0000-4000-8000-000000000001','admin','ID','Reviewer',null,null,null,null,null,null),
 ('b1270000-0000-4000-8000-000000000003','a1270000-0000-4000-8000-000000000002','admin','Foreign','Admin',null,null,null,null,null,null),
 ('b1270000-0000-4000-8000-000000000004','a1270000-0000-4000-8000-000000000001','resident','Ordinary','Resident','12','Main Street','female','student','09171234568','2000-02-29'),
@@ -27,7 +27,6 @@ insert into public.document_types(id,barangay_id,name,fee_centavos) values
 ('d1270000-0000-4000-8000-000000000002','a1270000-0000-4000-8000-000000000001','Legacy document',5000),
 ('d1270000-0000-4000-8000-000000000003','a1270000-0000-4000-8000-000000000002','Foreign document',5000);
 insert into storage.objects(bucket_id,name,metadata) values
-('id-documents','b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg','{"size":1000,"mimetype":"image/jpeg"}'),
 ('id-documents','b1270000-0000-4000-8000-000000000004/versions/c1270000-0000-4000-8000-000000000004/id-front.jpg','{"size":1000,"mimetype":"image/jpeg"}');
 
 create temp table dual_request_input(payload jsonb);
@@ -37,8 +36,15 @@ grant select on dual_request_input to authenticated;
 set local role anon;
 select throws_ok($$select public.submit_service_request('{}')$$,'42501',null,'Anonymous requests remain blocked');
 reset role;
+-- Match account provisioning: an existing resident is manually granted admin access.
+update public.profiles set role='admin' where id='b1270000-0000-4000-8000-000000000001';
 set local role authenticated;
 set local request.jwt.claim.sub='b1270000-0000-4000-8000-000000000001';
+select lives_ok($$insert into storage.objects(bucket_id,name,metadata) values ('id-documents','b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg','{"size":1000,"mimetype":"image/jpeg"}')$$,'Promoted resident uploads own front ID through ordinary Storage permissions');
+select is((select count(*)::integer from storage.objects where bucket_id='id-documents' and name='b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg'),1,'Promoted resident can read own uploaded ID');
+select throws_ok($$insert into storage.objects(bucket_id,name,metadata) values ('id-documents','b1270000-0000-4000-8000-000000000004/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg','{}')$$,'42501',null,'Admin role does not allow uploading another resident ID');
+select throws_ok($$select public.publish_id_submission('{"submissionId":"c1270000-0000-4000-8000-000000000001","idType":"PhilSys","frontPath":"b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg","confirmedDetails":{"fullName":" ","idNumber":"","birthDate":"","address":""}}')$$,'22023','invalid_fullName','Admin ID submission still requires a confirmed name');
+select throws_ok($$select public.publish_id_submission('{"submissionId":"c1270000-0000-4000-8000-000000000001","idType":"PhilSys","frontPath":"b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg","confirmedDetails":{"fullName":"Dual Resident","idNumber":"","birthDate":"2001-02-29","address":""}}')$$,'22023','invalid_birth_date','Admin ID submission rejects impossible birthdays');
 select lives_ok($$insert into storage.objects(bucket_id,name,metadata) values ('request-attachments','b1270000-0000-4000-8000-000000000001/c1270000-0000-4000-8000-000000000001/lessor.pdf','{"size":1000,"mimetype":"application/pdf"}')$$,'Dual-role resident uploads own required certification');
 select throws_ok($$insert into storage.objects(bucket_id,name,metadata) values ('request-attachments','b1270000-0000-4000-8000-000000000004/c1270000-0000-4000-8000-000000000001/forged.pdf','{}')$$,'42501',null,'Admin role does not allow uploading as another resident');
 select lives_ok($$select public.publish_id_submission('{"submissionId":"c1270000-0000-4000-8000-000000000001","idType":"PhilSys","frontPath":"b1270000-0000-4000-8000-000000000001/versions/c1270000-0000-4000-8000-000000000001/id-front.jpg","confirmedDetails":{"fullName":"Dual Resident","idNumber":"","birthDate":"","address":""}}')$$,'Dual-role resident can submit own ID for approval');

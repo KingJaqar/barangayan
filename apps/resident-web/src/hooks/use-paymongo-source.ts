@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { isNoAnswer } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, type OperationId } from '@/lib/notify';
 
 export type PaymentStatus = 'idle' | 'loading' | 'pending' | 'paid' | 'expired' | 'cancelled' | 'error';
 
@@ -54,6 +55,7 @@ export function usePaymongoSource(requestId: string) {
   // True while the most recent status check could not reach the server. A display
   // condition only — never evidence that the payment failed or was not received.
   const [statusCheckFailed, setStatusCheckFailed] = useState(false);
+  const [setupResult, setSetupResult] = useState<{ id: OperationId; uncertain: boolean } | null>(null);
   // Unique per hook instance — the resume check in create-payment-source deliberately
   // hands back the SAME paymentId across screen opens, so a `payment-${paymentId}` topic
   // collides whenever two QR screens are alive at once (e.g. back/forward navigation).
@@ -68,6 +70,7 @@ export function usePaymongoSource(requestId: string) {
 
   useEffect(() => {
     let cancelled = false;
+    const setupId = beginAttempt('qrph-setup');
     // Routed through a microtask, not called synchronously — react-hooks/set-state-in-
     // effect flags any setState reachable synchronously from an effect body (see
     // use-unread-counts.tsx's identical pattern/comment). Resets state for a fresh
@@ -76,6 +79,7 @@ export function usePaymongoSource(requestId: string) {
       if (cancelled) return;
       setStatus('loading');
       setErrorMessage(null);
+      setSetupResult(null);
     });
 
     supabase.functions
@@ -98,11 +102,25 @@ export function usePaymongoSource(requestId: string) {
               // Body wasn't JSON — fall through to the generic message.
             }
           }
-          if (!cancelled) setStatus('error');
+          if (!cancelled) {
+            const response = error.context;
+            const uncertain = isNoAnswer(error) || !(response instanceof Response) || response.status >= 500;
+            setSetupResult({ id: setupId, uncertain });
+            setStatus('error');
+          }
           return;
         }
 
-        if (!data?.paymentId || !data?.qrImageUrl) {
+        // Setup may lose a race to an already-settled request. This response has no
+        // payment identity/receipt, so keep it quiet instead of replaying settlement
+        // or reporting an uncertain new payment setup.
+        if (data?.status === 'paid') {
+          setErrorMessage('This request is already paid. Open My Requests to view its receipt.');
+          setStatus('error');
+          return;
+        }
+        if (typeof data?.paymentId !== 'string' || !data.paymentId || typeof data?.qrImageUrl !== 'string' || !data.qrImageUrl) {
+          setSetupResult({ id: setupId, uncertain: true });
           setErrorMessage('PayMongo did not return a QR code.');
           setStatus('error');
           return;
@@ -119,12 +137,13 @@ export function usePaymongoSource(requestId: string) {
           amountCentavos: (data.amountCentavos as number) ?? 0,
         });
         setStatus('pending');
+        setSetupResult({ id: setupId, uncertain: false });
       })
       .catch(() => {
         // Network-level failure (e.g. unreachable Edge Function) — the destructured
         // {error} above only covers HTTP-level errors, so a thrown rejection needs its
         // own catch or the UI hangs on "Generating…" forever.
-        if (!cancelled) setStatus('error');
+        if (!cancelled) { setSetupResult({ id: setupId, uncertain: true }); setStatus('error'); }
       });
 
     return () => {
@@ -259,10 +278,9 @@ export function usePaymongoSource(requestId: string) {
         setStatus('paid');
         return { ok: false, error: 'This payment already went through.', outcome: 'paid' };
       }
-      const message = 'Could not cancel the payment. Please try again.';
-      setErrorMessage(message);
+      setErrorMessage(UNCONFIRMED);
       cancelledRef.current = false; // unexpected response — let polling resume
-      return { ok: false, error: message, outcome: 'rejected' };
+      return { ok: false, error: UNCONFIRMED, outcome: 'unconfirmed' };
     } catch {
       setErrorMessage(UNCONFIRMED);
       cancelledRef.current = false; // cancel failed — let polling resume
@@ -272,5 +290,5 @@ export function usePaymongoSource(requestId: string) {
     }
   }
 
-  return { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed };
+  return { source, status, errorMessage, cancelPayment, cancelling, statusCheckFailed, setupResult };
 }

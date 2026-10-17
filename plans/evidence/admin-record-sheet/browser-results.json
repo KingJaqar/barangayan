@@ -1,0 +1,454 @@
+{
+  "checks": [
+    {
+      "screen": "requests",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "transactions",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "residents",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "incidents",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "health",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "applicants",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "households",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "staff",
+      "status": "passed",
+      "checks": [
+        "icon-only actions with tooltips and accessible labels",
+        "40px button targets",
+        "failed details load and retry",
+        "read-only right sheet",
+        "pinned visible section links and valid targets",
+        "no duplicated record fields",
+        "sheet action icons",
+        "Edit/Save/Cancel with current values",
+        "save transport and permission failures retain draft",
+        "failed archive preserves active record",
+        "archive list removal",
+        "archived details",
+        "restore failure and retry",
+        "irreversible-delete confirmation",
+        "failed delete retry",
+        "list refresh"
+      ]
+    },
+    {
+      "screen": "request-workflow",
+      "status": "passed",
+      "checks": [
+        "visible workflow labels",
+        "legacy processing/pickup/completion operations",
+        "terminal action visibility",
+        "versioned requests without review",
+        "confirmed payment before release",
+        "controlled versioned transitions"
+      ]
+    },
+    {
+      "screen": "free request",
+      "status": "passed",
+      "checks": [
+        "no invalid payment collection action",
+        "completion remains available"
+      ]
+    },
+    {
+      "screen": "incident-workflow",
+      "status": "passed",
+      "checks": [
+        "in-progress/resolved/unresolved transitions",
+        "admin withdrawal of old open/in-progress reports from other reporters",
+        "withdrawal failure feedback and retry",
+        "report retained after withdrawal",
+        "visible labels",
+        "no duplicate Remove"
+      ]
+    },
+    {
+      "screen": "applicant-workflow",
+      "status": "passed",
+      "checks": [
+        "visible confirmed cancellation",
+        "cancelled records remain available",
+        "archive/delete unchanged"
+      ]
+    },
+    {
+      "screen": "transaction-workflow",
+      "status": "passed",
+      "checks": [
+        "visible refund retry alongside shared icons",
+        "existing refund endpoint",
+        "pending refund prevents duplicates"
+      ]
+    },
+    {
+      "screen": "requests: Move to Processing",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "requests: Mark as Ready for Pickup",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "requests: Mark as Completed",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "requests: Mark Payment Collected",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "incidents: Mark as In Progress",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "incidents: Mark as Resolved",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "incidents: Mark as Unresolved",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "incidents: Withdraw",
+      "status": "passed",
+      "checks": [
+        "permission failure",
+        "transport failure",
+        "zero-change read-back failure",
+        "retry",
+        "duplicate-click prevention"
+      ]
+    },
+    {
+      "screen": "request cancellation v1",
+      "status": "passed",
+      "checks": [
+        "reason validation",
+        "permission and transport failure",
+        "draft preservation",
+        "guarded cancellation"
+      ]
+    },
+    {
+      "screen": "request cancellation v2",
+      "status": "passed",
+      "checks": [
+        "reason validation",
+        "permission and transport failure",
+        "draft preservation",
+        "guarded cancellation"
+      ]
+    },
+    {
+      "screen": "Cancel Registration",
+      "status": "passed",
+      "checks": [
+        "permission and transport failure",
+        "confirmation cancellation",
+        "retry"
+      ]
+    },
+    {
+      "screen": "Refund Payment",
+      "status": "passed",
+      "checks": [
+        "permission and transport failure",
+        "confirmation cancellation",
+        "retry"
+      ]
+    },
+    {
+      "screen": "Retry Refund",
+      "status": "passed",
+      "checks": [
+        "permission and transport failure",
+        "confirmation cancellation",
+        "retry"
+      ]
+    },
+    {
+      "screen": "requests archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "transactions archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "residents archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "incidents archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "health archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "applicants archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "households archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "staff archive/access",
+      "status": "passed",
+      "checks": [
+        "unavailable record",
+        "detail retry",
+        "permanent deletion from archive"
+      ]
+    },
+    {
+      "screen": "accessibility",
+      "status": "passed",
+      "checks": [
+        "dark theme",
+        "narrow viewport",
+        "reduced motion",
+        "Escape dismissal",
+        "body scroll restoration"
+      ]
+    }
+  ],
+  "limitations": [
+    "Actual screen components with synthetic data and action adapters; database persistence and RLS are covered separately by rollback-only PostgreSQL tests."
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "status": "passed"
+}

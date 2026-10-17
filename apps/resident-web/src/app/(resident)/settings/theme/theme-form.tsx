@@ -14,7 +14,7 @@
 import { ACCENT_COLORS, FONT_OPTIONS } from '@barangayan/shared';
 import { Check, Moon, Pipette, Plus, Sun, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 import { isValidHexColor, MAX_CUSTOM_COLORS, useAccentController } from '@/components/theme/accent-controller';
 import { ColorPickerSwatch } from '@/components/theme/color-picker-popover';
@@ -149,7 +149,6 @@ function AccentPicker({
       setHexError(atMax ? `You can save up to ${MAX_CUSTOM_COLORS} custom colors. Remove one first.` : 'Color already saved.');
       return;
     }
-    onSelect(normalized);
     setHexError('');
   }
 
@@ -273,6 +272,7 @@ export function ThemeForm({
   const { theme, setTheme } = useThemeController();
   const { accent, setAccent, customColors, addCustomColor, removeCustomColor } = useAccentController();
   const { fontId, setFontId } = useFontController();
+  const latest = useRef<Partial<Record<'theme' | 'accent' | 'font', OperationId>>>({});
 
   // On mount, reconcile DB-saved preferences with localStorage. If this is the resident's
   // first visit on this device (no localStorage entry yet), apply the DB value. If they've
@@ -293,27 +293,41 @@ export function ThemeForm({
   }, []);
 
   async function persistToDb(update: { theme_preference?: string; accent_color?: string; font_preference?: string }) {
-    // Guests have no profiles row to sync to — the local controllers above already
-    // applied the change; there's just no cross-device copy to write.
-    if (!userId) return;
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.from('profiles').update(update).eq('id', userId);
-    if (error) toast.error(`Could not save preference: ${error.message}`);
+    if (!userId) return 'local';
+    try {
+      const { error, status } = await createSupabaseBrowserClient().from('profiles').update(update).eq('id', userId);
+      if (error) return status === 0 ? 'uncertain' : 'rejected';
+      // This existing write does not return a row/count, so it cannot prove a save.
+      return 'unconfirmed';
+    } catch { return 'uncertain'; }
+  }
+
+  async function reportPreference(key: 'theme' | 'accent' | 'font', attempt: OperationId, stored: boolean, result: ReturnType<typeof persistToDb>, guestCopy: string) {
+    const outcome = await result;
+    if (latest.current[key] !== attempt) return;
+    if (!stored) notify.warning(outcome === 'local' ? "Preference updated for this session. Your browser couldn't save it." : "Preference applied. Your browser couldn't save it, and the account save wasn't confirmed.", { id: attempt });
+    else if (outcome === 'local') notify.success(guestCopy, { id: attempt });
+    else if (outcome === 'rejected') notify.error("Couldn't save your preference. Please try again.", { id: attempt });
+    else if (outcome === 'uncertain') notify.warning("Preference applied. We couldn't confirm it was saved to your account.", { id: attempt });
+    else notify.info("Preference applied. We couldn't confirm it was saved to your account.", { id: attempt });
   }
 
   function handleThemeChange(next: ResolvedTheme) {
-    setTheme(next);
-    persistToDb({ theme_preference: next });
+    const attempt = beginAttempt('theme'); latest.current.theme = attempt;
+    const stored = setTheme(next);
+    void reportPreference('theme', attempt, stored, persistToDb({ theme_preference: next }), 'Theme updated on this device.');
   }
 
   function handleAccentChange(color: string) {
-    setAccent(color);
-    persistToDb({ accent_color: color });
+    const attempt = beginAttempt('accent'); latest.current.accent = attempt;
+    const stored = setAccent(color);
+    void reportPreference('accent', attempt, stored, persistToDb({ accent_color: color }), 'Accent color updated on this device.');
   }
 
   function handleFontChange(id: string) {
-    setFontId(id);
-    persistToDb({ font_preference: id });
+    const attempt = beginAttempt('font'); latest.current.font = attempt;
+    const stored = setFontId(id);
+    void reportPreference('font', attempt, stored, persistToDb({ font_preference: id }), 'Font updated on this device.');
   }
 
   return (
@@ -339,10 +353,27 @@ export function ThemeForm({
           onSelect={handleAccentChange}
           onAddCustom={(color) => {
             const added = addCustomColor(color);
-            if (added) persistToDb({ accent_color: color });
-            return added;
+            if (!added) return false;
+            const attempt = beginAttempt('custom-accent'); latest.current.accent = attempt;
+            // Retain the existing add + select writes; consolidate only their feedback.
+            const addSave = persistToDb({ accent_color: color });
+            const stored = setAccent(color);
+            const selectSave = persistToDb({ accent_color: color });
+            void Promise.all([addSave, selectSave]).then(outcomes => {
+              if (latest.current.accent !== attempt) return;
+              if (!added.persisted || !stored) notify.warning("Color added for this session. Your browser couldn't save it.", { id: attempt });
+              else if (outcomes.some(outcome => outcome === 'rejected' || outcome === 'uncertain')) notify.warning("Custom color added. We couldn't confirm your account preference was saved.", { id: attempt });
+              else notify.success('Custom color added.', { id: attempt });
+            });
+            return true;
           }}
-          onRemoveCustom={removeCustomColor}
+          onRemoveCustom={(color) => {
+            const result = removeCustomColor(color);
+            if (!result) return;
+            const attempt = beginAttempt('remove-custom-accent'); latest.current.accent = attempt;
+            if (result.persisted) notify.success('Custom color removed.', { id: attempt });
+            else notify.warning("Color removed for this session. Your browser couldn't save the change.", { id: attempt });
+          }}
         />
       </div>
 

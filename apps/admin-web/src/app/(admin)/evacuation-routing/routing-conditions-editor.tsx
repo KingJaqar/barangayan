@@ -310,12 +310,9 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
         </div>
         <div className={styles.workspaceGrid}>
           <div className={`${cardClass} ${styles.mapCard}`}>
-            <div className={styles.mapBar}>
-              <span><MapPin size={14} aria-hidden="true" /> {area.name}</span>
-              <span className={styles.badge}>{entranceCenter ? 'Entrance selection' : 'Road conditions'}</span>
-            </div>
             {graph && bundledPack ? (
               <RoutingMap
+                areaName={area.name}
                 graph={graph}
                 attribution={bundledPack.attribution}
                 closures={snapshot.closures}

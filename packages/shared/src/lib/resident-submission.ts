@@ -101,10 +101,11 @@ export async function uploadSupportingEvidence(
 /** Holds the exact submitted input across lost replies. Changed retries never create
  * another request. A definite validation/authorization failure permits correction. */
 export class ResidentSubmissionAttempt {
-  readonly key = createRequestKey();
   private payload: ServiceSubmissionInput | null = null;
   private requestId: string | null = null;
   private owner: string | null = null;
+  /** A client that persisted an unconfirmed attempt passes its key back to retry the same operation. */
+  constructor(readonly key: string = createRequestKey()) {}
   async submit(client: SupabaseClient<Database>, value: Omit<ServiceSubmissionInput, 'idempotencyKey'>) {
     const {
       data: { user },

@@ -1,0 +1,149 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Manila",
+  "phaseStatus": {
+    "phase4": "Complete: implementation, local browser/SQL/real HTTP acceptance and owner-attested media/OCR/spoken checks",
+    "phase5": "Complete: implementation, local browser/SQL/real HTTP payment-race acceptance and owner-attested provider timing/spoken checks"
+  },
+  "baseline": {
+    "typecheck": "pass",
+    "lint": {
+      "errors": 0,
+      "warnings": 2,
+      "preExisting": true
+    },
+    "tests": {
+      "passed": 157,
+      "failed": 1,
+      "preExistingFailure": "tests/search.test.ts:74 certified-copy pricing text"
+    },
+    "productionBuild": "Turbopack stalled during compile and was stopped; no baseline build pass claimed"
+  },
+  "final": {
+    "typecheck": "pass; serial after production build",
+    "lint": {
+      "errors": 0,
+      "warnings": 2,
+      "unchangedWarnings": true
+    },
+    "tests": {
+      "passed": 181,
+      "failed": 1,
+      "unchangedFailure": "tests/search.test.ts:74",
+      "focusedTestsPassed": 24,
+      "cancelHandlerTestsPassed": 19
+    },
+    "productionBuild": {
+      "passed": true,
+      "next": "16.3.0",
+      "compiler": "webpack",
+      "staticPages": 48
+    },
+    "browser": {
+      "passed": true,
+      "scenarios": 66,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "warnings": 0,
+      "mode": "actual client owners, adapter, host and hooks; React StrictMode; synthetic service outcomes"
+    },
+    "existingIdBrowser": {
+      "passed": true,
+      "checks": 41,
+      "pageErrors": 0,
+      "expectedInjectedNetworkErrors": 26,
+      "unexpectedErrors": 0,
+      "warnings": 0,
+      "report": "tmp/toast-phases45/existing-id-browser-final/report.json"
+    },
+    "existingDocumentPaymentBrowser": "passed; synthetic components/backend only",
+    "visuals": "light/wide and dark/390px open-camera-dialog screenshots inspected",
+    "unselectedPlanContentUnchanged": true,
+    "dependenciesAdded": 0,
+    "backendOrOtherPlatformFilesEdited": 1,
+    "sourceHashesMatchFinalReview": true,
+    "clientNetworkCallSignaturesUnchanged": true,
+    "backendTypecheck": "pass: Deno 2.9.7, frozen Supabase SDK 2.117.2 lock",
+    "backendLint": {
+      "status": "pre-existing failure",
+      "errors": 1,
+      "rule": "no-import-prefix",
+      "location": "cancel-payment/index.ts:9",
+      "proof": "Same unchanged import fails on saved before source"
+    },
+    "scopedDatabase": {
+      "passed": true,
+      "migrations": 128,
+      "latestMigration": "0130_resident_directory_admin_visibility.sql",
+      "counts": {
+        "resident_front_id_submission.test.sql": 26,
+        "administrator_scores.test.sql": 46,
+        "automatic_document_payments.test.sql": 65
+      },
+      "environment": "Disposable network-disabled PostgreSQL 17.6.1.155; real migrations and RLS, repository SQL bootstrap for Auth/Storage; no hosted HTTP/provider."
+    },
+    "existingBroadDatabase": {
+      "status": "pre-existing failure outside scope",
+      "passed": 440,
+      "failed": 1,
+      "test": "admin_request_row_workflows.test.sql:81",
+      "reason": "Expected unreviewed-request rejection, current automatic acceptance returns without exception; no SQL/migrations changed"
+    },
+    "realHttpIntegration": {
+      "passed": true,
+      "assertions": 85,
+      "result": "http-integration-results.json",
+      "runtime": "Actual cancellation handler, Deno 2.9.7 and frozen SDK 2.117.2; real Auth/PostgREST/Storage HTTP; synthetic provider boundary"
+    },
+    "integrationCleanup": {
+      "functionStopped": true,
+      "isolatedStackStopped": true,
+      "localDatabaseVolumePreserved": true,
+      "boundedWslKeeperStopped": true,
+      "unnecessaryCopiedConnectionMetadataRemoved": true,
+      "existingUserServicesUntouched": true
+    }
+  },
+  "manual": [
+    {
+      "scenario": "Real camera and OCR functionality",
+      "status": "passed",
+      "provenance": "user report"
+    },
+    {
+      "scenario": "Provider timing behavior",
+      "status": "passed",
+      "provenance": "user report"
+    },
+    {
+      "scenario": "Spoken screen-reader toast functionality",
+      "status": "passed",
+      "provenance": "user report"
+    }
+  ],
+  "scope": {
+    "productSourceFilesChanged": 19,
+    "newProductSourceFiles": 0,
+    "newTestFiles": 3,
+    "commits": 0,
+    "pushes": 0,
+    "deployments": 0,
+    "remoteMigrations": 0,
+    "backendPrerequisite": "cancel-payment authoritative result proof, documented Phase 5 scope exception"
+  },
+  "continuationBaseline": {
+    "typecheck": "pass",
+    "lint": {
+      "errors": 0,
+      "warnings": 2,
+      "preExisting": true
+    },
+    "tests": {
+      "passed": 161,
+      "failed": 1,
+      "preExistingFailure": "tests/search.test.ts:74"
+    }
+  },
+  "manualVerificationSource": "owner-verification.json",
+  "productionReadyClaim": false
+}

@@ -1,0 +1,234 @@
+{
+  "passed": false,
+  "startedAt": "2026-10-16T01:05:09.382Z",
+  "environment": {
+    "project": "pwjbucnyqexiepoinoke",
+    "app": "local production build",
+    "backend": "hosted Auth/Storage/Edge/OCR.space"
+  },
+  "checks": [
+    "Temporary synthetic resident created through Auth API without sending email; existing resident records untouched",
+    "Deployed endpoint accepts browser CORS preflight and rejects unauthenticated POST with 401"
+  ],
+  "browser": "155.0.8059.80",
+  "requests": [
+    {
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/780f4591e142a8d4.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4708-1370389c90891d14.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/login/page-3767ac30ad836194.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/error-fae75ea051964c68.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    }
+  ],
+  "responses": [],
+  "consoleErrors": [],
+  "consoleWarnings": [
+    "The resource http://127.0.0.1:3214/_next/static/css/1b577c6ccce4d492.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3214/_next/static/css/727201751712b253.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+  ],
+  "pageErrors": [],
+  "cleanup": {
+    "uploadedObjectsRemoved": 0,
+    "syntheticAuthUserRemoved": true,
+    "syntheticProfileAbsent": true
+  },
+  "limitations": [
+    "Synthetic image and temporary synthetic resident only. No real ID, publication, staff approval, service request or physical camera. Provider failures are browser-only fixtures; successful extraction is live."
+  ],
+  "failedStage": "actual production browser login",
+  "failure": "locator.click: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Log in', exact: true })\u001b[22m\n",
+  "finishedAt": "2026-10-16T01:06:10.437Z"
+}

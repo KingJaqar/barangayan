@@ -2,11 +2,11 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { AppState } from 'react-native';
 import { useResident } from '../lib/runtime';
 import { createCoalescer, subscribeToChanges } from './realtime';
+import type { ReportCounts } from './report-signals';
 import { residentApi } from './resident-api';
 
-type Counts = { active: number; unreadResolved: number; unreadAnnouncements: number };
-type ReportCounts = { counts: Counts | null; failed: boolean; refresh: () => void };
-const Context = createContext<ReportCounts | null>(null);
+type ReportCountsValue = { counts: ReportCounts | null; failed: boolean; refresh: () => void };
+const Context = createContext<ReportCountsValue | null>(null);
 
 export function useReportCounts() {
   const value = useContext(Context);
@@ -18,7 +18,7 @@ export function useReportCounts() {
 export function ReportCountsProvider({ children }: { children: ReactNode }) {
   const { client, config, session } = useResident();
   const userId = session?.user.id;
-  const [state, setState] = useState<{ owner?: string; counts: Counts | null; failed: boolean }>({ counts: null, failed: false });
+  const [state, setState] = useState<{ owner?: string; counts: ReportCounts | null; failed: boolean }>({ counts: null, failed: false });
   const schedule = useRef<() => void>(() => undefined);
 
   useEffect(() => {
@@ -59,6 +59,6 @@ export function ReportCountsProvider({ children }: { children: ReactNode }) {
   }, [client, config.barangayId, userId]);
 
   const owned = userId && state.owner === userId ? state : null;
-  const value: ReportCounts = { counts: owned?.counts ?? null, failed: owned?.failed ?? false, refresh: () => schedule.current() };
+  const value: ReportCountsValue = { counts: owned?.counts ?? null, failed: owned?.failed ?? false, refresh: () => schedule.current() };
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }

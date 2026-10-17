@@ -1,9 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { RECORD_CONFIG, validateRecordPatch, editableFields } from '../../src/lib/admin-tables/record-config';
+import { RECORD_CONFIG, validateRecordPatch, editableFields, recordDraft, changedRecordDraft, fieldValue } from '../../src/lib/admin-tables/record-config';
 import { archiveBrowseConfig, parseArchiveState } from '../../src/lib/admin-tables/archive-config';
 import { parseBrowseState, queryIdentity } from '../../src/lib/admin-tables/browse-state';
 
 describe('record detail edit boundaries', () => {
+  it('populates structured resident values and sends only changed fields', () => {
+    const row = { id: 'resident', first_name: 'Ana', last_name: 'Cruz', middle_name: 'Reyes', suffix: 'Jr.', house_no: '42', street: 'Mabini', occupation: 'Nurse' };
+    const draft = recordDraft('residents', row);
+    for (const key of ['first_name', 'last_name', 'middle_name', 'suffix', 'house_no', 'street'] as const) expect(draft[key]).toBe(row[key]);
+    expect(changedRecordDraft('residents', row, draft)).toEqual({});
+    expect(changedRecordDraft('residents', row, { ...draft, occupation: 'Teacher' })).toEqual({ occupation: 'Teacher' });
+  });
+  it('reads joined current values and includes table-editable sheet fields', () => {
+    const row = { id: 'payment', status: 'pending', service_requests: { reference_number: 'REQ-1', resident_id: 'resident', document_type_id: 'document' } };
+    expect(recordDraft('transactions', row)).toMatchObject({ request_reference: 'REQ-1', linked_resident_id: 'resident', linked_document_type_id: 'document' });
+    expect(fieldValue({ id: 'staff', profiles: { full_name: 'Current Staff' } }, RECORD_CONFIG.staff.fields[0])).toBe('Current Staff');
+    for (const [name, keys] of Object.entries({ requests: ['reference_number', 'resident_id', 'document_type_id', 'created_at'], transactions: ['request_reference', 'linked_resident_id', 'linked_document_type_id', 'collected_by', 'created_at'], incidents: ['category_id', 'reporter_id', 'location', 'confirmation_count', 'created_at'], households: ['is_checked_in'] })) {
+      expect(RECORD_CONFIG[name as keyof typeof RECORD_CONFIG].fields.map(field => field.key)).toEqual(expect.arrayContaining(keys));
+    }
+  });
+  it('validates coordinates, lookup identities and submitted timestamps', () => {
+    expect(validateRecordPatch('incidents', { id: 'incident' }, { location: '14.7, 121.1' })).toEqual({ location: { lat: 14.7, lng: 121.1 } });
+    for (const location of ['', null, '1,', '91, 121', '1,181', 'a,b']) expect(() => validateRecordPatch('incidents', { id: 'incident' }, { location })).toThrow('coordinates');
+    expect(() => validateRecordPatch('incidents', { id: 'incident' }, { reporter_id: 'not-a-uuid' })).toThrow('Reporter'.toLowerCase());
+    expect(() => validateRecordPatch('requests', { id: 'request' }, { created_at: 'bad date' })).toThrow('valid');
+  });
   it('uses matching server and browser archive defaults for direct entry and search', () => {
     for (const name of Object.keys(RECORD_CONFIG) as (keyof typeof RECORD_CONFIG)[]) {
       for (const params of [new URLSearchParams(), new URLSearchParams({q:'  test  '}), new URLSearchParams({category:'f1150000-0000-0000-0000-000000000001',doc:'c1150000-0000-0000-0000-000000000001'})]) {

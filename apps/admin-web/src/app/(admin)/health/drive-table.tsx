@@ -269,11 +269,11 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
     return { error: null };
   }
 
-  const lifecycle = useRecordWorkspace<DriveRow>('health', browse.refresh, browse.settle);
+  const lifecycle = useRecordWorkspace<DriveRow>('health', browse.refresh, browse.settle, { editHandle: browse.editHandle });
 
   const columns: EditableDataTableColumn<DriveRow>[] = [
     {
-      id: 'title', header: 'Drive',
+      id: 'title', header: 'Drive', frozen: true,
       initialWidth: 270,
       minWidth: 220,
       wrap: 'break-word',
@@ -284,11 +284,13 @@ export function DriveTable({ result, summary, requestedState, barangayId }: {
           <p className="mt-0.5 text-xs leading-snug text-zinc-500 dark:text-zinc-400">{r.location}</p>
         </div>
       ),
-      // Long-form fields (title, location, time, eligibility, stock label/unit) are
-      // edited via the detail modal's form rather than a cramped inline text cell.
+      rowEdit: [
+        { label: 'Title', edit: { type: 'text', getValue: r => r.title, onSave: (r, value) => String(value).trim() ? updateField(r, { title: String(value).trim() }) : Promise.resolve({ error: 'Title is required.' }) } },
+        { label: 'Location', edit: { type: 'text', getValue: r => r.location, onSave: (r, value) => String(value).trim() ? updateField(r, { location: String(value).trim() }) : Promise.resolve({ error: 'Location is required.' }) } },
+      ],
     },
     {
-      id: 'category', header: 'Category',
+      id: 'category', header: 'Category', frozen: true,
       initialWidth: 150,
       minWidth: 136,
       wrap: 'nowrap',

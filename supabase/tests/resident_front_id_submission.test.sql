@@ -45,6 +45,8 @@ set local request.jwt.claim.sub='b1180000-0000-4000-8000-000000000001';
 select lives_ok($$select public.submit_service_request('{"documentTypeId":"d1180000-0000-4000-8000-000000000001","idempotencyKey":"e1180000-0000-4000-8000-000000000001","purposeCode":"medical","details":{},"attachments":[]}')$$,'Approved front-only evidence supports a service request');
 select lives_ok($$select public.publish_id_submission('{"submissionId":"c1180000-0000-4000-8000-000000000002","idType":"Passport","frontPath":"b1180000-0000-4000-8000-000000000001/versions/c1180000-0000-4000-8000-000000000002/id-front.jpg","backPath":"b1180000-0000-4000-8000-000000000001/versions/c1180000-0000-4000-8000-000000000002/id-back.jpg"}')$$,'Existing two-sided clients remain supported');
 select ok((select approved_id_submission_id is null from public.profiles where id=auth.uid()),'Replacement requires fresh verification');
+select lives_ok($$select public.publish_id_submission((select payload from front_id_input))$$,'Resolving an older front-only submission remains idempotent');
+select is((select current_id_submission_id::text from public.profiles where id=auth.uid()),'c1180000-0000-4000-8000-000000000002','Resolving an older submission does not replace the newer current evidence');
 reset role;
 select ok(public.consume_id_extraction_limit('b1180000-0000-4000-8000-000000000001'),'OCR request 1 permitted');
 select ok(public.consume_id_extraction_limit('b1180000-0000-4000-8000-000000000001'),'OCR request 2 permitted');

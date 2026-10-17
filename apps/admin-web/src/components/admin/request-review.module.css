@@ -26,9 +26,6 @@
 .sheet .recordForm > div:last-child button:first-child { background: var(--review-accent-soft); border-color: color-mix(in srgb, var(--accent) 25%, var(--background)); }
 .sheet .recordForm > div:last-child button:hover { background: var(--review-soft); }
 .sheet :is(button, a, summary, input):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.recordFields { margin-top: 26px; border-top: 1px solid var(--review-line); padding-top: 18px; }
-.recordFields > summary { color: var(--review-muted); cursor: pointer; font-size: 12px; font-weight: 500; }
-.recordFields[open] > summary { color: var(--foreground); }
 
 .review { font-family: inherit; color: var(--foreground); line-height: 1.6; }
 .review .hero { margin-bottom: 24px; gap: 20px; }
@@ -38,9 +35,6 @@
 .review .statuses { padding-top: 3px; flex-shrink: 0; gap: 7px; }
 .review .statuses > span { border: 1px solid var(--review-line); background: var(--review-soft); color: var(--foreground); font-size: 10px; font-weight: 500; padding: 5px 10px; white-space: nowrap; }
 .review .statuses > span:last-child { border-color: color-mix(in srgb, var(--accent) 24%, var(--background)); background: var(--review-accent-soft); }
-.navigation { display: flex; flex-wrap: wrap; gap: 4px 24px; border-bottom: 1px solid var(--review-line); padding-bottom: 15px; margin-bottom: 24px; }
-.navigation a { display: inline-flex; align-items: center; min-height: 32px; font-size: 12px; color: var(--review-muted); text-decoration: none; border-radius: 3px; transition: color 160ms ease; }
-.navigation a:hover, .navigation a:focus-visible { color: var(--foreground); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 8px; }
 .review .workflow { padding: 18px 20px; border-radius: 12px; border-color: var(--review-line); background: var(--review-soft); margin-bottom: 12px; }
 .sectionLabel { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--review-muted); font-weight: 600; margin-bottom: 12px; }
 .review .workflow button { font-family: inherit; border: 1px solid var(--review-line); border-radius: 8px; font-size: 12px; line-height: 1.5; padding: 10px 15px; min-height: 40px; color: var(--foreground); background: var(--background); transition: background 160ms ease, color 160ms ease, border-color 160ms ease; }
@@ -93,7 +87,6 @@
   .review .card { padding: 18px; }
   .review .workflow { padding: 16px; }
   .review .overview { gap: 12px; }
-  .navigation { column-gap: 20px; }
   .review .supportingDetails, .review .evidenceGrid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -108,6 +101,7 @@
   background: var(--background); color: var(--foreground); border-color: var(--review-line); font-family: inherit;
 }
 .sheet .recordForm label > span:first-child,
-.sheet .recordFields dt { color: var(--review-muted); }
-.sheet .recordFields dd { color: var(--foreground); }
+.sheet .recordForm dt { color: var(--review-muted); }
 .sheet .recordForm > div:last-child button:first-child:hover { background: color-mix(in srgb, var(--accent) 14%, var(--background)); }
+
+.navigation { composes: navigation from './record-sheet.module.css'; }

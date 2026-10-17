@@ -1,8 +1,8 @@
 # Phase 12 — Concern forms, photos, location, detail, corroboration and withdrawal (`P12`)
 
-**Status:** Planned. Not started; no evidence recorded.
+**Status (2026-10-16):** Partially complete (non-device scope, OD-06/OD-07). T01, T03 and T04 verified on non-device checks (typecheck, lint, 43 new tests, export, read-only hosted contract check); T02, T05, T06 and T08 partial; T07 blocked on the G12 moderation policy (PR-13). `publicIncidents` and `mapProviders` stay closed; live app runs and device checks are Skipped (OD-06/OD-07). Phase 3, 4 and 6 open exits carried. See `P12_2026-10-16_implementation-and-verification.md`.
 
-**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 6, Phase 11. Do not start until those exits are verified (plan §4.2). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
+**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 6, Phase 11. Phases 3, 4 and 6 are Partially complete; their open exits are carried as blockers. Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 
 **Lead owner role:** iOS/reports engineer + backend/moderation. **Named owner:** KingJaqar (decision-register OD-01).
 
@@ -12,4 +12,6 @@
 
 ## Evidence
 
-None yet. Add records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.
+- [P12_2026-10-16_implementation-and-verification.md](P12_2026-10-16_implementation-and-verification.md) — implementation, decisions P12-D01…D11, baseline versus final, acceptance and open items.
+
+Add further records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.

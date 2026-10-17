@@ -10,6 +10,9 @@ import { PasswordInput } from '@/components/ui/password-input';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { signOutBrowser } from '@/lib/auth/sign-out';
+import { notifyLoggedOut } from '@/lib/auth/session-feedback';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { maskRecoveryEmail, type SettingsRecoveryFailure, type SettingsRecoveryResult } from '@/lib/auth/settings-recovery-contract';
 
 type RecoveryStage = 'send' | 'code' | 'password' | 'success';
@@ -41,7 +44,7 @@ export function ForgotPasswordDialog({ userId, email, unavailable, checkEligibil
   useEffect(() => {
     active.current = true;
     const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((_event, session) => {
-      if (!signingOut.current && (session?.user.id !== userId || session.user.email !== email)) {
+      if ((session || !signingOut.current) && (session?.user.id !== userId || session.user.email !== email)) {
         active.current = false;
         setAccountChanged(true);
         setCode(''); setPassword(''); setConfirmPassword('');
@@ -56,14 +59,27 @@ export function ForgotPasswordDialog({ userId, email, unavailable, checkEligibil
     return () => clearInterval(timer);
   }, [secondsLeft]);
 
-  function refreshEligibility() {
+  function refreshEligibility(explicit = false) {
+    if (!active.current || busy.current || checking) return;
     const sequence = ++checkSequence.current;
+    const attempt = explicit ? beginAttempt('recovery-eligibility') : null;
+    if (explicit) setOperation('check');
     checkTransition(async () => {
       try {
         const result = await checkEligibility();
-        if (active.current && sequence === checkSequence.current) { setEligibility(result); setError(null); }
+        if (active.current && sequence === checkSequence.current) {
+          setEligibility(result); setError(null);
+          if (attempt) {
+            if (result.ok) notify.success('Your account is ready for password recovery.', { id: attempt });
+            else if (result.kind === 'unverified') notify.warning('Verify your email before resetting your password.', { id: attempt });
+            else notify.error("Couldn't check your account. Please try again.", { id: attempt, description: result.message });
+          }
+        }
       } catch {
-        if (active.current && sequence === checkSequence.current) setEligibility({ ok: false, kind: 'connection', message: 'Unable to check your verified email. Check your connection, then try again.' });
+        if (active.current && sequence === checkSequence.current) {
+          setEligibility({ ok: false, kind: 'connection', message: 'Unable to check your verified email. Check your connection, then try again.' });
+          if (attempt) notify.error("Couldn't check your account. Please try again.", { id: attempt });
+        }
       }
     });
   }
@@ -86,38 +102,61 @@ export function ForgotPasswordDialog({ userId, email, unavailable, checkEligibil
       }
     }
     busy.current = true; setOperation(action); setError(null); setFieldErrors({});
+    const attempt = beginAttempt(`settings-recovery-${action}`);
     startTransition(async () => {
       try {
         const result = action === 'send' ? await sendCode() : action === 'resend' ? await resendCode() : action === 'verify' ? await verifyCode(code) : await updatePassword(password, confirmPassword);
         if (!active.current) return;
         if (!result.ok) {
           setError(result);
+          if (result.kind === 'connection' && action !== 'verify') notify.warning(action === 'update' ? "We couldn't confirm the password change. Try logging in before resetting it again." : "We couldn't confirm the code was sent. Check your email before trying again.", { id: attempt });
+          else notify.error(action === 'verify' ? result.kind === 'rejected' ? 'Code not accepted. Check the code or request a new one.' : result.kind === 'connection' ? "Couldn't verify the code. Check your connection and try again." : "Couldn't verify the code. Review the message below." : action === 'update' ? "Couldn't update your password. Please try again." : "Couldn't send the reset code. Please try again.", { id: attempt, description: result.message });
           if (stage === 'send' && ['session', 'unverified', 'mismatch'].includes(result.kind)) setEligibility(result);
           if (action === 'resend') setSecondsLeft(45);
           return;
         }
+        notify.success(action === 'verify' ? 'Code verified. Choose your new password.' : action === 'update' ? 'Password updated. Log in with your new password.' : 'Reset code sent. Check your email.', { id: attempt });
         if (action === 'send' || action === 'resend') { setStage('code'); setCode(''); setSecondsLeft(45); }
         else if (action === 'verify') { setStage('password'); setCode(''); }
         else { setStage('success'); setPassword(''); setConfirmPassword(''); }
       } catch {
-        if (active.current) setError({ ok: false, kind: 'connection', message: action === 'send' || action === 'resend' ? "We couldn't confirm that a code was sent. Check your email before trying again." : action === 'update' ? "We couldn't confirm that your password was changed. Check your connection, then try again." : 'Unable to verify the code. Check your connection and try again.' });
+        if (active.current) {
+          setError({ ok: false, kind: 'connection', message: action === 'send' || action === 'resend' ? "We couldn't confirm that a code was sent. Check your email before trying again." : action === 'update' ? "We couldn't confirm that your password was changed. Check your connection, then try again." : 'Unable to verify the code. Check your connection and try again.' });
+          if (action === 'verify') notify.error("Couldn't verify the code. Check your connection and try again.", { id: attempt });
+          else notify.warning(action === 'update' ? "We couldn't confirm the password change. Try logging in before resetting it again." : "We couldn't confirm the code was sent. Check your email before trying again.", { id: attempt });
+        }
       } finally { busy.current = false; }
     });
   }
   function continueToLogin() {
     if (busy.current || accountChanged) return;
     busy.current = true; signingOut.current = true; setOperation('finish'); setError(null);
+    const attempt = beginAttempt('recovery-logout');
+    let loggedOut = false;
+    let logoutAttempt: OperationId | null = null;
     startTransition(async () => {
       try {
         const outcome = await signOutBrowser('local');
         if (outcome === 'failed') {
           signingOut.current = false;
+          notify.error("Your password was updated, but we couldn't log you out. Please try again.", { id: attempt });
           setError({ ok: false, kind: 'connection', message: 'Your password was updated, but we could not sign you out. Try again.' });
           return;
         }
+        loggedOut = true;
+        logoutAttempt = notifyLoggedOut(null);
         await finish();
-      } catch {
-        setError({ ok: false, kind: 'connection', message: 'Your password was updated. We could not open Login. Please try again.' });
+        notify.success('Logged out.', { id: logoutAttempt, keepOnSessionChange: true });
+      } catch (cause) {
+        if (isRedirectError(cause)) {
+          if (logoutAttempt) notify.success('Logged out.', { id: logoutAttempt, keepOnSessionChange: true });
+          throw cause;
+        }
+        if (logoutAttempt) notify.warning("You're logged out. Open Login to continue.", { id: logoutAttempt, keepOnSessionChange: true });
+        if (active.current) {
+          if (!loggedOut) notify.error("Your password was updated, but we couldn't log you out. Please try again.", { id: attempt });
+          setError({ ok: false, kind: 'connection', message: loggedOut ? 'Your password was updated. We could not open Login. Please try again.' : 'Your password was updated, but we could not sign you out. Try again.' });
+        }
       } finally { busy.current = false; }
     });
   }
@@ -132,10 +171,10 @@ export function ForgotPasswordDialog({ userId, email, unavailable, checkEligibil
       <DialogDescription>
         {needsVerification ? 'Verify your email first, then return here to reset your password.' : stage === 'code' ? <>Enter the six-digit code sent to {maskRecoveryEmail(email)}.</> : stage === 'password' ? 'Your email code is verified. Choose a new password using the requirements below.' : stage === 'success' ? 'Your password was updated successfully. Continue to login and sign in with your new password.' : <>We will send a six-digit reset code to {maskRecoveryEmail(email)}. Verify the code here to choose a new password without your current password.</>}
       </DialogDescription>
-      {message ? <p role="alert" className="text-sm text-destructive">{message.message} {message.href && message.kind !== 'unverified' ? <Link href={message.href} className="underline">{message.href === '/settings/profile' ? 'Open Profile' : message.href === '/login' ? 'Open Login' : 'Back to Change Password'}</Link> : null}</p> : null}
+      {message ? <p role={accountChanged || !operation ? "alert" : undefined} className="text-sm text-destructive">{message.message} {message.href && message.kind !== 'unverified' ? <Link href={message.href} className="underline">{message.href === '/settings/profile' ? 'Open Profile' : message.href === '/login' ? 'Open Login' : 'Back to Change Password'}</Link> : null}</p> : null}
       {stage !== 'send' && stage !== 'success' && message && ['session', 'unverified', 'mismatch'].includes(message.kind) && !accountChanged ? <Button type="button" variant="outline" disabled={pending} onClick={() => { setStage('send'); setCode(''); setPassword(''); setConfirmPassword(''); setError(null); refreshEligibility(); }}>Start again</Button> : null}
       {stage === 'send' ? <>
-        {!eligibility.ok ? <Button type="button" variant="outline" loading={checking} loadingLabel="Checking email…" onClick={refreshEligibility}>Check again</Button> : null}
+        {!eligibility.ok ? <Button type="button" variant="outline" loading={checking} loadingLabel="Checking email…" onClick={() => refreshEligibility(true)}>Check again</Button> : null}
         {needsVerification ? <Button asChild><Link href="/settings/email-verification">Verify email</Link></Button> : <Button id="recovery-primary" type="button" loading={pending || checking} loadingLabel={checking ? 'Checking email…' : 'Sending code…'} disabled={!eligibility.ok || error?.kind === 'session'} onClick={() => run('send')}>Send reset code</Button>}
       </> : stage === 'success' ? <Button id="recovery-primary" type="button" loading={pending} loadingLabel="Opening login…" disabled={accountChanged} onClick={continueToLogin}>Continue to login</Button> : <form className="space-y-4" onSubmit={event => { event.preventDefault(); event.stopPropagation(); run(stage === 'code' ? 'verify' : 'update'); }}>
         {stage === 'code' ? <>

@@ -1,0 +1,108 @@
+path	line	callee	arguments
+apps/resident-web/src/app/(auth)/forgot-password/page.tsx	49	notify.warning	"Couldn't confirm the code was sent", { id: attempt, description: 'Check your email before requesting another code.' }
+apps/resident-web/src/app/(auth)/forgot-password/page.tsx	52	notify.error	"Couldn't send reset code", { id: attempt, description: 'Too many requests. Wait a few minutes.' }
+apps/resident-web/src/app/(auth)/forgot-password/page.tsx	55	notify.error	"Couldn't send reset code", { id: attempt, description: 'Try again shortly.' }
+apps/resident-web/src/app/(auth)/forgot-password/page.tsx	58	notify.error	"Couldn't send reset code", { id: attempt, description: 'Check the email address.' }
+apps/resident-web/src/app/(auth)/login/page.tsx	61	notify.error	title, { id: attempt, description }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	334	notify.warning	UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	335	notify.error	"Couldn't save your profile", { id: attempt, description: 'See the message above the buttons.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	341	notify.success	'Profile saved', { id: attempt }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	396	notify.warning	UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	399	notify.warning	UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	418	notify.warning	UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	423	notify.error	SIGN_UP_FAILED_TITLE, { id: attempt, description: 'Try again shortly.' }
+apps/resident-web/src/app/(auth)/register/register-form.tsx	444	notify.error	SIGN_UP_FAILED_TITLE, { id: attempt, description: 'See the message above the buttons.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	114	notify.warning	"Couldn't confirm the password change", { id: attempt, description: 'Check your connection, then try again.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	118	notify.error	"Couldn't update password", { id: attempt, description: 'Your reset session has ended.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	121	notify.error	"Couldn't update password", { id: attempt, description: 'Try again shortly.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	125	notify.error	"Couldn't update password", { id: attempt, description: 'Choose a different password.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	129	notify.error	"Couldn't update password", { id: attempt, description: 'Choose a stronger password.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	132	notify.error	"Couldn't update password", { id: attempt, description: 'Please try again.' }
+apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx	139	notify.success	'Password updated', { id: attempt }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	91	notify.error	"Couldn't verify the code", { id: attempt, description: 'Check your connection, then try again.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	94	notify.error	"Couldn't verify the code", { id: attempt, description: 'Too many attempts. Wait a moment.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	97	notify.error	"Couldn't verify the code", { id: attempt, description: 'Try again shortly.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	100	notify.error	'Code not accepted', { id: attempt, description: 'Check the code or request a new one.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	128	notify.success	'New code sent', { id: attempt, description: 'Check your email for the latest code.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	145	notify.warning	"Couldn't confirm a new code was sent", { id: attempt, description: 'Check your email first.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	148	notify.error	"Couldn't send a new code", { id: attempt, description: 'Too many requests. Wait a few minutes.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	151	notify.error	"Couldn't send a new code", { id: attempt, description: kind === 'service' ? 'Try again shortly.' : 'Check the email address.' }
+apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx	156	notify.success	'New code sent', { id: attempt, description: 'Check your email for the latest code.' }
+apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx	109	toast.error	"Couldn't mark announcements as read. Please try again."
+apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx	205	toast.error	`Could not withdraw: ${error.message}`
+apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx	206	toast.success	'Report withdrawn. The barangay will no longer act on it.'
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	106	toast.error	`${file.name} is not an accepted image type (JPEG, PNG, WebP).`
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	110	toast.error	`${file.name} exceeds the 10 MB per-photo limit.`
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	145	toast.error	`Photo upload failed: ${uploadErr?.message ?? 'Unknown error'}`
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	212	toast.error	`Failed to submit report: ${insertErr.message}`
+apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx	216	toast.success	'Report submitted successfully.'
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	183	notify.warning	"We couldn't confirm the cancellation.", { id: attempt, description: 'Your QR code may still be valid. Check the payment status before paying again.', }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	201	notify.error	"Couldn't cancel the payment.", { id: attempt, description: message }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	207	notify.success	'Payment attempt cancelled.', { id: attempt, description: 'You can start a new payment at any time.' }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	210	notify.info	'This payment was already completed.', { id: attempt }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	213	notify.error	"Couldn't cancel the payment.", { id: attempt, description: 'Please try again.' }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	216	notify.warning	"We couldn't confirm the cancellation.", { id: attempt, description: 'Your QR code may still be valid. Check the payment status before paying again.', }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	238	notify[failure.uncertain ? 'warning' : 'error']	failure.title, { id: attempt, description: failure.description }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	244	notify.success	'Your service request has been cancelled.', { id: attempt }
+apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx	247	notify.warning	"We couldn't confirm the cancellation.", { id: attempt, description: 'Your request may or may not have been cancelled. Check its status before trying again.', }
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	155	toast.error	'Your account has no email on file. Contact barangay staff for help.'
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	173	toast.error	'Too many attempts. Please wait a moment and try again.'
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	175	toast.error	reauthError.message
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	182	toast.error	updateError.message
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	190	toast.success	'Password updated successfully.'
+apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx	193	toast.error	'Check your connection and try again.'
+apps/resident-web/src/app/(resident)/settings/delete-account/delete-account-form.tsx	70	toast.success	'Your account has been deleted.'
+apps/resident-web/src/app/(resident)/settings/download-data/page.tsx	48	toast.success	'Your data was downloaded as JSON.'
+apps/resident-web/src/app/(resident)/settings/download-data/page.tsx	55	toast.error	'Please allow pop-ups to view your PDF export.'
+apps/resident-web/src/app/(resident)/settings/download-data/page.tsx	64	toast.error	err instanceof Error ? err.message : 'Could not export your data. Please try again.'
+apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx	103	toast.error	'Geolocation is not supported by your browser.'
+apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx	118	toast.error	"Couldn't detect your location. Please try again or drag the pin manually."
+apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx	153	toast.error	`Failed to save: ${error.message}`
+apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx	157	toast.success	'Location saved.'
+apps/resident-web/src/app/(resident)/settings/notifications/page.tsx	22	toast	`${label} notifications ${next ? 'enabled' : 'disabled'}.`
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	217	toast.error	'Photo is too large (max 3 MB).'
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	221	toast.error	'Please upload a JPG, PNG, or WebP image.'
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	229	toast.error	`Upload failed: ${upErr.message}`
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	237	toast.error	`Failed to save avatar: ${updateErr.message}`
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	240	toast.success	'Profile photo updated.'
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	501	toast.error	'Please fix the highlighted fields.'
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	530	toast.error	`Failed to save: ${error.message}`
+apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx	533	toast.success	'Profile updated.'
+apps/resident-web/src/app/(resident)/settings/theme/theme-form.tsx	301	toast.error	`Could not save preference: ${error.message}`
+apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx	119	notify.error	parsed.title, { id: attempt }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	72	notify.error	"Couldn't prepare the QR image.", { id: attempt, description: 'Close this window and open it again.' }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	81	notify.success	'Download started.', { id: attempt }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	83	notify.error	"Couldn't download the QR image.", { id: attempt, description: 'You can show this screen to center staff instead.' }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	108	notify.success	'Copied to clipboard.', { id: attempt }
+apps/resident-web/src/components/emergency/qr-show-dialog.tsx	110	notify.error	"Couldn't copy to the clipboard.", { id: attempt, description: 'Your browser blocked clipboard access. Use Download, or show this screen to center staff.', }
+apps/resident-web/src/components/emergency/qr-upload-fallback.tsx	66	notify.error	loadFailed ? "Couldn't load the QR reader." : 'No QR code found in that image.', { id: attempt, description: loadFailed ? 'Check your connection, then try again.' : 'Try a clearer, closer photo of the whole code.', }
+apps/resident-web/src/components/emergency/qr-upload-fallback.tsx	78	notify.error	parsed.title, { id: attempt }
+apps/resident-web/src/components/emergency/qr-upload-fallback.tsx	91	notify.error	"Couldn't read that image.", { id: attempt, description: 'Please try another photo.' }
+apps/resident-web/src/components/maps/locate-button.tsx	56	notify.error	"This browser doesn't support location access.", { id: attempt, description: 'You can still pan and zoom the map, or search for a place.', }
+apps/resident-web/src/components/maps/locate-button.tsx	77	notify.error	'Location access is blocked.', { id: attempt, description: "Allow location in your browser's site settings to use this. You can still pan and zoom the map.", }
+apps/resident-web/src/components/maps/locate-button.tsx	82	notify.error	"We couldn't find your location.", { id: attempt, description: 'Check that location services are on and try again. You can still pan and zoom the map.', }
+apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx	70	notify[failure.uncertain ? 'warning' : 'error']	failure.title, { id: attempt }
+apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx	79	notify.warning	failure.title, { id: attempt }
+apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx	86	notify.warning	'This QR code has expired.', { description: 'If you already paid, don’t pay again — open My Request to check.', id: eventId('payment', paymentId, 'expired'), }
+apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx	99	notify.success	'QR PH payment cancelled.', { description: 'You can choose a payment method again.', id: attempt, }
+apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx	105	notify.warning	"We couldn't confirm the cancellation.", { description: 'Your QR code may still be valid. We’re still checking its status.', id: attempt, }
+apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx	110	notify.error	'Could not cancel the payment.', { description: 'Your QR code is still active.', id: attempt }
+apps/resident-web/src/components/services/resident-service-form.tsx	254	notify.error	message
+apps/resident-web/src/components/services/resident-service-form.tsx	345	notify.success	'Request submitted.', { id: attemptId, description: `Reference ${result.reference_number}. Track it in My Requests.` }
+apps/resident-web/src/components/services/resident-service-form.tsx	352	notify.error	outcome.message, { id: attemptId }
+apps/resident-web/src/components/services/resident-service-form.tsx	356	notify[level]	outcome.title ?? 'Could not submit your request.', { id: attemptId, description: outcome.message }
+apps/resident-web/src/components/shared/notification-session.tsx	35	notify.info	"You've been logged out", { id: eventId('session-ended', userId), keepOnSessionChange: true, description: 'Your session ended. Log in again to continue.', }
+apps/resident-web/src/hooks/use-sign-out.ts	37	notify.error	"Couldn't log out", { id: attempt, description: 'You are still logged in. Check your connection, then try again.' }
+apps/resident-web/src/hooks/use-sign-out.ts	45	notify.warning	'Logged out on this browser', { id: attempt, keepOnSessionChange: true, description: "We couldn't reach the server to end your other sessions. Devices that were already logged in may stay logged in.", }
+apps/resident-web/src/lib/auth/session-feedback.ts	41	notify.success	name ? `Welcome back ${name}` : 'Welcome back', { id: attempt }
+apps/resident-web/src/lib/auth/session-feedback.ts	48	notify.success	'Logged out', { id: beginAttempt('logout-success'), keepOnSessionChange: true }
+apps/resident-web/src/lib/household-feedback.ts	23	notify.success	PAST[action], { id }
+apps/resident-web/src/lib/household-feedback.ts	25	notify.warning	"We couldn't confirm the change.", { id, description: 'Your household list may or may not have been updated. Check the list before trying again.', }
+apps/resident-web/src/lib/household-feedback.ts	30	notify.warning	'Another change is still saving.', { id, description: 'Wait a moment, then try again.' }
+apps/resident-web/src/lib/household-feedback.ts	32	notify.error	`Couldn't ${VERB[action]} family member.`, { id, description: 'Nothing was changed. Please try again.' }
+apps/resident-web/src/lib/notify.ts	92	toast.dismiss	toastId
+apps/resident-web/src/lib/notify.ts	97	toast[entry.kind]	entry.title, { id: toastId, description: entry.description, duration, // The host reads this class to pause the timer while a toast has keyboard focus. className: `rw-toast ${toastId}`, onDismiss: () => shown.delete(toastId), onAutoClose: () => shown.delete(toastId), }
+apps/resident-web/src/lib/qr-checkin.ts	52	notify.warning	"We couldn't confirm your check-in.", { id: attempt, description: 'It may have been recorded. Ask center staff to confirm before you scan again.', }
+apps/resident-web/src/lib/qr-checkin.ts	58	notify.error	"Couldn't record your check-in.", { id: attempt, description: 'Nothing was recorded. Please try again.' }
+apps/resident-web/src/lib/qr-checkin.ts	63	notify.warning	'Check-in recorded.', { id: attempt, description: "Your own check-in is saved, but we couldn't update your household's status. Tell center staff so they can mark your household.", }
+apps/resident-web/src/lib/qr-checkin.ts	69	notify.success	'Your presence has been registered at the evacuation center.', { id: attempt }

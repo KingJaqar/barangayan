@@ -60,8 +60,8 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    // The code-entry screen states where the code was sent, so no success toast. Stay
-    // pending until it replaces this screen.
+    notify.success('If this email has an account, a reset code has been sent.', { id: attempt });
+    // Stay pending until the code-entry destination replaces this screen.
     router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
   }
 

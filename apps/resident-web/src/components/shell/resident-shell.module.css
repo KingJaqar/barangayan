@@ -7,6 +7,8 @@
 
 .header {
   --shell-active: var(--primary);
+  position: relative;
+  z-index: 40;
   flex-shrink: 0;
   border-bottom: 1px solid var(--border);
   background: var(--card);
@@ -353,9 +355,13 @@
 }
 
 .main {
+  /* Contain map panes and page controls below the header's account menu. */
+  isolation: isolate;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Keep shared notices centered when route content adds or removes a scrollbar. */
+  scrollbar-gutter: stable;
   background: var(--background);
   padding: 32px 32px 40px;
 }
@@ -458,7 +464,7 @@
   .main {
     padding: 20px 16px calc(90px + env(safe-area-inset-bottom));
   }
-  .homeMain {
+  .guestMain.homeMain {
     padding-top: 24px;
   }
   .guestMain {

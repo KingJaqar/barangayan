@@ -5,7 +5,9 @@ import localFont from 'next/font/local';
 import { safeResidentRedirect } from '@barangayan/shared';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/loading';
+import { queueLoginNotification } from '@/lib/auth/session-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 const googleSans = localFont({ src: './google-sans-medium.ttf', weight: '500', style: 'normal', display: 'swap' });
 
@@ -27,15 +29,19 @@ export function GoogleButton({ label, next = null, link = false }: { label: stri
   }, []);
   async function start() {
     if (busy.current) return;
+    const attempt = beginAttempt(link ? 'google-link' : 'google-sign-in');
     busy.current = true; setLoading(true); setError(null);
     try {
       const client = createSupabaseBrowserClient();
       const options = { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeResidentRedirect(next))}`, skipBrowserRedirect: true };
       const result = link ? await client.auth.linkIdentity({ provider: 'google', options }) : await client.auth.signInWithOAuth({ provider: 'google', options });
       if (result.error || !result.data.url) throw new Error('Unable to start Google sign-in. Check your connection and try again.');
+      if (!link) queueLoginNotification();
       window.location.assign(result.data.url);
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Google sign-in failed. Please retry.');
+    } catch {
+      const message = link ? "Couldn't connect your Google account. Please try again." : "Couldn't connect to Google. Please try again.";
+      setError(message);
+      notify.error(message, { id: attempt });
       busy.current = false; setLoading(false);
     }
   }
@@ -53,7 +59,7 @@ export function GoogleButton({ label, next = null, link = false }: { label: stri
         <span aria-hidden="true" className="flex h-[18px] w-[18px] items-center justify-center text-[#4285f4]">{loading ? <Spinner className="size-[18px]" /> : null}</span>
       </Button>
       {loading && <p role="status" className="sr-only">Connecting to Google…</p>}
-      {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
 }

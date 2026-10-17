@@ -1,0 +1,21 @@
+
+> @barangayan/resident-web@0.1.0 start
+> next start --hostname 127.0.0.1 --port 3216
+
+▲ Next.js 16.3.0
+- Local:         http://127.0.0.1:3216
+- Network:       http://127.0.0.1:3216
+✓ Ready in 7.3s
+✓ Running next.config.ts took 430ms
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3503127114'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3503127114'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3503127114'
+}

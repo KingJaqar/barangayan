@@ -1,0 +1,42 @@
+{
+  "scannedSourceFiles": 289,
+  "imports": 50,
+  "calls": 185,
+  "byKind": {
+    "adapter": 143,
+    "feedback-helper": 11,
+    "direct-sonner": 31
+  },
+  "dynamicDispatch": [
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx",
+      "line": 238,
+      "callee": "notify[failure.uncertain ? 'warning' : 'error']"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx",
+      "line": 70,
+      "callee": "notify[failure.uncertain ? 'warning' : 'error']"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/resident-service-form.tsx",
+      "line": 356,
+      "callee": "notify[level]"
+    },
+    {
+      "file": "apps/resident-web/src/lib/notify.ts",
+      "line": 97,
+      "callee": "toast[entry.kind]"
+    }
+  ],
+  "directSonnerFiles": [
+    "apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx",
+    "apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx",
+    "apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx",
+    "apps/resident-web/src/app/(resident)/settings/download-data/page.tsx",
+    "apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx",
+    "apps/resident-web/src/app/(resident)/settings/notifications/page.tsx",
+    "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "apps/resident-web/src/lib/notify.ts"
+  ]
+}

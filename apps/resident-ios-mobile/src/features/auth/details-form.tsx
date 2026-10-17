@@ -13,7 +13,7 @@ import { BirthdaySheet } from '../profile/birthday-sheet';
 import { HomePinCard } from '../profile/home-pin';
 import { useDeviceLocation } from '../../lib/device-location';
 import { useResident } from '../../lib/runtime';
-import { layout, radius, space, typeScale, useColors } from '../../lib/theme';
+import { layout, radius, space, useType, useColors } from '../../lib/theme';
 import { useLatest } from '../../lib/use-latest';
 import { EmergencyEntry } from './parts';
 
@@ -53,6 +53,7 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
 }) {
   const { client, session } = useResident();
   const colors = useColors();
+  const type = useType();
   const owner = useRef(new Ownership());
   const uid = session?.user.id;
   const email = session?.user.email ?? '';
@@ -186,11 +187,11 @@ export function DetailsForm({ required, onSaved, onSkip, onSignOut, onReview }: 
         <Field label="Suffix (optional)" value={suffix} onChangeText={setSuffix} editable={editable} error={live(suffix, fieldErrors.suffix, nameIssue)} />
         <Selector label="Sex" required options={SEX_OPTIONS} selected={sex} onChange={setSex} disabled={!editable} error={fieldErrors.sex} />
         <View style={{ gap: space[2] }}>
-          <Text style={[typeScale.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>Date of birth <Text style={{ color: colors.danger }}>*</Text></Text>
+          <Text style={[type.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>Date of birth <Text style={{ color: colors.danger }}>*</Text></Text>
           <Pressable accessibilityRole="button" accessibilityLabel="Date of birth, required" accessibilityValue={{ text: birthDate ? birthdayLabel(isoDate(birthDate)) : 'Not selected' }}
             accessibilityHint="Opens the date picker" accessibilityState={{ disabled: !editable }} disabled={!editable} onPress={() => setBirthdayOpen(true)}
             style={{ minHeight: layout.buttonMinHeight, justifyContent: 'center', paddingHorizontal: space[3], borderWidth: 1, borderColor: fieldErrors.birthDate ? colors.danger : colors.border, borderRadius: radius.sm, borderCurve: 'continuous', backgroundColor: colors.surface, opacity: editable ? 1 : 0.5 }}>
-            <Text style={[typeScale.body, { color: birthDate ? colors.textPrimary : colors.textTertiary }]}>{birthDate ? birthdayLabel(isoDate(birthDate)) : 'Select your date of birth'}</Text>
+            <Text style={[type.body, { color: birthDate ? colors.textPrimary : colors.textTertiary }]}>{birthDate ? birthdayLabel(isoDate(birthDate)) : 'Select your date of birth'}</Text>
           </Pressable>
           {!!fieldErrors.birthDate && <Notice tone="danger" message={fieldErrors.birthDate} />}
           <BirthdaySheet visible={birthdayOpen} value={birthDate ? isoDate(birthDate) : ''} onClose={() => setBirthdayOpen(false)}

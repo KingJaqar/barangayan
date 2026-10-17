@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": [
+    "AUTH-01: Google start rejection, intentional retry and identity linking have one distinct safe outcome, no welcome receipt",
+    "AUTH-03/04: actual registration form confirms account creation or warns on unsupported confirmation, preserves modal/navigation, no reload replay",
+    "AUTH-05/06: public send privacy, lost-response warning and confirmed recovery verification; no ordinary login welcome or reload replay",
+    "AUTH-07–11: automatic eligibility quiet; explicit eligibility, uncertain send, rate-limit vs code rejection, update, logout failure and navigation-only failure each have one truthful outcome",
+    "AUTH-10/11: rejected and lost password writes stay distinct; later deliberate recovery logout survives the guest session",
+    "AUTH-12–14/11: standalone Settings redirect control errors propagate to a synthetic Next boundary; resend rejection/uncertainty; update/logout emits one combined success or navigation warning",
+    "Recovery double activation causes one write; pending outcomes suppressed on account switch",
+    "Both recovery variants suppress delayed logout/navigation outcomes after a new account signs in",
+    "Legitimate same-session recovery completion still notifies after the form unmounts",
+    "AUTH-15–17: controlled verification pending/verified/rejected and profile synchronization; one live announcement owner",
+    "AUTH-18–20: email request, resend rejection/uncertainty, pending, no-change and confirmed-change results distinguished without extra mutations",
+    "AUTH-22: synthetic deletion reauthentication/rate-limit, rejection, partial server failure, lost reply and success; no raw provider text or welcome/logout duplicate",
+    "Ordinary logout persists once; repeated unexpected session events notify once",
+    "Unchanged shared toast with open recovery dialog, light/wide and dark/narrow; dismissal causes no request; no runtime errors or console warnings"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "warnings": [],
+  "limitations": [
+    "Synthetic Auth, email, deletion and server-action responses; no real external operations.",
+    "AUTH-02/AUTH-21 have no safe client callback provenance. Standalone Settings pages are exercised as components, not through a live recovery cookie. Registration map excluded from this auth fixture."
+  ]
+}

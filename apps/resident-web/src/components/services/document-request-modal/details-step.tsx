@@ -80,7 +80,7 @@ export function DetailsStep({
       {isAuthenticated ? (
         <>
           {requestError ? (
-            <p role="alert" data-slot="request-check-error" className="text-sm text-status-error">
+            <p data-slot="request-check-error" className="text-sm text-status-error">
               {requestError}
             </p>
           ) : null}

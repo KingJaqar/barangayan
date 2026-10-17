@@ -1,0 +1,42 @@
+{
+  "identities": {
+    "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+    "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+    "resident": "27a3cf31-a7a1-4eec-9dbf-e68e42c9ea19",
+    "admin": "606ace67-818f-44ad-8abe-1298ef130ec2",
+    "incomplete": "de41d01e-2b2d-4e30-8ec9-a1908e4f1495",
+    "firstSubmission": "80508c07-2296-42fc-a3ee-de36b23ee164",
+    "serviceRequest": "2707d24d-dade-4aee-b9fa-4ed8ffdd7ea2",
+    "legacySubmission": "b0f7ad9d-13da-472f-b8ef-edb28aee5ecf"
+  },
+  "profile": {
+    "current_id_submission_id": "b0f7ad9d-13da-472f-b8ef-edb28aee5ecf",
+    "approved_id_submission_id": "b0f7ad9d-13da-472f-b8ef-edb28aee5ecf",
+    "id_verification_status": "verified",
+    "id_repair_required": false
+  },
+  "submissions": [
+    {
+      "id": "80508c07-2296-42fc-a3ee-de36b23ee164",
+      "decision": "verified",
+      "reviewed_by": "606ace67-818f-44ad-8abe-1298ef130ec2",
+      "hasBack": false
+    },
+    {
+      "id": "b0f7ad9d-13da-472f-b8ef-edb28aee5ecf",
+      "decision": "verified",
+      "reviewed_by": "606ace67-818f-44ad-8abe-1298ef130ec2",
+      "hasBack": true
+    }
+  ],
+  "requests": [
+    {
+      "id": "2707d24d-dade-4aee-b9fa-4ed8ffdd7ea2",
+      "approved_id_submission_id": "80508c07-2296-42fc-a3ee-de36b23ee164",
+      "payment_status": "pending"
+    }
+  ],
+  "readbackBeforeCleanup": true,
+  "cleanupConfirmedBySuccessfulApiResponses": true,
+  "independentPrivilegedCleanupReadback": "Not run"
+}

@@ -19,7 +19,8 @@ export interface ResidentProfile {
  *
  * - No session -> redirect to /login?next=<current path>, so login returns the resident
  *   to where they were headed.
- * - Missing or incomplete resident profile -> mandatory /complete-profile.
+ * - Incomplete resident profile -> mandatory /complete-profile outside Settings.
+ *   Settings remains available so residents can manage their account during setup.
  * - Any authenticated role with a profile stays in resident-web.
  *
  * requireUser()/getOptionalUser() are UX guards, not the real security boundary — RLS on
@@ -34,13 +35,17 @@ export async function requireUser(): Promise<{ user: { id: string; email: string
     data: { user },
   } = await supabase.auth.getUser();
 
+  const pathname = (await headers()).get('x-pathname') ?? '/home';
+
   if (!user) {
-    const pathname = (await headers()).get('x-pathname') ?? '/home';
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }
 
   await ensureGoogleResidentProfile(supabase, user);
-  if (await needsResidentProfile(supabase, user.id)) redirect(residentCompletionDestination((await headers()).get('x-pathname')));
+  const isSettings = pathname === '/settings' || pathname.startsWith('/settings/');
+  if (!isSettings && await needsResidentProfile(supabase, user.id)) {
+    redirect(residentCompletionDestination(pathname));
+  }
 
   const { data: profile } = await supabase
     .from('profiles')

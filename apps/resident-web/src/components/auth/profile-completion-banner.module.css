@@ -1,0 +1,113 @@
+.banner {
+  --notice-accent: var(--primary);
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 14px;
+  width: calc(100% - 32px);
+  max-width: 1000px;
+  margin: 14px auto;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--notice-accent) 28%, var(--background));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--primary) 7%, var(--background));
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--primary) 5%, transparent);
+  color: var(--foreground);
+}
+
+:global(.dark) .banner {
+  --notice-accent: color-mix(in srgb, var(--primary) 55%, white);
+  background: color-mix(in srgb, var(--primary) 15%, var(--background));
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--notice-accent) 20%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--notice-accent) 12%, var(--background));
+  color: var(--notice-accent);
+}
+
+.copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.description {
+  margin: 3px 0 0;
+  color: color-mix(in srgb, var(--foreground) 76%, var(--background));
+  font-size: 13px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.action {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: var(--notice-accent);
+  color: var(--background);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 150ms ease;
+}
+
+.action:hover {
+  background: color-mix(in srgb, var(--notice-accent) 85%, var(--foreground));
+}
+
+.action:focus-visible {
+  outline: 2px solid var(--notice-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  .banner {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px 12px;
+    width: calc(100% - 24px);
+    margin-block: 12px;
+    padding: 14px;
+  }
+
+  .icon {
+    align-self: start;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+
+  .action {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action {
+    transition: none;
+  }
+}

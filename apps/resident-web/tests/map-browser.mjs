@@ -100,6 +100,12 @@ try {
   for (const width of [1440, 1024, 390]) for (const theme of ['light', 'dark']) {
     await page.setViewportSize({ width, height: 1000 });
     await page.evaluate(theme => document.documentElement.classList.toggle('dark', theme === 'dark'), theme);
+    const mapBounds = () => page.locator('.leaflet-container').boundingBox();
+    const incidentsBounds = await mapBounds();
+    await page.getByRole('button', { name: /^Evacuation/ }).click();
+    assert.deepEqual(await mapBounds(), incidentsBounds, `${width}/${theme}: evacuation tab preserves map bounds`);
+    await page.getByRole('button', { name: /^Incidents/ }).click();
+    assert.deepEqual(await mapBounds(), incidentsBounds, `${width}/${theme}: incidents tab preserves map bounds`);
     await search().fill('street');
     await page.getByRole('option').first().waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${width}/${theme}: no page overflow`);
@@ -110,6 +116,7 @@ try {
     await page.screenshot({ path: path.join(output, `maps-${width}-${theme}.png`), fullPage: true, animations: 'disabled' });
   }
   report.checks.push('Desktop, tablet and narrow layouts in light/dark; no horizontal overflow; suggestions visible above Leaflet');
+  report.checks.push('Map position and dimensions stay identical when switching tabs at every tested width and theme');
   assert.deepEqual(report.pageErrors, []);
   report.status = 'passed';
 } catch (error) { report.status = 'failed'; report.error = error.stack; throw error; }

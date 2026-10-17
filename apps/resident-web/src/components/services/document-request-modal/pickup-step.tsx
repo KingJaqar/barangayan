@@ -11,6 +11,7 @@ import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { pickupPaymentFailure } from '@/lib/service-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 type PickupState = { status: 'saving' } | { status: 'saved' } | { status: 'failed'; message: string };
 
@@ -36,21 +37,23 @@ export function PickupStep({
     // Repeated activation (or a Strict Mode replay) while a write is in flight is ignored.
     if (inFlight.current) return;
     inFlight.current = true;
+    const attempt = beginAttempt('pickup-payment');
     setState({ status: 'saving' });
     try {
       const client = createSupabaseBrowserClient();
-      const { error, status } = await client.rpc('start_pickup_payment', { p_request_id: requestId });
-      if (!active.current) return;
-      if (error) {
-        const failure = pickupPaymentFailure(error, status);
-        setState({ status: 'failed', message: failure.message });
+      const { data, error, status } = await client.rpc('start_pickup_payment', { p_request_id: requestId });
+      if (error || !data) {
+        const failure = pickupPaymentFailure(error ?? { message: '' }, !data && !error ? 0 : status);
+        notify[failure.uncertain ? 'warning' : 'error'](failure.uncertain ? "We couldn't confirm Pay at Pickup. Check your request before retrying." : "Couldn't record Pay at Pickup. Please try again.", { id: attempt });
+        if (active.current) setState({ status: 'failed', message: failure.message });
       } else {
-        setState({ status: 'saved' });
+        notify.success('Pay at Pickup recorded. Payment is due at collection.', { id: attempt });
+        if (active.current) setState({ status: 'saved' });
       }
     } catch {
-      if (!active.current) return;
       const failure = pickupPaymentFailure({ message: '' }, 0);
-      setState({ status: 'failed', message: failure.message });
+      notify.warning("We couldn't confirm Pay at Pickup. Check your request before retrying.", { id: attempt });
+      if (active.current) setState({ status: 'failed', message: failure.message });
     } finally {
       inFlight.current = false;
     }
@@ -93,14 +96,14 @@ export function PickupStep({
 
       <div aria-busy={saving || undefined} className="min-h-6">
         {state.status === 'failed' ? (
-          <div role="alert" className="flex flex-col items-start gap-2 text-sm">
+          <div className="flex flex-col items-start gap-2 text-sm">
             <p>{state.message}</p>
             <Button type="button" variant="outline" size="sm" loading={saving} loadingLabel="Recording…" onClick={() => void save()}>
               Retry recording pickup payment
             </Button>
           </div>
         ) : state.status === 'saved' ? (
-          <p role="status" className="text-sm font-medium">
+          <p className="text-sm font-medium">
             Pickup payment recorded.
           </p>
         ) : null}

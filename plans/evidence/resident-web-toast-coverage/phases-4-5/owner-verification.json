@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Manila",
+  "source": "Direct user report in this chat after the attended attempt",
+  "method": "Owner-attested; not independently observed by the agent",
+  "reportedText": "eal camera/OCR, provider timing and spoken screen-reader toast is fully working and functional",
+  "checks": [
+    {
+      "scenario": "Real camera and OCR functionality",
+      "status": "passed",
+      "provenance": "user report"
+    },
+    {
+      "scenario": "Provider timing behavior",
+      "status": "passed",
+      "provenance": "user report"
+    },
+    {
+      "scenario": "Spoken screen-reader toast functionality",
+      "status": "passed",
+      "provenance": "user report"
+    }
+  ],
+  "notes": [
+    "An earlier agent desktop attempt was stopped with physical Escape before completing an attended flow; it is not counted as a passed test.",
+    "No physical-media, live-provider or spoken-speech observation is attributed to the automated runner.",
+    "No independent deployed-host parity or production-deployment claim is made."
+  ]
+}

@@ -68,6 +68,14 @@ describe('resident submission recovery', () => {
     await attempt.submit(client, { ...value, requesterNotes: 'corrected' });
     expect(rpc).toHaveBeenCalledTimes(2);
   });
+  it('resumes a persisted attempt with its original key so a restart cannot create a second request', async () => {
+    const { client, rpc } = fixture();
+    const key = 'e6000000-0000-4000-8000-000000000001';
+    const attempt = new ResidentSubmissionAttempt(key);
+    expect(attempt.key).toBe(key);
+    await attempt.submit(client, value);
+    expect(rpc.mock.calls[0][1].p_input.idempotencyKey).toBe(key);
+  });
   it('never recovers another account’s request from an old attempt', async () => {
     const { client, rpc, account } = fixture();
     const attempt = new ResidentSubmissionAttempt();

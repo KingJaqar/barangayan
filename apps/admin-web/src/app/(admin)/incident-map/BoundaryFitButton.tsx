@@ -2,37 +2,51 @@
 
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Maximize2 } from 'lucide-react';
+import { ScanLine } from 'lucide-react';
+import styles from './incident-map.module.css';
 
 interface BoundaryFitButtonProps {
   boundary: GeoJSON.Polygon | GeoJSON.MultiPolygon | null;
   markers: { position: { lat: number; lng: number } }[];
   defaultCenter: { lat: number; lng: number };
   defaultZoom: number;
+  boundaryLabel?: string;
 }
 
-export function BoundaryFitButton({ boundary, markers, defaultCenter, defaultZoom }: BoundaryFitButtonProps) {
+export function BoundaryFitButton({ boundary, markers, defaultCenter, defaultZoom, boundaryLabel = 'Show whole barangay boundary' }: BoundaryFitButtonProps) {
   const map = useMap();
 
   function handleClick() {
+    const animate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canvas = map.getContainer();
+    const controls = canvas.parentElement?.querySelector<HTMLElement>('[data-map-controls]');
+    const height = map.getSize().y;
+    const top = controls ? controls.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top + 24 : 24;
+    const padding = {
+      paddingTopLeft: L.point(24, Math.min(top, height * 0.5)),
+      paddingBottomRight: L.point(Math.min(80, map.getSize().x * 0.2), 80),
+      animate,
+    };
+    map.closePopup();
     if (boundary) {
       const layer = L.geoJSON(boundary);
-      map.fitBounds(layer.getBounds().pad(0.1));
+      map.fitBounds(layer.getBounds().pad(0.05), padding);
     } else if (markers.length > 0) {
       const latLngs = markers.map((m) => [m.position.lat, m.position.lng] as [number, number]);
-      map.fitBounds(latLngs, { padding: [50, 50] });
+      map.fitBounds(latLngs, padding);
     } else {
-      map.setView([defaultCenter.lat, defaultCenter.lng], defaultZoom);
+      map.setView([defaultCenter.lat, defaultCenter.lng], defaultZoom, { animate });
     }
   }
 
   return (
     <button
+      type="button"
       onClick={handleClick}
-      className="absolute bottom-6 right-4 z-[1000] flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-white/95 shadow-lg shadow-black/5 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-white/10 dark:bg-zinc-900/95 dark:hover:border-slate-600 md:right-4"
-      title="Reset view"
-      aria-label="Reset map view">
-      <Maximize2 className="h-4 w-4 text-slate-700 dark:text-slate-300" strokeWidth={2.5} />
+      className={styles.reset}
+      title={boundary ? boundaryLabel : 'Recenter map'}
+      aria-label={boundary ? boundaryLabel : 'Recenter map'}>
+      <ScanLine size={18} aria-hidden="true" />
     </button>
   );
 }

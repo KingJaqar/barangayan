@@ -1,0 +1,199 @@
+{
+  "passed": true,
+  "browser": "155.0.8059.80",
+  "checks": [
+    "Verified IDs open a read-only summary on refresh and revisit with saved details and an uncropped private photo; desktop/light/dark/narrow layouts fit; replacement is explicit and cancellable; failed reads/photos retry without losing verification; legacy missing details are not invented",
+    "Status requires matching current/approved evidence; repair and failed refresh clear approval; accessible badge refresh recovers",
+    "Loading immediately removes a verified badge; focus/Realtime bursts coalesce to one read plus one follow-up; pending/failed/revoked statuses warn with one Settings channel",
+    "Sidebar placement, four steps, shared validation, explicit-only OCR, trimmed review, Previous, edited/cleared-field protection and birthday Cancel/confirm/clear/focus",
+    "Recoverable quota/key failures expose explicit retry only; typing/Previous do not retry and manual details survive",
+    "Failed/invalid and same-file replacements preserve the draft; accepted replacement resets details; quota permits manual submission; lost RPC response reconciles the same ID; confirmed success survives failed status refresh",
+    "Synchronous double click produces one attempt; a missing reconciliation row retries the same ID and identical immutable photo",
+    "A transaction committing after a not-found read is retried with the identical payload/ID; confirmed success refreshes status without remounting the route",
+    "Failed or mismatched owned-row reads keep the snapshot locked without writes or false success; resolving an older version preserves and identifies the newer current submission",
+    "Confirmed success uses fresh staff decisions without forcing pending; later status refreshes preserve success and never republish or refresh the route",
+    "Definitive validation/access rejections show safe feedback and retain the editable draft; a deliberate correction gets a new identity only after that resolved rejection",
+    "Actual REST deadline ends a held publication spinner as unknown; a later committed row resolves through an explicit owned-ID read without another publication",
+    "A same-ID retry rejects different saved image bytes without overwriting or publishing them; restoring identical bytes resolves the original snapshot",
+    "OCR cancel/review navigation invalidates late replies; logout clears the draft and returning creates a fresh draft",
+    "Camera starts only on click, denial allows upload, ignored permission can be cancelled, late permission tracks are stopped",
+    "Canvas-backed live video capture creates the same uploaded front-photo draft and closes its stream",
+    "Real decoder accepts exact 5,242,880-byte evidence; empty and one-byte-over candidates preserve the accepted photo",
+    "Real browser WebP conversion creates a separate capped JPEG; encoding failure stops after three attempts",
+    "Three failed derivative encodes make no upload/provider request, preserve corrections and original evidence, and permit complete manual publication",
+    "Malformed, empty and partial OCR replies preserve manual edits, reject over-limit/invalid suggestions and allow complete publication without automatic retries",
+    "Actual OCR transport timeout ends loading; a late response cannot change manual publication or start another read",
+    "Normal Profile validates locally, preserves edits after a rejected save, writes only personal fields and retains its ordinary birthday calendar",
+    "Retained avatar upload failure permits same-file retry; success updates only avatar_url and decodes the public profile image",
+    "Actual household hook supports failed add with preserved dialog, explicit retry, edit and remove without writing ID approval",
+    "Both web verification entry points use Valid ID while Edit in Profile stays on Profile; older portal destinations/copy and legacy request attachments remain intact",
+    "Actual service evidence reader decodes front-only and historical two-sided private previews without changing stored evidence",
+    "Complete and incomplete Profile component fixtures hand old fragments off once, normal navigation stays on Profile, and later hash changes hand off without a cycle",
+    "Type changes cancel stale OCR without clearing corrections; cancelled/stale uploads cannot replace the photo or restore an old account draft",
+    "360/768/1440px and dark/200% layout, actual retained Profile/avatar/household controls, one-way old-fragment handoff and one Settings channel",
+    "Birthday focus stays trapped; backdrop/Cancel/Escape preserve the form; leap-year changes clamp the day; an open wheel is protected from late OCR",
+    "Actual browser wheel with fixed Manila clocks at 00:01 and 08:01 caps dates at the earlier local/UTC day and passes shared review validation",
+    "Manila midnight: open-wheel confirmation, reopened maximum, Cancel/clear, review and one publication stay valid across the controlled clock transition",
+    "UTC midnight: open-wheel confirmation, reopened maximum, Cancel/clear, review and one publication stay valid across the controlled clock transition",
+    "Existing admin and resident promoted during a draft retain the same upload, required-name validation, optional OCR, correction, publication, lost-response recovery and pending staff review",
+    "Starting a replacement after a newly approved submission clears the published snapshot and creates new evidence requiring staff review",
+    "A deleted admin profile remains unable to submit an ID",
+    "No unexpected runtime/console errors or warnings; synthetic failure responses are identified separately",
+    "Every network destination is checked; browser requests stay on the fixture app/backend with no direct provider or Google call"
+  ],
+  "dateBoundaries": [
+    {
+      "name": "Manila midnight",
+      "before": "2026-10-16T15:59:59Z",
+      "after": "2026-10-16T16:00:01Z",
+      "beforeMaximum": "2026-10-16",
+      "afterMaximum": "2026-10-16",
+      "localDayAfter": 17,
+      "passed": true,
+      "clock": "Controlled browser Date; no wall-clock attendance or hosted publication"
+    },
+    {
+      "name": "UTC midnight",
+      "before": "2026-10-16T23:59:59Z",
+      "after": "2026-10-17T00:00:01Z",
+      "beforeMaximum": "2026-10-16",
+      "afterMaximum": "2026-10-17",
+      "localDayAfter": 17,
+      "passed": true,
+      "clock": "Controlled browser Date; no wall-clock attendance or hosted publication"
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/storage/v1/object/sign/id-documents/b1180000-0000-4000-8000-000000000001/versions/current/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/rest/v1/id_submissions?select=id_type%2Cfront_path%2Cconfirmed_details&id=eq.current&resident_id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Cid_verification_status%2Ccurrent_id_submission_id%2Capproved_id_submission_id%2Cid_repair_required&id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/storage/v1/object/id-documents/b1180000-0000-4000-8000-000000000001/versions/85da671c-0718-41bd-8f0b-effa37282251/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "url": "https://fixture-supabase.test/functions/v1/extract-resident-id-ocrspace"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/functions/v1/extract-resident-id-ocrspace"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/rest/v1/profiles?select=id%2Crole%2Cdeleted_at%2Cid_verification_status%2Ccurrent_id_submission_id%2Capproved_id_submission_id%2Cid_repair_required&id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "url": "https://fixture-supabase.test/storage/v1/object/id-documents/b1180000-0000-4000-8000-000000000001/versions/75210695-5575-4afd-9922-7ee12c843b2e/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "url": "https://fixture-supabase.test/storage/v1/object/id-documents/b1180000-0000-4000-8000-000000000001/versions/259f3bf8-0137-46d4-bfd5-9dfe5d37af13/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "https://fixture-supabase.test/rest/v1/id_submissions?select=id%2Cid_type%2Cfront_path%2Cconfirmed_details&id=eq.68fd72b6-49a7-4724-9f77-307e8ad999d6&resident_id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "url": "https://fixture-supabase.test/storage/v1/object/id-documents/b1180000-0000-4000-8000-000000000001/versions/46fbaa20-46e2-49df-8095-e792dcd108d5/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "url": "https://fixture-supabase.test/storage/v1/object/id-documents/b1180000-0000-4000-8000-000000000001/versions/46fbaa20-46e2-49df-8095-e792dcd108d5/id-front.png"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "https://fixture-supabase.test/rest/v1/profiles?id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "https://fixture-supabase.test/storage/v1/object/profile-photos/b1180000-0000-4000-8000-000000000001/avatar.png"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+      "url": "https://fixture-supabase.test/rest/v1/profiles?id=eq.b1180000-0000-4000-8000-000000000001"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_CONNECTION_FAILED",
+      "url": "https://fixture-supabase.test/rest/v1/rpc/publish_id_submission"
+    }
+  ],
+  "warnings": [],
+  "networkHosts": [
+    "fixture-supabase.test",
+    "valid-id.test"
+  ],
+  "limitations": [
+    "Fixture-backed browser/component checks. No live authentication, database publication, OCR.space call, staff approval, physical camera or real service request."
+  ]
+}

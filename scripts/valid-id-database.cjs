@@ -25,6 +25,6 @@ sql(['-c','create extension if not exists pgtap with schema extensions']);
 const tests = sql(['-c','set search_path=public,extensions','-f','supabase/tests/resident_front_id_submission.test.sql']);
 if (/not ok|Looks like you failed/.test(tests)) throw new Error(tests);
 const assertions = (tests.match(/\bok \d+ - /g)||[]).length;
-if (assertions!==24) throw new Error('Expected 24 assertions, received '+assertions);
+if (assertions!==26) throw new Error('Expected 26 assertions, received '+assertions);
 fs.writeFileSync(path.join(output,'results.json'),JSON.stringify({passed:true,assertions,database,baseline:'schema-only through 0094',migrations:'0095–0118'},null,2));
-console.log('PASS: 24 database assertions, front-only publication, staff approval, service request, legacy compatibility, and OCR limits');
+console.log('PASS: 26 database assertions, front-only publication, staff approval, service request, legacy compatibility, current-version recovery, and OCR limits');

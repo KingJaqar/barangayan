@@ -1,0 +1,1718 @@
+{
+  "base": "e860743184916ff287fe5daf142240af78fd15bf",
+  "destination": "C:\\Users\\User\\barangayan\\tmp\\valid-id-phase7\\release\\resident-web",
+  "createdAt": "2026-10-16T07:53:42.325Z",
+  "overlay": [
+    "apps/resident-web/src/app/(resident)/settings/valid-id/birthday-dialog.tsx",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/camera-dialog.tsx",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/draft.ts",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/page.tsx",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/photo.ts",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/transport.ts",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/valid-id-flow.tsx",
+    "apps/resident-web/src/app/(resident)/settings/layout.tsx",
+    "apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx",
+    "apps/resident-web/src/app/(resident)/settings/settings-id-status.tsx",
+    "apps/resident-web/src/app/(resident)/settings/profile/page.tsx",
+    "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+    "apps/resident-web/src/components/services/resident-service-form.tsx",
+    "apps/resident-web/src/lib/auth/get-optional-user.ts",
+    "apps/resident-web/src/lib/auth/require-user.ts"
+  ],
+  "adapted": [
+    "apps/resident-web/src/lib/supabase/server.ts"
+  ],
+  "removed": [
+    "apps/resident-web/src/actions/id-document-signed-url.ts"
+  ],
+  "buildCommand": "cd ../.. && npm run build --workspace=@barangayan/resident-web -- --webpack",
+  "files": [
+    {
+      "file": ".gitignore",
+      "sha256": "e7f6ddbc1fc47f0912210a3fe78d1865b4b720904349d5489217791ae38b9403"
+    },
+    {
+      "file": ".vercel/project.json",
+      "sha256": "f43ce1092030fde18cf122d52308a08785f69378d28e16c33a695a596821e1d5"
+    },
+    {
+      "file": ".vercelignore",
+      "sha256": "5c313ce0f2a6fbbc003205646de12424045abcbf1cceaba2515fe292017a1589"
+    },
+    {
+      "file": "apps/admin-web/package.json",
+      "sha256": "71973fceefa58ac641a85a1ce71b0bed4b1ffa5603368ad013f2b26c8ad21e75"
+    },
+    {
+      "file": "apps/resident-android-mobile/package.json",
+      "sha256": "37f814f883736f55d36252a62689f4257dc47a6775315329d9f411917e35cf7b"
+    },
+    {
+      "file": "apps/resident-ios-mobile/package.json",
+      "sha256": "4766875efa5fd4c8603b962bc71a5daee43cd633e7e5bb681d9733a11aa90d2d"
+    },
+    {
+      "file": "apps/resident-web/.gitignore",
+      "sha256": "e039133bbbe900bec3e3d9ada4a10b4154913fde412c34169f6f897ae4856a9d"
+    },
+    {
+      "file": "apps/resident-web/eslint.config.mjs",
+      "sha256": "e6d12028b9530beca7ab3ca89c4a9fde29a6a58145b3aba06c715407d90d9232"
+    },
+    {
+      "file": "apps/resident-web/next.config.ts",
+      "sha256": "55130612e9f60711a240a2c36f24facccdd2e4bde7f8d19072d436b70acea189"
+    },
+    {
+      "file": "apps/resident-web/package.json",
+      "sha256": "460b994a5a185ac6497154a5113da3d57a3758f8bb3054d61613d6c25784315e"
+    },
+    {
+      "file": "apps/resident-web/postcss.config.mjs",
+      "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+    },
+    {
+      "file": "apps/resident-web/public/assets/logo/barangayan-logo-1024.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "file": "apps/resident-web/public/google-g.png",
+      "sha256": "d1ce9c2af0b10a7333abc99bc706f9a6a199e5b65bf3e3009624f076b8638e6a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/complete-profile/page.tsx",
+      "sha256": "3f87dfcee63d2b19a0f292454f2dbabc7e727686039df3ec3a03f25d4f953262"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/error.tsx",
+      "sha256": "05212bdd8eb0f0ba895af3923519455ee76cdf5a0c2a2e8a327da6f4033fae57"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/forgot-password/page.tsx",
+      "sha256": "be5fa62a6ff4f42381184115541185399e794e2ce77cb35691f2eefc9ebab5af"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/layout.tsx",
+      "sha256": "06ed5d36484e36868ae0cef22b04e48bc1f17906fb5458c21bd03a1c7db5d3f2"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/loading.tsx",
+      "sha256": "dfb2a31f472ecd335ba589933240fa41ac5d476bbf91fce86901fe2721e1e245"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/login/page.tsx",
+      "sha256": "21281ea7067a7534132945d2f8d434ac1f1c2ddd9c6e48d4de2ef2dd4159ae3d"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/onboarding/page.tsx",
+      "sha256": "abccbe0e4f59cd2a1bdc315bb807dc11331b0efba6bf390eea0b8bca58c5b37b"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/register/page.tsx",
+      "sha256": "9bd293033e9b164490e4721057949676b0802f5014ee56d257c716f87fd48c7a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/register/register-form.tsx",
+      "sha256": "6cfcb02879b0e30d608832376678a1b80e6a49303ec9306e7d74fe217c91048e"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/reset-password/page.tsx",
+      "sha256": "ac4f86b9f2ddf9d859d86cf1039fc2017071c038fc1dea748db155c2ec23020c"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx",
+      "sha256": "1b0a65464e2643a8eb173e4214a99d8a62806cb59feb91ea4c97c15e5d37ac3c"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/verify-otp/page.tsx",
+      "sha256": "99cd4dd15bcdba611b6bf078a4b608be6c5be6b1c9501cfe54831516c4d109f4"
+    },
+    {
+      "file": "apps/resident-web/src/app/(auth)/verify-otp/verify-otp-form.tsx",
+      "sha256": "29e64291f1c835117d83dec82fb7b963e7a5842e9ca410d41de68b7d510ad841"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx",
+      "sha256": "7a87ac96d5e56bc28dba76c7258debbf5cf1b41e1e8dd9c1ef9bce0b1257c7ac"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/announcements/page.tsx",
+      "sha256": "de5a90851e88a64d010ba38ecb63a27b0c5c9b1a23828f0ecc1561bed7388a4f"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/announcements/[announcementId]/page.tsx",
+      "sha256": "3fc059da72f35793125e1edcbfd7ad992f4de455f3e67dd2adcf2a9fe7bf2187"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/alerts/page.tsx",
+      "sha256": "14daa0f96abed5b94d2d0160bdda99c5051333481e2aabc87503129bde9340d9"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/centers/page.tsx",
+      "sha256": "494b800a3fafbc94d1784e7b3a6c59185bed5cdd59cfbf41a22b9f2e526b6da8"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/family/page.tsx",
+      "sha256": "23ab7321a60150141eae8d99bc448cec2f12c62a1af9533149baad74c2fb088a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/layout.tsx",
+      "sha256": "994611da083d2726aa6de0694215cee6062905aaefd227105ee5e3f2279fe5bf"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/loading.tsx",
+      "sha256": "43933e7b398d0bbe2764bdd30264eaeaeb75fb9ed1841b0c728b47541fddeb67"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/page.tsx",
+      "sha256": "629ed0bc47e36f44bf968c0a11df40979ac9441c04fc9000932cbfb81c68aed3"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/emergency/scan/page.tsx",
+      "sha256": "30fccc87c13983ac86d5b0d5c34226f2b79f361eac43e6b91dd121549f8e30bd"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/error.tsx",
+      "sha256": "8a31daeeced39ca9b2589676959fa5eb16a6e0afe7c0baac8e47921120911dbe"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/drives/[driveId]/page.tsx",
+      "sha256": "04ce986a9fa01acca5b0069ab06d4d7b43e5b3ed27e12d4f850759f26ea571c7"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/layout.tsx",
+      "sha256": "1ea56315f04e48000c39fad8c8a35f34b7ee8a4e2f327a5f19af1916851590ff"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/loading.tsx",
+      "sha256": "f0ac2da5e16b73fbd4ae634a4a0321c0f07047af453d2e828f6652aedab317f8"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/my-registrations/page.tsx",
+      "sha256": "9ff6dabbc60aa524a758f01fdd69cbb64870c9f75e0a19dde888821b7fb92d43"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/page.tsx",
+      "sha256": "cb3122300e320c08badeb46705ae680e7e33ac0d72d9d3fc1984d54db5d569ff"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/health/register/[driveId]/page.tsx",
+      "sha256": "510f30903f024518814f5240c56be480e4c98b48edd837172eb7da4d9d207e3a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/home/loading.tsx",
+      "sha256": "f78151c8916c2ddc34729ff21916fc6f182b1b2992a854dc46e15681bf2dc07f"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/home/page.tsx",
+      "sha256": "1480cd6e366249c4d83b0aaee4f9328ec1ab80d5f684f2279ea368c3fffa6e11"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/layout.tsx",
+      "sha256": "9f45776999044d122a6805ebcbe79402b585d94929dc18cb5dd632284591f527"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/loading.tsx",
+      "sha256": "63e7dcd1b19fbd948586f3715f688061eaff35916e9cbebb7d7a319e7ac01cad"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/directory/loading.tsx",
+      "sha256": "3c0f2a97bcf574519c60291f03bbca892ab091309921726abbd85e46636b258e"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/directory/page.tsx",
+      "sha256": "b3848de56b91b3ca0f01164eb6529fbe79902eb0f297e3a81077d50227280d45"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/loading.tsx",
+      "sha256": "84221cea918967cdb0babf5814585b6971bec744d0c3dee81196a77e6650297f"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/page.tsx",
+      "sha256": "f52b9e6f28eedaf7176b46b4ce62c9c0a78ea305f02c78287fb4d8b76beab77b"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/preparedness/loading.tsx",
+      "sha256": "739765de1cebef4d4feaf5a26ed68d7d2a7711ec3c620598b1d430ef77dd0c6d"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/maps/preparedness/page.tsx",
+      "sha256": "a38509c2da0284195cdd978e87e456eea6ff2d8b01764d775b1ab7359ae865e4"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/my-reports-tabs.tsx",
+      "sha256": "2c196dcaf1c8e1fd9745e141ae1f4f9ea3895c777aa3029be9bfb8e86cfcbab0"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx",
+      "sha256": "9c2007caeae50520f099024cd831c836451ebab7ff02287a3e0cc9d41493add5"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/new/page.tsx",
+      "sha256": "1f5a4b0cd3e3513be8a81fa4f93e0911fdcd5a3da86af60dc80f00f173a3ccee"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/page.tsx",
+      "sha256": "30e1e8c5080aabccd09cfdd3d6f5fc47cc5e25f18a398b6168e3b2d407e2fd22"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/[incidentId]/incident-detail.tsx",
+      "sha256": "d89cfc8bd931e3abe5918a21fb163b8488ef456682cabf88a98614eccde39da4"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/reports/[incidentId]/page.tsx",
+      "sha256": "28019f9fb08662f159515ad55ea375222081829d1952ee66817b14fa1e752793"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/search/page.tsx",
+      "sha256": "1fd26bddd4f343e0da5105801b01f0c0d726220a8bd33fb00c8445476c682c88"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/documents/page.tsx",
+      "sha256": "bb4f710ecd4b0b8342354aecf2c292abb3ada0d519b5c60ae2f21347aad5dee1"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/layout.tsx",
+      "sha256": "f07636bb42feb29d7357b05b42bc8350ec31298b13f4402a59bb06a3fe4f5b64"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/loading.tsx",
+      "sha256": "14c3379921fff1e01a5f4f274d70aec33ff2938882779317c92fb8c733fcdb0d"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/logs/page.tsx",
+      "sha256": "2d32c37212e9abb9dc8df85727a200c5dcb719728eeb88fff8fe00e52688908a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/page.tsx",
+      "sha256": "708ee04d7f0c2b86050baac31e93473657be9d2e430efb5f8fb9e6a5b149f7d8"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/payment/loading.tsx",
+      "sha256": "720392cdda224e07dd76fea5df05f7b55710dd36fde558342eeee88e823b0375"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx",
+      "sha256": "e37e4d89ac4071be8912c56d46ee5a32b16b012637fd2080427564685764cb50"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx",
+      "sha256": "0f9fc204d4187d45bcc20a611fff9454d71e7cf36c5d7fcd4eb53b55bd24bfb2"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/payment/success/page.tsx",
+      "sha256": "25886d664cd305af7bf5dd213d8a1e3e164792e8ba8e9ed8490552923c4fd376"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx",
+      "sha256": "f444c45fcac9827f8ec4cc9a5888116d57b18536baf4c8cbf62ebb91d52b56f4"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/loading.tsx",
+      "sha256": "81f62acdab2eb523afe507db05ab3f90c9a172f91b2daef23b77669d82ef8684"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/new-request-form.tsx",
+      "sha256": "2319d16e84db7f93a0c1943672097c3f90ac84841073a20033a91947b13d9c24"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/page.tsx",
+      "sha256": "49beb60a70993203d8818ca1780ea5defbf190b72de68fe09bcecda7be743919"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/page.tsx",
+      "sha256": "3b38bfb80c85df3b60bbc6d99ea63a54ef54422d67b43b8e9246402f07d8bea3"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx",
+      "sha256": "4a0fb25a2cdbe4d19374882490d0f24d6be3cec49480d4f55695cb7148ae6c5e"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/requests-list.tsx",
+      "sha256": "4ed7816713271abafd07c116a4188ff7863735899e8b55eb55695a7f0c748575"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/[requestId]/loading.tsx",
+      "sha256": "e5bcc92bd63d8e38d513a3ea3f76d585d15a3e68b76c9981144aadb4f5136b3c"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx",
+      "sha256": "c6bc30cef345057747def89aa5a9e16c448bd7c9481712bbf898195594efdda3"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/requests/[requestId]/request-tracking.tsx",
+      "sha256": "17525f5271759cc54fff6e2915a53d376169ea56a724cf680816d7ba775ac51e"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/services-layout.module.css",
+      "sha256": "e1a654aa244cf9ca06abab41420fa4cf8966db6765cba1507b437f7433bf925a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/[documentId]/loading.tsx",
+      "sha256": "1e7aa965d0e34b07741988881ab61e4a61b265b014cb69559650d45a95515453"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx",
+      "sha256": "b561e165542e31e567d780107bff7acbae2d8773facfac031e931024f4ef9e8d"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/about/about-client.tsx",
+      "sha256": "8c50c790c58aacc074578073a2c5f536cb4754cd68984006ab92a02d7fe54f13"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/about/page.tsx",
+      "sha256": "c0fdf96d9fc57fc3e63daa961997c1c906de97bc223019588cc69b7306f04b48"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/change-password/change-password-form.tsx",
+      "sha256": "3c552ee1a778880c836bd79acb36564b3dba46a6bde5e18409fc3bef3fc867fb"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/change-password/forgot-password-dialog.tsx",
+      "sha256": "2638791456c04477a2088c924ff7f9be8112a57f855d227fb912c3d45f4ccced"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/change-password/page.tsx",
+      "sha256": "bc53c510796a5f26b0a6ca390b0d9e938a4da85dff7644ad2141a48da14b5a97"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/delete-account/delete-account-form.tsx",
+      "sha256": "af406ae3bab1895253be69882cdabe3e19d0fcaf3b87f024ee425404c11097ac"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/delete-account/page.tsx",
+      "sha256": "404d641e0119499b7dbe5c62f5337cd9ea0cbc2434f25b7bd441fe1ec890b3b9"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/download-data/page.tsx",
+      "sha256": "0c007270522bfce7ac107227f677ac6300cb3e1a2ae58982da6d05e2ce6ce453"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/email-verification/actions.ts",
+      "sha256": "9a59ae6ba813a11a732e6573ef64543685f7fa5a0b1618697414c4f46e8688a0"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/email-verification/change-email-form.tsx",
+      "sha256": "41c7be652cf4b39ddb73c4f6ff0659bcf61a5791595b9d5ceea01ff5e856aa14"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/email-verification/page.tsx",
+      "sha256": "9c6869ac74b30d28842e1a12d06d382ea3d2c37c3928a23774fd844061512cba"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/email-verification/verification-form.tsx",
+      "sha256": "a7d1a5bc95dc1fa4eb10af7434e92e034e0c115b66fa00582f36077a834f3579"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/help/article-drawer.tsx",
+      "sha256": "5d2b56458a336219ac2ab8e9d8709c60899a880adbd7b67b3cd7454baa87b6fe"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/help/help-center-client.tsx",
+      "sha256": "f22979ca58c198df8fb80c321db03f046998ce824fd27fd06028162cac21509d"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/help/page.tsx",
+      "sha256": "8841f1788d99e10b81ee778f1625b0cdb1a82c9f06b626def2654567476e8c87"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/help/[articleId]/page.tsx",
+      "sha256": "4c1371be2f1ebdedb5420899ac1f7bea1ad15e1c51f83234433e7e59b5c5f694"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/layout.tsx",
+      "sha256": "960b744640bc089115b8fc105cca454ea00ea43e39dada5e63c4fcefcedcbec6"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/loading.tsx",
+      "sha256": "e044a2cfe9cca13a9702719c3fb835a5e8c4f38938566f742b291e3245ca86cc"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx",
+      "sha256": "b45d1e48f1fbe1e082944a7759566d4e7dc07434b220fe77f11a98c3840db6dd"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-map-wrapper.tsx",
+      "sha256": "722623161055d4eb750b90392bc829282e03c39e7c08222ce89184afdd82d751"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-map.tsx",
+      "sha256": "83e1156b39d0300824615de598242a8a320bade9733c1933d04a5e794786c9d3"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/location-verification/page.tsx",
+      "sha256": "cf2ebab72d22a750b9b36f214681319cdf9a32823d13a15536e69a010572ae52"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/notifications/page.tsx",
+      "sha256": "d34d5f92017f0f16424ce75a2177c5a730bb1d2ee885853a0affb8bd53f3cc86"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/page.tsx",
+      "sha256": "2425f16f3625a9524aaf866c68d72f24770c75655cb6da18ab6c9f0e1bb62736"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/profile/page.tsx",
+      "sha256": "d094a2d99547facc03f36fb633b63e3a921ef1246468e80d84e0cb197926438a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "sha256": "c605d3a0192ce296d6ff338696166af45e96103b45fc85808eff35e2b814c5c9"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/settings-content.tsx",
+      "sha256": "75d022d77fb670b7022c5a6150e6c7396da889dd10988ab61e164fa7ad8ffb9e"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/settings-id-status.tsx",
+      "sha256": "72b319aacd897493e92001ad7a6a5b61c584c60dfbe455aad8fedcf42de8e55f"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx",
+      "sha256": "4f16376145b6d80dd4f874e8921ca7b192e0fb0e1a45b7d0f402a57e018cbf16"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/terms-privacy/page.tsx",
+      "sha256": "dd334079d96dbc29fd8fbed493781544eddcaf379be39d21a67868918c07e854"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/terms-privacy/terms-privacy-client.tsx",
+      "sha256": "a64716a6191fac9abb25a1fc41cb7c5f32841dc634fa40ce03eaecb1cae1510b"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/theme/page.tsx",
+      "sha256": "d47e4dd9d6cfdf8419e197501165f20f44a59028e0920793d777eb66bf07ae49"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/theme/theme-form.tsx",
+      "sha256": "44523b8b4bb2dff34ef25a1c80582e5fb693b1dd89f499a4ab78b55c90fc99d7"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/birthday-dialog.tsx",
+      "sha256": "18af5674ef0b6e685548fa8f0b6746a7d8639203a9c6fc6151b09fd8cbd3681c"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/camera-dialog.tsx",
+      "sha256": "7eeabfb17e0b1c15dafb6380fa9756a485afecaea478d62f34225cb96ba5e736"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/draft.ts",
+      "sha256": "60374e3b6f11e66f99472b4677ba7cad16d3c9e8ee4b106a1a60de7bc88f7eae"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/page.tsx",
+      "sha256": "82b233bca4f8ff1dba3486ef9cb5a0871f8e31cca3f282445bfaa2227fa77e5b"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/photo.ts",
+      "sha256": "b739e7844002e751143ec8be1640b2ed3a22d6e48b29c2e70f82ba83be3318aa"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/transport.ts",
+      "sha256": "bb5bc772ed94230360fcf55b1314eb58c5598dd8d59e8ffaa97896c815d3a4db"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/valid-id-flow.tsx",
+      "sha256": "50ed7d9ba08855308c1a3ce2dd429df75e7529e6d0548a13483b2d50d0b4c360"
+    },
+    {
+      "file": "apps/resident-web/src/app/api/search/route.ts",
+      "sha256": "bf51ef0eed1b0a3a2653863bb9fd381be9d7732e6b070757c48940dc8b6217e1"
+    },
+    {
+      "file": "apps/resident-web/src/app/apple-icon.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "file": "apps/resident-web/src/app/auth/callback/route.ts",
+      "sha256": "725b7948a09392045974df74665b5bbd9855074e6770aac86cf883bfcb5bfd1b"
+    },
+    {
+      "file": "apps/resident-web/src/app/auth/email-change/route.ts",
+      "sha256": "d2235ddfea0657b015f7e76a6a306b16ac601a9df724e067fc85cb77529c9f70"
+    },
+    {
+      "file": "apps/resident-web/src/app/auth/error/page.tsx",
+      "sha256": "35d424c67c24e9a04de47794bc6789fa86760788bd61ea99da81dba93b4114d8"
+    },
+    {
+      "file": "apps/resident-web/src/app/error.tsx",
+      "sha256": "edb81e50f52772831dc08144d609772355abfd6a0f94061197261f9536f48c99"
+    },
+    {
+      "file": "apps/resident-web/src/app/globals.css",
+      "sha256": "b4bd7e52da55fcdb35b424abe41e4dbb20be9886965bc65ad328715ce6c67b37"
+    },
+    {
+      "file": "apps/resident-web/src/app/icon.png",
+      "sha256": "43c95303ddfa30e2aea59bae30f6889af2b071c0b3c25a07cb41e6f200b39e33"
+    },
+    {
+      "file": "apps/resident-web/src/app/layout.tsx",
+      "sha256": "e51f95f02ba1cbdb58bf8a0bd36462f2962835be4e4a129462721466a34d3074"
+    },
+    {
+      "file": "apps/resident-web/src/app/loading.tsx",
+      "sha256": "38bc85fdf4171df704b2ea4962ed07a64d10b905f461287b5c5fe95280ed40c5"
+    },
+    {
+      "file": "apps/resident-web/src/app/page.tsx",
+      "sha256": "b06bb41aedb157d8404f210e71e0c2f486f45dd2ca9999c80e7906e0e274a8d9"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/google-button.tsx",
+      "sha256": "df19323ef658a622f9a71f2780613ee3d16bf3feb1b254c171f812c6ae4e7a74"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/google-sans-medium.ttf",
+      "sha256": "011d8d7d302b9c8f41ceedcb8510729253047c8cc8201eb269185d07f0a0d88c"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/google-sans-OFL.txt",
+      "sha256": "65ca17f235e1d9adaf2e25fd14d0929c75521ac1e063a48d6824a8e7b7e4466a"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/GOOGLE_ASSETS.md",
+      "sha256": "5068abeeef47d809a85160ea6d96b55f4f6ddb1d748ff85ea9a53dd738b5d918"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/profile-completion-banner.tsx",
+      "sha256": "007a2f4264423e685d99564b548a27aa36980b374fe820c81a8131c81e3df571"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/profile-setup-notice.tsx",
+      "sha256": "99af11a809faf9c4d8f6cb88beb23e70c71c3ee94ae53ea55c2e89d1c56da33e"
+    },
+    {
+      "file": "apps/resident-web/src/components/auth/registration-map.tsx",
+      "sha256": "fc439dcfe08670f00463ae103710f2ffe209b4cfbb47b3cea70bac3d541074ac"
+    },
+    {
+      "file": "apps/resident-web/src/components/birthday-calendar-modal.tsx",
+      "sha256": "218f34fa917b16fed586e8197782dca1787b791087b5f012e75e2c96193bad62"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/alerts-content.tsx",
+      "sha256": "d24ebcc31faccf1d9dacbef09e39215a692c6e340ba11ea468a33572da3b89c3"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/centers-content.tsx",
+      "sha256": "7af9f61d773f7d21e3c839f26eb2ce9023eed0c023b0f1f20d9e97de5a67e2db"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/centers-map-client.tsx",
+      "sha256": "4d76e478a013d50732a9e1fbeeca3bda91e14b151e753c3e67778d7589e52408"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/centers-map.tsx",
+      "sha256": "0bb5ea99729090263163dcfedffc3befdf3f8305b104c076975f54efeb91a783"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/emergency-accordion.tsx",
+      "sha256": "c10040e4f6ee750603c57806e11142d0eb8325b8eb89edc8cfb7c74ef45dac7b"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/emergency-page-header.tsx",
+      "sha256": "0c8b013bdcc474ba95782129028616604666f7c72489964c345cf2e2667965c9"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/emergency-segment-nav.tsx",
+      "sha256": "84f7484472ede2ef64d4a7f466f42c5f2f69337dd9bbe5c51ddda09d25abdb91"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/emergency.module.css",
+      "sha256": "a77e416ab2343f6c9c6777a07dbdd25293b4e0a9b93b782f73362c13addf1828"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/evacuation-center-card.tsx",
+      "sha256": "9df19b82fe60951f7823b4c9f6f9f5f5bf26b20d556fcdd46c507f29fb9a568a"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/family-content.tsx",
+      "sha256": "b4d948a64d18a2a01d9e41e7a354dbf4e20bc52d34e51d123c893a12b2eca421"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/family-member-dialog.tsx",
+      "sha256": "b24cadb9bc5e3d51f63b93f114c441408d7f3f3237d518f5cae88697920bcc42"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/horizontal-center-picker.tsx",
+      "sha256": "0dfe11c7bc9708abfac5ad654d733dbd077dd2f14c1e578ad69feaea7bbede25"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/hotline-row.tsx",
+      "sha256": "3a9d6abfdd42515bd169b358e6aae90fc438a3fb2499dae7174ce3fc8859fca0"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/hotline-skeleton.tsx",
+      "sha256": "a2a05ffd705ca64a95ea11aa08a50c3790dcb1b597b9d66ab31f80aea4993e08"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "sha256": "73c8d4d41a1d9059a480e1dbceeedb9fde4c776b0cc9c2b63a356fd1a6eb9148"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/hub-content.tsx",
+      "sha256": "b0fc70a38d2fef5af2d337b9ad87a59c11281ce3a113955f9cc68635f1067275"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/location-status-card.tsx",
+      "sha256": "d0a1ff49705a8a5c98f326fff56d22ae6596e113d8b9b31d8ad8705983920110"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "sha256": "9e034bdb773471754615124a11d5be1a630716a896f126ba45b582cbf8e8ea59"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/qr-show-dialog.tsx",
+      "sha256": "d66f4dcfd1c4593b997de4fdb742f81e7d1bfbbbd45b7fdd0bcb25982a3f5bee"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/qr-upload-fallback.tsx",
+      "sha256": "5ba886d74f1c6b64de28033222be38ef5cf0d1d7b2187eaca19ed4e53ee46174"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/route-status-card.tsx",
+      "sha256": "feff9ff28c66e08ba7797b63956ca0833d41db29f438439a078fb9a73896fcff"
+    },
+    {
+      "file": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "sha256": "08e91fb31a4a83b00867984232a90419299e781b498885968740a3c11a3db2a3"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/active-drives-content.tsx",
+      "sha256": "459af41c36abb0d925c6360536fff278f3bd800bf393d3dd80ee20df1d02eb06"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/applicant-form.tsx",
+      "sha256": "89a3c2f4b60d08b8d6d7b15f9d30a0da4d27f178f23d8910dce308d98af76963"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/category-filter-pills.tsx",
+      "sha256": "5f9e54f06710664fde0d6b67175eb659a2a945b8e6bf1293ff3acf96e1e4c867"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/drive-calendar.tsx",
+      "sha256": "f4e8e45ed6ea45d954ad086c58675c9f7ca7d4375e546e9a3435fba2cc78afdb"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/drive-card.tsx",
+      "sha256": "54132088efa8415a82b48e2e3360b1654330901cb705a9080ec70e4c607a2af1"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/health-segment-nav.tsx",
+      "sha256": "aaba707923921bc7fc1ccac230a9b201252fb4c851d9d9a853ea31a81866f2ca"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/health.module.css",
+      "sha256": "220a098e757fab01ae9e50f258ddeb7eadc13f60e5d160c2fb674580cc825634"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/my-registrations-content.tsx",
+      "sha256": "079b8b99070600b580284e040b1d3db707819656a6f3079320c67bd5e42062b5"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/register-drawer.tsx",
+      "sha256": "1c6ece2aaef6f4708fc3f8e064625d18d3921c3716c618c9c1dcc97807dc28f2"
+    },
+    {
+      "file": "apps/resident-web/src/components/health/registration-drawer.tsx",
+      "sha256": "73dbdb95c4ef5154558c4979226e5837fb8b0ff0970d3a945eab58ff6ca49771"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/email-verify-banner.tsx",
+      "sha256": "9681cb0b5b4f293739842de20b61c41f84832b018fdee91d101232d53c714d7c"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/guest-hero.tsx",
+      "sha256": "cbf3b7b3ba396e47b3b8ae1ba18a58f2f851fc9f4e4cef55edfb0e1e705e70f9"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/home-search-bar.tsx",
+      "sha256": "d9ff3b4fb94d405cfb2c0ffee26e8622b6cc2fb8d3ba3d6704b3cca63ea0462c"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/home.module.css",
+      "sha256": "a20dd789697d45a592a4a7ac8bfdc01ab01774c8e1a7fcbf4882f1168fb3569e"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/latest-announcement-card.tsx",
+      "sha256": "36517e3ebda83b91589f0e117191eba39a2adc22b9ae7080f163680da218ca9c"
+    },
+    {
+      "file": "apps/resident-web/src/components/home/quick-action-tile.tsx",
+      "sha256": "cc165146e4bb8e2d6914b78fb69013fc5fd3a1d7426d728eaf4c76339b66fc8e"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/boundary-fit-button.tsx",
+      "sha256": "3853274e5d0cecef36b5b80b222d94eabaaba053f97fab3ef719d088e825b3e3"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/directory-content.tsx",
+      "sha256": "3ebdd5ea3eef1635ddeed6eb19ef9331b844f9cf5b2a30ae2d8fbbddbdd362b8"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/fullscreen-button.tsx",
+      "sha256": "7e15be72180b521536e7d4f077aa3bd8e4e769d1e7a1c3ea5c167228655c6bef"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/fullscreen-sync.tsx",
+      "sha256": "d122833b8187658c2992d359636a4332842e4e51712aa4f4a986d344b4047237"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/locate-button.tsx",
+      "sha256": "18132ba1dcdac8d4a5f487872014328aa8e5d6264c8707797ae3ea6dd2f68623"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-canvas.tsx",
+      "sha256": "57ef99d3e3b7e7bc2f9b3780de31ec562b2cb69d0d5d1584a8fd9b4b04e549a4"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-client-wrapper.tsx",
+      "sha256": "c707af00a1f3c8aece425bc45c088e6bd9104c37b31eee4f97f3ad4ca82b5775"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-filter-pills.tsx",
+      "sha256": "ea8d49e50305b8dcf8d8bc556ff0c22016ae4eed3512b5445e10fbb0b16b2792"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-marker-popup.tsx",
+      "sha256": "e5c71f9e630a7410be19fe45c3dd58d27c6fd58a6bbb3f64c9920a986ccad2c5"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-search-bar.tsx",
+      "sha256": "d1da343cb1d325a9e97be034915e18d600a2fdb59d9083da3d3cf0c7d125cebb"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-search.ts",
+      "sha256": "c117736b7d18ffbe38e6ec2914d5be04e08c7bb151aa08ac2174265fb932fba6"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-segment-toggle.tsx",
+      "sha256": "aa72977d9a3bc3760d364e11dab1d5058211bde08fb46b0301276ca60028b176"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/map-sidebar.tsx",
+      "sha256": "9c1f376f8e97e92321fd6b7e91aa5cdc8ea34aa92fc5306399c52226409c34b0"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/maps.module.css",
+      "sha256": "23adc1f2c1e4ebb2ccbebd3d00908813e7e001d3ff44f5266d3e335dd7c412b8"
+    },
+    {
+      "file": "apps/resident-web/src/components/maps/preparedness-guide.tsx",
+      "sha256": "3b20a24404553fc1e1af51382c892f143588b594bc1b3b362e21d10adc78aad9"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/announcement-card.tsx",
+      "sha256": "fe8680a17a749c616633a14468cc2b10dac9cb91b9d73006b8970bb97eff075b"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/announcement-modal.tsx",
+      "sha256": "9ee2b5fbdc270bfc829d3a9006187b6b86b252f1bd33c8863b217db6f9ae143d"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/announcements.module.css",
+      "sha256": "da80da3564025b04621f4a703a4158d45328a492b0948af83e1393f46a8f10bb"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/incident-card.tsx",
+      "sha256": "8b156e19ada008a29daafb3f74abdfe6b567896a56535215a597c51353ea49dd"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/incident-drawer.tsx",
+      "sha256": "908b68823292f62acb63ac0d0ba47b3d8797174702ae02fa081970519d3b671d"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/incident-location-map-wrapper.tsx",
+      "sha256": "117ea78d81546507f5dc612cf01c520c8ec39a7eb734c70b09fbd88076fbf02b"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/incident-location-map.tsx",
+      "sha256": "10db7c448f0e5385c9fa02437feb4b1ccd5454eb5370da57a5e4f0512adb5225"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/location-picker-map-wrapper.tsx",
+      "sha256": "d51cd05880b17c1a4cc9487654550219a216461d72aaf4972f488cdc1d5fb7b5"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/location-picker-map.tsx",
+      "sha256": "f140bb3981726387a181e5cd31518778b2d1a3313b57d34d8b808a5e80bb0996"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/new-report-drawer.tsx",
+      "sha256": "766bf5cab070311cee32fa797ad0f494ecdf0131a903d55f6d52c3683cd07eaf"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/report-sort-menu.tsx",
+      "sha256": "e13cecb177b4f63167c49790fd8488802c4b3b69e47195a8fe2f9ee6e3d5bfd5"
+    },
+    {
+      "file": "apps/resident-web/src/components/reports/reports.module.css",
+      "sha256": "3e4349e4d0a39890ff4e61a3be22a2135afb653c4ea18e00c4605131f703c556"
+    },
+    {
+      "file": "apps/resident-web/src/components/search/search-icons.ts",
+      "sha256": "d347f749e859c360550df7d474b25662c2cea98b2d32e03b76919b441688ad77"
+    },
+    {
+      "file": "apps/resident-web/src/components/search/search-input.tsx",
+      "sha256": "d9669f79407882f54981c340604ced2a66c7f7a35dc14feb7ae5241c92e0608a"
+    },
+    {
+      "file": "apps/resident-web/src/components/search/search-loading.tsx",
+      "sha256": "648d015b546824e9acdf332cb5b88c663ab011e36034fc46850a8a0edcd7bd00"
+    },
+    {
+      "file": "apps/resident-web/src/components/search/search-results.tsx",
+      "sha256": "78886f96dee6eb351dc3beaa5b5379c1c5d992e06b9ec699c8da86b25c2630af"
+    },
+    {
+      "file": "apps/resident-web/src/components/search/search.module.css",
+      "sha256": "630a87c941ef12494a1a869571e4917ea24104cbab9929c439e3dbd302cf6e73"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/agency-sla-status.tsx",
+      "sha256": "5cfc0e19ed0c60285bbd0d0943afec4ac6b73a6ba097d0b80c66ad3c494be78c"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/details-step.tsx",
+      "sha256": "310f4e93a1a2f9bfb7f72c62f58dba79388c6a3a3c7023f0c8bd785fa857e91c"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/document-request-modal.tsx",
+      "sha256": "26ac13887d7fb1aa47f4840e0d0dc5c09a935e88df5a7182e83e754ab6b433df"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/payment-method-step.tsx",
+      "sha256": "bb635a98c5a369c628703585e704b5458ad5a45b57937111c7ac9c6abf1b9f2d"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/pickup-step.tsx",
+      "sha256": "2001bf6527d16060793084f8708ee536e8089956723922e789e8bcd640b0a963"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/qrph-step.tsx",
+      "sha256": "3a02073c82a94df057543946fdda516741df26060cabee32e76f5eff9d192f6c"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/request-form-step.tsx",
+      "sha256": "7afa0c5130b592c51ca0cce5274c77aab98389eef1ffb5ac9112c72bc465c4c5"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/success-step.tsx",
+      "sha256": "17a07b942c710a1c7ec968b51d6ecb65eeac0cfaacd2675538286680a5ba5cf8"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/document-request-modal/types.ts",
+      "sha256": "a75b8a8cc2814f4965d180b0c732bb1b38f323873c0a3aa9f9316e1fe795a5de"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/documents-list.tsx",
+      "sha256": "c1856d462aef8f5683818617d4feebcaaac7848a7e8b8fa2f6633060260d6e97"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/download-receipt-button.tsx",
+      "sha256": "4938ff654172bbe119c35ddca3d7828b3ce96f9ad5d1233b138db513e2006773"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/payment-confirmed-dialog.tsx",
+      "sha256": "9738d0fd0b1cd000e7e9c4ace48cfccdcc603050f7139b81b9a9e917a3bb14e7"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/request-page-count.tsx",
+      "sha256": "120e23ac9749ceaae737d4c6684de2acae3b4f7ec59617866751eca29251f8fc"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/request-payment-journey.tsx",
+      "sha256": "6fb8051c0a68877b6a36307d08a8ccbe46f806dd200fe7ae9da3a91167be6348"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/resident-service-form.tsx",
+      "sha256": "d091898b0643e2e44c548b3363c82d0dfd400625c0840e4f8b5b8aee731bd73f"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/services-segment-nav.module.css",
+      "sha256": "528b73b779b4c15b6090dadb635e4eb7a9f78711d0a6a109b04e1173b7859a36"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/services-segment-nav.tsx",
+      "sha256": "720dc1435a9a471996c75c8a55fc88f13c3461b644adced2e927aec125a806dc"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/services-verification.tsx",
+      "sha256": "259e149eda11de6c71793a4fd5f9455e0ed96e09433c51fcd9218afc346d97da"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/auth-gate.tsx",
+      "sha256": "6aeff79b06e331844dd50931beafb66a4aae22dbc03e104b493408a87272cb30"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/confirm-dialog.tsx",
+      "sha256": "d2ef84e3429956805a6d5885ed5d99a446ec67c347b0e74019da454a06625ca5"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/fade-in.tsx",
+      "sha256": "855181fb54f61f6e53b0c9c44a7e22a8b941c3bee9f836c7d219a841d33ad47f"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/inline-read-error.tsx",
+      "sha256": "f797407524b263da95232b5f4314c501a6678f66685a81060e57c4c96594f025"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/loading-status.tsx",
+      "sha256": "f17a76779d2c716e6fbabc10501adb477843bad3657913419cc905078f77cd30"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/motion-provider.tsx",
+      "sha256": "11fb4fc75bd303168061274385741e3f1d07ec519c4ee6defdf299bb2658a90e"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/notification-session.tsx",
+      "sha256": "2feb7edec9a39bb9d250422e1204ec1278c30767b9c60d3373951b9df00a06ed"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/page-skeleton.tsx",
+      "sha256": "188bf61264eaf219eb74d017fda6892251eda9051c4ec0e943f4fae21cdb454b"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/placeholder-screen.tsx",
+      "sha256": "ecc3ca91ff6e858347141ce8f56881ab026fda42a2e76d626574df1845d319aa"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/read-failure.tsx",
+      "sha256": "f2b71b924b1700e832c927b6736d08f41a34c2fff5e74579be3b2f1b1123cff7"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/route-error.tsx",
+      "sha256": "6a3fef3c1c3df94cc1860d5310828aaf31b205fff97778a3d12a417f64881dad"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/status-pill.tsx",
+      "sha256": "f4f6bf6564dcaff3f0d54660fb20b459785e25029ba4b9c4c1819ead647c3ca6"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/sticky-primary-tabs.tsx",
+      "sha256": "9839fa8f0611a21e9c4ecbec1b1973b8a2763c26932c368db3494358a432bf24"
+    },
+    {
+      "file": "apps/resident-web/src/components/shared/sticky-tabs.module.css",
+      "sha256": "63ec62e83855d86df16a3dd20ff7676d92aa7da0a18e40c59ada89e905fdd949"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/bottom-tab-bar.tsx",
+      "sha256": "c19d3db6d6da3d93e8ef10cebb369dba82a15e00cab8719860eb8e9572e3f865"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/link-pending-hint.tsx",
+      "sha256": "1b6323296cb208a36e9493ee4b88b19516db3ebf189afb82a35cc0380513c088"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/notification-bell.tsx",
+      "sha256": "4093454ea132e0c0d48dc95e08593e717ea48c5a17ae4e91e36209717ae7e8fe"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/profile-menu.tsx",
+      "sha256": "53b9dc4c1c73f925f6bb29bcdcba8bca60e98c2539b5252a7bc5f042d9c44a15"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/resident-shell.module.css",
+      "sha256": "6543aca543cdafbb1b21cb9a9bfecac406c65b756ecf730fffb442da794998e0"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/resident-shell.tsx",
+      "sha256": "c951b26d3819ba049931d85bf32e313ef525eabdeb87dece6563a67cae6629ac"
+    },
+    {
+      "file": "apps/resident-web/src/components/shell/top-nav.tsx",
+      "sha256": "b931a8e3dea3c7f3933add7520655dd05394dceb15f38c771d2a25c050d72b09"
+    },
+    {
+      "file": "apps/resident-web/src/components/theme/accent-controller.tsx",
+      "sha256": "680c160ba9f17d4dadd95d29317c1972984249ca30d1af5d982bd4a9910e7983"
+    },
+    {
+      "file": "apps/resident-web/src/components/theme/color-picker-popover.tsx",
+      "sha256": "425a14245e9bce4e1248575407934e5905cf42b5f81500e9ca343dcc192c5244"
+    },
+    {
+      "file": "apps/resident-web/src/components/theme/font-controller.tsx",
+      "sha256": "b0bfe6170520db67b9c068f116a6d2920283c0393e38d4a40eb9d8d4581ab7e4"
+    },
+    {
+      "file": "apps/resident-web/src/components/theme/theme-controller.tsx",
+      "sha256": "12cb299ef79a70cc9963495cf6e35ee690a88c6c9ee49edeb6aae1fb4d0e688a"
+    },
+    {
+      "file": "apps/resident-web/src/components/theme/use-reset-preferences.ts",
+      "sha256": "4e9f5e1578afbd49c4bcabc295986e27811680de9bcc3e4e9413104aa3b57600"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/button.tsx",
+      "sha256": "0f4ec9532c322cfa572ad26b29448739dc82194690a5fb2162d359a4ccc30190"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/card.tsx",
+      "sha256": "f9176e2c7a571c32dd44f3c896ef89285446fd3402347c2d573b86d6c61a7318"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/dialog.tsx",
+      "sha256": "d2d7f64dcb2d8e51cd57d2312ccc16a3e427b40e056e366c7f933963d6d73547"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/input.tsx",
+      "sha256": "219937de019d85c1a5aa691a7fb307c482d5bc1c7ef8309c1db4756526ddb13a"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/label.tsx",
+      "sha256": "3c3c48ebe2e7fae82d02519a7bacc82f006b7e6271dc8f41817398580b72e106"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/loading.tsx",
+      "sha256": "a414c9bc0e5c79446a8404a5b028ac0246d2ec49e81c82ed75cbc4d1f8c8e406"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/password-input.tsx",
+      "sha256": "495be8b1c94897c2d4b074c0368ed7c4aba350bc0d32a86bee1b4b730f7de7f1"
+    },
+    {
+      "file": "apps/resident-web/src/components/ui/sonner.tsx",
+      "sha256": "8926702b6faa3aee3fe50d8f1d59dcfc68c5732974ff28b0c91395dd54271009"
+    },
+    {
+      "file": "apps/resident-web/src/constants/incident-status.ts",
+      "sha256": "0287efd7f7845c80347dda7218cbcce19006f0306e204784dd8386e25490d56b"
+    },
+    {
+      "file": "apps/resident-web/src/constants/payment.ts",
+      "sha256": "6e45a8d8e3f61b7abb5b0b0a21c36b2f154eac16b614d888adf3ffdf2134d301"
+    },
+    {
+      "file": "apps/resident-web/src/data/ampid1-boundary.json",
+      "sha256": "7e7263ce43657c406bd5ec7c43374bf0ba8ae7af7a4da94ba28f9b5b0f88c20a"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-about-us.ts",
+      "sha256": "7f371b6cdea2348d9c7e3dba83074caff4ff2009915fb055cf9070eb72aa7fd7"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-announcements.ts",
+      "sha256": "3763eb60dfcaf743eaa622cd1523f93b7799dfd7ed13fcbd702a3f1a44344d04"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-connected-route.ts",
+      "sha256": "d7a29f79e7dbae9e4f91276d3715437d0856ed0d1ca6695ffd9eaefdcf8e9214"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-countdown.ts",
+      "sha256": "a7bda154c23ff4b36714f9e2caa198cf99cb74094da1183a09184a3ee3151afd"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-device-location.ts",
+      "sha256": "f627ab01137ba008c2c8007357fe92f489fe0d512a51812bec150596892eda05"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-emergency-guidelines.ts",
+      "sha256": "ee386039fb4dabbcda75a24efa0147f25b1adf8d0df064ef581393bb972c641a"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-emergency-hotlines.ts",
+      "sha256": "23ccdc4db458aec08cb4077cf4b6a6c7b403aad2b2037fdaf91340799f1bcb60"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-emergency-qr-content.ts",
+      "sha256": "02a126491cb4e6196001e17b93056b6b005075e03dfee00be7dcfe3a70f26e0b"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-evacuation-centers.ts",
+      "sha256": "3217a641591ff13abc15b0f9bd5ebea9c5270b4b4d347fbd57bd4997589f872b"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-family-members.ts",
+      "sha256": "a60142df1b615bbed9baa9fbd4dc6e328d00df8c864f278554feed64c3686f9d"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-faq-articles.ts",
+      "sha256": "d37bbf977611c294040e44b4e5669b9c14a1a77a9c32be207281cd9285b5262f"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-fullscreen.ts",
+      "sha256": "40999993e1ea913f03c3c899e44f758affc802e8362d054c1c0d0564c2e9c778"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-incident-categories.ts",
+      "sha256": "4cbbd1b8b3280427f4c1f8b142285c817cfb7ef18c07f9cb6233889c060c92e0"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-medical-drives.ts",
+      "sha256": "c4ea742cd326d3ce27fa09134d61cfafb8b3bf1aebae58be97ba17e2bc8eeb60"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-my-incidents.ts",
+      "sha256": "ff0d10106a2d035a62d86dac6f25d6ebee19d50a69542c193b68937871e34e5f"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-paymongo-source.ts",
+      "sha256": "17fb6bfc93b49c2b1acf0a75a7af041c5d713ae03b5404b987d755c56e3b09a6"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-profile.ts",
+      "sha256": "594d7e9d0a84c01eb46955812e0d08662b4546f2e449c30a52c1cba42c7dfd26"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-qr-checkins.ts",
+      "sha256": "1c00fa129c875f40f813484cb601980f7e026c4e814267b972558ed0026bf541"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-resident-search.ts",
+      "sha256": "d8a11872112e224a848e07aecaafea859d06f35cc323df813e8ee0238e83c946"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-scoped-read.ts",
+      "sha256": "21495ba5becb4011652497785e6ea0c15f698fc40d9158eb25ceec5cc489e5c6"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-sign-out.ts",
+      "sha256": "d5110a113feba6c44e753449f1455d0c0fbdcea4019b77c88c497427ec3a1986"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-site-content.ts",
+      "sha256": "7b25173194ecba025f1534e9e5ae0efd8af2ab77bde8c1bd37a2542ddb00ed9c"
+    },
+    {
+      "file": "apps/resident-web/src/hooks/use-unread-counts.tsx",
+      "sha256": "412fa67d19cde1470be2927d64e6f9d51d5fabaea3e9822bb5e8b55c41a1eed4"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/auth-feedback.ts",
+      "sha256": "aedfbe0a08a50d454b53dead2d028435b5bf1cf1f87f351284643b1b047ba877"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/email-change.ts",
+      "sha256": "d4d7bdc4fa5ecc3b2cf28040de4f1f274d948401becd5079b45928b03c37c623"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/get-optional-user.ts",
+      "sha256": "8f9c4b344bf838ceb3e6552c0970a919d7fa96c993d5179733f14405c7c6c3d8"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/login-destination.ts",
+      "sha256": "924aca5b95b4a9fed7b0b977d82c2e87bc036588185ec0ddc4e521fc079784a5"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/require-user.ts",
+      "sha256": "11d700e3a41d3964b9cc5d82df3e15578c7f06feb1d848b79700d1451543fa56"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/settings-recovery-contract.ts",
+      "sha256": "785fabf730c3f2826a9fc783455ef63451cf8064cd8b516007fa8fb3c09cd8e8"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/settings-recovery-password.ts",
+      "sha256": "aa34be2aafd71a70644e4902907f2adc4737160f4baa3ddfc633c6f474768230"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/settings-recovery.ts",
+      "sha256": "70c98016c87cc41b9ef3a11965595df536bdb8eb63dba7ea84492c4e548f040f"
+    },
+    {
+      "file": "apps/resident-web/src/lib/auth/sign-out.ts",
+      "sha256": "1854958d1cac3f6cd5943afdfb90691cd0af0e017829222c580242f0a31d7f34"
+    },
+    {
+      "file": "apps/resident-web/src/lib/barangay-boundary.ts",
+      "sha256": "68ff5763db1cac72c301818f75b56f9f46db237dc4b4abcbe778a23752af6fac"
+    },
+    {
+      "file": "apps/resident-web/src/lib/data-export-html.ts",
+      "sha256": "8333441412b0cfcaf707ffff44363e265acc923546a52986995b7fcfcf1c5fa6"
+    },
+    {
+      "file": "apps/resident-web/src/lib/edge-function-error.ts",
+      "sha256": "130a7248568b148c0773693170a3315a562904400dbd7ca51a26b37d95c07527"
+    },
+    {
+      "file": "apps/resident-web/src/lib/household-feedback.ts",
+      "sha256": "a3ec46b0026ea294e5836f6bd3c3840fd5c9d4aa01f0a119d66ca676b01bf49b"
+    },
+    {
+      "file": "apps/resident-web/src/lib/image-upload.ts",
+      "sha256": "f55d41800ebfacf6682de259416d3cf0aaa6b5e5562c28694c82af90d94fcbc1"
+    },
+    {
+      "file": "apps/resident-web/src/lib/ionicon-map.tsx",
+      "sha256": "b1003320e8a6a7bf3c784ad651501b012e51477d7effc1643f7af5cb6dde033a"
+    },
+    {
+      "file": "apps/resident-web/src/lib/motion.ts",
+      "sha256": "8d5473321d4534bcfaebee2db737dfa45edc4686cab68dd2a2b6a91723c516eb"
+    },
+    {
+      "file": "apps/resident-web/src/lib/notify.ts",
+      "sha256": "a773a78ac6c9680ba86f99b53a941765e2fb5c75e3b7a8712707dff10ebeb925"
+    },
+    {
+      "file": "apps/resident-web/src/lib/onboarding.ts",
+      "sha256": "0c2c9f2e622bc2896599ff431829219c47074b72ded6597ed39de967efe4fbf4"
+    },
+    {
+      "file": "apps/resident-web/src/lib/payment-receipt.ts",
+      "sha256": "66ba3df59608187bab9dd411415fe00b75b3b040448f92234f5d1a96633aee5d"
+    },
+    {
+      "file": "apps/resident-web/src/lib/qr-checkin.ts",
+      "sha256": "fd855b54f39b53f30131e734294da1ac5e1f189d39082e83c158c875742166a6"
+    },
+    {
+      "file": "apps/resident-web/src/lib/realtime-channel.ts",
+      "sha256": "626c74648d509eea9416b1674668f36c1daa46354ce540d15b99aba1c823c300"
+    },
+    {
+      "file": "apps/resident-web/src/lib/search/query.ts",
+      "sha256": "6bec8826d0c80a3097d68832f94108ef8af67566ab8353bd69c010884985e566"
+    },
+    {
+      "file": "apps/resident-web/src/lib/search/types.ts",
+      "sha256": "d3fed0d74411f368f01b096f6e6f7b3b1e480f211c0bf87282c2ab9d46e07d76"
+    },
+    {
+      "file": "apps/resident-web/src/lib/service-feedback.ts",
+      "sha256": "42dba5362bce5c78513aa38145bbb65c18e13944ec10b037b3cae0925b4bfc48"
+    },
+    {
+      "file": "apps/resident-web/src/lib/supabase/client.ts",
+      "sha256": "8551dbf2511d3f6f9d4356e604b9e446cdf643877c85fbe8dba8a4f9be0044b8"
+    },
+    {
+      "file": "apps/resident-web/src/lib/supabase/server.ts",
+      "sha256": "16bac3215d539a19170d3e48bc04672ed7355e397e832a837e85a598d46634eb"
+    },
+    {
+      "file": "apps/resident-web/src/lib/utils.ts",
+      "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+    },
+    {
+      "file": "apps/resident-web/src/proxy.ts",
+      "sha256": "670568da967a52d90368972b889bb3253fc86d7cc79bcd3eada03af9488d2a5f"
+    },
+    {
+      "file": "apps/resident-web/tsconfig.json",
+      "sha256": "ec7da105e0aad9344a72482c308ff196febb397fc14790addacc4ba7599c9525"
+    },
+    {
+      "file": "apps/resident-web/vercel.json",
+      "sha256": "456f4be09f71a0f07df7baaafaf70b9bacf40a7bad192dec5cbe686274deac77"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "5cb44e95ad476f25b199b4a49b18cfcf7f9f692d0cba00ab0a5a88cc9c9c93da"
+    },
+    {
+      "file": "package.json",
+      "sha256": "169121aee40971b647d3225216d0cb1a3f2c079b6c89a394a71707ec37dcb9e6"
+    },
+    {
+      "file": "packages/shared/package.json",
+      "sha256": "001625a5cd8d59380a32e2c392e7e3153edddb409fc4d744ac3ea39e0a600aee"
+    },
+    {
+      "file": "packages/shared/src/constants/announcement-categories.ts",
+      "sha256": "7ef3d63b83a732db59bfaf6f61d78522f894a8802bcb08a94e671f0c379b1c66"
+    },
+    {
+      "file": "packages/shared/src/constants/document-catalog-shape.ts",
+      "sha256": "53ff42d6ef8eeabd2062d0d9c86dc8bab8abff36d1ce0ee97cb550911765f12b"
+    },
+    {
+      "file": "packages/shared/src/constants/drive-types.ts",
+      "sha256": "4461f694eff9a3631382c3537a171fb6ffd59c95840ac0d14e69d02af3262091"
+    },
+    {
+      "file": "packages/shared/src/constants/id-verification.ts",
+      "sha256": "e14dc1fd0d0b2a3858d135c113f64ef38e982bf48d2a827f1d70cf7ee269f6d2"
+    },
+    {
+      "file": "packages/shared/src/constants/incident-categories.ts",
+      "sha256": "c7c00fdb7bee2d2be5a082b8d4f20380b4badfef8b6fe7491e007ee6a48ece6e"
+    },
+    {
+      "file": "packages/shared/src/constants/official-roles.ts",
+      "sha256": "97e4682a0883f7aaeb9589428a4ca312e538b6a0a98f4f8f8aa174d10422a226"
+    },
+    {
+      "file": "packages/shared/src/constants/priority-weights.ts",
+      "sha256": "02d1139d760d71dc2807912a22b055d032a7cf0b349f4688f2841f5b3b6af96c"
+    },
+    {
+      "file": "packages/shared/src/constants/theme-colors.ts",
+      "sha256": "69a5f88cd9158624c3bb782f28e09669738133a79b0bddce5f75f0bc3ddf0cd0"
+    },
+    {
+      "file": "packages/shared/src/constants/theme-fonts.ts",
+      "sha256": "0226aca9972014ea792770e735403489fc23c74125e0636c650512cf694c6a83"
+    },
+    {
+      "file": "packages/shared/src/constants/waste-types.ts",
+      "sha256": "8a65ded8c57085005db02009a2b93e9b77764090b7af5e18500d16fcd48c2401"
+    },
+    {
+      "file": "packages/shared/src/index.ts",
+      "sha256": "e80b607bb619e4738d354f8fa5311b04bebc7f09a450910a7f6fb7bc45aca68f"
+    },
+    {
+      "file": "packages/shared/src/lib/agency-sla.test.ts",
+      "sha256": "f820c00849c5686dd379235cdb842a0148b534d96a464faf9fbdce4fbca46fbb"
+    },
+    {
+      "file": "packages/shared/src/lib/agency-sla.ts",
+      "sha256": "02c21ead3c38cc5d0011d30acd0dda75d6e9f53d5304d808fb305eb8753505f1"
+    },
+    {
+      "file": "packages/shared/src/lib/auth-fetch.test.ts",
+      "sha256": "47728e89e011ef94ff5f2d197516527933ebd8893fe5d0cf81a5f88f309af12d"
+    },
+    {
+      "file": "packages/shared/src/lib/auth-fetch.ts",
+      "sha256": "8915f808f0fea76ea4a9d4f462e3fe117e44dda455bf4f960abc063246d7db72"
+    },
+    {
+      "file": "packages/shared/src/lib/connected-route-client.test.ts",
+      "sha256": "28f031c59c6cc6d982e1ea8c40e38db7ce5dcd6b74620ca22713b8f12f64c19d"
+    },
+    {
+      "file": "packages/shared/src/lib/connected-route-client.ts",
+      "sha256": "f3f60b845091c0583394fedc7dd5189c0e140b2b0e7030def41f8a266991f8b8"
+    },
+    {
+      "file": "packages/shared/src/lib/device-location.test.ts",
+      "sha256": "ba6383e526da3d84043ae348b09b04f653276017bf097239811431a0d84e5007"
+    },
+    {
+      "file": "packages/shared/src/lib/device-location.ts",
+      "sha256": "56632a5f5bc8fead47cbfbcde3b98872171717da453edec97bdecf27698b5993"
+    },
+    {
+      "file": "packages/shared/src/lib/evacuation-route-service.test.ts",
+      "sha256": "92e8f6cea8c7852b864201ab9d300c2d60a0c0dfa92492cf210b526ea2668faa"
+    },
+    {
+      "file": "packages/shared/src/lib/evacuation-route-service.ts",
+      "sha256": "7fb199812738ded4f9b9d2c0e5a423fb169ea7185b8444189101afa60bc6353e"
+    },
+    {
+      "file": "packages/shared/src/lib/evacuation-routing.test.ts",
+      "sha256": "bb31c41acd50152da1c41fdea943a7a6e636adbe1f53f9cae8d43408ad708c0d"
+    },
+    {
+      "file": "packages/shared/src/lib/evacuation-routing.ts",
+      "sha256": "670dd09437c5f8025c922a27abe0bb90d202e762c40a64e619e3f50e90889071"
+    },
+    {
+      "file": "packages/shared/src/lib/flood-shadow.test.ts",
+      "sha256": "752ae101733a2dfb6aa27c39e624573cc956e2a228893ccf5b51b269e8f8f088"
+    },
+    {
+      "file": "packages/shared/src/lib/flood-shadow.ts",
+      "sha256": "f28b44a608696dbbc7fc82635bc0958a4766789599022ad6f3c0d5a34ee4fa87"
+    },
+    {
+      "file": "packages/shared/src/lib/flood-validation.test.ts",
+      "sha256": "7d587f01ef41992053f4759e0fdca2dd7a17398d7f806364e6c14e32625e0318"
+    },
+    {
+      "file": "packages/shared/src/lib/flood-validation.ts",
+      "sha256": "a8783763a01e40d2a10d5cd517b45edd473bed9b00aa6507b415c76a60567588"
+    },
+    {
+      "file": "packages/shared/src/lib/format.test.ts",
+      "sha256": "ca16e24bea4dc5ad3959d0069dbdfd71ef42e2c4fbad48baeb83cdc2c806a385"
+    },
+    {
+      "file": "packages/shared/src/lib/format.ts",
+      "sha256": "c379a70815fa718dd253ff6a1e024dcccb236f36c1bf6354fb31c5537af396b6"
+    },
+    {
+      "file": "packages/shared/src/lib/geocode.ts",
+      "sha256": "8d2e684c35f4080810bf7fe5f5576388b8c7f4599bb90846417e788e2dbdd97c"
+    },
+    {
+      "file": "packages/shared/src/lib/google-profile.test.ts",
+      "sha256": "bec2fbe4c8584a483ef24aa4aab25ef1e47ba72d6f8dc9f6eef151261990abb0"
+    },
+    {
+      "file": "packages/shared/src/lib/haversine.test.ts",
+      "sha256": "f50e727f7dab3486a37f7c5c848c04bb411ee5cad8028f85ff041e1b81e48107"
+    },
+    {
+      "file": "packages/shared/src/lib/haversine.ts",
+      "sha256": "e85e11a981695cdf970553d90c44fe65f2853b8e08654a51c8f7d81733051c3b"
+    },
+    {
+      "file": "packages/shared/src/lib/id-evidence.test.ts",
+      "sha256": "ec4a6b62f6db672e9012ad50fbf9edd577c11631b25fc580df96ff796fafbe7c"
+    },
+    {
+      "file": "packages/shared/src/lib/id-evidence.ts",
+      "sha256": "7886d7af72df097eff8dc759339c797cba2c986764f5cf313421cefda8d8fe83"
+    },
+    {
+      "file": "packages/shared/src/lib/model-activation.test.ts",
+      "sha256": "1c7a905cd8d1a97b65dc5cb6656acd46a564210ba7cb5df9b2760f3287ff7103"
+    },
+    {
+      "file": "packages/shared/src/lib/model-activation.ts",
+      "sha256": "ab9480d5f1aa1bd1b05360b83a3224ee49034fadf6b1d42d6ee2907fe8adf86f"
+    },
+    {
+      "file": "packages/shared/src/lib/model-exclusions.test.ts",
+      "sha256": "7ad14406e1afa6491b7a2631c3e6e2dd1ae4a8f35ee8ce241fe5922e4a3cfb5e"
+    },
+    {
+      "file": "packages/shared/src/lib/model-exclusions.ts",
+      "sha256": "eac61728c4642a1395e984b8c153b9eae0f873cfe1bfa6e1d09cb8deda1ba00f"
+    },
+    {
+      "file": "packages/shared/src/lib/point-in-polygon.test.ts",
+      "sha256": "943d2b3116d1101a4810572dc86dfa8bf97cb286da5c0517ccc9a45b065c344b"
+    },
+    {
+      "file": "packages/shared/src/lib/point-in-polygon.ts",
+      "sha256": "0d0d04eeeda6157133098827716c78574e6d8ca8dd8895da3ce06c818cffb708"
+    },
+    {
+      "file": "packages/shared/src/lib/request-status.ts",
+      "sha256": "56f1af0fd8e53582002ab496a3c43309475febc2770556076ed05abc710e6e2e"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-account-setup.test.ts",
+      "sha256": "2027270bd3baa9af5fe2fcd9667316ce8c283afd4f7210dd3cbce97fd83ece9b"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-account-setup.ts",
+      "sha256": "ef6455a6cda0dc8bed101484e9a0f97430b7f5bae3ad317fdb13bdcc75ce9860"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-auth.test.ts",
+      "sha256": "00d596dc723a59d48a01147b9f70d2f9bafbdd14588daa58dd2fe290f8a2d3c7"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-auth.ts",
+      "sha256": "12677f49a3e4f1be63aeb38eb439c12e6637134dfdd76c44f83cc4e719ad8252"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification-client.test.ts",
+      "sha256": "4cd418100fa1cba07a6d0301ca308acd37d64a51ee8883a577a9c59e5b16f8bc"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification.test.ts",
+      "sha256": "bb202ffc5cbd7ba6235a8f00af8ed7034ee51ff612305ec5aa31757af8526d92"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-email-verification.ts",
+      "sha256": "d8025966e97f200db7f053b74dc4c35a3e2b6a6f3e2b6214b148c7befb432164"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-submission.test.ts",
+      "sha256": "9084b3be85be3ce9f2f7488d6ca028bd78966db1bae4a5ad474950c02b9046b6"
+    },
+    {
+      "file": "packages/shared/src/lib/resident-submission.ts",
+      "sha256": "01a348e50ee924febcf3b1900c6e004530e3e11e9303dfe9769d4cecfc445367"
+    },
+    {
+      "file": "packages/shared/src/lib/routing-pack-builder.test.ts",
+      "sha256": "225af4619376885be4d7c4651f04a50018116ecb8c83c08c73710a03cd1f0753"
+    },
+    {
+      "file": "packages/shared/src/lib/routing-pack-builder.ts",
+      "sha256": "5bcde2c2e70a8ed22e377491a1ada09aa04897ba16b39be36ab52432ca85a632"
+    },
+    {
+      "file": "packages/shared/src/lib/service-catalog.test.ts",
+      "sha256": "e898b51f67419084f2d877066777e5a6cf8703cb5219b6cab0db0fcb2a287694"
+    },
+    {
+      "file": "packages/shared/src/lib/service-catalog.ts",
+      "sha256": "1377c6c75ffbe9527475866c5184b290463a54ddaee21635ca530fc453c5126a"
+    },
+    {
+      "file": "packages/shared/src/lib/service-foundations.ts",
+      "sha256": "957a4e1153b11257aefe138561cb57e52a340ec28d62f0ebdd1355535162fd64"
+    },
+    {
+      "file": "packages/shared/src/lib/service-request-validation.test.ts",
+      "sha256": "5b054cc16c2f25dee0956ac602f798061499c7b1a0fc28c2dc961c78a6c9116e"
+    },
+    {
+      "file": "packages/shared/src/lib/service-request-validation.ts",
+      "sha256": "be57ce06b25c4b0db058ffad577ee60de97c3627662d12918265ef284d8cc449"
+    },
+    {
+      "file": "packages/shared/src/lib/service-tracking.test.ts",
+      "sha256": "b21eb7b14056195f785a8d100c08f0fcdbb4151d50ed8cb668385c68fd15d6dd"
+    },
+    {
+      "file": "packages/shared/src/lib/service-tracking.ts",
+      "sha256": "97796906feb675dc901130b476126a1c43bd9ea46ff627eca220992721a45102"
+    },
+    {
+      "file": "packages/shared/src/lib/supabase-client.ts",
+      "sha256": "699e8655079895230b6a406e978f45be1a0a2eb3c25ac45402bdc71dbdea63e4"
+    },
+    {
+      "file": "packages/shared/src/schemas/about-us.ts",
+      "sha256": "cd9b7ba759c248386b7ba31ef5159985d4773683b6fcf804db1eac73159f3417"
+    },
+    {
+      "file": "packages/shared/src/schemas/admin-audit-log.ts",
+      "sha256": "0007fb27f457aad1794d0f41e63c5933ded7e37152a735762718744b24f1f0f7"
+    },
+    {
+      "file": "packages/shared/src/schemas/announcement.test.ts",
+      "sha256": "92397ef291b2a33d61dd08157228a4d6f0ea67ed9fcb7d44dc908c75144da3b3"
+    },
+    {
+      "file": "packages/shared/src/schemas/announcement.ts",
+      "sha256": "7a10636eacbfed57bd6c4192396f3be4720b0b43cb87619436985b9eb1580955"
+    },
+    {
+      "file": "packages/shared/src/schemas/auth.ts",
+      "sha256": "fbc8a562f21119526261883e6622964088ca7a8575f93ab10147305759e66c38"
+    },
+    {
+      "file": "packages/shared/src/schemas/document-type.test.ts",
+      "sha256": "4dfc69ec8dfdb69ec1ee20f671cb308123058d68d946f9724a4be332ae93ffbb"
+    },
+    {
+      "file": "packages/shared/src/schemas/document-type.ts",
+      "sha256": "5b465e0bed7f1f8f60bf568bef4cfb6f500440a3a8e7f855d30efb2dc0c1beff"
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration-result.test.ts",
+      "sha256": "dcac003fe169352376b89a8f34acdfd8fdc060246f4362cec7cee464c5611221"
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration.test.ts",
+      "sha256": "5c9cc698c0393e6981abef12ec3159500867fe14158d45dcf5f670b34179be52"
+    },
+    {
+      "file": "packages/shared/src/schemas/drive-registration.ts",
+      "sha256": "8fc33f90d0c5b0ef87496281684fc4aa09e767862d903876835d283dbf576b78"
+    },
+    {
+      "file": "packages/shared/src/schemas/emergency-information.ts",
+      "sha256": "6075267bb490267c526b07afdbb597c5f1bb5faffc45df915db4389c570d09d8"
+    },
+    {
+      "file": "packages/shared/src/schemas/emergency-qr.ts",
+      "sha256": "b8d7d5cc0baa3080839cfd896fcb1cac90fd87f3d26874c1e87492431b8c47c8"
+    },
+    {
+      "file": "packages/shared/src/schemas/evacuation-center.ts",
+      "sha256": "f1898bdfd27fbc2fd47fbe6e75bd24b552d7424ec978b5077d535c3c92f429aa"
+    },
+    {
+      "file": "packages/shared/src/schemas/faq.ts",
+      "sha256": "d3f1a21228b4a5be22f7c1e939d7d8b21958516882943cf8f599a3cd052a1d4f"
+    },
+    {
+      "file": "packages/shared/src/schemas/household.ts",
+      "sha256": "649ee31b82fc0d2791ea352a59c3bfc5eef0a711979b04782852596296c0a224"
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-map.ts",
+      "sha256": "153a44870e89ebdb1b0a05e11cf0eec9c10dd4879f6dedbd0273136c24aa0cce"
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-report.test.ts",
+      "sha256": "f3ce329a4cc7fe7eb24b42178481f5719019db88b6e6a2411639450736bbcce4"
+    },
+    {
+      "file": "packages/shared/src/schemas/incident-report.ts",
+      "sha256": "6a900466695019fcc4a194ee0050ed9a6bf369df28546d414e7049900bd1aef6"
+    },
+    {
+      "file": "packages/shared/src/schemas/payment.test.ts",
+      "sha256": "b35ddb97c28140c6788b0b992b7b7633881450aed530479d2a8d4c388eb775a4"
+    },
+    {
+      "file": "packages/shared/src/schemas/payment.ts",
+      "sha256": "c2cfaa9ebde38c0cafffbeb168f5db5823a84fe8711605b1cae396c4472ef2e7"
+    },
+    {
+      "file": "packages/shared/src/schemas/request-form.test.ts",
+      "sha256": "6d4b5d84a9590290ba666ccfd1bcfd08c5df11e7934db5b658fcdc0ea98304eb"
+    },
+    {
+      "file": "packages/shared/src/schemas/request-form.ts",
+      "sha256": "1c453b9bde025104254cc48dd4dfaca515a4ea92ad09bc18b4eb320d153dde25"
+    },
+    {
+      "file": "packages/shared/src/schemas/routing-conditions.test.ts",
+      "sha256": "0e1f339f057e26b6f9f92f8aa9edd46d0b8e3ee50ca7656117244c69e55267d9"
+    },
+    {
+      "file": "packages/shared/src/schemas/routing-conditions.ts",
+      "sha256": "e00cc18ba339166c668f1cea788498d51289f8239dd2e8fffc877652a4e95828"
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.test.ts",
+      "sha256": "78f32dc8d648f11ca0aa29cb8a982e9483a3c5173fad57a106bb57e30e1acdf9"
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "93ce2539e168bf51b93ebbf4e11c5a6ab24d0fe8b22b7564e5b3bc66575f9662"
+    },
+    {
+      "file": "packages/shared/src/schemas/settings.ts",
+      "sha256": "79388a981033f0ead971befa1fb87d4a801f3668843be6344ac8841ff1a5cced"
+    },
+    {
+      "file": "packages/shared/src/schemas/site-content.ts",
+      "sha256": "20dfbccb6a47ec360910b43bd48a276365a348ef97903154f20320799eeeded2"
+    },
+    {
+      "file": "packages/shared/src/schemas/staff.test.ts",
+      "sha256": "14f69f79e948e83f6dda87f010c6dc27275a3e8342d77654bc4a0da76de18bd3"
+    },
+    {
+      "file": "packages/shared/src/schemas/staff.ts",
+      "sha256": "bb5677337d59300902b562b01c60ebe480aab522dd9d9af54526cf1c4b437eb4"
+    },
+    {
+      "file": "packages/shared/src/schemas/waste-management.ts",
+      "sha256": "4dfdff85e02a35fa3ede629f69c126415337f80800aa238db14f0371172ea708"
+    },
+    {
+      "file": "packages/shared/src/types/database.ts",
+      "sha256": "095d94526749f11bb6a9926b827fffc0f81b0a628245d34d7b3894e5e70ee1bc"
+    },
+    {
+      "file": "packages/shared/src/types/domain.ts",
+      "sha256": "3e40f44fd17650cf7398e24f7b1e8712fc0b14a1d2c342ef965e240b125525f3"
+    },
+    {
+      "file": "packages/shared/src/types/map-bridge.ts",
+      "sha256": "9fb7157073af06ad26b861d93798d98f644e2d4fee6786436866eb1f2ca2f465"
+    },
+    {
+      "file": "packages/shared/src/types/resident-account-setup.database.ts",
+      "sha256": "13c8a74ef3d7c43df797174c6f9211e48ee8f018617439148320fd30a9551978"
+    },
+    {
+      "file": "packages/shared/src/types/routing-conditions.database.ts",
+      "sha256": "00e663290412a899a19c3067dec585802982a03c2702bb7d6a96900a10aa23a5"
+    },
+    {
+      "file": "packages/shared/src/types/service-foundations.ts",
+      "sha256": "5a669feb8fcde6c3cd070a3cc01f63dbec07d7f4120672941f2fdd71a1abacb3"
+    }
+  ],
+  "exclusions": [
+    "all uncommitted home/maps/reports/banner/auth-notification and cookie-isolation work",
+    "all uncommitted shared/iOS/admin changes",
+    "credentials/env files",
+    "git history",
+    "plans/evidence and temporary data"
+  ]
+}

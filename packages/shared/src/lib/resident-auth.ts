@@ -82,10 +82,12 @@ export function androidCallbackCode(value: string): string {
   return codes[0];
 }
 
-/** Existing staff profiles retain their role; residents must supply required fields. */
-export function residentProfileComplete(profile: Database['public']['Tables']['profiles']['Row'] | null): boolean {
+type ProfileCompletionOptions = { includeAdmin?: boolean };
+
+/** Resident-web warnings can check admin details without changing account setup routing. */
+export function residentProfileComplete(profile: Database['public']['Tables']['profiles']['Row'] | null, options: ProfileCompletionOptions = {}): boolean {
   if (!profile || profile.deleted_at) return false;
-  if (profile.role !== 'resident') return true;
+  if (profile.role !== 'resident' && !(options.includeAdmin && profile.role === 'admin')) return true;
   return profileCompletionSchema.safeParse({
     firstName: profile.first_name, lastName: profile.last_name,
     middleName: profile.middle_name || undefined, suffix: profile.suffix || undefined,
@@ -95,13 +97,13 @@ export function residentProfileComplete(profile: Database['public']['Tables']['p
   }).success;
 }
 
-export async function needsResidentProfile(client: SupabaseClient<Database>, userId: string): Promise<boolean> {
+export async function needsResidentProfile(client: SupabaseClient<Database>, userId: string, options: ProfileCompletionOptions = {}): Promise<boolean> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 10000);
   try {
     const { data, error } = await client.from('profiles').select('*').eq('id', userId).abortSignal(controller.signal).maybeSingle();
     if (error) throw new Error('Unable to load your profile. Check your connection and retry.');
-    return !residentProfileComplete(data);
+    return !residentProfileComplete(data, options);
   } finally { clearTimeout(timer); }
 }
 

@@ -1,0 +1,31 @@
+{
+  "identities": {
+    "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+    "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+    "resident": "0b9d8b87-bb21-4f81-bb7c-c18c0d34d51a",
+    "admin": "ebcc210c-f014-467e-bdc6-eb152a2b61ad",
+    "firstSubmission": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+    "serviceRequest": "74c9349f-5fff-4053-82f5-ddf711a30e81"
+  },
+  "profile": {
+    "current_id_submission_id": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+    "approved_id_submission_id": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+    "id_verification_status": "verified",
+    "id_repair_required": false
+  },
+  "submissions": [
+    {
+      "id": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+      "decision": "verified",
+      "reviewed_by": "ebcc210c-f014-467e-bdc6-eb152a2b61ad"
+    }
+  ],
+  "requests": [
+    {
+      "id": "74c9349f-5fff-4053-82f5-ddf711a30e81",
+      "approved_id_submission_id": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+      "payment_status": "pending"
+    }
+  ],
+  "payments": []
+}

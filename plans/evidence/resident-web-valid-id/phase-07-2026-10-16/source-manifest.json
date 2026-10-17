@@ -1,0 +1,94 @@
+{
+  "recordedAt": "2026-10-16T07:40:59.997Z",
+  "scope": "Local source only; hashes do not certify hosted deployment or historical source equivalence.",
+  "files": [
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/birthday-dialog.tsx",
+      "sha256": "18af5674ef0b6e685548fa8f0b6746a7d8639203a9c6fc6151b09fd8cbd3681c"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/camera-dialog.tsx",
+      "sha256": "7eeabfb17e0b1c15dafb6380fa9756a485afecaea478d62f34225cb96ba5e736"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/draft.ts",
+      "sha256": "60374e3b6f11e66f99472b4677ba7cad16d3c9e8ee4b106a1a60de7bc88f7eae"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/page.tsx",
+      "sha256": "82b233bca4f8ff1dba3486ef9cb5a0871f8e31cca3f282445bfaa2227fa77e5b"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/photo.ts",
+      "sha256": "b739e7844002e751143ec8be1640b2ed3a22d6e48b29c2e70f82ba83be3318aa"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/transport.ts",
+      "sha256": "bb5bc772ed94230360fcf55b1314eb58c5598dd8d59e8ffaa97896c815d3a4db"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/valid-id/valid-id-flow.tsx",
+      "sha256": "50ed7d9ba08855308c1a3ce2dd429df75e7529e6d0548a13483b2d50d0b4c360"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/layout.tsx",
+      "sha256": "960b744640bc089115b8fc105cca454ea00ea43e39dada5e63c4fcefcedcbec6"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/settings-sidebar.tsx",
+      "sha256": "4f16376145b6d80dd4f874e8921ca7b192e0fb0e1a45b7d0f402a57e018cbf16"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/settings-id-status.tsx",
+      "sha256": "72b319aacd897493e92001ad7a6a5b61c584c60dfbe455aad8fedcf42de8e55f"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/profile/page.tsx",
+      "sha256": "d094a2d99547facc03f36fb633b63e3a921ef1246468e80d84e0cb197926438a"
+    },
+    {
+      "file": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "sha256": "c605d3a0192ce296d6ff338696166af45e96103b45fc85808eff35e2b814c5c9"
+    },
+    {
+      "file": "apps/resident-web/src/components/services/resident-service-form.tsx",
+      "sha256": "d091898b0643e2e44c548b3363c82d0dfd400625c0840e4f8b5b8aee731bd73f"
+    },
+    {
+      "file": "apps/resident-web/tests/valid-id-browser.mjs",
+      "sha256": "ab6b8d3d2e427f1d72cc74108ea7d5a7af221bb1bba00682e2e6b2880b963951"
+    },
+    {
+      "file": "apps/resident-web/tests/valid-id.test.ts",
+      "sha256": "f588e62e15f57e1ce4c64b84e3d3dfd707e7285f6bd43550a806245d82b86733"
+    },
+    {
+      "file": "supabase/functions/extract-resident-id-ocrspace/index.ts",
+      "sha256": "d90f94754ef406d30d476907871c18b0f3b3b8d10013a9deab867667e8565ced"
+    },
+    {
+      "file": "supabase/functions/extract-resident-id-ocrspace/handler.ts",
+      "sha256": "96416f47630699217546d8ed8250c7fe84c7d14f30aaf82b5f2b59c51946526b"
+    },
+    {
+      "file": "supabase/functions/extract-resident-id/id-text.ts",
+      "sha256": "8ba3e8a25c363c1283fa8a5ff20d9bdb16ef76eed597aaec43a5a565676742a1"
+    },
+    {
+      "file": "supabase/functions/extract-resident-id/handler.ts",
+      "sha256": "e83eb589e7db0bbc61faa1c6f4d28d623adc10054ce54004780110708ee14193"
+    },
+    {
+      "file": "packages/shared/src/lib/id-evidence.ts",
+      "sha256": "7886d7af72df097eff8dc759339c797cba2c986764f5cf313421cefda8d8fe83"
+    },
+    {
+      "file": "packages/shared/src/schemas/service-foundations.ts",
+      "sha256": "93ce2539e168bf51b93ebbf4e11c5a6ab24d0fe8b22b7564e5b3bc66575f9662"
+    },
+    {
+      "file": "supabase/migrations/0118_resident_front_id_submission.sql",
+      "sha256": "f063101a9257d45b0111b043e200d325ccf94f4ff49ba169c2045ca88a93c337"
+    }
+  ]
+}

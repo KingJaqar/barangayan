@@ -2,15 +2,16 @@ import { Host, Icon, Switch as NativeSwitch, type IconName } from '@expo/ui';
 import { Link, useNavigation, type Href } from 'expo-router';
 import { usePreventRemove } from 'expo-router/react-navigation';
 import { useEffect, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Modal, Pressable, ScrollView, Text, TextInput, View, type TextInputProps } from 'react-native';
-import { layout, radius, space, typeScale, useColors, type Colors, type TypeRole } from '../lib/theme';
+import { AccessibilityInfo, ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Modal, Pressable, ScrollView, Text, TextInput, useWindowDimensions, View, type TextInputProps } from 'react-native';
+import { layout, radius, space, useColors, useType, type Colors, type TypeRole } from '../lib/theme';
 
 type Tone = 'primary' | 'secondary' | 'danger';
 const toneColor = (colors: Colors, tone: Tone) => tone === 'secondary' ? colors.textSecondary : tone === 'danger' ? colors.danger : colors.textPrimary;
 
 export function Body({ children, heading = false, role = heading ? 'title2' : 'body', tone = 'primary' }: { children: ReactNode; heading?: boolean; role?: TypeRole; tone?: Tone }) {
   const colors = useColors();
-  return <Text selectable accessibilityRole={heading ? 'header' : undefined} style={[typeScale[role], { color: toneColor(colors, tone) }]}>{children}</Text>;
+  const type = useType();
+  return <Text selectable accessibilityRole={heading ? 'header' : undefined} style={[type[role], { color: toneColor(colors, tone) }]}>{children}</Text>;
 }
 export function Screen({ children }: { children: ReactNode }) {
   const colors = useColors();
@@ -25,34 +26,38 @@ export function Card({ children }: { children: ReactNode }) {
 /** Primary, secondary or destructive button. Callers keep it disabled while their request is active. */
 export function Action({ label, onPress, disabled = false, secondary = false, destructive = false, hint }: { label: string; onPress: () => void; disabled?: boolean; secondary?: boolean; destructive?: boolean; hint?: string }) {
   const colors = useColors();
+  const type = useType();
   const fill = destructive ? colors.danger : colors.primary;
   const foreground = secondary ? fill : destructive ? colors.surface : colors.onPrimary;
   return <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityHint={hint} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
     style={({ pressed }) => ({ minHeight: layout.buttonMinHeight, borderRadius: radius.md, borderCurve: 'continuous', borderWidth: secondary ? 1 : 0, borderColor: fill, backgroundColor: secondary ? 'transparent' : fill, opacity: disabled ? 0.5 : pressed ? 0.7 : 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: space[4], paddingVertical: space[3] })}>
-    <Text style={[typeScale.headline, { color: foreground, textAlign: 'center' }]}>{label}</Text>
+    <Text style={[type.headline, { color: foreground, textAlign: 'center' }]}>{label}</Text>
   </Pressable>;
 }
 export function Toggle({ label, value, onChange, disabled }: { label: string; value: boolean; onChange: (value: boolean) => void; disabled?: boolean }) {
   const colors = useColors();
   return <Host matchContents={{ vertical: true }} seedColor={colors.primary} style={{ minHeight: layout.controlMin, width: '100%' }}><NativeSwitch label={label} value={value} onValueChange={onChange} disabled={disabled} /></Host>;
 }
-function SymbolIcon({ name, color, size = 17 }: { name: IconName; color: string; size?: number }) {
+export function SymbolIcon({ name, color, size = 17 }: { name: IconName; color: string; size?: number }) {
   return <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><Host matchContents><Icon name={name} size={size} color={color} /></Host></View>;
 }
 function FieldLabel({ label, required }: { label: string; required: boolean }) {
   const colors = useColors();
+  const type = useType();
   // The control itself carries the label (and "required") for VoiceOver, so the visual label is not read twice.
-  return <Text accessibilityElementsHidden importantForAccessibility="no" style={[typeScale.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>{label}{required && <Text style={{ color: colors.danger }}> *</Text>}</Text>;
+  return <Text accessibilityElementsHidden importantForAccessibility="no" style={[type.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>{label}{required && <Text style={{ color: colors.danger }}> *</Text>}</Text>;
 }
 function FieldError({ message }: { message?: string }) {
   const colors = useColors();
+  const type = useType();
   useEffect(() => { if (message) AccessibilityInfo.announceForAccessibility(message); }, [message]);
   if (!message) return null;
-  return <View style={{ flexDirection: 'row', gap: space[2], alignItems: 'center' }}><SymbolIcon name="exclamationmark.circle" color={colors.danger} size={15} /><Text style={[typeScale.footnote, { color: colors.danger, flex: 1 }]}>{message}</Text></View>;
+  return <View style={{ flexDirection: 'row', gap: space[2], alignItems: 'center' }}><SymbolIcon name="exclamationmark.circle" color={colors.danger} size={15} /><Text style={[type.footnote, { color: colors.danger, flex: 1 }]}>{message}</Text></View>;
 }
 /** Labeled input with required marker, adjacent announced error, password visibility and a numeric-pad Done action. */
 export function Field({ label, required = false, error, ...props }: TextInputProps & { label: string; required?: boolean; error?: string }) {
   const colors = useColors();
+  const type = useType();
   const [revealed, setRevealed] = useState(false);
   const secret = props.secureTextEntry === true;
   const numeric = props.keyboardType === 'number-pad' || props.keyboardType === 'decimal-pad' || props.keyboardType === 'phone-pad';
@@ -60,21 +65,57 @@ export function Field({ label, required = false, error, ...props }: TextInputPro
     <FieldLabel label={label} required={required} />
     <View style={{ flexDirection: 'row', alignItems: 'center', borderColor: error ? colors.danger : colors.border, borderWidth: 1, backgroundColor: colors.surface, borderRadius: radius.sm, borderCurve: 'continuous' }}>
       <TextInput accessibilityLabel={required ? `${label}, required` : label} accessibilityHint={error} placeholderTextColor={colors.textTertiary} autoCorrect={false} returnKeyType="done" onSubmitEditing={Keyboard.dismiss} {...props} secureTextEntry={secret && !revealed}
-        style={[typeScale.body, { flex: 1, color: colors.textPrimary, minHeight: props.multiline ? 120 : layout.buttonMinHeight, padding: space[3], textAlignVertical: props.multiline ? 'top' : 'center' }, props.style]} />
-      {secret && <Pressable accessibilityRole="button" accessibilityLabel={revealed ? `Hide ${label}` : `Show ${label}`} onPress={() => setRevealed((value) => !value)} style={{ minHeight: layout.controlMin, minWidth: layout.controlMin, paddingHorizontal: space[3], justifyContent: 'center' }}><Text style={[typeScale.callout, { color: colors.primary }]}>{revealed ? 'Hide' : 'Show'}</Text></Pressable>}
+        style={[type.body, { flex: 1, color: colors.textPrimary, minHeight: props.multiline ? 120 : layout.buttonMinHeight, padding: space[3], textAlignVertical: props.multiline ? 'top' : 'center' }, props.style]} />
+      {secret && <Pressable accessibilityRole="button" accessibilityLabel={revealed ? `Hide ${label}` : `Show ${label}`} onPress={() => setRevealed((value) => !value)} style={{ minHeight: layout.controlMin, minWidth: layout.controlMin, paddingHorizontal: space[3], justifyContent: 'center' }}><Text style={[type.callout, { color: colors.primary }]}>{revealed ? 'Hide' : 'Show'}</Text></Pressable>}
     </View>
     <FieldError message={error} />
-    {numeric && <Pressable accessibilityRole="button" accessibilityLabel={`Done editing ${label}`} onPress={Keyboard.dismiss} style={{ minHeight: layout.controlMin, justifyContent: 'center', alignSelf: 'flex-end' }}><Text style={[typeScale.body, { color: colors.primary }]}>Done</Text></Pressable>}
+    {numeric && <Pressable accessibilityRole="button" accessibilityLabel={`Done editing ${label}`} onPress={Keyboard.dismiss} style={{ minHeight: layout.controlMin, justifyContent: 'center', alignSelf: 'flex-end' }}><Text style={[type.body, { color: colors.primary }]}>Done</Text></Pressable>}
+  </View>;
+}
+/**
+ * Search input with a magnifier, a domain-specific hint and an explicit clear action. Callers
+ * debounce the value and own what it searches; a field never ships without a working result.
+ */
+export function SearchField({ label, hint, value, onChangeText }: { label: string; hint: string; value: string; onChangeText: (value: string) => void }) {
+  const colors = useColors();
+  const type = useType();
+  return <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: layout.buttonMinHeight, paddingLeft: space[3], gap: space[2], borderColor: colors.border, borderWidth: 1, borderRadius: radius.md, borderCurve: 'continuous', backgroundColor: colors.surface }}>
+    <SymbolIcon name="magnifyingglass" color={colors.textSecondary} size={16} />
+    <TextInput accessibilityLabel={label} placeholder={hint} placeholderTextColor={colors.textTertiary} value={value} onChangeText={onChangeText} autoCorrect={false} autoCapitalize="none" returnKeyType="search" onSubmitEditing={Keyboard.dismiss}
+      style={[type.body, { flex: 1, color: colors.textPrimary, paddingVertical: space[3] }]} />
+    {value.length > 0 && <Pressable accessibilityRole="button" accessibilityLabel="Clear search" onPress={() => onChangeText('')} style={{ minHeight: layout.controlMin, minWidth: layout.controlMin, justifyContent: 'center', alignItems: 'center' }}>
+      <SymbolIcon name="xmark.circle" color={colors.textSecondary} size={18} />
+    </Pressable>}
+  </View>;
+}
+/**
+ * Two to four short peers. At accessibility text sizes the options stack as full-width rows so
+ * every option stays visible and reachable instead of being clipped or dropped.
+ */
+export function Segmented<T extends string>({ label, options, selected, onChange }: { label: string; options: readonly { value: T; label: string }[]; selected: T; onChange: (value: T) => void }) {
+  const colors = useColors();
+  const type = useType();
+  const { fontScale } = useWindowDimensions();
+  const stacked = fontScale > 1.3;
+  return <View accessibilityRole="tablist" accessibilityLabel={label} style={{ flexDirection: stacked ? 'column' : 'row', gap: space[1], padding: space[1], borderRadius: radius.md, borderCurve: 'continuous', backgroundColor: colors.border }}>
+    {options.map((option) => {
+      const active = option.value === selected;
+      return <Pressable key={option.value} accessibilityRole="tab" accessibilityLabel={option.label} accessibilityState={{ selected: active }} onPress={() => { if (!active) onChange(option.value); }}
+        style={{ flex: stacked ? undefined : 1, minHeight: layout.controlMin, justifyContent: 'center', alignItems: 'center', paddingHorizontal: space[2], borderRadius: radius.sm, borderCurve: 'continuous', backgroundColor: active ? colors.surface : 'transparent' }}>
+        <Text style={[type.subheadline, { color: active ? colors.textPrimary : colors.textSecondary, fontWeight: active ? '600' : '400', textAlign: 'center' }]}>{option.label}</Text>
+      </Pressable>;
+    })}
   </View>;
 }
 /** Native page sheet with a labeled close action. Swipe dismissal is allowed only when closing loses nothing. */
-export function Sheet({ visible, title, onClose, children }: { visible: boolean; title: string; onClose: () => void; children: ReactNode }) {
+export function Sheet({ visible, title, onClose, children, swipeDismiss = true }: { visible: boolean; title: string; onClose: () => void; children: ReactNode; swipeDismiss?: boolean }) {
   const colors = useColors();
-  return <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" allowSwipeDismissal onRequestClose={onClose}>
+  const type = useType();
+  return <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" allowSwipeDismissal={swipeDismiss} onRequestClose={onClose}>
     <View style={{ flex: 1, backgroundColor: colors.surfaceRaised }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: layout.margin, paddingTop: space[4], gap: space[3] }}>
-        <Text accessibilityRole="header" style={[typeScale.headline, { color: colors.textPrimary, flex: 1 }]}>{title}</Text>
-        <Pressable accessibilityRole="button" accessibilityLabel={`Close ${title}`} onPress={onClose} style={{ minHeight: layout.controlMin, minWidth: layout.controlMin, justifyContent: 'center', alignItems: 'flex-end' }}><Text style={[typeScale.body, { color: colors.primary }]}>Close</Text></Pressable>
+        <Text accessibilityRole="header" style={[type.headline, { color: colors.textPrimary, flex: 1 }]}>{title}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Close ${title}`} onPress={onClose} style={{ minHeight: layout.controlMin, minWidth: layout.controlMin, justifyContent: 'center', alignItems: 'flex-end' }}><Text style={[type.body, { color: colors.primary }]}>Close</Text></Pressable>
       </View>
       <ScrollView contentContainerStyle={{ padding: layout.margin, gap: space[2] }}>{children}</ScrollView>
     </View>
@@ -83,13 +124,14 @@ export function Sheet({ visible, title, onClose, children }: { visible: boolean;
 /** Label + chosen value + chevron; opens a sheet of every option with a checkmark on the selected one. */
 export function Selector<T extends string>({ label, options, selected, onChange, required = false, error, disabled = false }: { label: string; options: readonly { value: T; label: string }[]; selected: T | ''; onChange: (value: T) => void; required?: boolean; error?: string; disabled?: boolean }) {
   const colors = useColors();
+  const type = useType();
   const [open, setOpen] = useState(false);
   const chosen = options.find((option) => option.value === selected)?.label;
   return <View style={{ gap: space[2] }}>
     <FieldLabel label={label} required={required} />
     <Pressable accessibilityRole="button" accessibilityLabel={required ? `${label}, required` : label} accessibilityValue={{ text: chosen ?? 'Not selected' }} accessibilityHint="Opens the list of choices" accessibilityState={{ disabled }} disabled={disabled} onPress={() => setOpen(true)}
       style={({ pressed }) => ({ minHeight: layout.buttonMinHeight, flexDirection: 'row', alignItems: 'center', gap: space[2], paddingHorizontal: space[3], borderColor: error ? colors.danger : colors.border, borderWidth: 1, borderRadius: radius.sm, borderCurve: 'continuous', backgroundColor: colors.surface, opacity: disabled ? 0.5 : pressed ? 0.7 : 1 })}>
-      <Text style={[typeScale.body, { flex: 1, color: chosen ? colors.textPrimary : colors.textTertiary }]}>{chosen ?? 'Select'}</Text>
+      <Text style={[type.body, { flex: 1, color: chosen ? colors.textPrimary : colors.textTertiary }]}>{chosen ?? 'Select'}</Text>
       <SymbolIcon name="chevron.up.chevron.down" color={colors.textSecondary} size={14} />
     </Pressable>
     <FieldError message={error} />
@@ -98,7 +140,7 @@ export function Selector<T extends string>({ label, options, selected, onChange,
         const active = option.value === selected;
         return <Pressable key={option.value} accessibilityRole="button" accessibilityLabel={option.label} accessibilityState={{ selected: active }} onPress={() => { onChange(option.value); setOpen(false); }}
           style={({ pressed }) => ({ minHeight: layout.listRowMin, flexDirection: 'row', alignItems: 'center', gap: space[3], paddingHorizontal: space[3], borderRadius: radius.sm, backgroundColor: active ? colors.surfaceSelected : pressed ? colors.canvas : 'transparent' })}>
-          <Text style={[typeScale.body, { flex: 1, color: colors.textPrimary }]}>{option.label}</Text>
+          <Text style={[type.body, { flex: 1, color: colors.textPrimary }]}>{option.label}</Text>
           {active && <SymbolIcon name="checkmark" color={colors.primary} />}
         </Pressable>;
       })}
@@ -109,16 +151,18 @@ export type StatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 /** Icon + label so status never depends on color alone. */
 export function StatusBadge({ label, icon, tone }: { label: string; icon: IconName; tone: StatusTone }) {
   const colors = useColors();
+  const type = useType();
   const color = tone === 'neutral' ? colors.textSecondary : colors[tone];
   return <View accessible accessibilityLabel={`Status: ${label}`} style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: space[1], borderColor: color, borderWidth: 1, borderRadius: radius.xl, paddingHorizontal: space[2], paddingVertical: space[1] }}>
-    <SymbolIcon name={icon} color={color} size={13} /><Text style={[typeScale.caption, { color }]}>{label}</Text>
+    <SymbolIcon name={icon} color={color} size={13} /><Text style={[type.caption, { color }]}>{label}</Text>
   </View>;
 }
 export function Destination({ title, detail, href }: { title: string; detail?: string; href: Href }) {
   const colors = useColors();
+  const type = useType();
   return <Link href={href} asChild><Pressable accessibilityRole="link" accessibilityLabel={detail ? `${title}, ${detail}` : title}
     style={({ pressed }) => ({ minHeight: layout.listRowMin, paddingVertical: space[2], flexDirection: 'row', alignItems: 'center', gap: space[3], opacity: pressed ? 0.6 : 1 })}>
-    <View style={{ flex: 1, gap: space[1] }}><Text style={[typeScale.headline, { color: colors.primary }]}>{title}</Text>{detail && <Text style={[typeScale.subheadline, { color: colors.textSecondary }]}>{detail}</Text>}</View>
+    <View style={{ flex: 1, gap: space[1] }}><Text style={[type.headline, { color: colors.primary }]}>{title}</Text>{detail && <Text style={[type.subheadline, { color: colors.textSecondary }]}>{detail}</Text>}</View>
     <SymbolIcon name="chevron.right" color={colors.textTertiary} size={14} />
   </Pressable></Link>;
 }

@@ -8,7 +8,7 @@ import { storageBucket } from '../../lib/files';
 import { pickImage, type ImageOrigin } from '../../lib/image-source';
 import { useResident, type Profile } from '../../lib/runtime';
 import { createStagedUploads } from '../../lib/staged-uploads';
-import { space, typeScale, useColors } from '../../lib/theme';
+import { space, useType, useColors } from '../../lib/theme';
 import { applyAvatar, replaceAvatar } from './avatar';
 import { initials } from './profile-form';
 
@@ -21,6 +21,7 @@ const staged = createStagedUploads(drafts);
 export function AvatarCard({ profile }: { profile: Profile }) {
   const { client, session, config, refreshProfile } = useResident();
   const colors = useColors();
+  const type = useType();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ text: string; tone: 'primary' | 'danger' } | null>(null);
   const [showFailed, setShowFailed] = useState(false);
@@ -80,7 +81,7 @@ export function AvatarCard({ profile }: { profile: Profile }) {
         style={{ width: 96, height: 96, borderRadius: 48, overflow: 'hidden', backgroundColor: colors.surfaceSelected, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.border }}>
         {url && !showFailed
           ? <Image source={{ uri: url }} style={{ width: 96, height: 96 }} onError={() => setShowFailed(true)} accessibilityIgnoresInvertColors />
-          : <Text style={[typeScale.title1, { color: colors.primary }]}>{initials(profile)}</Text>}
+          : <Text style={[type.title1, { color: colors.primary }]}>{initials(profile)}</Text>}
         {busy && <View style={{ position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.overlay }}><ActivityIndicator color={colors.onPrimary} /></View>}
       </View>
       <Body heading role="title2">{profile.full_name || 'Resident'}</Body>

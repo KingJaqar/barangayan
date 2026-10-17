@@ -24,17 +24,12 @@
 .status > span { height: 6px; width: 6px; flex-shrink: 0; border-radius: 50%; background: var(--accent); }
 .summary { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 20px; color: var(--incident-muted); font-size: 11px; }
 .summary > span { display: inline-flex; align-items: center; gap: 7px; }
-.navigation { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 18px; border-bottom: 1px solid var(--incident-line); }
-.navigation a { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 8px 12px; border-radius: 5px; color: var(--incident-muted); font-size: 12px; text-decoration: none; }
-.navigation a:first-child { color: var(--foreground); background: var(--incident-soft); }
-.navigation a:hover { background: var(--incident-tint); color: var(--foreground); }
-.navigation a span { font-size: 10px; font-variant-numeric: tabular-nums; }
 .section { padding: 26px 0; border-bottom: 1px solid var(--incident-line); scroll-margin-top: 24px; }
 .heading { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 15px; font-weight: 550; letter-spacing: -.025em; }
 .number { color: var(--incident-muted); font-size: 10px; font-weight: 400; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
 .heading > svg, .count { margin-left: auto; color: var(--incident-muted); }
 .count { font-size: 11px; font-weight: 400; letter-spacing: normal; }
-.description { font-size: 14px; line-height: 1.85; white-space: pre-wrap; }
+.description { border-left: 3px solid var(--accent); padding-left: 16px; font-size: 15px; line-height: 1.85; white-space: pre-wrap; }
 .details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
 .details dt { margin-bottom: 6px; color: var(--incident-muted); font-size: 11px; }
 .details dd { font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
@@ -69,8 +64,6 @@
   .sheet > div:nth-child(2) { padding: 0 20px 20px; }
   .hero { padding-top: 28px; }
   .title { font-size: 28px; }
-  .navigation { gap: 2px; }
-  .navigation a { padding-inline: 9px; }
   .photo { height: 220px; }
   .sheet .recordForm > div:last-child, .sheet .recordForm form > div:last-child { bottom: -20px; }
 }
@@ -79,3 +72,5 @@
   .sheet > div:nth-child(2) { scroll-behavior: smooth; }
   .navigation a, .sheet .recordForm button { transition: background-color 150ms ease, border-color 150ms ease; }
 }
+
+.navigation { composes: navigation from './record-sheet.module.css'; }

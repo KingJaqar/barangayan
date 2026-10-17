@@ -1,0 +1,88 @@
+{
+  "readOnly": true,
+  "allSynthetic": true,
+  "accounts": [
+    {
+      "attempt": 1,
+      "id": "57fca240-a468-4f51-8b78-6cd454267410",
+      "originalTestRole": "resident",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": null,
+      "approvedSubmission": null,
+      "verification": null
+    },
+    {
+      "attempt": 1,
+      "id": "59ae9338-bd02-452a-9dbb-4c10ad747360",
+      "originalTestRole": "admin",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": null,
+      "approvedSubmission": null,
+      "verification": null
+    },
+    {
+      "attempt": 2,
+      "id": "5caec943-86d7-4b4a-aa14-bb7bebfaaa2e",
+      "originalTestRole": "resident",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": null,
+      "approvedSubmission": null,
+      "verification": null
+    },
+    {
+      "attempt": 2,
+      "id": "79df7d77-0b96-45f3-a8c5-c1a3b7cbaaec",
+      "originalTestRole": "admin",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": null,
+      "approvedSubmission": null,
+      "verification": null
+    },
+    {
+      "attempt": 3,
+      "id": "03cff13a-5bcd-4c96-a52f-1d3c862f9227",
+      "originalTestRole": "resident",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": "47af5664-12b9-4a5c-979e-af75b41fb572",
+      "approvedSubmission": "47af5664-12b9-4a5c-979e-af75b41fb572",
+      "verification": "verified"
+    },
+    {
+      "attempt": 3,
+      "id": "70e6896d-ba42-43dc-aa95-2506eb423d92",
+      "originalTestRole": "admin",
+      "currentRole": "resident",
+      "loginDisabled": true,
+      "currentSubmission": null,
+      "approvedSubmission": null,
+      "verification": null
+    }
+  ],
+  "submissions": [
+    {
+      "id": "47af5664-12b9-4a5c-979e-af75b41fb572",
+      "decision": "verified",
+      "back_path": null,
+      "confirmed_details": {
+        "address": "",
+        "fullName": "Corrected Synthetic Resident",
+        "idNumber": "",
+        "birthDate": ""
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "49a01dda-9a6a-475c-8e46-2900a0f37e8c",
+      "approved_id_submission_id": "47af5664-12b9-4a5c-979e-af75b41fb572",
+      "payment_status": "pending",
+      "status": "submitted"
+    }
+  ],
+  "paymentCount": 0
+}

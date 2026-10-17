@@ -1,0 +1,22 @@
+{
+  "planChangesConfinedToPhase6": true,
+  "ports": [
+    {
+      "port": 3236,
+      "closed": true
+    },
+    {
+      "port": 3237,
+      "closed": true
+    },
+    {
+      "port": 3238,
+      "closed": true
+    }
+  ],
+  "evidenceVersions": 2,
+  "requestCount": 1,
+  "pageErrors": 0,
+  "cleanupEvidence": "Successful mutation API responses; optional privileged independent readback not run",
+  "sourceChangesInHostedFollowup": false
+}

@@ -25,6 +25,8 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { IncidentRow } from './types';
 import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
+import { Spinner } from '@/components/loading/spinner';
+import loadingStyles from './incident-loading.module.css';
 import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 interface CategoryOption {
@@ -298,7 +300,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
     return { error: null };
   }
 
-  const lifecycle = useRecordWorkspace<IncidentRow>('incidents', browse.refresh, browse.settle, {
+  const lifecycle = useRecordWorkspace<IncidentRow>('incidents', browse.refresh, browse.settle, { editHandle: browse.editHandle,
     actionsMinWidth: 640,
     workflowActions: row => <IncidentActions incidentId={row.id} status={row.status} incidentTitle={row.title} variant="compact"
       showRemove={false}
@@ -307,7 +309,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
 
   const columns: EditableDataTableColumn<IncidentRow>[] = [
     {
-      id: 'title', header: 'Incident',
+      id: 'title', header: 'Incident', frozen: true,
       initialWidth: 280,
       minWidth: 230,
       wrap: 'break-word',
@@ -328,8 +330,10 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
           )}
         </div>
       ),
-      // Incident Details (title + description) are long-form — edited via the detail
-      // modal's form rather than a cramped inline text cell.
+      rowEdit: [
+        { label: 'Title', edit: { type: 'text', getValue: r => r.title, onSave: (r, value) => String(value).trim() ? updateField(r, { title: String(value).trim() }) : Promise.resolve({ error: 'Title is required.' }) } },
+        { label: 'Description', edit: { type: 'text', getValue: r => r.description ?? '', onSave: (r, value) => updateField(r, { description: String(value) || null }) } },
+      ],
     },
     {
       id: 'category', header: 'Category',
@@ -357,7 +361,7 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
       },
     },
     {
-      id: 'reporter', header: 'Reporter',
+      id: 'reporter', header: 'Reporter', frozen: true,
       initialWidth: 210,
       minWidth: 180,
       wrap: 'break-word',
@@ -509,6 +513,9 @@ export function IncidentTable({ result, summary, requestedState, barangayId, cat
     <OperationsTableSummary name="incidents" summary={summary} onRetry={browse.refresh} />
     <div>{optionsError && <p role="alert" className="mb-4">{optionsError} <button type="button" onClick={browse.refresh}>Retry options</button></p>}</div>
     {addOpen && <fieldset disabled={browse.pending || !!optionsError}><AddIncidentForm categories={categories} residents={residents} barangayId={barangayId} onClose={() => setAddOpen(false)} onChanged={browse.refresh} /></fieldset>}
+    <div className={loadingStyles.status} data-active={browse.pending || undefined} role="status" aria-live="polite">
+      {browse.pending && <><Spinner size="compact" /> Updating incident reports…</>}
+    </div>
     <ProfileTablePanel label="Incident Reports" browse={browse}
       category={<label className="table-browse-field">Category
         <AdminSelect aria-label="Category" value={state.filters.category} disabled={!!optionsError}

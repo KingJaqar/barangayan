@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { requestResidentEmailChange } from '@/lib/auth/email-change';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { syncResidentSignInEmail } from './actions';
+import { beginAttempt, notify } from '@/lib/notify';
 
 export function ChangeEmailForm({ userId, email, initialPendingEmail, initiallyOpen, disabled }: {
   userId: string; email: string; initialPendingEmail: string; initiallyOpen: boolean; disabled: boolean;
@@ -43,34 +44,46 @@ export function ChangeEmailForm({ userId, email, initialPendingEmail, initiallyO
   async function send(address: string) {
     if (busy.current || !active.current || disabled || seconds > 0) return;
     busy.current = true; setWorking('send'); setMessage(null);
+    const attempt = beginAttempt('email-change-request');
+    const resending = !open && !!pendingEmail;
     try {
       const requested = await requestResidentEmailChange(client, userId, email, address, window.location.origin);
       if (!active.current) return;
       setPendingEmail(requested); setOpen(false); setNewEmail(''); setSeconds(60);
       setMessage('Confirmation instructions sent. Check your inbox and spam folder.');
+      notify.success(resending ? 'Confirmation instructions resent. Check your inboxes.' : 'Confirmation instructions sent. Check your inboxes.', { id: attempt });
     } catch (error) {
-      if (active.current) setMessage(error instanceof Error ? error.message : 'Unable to request an email change. Try again.');
+      if (active.current) {
+        setMessage(error instanceof Error ? error.message : 'Unable to request an email change. Try again.');
+        if (error && typeof error === 'object' && 'uncertain' in error && error.uncertain === true) notify.warning(resending ? "We couldn't confirm the instructions were resent. Check your inboxes first." : "We couldn't confirm the request. Check your inboxes before trying again.", { id: attempt });
+        else notify.error(resending ? "Couldn't resend confirmation. Please try again." : "Couldn't request the email change. Please try again.", { id: attempt });
+      }
     } finally { busy.current = false; if (active.current) setWorking(null); }
   }
 
   async function checkConfirmation() {
     if (busy.current || !active.current || disabled) return;
     busy.current = true; setWorking('check'); setMessage(null);
+    const attempt = beginAttempt('email-change-confirmation');
+    const expectedEmail = pendingEmail;
     try {
       const result = await syncResidentSignInEmail(userId);
       if (!active.current) return;
-      if (!result.ok) { setMessage(result.message); return; }
+      if (!result.ok) { setMessage(result.message); notify.error("Couldn't check confirmation. Please try again.", { id: attempt }); return; }
       if (result.pendingEmail) {
         setPendingEmail(result.pendingEmail);
         setMessage('Your email change is still awaiting confirmation. Complete the instructions in both inboxes if requested.');
-      } else if (result.email.toLowerCase() === pendingEmail.toLowerCase()) {
+        notify.info('Your email change is still awaiting confirmation.', { id: attempt });
+      } else if (expectedEmail && result.email.toLowerCase() === expectedEmail.toLowerCase()) {
         setPendingEmail('');
         setMessage('Email address changed. You can now verify the new address.');
+        notify.success('Email address changed.', { id: attempt });
         router.refresh();
       } else {
         setMessage('No completed email change was found. Request a new confirmation email.');
+        notify.info('No completed email change was found. Check your confirmation emails.', { id: attempt });
       }
-    } catch { if (active.current) setMessage('Unable to check confirmation. Try again.'); }
+    } catch { if (active.current) { setMessage('Unable to check confirmation. Try again.'); notify.error("Couldn't check confirmation. Please try again.", { id: attempt }); } }
     finally { busy.current = false; if (active.current) setWorking(null); }
   }
 
@@ -112,7 +125,7 @@ export function ChangeEmailForm({ userId, email, initialPendingEmail, initiallyO
           <Pencil aria-hidden="true" className="size-4" />Change email address
         </Button>
       )}
-      {message ? <p role="status" className="text-sm leading-6">{message}</p> : null}
+      {message ? <p className="text-sm leading-6">{message}</p> : null}
     </div>
   );
 }

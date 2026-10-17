@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/loading';
 import { drawerTransition } from '@/lib/motion';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify } from '@/lib/notify';
 import { DetailsStep } from './details-step';
 import { RequestFormStep } from './request-form-step';
 import { RequestPaymentJourney } from '../request-payment-journey';
@@ -44,12 +45,19 @@ export function DocumentRequestModal({
 }) {
   const router = useRouter();
   const checkingProfile = useRef(false);
+  const profileScope = useRef(0);
   const [read, setRead] = useState<ServiceRead | null>(null);
   const [requesting, setRequesting] = useState(false);
   const [requestError, setRequestError] = useState<string | null>(null);
   const [step, setStep] = useState<'details' | 'form' | 'payment'>('details');
   const [requestId, setRequestId] = useState<string | null>(null);
   const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    const currentScope = profileScope;
+    const scope = ++currentScope.current;
+    void Promise.resolve().then(() => { if (scope === currentScope.current) setRequesting(false); });
+    return () => { ++currentScope.current; };
+  }, [documentId, open]);
 
   // Only a read for the currently selected document is shown, so switching documents goes
   // straight to the loading state instead of flashing the previous service.
@@ -60,27 +68,34 @@ export function DocumentRequestModal({
   async function requestDocument() {
     if (!doc || checkingProfile.current) return;
     checkingProfile.current = true;
+    const attempt = beginAttempt('request-account-check');
+    const scope = profileScope.current;
     setRequesting(true);
     setRequestError(null);
     try {
       const client = createSupabaseBrowserClient();
       const { data: { user }, error: authError } = await client.auth.getUser();
       if (authError) throw new Error('Unable to check your account. Please retry.');
+      if (scope !== profileScope.current) return;
       const destination = `/services/requests/new/${doc.id}`;
       if (!user) {
         onClose();
         router.push(`/login?next=${encodeURIComponent(destination)}`);
-      } else if (await needsResidentProfile(client, user.id)) {
-        onClose();
-        router.push(residentCompletionDestination(destination));
       } else {
-        setStep('form');
+        const incomplete = await needsResidentProfile(client, user.id);
+        if (scope !== profileScope.current) return;
+        if (incomplete) {
+          onClose();
+          router.push(residentCompletionDestination(destination));
+        } else setStep('form');
       }
-    } catch (error) {
-      setRequestError(error instanceof Error ? error.message : 'Unable to check your profile. Please retry.');
+    } catch {
+      if (scope !== profileScope.current) return;
+      setRequestError('Unable to check your account. Please retry.');
+      notify.error("Couldn't check your account. Please try again.", { id: attempt });
     } finally {
       checkingProfile.current = false;
-      setRequesting(false);
+      if (scope === profileScope.current) setRequesting(false);
     }
   }
 

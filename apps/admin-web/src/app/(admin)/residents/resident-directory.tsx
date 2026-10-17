@@ -7,15 +7,13 @@ import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record
 import {
   EMPLOYMENT_STATUSES,
   SEXES,
-  serviceFoundationOperations,
-  type IdSubmissionRow,
   type Database,
   type EmploymentStatus,
   type IdVerificationStatus,
   type Sex,
 } from '@barangayan/shared';
 import { useEffect, useId, useMemo, useState } from 'react';
-import { ArrowUpRight, FileCheck2, History, Mail, MapPin, Phone, UserRound, Users } from 'lucide-react';
+import { FileCheck2, History, Mail, MapPin, Phone, UserRound, Users } from 'lucide-react';
 import styles from '@/components/admin/resident-record.module.css';
 
 import { ProfileTableSummary } from '@/components/admin/profile-table-summary';
@@ -28,7 +26,6 @@ import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state'
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
 import { useToast } from '@/components/ui/toast';
@@ -37,7 +34,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { ResidentRow } from './types';
 import { TABS } from './types';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
-import { Spinner } from '@/components/loading/spinner';
+import { ResidentIdReview, ResidentIdStatusCell, idStatusLabel } from './resident-id-review';
 import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -69,20 +66,6 @@ function verificationColor(status: string) {
   if (status === 'pending') return 'text-yellow-700 bg-yellow-100 dark:text-yellow-300 dark:bg-yellow-900/30';
   if (status === 'unverified') return 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30';
   return 'text-zinc-600 bg-zinc-100 dark:text-zinc-300 dark:bg-zinc-800';
-}
-
-function idVerifColor(status: IdVerificationStatus | null) {
-  if (status === 'verified') return 'text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/30';
-  if (status === 'pending') return 'text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-900/30';
-  if (status === 'verification_failed') return 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/30';
-  return 'text-zinc-400 bg-zinc-100 dark:text-zinc-500 dark:bg-zinc-800';
-}
-
-function idVerifLabel(status: IdVerificationStatus | null) {
-  if (status === 'verified') return 'Verified ID';
-  if (status === 'pending') return 'Pending Verification';
-  if (status === 'verification_failed') return 'Verification Failed, Try Again';
-  return 'No ID';
 }
 
 // ─── Add Resident Form ─────────────────────────────────────────────────────────
@@ -173,15 +156,8 @@ export function ResidentDetailContent({
 }) {
   const sectionId = useId();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
-  const toast = useToast();
   const [requests, setRequests] = useState<ServiceRequest[] | null>(null);
-  const [idUrls, setIdUrls] = useState<string[]>([]);
   const [idStatus, setIdStatus] = useState(resident?.id_verification_status ?? null);
-  const [idStatusLoading, setIdStatusLoading] = useState(false);
-  const [evidence, setEvidence] = useState<IdSubmissionRow | null>(null);
-  const [reviewReason, setReviewReason] = useState('');
-  const [reviewingId, setReviewingId] = useState(false);
-
   // Reset the panel's per-resident state the moment a different resident (or none) is
   // selected, so the previous resident's requests/photos never flash in the new panel.
   // Adjusting state during render is React's recommended way to do this.
@@ -189,9 +165,7 @@ export function ResidentDetailContent({
   if (prevResidentId !== (resident?.id ?? null)) {
     setPrevResidentId(resident?.id ?? null);
     setRequests(null);
-    setIdUrls([]);
     setIdStatus(resident?.id_verification_status ?? null);
-    setEvidence(null); setReviewReason('');
   }
 
   useEffect(() => {
@@ -207,62 +181,8 @@ export function ResidentDetailContent({
       .order('created_at', { ascending: false })
       .then(({ data }) => { if (!cancelled) setRequests((data as unknown as ServiceRequest[]) ?? []); });
 
-    // Resolve short-lived signed URLs for ID photos — id-documents is a
-    // private bucket (government ID photos); getPublicUrl() would silently
-    // return a broken URL, and a public bucket would rely on obscurity alone.
-    // The render-time reset above already cleared idUrls, so there is nothing to do when
-    // this resident has no ID photos on file.
-    async function loadEvidence() {
-      const { data: row } = resident?.current_id_submission_id
-        ? await supabase.from('id_submissions').select('*').eq('id', resident.current_id_submission_id).single()
-        : { data: null };
-      if (cancelled) return;
-      setEvidence(row); setIdUrls([]);
-      if (!row) return;
-      const { data, error } = await supabase.storage.from('id-documents').createSignedUrls([row.front_path, row.back_path].filter((path): path is string => !!path), 600);
-      if (!cancelled && !error && data) setIdUrls(data.map(d => d.signedUrl).filter((u): u is string => !!u));
-    }
-    loadEvidence();
     return () => { cancelled = true; };
   }, [resident, supabase]);
-
-  // Front-only submissions (migration 0118) have no back_path, so the evidence is complete
-  // once every stored side has a signed URL: one photo for front-only, two otherwise.
-  const expectedIdPhotos = evidence ? (evidence.back_path ? 2 : 1) : 0;
-  const idEvidenceReady = !!evidence && idUrls.length === expectedIdPhotos;
-
-  async function handleIdVerifAction(nextStatus: IdVerificationStatus | null) {
-    if (!resident || !evidence) return;
-    const decision = nextStatus === 'verified' ? 'verified' : evidence.decision === 'verified' ? 'revoked' : 'verification_failed';
-    if (decision !== 'verified' && !reviewReason.trim()) { toast.showError('Enter a rejection or revocation reason.'); return; }
-    setIdStatusLoading(true);
-    const { error } = await serviceFoundationOperations(supabase).reviewId({ submissionId: evidence.id, decision, ...(reviewReason.trim() ? { reason: reviewReason.trim() } : {}) });
-    setIdStatusLoading(false);
-    if (error) {
-      toast.showError(`Failed to update ID status: ${error.message}`);
-      return;
-    }
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'resident',
-      entityId: resident.id,
-      entityLabel: resident.full_name,
-      metadata: { previousStatus: idStatus, nextStatus },
-    }).catch(() => {});
-    const actualStatus = decision === 'verified' ? 'verified' : 'verification_failed';
-    setIdStatus(actualStatus);
-    setEvidence({ ...evidence, decision });
-    onIdStatusChange?.(resident.id, actualStatus);
-    toast.showSuccess(
-      nextStatus === 'verified'
-        ? `${resident.full_name}'s ID has been verified.`
-        : nextStatus === 'verification_failed'
-          ? `${resident.full_name}'s ID was marked as verification failed — they'll see "Try Again".`
-          : nextStatus === 'pending'
-            ? `${resident.full_name}'s ID marked as pending review.`
-            : `ID verification cleared for ${resident.full_name}.`,
-    );
-  }
 
   if (!resident) return null;
 
@@ -299,7 +219,7 @@ export function ResidentDetailContent({
           </div>
           <div className={styles.badges}>
             <span className={styles.badge}>Email · {verStatus}</span>
-            <span className={styles.badge}>{idVerifLabel(idStatus)}</span>
+            <span className={styles.badge}>{idStatusLabel(idStatus)}</span>
             {resident.location_verified === false && (
               <span
                 title="This resident's device location at signup fell outside the barangay boundary. Soft flag only — did not block registration."
@@ -383,88 +303,8 @@ export function ResidentDetailContent({
             )}
           </section>
 
-          {/* Admin: ID verification actions */}
-          <section id={`${sectionId}-verification`} className={styles.section}>
-            <h3 className={styles.sectionHeading}><FileCheck2 size={16} aria-hidden="true" />ID verification <span>Admin review</span></h3>
-            {resident.id_repair_required && <p role="alert" className={styles.notice}>Legacy approval needs repair: complete evidence is missing. Ask the resident to submit both ID sides.</p>}
-            {evidence && <p className="mb-3 text-sm">Submission version {evidence.version} · {evidence.id_type} · {evidence.evidence_origin.startsWith('legacy_') ? 'Imported legacy evidence; original submission/review provenance unavailable' : `Submitted ${formatAdminTimestamp(evidence.submitted_at)}`}{evidence.reviewed_at ? ` · Decision ${formatAdminTimestamp(evidence.reviewed_at)} · Reviewer ${evidence.reviewed_by}` : ''}</p>}
-            {evidence?.rejection_reason && <p className="mb-3 text-sm">Decision reason: {evidence.rejection_reason}</p>}
-            {evidence?.confirmed_details && <dl className="mb-3 space-y-1 text-sm">
-              {Object.entries(evidence.confirmed_details).map(([key, value]) => <div key={key}><dt className="inline font-medium">{({ fullName: 'Full name', idNumber: 'ID number', birthDate: 'Birth date', address: 'Address' } as Record<string, string>)[key]}: </dt><dd className="inline">{value || 'Not shown on ID'}</dd></div>)}
-            </dl>}
-            {!reviewingId && evidence && <button type="button" className={styles.reviewAction} onClick={() => setReviewingId(true)}>Review ID</button>}
-            {reviewingId && <><label className="mb-3 block text-sm">Reason for rejection or revocation<textarea className={styles.reviewReason} value={reviewReason} onChange={event => setReviewReason(event.target.value)} maxLength={1000} /></label>
-              <button type="button" disabled={idStatusLoading} className={styles.reviewAction} onClick={() => { setReviewingId(false); setReviewReason(''); }}>Cancel ID review</button></>}
-            <div aria-busy={idStatusLoading} className="flex flex-wrap items-center gap-3">
-              <span className={styles.badge}>
-                Current: {idVerifLabel(idStatus)}
-              </span>
-
-              {reviewingId && evidence?.decision === 'pending' && (
-                <ConfirmButton
-                  label="Mark as Verified"
-                  confirmLabel="Confirm verification?"
-                  onConfirm={() => handleIdVerifAction('verified')}
-                  disabled={idStatusLoading || !idEvidenceReady}
-                  title={idUrls.length ? "Mark this resident's ID as verified" : 'No ID document uploaded yet'}
-                  className={styles.reviewAction}
-                />
-              )}
-
-              {reviewingId && evidence?.decision === 'pending' && (
-                <ConfirmButton
-                  label="Mark as Failed"
-                  confirmLabel="Reject this ID? The resident will see 'Verification Failed, Try Again' and can re-upload."
-                  onConfirm={() => handleIdVerifAction('verification_failed')}
-                  disabled={idStatusLoading || !idEvidenceReady || !reviewReason.trim()}
-                  title={idUrls.length ? 'Reject this ID — resident can re-upload to retry' : 'No ID document uploaded yet'}
-                  className={styles.reviewAction}
-                />
-              )}
-
-              {reviewingId && evidence?.decision === 'verified' && (
-                <ConfirmButton
-                  label="Revoke Verification"
-                  confirmLabel="Revoke this reviewed ID approval?"
-                  onConfirm={() => handleIdVerifAction('pending')}
-                  disabled={idStatusLoading || !reviewReason.trim()}
-                  title="Revert to pending — resident must re-upload or admin re-verify"
-                  className={styles.reviewAction}
-                />
-              )}
-
-            </div>
-            {idStatusLoading ? (
-              <p aria-hidden="true" className="mt-2 inline-flex items-center gap-2 text-xs text-zinc-500">
-                <Spinner size="compact" /> Updating ID status…
-              </p>
-            ) : null}
-            {!idUrls.length && (
-              <p className={styles.hint}>No ID photo uploaded — cannot verify until the resident uploads one.</p>
-            )}
-          </section>
-
-          {/* ID photos */}
-          <section id={`${sectionId}-documents`} className={styles.section}>
-            <h3 className={styles.sectionHeading}><FileCheck2 size={16} aria-hidden="true" />ID documents <span>{idUrls.length}</span></h3>
-            {idUrls.length === 0 ? (
-              <p className={styles.empty}>No ID documents uploaded.</p>
-            ) : (
-              <div className={styles.documents}>
-                {idUrls.map((url, i) => (
-                  <a key={i} href={url} target="_blank" rel="noreferrer" className={styles.document}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={url}
-                      alt={`ID document ${i + 1}`}
-                      className={styles.documentImage}
-                    />
-                    <span>ID document {i + 1}<span>Open full size <ArrowUpRight size={13} aria-hidden="true" /></span></span>
-                  </a>
-                ))}
-              </div>
-            )}
-          </section>
+          <ResidentIdReview key={resident.id} resident={resident} sectionId={sectionId}
+            onStatusChange={(id, status) => { setIdStatus(status); onIdStatusChange?.(id, status); }} />
 
           {/* Service request history */}
           <section id={`${sectionId}-history`} className={styles.section}>
@@ -563,7 +403,7 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     return { error: null, row: updated };
   }
 
-  const lifecycle = useRecordWorkspace<ResidentRow>('residents', browse.refresh, browse.settle, { extra: (row, close) => <ResidentDetailContent resident={row} onClose={close} onIdStatusChange={browse.refresh} /> });
+  const lifecycle = useRecordWorkspace<ResidentRow>('residents', browse.refresh, browse.settle, { editHandle: browse.editHandle, extra: (row, close) => <ResidentDetailContent resident={row} onClose={close} onIdStatusChange={browse.refresh} /> });
 
   const columns: EditableDataTableColumn<ResidentRow>[] = [
     {
@@ -574,17 +414,17 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
     { id: 'last_name', header: 'Last Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.last_name ?? '—', edit: { type: 'text', getValue: (r) => r.last_name ?? '', onSave: (r, value) => updateField(r, { last_name: String(value).trim() || null }) } },
     { id: 'middle_name', header: 'Middle Name', initialWidth: 140, minWidth: 118, wrap: 'break-word', render: (r) => r.middle_name ?? '—', edit: { type: 'text', getValue: (r) => r.middle_name ?? '', onSave: (r, value) => updateField(r, { middle_name: String(value).trim() || null }) } },
     { id: 'suffix', header: 'Suffix', initialWidth: 90, minWidth: 78, wrap: 'nowrap', render: (r) => r.suffix ?? '—', edit: { type: 'text', getValue: (r) => r.suffix ?? '', onSave: (r, value) => updateField(r, { suffix: String(value).trim() || null }) } },
-    { id: 'sex', header: 'Sex', initialWidth: 94, minWidth: 82, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', selectKind: 'sex', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
-    { id: 'email', header: 'Email', initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
+    { id: 'sex', header: 'Sex', initialWidth: 160, minWidth: 156, wrap: 'nowrap', render: (r) => r.sex ? (SEX_LABELS[r.sex as Sex] ?? r.sex) : '—', edit: { type: 'select', selectKind: 'sex', options: SEX_OPTIONS, getValue: (r) => r.sex ?? '', onSave: (r, value) => updateField(r, { sex: String(value) || null }), commitOnChange: true } },
+    { id: 'email', header: 'Email', frozen: true, initialWidth: 220, minWidth: 170, wrap: 'break-word', render: (r) => <span className="text-zinc-600 dark:text-zinc-400">{r.email ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.email ?? '', onSave: (r, value) => updateField(r, { email: String(value).trim() || null }) } },
     { id: 'mobile', header: 'Mobile', initialWidth: 142, minWidth: 124, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{r.mobile_number ?? '—'}</span>, edit: { type: 'text', getValue: (r) => r.mobile_number ?? '', onSave: (r, value) => updateField(r, { mobile_number: String(value).trim() || null }) } },
     { id: 'house_no_', header: 'House No.', initialWidth: 110, minWidth: 92, wrap: 'nowrap', render: (r) => r.house_no ?? '—', edit: { type: 'text', getValue: (r) => r.house_no ?? '', onSave: (r, value) => updateField(r, { house_no: String(value).trim() || null }) } },
     { id: 'street', header: 'Street', initialWidth: 180, minWidth: 140, wrap: 'break-word', render: (r) => r.street ?? '—', edit: { type: 'text', getValue: (r) => r.street ?? '', onSave: (r, value) => updateField(r, { street: String(value).trim() || null }) } },
-    { id: 'city', header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—' },
+    { id: 'city', header: 'City', initialWidth: 140, minWidth: 112, wrap: 'break-word', render: (r) => r.city ?? '—', edit: { type: 'text', getValue: r => r.city ?? '', onSave: (r, value) => updateField(r, { city: String(value).trim() || null }) } },
     { id: 'birthday', header: 'Birthday', initialWidth: 130, minWidth: 118, wrap: 'nowrap', render: (r) => <span className="tabular-nums text-zinc-600 dark:text-zinc-400">{fmtDate(r.birth_date)}</span>, edit: { type: 'date', getValue: (r) => r.birth_date ?? '', onSave: (r, value) => updateField(r, { birth_date: String(value) || null }) } },
     { id: 'employment_status', header: 'Employment Status', initialWidth: 170, minWidth: 142, wrap: 'nowrap', render: (r) => r.employment_status ? (EMPLOYMENT_STATUS_LABELS[r.employment_status as EmploymentStatus] ?? r.employment_status) : '—', edit: { type: 'select', selectKind: 'employment', options: EMPLOYMENT_STATUS_OPTIONS, getValue: (r) => r.employment_status ?? '', onSave: (r, value) => updateField(r, { employment_status: String(value) || null }), commitOnChange: true } },
     { id: 'occupation', header: 'Occupation', initialWidth: 170, minWidth: 135, wrap: 'break-word', render: (r) => r.occupation ?? '—', edit: { type: 'text', getValue: (r) => r.occupation ?? '', onSave: (r, value) => updateField(r, { occupation: String(value).trim() || null }) } },
     { id: 'id_type', header: 'ID Type', initialWidth: 150, minWidth: 120, wrap: 'nowrap', render: (r) => r.id_type ?? '—' },
-    { id: 'id_status', header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${idVerifColor(r.id_verification_status)}`}>{r.id_repair_required ? 'Evidence repair required' : idVerifLabel(r.id_verification_status)}</span> },
+    { id: 'id_status', header: 'ID Status', initialWidth: 180, minWidth: 150, wrap: 'nowrap', render: (r) => <ResidentIdStatusCell resident={r} onStatusChange={browse.refresh} /> },
     { id: 'household', header: 'Household', initialWidth: 100, minWidth: 88, wrap: 'nowrap', render: (r) => <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold tabular-nums text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{r.household_members?.length ?? 0}</span> },
     { id: 'email_verification', header: 'Email Verif.', initialWidth: 135, minWidth: 116, wrap: 'nowrap', render: (r) => <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${verificationColor(r.email_verification_status)}`}>{r.email_verification_status}</span> },
     { id: 'location_verified', header: 'Location Verified', initialWidth: 230, minWidth: 175, wrap: 'break-word', render: (r) => r.verified_location ? <span className="text-green-700 dark:text-green-400">{r.verified_location_address ?? 'Verified (no address on file)'}</span> : <span className="text-zinc-400">Not verified</span> },
@@ -601,7 +441,7 @@ export function ResidentDirectory({ result, summary, requestedState, barangayId 
       category={<label className="table-browse-field">ID presence <AdminSelect kind="idPresence" aria-label="ID presence" value={state.filters.verification} onValueChange={nextValue => void browse.commit({ filters: { verification: nextValue } })}>
         <option value="">All ID status</option><option value="with_id">With uploaded ID</option><option value="without_id">Without uploaded ID</option>
       </AdminSelect></label>}
-      filters={<SegmentedFilter label="Email verification" value={state.filters.tab}
+      filters={<SegmentedFilter label="Resident verification" value={state.filters.tab}
         options={TABS.map(tab => ({ value: tab.key, label: tab.label }))} onChange={tab => void browse.commit({ filters: { tab } })} />}
       actions={!addOpen && <button type="button" disabled={browse.pending || !barangayId}
         onClick={() => void browse.settle().then(saved => { if (saved) setAddOpen(true); })}>+ Add Resident</button>}>

@@ -146,6 +146,13 @@ describe('pending destination allowlist (P04-T01, B.2 rule 4)', () => {
     expect(pendingDestination('/settings/change-password')).toEqual({ v: 1, path: '/settings/change-password' });
   });
 
+  it('restores the public service catalogue and one service detail after sign-in (P07-T04)', () => {
+    expect(pendingDestination(`/services/${id}?x=1`)).toEqual({ v: 1, path: `/services/${id}` });
+    expect(pendingDestination('/services')).toEqual({ v: 1, path: '/services' });
+    expect(pendingDestination('/services/not-a-uuid')).toBeNull();
+    expect(safeReturnPath(`/services/${id}`)).toBe(`/services/${id}`);
+  });
+
   it('rejects foreign, malformed and credential-bearing destinations', () => {
     for (const bad of ['https://evil.example', '//evil.example', 'javascript:alert(1)', '/request/not-a-uuid', '/auth/login', '/home', '/services/request/', '/request/' + id + '/x', '/\\evil', null, undefined, '']) {
       expect(pendingDestination(bad as string)).toBeNull();

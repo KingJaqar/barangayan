@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { EmailVerifyBanner } from '@/components/home/email-verify-banner';
 import { GuestHero } from '@/components/home/guest-hero';
 import { HomeSearchBar } from '@/components/home/home-search-bar';
+import { LandingCta, LandingFeatures } from '@/components/home/landing-features';
+import { LandingFooter } from '@/components/home/landing-footer';
 import { LatestAnnouncementCard } from '@/components/home/latest-announcement-card';
 import { QuickActionTile } from '@/components/home/quick-action-tile';
 import styles from '@/components/home/home.module.css';
@@ -96,7 +98,13 @@ export default async function ResidentHomePage() {
           ))}
         </div>
 
+        <LandingFeatures />
+
         {latestAnnouncement || announcementError ? <LatestAnnouncement announcement={latestAnnouncement ?? null} failed={announcementError !== null} /> : null}
+
+        <LandingCta />
+
+        <LandingFooter barangayName={null} />
       </div>
     );
   }
@@ -208,6 +216,8 @@ export default async function ResidentHomePage() {
           </div>
         </section>
       </div>
+
+      <LandingFooter barangayName={profile?.barangayName ?? null} />
     </div>
   );
 }

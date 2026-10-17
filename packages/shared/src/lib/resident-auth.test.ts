@@ -1,10 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { androidCallbackCode, safeResidentRedirect, residentActionNeedsProfile, residentCompletionDestination, residentNamePrefill } from './resident-auth';
+import { androidCallbackCode, safeResidentRedirect, residentActionNeedsProfile, residentCompletionDestination, residentNamePrefill, residentProfileComplete } from './resident-auth';
 import { profileCompletionSchema } from '../schemas/service-foundations';
+import type { Database } from '../types/database';
 import { isPointInPolygon } from './point-in-polygon';
 import type { Polygon } from 'geojson';
 
 describe('resident authentication boundaries', () => {
+  it('can check incomplete admin details for web warnings without changing default setup routing', () => {
+    const profile = { role: 'admin', deleted_at: null, first_name: 'Ana', last_name: 'Reyes' } as Database['public']['Tables']['profiles']['Row'];
+    expect(residentProfileComplete(profile)).toBe(true);
+    expect(residentProfileComplete(profile, { includeAdmin: true })).toBe(false);
+    expect(residentProfileComplete({ ...profile, role: 'resident' })).toBe(false);
+  });
   it.each(['/home', '/announcements', '/maps', '/health', '/services/documents', '/services/123', '/reports', '/settings/help'])('allows incomplete-account browsing at %s', path => expect(residentActionNeedsProfile(path)).toBe(false));
   it.each(['/services/requests/new/id', '/services/request/id', '/services/payment/id', '/health/register/id', '/reports/new'])('requires completion for resident action %s', path => expect(residentActionNeedsProfile(path)).toBe(true));
   it('retains a safe attempted action after completion and rejects external destinations', () => {

@@ -14,27 +14,28 @@ function availableActions(cell: HTMLElement): MenuAction[] {
   // copy of a stateful action or duplicating the screen's permissions and status rules.
   return Array.from(cell.querySelectorAll<ActionControl>('button, a[href]')).flatMap(control => {
     const style = getComputedStyle(control);
-    if (control.closest('[hidden], [inert], [aria-hidden="true"]') || !control.getClientRects().length
-      || style.visibility === 'hidden' || style.visibility === 'collapse') return [];
+    const menuOnly = control.hasAttribute('data-context-menu-only');
+    if (control.closest('[inert], [aria-hidden="true"]') || (!menuOnly && (control.closest('[hidden]') || !control.getClientRects().length
+      || style.visibility === 'hidden' || style.visibility === 'collapse'))) return [];
     // Loading controls keep an invisible pending label mounted beside the current
     // label. Exclude that content, while retaining screen-reader-only action text.
     const labelContent = control.cloneNode(true) as HTMLElement;
     labelContent.querySelectorAll('[aria-hidden="true"], [hidden]').forEach(node => node.remove());
-    const label = (control.getAttribute('aria-label') || labelContent.textContent || control.title).trim();
+    const label = (control.dataset.contextMenuLabel || control.getAttribute('aria-label') || labelContent.textContent || control.title).trim();
     if (!label) return [];
     return [{ control, label, disabled: control.matches(':disabled') || !!control.closest('[aria-disabled="true"]') }];
   });
 }
 
 export function useRowContextMenu() {
-  const [selection, setSelection] = useState<{ cell: HTMLElement; x: number; y: number; actions: MenuAction[] } | null>(null);
+  const [selection, setSelection] = useState<{ rowKey: string; cell: HTMLElement; x: number; y: number; actions: MenuAction[] } | null>(null);
   const close = useCallback(() => setSelection(null), []);
   useEffect(() => {
     window.addEventListener(OPEN_EVENT, close);
     return () => window.removeEventListener(OPEN_EVENT, close);
   }, [close]);
 
-  function open(event: MouseEvent<HTMLTableRowElement>) {
+  function open(event: MouseEvent<HTMLTableRowElement>, rowKey: string) {
     const cell = event.currentTarget.querySelector<HTMLElement>('[data-context-menu-actions]');
     if (!cell) return;
     const actions = availableActions(cell);
@@ -42,10 +43,10 @@ export function useRowContextMenu() {
     event.preventDefault();
     event.stopPropagation();
     window.dispatchEvent(new Event(OPEN_EVENT));
-    setSelection({ cell, x: event.clientX, y: event.clientY, actions });
+    setSelection({ rowKey, cell, x: event.clientX, y: event.clientY, actions });
   }
 
-  return { open, menu: selection && <RowContextMenu selection={selection} onClose={close} /> };
+  return { open, activeRowKey: selection?.rowKey, menu: selection && <RowContextMenu selection={selection} onClose={close} /> };
 }
 
 function RowContextMenu({ selection, onClose }: {
@@ -88,7 +89,11 @@ function RowContextMenu({ selection, onClose }: {
     // Close when the table changes so removed/disabled actions cannot remain stale.
     // The portal is outside the table and cannot trigger this observer. Ancestor
     // attributes also cover a pending/inert browse panel or disabled fieldset.
-    const observer = new MutationObserver(onClose);
+    const observer = new MutationObserver(records => {
+      // Moving the menu updates the row highlight; that UI-only attribute must not
+      // dismiss the new menu. All other table changes still invalidate its actions.
+      if (records.some(record => record.type !== 'attributes' || record.attributeName !== 'data-context-menu-open')) onClose();
+    });
     const table = cell.closest('table');
     if (table) observer.observe(table, { subtree: true, childList: true, attributes: true, characterData: true });
     for (let parent = table?.parentElement; parent; parent = parent.parentElement) {
@@ -125,8 +130,8 @@ function RowContextMenu({ selection, onClose }: {
         const current = availableActions(cell).find(action => action.control === control);
         if (!control.isConnected || !current || current.disabled) return;
         // Keep inline confirmations and cancellation forms reachable in wide tables.
-        control.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-        control.focus({ preventScroll: true });
+        if (!control.closest('[data-record-actions]')) control.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        if (!control.hidden) control.focus({ preventScroll: true });
         control.click();
       }}><ActionIcon control={control} /><span>{label}</span></button>)}
   </div>, document.body);
@@ -136,6 +141,7 @@ function ActionIcon({ control }: { control: ActionControl }) {
   const iconRef = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {
     const source = Array.from(control.querySelectorAll('svg')).find(svg => {
+      if (control.hasAttribute('data-context-menu-only')) return true;
       if (!svg.getClientRects().length) return false;
       for (let element: Element | null = svg; element && element !== control; element = element.parentElement) {
         const style = getComputedStyle(element);

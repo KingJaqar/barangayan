@@ -6,19 +6,20 @@ import { Action, Body, Card, confirmDestructive, EmptyState, Field, Notice, Shee
 import { residentError } from '../../lib/errors';
 import { releaseGates } from '../../lib/release-gates';
 import { useResident, type Profile } from '../../lib/runtime';
-import { layout, radius, space, typeScale, useColors } from '../../lib/theme';
+import { layout, radius, space, useType, useColors } from '../../lib/theme';
 import { MAX_MEMBERS, memberInitials, readMembers, RELATIONS, ROLES, sameMembers, saveHousehold, validateMember, type Member, type MemberDraft } from './household';
 
 function Chips({ label, options, value, onChange, error }: { label: string; options: readonly string[]; value: string; onChange: (value: string) => void; error?: string }) {
   const colors = useColors();
+  const type = useType();
   return <View accessibilityRole="radiogroup" accessibilityLabel={`${label}, required`} style={{ gap: space[2] }}>
-    <Text style={[typeScale.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>{label} <Text style={{ color: colors.danger }}>*</Text></Text>
+    <Text style={[type.subheadline, { color: colors.textPrimary, fontWeight: '600' }]}>{label} <Text style={{ color: colors.danger }}>*</Text></Text>
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space[2] }}>
       {options.map((option) => {
         const selected = option === value;
         return <Pressable key={option} accessibilityRole="radio" accessibilityLabel={option} accessibilityState={{ selected }} onPress={() => onChange(option)}
           style={{ minHeight: layout.controlMin, justifyContent: 'center', paddingHorizontal: space[3], borderRadius: radius.xl, borderCurve: 'continuous', borderWidth: 1, borderColor: selected ? colors.primary : colors.border, backgroundColor: selected ? colors.surfaceSelected : 'transparent' }}>
-          <Text style={[typeScale.callout, { color: colors.textPrimary, fontWeight: selected ? '700' : '400' }]}>{option}</Text>
+          <Text style={[type.callout, { color: colors.textPrimary, fontWeight: selected ? '700' : '400' }]}>{option}</Text>
         </Pressable>;
       })}
     </View>
@@ -55,14 +56,15 @@ function MemberForm({ initial, onSave, onRemove, onClose }: { initial: Member | 
 
 function MemberRow({ member, onEdit }: { member: Member; onEdit?: () => void }) {
   const colors = useColors();
+  const type = useType();
   const detail = [member.relation, member.role].filter(Boolean).join(' · ');
   const content = <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[3], minHeight: layout.listRowMin }}>
     <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surfaceSelected, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={[typeScale.callout, { color: colors.primary, fontWeight: '700' }]}>{memberInitials(member.name)}</Text>
+      <Text style={[type.callout, { color: colors.primary, fontWeight: '700' }]}>{memberInitials(member.name)}</Text>
     </View>
     <View style={{ flex: 1 }}>
-      <Text style={[typeScale.headline, { color: colors.textPrimary }]}>{member.name}</Text>
-      {!!detail && <Text style={[typeScale.subheadline, { color: colors.textSecondary }]}>{detail}</Text>}
+      <Text style={[type.headline, { color: colors.textPrimary }]}>{member.name}</Text>
+      {!!detail && <Text style={[type.subheadline, { color: colors.textSecondary }]}>{detail}</Text>}
     </View>
   </View>;
   return onEdit

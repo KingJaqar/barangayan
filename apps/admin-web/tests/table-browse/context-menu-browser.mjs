@@ -49,6 +49,25 @@ try {
   page.setDefaultTimeout(10000);
   page.on('pageerror', error => report.pageErrors.push(error.message));
   const menu = page.getByRole('menu', { name: 'Row actions' });
+  const highlightedRows = page.locator('tr[data-context-menu-open]');
+  async function assertHighlight(target) {
+    await target.locator(':scope[data-context-menu-open]').waitFor({ state: 'attached' });
+    assert.equal(await highlightedRows.count(), 1, 'Only the menu owner is highlighted');
+    const cells = await target.locator('td').evaluateAll(elements => elements.map(element => ({
+      background: getComputedStyle(element).backgroundColor, shadow: getComputedStyle(element).boxShadow,
+      outline: getComputedStyle(element).outlineStyle,
+    })));
+    assert.ok(cells.every(cell => cell.background === cells[0].background), 'Highlight spans every cell, including frozen columns');
+    if (await page.evaluate(() => matchMedia('(forced-colors: active)').matches)) {
+      assert.ok(cells.every(cell => cell.outline === 'solid'), 'System colors retain a visible boundary');
+    } else {
+      assert.ok(cells.every(cell => cell.shadow !== 'none'), 'Every selected cell has a visible boundary');
+      assert.ok(cells[0].shadow.includes('3px'), 'The first cell has an accent marker');
+    }
+  }
+  async function assertNoHighlight() {
+    await highlightedRows.waitFor({ state: 'detached' });
+  }
   async function assertIconContrast(icon) {
     const ratio = await icon.evaluate(svg => {
       const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
@@ -74,6 +93,7 @@ try {
     // opening, just as a physical right-click starts on an already visible cell.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     await cell.click({ button: 'right' }); await menu.waitFor();
+    await assertHighlight(row());
   }
   async function pick(label) {
     await open();
@@ -82,13 +102,14 @@ try {
     const expectedIcon = await source.evaluate(control => control.querySelector('svg')?.innerHTML ?? null);
     assert.equal(await item.evaluate(control => control.querySelector('svg')?.innerHTML ?? null), expectedIcon, `${label}: menu matches button icon`);
     await item.click(); await menu.waitFor({ state: 'detached' });
+    await assertNoHighlight();
   }
   async function closeDetails() { await page.getByRole('dialog').first().getByRole('button', { name: 'Close form', exact: true }).click(); await page.getByRole('dialog').waitFor({ state: 'detached' }); }
   for (const screen of ['requests', 'transactions', 'residents', 'incidents', 'health', 'applicants', 'households', 'staff']) {
     await page.goto(`${url}/?screen=${screen}`);
     await row().getByRole('button', { name: 'View Details', exact: true }).waitFor();
     const expected = await row().locator('[data-context-menu-actions]').evaluate(cell => Array.from(cell.querySelectorAll('button,a[href]')).map(control => ({
-      label: (control.getAttribute('aria-label') || control.textContent || control.title).trim(), disabled: control.matches(':disabled'),
+      label: (control.dataset.contextMenuLabel || control.getAttribute('aria-label') || control.textContent || control.title).trim(), disabled: control.matches(':disabled'),
     })));
     await open();
     assert.deepEqual(await menu.getByRole('menuitem').evaluateAll(items => items.map(item => ({ label: item.textContent, disabled: item.disabled }))), expected, `${screen}: exact Actions parity`);
@@ -122,6 +143,13 @@ try {
     }
     assert.equal(await page.getByRole('dialog').count(), 0, 'Right-click does not open row details');
     await page.keyboard.press('Escape'); await menu.waitFor({ state: 'detached' });
+    await assertNoHighlight();
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    await open();
+    await page.screenshot({ path: path.join(evidence, `${screen}-highlight-dark.png`) });
+    await page.keyboard.press('Escape'); await menu.waitFor({ state: 'detached' });
+    await assertNoHighlight();
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
     await pick('View Details');
     await page.getByRole('dialog').first().getByRole('button', { name: 'Edit', exact: true }).waitFor();
     await closeDetails();
@@ -130,13 +158,14 @@ try {
       const confirmation = page.getByRole('dialog').last();
       await confirmation.getByRole('button', { name: confirm, exact: true }).waitFor();
       assert.deepEqual(await page.evaluate(() => window.recordFixture.mutations), [], `${action} preserves confirmation`);
+      assert.equal(await page.locator('dialog section').count(), 0, 'Confirmation does not open details');
       await confirmation.getByRole('button', { name: 'Cancel', exact: true }).click();
-      await closeDetails();
+      await page.getByRole('dialog').waitFor({ state: 'detached' });
     }
     // Existing Actions buttons still work after context-menu use.
     await row().getByRole('button', { name: 'View Details', exact: true }).click();
     await closeDetails();
-    report.checks.push(`${screen}: matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls`);
+    report.checks.push(`${screen}: light/dark full-row highlight and cleanup, matching icons, readable foreground, action parity, details, archive/delete confirmation, original Actions controls`);
   }
   for (const [screen, initial, action, next] of [
     ['requests', 'submitted', 'Move to Processing', 'in_progress'],
@@ -167,7 +196,9 @@ try {
   await page.goto(`${url}/?screen=requests`);
   await page.evaluate(() => { Object.assign(window.recordFixture.rows.requests, { contract_version: 2, requirements_review_state: 'incomplete', eligibility_state: 'pending' }); window.dispatchEvent(new Event('record-refresh')); });
   await open();
-  assert.ok(await menu.getByRole('menuitem', { name: 'Move to Processing', exact: true }).isDisabled());
+  // Eligibility belongs to the current Actions control; the menu mirrors it.
+  assert.equal(await menu.getByRole('menuitem', { name: 'Move to Processing', exact: true }).isDisabled(),
+    await row().getByRole('button', { name: 'Move to Processing', exact: true }).isDisabled());
   await page.keyboard.press('Escape');
   await page.goto(`${url}/?screen=requests`);
   await page.evaluate(() => { window.recordFixture.workflowDelay = 1500; });
@@ -216,6 +247,7 @@ try {
   async function genericOpen(target = first, position) {
     await target.evaluate((element, point) => element.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: point?.x ?? 30, clientY: point?.y ?? 30 })), position);
     await menu.waitFor();
+    await assertHighlight(target);
   }
   await genericOpen();
   assert.equal(await menu.getByRole('menuitem', { name: 'Hidden action' }).count(), 0);
@@ -224,6 +256,7 @@ try {
   await page.keyboard.press('ArrowDown'); // skip disabled item
   assert.equal(await menu.getByRole('menuitem', { name: 'Open link' }).evaluate(item => item === document.activeElement), true);
   await page.keyboard.press('Escape'); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
   await genericOpen(); await menu.getByRole('menuitem', { name: 'Run first' }).click();
   assert.equal(await page.locator('#count').textContent(), '1');
   await genericOpen(); await menu.getByRole('menuitem', { name: 'Open link' }).click();
@@ -233,9 +266,11 @@ try {
   await genericOpen(tables.nth(1).locator('tbody tr').first());
   assert.equal(await page.getByRole('menu').count(), 1); await menu.getByRole('menuitem', { name: 'Run other-table' }).waitFor();
   await page.locator('#count').click(); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
   for (const target of [tables.nth(2).locator('tbody tr').first(), tables.nth(0).locator('tbody tr').nth(2), tables.nth(0).locator('thead tr')]) {
     assert.equal(await target.evaluate(element => !element.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }))), false, 'Unsupported targets retain browser menu');
     assert.equal(await menu.count(), 0);
+    await assertNoHighlight();
   }
   assert.equal(await first.evaluate(element => !element.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }))), true, 'Supported row prevents browser menu');
   await menu.waitFor(); await page.keyboard.press('Escape');
@@ -248,12 +283,24 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await genericOpen(); await first.getByRole('button', { name: 'Run first' }).evaluate(button => { button.disabled = true; }); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
   await genericOpen(); await tables.nth(0).evaluate(table => { table.parentElement.inert = true; }); await menu.waitFor({ state: 'detached' });
   assert.equal(await first.evaluate(element => !element.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }))), false, 'Inert browse regions cannot expose actions');
   await tables.nth(0).evaluate(table => { table.parentElement.inert = false; });
   await genericOpen(); await page.evaluate(() => window.dispatchEvent(new Event('scroll'))); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
   await genericOpen(); await page.setViewportSize({ width: 1300, height: 900 }); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
+  await genericOpen(); await page.evaluate(() => window.dispatchEvent(new Event('blur'))); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
+  await page.emulateMedia({ forcedColors: 'active' });
+  await genericOpen();
+  assert.equal(await first.locator('td').first().evaluate(element => getComputedStyle(element).outlineStyle), 'solid');
+  await page.keyboard.press('Tab'); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
+  await page.emulateMedia({ forcedColors: 'none' });
   await genericOpen(); await page.locator('#unmount').click(); await menu.waitFor({ state: 'detached' });
+  await assertNoHighlight();
   report.checks.push('Shared menu: hidden/disabled items, keyboard navigation, links, row/table switching, unsupported targets, viewport edges, stale controls, scroll/resize/unmount dismissal');
   assert.deepEqual(report.pageErrors, []);
   report.status = 'passed'; save();

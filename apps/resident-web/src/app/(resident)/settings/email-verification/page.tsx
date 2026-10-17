@@ -16,7 +16,7 @@ export default async function EmailVerificationPage({ searchParams }: { searchPa
       <h1 className="text-2xl font-bold tracking-tight">Email Verification</h1>
       <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">Confirm your email address to complete your account setup.</p>
     </div>
-    {params.emailChangeError === '1' ? <p role="alert" className="rounded-xl border border-border bg-muted/40 p-4 text-sm">Unable to complete email confirmation. Check confirmation below or request a new confirmation email.</p> : null}
+    {params.emailChangeError === '1' ? <p className="rounded-xl border border-border bg-muted/40 p-4 text-sm">Unable to complete email confirmation. Check confirmation below or request a new confirmation email.</p> : null}
     {error || !data || authError || auth.user?.id !== user.id ? <p role="alert" className="rounded-2xl border border-border bg-card p-6 text-sm">Unable to load your profile. Reload and try again.</p> :
       <EmailVerificationForm key={`${user.id}:${auth.user.email}:${data.email}:${auth.user.new_email}:${params.changeEmail}`} userId={user.id} email={auth.user.email ?? ''} profileEmail={data.email} initialStatus={data.email_verification_status} pendingEmail={auth.user.new_email ?? ''} changeEmail={params.changeEmail === '1'} />}
   </div>;

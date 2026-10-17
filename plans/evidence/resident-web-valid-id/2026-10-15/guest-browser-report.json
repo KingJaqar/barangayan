@@ -1,0 +1,12 @@
+{
+  "browser": "155.0.8059.79",
+  "checks": [
+    "Actual production route redirects guests through Login to the fixed Valid ID destination",
+    "Old Profile fragment preserves its existing server guard and Profile return destination"
+  ],
+  "errors": [],
+  "warnings": [],
+  "limitations": [
+    "Guest session only; incomplete/complete residents and live writes are not exercised."
+  ]
+}

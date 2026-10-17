@@ -16,8 +16,8 @@
  */
 
 import { Download, FileJson, FileText } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useRef, useState } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { buildDataExportHtml } from '@/lib/data-export-html';
 import { toEdgeFunctionError } from '@/lib/edge-function-error';
@@ -25,8 +25,14 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function DownloadDataPage() {
   const [exporting, setExporting] = useState<'json' | 'pdf' | null>(null);
+  const busy = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
 
   async function runExport(format: 'json' | 'pdf') {
+    if (busy.current) return;
+    busy.current = true;
+    const attempt = beginAttempt('data-export');
     setExporting(format);
     try {
       const supabase = createSupabaseBrowserClient();
@@ -41,29 +47,40 @@ export default function DownloadDataPage() {
         const a = document.createElement('a');
         a.href = url;
         a.download = `barangayan-my-data-${dateStr}.json`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        toast.success('Your data was downloaded as JSON.');
+        try {
+          document.body.appendChild(a);
+          a.click();
+        } finally {
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
+        notify.success('Your data download started.', { id: attempt });
         return;
       }
 
       const html = buildDataExportHtml(data as Record<string, unknown>);
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
-        toast.error('Please allow pop-ups to view your PDF export.');
+        notify.error('Please allow pop-ups to view your PDF export.', { id: attempt });
         return;
       }
       printWindow.document.write(html);
       printWindow.document.close();
       printWindow.focus();
       // Give the new tab a moment to lay out before invoking print.
-      setTimeout(() => printWindow.print(), 300);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not export your data. Please try again.');
+      setTimeout(() => {
+        try {
+          printWindow.print();
+          notify.success('Your data is ready. Choose Save as PDF in the print dialog.', { id: attempt });
+        } catch {
+          notify.error('Could not export your data. Please try again.', { id: attempt });
+        }
+      }, 300);
+    } catch {
+      notify.error('Could not export your data. Please try again.', { id: attempt });
     } finally {
-      setExporting(null);
+      busy.current = false;
+      if (mounted.current) setExporting(null);
     }
   }
 

@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const root = path.resolve(import.meta.dirname, '../../../..');
 const app = path.join(root, 'apps/admin-web');
 const appRequire = createRequire(path.join(app, 'package.json'));
-const evidence = path.join(root, 'plans/evidence/admin-record-lifecycle');
+const evidence = path.join(root, 'plans/evidence/admin-record-sheet');
 fs.mkdirSync(evidence, { recursive: true });
 const adapters = path.join(import.meta.dirname, 'record-adapters.js');
 const bundle = await build({ entryPoints: [path.join(import.meta.dirname, 'record-fixture.jsx')], bundle: true, write: false, outdir: 'record-preview',
@@ -65,7 +65,36 @@ try {
     assert.equal(await sheet.locator('input,textarea,select').count(), 0, `${name}: read-only by default`);
     const bounds = await sheet.locator('section').first().boundingBox();
     assert.ok(bounds.x + bounds.width > 1438, `${name}: side sheet aligns to right edge`);
+    const nav = sheet.locator('nav[aria-label$="sections"]').first();
+    await nav.waitFor();
+    assert.equal(await sheet.getByText('Record fields and timestamps', { exact: true }).count(), 0, `${name}: duplicate fields removed`);
+    await nav.evaluate(element => {
+      const body = element.closest('section').children[1];
+      body.scrollTop = body.scrollHeight;
+    });
+    await page.waitForFunction(() => {
+      const element = document.querySelector('dialog nav[aria-label$="sections"]');
+      const body = element.closest('section').children[1];
+      const bounds = element.getBoundingClientRect();
+      const viewport = body.getBoundingClientRect();
+      return getComputedStyle(element).position === 'sticky' && bounds.top >= viewport.top - 2 && bounds.bottom <= viewport.bottom + 2;
+    });
+    const navPaint = await nav.locator('a').first().evaluate(element => getComputedStyle(element).borderTopStyle);
+    assert.equal(navPaint, 'solid', `${name}: section links have visible borders`);
+    for (const link of await nav.locator('a').all()) {
+      await link.click();
+      const visibleTarget = await link.evaluate(element => {
+        const target = document.getElementById(decodeURIComponent(element.hash.slice(1)));
+        return !!target;
+      });
+      assert.ok(visibleTarget, `${name}: section link resolves`);
+    }
+    for (const action of ['Edit', 'Archive', 'Delete']) assert.equal(await sheet.getByRole('button', { name: action, exact: true }).locator('svg').count(), 1, `${name}: ${action} has an icon`);
     await sheet.getByRole('button', { name: 'Edit', exact: true }).click();
+    if (name === 'residents') {
+      for (const [label, current] of [['First name', 'Fixture'], ['Last name', 'Resident'], ['Middle name', 'Santos'], ['Suffix', 'Jr.'], ['House number', '1'], ['Street', 'Fixture Street']])
+        assert.equal(await sheet.getByLabel(label, { exact: false }).first().inputValue(), current, `Resident ${label} starts populated`);
+    }
     const input = sheet.getByLabel(field, { exact: false }).first();
     const original = await input.inputValue();
     await input.fill(value);
@@ -116,7 +145,7 @@ try {
     await deletion.getByText(/cannot be undone/).waitFor();
     await deletion.getByRole('button', { name: 'Cancel', exact: true }).click();
     assert.equal(await page.evaluate(() => window.recordFixture.mutations.filter(item => item.operation === 'delete').length), 0, `${name}: deletion requires explicit confirmation`);
-    await page.getByRole('dialog').first().getByRole('button', { name: 'Close form', exact: true }).click();
+    assert.equal(await page.locator('dialog section').count(), 0, name + ': cancel deletion leaves no details sheet');
     await page.getByRole('dialog').waitFor({ state: 'detached' });
     await page.getByRole('button', { name: 'Delete', exact: true }).click();
     const deletionAgain = page.getByRole('dialog', { name: 'delete record', exact: true });
@@ -127,7 +156,7 @@ try {
     await page.getByRole('alert').filter({ hasText: 'Record permanently deleted.' }).waitFor();
     await page.getByRole('button', { name: 'View Details', exact: true }).waitFor({ state: 'detached' });
     assert.equal(await page.getByRole('button', { name: 'View Details', exact: true }).count(), 0, `${name}: successful deletion refreshes list`);
-    report.checks.push({ screen: name, status: 'passed', checks: ['icon-only actions with tooltips and accessible labels','40px button targets','failed details load and retry','read-only right sheet','Edit/Save/Cancel','save transport and permission failures retain draft','failed archive preserves active record','archive list removal','archived details','restore failure and retry','irreversible-delete confirmation','failed delete retry','list refresh'] });
+    report.checks.push({ screen: name, status: 'passed', checks: ['icon-only actions with tooltips and accessible labels','40px button targets','failed details load and retry','read-only right sheet','pinned visible section links and valid targets','no duplicated record fields','sheet action icons','Edit/Save/Cancel with current values','save transport and permission failures retain draft','failed archive preserves active record','archive list removal','archived details','restore failure and retry','irreversible-delete confirmation','failed delete retry','list refresh'] });
     save();
   }
   await page.goto(`${url}?screen=requests`, { waitUntil: 'domcontentloaded' });

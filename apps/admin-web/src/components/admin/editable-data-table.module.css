@@ -1,0 +1,49 @@
+.table th[data-frozen] {
+  position: sticky;
+  z-index: 3;
+  background: #fafafa;
+}
+
+.table tbody tr { --frozen-row-background: var(--background); }
+.table tbody tr:nth-child(even) {
+  --frozen-row-background: color-mix(in srgb, #fafafa 60%, var(--background));
+}
+.table tbody tr[data-clickable]:hover {
+  --frozen-row-background: #f4f4f5;
+}
+.table td[data-frozen] {
+  position: sticky;
+  z-index: 1;
+  background: var(--frozen-row-background);
+}
+.table td[data-frozen][data-editable]:hover {
+  background: color-mix(in srgb, var(--accent) 5%, var(--frozen-row-background));
+}
+
+:global(.dark) .table th[data-frozen] { background: #27272a; }
+:global(.dark) .table tbody tr:nth-child(even) {
+  --frozen-row-background: color-mix(in srgb, #18181b 20%, var(--background));
+}
+:global(.dark) .table tbody tr[data-clickable]:hover {
+  --frozen-row-background: color-mix(in srgb, #18181b 50%, var(--background));
+}
+
+.table tbody tr[data-context-menu-open] > td,
+.table tbody tr[data-context-menu-open] > td[data-frozen][data-editable]:hover {
+  background: color-mix(in srgb, var(--accent) 12%, var(--background));
+  box-shadow: inset 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+    inset 0 -1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.table tbody tr[data-context-menu-open] > td:first-child {
+  box-shadow: inset 3px 0 var(--accent),
+    inset 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+    inset 0 -1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+@media (forced-colors: active) {
+  .table :is(th, td)[data-frozen] { background: Canvas; }
+  .table tbody tr[data-context-menu-open] > td {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+}

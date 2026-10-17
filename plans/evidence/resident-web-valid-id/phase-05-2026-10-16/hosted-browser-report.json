@@ -1,0 +1,4883 @@
+{
+  "passed": true,
+  "startedAt": "2026-10-16T02:03:36.535Z",
+  "environment": {
+    "project": "pwjbucnyqexiepoinoke",
+    "resident": "local production build, actual hosted backend",
+    "staff": "local Next webpack production server, actual hosted backend"
+  },
+  "checks": [
+    "Isolated synthetic tenant, complete resident and reviewer accounts, and zero-fee test service created; real password logins reach both actual apps",
+    "Actual hosted front-only publication persists trimmed corrected details and original bytes without changing Profile; double click and deliberately lost committed reply resolve one ID/version through owned-row Retry",
+    "Actual staff UI loads one private front image and confirmed details, approves through the caller-authorized RPC, and records the reviewer; resident entry and sidebar refresh to verified",
+    "Real resident service form reads and previews approved front-only evidence and creates a v2 request linked to that exact submission; no back photo or payment record is required/created",
+    "Final hosted readback confirms one verified immutable front-only submission, corrected details and matching current/approved IDs; console has only deliberate lost-response and existing asset-preload warnings, with the admin logo limitation recorded"
+  ],
+  "identities": {
+    "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+    "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+    "resident": "03cff13a-5bcd-4c96-a52f-1d3c862f9227",
+    "admin": "70e6896d-ba42-43dc-aa95-2506eb423d92",
+    "firstSubmission": "47af5664-12b9-4a5c-979e-af75b41fb572",
+    "serviceRequest": "49a01dda-9a6a-475c-8e46-2900a0f37e8c"
+  },
+  "requests": [
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/780f4591e142a8d4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4708-1370389c90891d14.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/login/page-3767ac30ad836194.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/error-fae75ea051964c68.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/onboarding/page-45da0ed9b0c677d8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-7f03d59d6c7a1f5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/247-5f7a0b43199fa7c5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-9d036b3154270462.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/83270ee04ae3dee4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-4ed11bc0c4208c08.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1627-91a81e39c1821d59.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3987-21cffdb1efd2bc3f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-809705e32ec38728.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2864-4de4f1dd938e10c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1317-d1ddeafd00948272.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/login/page-cd15663ea02be097.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-19d0fab8c390e0de.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ef4626d868f1264.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/forgot-password/page-dc2241f0f3902555.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-03eb5f522c1e3b1d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/f98edc85984fffba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/c0b6fe91e17d5720.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7166-21a3b7925fd822c2.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2324-9c777ab716dc9d98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-55bec4291db5ac51.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/dashboard/page-56787a42b3ace3dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/69d6eefe52b47a77.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/d50b3408211c4cba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a6f675b5d440b45a.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3933-a2f9ce1652645c72.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5436-875a3637b3a2e169.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2327-0bc53542fc7dd1c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/layout-a831557d021dcfb0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/83270ee04ae3dee4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/69d6eefe52b47a77.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/d50b3408211c4cba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-4ed11bc0c4208c08.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1627-91a81e39c1821d59.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3987-21cffdb1efd2bc3f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-809705e32ec38728.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2864-4de4f1dd938e10c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1317-d1ddeafd00948272.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3933-a2f9ce1652645c72.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5436-875a3637b3a2e169.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2327-0bc53542fc7dd1c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/layout-a831557d021dcfb0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6463-d47758413282d23d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/526-994b4b84fbc3d5e7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4945-4eef1e9f4c87322a.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/946-ddd3edcd63aee677.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6036-708b7e5601681771.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1160-3a741c89b0aa0015.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7703-376709697e857223.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/residents/page-2c63a306b338bd0c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/archive/layout-a998f2f3a82c69a5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/profile/error-5a9b77f6fe2cd444.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/453262e5fc8cdf85.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ffa9bfb802c2e94.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "http://127.0.0.1:3216/9da34d55-37fe-43f0-9e26-ca7ce137ca76",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "http://127.0.0.1:3216/d19ca2a5-d6ec-46d5-b29b-7ade6aee01d0",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/publish_id_submission",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/83270ee04ae3dee4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/69d6eefe52b47a77.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/d50b3408211c4cba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-4ed11bc0c4208c08.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1627-91a81e39c1821d59.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3987-21cffdb1efd2bc3f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-809705e32ec38728.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2864-4de4f1dd938e10c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1317-d1ddeafd00948272.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3933-a2f9ce1652645c72.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5436-875a3637b3a2e169.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2327-0bc53542fc7dd1c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/layout-a831557d021dcfb0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6463-d47758413282d23d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/526-994b4b84fbc3d5e7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4945-4eef1e9f4c87322a.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/946-ddd3edcd63aee677.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6036-708b7e5601681771.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1160-3a741c89b0aa0015.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7703-376709697e857223.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/residents/page-2c63a306b338bd0c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/archive/layout-a998f2f3a82c69a5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/profile/error-5a9b77f6fe2cd444.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/453262e5fc8cdf85.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ffa9bfb802c2e94.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/780f4591e142a8d4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4708-1370389c90891d14.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/login/page-3767ac30ad836194.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/error-fae75ea051964c68.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/onboarding/page-45da0ed9b0c677d8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-7f03d59d6c7a1f5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/247-5f7a0b43199fa7c5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-9d036b3154270462.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/83270ee04ae3dee4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-4ed11bc0c4208c08.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1627-91a81e39c1821d59.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3987-21cffdb1efd2bc3f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-809705e32ec38728.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2864-4de4f1dd938e10c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1317-d1ddeafd00948272.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/login/page-cd15663ea02be097.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/forgot-password/page-dc2241f0f3902555.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-19d0fab8c390e0de.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ef4626d868f1264.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-03eb5f522c1e3b1d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/f98edc85984fffba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/c0b6fe91e17d5720.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7166-21a3b7925fd822c2.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2324-9c777ab716dc9d98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-55bec4291db5ac51.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/dashboard/page-56787a42b3ace3dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/69d6eefe52b47a77.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/d50b3408211c4cba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a6f675b5d440b45a.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3933-a2f9ce1652645c72.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5436-875a3637b3a2e169.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2327-0bc53542fc7dd1c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/layout-a831557d021dcfb0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/profile/error-5a9b77f6fe2cd444.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/453262e5fc8cdf85.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ffa9bfb802c2e94.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/83270ee04ae3dee4.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/69d6eefe52b47a77.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/d50b3408211c4cba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-4ed11bc0c4208c08.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1627-91a81e39c1821d59.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3987-21cffdb1efd2bc3f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-809705e32ec38728.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2864-4de4f1dd938e10c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1317-d1ddeafd00948272.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3933-a2f9ce1652645c72.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5436-875a3637b3a2e169.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2327-0bc53542fc7dd1c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/layout-a831557d021dcfb0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6463-d47758413282d23d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/526-994b4b84fbc3d5e7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4945-4eef1e9f4c87322a.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/946-ddd3edcd63aee677.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6036-708b7e5601681771.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1160-3a741c89b0aa0015.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7703-376709697e857223.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/residents/page-2c63a306b338bd0c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_residents_records",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/profile/error-5a9b77f6fe2cd444.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/453262e5fc8cdf85.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(admin)/archive/layout-a998f2f3a82c69a5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ffa9bfb802c2e94.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/review_id_submission",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "127.0.0.1",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/requests/new/82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/requests/new/%5BdocumentId%5D/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/c0b6fe91e17d5720.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7166-21a3b7925fd822c2.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2324-9c777ab716dc9d98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-55bec4291db5ac51.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/requests/new/%5BdocumentId%5D/page-fcb83ca535a87103.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/logs",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/logs",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-19d0fab8c390e0de.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ef4626d868f1264.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-03eb5f522c1e3b1d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/f98edc85984fffba.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-7f03d59d6c7a1f5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/submit_service_request",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/services/payment/49a01dda-9a6a-475c-8e46-2900a0f37e8c",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/247-5f7a0b43199fa7c5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/203-ac459fcf3e9b9573.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6804-5a41758bce12cc83.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/payment/%5BrequestId%5D/page-7f618db0aee1f1cb.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    }
+  ],
+  "errors": [
+    {
+      "surface": "resident",
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_CONNECTION_FAILED"
+    }
+  ],
+  "warnings": [
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "staff",
+      "message": "The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource http://127.0.0.1:3216/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Synthetic test data only; physical camera and wider Phase 6/7 release are outside this gate. Test records retained; no payment initiated or data deleted."
+  ],
+  "previousAttempt": {
+    "identities": {
+      "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+      "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+      "resident": "5caec943-86d7-4b4a-aa14-bb7bebfaaa2e",
+      "admin": "79df7d77-0b96-45f3-a8c5-c1a3b7cbaaec"
+    },
+    "failures": [
+      {
+        "stage": "setup",
+        "message": "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboard\" until \"load\"\n  navigated to \"http://127.0.0.1:3217/login\"\n  navigated to \"http://127.0.0.1:3217/login\"\n  navigated to \"http://127.0.0.1:3217/login\"\n============================================================"
+      }
+    ]
+  },
+  "browser": "155.0.8059.80",
+  "recoveredAttemptFailures": [
+    {
+      "stage": "approve",
+      "message": "locator.click: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('cell', { name: 'Resident', exact: true })\u001b[22m\n"
+    },
+    {
+      "stage": "approve",
+      "message": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "stage": "custom",
+      "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     message: \"The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+     surface: 'staff'\n+   },\n+   {\n+     message: \"The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+     surface: 'staff'\n+   },\n+   {\n+     message: \"The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+     surface: 'staff'\n+   },\n+   {\n+     message: \"The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+     surface: 'staff'\n+   },\n+   {\n+     message: \"The resource http://127.0.0.1:3217/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+     surface: 'staff'\n+   }\n+ ]\n- []\n"
+    }
+  ],
+  "resumedAt": "2026-10-16T02:12:42.196Z",
+  "consoleReview": {
+    "unexpectedErrors": 0,
+    "pageErrors": 0,
+    "expectedLostResponseErrors": 1,
+    "residentPreloadWarnings": 46,
+    "staffPreloadWarnings": 15,
+    "residentBaselineCssIdentical": true,
+    "staffCssWarningsReproducedOnUnchangedBuild": true,
+    "staffLogoPreloadWarnings": 5,
+    "staffLogoWarning": "Unused preload for the existing admin logo during test navigation. Admin code unchanged by Phase 5; not independently reproduced in the fresh-tab check.",
+    "staffBaseline": [
+      "The resource http://127.0.0.1:3217/_next/static/css/453262e5fc8cdf85.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+      "The resource http://127.0.0.1:3217/_next/static/css/2ffa9bfb802c2e94.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    ]
+  },
+  "finishedAt": "2026-10-16T02:17:16.717Z",
+  "retained": {
+    "syntheticRecords": true,
+    "noDeletion": true,
+    "completedRunSessionsEnded": true,
+    "reviewerPrivilegeRemoved": true,
+    "bothTestLoginsDisabled": true,
+    "previousFourTestLoginsAlreadyDisabled": true
+  }
+}

@@ -8,16 +8,18 @@
  * definite failure and a raw database token never reaches the page.
  */
 
-/** True when no answer arrived (offline, aborted, timed out, gateway-less failure): the
- * server may or may not have applied a write. PostgREST reports this as status 0 / an
+/** True when transport or server failure leaves a write outcome unknown: the
+ * server may or may not have applied it. PostgREST reports transport loss as status 0 / an
  * empty error code; Edge Function invokes as a FunctionsFetchError; fetch itself throws a
  * TypeError or AbortError. */
 export function isNoAnswer(failure: unknown, status?: number): boolean {
   if (status === 0) return true;
   if (failure instanceof TypeError) return true;
   if (typeof failure !== 'object' || failure === null) return false;
-  const { name, code, originalError } = failure as { name?: unknown; code?: unknown; originalError?: unknown };
-  if (name === 'AbortError' || name === 'FunctionsFetchError') return true;
+  const { name, code, originalError, context } = failure as { name?: unknown; code?: unknown; originalError?: unknown; context?: unknown };
+  if (name === 'AbortError' || name === 'FunctionsFetchError' || name === 'FunctionsRelayError') return true;
+  // An Edge Function/gateway can fail after accepting the operation.
+  if (context instanceof Response && context.status >= 500) return true;
   // Storage wraps a failed fetch as StorageUnknownError({ originalError: TypeError }).
   if (originalError instanceof TypeError) return true;
   // postgrest-js builds a transport failure with `code: ''`; every server answer carries a
@@ -49,7 +51,12 @@ export function serviceSubmissionFailure(
   mapped: string,
 ): SubmissionFailure {
   if (phase === 'validate') return { kind: 'validation', message: mapped };
-  if (isNoAnswer(failure)) {
+  const sessionExpired = /sign in again|account changed/i.test(mapped);
+  if (sessionExpired) return { kind: 'session', title: 'Please sign in again.', message: mapped };
+  const code = failure && typeof failure === 'object' && 'code' in failure ? failure.code : null;
+  // The shared attempt can resolve the write and then fail to read its reference,
+  // or reject a changed retry with a plain Error. Neither proves rejection.
+  if (isNoAnswer(failure) || (phase === 'submit' && (typeof code !== 'string' || !code))) {
     return phase === 'upload'
       ? {
           kind: 'rejected',
@@ -64,8 +71,6 @@ export function serviceSubmissionFailure(
             "We couldn't confirm that your request was received. It may already be submitted. Submit again to recover it — it won't create a duplicate — or check My Requests before starting another.",
         };
   }
-  const sessionExpired = /sign in again|account changed/i.test(mapped);
-  if (sessionExpired) return { kind: 'session', title: 'Please sign in again.', message: mapped };
   if (phase === 'upload') {
     // Storage/provider text is never shown; the files stay selected for another try.
     return {
@@ -93,7 +98,7 @@ export function plainFunctionMessage(message: string | undefined, fallback: stri
 export type PickupFailure = { uncertain: boolean; message: string };
 
 export function pickupPaymentFailure(error: { message: string }, status: number): PickupFailure {
-  if (status === 0) {
+  if (isNoAnswer(error, status) || status >= 500) {
     return {
       uncertain: true,
       message:
@@ -122,7 +127,7 @@ export function pickupPaymentFailure(error: { message: string }, status: number)
 export type PaymentMethodFailure = { uncertain: boolean; title: string; message: string };
 
 export function paymentMethodFailure(error: { message: string; code?: string }, status: number): PaymentMethodFailure {
-  if (status === 0) {
+  if (isNoAnswer(error, status) || status >= 500) {
     return {
       uncertain: true,
       title: "We couldn't confirm your choice.",

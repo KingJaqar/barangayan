@@ -416,6 +416,9 @@ verify_jwt = true
 [functions.extract-resident-id]
 verify_jwt = true
 
+[functions.extract-resident-id-ocrspace]
+verify_jwt = true
+
 # Public emergency routing (DRRM routing plan R5) must not depend on authentication:
 # a resident's expired or missing session must never block a route (plan invariant 9).
 # The function serves only public data and limits requests per hashed client address.

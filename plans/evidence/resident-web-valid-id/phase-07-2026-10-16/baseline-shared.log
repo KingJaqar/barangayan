@@ -1,0 +1,16 @@
+
+> @barangayan/shared@0.0.0 test
+> vitest run src/lib/id-evidence.test.ts src/schemas/service-foundations.test.ts src/lib/resident-submission.test.ts
+
+
+ RUN  v3.2.7 C:/Users/User/barangayan/packages/shared
+
+ ✓ src/schemas/service-foundations.test.ts (16 tests) 17ms
+ ✓ src/lib/id-evidence.test.ts (6 tests) 16ms
+ ✓ src/lib/resident-submission.test.ts (11 tests) 19ms
+
+ Test Files  3 passed (3)
+      Tests  33 passed (33)
+   Start at  15:31:20
+   Duration  1.07s (transform 293ms, setup 0ms, collect 557ms, tests 53ms, environment 1ms, prepare 902ms)
+

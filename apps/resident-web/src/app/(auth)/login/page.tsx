@@ -13,9 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
 import { AUTH_MESSAGES, authFailureKind } from '@/lib/auth/auth-feedback';
-import { getResidentLoginDestination } from '@/lib/auth/login-destination';
+import { queueLoginNotification } from '@/lib/auth/session-feedback';
 import { beginAttempt, notify } from '@/lib/notify';
-import { hasCompletedOnboarding } from '@/lib/onboarding';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 const BRAND_HIGHLIGHTS = [
@@ -26,8 +25,7 @@ const BRAND_HIGHLIGHTS = [
 
 /**
  * Uses shared Supabase authentication, but every role stays in resident-web.
- * Supports a local `?next=` return path after login. The first successful login
- * on this browser goes to /onboarding instead — see lib/onboarding.ts.
+ * Supports a local `?next=` return path after login, defaulting to /home.
  *
  * Layout: a brand panel + form split on lg+ screens (fills the viewport instead of
  * floating a lone card in empty space), collapsing to a single compact card on
@@ -83,8 +81,9 @@ function LoginForm() {
       const safeNext = safeResidentRedirect(next);
       const destination = incomplete
         ? (residentActionNeedsProfile(new URL(safeNext, window.location.origin).pathname) ? residentCompletionDestination(safeNext) : safeNext)
-        : getResidentLoginDestination(next, hasCompletedOnboarding(signInData.user.id));
+        : safeNext;
       // Stay pending until the destination replaces this screen.
+      queueLoginNotification(signInData.user.id);
       router.replace(destination);
       router.refresh();
     } catch {

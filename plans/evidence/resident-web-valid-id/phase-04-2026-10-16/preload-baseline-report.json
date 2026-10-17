@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "browser": "155.0.8059.80",
+  "warnings": [
+    "The resource http://127.0.0.1:3215/_next/static/css/1b577c6ccce4d492.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3215/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3215/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3215/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+  ],
+  "errors": [],
+  "cssComparison": [
+    {
+      "asset": "static/css/2ef4626d868f1264.css",
+      "identical": true
+    },
+    {
+      "asset": "static/css/1b577c6ccce4d492.css",
+      "identical": true
+    },
+    {
+      "asset": "static/css/c0b6fe91e17d5720.css",
+      "identical": true
+    },
+    {
+      "asset": "static/css/f98edc85984fffba.css",
+      "identical": true
+    }
+  ],
+  "cleanup": true
+}

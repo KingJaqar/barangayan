@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { ACCENT_COLORS } from '@barangayan/shared';
 
@@ -37,15 +37,15 @@ interface AccentControllerValue {
   /** Flips `--accent` on <html> immediately — same "don't wait on a DB round-trip to
    * see the effect" pattern as theme-controller.tsx. Phase 7's theme-form.tsx
    * additionally persists to profiles.accent_color for cross-device sync. */
-  setAccent: (color: string) => void;
+  setAccent: (color: string) => boolean;
   /** Up to MAX_CUSTOM_COLORS resident-saved swatches, most recently saved first. */
   customColors: string[];
   /** Replaces the whole saved list (used to reconcile with a DB value). */
   setCustomColors: (colors: string[]) => void;
   /** Adds `color` to the front of the saved list. No-ops (returns false) if the color is
    * invalid, already saved, or the list is already at MAX_CUSTOM_COLORS. */
-  addCustomColor: (color: string) => boolean;
-  removeCustomColor: (color: string) => void;
+  addCustomColor: (color: string) => false | { persisted: boolean };
+  removeCustomColor: (color: string) => false | { persisted: boolean };
   /** Forgets the saved accent + custom colors and reverts to DEFAULT_ACCENT — called on
    * logout (see use-reset-preferences.ts), mirrors theme-controller.tsx's resetTheme(). */
   resetAccent: () => void;
@@ -103,6 +103,7 @@ export function AccentControllerProvider({ children }: { children: ReactNode }) 
   // — only the React state driving swatch-selection UI lags by one tick.
   const [accent, setAccentState] = useState<string>(DEFAULT_ACCENT);
   const [customColors, setCustomColorsState] = useState<string[]>([]);
+  const customColorsRef = useRef<string[]>([]);
 
   useEffect(() => {
     // Deferred a microtask — see theme-controller.tsx's identical fix for why (avoids
@@ -110,27 +111,33 @@ export function AccentControllerProvider({ children }: { children: ReactNode }) 
     queueMicrotask(() => {
       const live = document.documentElement.style.getPropertyValue('--accent').trim();
       if (live) setAccentState(live);
-      setCustomColorsState(readStoredCustomColors());
+      customColorsRef.current = readStoredCustomColors();
+      setCustomColorsState(customColorsRef.current);
     });
   }, []);
 
   const setAccent = useCallback((next: string) => {
-    if (!isValidHexColor(next)) return;
+    if (!isValidHexColor(next)) return false;
     setAccentState(next);
     applyAccentVar(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);
+      return true;
     } catch {
       // Private browsing / storage disabled — the CSS var still applies for this session.
+      return false;
     }
   }, []);
 
   const persistCustomColors = useCallback((next: string[]) => {
+    customColorsRef.current = next;
     setCustomColorsState(next);
     try {
       localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
+      return true;
     } catch {
       // Private browsing / storage disabled — the in-memory list still works this session.
+      return false;
     }
   }, []);
 
@@ -139,36 +146,19 @@ export function AccentControllerProvider({ children }: { children: ReactNode }) 
     [persistCustomColors],
   );
 
-  const addCustomColor = useCallback((color: string): boolean => {
+  const addCustomColor = useCallback((color: string) => {
     if (!isValidHexColor(color)) return false;
-    let added = false;
-    setCustomColorsState((prev) => {
-      if (prev.some((c) => c.toLowerCase() === color.toLowerCase()) || prev.length >= MAX_CUSTOM_COLORS) {
-        return prev;
-      }
-      added = true;
-      const next = [color, ...prev];
-      try {
-        localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // Private browsing / storage disabled — the in-memory list still works this session.
-      }
-      return next;
-    });
-    return added;
-  }, []);
+    const previous = customColorsRef.current;
+    if (previous.some(c => c.toLowerCase() === color.toLowerCase()) || previous.length >= MAX_CUSTOM_COLORS) return false;
+    return { persisted: persistCustomColors([color, ...previous]) };
+  }, [persistCustomColors]);
 
   const removeCustomColor = useCallback((color: string) => {
-    setCustomColorsState((prev) => {
-      const next = prev.filter((c) => c.toLowerCase() !== color.toLowerCase());
-      try {
-        localStorage.setItem(CUSTOM_STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // Private browsing / storage disabled — the in-memory list still works this session.
-      }
-      return next;
-    });
-  }, []);
+    const previous = customColorsRef.current;
+    const next = previous.filter(c => c.toLowerCase() !== color.toLowerCase());
+    if (next.length === previous.length) return false;
+    return { persisted: persistCustomColors(next) };
+  }, [persistCustomColors]);
 
   const resetAccent = useCallback(() => {
     try {
@@ -178,6 +168,7 @@ export function AccentControllerProvider({ children }: { children: ReactNode }) 
       // Private browsing / storage disabled — nothing to remove.
     }
     setAccentState(DEFAULT_ACCENT);
+    customColorsRef.current = [];
     setCustomColorsState([]);
     applyAccentVar(DEFAULT_ACCENT);
   }, []);

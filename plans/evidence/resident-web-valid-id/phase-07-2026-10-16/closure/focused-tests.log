@@ -1,0 +1,12 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-web
+
+ ✓ tests/valid-id-profile-cutover.test.ts (1 test) 16ms
+ ✓ tests/valid-id.test.ts (15 tests) 49ms
+ ✓ tests/valid-id-route.test.ts (8 tests) 20ms
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  20:20:54
+   Duration  2.14s (transform 823ms, setup 0ms, collect 2.39s, tests 85ms, environment 1ms, prepare 485ms)
+

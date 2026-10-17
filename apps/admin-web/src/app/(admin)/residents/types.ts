@@ -1,10 +1,12 @@
 import type { IdVerificationStatus } from '@barangayan/shared';
-export type Tab = 'all' | 'verified' | 'unverified';
+export type Tab = 'all' | 'id_verified' | 'id_unverified' | 'verified' | 'unverified';
 
 export const TABS: { key: Tab; label: string }[] = [
   { key: 'all', label: 'All' },
-  { key: 'verified', label: 'Verified' },
-  { key: 'unverified', label: 'Unverified' },
+  { key: 'id_verified', label: 'Valid ID Verified' },
+  { key: 'id_unverified', label: 'Valid ID Unverified' },
+  { key: 'verified', label: 'Email Verified' },
+  { key: 'unverified', label: 'Email Unverified' },
 ];
 
 export type ResidentRow = {

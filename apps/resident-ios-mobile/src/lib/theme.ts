@@ -1,46 +1,23 @@
+import { createContext, useContext, useMemo } from 'react';
 import { useColorScheme, type TextStyle } from 'react-native';
+import { derivePalette, type Colors } from './palette';
 
-/** Semantic colors from the Design System Handoff Rev 2.1 §5. Status colors never change with accent preferences. */
-const lightColors = {
-  canvas: '#F7F8F7',
-  surface: '#FFFFFF',
-  surfaceRaised: '#FFFFFF',
-  surfaceSelected: '#E8F4EF',
-  textPrimary: '#171D1A',
-  textSecondary: '#45534E',
-  textTertiary: '#61716B',
-  border: '#CDD8D2',
-  primary: '#0D6B59',
-  onPrimary: '#FFFFFF',
-  success: '#147A3E',
-  warning: '#8A5A00',
-  danger: '#B42318',
-  info: '#075BAA',
-  focus: '#0A70D1',
-  overlay: 'rgba(23,29,26,0.36)',
-};
-export type Colors = typeof lightColors;
-const darkColors: Colors = {
-  canvas: '#101614',
-  surface: '#18201D',
-  surfaceRaised: '#202A26',
-  surfaceSelected: '#16382F',
-  textPrimary: '#F3F7F4',
-  textSecondary: '#B9C7C0',
-  textTertiary: '#8EA19A',
-  border: '#3A4A43',
-  primary: '#35C7A0',
-  onPrimary: '#06251D',
-  success: '#5DDB8B',
-  warning: '#FFD37A',
-  danger: '#FF8B82',
-  info: '#7FC4FF',
-  focus: '#88C7FF',
-  overlay: 'rgba(0,0,0,0.52)',
-};
+export type { Colors } from './palette';
 
+/** The resident's accent color (null = the handoff's default tokens). Provided by the appearance provider. */
+export const AccentContext = createContext<string | null>(null);
+/** The resident's chosen iOS font family (undefined = the system face). Provided by the appearance provider. */
+export const FontFamilyContext = createContext<string | undefined>(undefined);
+
+/**
+ * Semantic colors for the active scheme. The scheme follows the system or the resident's
+ * Light/Dark choice (applied natively through `Appearance.setColorScheme`), and the accent
+ * overlays action/selection tokens only.
+ */
 export function useColors(): Colors {
-  return useColorScheme() === 'dark' ? darkColors : lightColors;
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const accent = useContext(AccentContext);
+  return useMemo(() => derivePalette(scheme, accent), [scheme, accent]);
 }
 
 /** iOS points. Font sizes scale with Dynamic Type through React Native's default font scaling. */
@@ -57,6 +34,20 @@ export const typeScale = {
   monoReference: { fontSize: 15, lineHeight: 20, fontFamily: 'Menlo' },
 } satisfies Record<string, TextStyle>;
 export type TypeRole = keyof typeof typeScale;
+
+/**
+ * The type scale with the resident's font family applied. Family changes only the face; size,
+ * weight and line height stay the semantic roles. References keep their monospaced face.
+ */
+export function useType(): Record<TypeRole, TextStyle> {
+  const fontFamily = useContext(FontFamilyContext);
+  return useMemo(() => {
+    if (!fontFamily) return typeScale;
+    const styled: Record<string, TextStyle> = {};
+    for (const [role, style] of Object.entries(typeScale)) styled[role] = role === 'monoReference' ? style : { ...style, fontFamily };
+    return styled as Record<TypeRole, TextStyle>;
+  }, [fontFamily]);
+}
 
 export const space = { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 7: 32 } as const;
 export const radius = { sm: 8, md: 12, lg: 16, xl: 24 } as const;

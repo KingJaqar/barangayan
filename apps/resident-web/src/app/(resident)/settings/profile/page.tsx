@@ -12,7 +12,7 @@ export default async function ProfilePage() {
   const { data: profile } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, middle_name, suffix, sex, birth_date, email, mobile_number, house_no, street, city, province, employment_status, occupation, id_verification_status, avatar_url, id_type, id_photo_urls, barangay_id, household_members, email_verification_status, barangays(name)',
+      'id, first_name, last_name, middle_name, suffix, sex, birth_date, email, mobile_number, house_no, street, city, province, employment_status, occupation, avatar_url, barangay_id, household_members, email_verification_status, barangays(name)',
     )
     .eq('id', user.id)
     .single();
@@ -25,7 +25,7 @@ export default async function ProfilePage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
         <p className="mt-2 max-w-xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-          Manage your personal information, address, household, and ID verification.
+          Manage your personal information, address, and household.
         </p>
       </div>
       <ProfileForm key={profile.id} profile={profile} barangayName={locality?.display_name ?? sessionProfile.barangayName} fixedLocality={!!locality} />

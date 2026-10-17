@@ -15,7 +15,7 @@ const MapCanvas = dynamic(() => import('@/components/maps/map-canvas').then((m) 
   // Steady (non-pulsing) placeholder at the map's own size, so the viewport never resizes.
   loading: () => (
     <div className={styles.mapFrame}>
-      <div className={styles.loadingToolbar}><Skeleton pulse={false} className="h-10 w-full max-w-sm rounded-md" /></div>
+      <div className={styles.mapOverlay}><div className={styles.loadingToolbar}><Skeleton pulse={false} className="h-10 w-full max-w-sm rounded-md" /></div></div>
       <Skeleton pulse={false} className={styles.mapViewport} />
       <LoadingStatus active label="Loading the map…" className="sr-only" />
     </div>

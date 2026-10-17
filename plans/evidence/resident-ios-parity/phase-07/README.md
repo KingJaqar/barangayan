@@ -1,8 +1,8 @@
 # Phase 7 — Services catalogue, guidelines and charter detail (`P07`)
 
-**Status:** Planned. Not started; no evidence recorded.
+**Status (2026-10-15):** Partially complete. T02–T06 are Verified (non-device scope, OD-06/OD-07); T01 is verified for Documents/Requests and its Logs segment closes with P09-T05. No screen was run and nothing was committed, deployed or applied remotely.
 
-**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 5, Phase 6. Do not start until those exits are verified (plan §4.2). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
+**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 5, Phase 6 (the Phase 3–6 exits are open and carried as blockers; started on the owner's explicit go-ahead, 2026-10-15). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 
 **Lead owner role:** iOS/services engineer + catalogue owner. **Named owner:** KingJaqar (decision-register OD-01).
 
@@ -12,4 +12,6 @@
 
 ## Evidence
 
-None yet. Add records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.
+- [P07_2026-10-15_implementation-and-verification.md](P07_2026-10-15_implementation-and-verification.md) — entry check, requirement classification, decisions P07-D01…D08, baseline vs final checks, acceptance status, pending manual verification, out-of-scope findings.
+
+Repository artifacts: `apps/resident-ios-mobile/src/features/services/`, `src/app/(tabs)/services/`, `src/app/requests.tsx`, `src/components/ui.tsx` (`SearchField`, `Segmented`), `src/data/schemas.ts`, `src/auth/pending-destination.ts`, `tests/services.test.ts`.

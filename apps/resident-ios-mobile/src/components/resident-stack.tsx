@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { Stack } from 'expo-router/stack';
-import { layout, typeScale, useColors } from '../lib/theme';
+import { layout, useType, useColors } from '../lib/theme';
 
 /** One destination's nested native stack. Child titles are declared here so every pushed screen has a real header. */
 export function ResidentStack({ title, screens = {}, settingsShortcut = true }: { title: string; screens?: Record<string, string>; settingsShortcut?: boolean }) {
@@ -13,5 +13,6 @@ export function ResidentStack({ title, screens = {}, settingsShortcut = true }: 
 /** Supplemental toolbar link; Settings remains a full destination (possibly inside More). */
 function SettingsShortcut() {
   const colors = useColors();
-  return <Link href="/settings" accessibilityRole="link" accessibilityLabel="Open Settings" style={[typeScale.body, { color: colors.primary, minHeight: layout.controlMin, paddingVertical: 10, paddingHorizontal: 4 }]}>Settings</Link>;
+  const type = useType();
+  return <Link href="/settings" accessibilityRole="link" accessibilityLabel="Open Settings" style={[type.body, { color: colors.primary, minHeight: layout.controlMin, paddingVertical: 10, paddingHorizontal: 4 }]}>Settings</Link>;
 }

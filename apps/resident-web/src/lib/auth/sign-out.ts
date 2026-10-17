@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { getAuthCookieOptions } from '@/lib/supabase/cookie-options';
 
 /**
  * - `signed-out`: Auth confirmed the sign-out.
@@ -18,15 +19,15 @@ export function isIntentionalSignOut(): boolean {
 }
 
 /**
- * Signs out through the browser client with the caller's existing scope (supabase-js
- * defaults to `global`) and reports what actually happened. It never retries.
+ * Ordinary logout revokes only this application's session. Explicit account-security
+ * operations can request global revocation. Reports the outcome without retrying.
  */
-export async function signOutBrowser(scope?: 'global' | 'local'): Promise<SignOutOutcome> {
+export async function signOutBrowser(scope: 'global' | 'local' = 'local'): Promise<SignOutOutcome> {
   const supabase = createSupabaseBrowserClient();
   intentionalSignOuts++;
   try {
     try {
-      const { error } = await supabase.auth.signOut(scope ? { scope } : undefined);
+      const { error } = await supabase.auth.signOut({ scope });
       if (!error) return 'signed-out';
     } catch {
       // Fall through and check what the failed call left behind.
@@ -35,7 +36,14 @@ export async function signOutBrowser(scope?: 'global' | 'local'): Promise<SignOu
     // chunked) before reporting a failed revoke, and keeps it when the failure came
     // from refreshing an expired token. Read that storage directly: getSession() would
     // retry the same refresh with backoff for up to ~25 s.
-    return /(?:^|;\s*)sb-[^=;]+-auth-token(?:\.\d+)?=/.test(document.cookie) ? 'failed' : 'local-only';
+    const sessionCookieName = getAuthCookieOptions().name;
+    const hasSession = document.cookie.split(';').some(cookie => {
+      const name = cookie.trim().split('=')[0];
+      return name === sessionCookieName || (
+        name.startsWith(`${sessionCookieName}.`) && /^\d+$/.test(name.slice(sessionCookieName.length + 1))
+      );
+    });
+    return hasSession ? 'failed' : 'local-only';
   } finally {
     intentionalSignOuts--;
   }

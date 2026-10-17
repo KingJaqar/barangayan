@@ -42,6 +42,37 @@ function scripted(replies: { total?: number; ids?: string[]; status?: number; co
 const state = (values: Record<string, string> = {}) => adapter.parseTableState('requests', new URLSearchParams({ tab: 'all', ...values }));
 
 describe('server query contracts', () => {
+  it.each([
+    ['all', null, null, null],
+    ['id_verified', 'eq.verified', null, null],
+    ['id_unverified', null, null, '(f_id_status.is.null,f_id_status.neq.verified)'],
+    ['verified', null, 'eq.true', null],
+    ['unverified', null, 'eq.false', null],
+  ])('filters the resident %s tab independently by ID or email on both reads', async (tab, id, email, or) => {
+    const f = scripted([{ total: 1, ids: ['fixture'] }]);
+    const s = adapter.parseTableState('residents', new URLSearchParams({ tab: tab! }));
+    expect(s.filters.tab).toBe(tab);
+    const result = await adapter.browseTable('residents', s, f.db);
+    expect(result.status).toBe('success');
+    expect(f.urls).toHaveLength(2);
+    for (const url of f.urls) {
+      expect(url.searchParams.get('f_id_status')).toBe(id);
+      expect(url.searchParams.get('f_email_verified')).toBe(email);
+      expect(url.searchParams.get('or')).toBe(or);
+    }
+  });
+  it('combines unverified ID filtering with search and ID presence before paging', async () => {
+    const f = scripted([{ total: 1, ids: ['fixture'] }]);
+    const s = adapter.parseTableState('residents', new URLSearchParams({ tab: 'id_unverified', q: 'Ana', verification: 'with_id' }));
+    expect((await adapter.browseTable('residents', s, f.db)).status).toBe('success');
+    for (const url of f.urls) {
+      expect(url.searchParams.get('f_with_id')).toBe('eq.true');
+      expect(url.searchParams.getAll('or')).toEqual([
+        '(f_id_status.is.null,f_id_status.neq.verified)',
+        expect.stringContaining('x0.match.'),
+      ]);
+    }
+  });
   it('uses tenant-scoped archive projections with the same bounded query on every screen', async () => {
     for (const name of ['requests', 'transactions', 'residents', 'incidents', 'health', 'applicants', 'households', 'staff'] as const) {
       const f = scripted([{ total: 1, ids: ['fixture'] }]);

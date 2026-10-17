@@ -1,0 +1,34 @@
+{
+  "browser": "155.0.8059.80",
+  "checks": [
+    "Status requires matching current/approved evidence; repair and failed refresh clear approval; accessible badge refresh recovers",
+    "Sidebar placement, four steps, shared validation, explicit-only OCR, trimmed review, Previous, edited/cleared-field protection and birthday Cancel/confirm/clear/focus",
+    "Recoverable quota/key failures expose explicit retry only; typing/Previous do not retry and manual details survive",
+    "Failed/invalid and same-file replacements preserve the draft; accepted replacement resets details; quota permits manual submission; lost RPC response reconciles the same ID; confirmed success survives failed status refresh",
+    "Synchronous double click produces one attempt; a missing reconciliation row retries the same ID and identical immutable photo",
+    "OCR cancel/review navigation invalidates late replies; logout clears the draft and returning creates a fresh draft",
+    "Camera starts only on click, denial allows upload, ignored permission can be cancelled, late permission tracks are stopped",
+    "Canvas-backed live video capture creates the same uploaded front-photo draft and closes its stream",
+    "Real decoder accepts exact 5,242,880-byte evidence; empty and one-byte-over candidates preserve the accepted photo",
+    "Real browser WebP conversion creates a separate capped JPEG; encoding failure stops after three attempts",
+    "Type changes cancel stale OCR without clearing corrections; cancelled/stale uploads cannot replace the photo or restore an old account draft",
+    "360/768/1440px and dark/200% layout, actual retained Profile/avatar/household controls, one-way old-fragment handoff and one Settings channel",
+    "Birthday focus stays trapped; backdrop/Cancel/Escape preserve the form; leap-year changes clamp the day; an open wheel is protected from late OCR",
+    "Actual browser wheel with fixed Manila clocks at 00:01 and 08:01 caps dates at the earlier local/UTC day and passes shared review validation",
+    "No unexpected runtime/console errors or warnings; synthetic failure responses are identified separately"
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_CONNECTION_FAILED",
+    "Failed to load resource: the server responded with a status of 409 (Conflict)"
+  ],
+  "warnings": [],
+  "limitations": [
+    "Fixture-backed browser/component checks. No live authentication, database publication, OCR.space call, staff approval, physical camera or real service request."
+  ]
+}

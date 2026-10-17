@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { Action, Body, Notice } from '../../components/ui';
+import { useLatest } from '../../lib/use-latest';
 import { radius, space, useColors } from '../../lib/theme';
 import { boundaryCenter, deliver, mapHtml, nudge, parseMapMessage, type Direction } from './location-map';
 
@@ -59,9 +60,13 @@ export function PinPicker({ boundary, position, placement, tiles, areaName, disa
   </View>;
 }
 
-/** Bundled-Leaflet map in a locked-down WebView: no external navigation, validated bridge messages only. */
-function LocationMap({ boundary, position, snap, center, tiles, onPin }: {
-  boundary: Boundary; position: LatLng | null; snap: number; center: LatLng | null; tiles: boolean; onPin: (point: LatLng) => void;
+/**
+ * Bundled-Leaflet map in a locked-down WebView: no external navigation, validated bridge messages only.
+ * `readOnly` shows the pin without letting it be moved; `recenter` flies back to the pin each time it changes.
+ */
+export function LocationMap({ boundary, position, snap = 0, center, tiles, onPin, readOnly = false, recenter = 0, label = 'Map of your barangay with a draggable pin' }: {
+  boundary: Boundary; position: LatLng | null; snap?: number; center: LatLng | null; tiles: boolean; onPin?: (point: LatLng) => void;
+  readOnly?: boolean; recenter?: number; label?: string;
 }) {
   const colors = useColors();
   const ref = useRef<WebView>(null);
@@ -74,8 +79,13 @@ function LocationMap({ boundary, position, snap, center, tiles, onPin }: {
     if (ready) ref.current?.injectJavaScript(deliver({ type: 'SET_BOUNDARY', payload: { geometry: boundary } }));
   }, [ready, boundary]);
   useEffect(() => {
-    if (ready) ref.current?.injectJavaScript(deliver({ type: 'SET_PICKER', payload: { enabled: true, position } }));
-  }, [ready, position, snap]);
+    if (ready) ref.current?.injectJavaScript(deliver({ type: 'SET_PICKER', payload: { enabled: !readOnly, position } }));
+  }, [ready, position, snap, readOnly]);
+  const pinned = useLatest(position);
+  useEffect(() => {
+    const point = pinned.current;
+    if (ready && recenter > 0 && point) ref.current?.injectJavaScript(deliver({ type: 'SET_VIEW', payload: { lat: point.lat, lng: point.lng, zoom: 17 } }));
+  }, [ready, recenter, pinned]);
   useEffect(() => {
     if (ready && !boundary && center) ref.current?.injectJavaScript(deliver({ type: 'SET_VIEW', payload: { ...center, zoom: 16 } }));
   }, [ready, boundary, center]);
@@ -88,15 +98,15 @@ function LocationMap({ boundary, position, snap, center, tiles, onPin }: {
     if (!message) return;
     if (message.type === 'ready') { setReady(true); setFailed(false); }
     else if (message.type === 'error') setFailed(true);
-    else onPin(message.point);
+    else if (message.type === 'pin' && !readOnly) onPin?.(message.point);
   }
   if (failed) {
     return <View style={{ gap: space[2] }}>
-      <Notice tone="danger" message="The map could not be shown. You can still place the pin with the buttons below." />
+      <Notice tone="danger" message={readOnly ? "The map could not be shown. The address and coordinates are shown below." : "The map could not be shown. You can still place the pin with the buttons below."} />
       <Action label="Reload map" secondary onPress={() => { setReady(false); setFailed(false); setGeneration((value) => value + 1); }} />
     </View>;
   }
-  return <View accessible={false} accessibilityLabel="Map of your barangay with a draggable pin"
+  return <View accessible={false} accessibilityLabel={label}
     style={{ height: MAP_HEIGHT, borderRadius: radius.md, overflow: 'hidden', borderWidth: 1, borderColor: colors.border }}>
     <WebView key={generation} ref={ref} originWhitelist={['about:blank']} source={{ html }} onMessage={onMessage}
       onShouldStartLoadWithRequest={(request) => request.url === 'about:blank'}

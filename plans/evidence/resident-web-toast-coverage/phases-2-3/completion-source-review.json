@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-17",
+  "scope": "Continuation compared with its pre-edit snapshot. Only response representation selects and feedback receipts added; timestamp/list variable aliases normalized for comparison.",
+  "files": [
+    {
+      "file": "src/app/auth/callback/route.ts",
+      "sha256": "2db7832c32f82b69a95e10c4a4bb5e7351ff27487107c1fab7a937a532c7063c",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/app/auth/email-change/route.ts",
+      "sha256": "497f3a6ecd6dfd8eee2cfbc3a743dcecc130acb49c29f180931de6e461a76903",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/app/auth/error/page.tsx",
+      "sha256": "eae0b8accfac6eb586eff0d0e2b9f121b8464fda394c12df14c852dfd2737f6e",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/app/(resident)/settings/email-verification/page.tsx",
+      "sha256": "748a0171c92c2877a6ef91344038cb1327f7cb9f896d28bad692186329d2ebd3",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/components/shared/notification-session.tsx",
+      "sha256": "61c3bf8a4fdb26c1c0c542745fda3686d08929b49a24f5b8fd1b80d5da3d1856",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/lib/auth/session-feedback.ts",
+      "sha256": "baec6b015418eb43d13fa0b2160ffa42c84e8ae601ec3e51115548392741b978",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/hooks/use-unread-counts.tsx",
+      "sha256": "cf797e520c96ad09591996d0ea2665f0390b6057abcec1ee302bfa39c06ee1c5",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/components/reports/announcement-card.tsx",
+      "sha256": "c7c2dad2f9b0efcaa41e10a6e49bb80e4bb0fb80b7eacffd04b074ad81f118d4",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/components/reports/incident-card.tsx",
+      "sha256": "f39ef927bc35d9532885043d9b40243161a204105ccd3555df0eb21dd21285b2",
+      "businessCallsUnchanged": true
+    },
+    {
+      "file": "src/app/(resident)/announcements/announcements-feed.tsx",
+      "sha256": "d79e362170bcd6c3c8750197b5e72e2cdf82e89c871bf0aa2e79ce460a06b643",
+      "businessCallsUnchanged": true
+    }
+  ],
+  "finalReview": "Report-read confirmation also requires a returned string timestamp; missing returned state falls back to information. Regression passed in the final browser run."
+}

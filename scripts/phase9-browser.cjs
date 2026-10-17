@@ -14,8 +14,7 @@ const read=async id=>{const r=await trusted.from('service_requests').select('*')
 async function login(page,base,role){
  await page.goto(base+'/login',{waitUntil:'networkidle',timeout:60000});
  await page.locator('input[type=email]').fill(fixture[role].email);await page.locator('input[type=password]').fill(fixture[role].password);
- await page.locator('button[type=submit]').click();await page.waitForURL(role==='admin'?'**/dashboard':/\/(home|onboarding)$/,{timeout:45000});
- if(new URL(page.url()).pathname==='/onboarding'){await page.getByRole('button',{name:'Continue to Barangayan',exact:true}).click();await page.waitForURL('**/home');}
+ await page.locator('button[type=submit]').click();await page.waitForURL(role==='admin'?'**/dashboard':'**/home',{timeout:45000});
 }
 async function main(){
  const browser=await chromium.launch({channel:'chrome',headless:true});

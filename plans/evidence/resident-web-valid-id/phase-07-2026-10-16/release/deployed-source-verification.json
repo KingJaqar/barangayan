@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "deployment": "dpl_CJ5cohLsZAYMqZfpYKUdBJpKoFKp",
+  "team": "team_6b0TR8mzj8rxhZsgs2DVd1y6",
+  "verifiedAt": "2026-10-16T11:54:39.077Z",
+  "files": 417,
+  "emptyDirectories": [
+    "apps/resident-web/src/actions"
+  ],
+  "method": "Every deployed Vercel source-tree file UID matches the prepared CLI upload SHA-1; separate SHA-256 source manifest retained"
+}

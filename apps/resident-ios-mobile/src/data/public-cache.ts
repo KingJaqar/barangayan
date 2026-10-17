@@ -67,6 +67,8 @@ export function createPublicCache(store: KeyValueStore, scope: PublicScope, now:
 
 const HOUR = 60 * 60 * 1000;
 /** Guidelines/hotlines change rarely; a month-old copy is reference only. (Decision P02-D04.) */
-export const EMERGENCY_CONTENT_POLICY: CachePolicy = { contractVersion: 1, staleAfterMs: 24 * HOUR, expireAfterMs: 30 * 24 * HOUR };
+export const EMERGENCY_CONTENT_POLICY: CachePolicy = { contractVersion: 2, staleAfterMs: 24 * HOUR, expireAfterMs: 30 * 24 * HOUR };
 /** Occupancy is an operational fact: stale after Android's 30-minute cache TTL, expired after a day. (Decision P02-D04.) */
-export const CENTER_POLICY: CachePolicy = { contractVersion: 1, staleAfterMs: HOUR / 2, expireAfterMs: 24 * HOUR };
+export const CENTER_POLICY: CachePolicy = { contractVersion: 3, staleAfterMs: HOUR / 2, expireAfterMs: 24 * HOUR };
+/** QR check-in guidance changes as rarely as the guidelines and follows the same freshness windows. */
+export const EMERGENCY_QR_POLICY: CachePolicy = { contractVersion: 1, staleAfterMs: 24 * HOUR, expireAfterMs: 30 * 24 * HOUR };

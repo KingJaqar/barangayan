@@ -1,8 +1,8 @@
 import { PublicError } from './errors';
 import { sniffType, UPLOAD_POLICIES, validateUpload, type UploadPurpose, type ValidatedFile } from './file-validation';
 
-/** Photo purposes handled here; documents and incident photos arrive with their phases. */
-export type ImagePurpose = Extract<UploadPurpose, 'avatar' | 'id-image'>;
+/** Photo purposes handled here; supporting documents go through the file picker instead. */
+export type ImagePurpose = Extract<UploadPurpose, 'avatar' | 'id-image' | 'incident-photo'>;
 export type ImageDimensions = { width: number; height: number };
 export type Rendition = { longestEdge: number | null; quality: number };
 /** Re-encodes the picked image as JPEG at the given rendition and returns its bytes. */
@@ -11,7 +11,7 @@ export type Converter = (rendition: Rendition) => Promise<Uint8Array>;
 /** A phone photo can be many megabytes; this only protects memory, the purpose limit applies to the final bytes. */
 const MAX_SOURCE_BYTES = 40 * 1024 * 1024;
 
-const EDGES: Record<ImagePurpose, number> = { avatar: 1024, 'id-image': 2400 };
+const EDGES: Record<ImagePurpose, number> = { avatar: 1024, 'id-image': 2400, 'incident-photo': 2048 };
 const QUALITIES = [0.85, 0.7, 0.55] as const;
 
 /**

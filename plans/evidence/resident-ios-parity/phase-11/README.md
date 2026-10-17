@@ -1,8 +1,8 @@
 # Phase 11 — Reports hub, announcements, read states and counters (`P11`)
 
-**Status:** Planned. Not started; no evidence recorded.
+**Status (2026-10-16):** Verified (non-device scope, OD-06/OD-07). T01–T07 verified on non-device checks (typecheck, lint, 33 new tests, export, read-only hosted contract check); live app runs, device badge/VoiceOver checks and execution of the read-state embed on the hosted API are Skipped (OD-06/OD-07). Phase 3, 4 and 6 open exits carried; `publicIncidents` stays closed. See `P11_2026-10-16_implementation-and-verification.md`.
 
-**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 6. Do not start until those exits are verified (plan §4.2). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
+**Entry dependencies:** Phase 2, Phase 3, Phase 4, Phase 6. Phases 3, 4 and 6 are Partially complete; their open exits were carried as blockers (plan Phase 11 entry status). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 
 **Lead owner role:** iOS/reports engineer + content/moderation. **Named owner:** KingJaqar (decision-register OD-01).
 
@@ -12,4 +12,6 @@
 
 ## Evidence
 
-None yet. Add records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.
+- [P11_2026-10-16_implementation-and-verification.md](P11_2026-10-16_implementation-and-verification.md) — implementation, decisions P11-D01…D14, baseline versus final, acceptance and open items.
+
+Add further records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.

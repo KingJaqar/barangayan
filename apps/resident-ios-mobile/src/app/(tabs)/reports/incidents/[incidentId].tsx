@@ -1,10 +1,6 @@
-import { useLocalSearchParams } from 'expo-router';
-import { Destination, EmptyState, Screen, Unavailable } from '../../../../components/ui';
-import { uuid } from '../../../../data/resident-api';
+import { IncidentDetailRoute } from '../../../../features/reports/incident-detail';
 
-/** Typed incident destination (R18). Concern details are delivered in Phase 12; the record type is never inferred from an ID. */
+/** Typed incident destination (R18). The record type is never inferred from an ID; announcements have their own route. */
 export default function IncidentDetail() {
-  const { incidentId } = useLocalSearchParams();
-  if (!uuid.safeParse(incidentId).success) return <Screen><EmptyState title="Concern not found" message="This link does not identify a concern report."><Destination title="Back to Reports" href="/reports" /></EmptyState></Screen>;
-  return <Screen><Unavailable service="Concern details" /><Destination title="Back to Reports" href="/reports" /></Screen>;
+  return <IncidentDetailRoute />;
 }

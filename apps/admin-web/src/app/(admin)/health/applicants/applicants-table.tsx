@@ -254,7 +254,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
     return { error: null, row: updated };
   }
 
-  const lifecycle = useRecordWorkspace<ApplicantRow>('applicants', browse.refresh, browse.settle, {
+  const lifecycle = useRecordWorkspace<ApplicantRow>('applicants', browse.refresh, browse.settle, { editHandle: browse.editHandle,
     actionsMinWidth: 360,
     workflowActions: row => row.status !== 'cancelled' && row.status !== 'attended' ? <ConfirmButton label="Cancel Registration" confirmLabel="Cancel registration?"
       ariaLabel="Cancel Registration" title="Cancel this medical registration" className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-950 dark:text-red-200"
@@ -268,14 +268,14 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
 
   const columns: EditableDataTableColumn<ApplicantRow>[] = [
     {
-      id: 'number', header: 'Applicant #',
+      id: 'number', header: 'Applicant #', frozen: true,
       initialWidth: 124,
       minWidth: 116,
       wrap: 'nowrap',
       render: (r) => <span className="font-mono text-xs font-medium tabular-nums">{r.applicant_number}</span>,
     },
     {
-      id: 'drive', header: 'Drive',
+      id: 'drive', header: 'Drive', frozen: true,
       initialWidth: 230,
       minWidth: 190,
       wrap: 'break-word',

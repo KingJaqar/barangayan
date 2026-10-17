@@ -1,5 +1,8 @@
 'use client';
 
+import { useRef } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
+
 import { Calendar, CheckCircle2, MailOpen, MailX, ArrowUpRight, FileText } from 'lucide-react';
 import { incidentStatusMeta } from '@/constants/incident-status';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
@@ -18,6 +21,20 @@ export function IncidentCard({ incident, selected, onSelect }: { incident: MyInc
   const firstPhoto = incident.photo_urls?.[0] ?? null;
   const isResolved = incident.status === 'resolved';
   const isUnread = isResolved && !incident.resolved_read_at;
+  const writing = useRef(false);
+  async function mark(read: boolean) {
+    if (writing.current || !isResolved || read !== isUnread) return;
+    writing.current = true;
+    const attempt = beginAttempt('report-read-status');
+    try {
+      const result = await (read ? markIncidentRead(incident.id) : markIncidentUnread(incident.id));
+      if (result === 'confirmed') notify.success(read ? 'Report marked as read.' : 'Report marked as unread.', { id: attempt });
+      else if (result === 'accepted') notify.info('Read-status update sent. Refresh to confirm.', { id: attempt });
+      else if (result === 'rejected') notify.error(read ? "Couldn't mark the report as read. Please try again." : "Couldn't mark the report as unread. Please try again.", { id: attempt });
+      else if (result === 'uncertain') notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt });
+    } catch { notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt }); }
+    finally { writing.current = false; }
+  }
   return (
     <article className={styles.card} data-selected={selected || undefined}>
       <button type="button" className={styles.cardMain} onClick={() => onSelect(incident.id)} aria-label={`View report: ${incident.title}`} aria-current={selected ? 'true' : undefined}>
@@ -49,8 +66,8 @@ export function IncidentCard({ incident, selected, onSelect }: { incident: MyInc
       {isResolved && (
         <div className={styles.readControls}>
           <span className={styles.readLabel}>{isUnread ? 'New update' : 'Update read'}</span>
-          <button type="button" aria-label="Mark as read" aria-pressed={!isUnread} onClick={() => { void markIncidentRead(incident.id); }}><MailOpen size={15} /></button>
-          <button type="button" aria-label="Mark as unread" aria-pressed={isUnread} onClick={() => { void markIncidentUnread(incident.id); }}><MailX size={15} /></button>
+          <button type="button" aria-label="Mark as read" aria-pressed={!isUnread} onClick={() => { void mark(true); }}><MailOpen size={15} /></button>
+          <button type="button" aria-label="Mark as unread" aria-pressed={isUnread} onClick={() => { void mark(false); }}><MailX size={15} /></button>
         </div>
       )}
     </article>

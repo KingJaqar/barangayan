@@ -1,0 +1,55 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-web
+
+ ✓ tests/map-search.test.ts (3 tests) 4ms
+ ✓ tests/require-user.test.ts (25 tests) 16ms
+ ✓ tests/search-api.test.ts (4 tests) 18ms
+ ✓ tests/sign-out.test.ts (6 tests) 10ms
+ ✓ tests/valid-id-profile-cutover.test.ts (1 test) 16ms
+ ✓ tests/session-feedback.test.ts (6 tests) 300ms
+ ✓ tests/auth-session-isolation.test.ts (7 tests) 68ms
+ ❯ tests/search.test.ts (13 tests | 1 failed) 56ms
+   ✓ resident search contract > normalizes and bounds query input, validates filters, and encodes navigation 3ms
+   ✓ resident search contract > quotes filter grammar and escapes LIKE wildcards 2ms
+   ✓ resident search contract > does not issue data queries for an empty or wildcard-only search 8ms
+   ✓ resident search contract > keeps guests out of personal content 12ms
+   ✓ resident search contract > applies tenant and ownership filters, omits archived records and bounds suggestions 7ms
+   ✓ resident search contract > fails closed for authenticated users with unavailable tenant scope 2ms
+   ✓ resident search contract > keeps successful results when a category fails 3ms
+   × resident search contract > shows current charter pricing and processing guidance instead of a misleading flat fee 12ms
+     → expected '₱10.00 per page · 30 minutes of agenc…' to be '₱10 per confirmed billable page · ass…' // Object.is equality
+   ✓ resident search contract > uses deterministic paging and recovers an out-of-range page 2ms
+   ✓ resident search contract > returns readable plain-text previews around matching passages 1ms
+   ✓ resident search contract > bounds invalid page values and deduplicates search words 0ms
+   ✓ resident search contract > orders exact, prefix, phrase and multi-word titles ahead of body-only matches 1ms
+   ✓ resident search contract > rejects malformed or external result links before rendering them 1ms
+ ✓ tests/profile-completion-banner.test.ts (7 tests) 32ms
+ ✓ tests/settings-recovery.test.ts (29 tests) 24ms
+ ✓ tests/valid-id.test.ts (11 tests) 44ms
+ ✓ tests/email-change.test.ts (19 tests) 20ms
+ ✓ tests/valid-id-route.test.ts (8 tests) 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/search.test.ts > resident search contract > shows current charter pricing and processing guidance instead of a misleading flat fee
+AssertionError: expected '₱10.00 per page · 30 minutes of agenc…' to be '₱10 per confirmed billable page · ass…' // Object.is equality
+
+Expected: "₱10 per confirmed billable page · assessed by staff · 30 minutes of agency processing"
+Received: "₱10.00 per page · 30 minutes of agency processing"
+
+ ❯ tests/search.test.ts:74:46
+     72|     const { client } = fixture(undefined, { contract_version: 2, prici…
+     73|     const result = await queryResidentSearch(client, { userId: null, b…
+     74|     expect(result.groups[0].results[0].meta).toBe('₱10 per confirmed b…
+       |                                              ^
+     75|   });
+     76|   it('uses deterministic paging and recovers an out-of-range page', as…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 12 passed (13)
+      Tests  1 failed | 138 passed (139)
+   Start at  15:29:37
+   Duration  2.99s (transform 3.50s, setup 0ms, collect 11.78s, tests 629ms, environment 4ms, prepare 4.91s)
+

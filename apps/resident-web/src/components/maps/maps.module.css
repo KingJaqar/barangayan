@@ -13,8 +13,13 @@
 .summaryLabel { color: var(--foreground); font-size: 13px; font-weight: 600; }
 .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 272px; align-items: start; gap: 28px; }
 .mapColumn { min-width: 0; }
-.mapFrame { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
-.toolbar { position: relative; z-index: 1100; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px; border-bottom: 1px solid var(--border); }
+.mapFrame { position: relative; isolation: isolate; display: flex; min-width: 0; height: clamp(560px, 76vh, 900px); flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.mapOverlay { position: absolute; inset: 14px 64px auto 14px; z-index: 1100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.mapOverlay > * { pointer-events: auto; }
+.mapOverlay .filters { padding: 0; border: 0; background: transparent; }
+.mapOverlay .filterLabel { width: auto; margin: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--card); }
+.mapOverlay .filterSummary, .mapOverlay .locationNotice { align-self: flex-start; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.toolbar { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .loadingToolbar { padding: 12px; border-bottom: 1px solid var(--border); }
 .segments { display: flex; flex-shrink: 0; gap: 4px; padding: 4px; border: 1px solid var(--maps-control-border); border-radius: 10px; background: var(--muted); }
 .segment { position: relative; min-height: 44px; padding: 9px 12px; border-radius: 7px; color: var(--foreground); font-size: 14px; font-weight: 650; cursor: pointer; }
@@ -50,7 +55,7 @@
 .filterSummary button { flex-shrink: 0; padding: 5px 0; color: var(--maps-accent); font-weight: 650; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .locationNotice { display: flex; align-items: flex-start; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--muted); color: var(--maps-secondary); font-size: 11px; line-height: 1.6; }
 .locationNotice svg { margin-top: 2px; }
-.mapViewport { position: relative; height: clamp(420px, 62vh, 720px); min-height: 0; background: var(--muted); }
+.mapViewport { position: absolute; inset: 0; height: 100%; min-height: 0; background: var(--muted); }
 .mapViewport :global(.leaflet-container) { font-family: var(--font-app); background: var(--muted); }
 .mapViewport :global(.leaflet-control-zoom) { overflow: hidden; border: 1px solid var(--border); border-radius: 6px; box-shadow: none; }
 .mapViewport :global(.leaflet-control-zoom a) { width: 36px; height: 36px; line-height: 36px; border-color: var(--border); background: var(--card); color: var(--foreground); }
@@ -70,7 +75,6 @@
 .mapCaption > span { display: flex; align-items: center; gap: 5px; }
 .boundaryKey { width: 12px; border-top: 2px solid var(--primary); }
 .fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; }
-.fullscreen .mapViewport { flex: 1; height: auto; }
 .fullscreen .toolbar, .fullscreen .filters, .fullscreen .filterSummary, .fullscreen .locationNotice { flex-shrink: 0; }
 .sidebar { min-width: 0; padding: 0 0 0 24px; border-left: 1px solid var(--border); }
 .resourceLinks { display: flex; flex-direction: column; gap: 4px; }
@@ -99,7 +103,8 @@
   .searchWrap { width: 100%; max-width: none; }
   .searchDropdown { width: 100%; }
   .filterLabel { width: 100%; }
-  .mapViewport { height: 480px; }
+  .mapFrame { height: 760px; }
+  .fullscreen { height: 100%; }
   .resourceLinks { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .resourceLink { min-height: 64px; }
   .resourceCopy { font-size: 13px; }

@@ -26,4 +26,16 @@ export type ResidentAccountSetupFunctions = {
     Args: { p_members: Json; p_expected: Json };
     Returns: Json;
   };
+  // Migration 0121 (resident iOS Phase 3): online, resident-only evacuation check-in that returns the authoritative receipt.
+  check_in_to_evacuation_center: {
+    Args: { p_center_id: string };
+    Returns: {
+      check_in_id: string;
+      evacuation_center_id: string;
+      evacuation_center_name: string;
+      barangay_id: string;
+      checked_in_at: string;
+      already_checked_in: boolean;
+    }[];
+  };
 };

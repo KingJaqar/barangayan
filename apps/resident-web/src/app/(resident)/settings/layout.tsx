@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SettingsSidebar } from './settings-sidebar';
 import { SettingsContent } from './settings-content';
+import { SettingsIdStatusProvider } from './settings-id-status';
 
 /**
  * Shared desktop shell: sidebar and routed content scroll independently within
@@ -21,19 +22,20 @@ export default async function SettingsLayout({ children }: { children: ReactNode
       .from('profiles')
       .select('email_verification_status, verified_location')
       .eq('id', user.id)
+      .abortSignal(AbortSignal.timeout(10000))
       .single();
     emailVerified = profile?.email_verification_status === 'verified';
     locationVerified = profile?.verified_location != null;
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6 lg:h-full lg:min-h-0 lg:w-full lg:flex-1 lg:flex-row">
+    <SettingsIdStatusProvider><div className="mx-auto flex max-w-7xl flex-col gap-6 lg:h-full lg:min-h-0 lg:w-full lg:flex-1 lg:flex-row">
       <SettingsSidebar
         emailVerified={emailVerified}
         locationVerified={locationVerified}
         isAuthenticated={user !== null}
       />
       <SettingsContent>{children}</SettingsContent>
-    </div>
+    </div></SettingsIdStatusProvider>
   );
 }

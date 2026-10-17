@@ -174,9 +174,10 @@ export function useMedicalDrives({
         p_comorbidities: params.comorbidities,
         p_prior_dose_date: params.priorDoseDate ?? undefined,
       });
-      if (qErr) throw new Error(qErr.message);
-      await Promise.all([fetchDrives(), fetchMyRegistrations()]);
-      return residentDriveRegistrationResultSchema.parse(data);
+      if (qErr) throw qErr;
+      const result = residentDriveRegistrationResultSchema.parse(data);
+      await Promise.allSettled([fetchDrives(), fetchMyRegistrations()]);
+      return result;
     },
     [fetchDrives, fetchMyRegistrations],
   );

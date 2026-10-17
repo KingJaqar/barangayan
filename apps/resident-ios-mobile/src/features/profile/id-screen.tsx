@@ -151,7 +151,7 @@ function IdVerification() {
 }
 
 /** A short-lived signed preview of a private ID image, renewed before it expires. */
-function PrivatePreview({ label, path, userId }: { label: string; path: string; userId: string }) {
+export function PrivatePreview({ label, path, userId }: { label: string; path: string; userId: string }) {
   const { client } = useResident();
   const colors = useColors();
   const preview = useResource(`id-preview:${path}`, () => createSignedPreview(storageBucket(client, 'id-documents'), userId, path));

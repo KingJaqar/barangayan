@@ -1,8 +1,8 @@
 # Phase 6 — Appearance preferences, introduction and interaction completion (`P06`)
 
-**Status:** Planned. Not started; no evidence recorded.
+**Status (2026-10-15):** Partially complete. T01–T05 are Verified (non-device scope, OD-06/OD-07); T06 is partial (shared controls that have no Phase 6 consumer close in their owner phases); T07's contrast, ten-font, ten-color and rollback evidence is automated and its device/live items are Skipped. No screen was run and nothing was committed, deployed or applied remotely.
 
-**Entry dependencies:** Phase 1, Phase 2, Phase 4, Phase 5. Do not start until those exits are verified (plan §4.2). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
+**Entry dependencies:** Phase 1, Phase 2, Phase 4, Phase 5 (the Phase 4 and 5 exits are open and carried as blockers; they do not gate this phase's code). Phase-specific open prerequisites are listed in `../phase-00/prerequisite-register.md`.
 
 **Lead owner role:** iOS/design/accessibility engineer. **Named owner:** KingJaqar (decision-register OD-01).
 
@@ -12,4 +12,6 @@
 
 ## Evidence
 
-None yet. Add records named `<task-id>_<yyyy-mm-dd>_<slug>.<ext>` following `../README.md`.
+- [P06_2026-10-15_implementation-and-verification.md](P06_2026-10-15_implementation-and-verification.md) — scope, decisions P06-D01…D08, baseline vs final checks, acceptance status, pending manual verification, out-of-scope findings.
+
+Repository artifacts: `apps/resident-ios-mobile/src/features/appearance/`, `src/features/onboarding/`, `src/app/onboarding/`, `src/app/(tabs)/settings/appearance.tsx`, `src/lib/color-math.ts`, `src/lib/palette.ts`, `src/lib/theme.ts`, `tests/appearance.test.ts`.

@@ -1,0 +1,662 @@
+{
+  "passed": false,
+  "startedAt": "2026-10-16T01:06:40.169Z",
+  "environment": {
+    "project": "pwjbucnyqexiepoinoke",
+    "app": "local production build",
+    "backend": "hosted Auth/Storage/Edge/OCR.space"
+  },
+  "checks": [
+    "Temporary synthetic resident created through Auth API without sending email; existing resident records untouched",
+    "Deployed endpoint accepts browser CORS preflight and rejects unauthenticated POST with 401",
+    "Real Auth password login reaches the actual Valid ID route with an existing incomplete resident Profile",
+    "Caller-authorized real Storage upload preserves original PNG; entering details performs no OCR and fields start empty",
+    "Live authenticated Edge Function and configured OCR.space key return editable synthetic-name suggestions; original and derivative paths are distinct",
+    "Live suggestions are editable, birthday can be cleared, and confirmed corrections survive review/Previous",
+    "Browser-only 503 fixture permits complete manual confirmation through review, preserving photo/corrections and blank optional fields without retries or shared configuration changes",
+    "Real resident session cannot invoke OCR for another owner path (403)"
+  ],
+  "browser": "155.0.8059.80",
+  "requests": [
+    {
+      "host": "127.0.0.1",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/a3dc10c95289af47.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/780f4591e142a8d4.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/webpack-2c123b3543714132.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/87c73c54-fe9448718f10265c.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1968-9e3047059368200e.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/main-app-d91fcfc52b56e40f.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3357-8286f5845adce167.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/loading-d971f392b78cc2e9.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3614-c779328a325c243d.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/6888-e5f5d90f91fdcda7.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/9865-4e382e38ea6e26b0.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4701-4a38f71bc9499d03.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/layout-6222b9675ac27cbd.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/5587-39729c3292027d16.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2336-318b7088abcd70dc.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/error-87deef61b3ed5dfc.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/75504863-2fcff8d319a5c2b4.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/3995-6bc1624b1e986390.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2175-8f2aa1c1bbfc98d3.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/4708-1370389c90891d14.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/login/page-3767ac30ad836194.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1098-0de23f45cfd511c8.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/1097-17520026188a4af9.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/8996-b6d103b278fb1ad7.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/layout-54f24c3b9c0e003b.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(auth)/error-fae75ea051964c68.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/1b577c6ccce4d492.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/727201751712b253.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/error-58780396149ec9af.js",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-7f03d59d6c7a1f5f.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/247-5f7a0b43199fa7c5.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-c9bca6c7f9f36cbc.js",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/complete-profile",
+      "method": "GET"
+    },
+    {
+      "host": "",
+      "path": "http://127.0.0.1:3214/fc6c8c86-6fd2-4b1c-9492-44f29495c41c",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/id-documents/1bc36dd3-a62f-4e1d-ae8d-46810572df64/versions/e17559c3-79a3-4f88-b399-ce6c6dad87b3/id-front.png",
+      "method": "POST"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "host": "",
+      "path": "http://127.0.0.1:3214/9f3edaf8-ca1e-49d9-add8-e7e6297c998c",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-19d0fab8c390e0de.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/2ef4626d868f1264.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-03eb5f522c1e3b1d.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/f98edc85984fffba.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/complete-profile",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/css/c0b6fe91e17d5720.css",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/7166-21a3b7925fd822c2.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/2324-9c777ab716dc9d98.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-55bec4291db5ac51.js",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "host": "",
+      "path": "http://127.0.0.1:3214/69d6c54d-e1d6-47fb-bd9e-d090d6a92b50",
+      "method": "GET"
+    },
+    {
+      "host": "",
+      "path": "http://127.0.0.1:3214/136c07e2-eb89-4c9e-95ee-6159071da8a0",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "host": "127.0.0.1",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "host": "",
+      "path": "http://127.0.0.1:3214/cd76f5d9-ea40-40a7-8632-d296af545579",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/id-documents/1bc36dd3-a62f-4e1d-ae8d-46810572df64/versions/244b7c36-892d-4b15-99ec-f2b1fc1681b6/id-front.jpg",
+      "method": "POST"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "method": "POST"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "method": "POST"
+    }
+  ],
+  "responses": [
+    {
+      "path": "/storage/v1/object/id-documents/1bc36dd3-a62f-4e1d-ae8d-46810572df64/versions/e17559c3-79a3-4f88-b399-ce6c6dad87b3/id-front.png",
+      "status": 200
+    },
+    {
+      "path": "/storage/v1/object/id-documents/1bc36dd3-a62f-4e1d-ae8d-46810572df64/versions/244b7c36-892d-4b15-99ec-f2b1fc1681b6/id-front.jpg",
+      "status": 200
+    },
+    {
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "status": 200
+    },
+    {
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "status": 503
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "consoleWarnings": [
+    "The resource http://127.0.0.1:3214/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3214/_next/static/css/1b577c6ccce4d492.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3214/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.",
+    "The resource http://127.0.0.1:3214/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+  ],
+  "pageErrors": [],
+  "cleanup": {
+    "uploadedObjectsRemoved": 2,
+    "syntheticAuthUserRemoved": true,
+    "syntheticProfileAbsent": true
+  },
+  "limitations": [
+    "Synthetic image and temporary synthetic resident only. No real ID, publication, staff approval, service request or physical camera. Provider failures are browser-only fixtures; successful extraction is live."
+  ],
+  "liveOcr": {
+    "status": 200,
+    "elapsedFields": [
+      "fullName",
+      "idNumber",
+      "birthDate",
+      "address"
+    ],
+    "populatedFields": [
+      "fullName",
+      "idNumber",
+      "birthDate",
+      "address"
+    ],
+    "warningCount": 0
+  },
+  "failedStage": "security and console review",
+  "failure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"The resource http://127.0.0.1:3214/_next/static/css/2ef4626d868f1264.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+   \"The resource http://127.0.0.1:3214/_next/static/css/1b577c6ccce4d492.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+   \"The resource http://127.0.0.1:3214/_next/static/css/c0b6fe91e17d5720.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\",\n+   \"The resource http://127.0.0.1:3214/_next/static/css/f98edc85984fffba.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.\"\n+ ]\n- []\n",
+  "finishedAt": "2026-10-16T01:07:01.850Z"
+}

@@ -1,0 +1,75 @@
+/* Scoped to the five operational record sheets; appearance settings own all paint and fonts. */
+.sheet, .confirmation {
+  --record-muted: color-mix(in srgb, var(--foreground) 65%, var(--background));
+  --record-line: color-mix(in srgb, var(--foreground) 14%, var(--background));
+  --record-soft: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  --record-tint: color-mix(in srgb, var(--accent) 9%, var(--background));
+  font-family: var(--font-app);
+}
+.sheet { width: min(100%, 800px); }
+.sheet.sheet, .confirmation.confirmation { background: var(--background); color: var(--foreground); border-color: var(--record-line); }
+.sheet > div:first-child { padding: 22px 36px; border-color: var(--record-line); }
+.sheet > div:first-child h2 { font-size: 14px; letter-spacing: -.02em; }
+.sheet > div:first-child p { color: var(--record-muted); font-size: 12px; }
+.sheet > div:first-child button { color: var(--foreground); background: var(--record-soft); border: 1px solid var(--record-line); border-radius: 50%; }
+.sheet > div:nth-child(2) { padding: 0 36px 24px; scroll-padding-block: 24px; }
+.sheet .recordForm { color: var(--foreground); }
+.record { min-width: 0; overflow-wrap: anywhere; }
+.hero { padding: 34px 0 24px; }
+.eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: var(--record-muted); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; }
+.title { font-size: clamp(26px, 3.2vw, 36px); font-weight: 500; line-height: 1.18; letter-spacing: -.045em; text-wrap: pretty; }
+.subtitle { margin-top: 10px; color: var(--record-muted); font-size: 13px; line-height: 1.7; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.badge, .status { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; border: 1px solid var(--record-line); border-radius: 5px; padding: 5px 9px; font-size: 11px; line-height: 1.5; }
+.badge { background: var(--record-soft); }
+.status { background: var(--record-tint); }
+.dot { flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 18px 24px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--record-line); }
+.metrics dt { color: var(--record-muted); font-size: 11px; margin-bottom: 6px; }
+.metrics dd { font-size: clamp(22px, 2.5vw, 28px); font-weight: 500; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.section { min-width: 0; padding: 26px 0; border-bottom: 1px solid var(--record-line); scroll-margin-top: 24px; }
+.heading { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 15px; font-weight: 550; letter-spacing: -.025em; }
+.heading > span { color: var(--record-muted); font-size: 10px; font-weight: 400; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.heading > svg { margin-left: auto; color: var(--record-muted); }
+.details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; }
+.details > div { min-width: 0; }
+.details dt { margin-bottom: 6px; color: var(--record-muted); font-size: 11px; }
+.details dd { white-space: pre-wrap; font-size: 13px; line-height: 1.75; }
+.wide { grid-column: 1 / -1; }
+.details .important { border-left: 3px solid var(--accent); padding-left: 12px; }
+.details .important dd { font-size: 14px; font-weight: 650; }
+.sheet .recordForm dd :is(span, dt) { color: var(--record-muted); }
+.sheet .recordForm a:not(.navigation a) { color: var(--foreground); text-decoration-color: var(--accent); text-underline-offset: 4px; }
+.sheet .recordForm .recordActions { margin-top: 0; bottom: -24px; padding: 20px 0; border-color: var(--record-line); background: var(--background); box-shadow: 0 -12px 20px var(--background); }
+.sheet .recordForm .recordActions button, .confirmation.confirmation button { min-height: 40px; border: 1px solid var(--record-line); border-radius: 6px; padding: 9px 16px; box-shadow: none; background: var(--background); color: var(--foreground); font-size: 12px; font-weight: 500; }
+.sheet .recordForm .recordActions button:first-child, .confirmation.confirmation button:first-child { background: var(--record-tint); border-color: color-mix(in srgb, var(--accent) 30%, var(--record-line)); }
+.sheet .recordForm .recordActions button:hover, .confirmation.confirmation button:hover { background: var(--record-soft); }
+.hint { flex-basis: 100%; color: var(--record-muted); font-size: 12px; line-height: 1.6; }
+.sheet .recordForm form { padding-top: 28px; }
+.sheet .recordForm form .recordActions { margin-top: 28px; }
+.sheet .recordForm label > span:first-child { color: var(--record-muted); font-size: 12px; }
+.sheet .recordForm label > :is(input, textarea), .sheet .recordForm [data-admin-select-trigger] { background: var(--record-soft); color: var(--foreground); border-color: var(--record-line); }
+.sheet .recordForm input::placeholder, .sheet .recordForm textarea::placeholder { color: var(--record-muted); }
+.sheet .recordForm > .notice, .sheet .recordForm > .loadState { padding: 16px; margin-block: 20px; border: 1px solid var(--record-line); border-left: 3px solid var(--accent); border-radius: 6px; color: var(--foreground); background: var(--record-tint); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.loadState button { margin-top: 12px; color: var(--foreground); border-color: var(--record-line); }
+.sheet :is(button, a, input, textarea):focus-visible, .confirmation button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.confirmation { overflow-wrap: anywhere; }
+.confirmation.confirmation [role='alert'] { color: var(--foreground); border-left: 3px solid var(--accent); padding-left: 12px; }
+@media (max-width: 639px) {
+  .sheet > div:first-child { padding: 18px 20px; }
+  .sheet > div:nth-child(2) { padding: 0 20px 20px; }
+  .hero { padding-top: 28px; }
+  .title { font-size: 28px; }
+  .details { gap: 20px; }
+  .sheet .recordForm .recordActions { bottom: -20px; gap: 8px; }
+}
+@media (max-width: 379px) {
+  .details { grid-template-columns: minmax(0, 1fr); }
+  .metrics { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sheet > div:nth-child(2) { scroll-behavior: smooth; }
+  .navigation a, .sheet .recordActions button { transition: background-color 150ms ease, border-color 150ms ease; }
+}
+
+.navigation { composes: navigation from './record-sheet.module.css'; }

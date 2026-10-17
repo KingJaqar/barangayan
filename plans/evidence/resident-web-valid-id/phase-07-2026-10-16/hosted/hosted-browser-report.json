@@ -1,0 +1,5667 @@
+{
+  "passed": true,
+  "startedAt": "2026-10-16T07:58:45.281Z",
+  "environment": {
+    "project": "pwjbucnyqexiepoinoke",
+    "resident": "canonical Vercel production release",
+    "staff": "existing canonical Vercel admin production",
+    "backend": "hosted Auth/Storage/Edge/OCR.space"
+  },
+  "checks": [
+    "Isolated synthetic tenant, complete resident and reviewer accounts, and zero-fee test service created; real password logins reach both actual apps",
+    "Canonical deployed four-step page uses explicit-only live OCR with editable suggestions and protected corrections; current deployed endpoint accepts an eligible admin and rejects a foreign-owner path",
+    "Actual hosted front-only publication persists trimmed corrected details and original bytes without changing Profile; double click and deliberately lost committed reply resolve one ID/version through owned-row Retry",
+    "Actual staff UI loads one private front image and confirmed details, approves through the caller-authorized RPC, and records the reviewer; resident success and sidebar refresh to verified with matching current/approved evidence",
+    "Real resident service form reads and previews approved front-only evidence and creates a v2 request linked to that exact submission; no back photo or payment record is required/created"
+  ],
+  "identities": {
+    "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+    "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+    "resident": "0b9d8b87-bb21-4f81-bb7c-c18c0d34d51a",
+    "admin": "ebcc210c-f014-467e-bdc6-eb152a2b61ad",
+    "firstSubmission": "2ea06ef5-b0c6-494c-b4f1-7ed7cb72a73d",
+    "serviceRequest": "74c9349f-5fff-4053-82f5-ddf711a30e81"
+  },
+  "requests": [
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/a8b9b0445899cd42.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5283-68bdc82fe4391b22.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/login/page-e599c084df15fd3e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/error-b37d463594f905cd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/onboarding/page-8fd46af37891e3eb.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2422-b95fb0ad770d995b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2740-fd70ca9ad493f078.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/home/page-06a0dc870a326df9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-f084a27d1babece0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/247-3c7fa1ba5d1a5bc5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-9524ca9b59163a6b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-be385919c62e3372.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/89969ccd851a2616.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2gx0pmgkr4t9l.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0as93-hrkv5ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/07oy167_m3zw7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/33lo8crqvns7x.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0-0d5gqn_zov7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/turbopack-0ably8px-j96u.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2rv4_f54g6h7_.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1nvuntxs7x0cp.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1tstbyfhj15li.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1qt0k0clt18qf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0l92_j3irloce.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-309caafd8451e360.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/97f680738b910ea9.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/6c4d9aafc2730918.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/7166-cdaff34928f7cf1b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2324-eff7c7fe66f38644.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-2fc20b3797f3aec6.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/login",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1cbfkfzi5d-53.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3fydeeg4t9j75.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2jbp3uucw8_8n.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2piiuzlxf4l9o.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1pu0fbbtksz98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2r928zxou0hoy.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2mjqajsnfib7s.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2ftobx1gso__n.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests/2707d24d-dade-4aee-b9fa-4ed8ffdd7ea2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2gx0pmgkr4t9l.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2r928zxou0hoy.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2mjqajsnfib7s.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0as93-hrkv5ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/07oy167_m3zw7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/33lo8crqvns7x.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0-0d5gqn_zov7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/turbopack-0ably8px-j96u.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2rv4_f54g6h7_.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1nvuntxs7x0cp.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2jbp3uucw8_8n.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2piiuzlxf4l9o.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1pu0fbbtksz98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1qt0k0clt18qf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3s5633p8y2z-9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1doirvso-l029.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3nek-kcfic6r9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1sct170a176yl.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3g02cxo4ayzw5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/30cpx97s3t8vd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/68991c71-4630-427f-9c5d-935d1d08bbb1",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/2f6c6ad0-3376-4290-ac16-226ddc6cde1a",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/9a0c1aac-b7cc-4c85-b391-b3a24ea2cf66",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/f41070e0-44be-4d97-bdbe-e61bf1c0a2a9",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/6a21e9e4-0e40-4a22-b55b-76eae3f3ecb6",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-f084a27d1babece0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/247-3c7fa1ba5d1a5bc5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-9524ca9b59163a6b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/64f5c534-6f46-40ce-9b4c-77f56c0e74e4",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "",
+      "path": "https://barangayan-resident-web.vercel.app/3fe999fe-d867-4d9f-a604-d415e7ac957b",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/functions/v1/extract-resident-id-ocrspace",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-be385919c62e3372.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/89969ccd851a2616.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-309caafd8451e360.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/97f680738b910ea9.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/6c4d9aafc2730918.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/7166-cdaff34928f7cf1b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2324-eff7c7fe66f38644.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-2fc20b3797f3aec6.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/publish_id_submission",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2gx0pmgkr4t9l.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2r928zxou0hoy.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2mjqajsnfib7s.css",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0as93-hrkv5ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/07oy167_m3zw7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/33lo8crqvns7x.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0-0d5gqn_zov7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/turbopack-0ably8px-j96u.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2rv4_f54g6h7_.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1nvuntxs7x0cp.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2jbp3uucw8_8n.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2piiuzlxf4l9o.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1pu0fbbtksz98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1qt0k0clt18qf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3s5633p8y2z-9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1doirvso-l029.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3nek-kcfic6r9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1sct170a176yl.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_residents_records",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3g02cxo4ayzw5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/30cpx97s3t8vd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "staff",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "staff",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/a8b9b0445899cd42.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5283-68bdc82fe4391b22.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/login/page-e599c084df15fd3e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/error-b37d463594f905cd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/onboarding/page-8fd46af37891e3eb.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/media/c0301319b85854d1-s.p.ttf",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/a8b9b0445899cd42.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5283-68bdc82fe4391b22.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/login/page-e599c084df15fd3e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/error-b37d463594f905cd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(auth)/onboarding/page-8fd46af37891e3eb.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/onboarding",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/register",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/login",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2422-b95fb0ad770d995b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2740-fd70ca9ad493f078.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/home/page-06a0dc870a326df9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2gx0pmgkr4t9l.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0as93-hrkv5ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/07oy167_m3zw7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/33lo8crqvns7x.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0-0d5gqn_zov7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/turbopack-0ably8px-j96u.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2rv4_f54g6h7_.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1nvuntxs7x0cp.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1tstbyfhj15li.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1qt0k0clt18qf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0l92_j3irloce.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports/new",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/token",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports/new",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1cbfkfzi5d-53.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3fydeeg4t9j75.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-309caafd8451e360.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/97f680738b910ea9.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/89969ccd851a2616.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/login",
+      "method": "POST"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2jbp3uucw8_8n.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2piiuzlxf4l9o.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1pu0fbbtksz98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2r928zxou0hoy.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2mjqajsnfib7s.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2ftobx1gso__n.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/forgot-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-be385919c62e3372.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/6c4d9aafc2730918.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/7166-cdaff34928f7cf1b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2324-eff7c7fe66f38644.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-2fc20b3797f3aec6.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-f084a27d1babece0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-f084a27d1babece0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/247-3c7fa1ba5d1a5bc5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/valid-id/page-9524ca9b59163a6b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests/2707d24d-dade-4aee-b9fa-4ed8ffdd7ea2",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests/49a01dda-9a6a-475c-8e46-2900a0f37e8c",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/30cpx97s3t8vd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests/2707d24d-dade-4aee-b9fa-4ed8ffdd7ea2",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests/49a01dda-9a6a-475c-8e46-2900a0f37e8c",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-be385919c62e3372.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/89969ccd851a2616.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-309caafd8451e360.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/97f680738b910ea9.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/valid-id",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/email-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/location-verification",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/6c4d9aafc2730918.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/7166-cdaff34928f7cf1b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2324-eff7c7fe66f38644.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-2fc20b3797f3aec6.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/change-password",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/notifications",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/download-data",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/delete-account",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/help",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/terms-privacy",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings/about",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2gx0pmgkr4t9l.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2r928zxou0hoy.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2mjqajsnfib7s.css",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2belr3pe9fbiz.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0as93-hrkv5ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/07oy167_m3zw7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/33lo8crqvns7x.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/0-0d5gqn_zov7.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/turbopack-0ably8px-j96u.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2rv4_f54g6h7_.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1nvuntxs7x0cp.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2jbp3uucw8_8n.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/2piiuzlxf4l9o.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1pu0fbbtksz98.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1qt0k0clt18qf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3s5633p8y2z-9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1doirvso-l029.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3nek-kcfic6r9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/1sct170a176yl.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_audit_log",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/admin_residents_records",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/3g02cxo4ayzw5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/_next/static/immutable/chunks/30cpx97s3t8vd.js",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/review_id_submission",
+      "method": "POST"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "POST"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/archive/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/dashboard",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/profile",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/theme",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/transactions",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/residents",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-reports",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/incident-map",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/health/applicants",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/waste-management",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/hub",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-centers",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "admin",
+      "host": "barangayan-admin-web.vercel.app",
+      "path": "/evacuation-routing",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests/new/82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/c8adbd2dac770724.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/59dc386ff16f7371.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/webpack-8ec3c23280cbe9f5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/87c73c54-498a0cadb2af30ab.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1968-8a29b985c03ee37d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/main-app-9a070ebbc22f5a2d.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3357-4b3f3ea9a5883f70.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/requests/new/%5BdocumentId%5D/loading-9443d57a8379f9cf.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3614-0539c0922d493aa4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6888-63fe91e3294e9ce4.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/9865-a4a6efcbfe6ca772.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/4701-42abf64fb5dfdeaa.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/layout-28b76a9abb957ed8.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/5587-db1c44ce9f877b40.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2336-788b4de4321274ae.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/error-867c202d0919c8ee.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/6c4d9aafc2730918.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/ebbdea99128b28f6.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/75504863-1d92b70177c2c666.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/3995-ebc57e3f4227116e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1098-25900dd33d03c51b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2175-d28a0bc73c3969c3.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/1097-a2795d9c4eaffb5f.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/8996-067397a978e298f0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/layout-84d2a39590ed3880.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/error-b83df921b5ec972c.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/7166-cdaff34928f7cf1b.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/2324-eff7c7fe66f38644.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/layout-2fc20b3797f3aec6.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/image",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/incidents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/announcement_reads",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/requests/new/%5BdocumentId%5D/page-4fb0ace8d304f3d9.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/profiles",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/id_submissions",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/storage/v1/object/[synthetic-evidence]",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/logs",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/home",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/emergency",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/auth/v1/user",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/emergency/layout-be385919c62e3372.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/89969ccd851a2616.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/maps",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/health",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/rpc/submit_service_request",
+      "method": "POST"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/reports",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/announcements",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/settings",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/health/layout-309caafd8451e360.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/css/97f680738b910ea9.css",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/documents",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/payment/74c9349f-5fff-4053-82f5-ddf711a30e81",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/services/logs",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/icon.png",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/settings/layout-f084a27d1babece0.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/247-3c7fa1ba5d1a5bc5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/203-0e70519f0dc1ca4e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/6804-acd5988f381f293e.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "barangayan-resident-web.vercel.app",
+      "path": "/_next/static/chunks/app/(resident)/services/payment/%5BrequestId%5D/page-a786716429152af5.js",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    },
+    {
+      "surface": "resident",
+      "host": "pwjbucnyqexiepoinoke.supabase.co",
+      "path": "/rest/v1/service_requests",
+      "method": "GET"
+    }
+  ],
+  "errors": [
+    {
+      "surface": "resident",
+      "kind": "console",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    },
+    {
+      "surface": "resident",
+      "kind": "console",
+      "message": "Failed to load resource: net::ERR_CONNECTION_FAILED"
+    }
+  ],
+  "warnings": [
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/ebbdea99128b28f6.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/59dc386ff16f7371.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "admin",
+      "message": "The resource https://barangayan-admin-web.vercel.app/_next/image?url=%2Fassets%2Flogo%2Fbarangayan-logo-1024.png&w=48&q=75 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/6c4d9aafc2730918.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/89969ccd851a2616.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    },
+    {
+      "surface": "resident",
+      "message": "The resource https://barangayan-resident-web.vercel.app/_next/static/css/97f680738b910ea9.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Synthetic test data only; physical camera and attended real-clock boundaries remain pending. Test records retained; no payment initiated or data deleted."
+  ],
+  "previousAttempt": {
+    "identities": {
+      "tenantId": "96b411fc-f8c8-4d5b-b8d8-b91f5529e2b7",
+      "docId": "82cd28b8-9f90-4a2b-bc25-73c74d51e352",
+      "resident": "5caec943-86d7-4b4a-aa14-bb7bebfaaa2e",
+      "admin": "79df7d77-0b96-45f3-a8c5-c1a3b7cbaaec"
+    },
+    "failures": [
+      {
+        "stage": "setup",
+        "message": "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/dashboard\" until \"load\"\n  navigated to \"http://127.0.0.1:3217/login\"\n  navigated to \"http://127.0.0.1:3217/login\"\n  navigated to \"http://127.0.0.1:3217/login\"\n============================================================"
+      }
+    ]
+  },
+  "browser": "155.0.8059.80",
+  "recoveredVerifierFailures": [
+    {
+      "stage": "approve",
+      "message": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "stage": "resumeRelease",
+      "message": "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/home\" until \"load\"\n  navigated to \"https://barangayan-resident-web.vercel.app/onboarding\"\n============================================================"
+    }
+  ],
+  "resumedAt": "2026-10-16T11:52:54.329Z",
+  "finishedAt": "2026-10-16T11:54:36.147Z",
+  "cleanup": {
+    "accounts": [
+      {
+        "id": "0b9d8b87-bb21-4f81-bb7c-c18c0d34d51a",
+        "loginDisabled": true,
+        "role": "resident"
+      },
+      {
+        "id": "ebcc210c-f014-467e-bdc6-eb152a2b61ad",
+        "loginDisabled": true,
+        "role": "resident"
+      }
+    ],
+    "sessionsEnded": true,
+    "retainedSyntheticRecords": true,
+    "deletedData": false
+  }
+}

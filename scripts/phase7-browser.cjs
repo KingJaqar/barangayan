@@ -12,8 +12,7 @@ async function login(page,base,label){
  await page.goto(base+'/login',{waitUntil:'networkidle',timeout:60000});
  await page.locator('input[type=email]').fill(fixtures.users[label].email);await page.locator('input[type=password]').fill(fixtures.users[label].password);
  await page.locator('button[type=submit]').click();
- await page.waitForURL(label==='admin'||label==='foreignAdmin'?'**/dashboard':/\/(home|onboarding)$/,{timeout:45000});
- if(new URL(page.url()).pathname==='/onboarding') {await page.getByRole('button',{name:'Continue to Barangayan',exact:true}).click();await page.waitForURL('**/home',{timeout:15000});}
+ await page.waitForURL(label==='admin'||label==='foreignAdmin'?'**/dashboard':'**/home',{timeout:45000});
 }
 async function privatePresentation(page,label){
  const text=await page.locator('body').innerText();prove(!/priority score|\b\d+ pts\b/i.test(text),label+': no visible score');

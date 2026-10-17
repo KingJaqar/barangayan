@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-10-16T12:20:48.195Z",
+  "baselineGroups": 36,
+  "finalGroups": 38,
+  "browser": "155.0.8059.80",
+  "pageErrors": 0,
+  "warnings": 0,
+  "expectedConsoleErrors": 24,
+  "dateBoundaries": [
+    {
+      "name": "Manila midnight",
+      "before": "2026-10-16T15:59:59Z",
+      "after": "2026-10-16T16:00:01Z",
+      "beforeMaximum": "2026-10-16",
+      "afterMaximum": "2026-10-16",
+      "localDayAfter": 17,
+      "passed": true,
+      "clock": "Controlled browser Date; no wall-clock attendance or hosted publication"
+    },
+    {
+      "name": "UTC midnight",
+      "before": "2026-10-16T23:59:59Z",
+      "after": "2026-10-17T00:00:01Z",
+      "beforeMaximum": "2026-10-16",
+      "afterMaximum": "2026-10-17",
+      "localDayAfter": 17,
+      "passed": true,
+      "clock": "Controlled browser Date; no wall-clock attendance or hosted publication"
+    }
+  ],
+  "matchingDeployedCalendarSources": {
+    "apps/resident-web/src/app/(resident)/settings/valid-id/birthday-dialog.tsx": "18af5674ef0b6e685548fa8f0b6746a7d8639203a9c6fc6151b09fd8cbd3681c",
+    "apps/resident-web/src/app/(resident)/settings/valid-id/draft.ts": "60374e3b6f11e66f99472b4677ba7cad16d3c9e8ee4b106a1a60de7bc88f7eae"
+  },
+  "scope": "Local actual components and shared publication helper; fixture network and controlled browser Date. No attended wall-clock or new hosted run."
+}

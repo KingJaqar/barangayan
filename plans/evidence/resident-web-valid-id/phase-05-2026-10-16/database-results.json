@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "assertions": 37,
+  "idAssertions": 26,
+  "migrations": 126,
+  "latestMigration": "0128_admin_personal_profile_editing.sql",
+  "environment": "Disposable network-disabled local PostgreSQL 17.6.1.155; repository Auth/Storage SQL bootstrap, not hosted Auth/Storage HTTP",
+  "test": "supabase/tests/resident_front_id_submission.test.sql"
+}

@@ -8,7 +8,7 @@
  */
 
 import { formatCentavosAsPHP, type PaymentMethod } from '@barangayan/shared';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { PAYMENT_METHOD_OPTIONS, PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
@@ -37,6 +37,8 @@ export function PaymentMethodStep({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const busy = useRef(false);
+  const active = useRef(true);
+  useEffect(() => { active.current = true; return () => { active.current = false; }; }, [requestId]);
 
   const totalDue = feeCentavos;
   const isQrphBlocked = selected === 'qrph' && (pickupOnly || !PAYMENT_SETTLEMENT_READY);
@@ -66,20 +68,21 @@ export function PaymentMethodStep({
       });
       if (rpcError) {
         const failure = paymentMethodFailure(rpcError, status);
-        setError(failure.message);
+        if (active.current) setError(failure.message);
         notify[failure.uncertain ? 'warning' : 'error'](failure.title, { id: attempt });
         return;
       }
-      // The next step is the confirmation, so there is no success toast — and the
-      // request itself was submitted in the previous step, not here.
-      onMethodChosen(chosen);
+      // Both choices immediately start the next operation. Pickup recording / QR
+      // readiness owns the combined success; don't queue an intermediate save toast.
+      if (active.current) onMethodChosen(chosen);
+      else notify.success(`Payment method saved: ${chosen === 'pickup' ? 'Pay at Pickup' : 'QR PH'}.`, { id: attempt });
     } catch {
       const failure = paymentMethodFailure({ message: '' }, 0);
-      setError(failure.message);
+      if (active.current) setError(failure.message);
       notify.warning(failure.title, { id: attempt });
     } finally {
       busy.current = false;
-      setSubmitting(false);
+      if (active.current) setSubmitting(false);
     }
   }
 

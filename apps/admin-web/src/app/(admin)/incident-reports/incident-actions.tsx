@@ -122,8 +122,9 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
           <button
             onClick={() => setStatus(step.next, `Incident marked as ${step.next.replace('_', ' ')}.`)}
             disabled={busy}
+            aria-busy={busy}
             className={`${btnClass} ${step.color}`}>
-            {step.next === 'in_progress' ? <Clock size={16} className="shrink-0" aria-hidden="true" /> : <CircleCheck size={16} className="shrink-0" aria-hidden="true" />}
+            {busy ? <Spinner size="button" /> : step.next === 'in_progress' ? <Clock size={16} className="shrink-0" aria-hidden="true" /> : <CircleCheck size={16} className="shrink-0" aria-hidden="true" />}
             {step.label}
           </button>
         )}
@@ -132,14 +133,15 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
           <button
             onClick={() => setStatus('unresolved', 'Incident marked as unresolved.')}
             disabled={busy}
+            aria-busy={busy}
             className={`${btnClass} bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300`}>
-            <TriangleAlert size={16} className="shrink-0" aria-hidden="true" />
+            {busy ? <Spinner size="button" /> : <TriangleAlert size={16} className="shrink-0" aria-hidden="true" />}
             Mark as Unresolved
           </button>
         )}
 
         {CAN_MARK_UNRESOLVED.has(status) && <button type="button" onClick={() => setStatus('withdrawn', 'Report withdrawn.')} disabled={busy}
-          className={`${btnClass} bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200`}><RotateCcw size={16} className="shrink-0" aria-hidden="true" />Withdraw</button>}
+          aria-busy={busy} className={`${btnClass} bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200`}>{busy ? <Spinner size="button" /> : <RotateCcw size={16} className="shrink-0" aria-hidden="true" />}Withdraw</button>}
 
         {showRemove && (!showDeleteConfirm ? (
           <button
@@ -154,8 +156,9 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
             <button
               onClick={softDelete}
               disabled={busy}
+              aria-busy={busy}
               className={`${btnClass} bg-red-600 text-white`}>
-              Confirm
+              {busy && <Spinner size="button" />} {busy ? 'Removing…' : 'Confirm'}
             </button>
             <button
               disabled={busy}

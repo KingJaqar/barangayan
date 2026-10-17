@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 import { boundedAuthFetch, type Database } from '@barangayan/shared';
+import { getAuthCookieOptions } from './cookie-options';
 
 /**
  * Supabase client for Server Components, Route Handlers, and Server Actions. Next.js
@@ -11,14 +12,16 @@ import { boundedAuthFetch, type Database } from '@barangayan/shared';
  * is NOT the service_role client. resident-web never carries SUPABASE_SERVICE_ROLE_KEY
  * (see the plan's §7/§8) — do not add a service_role variant here.
  */
-export async function createSupabaseServerClient() {
+export async function createSupabaseServerClient(transport: typeof fetch = boundedAuthFetch, options: { retry: boolean } = { retry: true }) {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      global: { fetch: boundedAuthFetch },
+      cookieOptions: getAuthCookieOptions(),
+      db: { retry: options.retry },
+      global: { fetch: transport },
       cookies: {
         getAll() {
           return cookieStore.getAll();

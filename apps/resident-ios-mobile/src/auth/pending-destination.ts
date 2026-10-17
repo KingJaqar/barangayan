@@ -5,7 +5,12 @@ const UUID = '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-
  * segments: no arbitrary URLs, query strings, tokens or personal records are ever retained.
  */
 const ALLOWED: readonly RegExp[] = [
+  /^\/services$/,
+  new RegExp(`^/services/${UUID}$`),
   /^\/requests$/,
+  /^\/reports$/,
+  /^\/reports\/new$/,
+  new RegExp(`^/reports/incidents/${UUID}$`),
   new RegExp(`^/request/${UUID}$`),
   new RegExp(`^/services/request/${UUID}$`),
   new RegExp(`^/health/register/${UUID}$`),

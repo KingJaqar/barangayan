@@ -309,6 +309,8 @@ export const TABLE_CONFIGS = {
       "tab": {
         "values": [
           "all",
+          "id_verified",
+          "id_unverified",
           "verified",
           "unverified"
         ],

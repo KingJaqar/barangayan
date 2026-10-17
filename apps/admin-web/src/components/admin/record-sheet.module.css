@@ -1,0 +1,52 @@
+.sheet.sheet > div:nth-child(2) { scroll-padding-top: 86px; }
+.navigation {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 12px 0;
+  margin-bottom: 20px;
+  border-block: 1px solid color-mix(in srgb, var(--foreground) 20%, var(--background));
+  background: var(--background);
+  box-shadow: 0 8px 14px color-mix(in srgb, var(--background) 94%, transparent);
+}
+.navigation a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--foreground) 15%);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--background));
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.navigation a:hover, .navigation a:focus-visible {
+  background: color-mix(in srgb, var(--accent) 22%, var(--background));
+  border-color: var(--accent);
+}
+.navigation a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.navigation a > span { font-size: 10px; font-variant-numeric: tabular-nums; }
+.sheet.sheet .actions.actions { z-index: 4; gap: 10px; }
+.sheet.sheet .actions.actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; font-weight: 650; }
+.sheet.sheet .actions.actions button.edit { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+.sheet.sheet .actions.actions button.archive { background: #fef3c7; border-color: #b45309; color: #78350f; }
+.sheet.sheet .actions.actions button.delete { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+.sheet.sheet .actions.actions button:hover:not(:disabled) { filter: brightness(.94); }
+.sheet.sheet .actions.actions button:disabled { cursor: not-allowed; opacity: .5; }
+:global(.dark) .sheet.sheet .actions.actions button.archive { background: #451a03; border-color: #f59e0b; color: #fde68a; }
+:global(.dark) .sheet.sheet .actions.actions button.delete { background: #450a0a; border-color: #f87171; color: #fecaca; }
+@media (max-width: 639px) {
+  .navigation { gap: 6px; }
+  .navigation a { padding-inline: 10px; }
+}

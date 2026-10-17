@@ -1,6 +1,7 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
 import { ANNOUNCEMENT_CATEGORY_META, type AnnouncementCategory, type Tables } from '@barangayan/shared';
 import { ArrowUpRight, MailOpen, MailX } from 'lucide-react';
 
@@ -39,6 +40,20 @@ interface AnnouncementCardProps {
 export function AnnouncementCard({ announcement, onPress }: AnnouncementCardProps) {
   const { unreadAnnouncementIds, markAnnouncementRead, markAnnouncementUnread } = useUnreadCounts();
   const isUnread = unreadAnnouncementIds.includes(announcement.id);
+  const writing = useRef(false);
+  async function mark(read: boolean) {
+    if (writing.current || read !== isUnread) return;
+    writing.current = true;
+    const attempt = beginAttempt('announcement-read-status');
+    try {
+      const result = await (read ? markAnnouncementRead(announcement.id) : markAnnouncementUnread(announcement.id));
+      if (result === 'confirmed') notify.success(read ? 'Announcement marked as read.' : 'Announcement marked as unread.', { id: attempt });
+      else if (result === 'accepted') notify.info('Read-status update sent. Refresh to confirm.', { id: attempt });
+      else if (result === 'rejected') notify.error(read ? "Couldn't mark the announcement as read. Please try again." : "Couldn't mark the announcement as unread. Please try again.", { id: attempt });
+      else if (result === 'uncertain') notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt });
+    } catch { notify.warning("We couldn't confirm the read-status change. Refresh before trying again.", { id: attempt }); }
+    finally { writing.current = false; }
+  }
 
   const category = announcement.category as AnnouncementCategory;
   const meta = ANNOUNCEMENT_CATEGORY_META[category] ?? ANNOUNCEMENT_CATEGORY_META.general;
@@ -84,7 +99,7 @@ export function AnnouncementCard({ announcement, onPress }: AnnouncementCardProp
               aria-label="Mark as read"
               aria-pressed={!isUnread}
               title="Mark as read"
-              onClick={(e) => { e.stopPropagation(); void markAnnouncementRead(announcement.id); }}
+              onClick={(e) => { e.stopPropagation(); void mark(true); }}
               className={styles.readAction}>
               <MailOpen aria-hidden size={16} />
             </button>
@@ -93,7 +108,7 @@ export function AnnouncementCard({ announcement, onPress }: AnnouncementCardProp
               aria-label="Mark as unread"
               aria-pressed={isUnread}
               title="Mark as unread"
-              onClick={(e) => { e.stopPropagation(); void markAnnouncementUnread(announcement.id); }}
+              onClick={(e) => { e.stopPropagation(); void mark(false); }}
               className={styles.readAction}>
               <MailX aria-hidden size={16} />
             </button>

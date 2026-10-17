@@ -13,12 +13,14 @@
 
 import { AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useRef, useState } from 'react';
+import { FunctionsHttpError } from '@supabase/supabase-js';
+import { AUTH_MESSAGES, authErrorCode, authFailureKind } from '@/lib/auth/auth-feedback';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { useResetPreferencesOnLogout } from '@/components/theme/use-reset-preferences';
 import { signOutBrowser } from '@/lib/auth/sign-out';
-import { toEdgeFunctionError } from '@/lib/edge-function-error';
+import { notifyLoggedOut } from '@/lib/auth/session-feedback';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export function DeleteAccountForm({ email }: { email: string }) {
@@ -30,49 +32,93 @@ export function DeleteAccountForm({ email }: { email: string }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const busy = useRef(false), active = useRef(true), accountChanged = useRef(false), signingOut = useRef(false);
+  useEffect(() => {
+    active.current = true;
+    accountChanged.current = false;
+    const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((_event, session) => {
+      if ((session || !signingOut.current) && session?.user.email?.trim().toLowerCase() !== email.trim().toLowerCase()) {
+        accountChanged.current = true;
+        setPassword('');
+        setError('Your account changed. Reload this page before continuing.');
+      }
+    });
+    return () => { active.current = false; data.subscription.unsubscribe(); };
+  }, [email]);
 
   async function handleDelete(e: React.FormEvent) {
     e.preventDefault();
+    if (busy.current || accountChanged.current) return;
+    const attempt = beginAttempt('delete-account');
     setError('');
 
     if (!email) {
       setError('Your account has no email on file, so your password cannot be verified. Contact barangay staff for help.');
+      notify.error("We couldn't verify account ownership. Contact barangay staff.", { id: attempt });
       return;
     }
     if (!password) return;
 
     setSubmitting(true);
+    busy.current = true;
+    let deletionStarted = false;
+    let deleted = false;
     try {
       const supabase = createSupabaseBrowserClient();
 
       // Re-authenticate first — mirrors change-password's rationale.
       const { error: reauthError } = await supabase.auth.signInWithPassword({ email, password });
+      if (accountChanged.current) return;
       if (reauthError) {
-        if (reauthError.message.toLowerCase().includes('invalid login credentials')) {
-          setError('Incorrect password.');
-        } else if (reauthError.message.toLowerCase().includes('rate limit')) {
-          setError('Too many attempts. Please wait a moment and try again.');
+        const kind = authFailureKind(reauthError);
+        if (authErrorCode(reauthError) === 'invalid_credentials') {
+          if (active.current) setError('Incorrect password.');
+          notify.error("Incorrect password. Your account wasn't deleted.", { id: attempt });
+        } else if (kind === 'rate-limit') {
+          if (active.current) setError('Too many attempts. Please wait a moment and try again.');
+          notify.error('Too many attempts. Wait a moment and try again.', { id: attempt });
         } else {
-          setError(reauthError.message);
+          if (active.current) setError(kind === 'rejected' ? 'Your password could not be verified. Review your account details and try again.' : kind === 'service' ? AUTH_MESSAGES.service : AUTH_MESSAGES.connection);
+          notify.error("Couldn't verify your password. Please try again.", { id: attempt });
         }
         return;
       }
 
+      deletionStarted = true;
       const { error: fnError } = await supabase.functions.invoke('delete-my-account');
-      if (fnError) throw await toEdgeFunctionError(fnError);
+      if (accountChanged.current) return;
+      if (fnError) {
+        // The function can fail after anonymizing the profile. A server failure
+        // cannot prove rejection, and its body may contain internal database text.
+        const status = fnError instanceof FunctionsHttpError ? fnError.context.status : 0;
+        const uncertain = status === 0 || status === 408 || status >= 500;
+        if (active.current) setError(uncertain ? "We couldn't confirm account deletion. Check your account before trying again." : status === 429 ? AUTH_MESSAGES.rateLimit : status === 401 ? 'Sign in again before deleting your account.' : "Couldn't delete your account. Please try again or contact barangay staff.");
+        if (uncertain) notify.warning("We couldn't confirm account deletion. Check your account before trying again.", { id: attempt });
+        else notify.error(status === 429 ? 'Too many attempts. Wait a moment and try again.' : "Couldn't delete your account. Review the message below.", { id: attempt });
+        return;
+      }
+      deleted = true;
 
       // Clear theme/accent/font before signing out — see use-reset-preferences.ts's doc
       // comment for why (otherwise guest mode inherits this now-deleted account's look).
       resetPreferences();
-      // Same call as before (default scope, result unchanged), marked as this tab's own
-      // sign-out so the session watcher doesn't also report "You've been logged out".
-      await signOutBrowser();
-      toast.success('Your account has been deleted.');
+      // Account deletion retains global cleanup; ordinary logout is app-local.
+      // Mark this tab's sign-out so the session watcher doesn't report it twice.
+      signingOut.current = true;
+      const outcome = await signOutBrowser('global');
+      if (accountChanged.current) return;
+      if (outcome === 'failed') notify.success('Your account has been deleted.', { id: attempt, keepOnSessionChange: true });
+      else notifyLoggedOut('Your account has been deleted.');
       router.push('/login');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not delete your account. Please try again.');
+    } catch {
+      if (active.current) setError(deleted ? 'Your account was deleted. Open Login to continue.' : deletionStarted ? "We couldn't confirm account deletion. Check your account before trying again." : "Couldn't verify your password. Please try again.");
+      if (!deleted) {
+        if (deletionStarted) notify.warning("We couldn't confirm account deletion. Check your account before trying again.", { id: attempt });
+        else notify.error("Couldn't verify your password. Please try again.", { id: attempt });
+      }
     } finally {
-      setSubmitting(false);
+      busy.current = false;
+      if (active.current) setSubmitting(false);
     }
   }
 

@@ -1,0 +1,17 @@
+{
+  "project": "pwjbucnyqexiepoinoke",
+  "functionId": "08e4739e-4755-476a-80f5-0fb4452ac8f6",
+  "windowStart": "2026-10-16T07:51:00Z",
+  "windowEnd": "2026-10-16T08:10:00Z",
+  "method": "Read-only Supabase unified logs; discovered sources/attribute keys, then aggregated only this function ID without reading request contents or credentials",
+  "http": [
+    { "status": 200, "count": 2, "meaning": "Live synthetic resident and eligible-admin OCR" },
+    { "status": 403, "count": 1, "meaning": "Expected synthetic foreign-owner denial" }
+  ],
+  "runtime": [
+    { "event": "Boot", "level": "log", "count": 4 },
+    { "event": "Shutdown", "level": "log", "count": 4 }
+  ],
+  "errorOrWarningEntries": 0,
+  "scope": "OCR deployment/live test window only; not continuous future monitoring"
+}

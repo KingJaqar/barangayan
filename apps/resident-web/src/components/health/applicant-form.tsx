@@ -2,7 +2,8 @@
 
 import { CheckCircle2, ChevronDown, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,6 +84,13 @@ export function ApplicantForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [result, setResult] = useState<{ applicant_number: string } | null>(null);
+  const busy = useRef(false);
+  const mounted = useRef(true);
+  const form = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
 
   const selectedName = selection.type === 'self' ? residentName : selection.member.name;
   const effectiveAge = profileAge ?? (ageOverride ? parseInt(ageOverride, 10) : null);
@@ -99,16 +107,23 @@ export function ApplicantForm({
   }
 
   async function handleSubmit() {
+    if (busy.current || isFull) return;
+    const attempt = beginAttempt('health-registration');
     if (!consented) {
       setSubmitError('Please check the consent box before registering.');
+      notify.error('Review your age and consent before registering.', { id: attempt });
+      form.current?.querySelector<HTMLInputElement>('[data-registration-consent]')?.focus();
       return;
     }
     if (effectiveAge === null || Number.isNaN(effectiveAge) || effectiveAge < 0 || effectiveAge > 130) {
       setSubmitError('Please enter a valid age (0–130).');
+      notify.error('Review your age and consent before registering.', { id: attempt });
+      form.current?.querySelector<HTMLInputElement>('[aria-label="Age"]')?.focus();
       return;
     }
     setSubmitError(null);
     setSubmitting(true);
+    busy.current = true;
     try {
       const res = await registerForDrive({
         driveId: drive.id,
@@ -117,11 +132,19 @@ export function ApplicantForm({
         comorbidities: Array.from(comorbidities),
         priorDoseDate: hasPriorDose && priorDoseDate ? priorDoseDate : null,
       });
-      setResult({ applicant_number: res.applicant_number });
+      notify.success(`Registration confirmed. Applicant number: ${res.applicant_number}.`, { id: attempt });
+      if (mounted.current) setResult({ applicant_number: res.applicant_number });
     } catch (e: unknown) {
-      setSubmitError(e instanceof Error ? e.message : 'Registration failed. Please try again.');
+      // Only structured database rejection proves the write failed. A missing or
+      // malformed response may follow a successful registration; never invite duplicates.
+      const code = e && typeof e === 'object' && 'code' in e ? e.code : null;
+      const rejected = typeof code === 'string' && /^(22|23|28|42|P0)/.test(code);
+      const message = rejected ? "Couldn't complete your registration. Review the message below." : "We couldn't confirm your registration. Check My Registrations before trying again.";
+      notify[rejected ? 'error' : 'warning'](message, { id: attempt });
+      if (mounted.current) setSubmitError(rejected ? 'Registration could not be accepted. Review your age, consent and drive availability before trying again.' : message);
     } finally {
-      setSubmitting(false);
+      busy.current = false;
+      if (mounted.current) setSubmitting(false);
     }
   }
 
@@ -151,7 +174,7 @@ export function ApplicantForm({
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-5 pb-10">
+    <div ref={form} className="mx-auto flex max-w-md flex-col gap-5 pb-10">
       {/* Drive info */}
       <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
         <div className="flex items-start justify-between gap-3">
@@ -226,6 +249,8 @@ export function ApplicantForm({
               ) : (
                 <Input
                   aria-label="Age"
+                  aria-invalid={!!submitError && (effectiveAge === null || effectiveAge < 0 || effectiveAge > 130)}
+                  aria-describedby={submitError ? 'health-registration-error' : undefined}
                   type="number"
                   min={0}
                   max={130}
@@ -284,12 +309,12 @@ export function ApplicantForm({
           <p>This information is used only to determine allocation priority for this drive and is handled under the Barangay&apos;s Data Privacy Policy.</p>
         </div>
         <label className="flex items-center gap-2 text-sm font-semibold">
-          <input type="checkbox" className="h-4 w-4 accent-[color:var(--accent)]" checked={consented} onChange={(e) => setConsented(e.target.checked)} />
+          <input type="checkbox" data-registration-consent aria-invalid={!!submitError && !consented} aria-describedby={submitError ? 'health-registration-error' : undefined} className="h-4 w-4 accent-[color:var(--accent)]" checked={consented} onChange={(e) => setConsented(e.target.checked)} />
           I understand and consent
         </label>
       </div>
 
-      {submitError ? <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{submitError}</div> : null}
+      {submitError ? <div id="health-registration-error" className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">{submitError}</div> : null}
 
       <Button size="lg" loading={submitting} disabled={isFull} onClick={handleSubmit}>
         {isFull ? 'No Slots Available' : 'Submit Registration'}

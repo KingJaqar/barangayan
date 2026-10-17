@@ -35,7 +35,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, children 
 
   async function handleLogout() {
     const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
     router.replace('/login');
     router.refresh();
   }

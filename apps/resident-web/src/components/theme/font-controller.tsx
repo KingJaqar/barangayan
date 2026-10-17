@@ -11,7 +11,7 @@ interface FontControllerValue {
   /** Sets `--font-app` on <html> immediately, same pattern as accent-controller.tsx.
    * Phase 7's theme-form.tsx additionally persists to profiles.font_preference for
    * cross-device sync. */
-  setFontId: (id: string) => void;
+  setFontId: (id: string) => boolean;
   /** Forgets the saved font and reverts to DEFAULT_FONT_ID — called on logout (see
    * use-reset-preferences.ts), mirrors theme-controller.tsx's resetTheme(). */
   resetFont: () => void;
@@ -75,13 +75,15 @@ export function FontControllerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setFontId = useCallback((id: string) => {
-    if (!isValidFontId(id)) return;
+    if (!isValidFontId(id)) return false;
     setFontIdState(id);
     applyFontVar(id);
     try {
       localStorage.setItem(STORAGE_KEY, id);
+      return true;
     } catch {
       // Private browsing / storage disabled — the CSS var still applies for this session.
+      return false;
     }
   }, []);
 

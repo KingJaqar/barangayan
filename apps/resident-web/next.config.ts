@@ -10,6 +10,9 @@ function supabaseHostname(): string {
 
 const nextConfig: NextConfig = {
   distDir: process.env.BARANGAYAN_PREVIEW_DIST_DIR ?? '.next',
+  redirects() {
+    return [{ source: '/onboarding', destination: '/home', permanent: true }];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: supabaseHostname(), pathname: "/storage/v1/object/**" },

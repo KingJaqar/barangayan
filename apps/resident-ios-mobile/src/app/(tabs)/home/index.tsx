@@ -8,7 +8,7 @@ export default function Home() {
   const barangay = useResource('barangay', api.barangay);
   return <Screen><ResourceState loading={barangay.loading} error={barangay.error} retry={() => void barangay.refresh()} />
     <Card><Body heading>{profile ? `Welcome, ${profile.first_name || profile.full_name}` : 'Welcome to Barangayan'}</Body>{barangay.data && <Body>{barangay.data.name}</Body>}<Body>Your barangay services and community updates, together.</Body>{!profile && <Destination title="Sign in or create an account" href="/auth" />}</Card>
-    <Card><Destination title="Document services" href="/services" detail="View requirements and follow your requests." /><Destination title="Community announcements" href="/reports" /><Destination title="Medical drives" href="/health" /><Destination title="Emergency information" href="/emergency" /></Card>
+    <Card><Destination title="Document services" href="/services" detail="View requirements and follow your requests." /><Destination title="Community announcements" href={{ pathname: '/reports', params: { segment: 'announcements' } }} /><Destination title="Medical drives" href="/health" /><Destination title="Emergency information" href="/emergency" /></Card>
     {profile && <Card><Destination title="My profile and household" href="/settings/profile" /></Card>}
   </Screen>;
 }

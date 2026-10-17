@@ -1,35 +1,37 @@
-import { formatDateTime } from '@barangayan/shared';
+import { ANNOUNCEMENT_CATEGORY_META, formatDateTime, type AnnouncementCategory } from '@barangayan/shared';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { createSingleFlight } from '../../../../data/mutation';
+import { Image } from 'react-native';
 import { Action, Body, Card, Destination, EmptyState, Notice, ResourceState, Screen } from '../../../../components/ui';
-import { useApi } from '../../../../data/use-api';
 import { useReportCounts } from '../../../../data/report-counts';
+import { useApi } from '../../../../data/use-api';
 import { useResource } from '../../../../data/use-resource';
-import { residentError } from '../../../../lib/errors';
+import { announcementImage } from '../../../../features/reports/media';
+import { useReadActions } from '../../../../features/reports/use-read-actions';
 import { useResident } from '../../../../lib/runtime';
+import { radius, useColors } from '../../../../lib/theme';
 
 export default function Announcement() {
   const { announcementId } = useLocalSearchParams();
   const api = useApi();
+  const colors = useColors();
   const { session } = useResident();
   const { refresh: refreshCounts } = useReportCounts();
   const resource = useResource(`announcement:${announcementId}`, (signal) => api.announcement(announcementId, signal));
-  const [message, setMessage] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [gate] = useState(createSingleFlight);
-  async function markRead() {
-    setBusy(true); setMessage('');
-    const outcome = await gate.run(() => api.markAnnouncementRead(announcementId));
-    setBusy(false);
-    if (outcome.status === 'busy') return;
-    // The read upsert is idempotent, so the counters are refreshed for every outcome.
-    refreshCounts();
-    setMessage(outcome.status === 'committed' ? 'Marked as read.' : residentError(outcome.error));
-  }
+  const { actions, state } = useReadActions(async () => { await resource.refresh(); refreshCounts(); });
+  const [imageFailed, setImageFailed] = useState(false);
+  const item = resource.data;
+  const image = item ? announcementImage(item.image_url) : null;
+  const category = item && item.category in ANNOUNCEMENT_CATEGORY_META ? ANNOUNCEMENT_CATEGORY_META[item.category as AnnouncementCategory].label : item?.category;
+  const read = item && session ? state.announcements[item.id] ?? item.read : null;
   return <Screen><ResourceState loading={resource.loading} error={resource.error} retry={() => void resource.refresh()} />
-    {resource.data === null && <EmptyState title="Announcement unavailable" message="This announcement was removed or is not published for your barangay."><Destination title="Back to Reports" href="/reports" /></EmptyState>}
-    {resource.data && <Card><Body heading>{resource.data.title}</Body><Body role="footnote" tone="secondary">{resource.data.category} · {formatDateTime(resource.data.published_at)}</Body><Body>{resource.data.body}</Body>{resource.data.detailed_description && <Body>{resource.data.detailed_description}</Body>}
-      {session && <Action label={busy ? 'Marking as read…' : 'Mark as read'} secondary disabled={busy} onPress={() => void markRead()} />}{!!message && <Notice message={message} />}</Card>}
+    {item === null && <EmptyState title="Announcement unavailable" message="This announcement was removed or is not published for your barangay."><Destination title="Back to Reports" href={{ pathname: '/reports', params: { segment: 'announcements' } }} /></EmptyState>}
+    {item && <Card><Body heading>{item.title}</Body><Body role="footnote" tone="secondary">{`${category} · ${formatDateTime(item.published_at)}`}</Body>
+      {image && !imageFailed && <Image source={{ uri: image }} accessibilityLabel="Announcement image" accessibilityIgnoresInvertColors resizeMode="cover" onError={() => setImageFailed(true)}
+        style={{ height: 200, borderRadius: radius.md, backgroundColor: colors.surfaceSelected }} />}
+      {image && imageFailed && <Body role="footnote" tone="secondary">The image could not be loaded.</Body>}
+      <Body>{item.body}</Body>{item.detailed_description && <Body>{item.detailed_description}</Body>}
+      {read !== null && <Action label={state.busy ? 'Saving…' : read ? 'Mark as unread' : 'Mark as read'} secondary disabled={state.busy} onPress={() => void actions.setAnnouncementRead(item.id, !read)} />}
+      {!!state.message && <Notice message={state.message} tone={state.failed ? 'danger' : 'primary'} />}</Card>}
   </Screen>;
 }

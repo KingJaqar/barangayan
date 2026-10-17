@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Action, Body, confirmDestructive, Loading, Screen } from '../components/ui';
 import { readConfiguration } from '../lib/config';
 import { ResidentProvider, useResident } from '../lib/runtime';
+import { AppearanceProvider } from '../features/appearance/provider';
 import { SetupEnforcer } from '../features/auth/setup-enforcer';
 import { useColors } from '../lib/theme';
 
@@ -32,7 +33,7 @@ export default function Layout() {
   }, []);
   return <SafeAreaProvider><ThemeProvider value={dark ? DarkTheme : DefaultTheme}>
     {!configuration.success ? <Screen><HideSplash /><Body heading>Barangayan is unavailable</Body><Body>This installation needs its barangay connection configured. Please contact the person who provided this app.</Body></Screen> :
-      <ResidentProvider config={configuration.data} fallback={(state) => <RestorationState {...state} />}><HideSplash /><Navigator /></ResidentProvider>}
+      <ResidentProvider config={configuration.data} fallback={(state) => <RestorationState {...state} />}><HideSplash /><AppearanceProvider><Navigator /></AppearanceProvider></ResidentProvider>}
   </ThemeProvider></SafeAreaProvider>;
 }
 function RestorationState({ error, retry, clear }: { error: boolean; retry: () => void; clear: () => void }) {
@@ -46,7 +47,13 @@ function RestorationState({ error, retry, clear }: { error: boolean; retry: () =
 function Navigator() {
   const { recovery } = useResident();
   const colors = useColors();
-  return <>
+  const dark = useColorScheme() === 'dark';
+  // Navigation chrome follows the resident's theme and accent, not only the system appearance.
+  const navigationTheme = useMemo(() => {
+    const base = dark ? DarkTheme : DefaultTheme;
+    return { ...base, colors: { ...base.colors, primary: colors.primary, background: colors.canvas, card: colors.surface, text: colors.textPrimary, border: colors.border } };
+  }, [dark, colors]);
+  return <ThemeProvider value={navigationTheme}>
     <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal', headerTintColor: colors.primary, contentStyle: { backgroundColor: colors.canvas } }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Protected guard={!recovery}>
@@ -63,9 +70,18 @@ function Navigator() {
         <Stack.Screen name="emergency" options={{ title: 'Emergency information' }} />
         <Stack.Screen name="requests" options={{ title: 'My requests' }} />
         <Stack.Screen name="request/[id]" options={{ title: 'Request details' }} />
+        <Stack.Screen name="request/received" options={{ title: 'Request received', headerBackVisible: false, gestureEnabled: false }} />
         <Stack.Screen name="services/request/[id]" options={{ title: 'Request a document' }} />
+        <Stack.Screen name="services/payment/[requestId]" options={{ title: 'Payment' }} />
+        <Stack.Screen name="services/payment/pickup/[requestId]" options={{ title: 'Pay at pickup' }} />
+        <Stack.Screen name="services/payment/qrph/[requestId]" options={{ title: 'QR PH payment' }} />
+        <Stack.Screen name="services/payment/success" options={{ title: 'Payment receipt' }} />
         <Stack.Screen name="health/register/[id]" options={{ title: 'Drive registration' }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding/welcome" options={{ title: '', headerShadowVisible: false }} />
+        <Stack.Screen name="onboarding/value-prop" options={{ title: '', headerShadowVisible: false }} />
+        <Stack.Screen name="onboarding/personalization" options={{ title: '', headerShadowVisible: false }} />
+        <Stack.Screen name="onboarding/completion" options={{ title: '', headerShadowVisible: false, headerBackVisible: false, gestureEnabled: false }} />
       </Stack.Protected>
       {/* Recovery stays reachable while the recovery guard hides everything else; aliases resolve to it. */}
       <Stack.Screen name="auth/recovery" options={{ title: 'Recover your account', gestureEnabled: false }} />
@@ -73,5 +89,5 @@ function Navigator() {
       <Stack.Screen name="recovery" options={{ headerShown: false }} />
     </Stack>
     <SetupEnforcer />
-  </>;
+  </ThemeProvider>;
 }

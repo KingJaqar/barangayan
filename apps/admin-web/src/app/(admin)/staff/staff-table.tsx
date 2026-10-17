@@ -113,7 +113,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
   // removing yourself here would be an easy way to accidentally lock yourself out.
   const notSelf = (r: OfficialWithProfile) => r.profile.id !== currentUserId;
 
-  const lifecycle = useRecordWorkspace<OfficialWithProfile>('staff', browse.refresh, browse.settle, { currentUserId });
+  const lifecycle = useRecordWorkspace<OfficialWithProfile>('staff', browse.refresh, browse.settle, { editHandle: browse.editHandle, currentUserId });
 
   const columns: EditableDataTableColumn<OfficialWithProfile>[] = [
     {
@@ -134,7 +134,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
       },
     },
     {
-      id: 'role', header: 'Role',
+      id: 'role', header: 'Role', frozen: true,
       render: (r) => <RoleBadge role={r.official_role} />,
       // Auto-measuring off the header cell would size this to whatever's currently in
       // view (e.g. a table full of "Staff" badges) and clip a longer role like "Barangay
@@ -154,7 +154,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
       },
     },
     {
-      id: 'email', header: 'Email',
+      id: 'email', header: 'Email', frozen: true,
       initialWidth: 245,
       minWidth: 190,
       wrap: 'break-word',
@@ -195,6 +195,7 @@ export function StaffTable({ result, summary, requestedState, barangayId, curren
       minWidth: 108,
       wrap: 'nowrap',
       render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatDateShort(r.date_hired)}</span>,
+      edit: { type: 'date', getValue: r => r.date_hired ?? '', canEdit: notSelf, onSave: (r, value) => String(value) ? updateOfficial(r, { date_hired: String(value) }) : Promise.resolve({ error: 'Hire date is required.' }) },
     },
     lifecycle.column,
   ];

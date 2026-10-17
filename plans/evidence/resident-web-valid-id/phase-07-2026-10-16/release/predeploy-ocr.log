@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/supabase/functions/extract-resident-id-ocrspace
+
+ ✓ handler.test.ts (26 tests) 55ms
+ ✓ adapter.test.ts (17 tests) 245ms
+
+ Test Files  2 passed (2)
+      Tests  43 passed (43)
+   Start at  15:50:15
+   Duration  1.09s (transform 196ms, setup 0ms, collect 237ms, tests 300ms, environment 0ms, prepare 497ms)
+

@@ -1,12 +1,13 @@
 import { createBrowserClient } from '@supabase/ssr';
 
 import { boundedAuthFetch, type Database } from '@barangayan/shared';
+import { getAuthCookieOptions } from './cookie-options';
 
 /** Supabase client for Client Components — safe to use only the public anon key here. */
 export function createSupabaseBrowserClient() {
   return createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { flowType: 'pkce' }, global: { fetch: boundedAuthFetch } },
+    { cookieOptions: getAuthCookieOptions(), auth: { flowType: 'pkce' }, global: { fetch: boundedAuthFetch } },
   );
 }

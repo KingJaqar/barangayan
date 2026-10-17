@@ -90,7 +90,6 @@ try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   page = await context.newPage(); page.setDefaultTimeout(20000);
   page.on('pageerror', error => report.pageErrors.push(error.message));
-  await page.addInitScript(id => localStorage.setItem(`barangayan-resident-web-onboarded:${id}`, '1'), accounts[0].id);
   await page.goto(base + '/login?next=%2Fhome');
   await page.getByLabel('Email', { exact: true }).fill(accounts[0].email);
   await page.getByLabel('Password', { exact: true }).fill(accounts[0].password);

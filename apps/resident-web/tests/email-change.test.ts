@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Database } from '@barangayan/shared';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { AuthApiError, AuthRetryableFetchError, type SupabaseClient } from '@supabase/supabase-js';
 
 const fx = vi.hoisted(() => ({
   auth: { getUser: vi.fn(), updateUser: vi.fn(), exchangeCodeForSession: vi.fn() },
@@ -35,6 +35,21 @@ describe('email change callback', () => {
     const response = await GET(new Request('https://resident.test/auth/email-change?code=test-code'));
     expect(fx.auth.exchangeCodeForSession).toHaveBeenCalledWith('test-code');
     expect(response.headers.get('location')).toBe('https://resident.test/settings/email-verification');
+    expect(JSON.parse(response.cookies.get('resident-web-callback-notice')?.value ?? '{}')).toMatchObject({ userId: user.id, kind: 'email-confirmed' });
+  });
+  it('reports changed only when the existing owned sync result confirms the requested address', async () => {
+    fx.auth.getUser.mockResolvedValueOnce({ data: { user: { ...user, new_email: 'new@example.test' } }, error: null })
+      .mockResolvedValue({ data: { user: { ...user, email: 'new@example.test' } }, error: null });
+    const response = await GET(new Request('https://resident.test/auth/email-change?code=test-code'));
+    expect(JSON.parse(response.cookies.get('resident-web-callback-notice')?.value ?? '{}')).toMatchObject({ userId: user.id, kind: 'email-changed' });
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=120');
+    expect(response.headers.get('set-cookie')).toContain('SameSite=lax');
+    expect(response.headers.get('location')).toBe('https://resident.test/settings/email-verification');
+  });
+  it('keeps two-inbox pending confirmation distinct from changed', async () => {
+    fx.auth.getUser.mockResolvedValue({ data: { user: { ...user, new_email: 'pending@example.test' } }, error: null });
+    const response = await GET(new Request('https://resident.test/auth/email-change?code=test-code'));
+    expect(JSON.parse(response.cookies.get('resident-web-callback-notice')?.value ?? '{}')).toMatchObject({ kind: 'email-pending' });
   });
   it.each(['?error=expired', '?code=a&code=b', '?code='])('rejects failed or malformed callbacks: %s', async query => {
     const response = await GET(new Request(`https://resident.test/auth/email-change${query}`));
@@ -75,6 +90,21 @@ describe('request email change', () => {
   it('reports rate limiting instead of claiming instructions were sent', async () => {
     fx.auth.updateUser.mockResolvedValue({ data: { user: null }, error: { status: 429 } });
     await expect(requestResidentEmailChange(client, user.id, user.email, 'new@example.test', 'https://resident.test')).rejects.toThrow('Please wait');
+  });
+  it.each([
+    ['returned rejection', new AuthApiError('internal provider detail', 400, 'email_exists'), false],
+    ['returned transport failure', new AuthRetryableFetchError('internal network detail', 0), true],
+  ] as const)('preserves safe result provenance for %s', async (_label, error, uncertain) => {
+    fx.auth.updateUser.mockResolvedValue({ data: { user: null }, error });
+    await expect(requestResidentEmailChange(client, user.id, user.email, 'new@example.test', 'https://resident.test')).rejects.toMatchObject({ uncertain });
+    expect(fx.auth.getUser).toHaveBeenCalledTimes(1);
+    expect(fx.auth.updateUser).toHaveBeenCalledTimes(1);
+    expect(fx.from).not.toHaveBeenCalled();
+  });
+  it('classifies a lost write response as uncertain without retrying', async () => {
+    fx.auth.updateUser.mockRejectedValue(new TypeError('synthetic lost reply'));
+    await expect(requestResidentEmailChange(client, user.id, user.email, 'new@example.test', 'https://resident.test')).rejects.toMatchObject({ uncertain: true });
+    expect(fx.auth.updateUser).toHaveBeenCalledTimes(1);
   });
 });
 

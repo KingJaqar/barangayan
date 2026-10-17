@@ -300,10 +300,6 @@ async function login(page, account) {
   await page.locator('input[type=password]').fill(account.password);
   await page.locator('form button[type=submit]').click();
   await page.waitForURL((u) => !u.pathname.startsWith('/login'), { timeout: 30000 });
-  if (new URL(page.url()).pathname === '/onboarding') {
-    const cont = page.getByRole('button', { name: /Continue to Barangayan|Get started|Skip/i }).first();
-    if (await cont.count()) { await cont.click(); await page.waitForURL((u) => u.pathname !== '/onboarding', { timeout: 20000 }).catch(() => {}); }
-  }
   return new URL(page.url()).pathname;
 }
 async function toastTexts(page) {
@@ -814,7 +810,7 @@ async function rwlt01(runName = 'verify') {
     await page.locator(sel).click();
     await page.waitForURL((u) => !u.pathname.startsWith('/login'), { timeout: 30000 });
     obs.successPath = new URL(page.url()).pathname;
-    check('successful login keeps existing destination', ['/home', '/onboarding'].includes(obs.successPath), obs.successPath);
+    check('successful login keeps existing destination', obs.successPath === '/home', obs.successPath);
   });
 
   await scenario('text-button-no-label-spinner', async (page, obs, check) => {
@@ -1228,7 +1224,7 @@ async function rwlt02(runName = 'verify') {
     obs.destination = new URL(page.url()).pathname;
     await page.waitForTimeout(800);
     obs.toastsAfterSignIn = (await liveToasts(page)).map((t) => t.text);
-    check('existing destination preserved', ['/home', '/onboarding'].includes(obs.destination), obs.destination);
+    check('existing destination preserved', obs.destination === '/home', obs.destination);
     check("guest-session failure toast cleared once the account session starts", !obs.toastsAfterSignIn.some((t) => LOGIN_FAILED.test(t)), obs.toastsAfterSignIn);
   });
 
@@ -2227,9 +2223,9 @@ async function rwlt04(runName = 'verify') {
     check('profile-check failure: stays on /login with usable controls and one error', profileFail.path === '/login' && !profileFail.button.disabled && obs.profileCheckFailure.toasts.length === 1, obs.profileCheckFailure);
     failProfiles = false;
     await page.locator('#password').press('Enter');
-    await page.waitForURL((u) => u.pathname === '/onboarding');
+    await page.waitForURL((u) => u.pathname === '/home');
     obs.retryDestination = new URL(page.url()).pathname;
-    check('retry after recovery follows the existing first-login destination (/onboarding)', obs.retryDestination === '/onboarding');
+    check('retry after recovery goes directly to /home', obs.retryDestination === '/home');
     await page.unroute('**/rest/v1/profiles*');
   });
 
@@ -2248,14 +2244,13 @@ async function rwlt04(runName = 'verify') {
       return r;
     };
     obs.populatedFirst = await dest(fx.accounts.populated, null);
-    await context.addInitScript((id) => { try { localStorage.setItem(`barangayan-resident-web-onboarded:${id}`, '1'); } catch {} }, fx.accounts.populated.id);
     obs.populatedNext = await dest(fx.accounts.populated, '/reports');
     obs.incompleteHome = await dest(fx.accounts.incomplete, null);
     obs.incompleteAction = await dest(fx.accounts.incomplete, '/reports/new');
-    check('first login on this browser → /onboarding', obs.populatedFirst.path === '/onboarding', obs.populatedFirst);
-    check('onboarded resident with ?next=/reports → /reports', obs.populatedNext.path === '/reports', obs.populatedNext);
+    check('first login on this browser → /home', obs.populatedFirst.path === '/home', obs.populatedFirst);
+    check('resident with ?next=/reports → /reports', obs.populatedNext.path === '/reports', obs.populatedNext);
     check('?next shows "continue where you left off"; plain /login keeps its copy', /where you left off/.test(obs.populatedNext.subtitle) && /continue to your account/.test(obs.populatedFirst.subtitle));
-    check('profile-completion-required resident → /home (browse) and /complete-profile for resident actions', obs.incompleteHome.path === '/onboarding' || obs.incompleteHome.path === '/home', obs.incompleteHome);
+    check('profile-completion-required resident → /home (browse) and /complete-profile for resident actions', obs.incompleteHome.path === '/home', obs.incompleteHome);
     check('profile-completion-required resident with ?next=/reports/new → /complete-profile', obs.incompleteAction.path === '/complete-profile', obs.incompleteAction);
   });
 
@@ -2605,24 +2600,16 @@ async function rwlt04(runName = 'verify') {
     await other.close();
   }, { account: 'populated' });
 
-  // 10. D-12: onboarding appearance choices preview immediately, without toasts.
-  await scenario('onboarding-quiet-appearance', async (page, obs, check) => {
-    await page.goto(`${BASE}/login`, { waitUntil: 'networkidle' });
-    await fillLogin(page, fx.accounts.populated.email, fx.accounts.populated.password);
-    await page.locator('#password').press('Enter');
-    await page.waitForURL((u) => u.pathname === '/onboarding');
-    await page.getByRole('heading', { level: 1 }).waitFor();
-    const swatches = page.locator('button[aria-label^="Accent "]');
-    const n = Math.min(3, await swatches.count());
-    for (let i = 0; i < n; i++) { await swatches.nth(i + 1).click(); await page.waitForTimeout(150); }
-    await page.getByRole('button', { name: 'dark' }).click();
-    await page.getByRole('button', { name: 'light' }).click();
-    const quiet = await noToastFor(page, 1200);
-    obs.choices = { accentsClicked: n, pressed: await page.locator('button[aria-label^="Accent "][aria-pressed=true]').count(), accentStored: await page.evaluate((k) => localStorage.getItem(k), ACCENT_KEY), quiet };
-    check('accent/theme picks: immediate preview (pressed + stored), zero toasts', quiet && obs.choices.pressed === 1 && obs.choices.accentStored, obs.choices);
-    await page.getByRole('button', { name: 'Continue to Barangayan' }).click();
-    await page.waitForURL((u) => u.pathname === '/home');
-    check('Continue → /home (existing destination)', true);
+  // Retired welcome links go directly to Home for guests and residents.
+  await scenario('removed-welcome-redirect', async (page, obs, check) => {
+    await page.goto(`${BASE}/onboarding`, { waitUntil: 'networkidle' });
+    obs.guestDestination = new URL(page.url()).pathname;
+    check('guest welcome bookmark → /home', obs.guestDestination === '/home');
+    await login(page, fx.accounts.populated);
+    await page.goto(`${BASE}/onboarding`, { waitUntil: 'networkidle' });
+    obs.residentDestination = new URL(page.url()).pathname;
+    check('resident welcome bookmark → /home', obs.residentDestination === '/home');
+    check('welcome screen is removed', await page.getByRole('button', { name: 'Continue to Barangayan' }).count() === 0);
   });
 
   // 11. D-07: home read failures (local REST briefly stopped) are not empty states.

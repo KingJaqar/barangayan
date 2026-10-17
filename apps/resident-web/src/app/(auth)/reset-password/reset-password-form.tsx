@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AUTH_MESSAGES, authErrorCode, authFailureKind, isBreachedPassword } from '@/lib/auth/auth-feedback';
-import { beginAttempt, notify } from '@/lib/notify';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { signOutBrowser } from '@/lib/auth/sign-out';
+import { notifyLoggedOut } from '@/lib/auth/session-feedback';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import type { SettingsRecoveryOwner, SettingsRecoveryResult } from '@/lib/auth/settings-recovery-contract';
 
 /**
@@ -32,33 +34,49 @@ export default function ResetPasswordForm({ settings }: { settings?: { owner: Se
   const busy = useRef(false);
   const active = useRef(true);
   const signingOut = useRef(false);
+  const finishBusy = useRef(false);
   const [accountChanged, setAccountChanged] = useState(false);
   const [updated, setUpdated] = useState(false);
   const [signOutPending, startSignOut] = useTransition();
   useEffect(() => {
     active.current = true;
-    if (!settings) return;
+    if (!settings) return () => { active.current = false; };
     const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((_event, session) => {
-      if (!signingOut.current && (session?.user.id !== settings.owner.userId || session.user.email !== settings.owner.email)) {
+      if ((session || !signingOut.current) && (session?.user.id !== settings.owner.userId || session.user.email !== settings.owner.email)) {
         active.current = false; setAccountChanged(true); setPassword(''); setConfirmPassword('');
       }
     });
     return () => { active.current = false; data.subscription.unsubscribe(); };
   }, [settings]);
 
-  async function finishSignOut() {
+  async function finishSignOut(combined = false) {
+    if (finishBusy.current || !active.current) return;
+    finishBusy.current = true;
+    const attempt = beginAttempt('recovery-logout');
     signingOut.current = true;
-    const outcome = await signOutBrowser('local');
-    if (outcome === 'failed') {
-      signingOut.current = false;
-      setError('Your password was updated, but we could not sign you out. Please try signing out again.');
-      return;
-    }
+    let loggedOut = false;
+    let logoutAttempt: OperationId | null = null;
     try {
+      const outcome = await signOutBrowser('local');
+      if (outcome === 'failed') {
+        signingOut.current = false;
+        if (active.current) setError('Your password was updated, but we could not sign you out. Please try signing out again.');
+        notify.error("Your password was updated, but we couldn't log you out. Please try again.", { id: attempt });
+        return;
+      }
+      loggedOut = true;
+      logoutAttempt = notifyLoggedOut(null);
       if (settings) await settings.finish();
-    } catch {
-      setError('Your password was updated and you are signed out. Please open Login to continue.');
-    }
+      notify.success(combined ? 'Password updated. Log in with your new password.' : 'Logged out.', { id: logoutAttempt, keepOnSessionChange: true });
+    } catch (cause) {
+      if (isRedirectError(cause)) {
+        if (logoutAttempt) notify.success(combined ? 'Password updated. Log in with your new password.' : 'Logged out.', { id: logoutAttempt, keepOnSessionChange: true });
+        throw cause;
+      }
+      if (logoutAttempt) notify.warning("You're logged out. Open Login to continue.", { id: logoutAttempt, keepOnSessionChange: true });
+      if (active.current) setError(loggedOut ? 'Your password was updated and you are signed out. Please open Login to continue.' : 'Your password was updated, but we could not sign you out. Please try signing out again.');
+      if (!loggedOut) notify.error("Your password was updated, but we couldn't log you out. Please try again.", { id: attempt });
+    } finally { finishBusy.current = false; }
   }
 
   async function handleUpdate(event: React.FormEvent) {
@@ -87,21 +105,26 @@ export default function ResetPasswordForm({ settings }: { settings?: { owner: Se
     try {
       if (settings) {
         const response = await settings.update(result.data.password, result.data.confirmPassword);
-        if (!active.current) return;
+        if (!active.current) { busy.current = false; return; }
         if (!response.ok) {
           setError(response.message);
+          if (response.kind === 'connection') notify.warning("We couldn't confirm the password change. Try logging in before resetting it again.", { id: attempt });
+          else notify.error("Couldn't update your password. Please try again.", { id: attempt, description: response.message });
           if (response.kind === 'session') setAccountChanged(true);
           busy.current = false; setLoading(false);
           return;
         }
         setPassword(''); setConfirmPassword(''); setUpdated(true); setLoading(false);
-        await finishSignOut();
+        try { await finishSignOut(true); }
+        finally { busy.current = false; }
         return;
       }
       ({ error: updateError } = await createSupabaseBrowserClient().auth.updateUser({ password: result.data.password }));
     } catch (cause) {
+      if (isRedirectError(cause)) throw cause;
       updateError = cause;
     }
+    if (!active.current) { busy.current = false; return; }
 
     if (updateError) {
       busy.current = false;
@@ -110,8 +133,8 @@ export default function ResetPasswordForm({ settings }: { settings?: { owner: Se
       const code = authErrorCode(updateError);
       if (kind === 'connection') {
         // The change may have been applied before the connection dropped.
-        setError("We couldn't confirm that your password was changed. Check your connection, then try again.");
-        notify.warning("Couldn't confirm the password change", { id: attempt, description: 'Check your connection, then try again.' });
+        setError("We couldn't confirm the password change. Try logging in before resetting it again.");
+        notify.warning("We couldn't confirm the password change. Try logging in before resetting it again.", { id: attempt });
       } else if (kind === 'session') {
         setSessionEnded(true);
         setError('Your reset session has ended. Request a new code to choose a password.');
@@ -145,7 +168,7 @@ export default function ResetPasswordForm({ settings }: { settings?: { owner: Se
     <div className="flex min-h-full flex-1 items-center justify-center p-6">
       <form onSubmit={event => { event.preventDefault(); startSignOut(() => handleUpdate(event)); }} className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-sm">
         <h1 className="mb-1 text-center text-2xl font-bold text-primary">Reset Password</h1>
-        {updated ? <div className="space-y-4"><p role="status">Password updated. Sign in with your new password.</p>{error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}<Button type="button" loading={signOutPending} onClick={() => startSignOut(finishSignOut)}>Sign out and continue to login</Button></div> : <>
+        {updated ? <div className="space-y-4"><p>Password updated. Sign in with your new password.</p>{error ? <p className="text-sm text-destructive">{error}</p> : null}<Button type="button" loading={signOutPending} onClick={() => startSignOut(() => finishSignOut())}>Sign out and continue to login</Button></div> : <>
         <p className="mb-6 text-center text-sm text-muted-foreground">
           Please create a strong, secure new password for your account.
         </p>

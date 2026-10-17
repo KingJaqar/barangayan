@@ -31,8 +31,9 @@ import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
 import { useSignOut } from '@/hooks/use-sign-out';
 import { AUTH_MESSAGES, authErrorCode, authFailureKind, isBreachedPassword, profileCompletionFailure } from '@/lib/auth/auth-feedback';
-import { signOutBrowser } from '@/lib/auth/sign-out';
-import { beginAttempt, notify, type OperationId } from '@/lib/notify';
+import { isIntentionalSignOut, signOutBrowser } from '@/lib/auth/sign-out';
+import { notifyLoggedOut } from '@/lib/auth/session-feedback';
+import { beginAttempt, eventId, notify, type OperationId } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -194,6 +195,17 @@ function focusFirstInvalid(errors: Record<string, string>) {
 export function RegisterForm({ completing = false }: { completing?: boolean }) {
   const router = useRouter();
   const submitting = useRef(false);
+  const mounted = useRef(true);
+  const registrationOwner = useRef<{ email: string; changed: boolean } | null>(null);
+  useEffect(() => {
+    mounted.current = true;
+    const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((event, session) => {
+      const owner = registrationOwner.current;
+      if (!owner || event === 'INITIAL_SESSION' || (!session && isIntentionalSignOut())) return;
+      if (session?.user.email?.trim().toLowerCase() !== owner.email) owner.changed = true;
+    });
+    return () => { mounted.current = false; data.subscription.unsubscribe(); };
+  }, []);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -321,7 +333,11 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
     submitting.current = true;
     setLoading(true);
     const attempt = beginAttempt(completing ? 'complete-profile' : 'register');
+    const owner = { email: email.trim().toLowerCase(), changed: false };
+    if (!completing) registrationOwner.current = owner;
+    let completionAttempt = attempt;
     let signUpSucceeded = false;
+    let signedOut = false;
     let navigating = false;
     try {
       const supabase = createSupabaseBrowserClient();
@@ -377,36 +393,49 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         return;
       }
 
+      if (owner.changed) return;
+
       if (!signUpData.session) {
         setError(
           'Account creation requires email confirmation, but that is not yet supported. Please contact support or try again later.',
         );
+        notify.warning('Your account needs email confirmation. Contact barangay support for help.', { id: attempt });
         return;
       }
 
       // The account exists from here on, whatever the local sign-out below reports.
       signUpSucceeded = true;
+      // Signup intentionally changes the guest session. Correlate its completion
+      // before sign-out, so a failed sign-out can still report the created account.
+      completionAttempt = eventId('account-created', signUpData.session.user.id, attempt);
       // Local scope only — clears this device's session without revoking tokens
       // elsewhere. The resident must go through Login explicitly afterward.
-      await signOutBrowser('local');
+      signedOut = await signOutBrowser('local') !== 'failed';
     } catch {
       // No answer came back, so the write may or may not have completed.
-      if (completing) {
-        setError(UNCONFIRMED_PROFILE);
-        notify.warning(UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' });
-      } else {
-        setError(UNCONFIRMED_SIGN_UP);
-        notify.warning(UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' });
+      if (!signUpSucceeded && !owner.changed) {
+        if (completing) {
+          if (mounted.current) setError(UNCONFIRMED_PROFILE);
+          notify.warning(UNCONFIRMED_PROFILE_TITLE, { id: attempt, description: 'Check your connection, then submit again.' });
+        } else {
+          if (mounted.current) setError(UNCONFIRMED_SIGN_UP);
+          notify.warning(UNCONFIRMED_SIGN_UP_TITLE, { id: attempt, description: 'Try logging in with this email before registering again.' });
+        }
       }
     } finally {
       if (!navigating) {
         submitting.current = false;
-        setLoading(false);
+        if (mounted.current) setLoading(false);
       }
-      if (signUpSucceeded && result.success) {
-        setSuccessEmail(result.data.email);
-        setShowSuccessModal(true);
+      if (signUpSucceeded && result.success && !owner.changed) {
+        if (signedOut) notifyLoggedOut('Account created. Log in to continue.');
+        else notify.success('Account created. Log in to continue.', { id: completionAttempt });
+        if (mounted.current) {
+          setSuccessEmail(result.data.email);
+          setShowSuccessModal(true);
+        }
       }
+      registrationOwner.current = null;
     }
   }
 
