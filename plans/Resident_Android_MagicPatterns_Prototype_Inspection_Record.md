@@ -106,7 +106,7 @@ Newly verified source distinctions that refine implementation targets:
 - Reduced-motion handling exists in selected sheet/About components, not every inspected control. Global native accessibility compliance remains proposed work, not an observed prototype property.
 - Current Android preserves stack slides/bottom fades and persistent Search expansion; those are explicit adaptations rather than verified prototype transitions.
 
-MP-00 should record opening, exit, interruption, reduced-motion and final-state evidence per adopted motion ID. The specification defines proposed frame/timing/visual tolerances; none has been tested yet. No “bug-free,” smooth or production-ready claim is supported by this record.
+Phase 0 should record opening, exit, interruption, reduced-motion and final-state evidence per adopted motion ID. The specification defines proposed frame/timing/visual tolerances; none has been tested yet. No “bug-free,” smooth or production-ready claim is supported by this record.
 
 ### Fresh Brave capture session
 
@@ -135,5 +135,7 @@ The main plan now states the user's exact-screen-plus-smooth-animation requireme
 No browser/UI defect found in the prototype is automatically an application bug or permission for a backend fix. The plan remains limited to resident Android frontend presentation, with explicit preservation of current functionality and unrelated work.
 
 ## Planning-document validation
+
+Phase naming was subsequently standardized to **Phase 0–16** across the implementation plan, motion work packets, dependency references and this record. This renames the existing 17 work packets without adding implementation scope, changing their order or reopening the cancelled usability phase in another plan. The main plan now consolidates mandatory engineering acceptance requirements; those are future implementation gates, not completed test results.
 
 The earlier source revision checked 131 local links. After adding fresh capture evidence, **all 180 local links** across the implementation plan, this record, the motion/fidelity specification and capture index resolved. All 22 derived GIFs decoded; the raw capture count is 624. The motion inventory remains M01–M16. Content hashes still matched the pre-edit baseline for Android `src`, shared `src`, the Android package manifest and repository lockfile. No application edits, dependency changes, cleanup deletions, native runs or project test execution were performed. Document/media checks do not qualify the future implementation.

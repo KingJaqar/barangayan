@@ -86,7 +86,7 @@ export function fieldValue(row: RecordData, field: RecordField) {
 export function recordFields(name: TableName, row: RecordData): RecordField[] {
   if (name === 'requests' && row.contract_version === 2) return [
     ...RECORD_CONFIG.requests.fields.map(field => field.key === 'resident_id' || field.key === 'document_type_id' ? { ...field, readOnly: true }
-      : field.key === 'status' ? { ...field, options: requestStatusOptions(row) } : field),
+      : field.key === 'status' ? { ...field, options: requestStatusOptions({ status: row.status, sla_state: row.sla_state }) } : field),
     { key: 'status_change_reason', label: 'Status change reason', type: 'textarea' },
   ];
   if (name === 'transactions' && row.status !== 'pending') return RECORD_CONFIG.transactions.fields.filter(field => field.key !== 'amount_centavos');
