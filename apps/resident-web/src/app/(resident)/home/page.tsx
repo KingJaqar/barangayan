@@ -153,7 +153,7 @@ export default async function ResidentHomePage() {
               </div>
               <div className={styles.panelBody}>
                 {requestsError ? (
-                  <ReadFailure message="We couldn't load your recent requests." />
+                  <ReadFailure resultId={crypto.randomUUID()} contentName="your recent requests" message="We couldn't load your recent requests." />
                 ) : recentRequests && recentRequests.length > 0 ? (
                   <ul>
                     {recentRequests.map((r) => (
@@ -190,7 +190,7 @@ export default async function ResidentHomePage() {
               </div>
               <div className={styles.panelBody}>
                 {reportsError ? (
-                  <ReadFailure message="We couldn't load your recent reports." />
+                  <ReadFailure resultId={crypto.randomUUID()} contentName="your recent reports" message="We couldn't load your recent reports." />
                 ) : recentReports && recentReports.length > 0 ? (
                   <ul>
                     {recentReports.map((r) => (
@@ -226,7 +226,7 @@ function LatestAnnouncement({ announcement, failed }: { announcement: Parameters
   if (failed) {
     return (
       <div className={`${styles.announcement} ${styles.announcementReadFailure}`}>
-        <ReadFailure message="We couldn't load the latest announcement." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="the latest announcement" message="We couldn't load the latest announcement." />
       </div>
     );
   }

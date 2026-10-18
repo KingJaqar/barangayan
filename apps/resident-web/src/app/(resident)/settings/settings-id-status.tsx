@@ -4,11 +4,12 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { idVerificationState, type Tables } from '@barangayan/shared';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { abortable, createIdClient } from './valid-id/transport';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 type IdProfile = Pick<Tables<'profiles'>, 'id' | 'role' | 'deleted_at' | 'id_verification_status' | 'current_id_submission_id' | 'approved_id_submission_id' | 'id_repair_required'>;
-type Status = { owner: string | null; profile: IdProfile | null; loading: boolean; error: string | null; access: boolean; reason: string | null };
-const initial: Status = { owner: null, profile: null, loading: true, error: null, access: false, reason: null };
-const Context = createContext<(Status & { refresh: () => Promise<void>; isOwner: (id: string) => boolean }) | null>(null);
+type Status = { owner: string | null; profile: IdProfile | null; loading: boolean; error: string | null; errorAnnounced: boolean; access: boolean; reason: string | null };
+const initial: Status = { owner: null, profile: null, loading: true, error: null, errorAnnounced: false, access: false, reason: null };
+const Context = createContext<(Status & { refresh: (explicit?: boolean) => Promise<void>; isOwner: (id: string) => boolean }) | null>(null);
 
 /** One Settings owner for auth, focus, Realtime and coalesced ID-status reads. */
 export function SettingsIdStatusProvider({ children }: { children: ReactNode }) {
@@ -18,7 +19,9 @@ export function SettingsIdStatusProvider({ children }: { children: ReactNode }) 
   const active = useRef<AbortController | null>(null);
   const inFlight = useRef<Promise<void> | null>(null);
   const queued = useRef(false);
-  const refresh = useCallback(function refreshStatus(): Promise<void> {
+  const feedback = useRef<{ owner: string; id: OperationId } | null>(null);
+  const refresh = useCallback(function refreshStatus(explicit = false): Promise<void> {
+    if (explicit && owner.current) feedback.current = { owner: owner.current, id: beginAttempt('id-status-retry') };
     if (inFlight.current) { queued.current = true; return inFlight.current; }
     const id = owner.current;
     if (!id) return Promise.resolve();
@@ -26,7 +29,7 @@ export function SettingsIdStatusProvider({ children }: { children: ReactNode }) 
     const controller = new AbortController();
     active.current = controller;
     const timer = setTimeout(() => controller.abort(), 10000);
-    setStatus(previous => ({ ...previous, profile: null, loading: true, error: null, reason: null }));
+    setStatus(previous => ({ ...previous, profile: null, loading: true, error: null, errorAnnounced: false, reason: null }));
     const work = (async () => {
       try {
         const client = createIdClient(controller.signal);
@@ -44,10 +47,16 @@ export function SettingsIdStatusProvider({ children }: { children: ReactNode }) 
         }
         if (generation.current !== ticket || owner.current !== id) return;
         const access = (data.role === 'resident' || data.role === 'admin') && data.deleted_at === null;
-        setStatus({ owner: id, profile: access ? data : null, access, loading: false, error: access ? null : 'Sign in with an active resident account to submit an ID.', reason });
+        const attempt = feedback.current?.owner === id ? feedback.current.id : null;
+        feedback.current = null;
+        if (!access && attempt) notify.error("Couldn't refresh ID verification status. Please try again.", { id: attempt });
+        setStatus({ owner: id, profile: access ? data : null, access, loading: false, error: access ? null : 'Sign in with an active resident account to submit an ID.', errorAnnounced: !access && attempt !== null, reason });
       } catch (cause) {
         if (generation.current !== ticket || owner.current !== id) return;
-        setStatus({ owner: id, profile: null, access: false, loading: false, reason: null,
+        const attempt = feedback.current?.owner === id ? feedback.current.id : null;
+        feedback.current = null;
+        if (attempt) notify.error("Couldn't refresh ID verification status. Please try again.", { id: attempt });
+        setStatus({ owner: id, profile: null, access: false, loading: false, reason: null, errorAnnounced: attempt !== null,
           error: cause instanceof Error && cause.message === 'auth' ? 'Sign in again to access your ID verification.' : 'Verification status is temporarily unavailable. Please try again.' });
       } finally {
         clearTimeout(timer);
@@ -78,6 +87,7 @@ export function SettingsIdStatusProvider({ children }: { children: ReactNode }) 
       active.current?.abort();
       inFlight.current = null;
       queued.current = false;
+      feedback.current = null;
       if (channel) void client.removeChannel(channel);
       channel = null;
       owner.current = next;

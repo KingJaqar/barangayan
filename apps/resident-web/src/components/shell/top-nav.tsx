@@ -23,20 +23,16 @@ const NAV_ITEMS = [
   { href: '/settings', label: 'Settings', icon: Settings, exact: false, badge: null },
 ] as const;
 
-/** Desktop-width top nav — same 8 destinations as bottom-tab-bar.tsx, shown at sm+
- * widths instead of the fixed bottom bar. Emergency is a website-only addition (not in
- * the mobile app's tab set, which folds it into "Maps") — placed right after Home per
- * request, since it's the one destination worth surfacing before anything else.
- * Announcements is likewise website-only (mobile nests it as a sub-tab of Reports) —
- * placed right after Reports per request. */
-export function TopNav() {
+/** Share destination styling and behavior between the main and account navigation. */
+export function TopNav({ group = 'main' }: { group?: 'main' | 'account' }) {
   const pathname = usePathname();
   const { activeReportsCount, resolvedUnreadCount, announcementsUnreadCount } = useUnreadCounts();
   const reportsBadgeCount = activeReportsCount + resolvedUnreadCount;
 
   return (
-    <nav aria-label="Main navigation" className={styles.nav}>
-      {NAV_ITEMS.map(({ href, label, icon: Icon, exact, badge }) => {
+    <nav aria-label={group === 'account' ? 'Account navigation' : 'Main navigation'} className={group === 'account' ? styles.accountNav : styles.nav}>
+      {NAV_ITEMS.filter(({ href }) => group === 'main' || href === '/announcements' || href === '/settings').map(({ href, label, icon: Icon, exact, badge }) => {
+        const accountDestination = href === '/announcements' || href === '/settings';
         const active = exact ? pathname === href : pathname.startsWith(href);
         const badgeCount = badge === 'reports' ? reportsBadgeCount : badge === 'announcements' ? announcementsUnreadCount : 0;
         return (
@@ -45,10 +41,10 @@ export function TopNav() {
             href={href}
             aria-label={badgeCount > 0 ? `${label}, ${badgeCount} ${badge === 'reports' ? 'report updates' : 'unread announcements'}` : label}
             aria-current={active ? 'page' : undefined}
-            className={styles.navLink}>
+            className={`${styles.navLink} ${group === 'main' && accountDestination ? styles.compactNavLink : ''}`}>
             {active ? (
               <motion.span
-                layoutId="top-nav-pill"
+                layoutId={`top-nav-pill-${group}`}
                 className={styles.navPill}
                 transition={{ type: 'spring', bounce: 0.25, duration: 0.35 }}
               />

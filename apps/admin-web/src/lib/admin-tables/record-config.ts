@@ -1,9 +1,11 @@
 import { DRIVE_TYPES, DRIVE_TYPE_CONFIG, OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, EMPLOYMENT_STATUSES, EMAIL_REGEX, MOBILE_NUMBER_REGEX } from '@barangayan/shared';
 import type { TableName } from './table-configs';
+import { REQUEST_PAYMENT_METHOD_OPTIONS, REQUEST_PAYMENT_STATUS_OPTIONS } from '../request-payment-fields';
+import { requestStatusOptions } from '../request-edit-fields';
 
 export type RecordData = { id: string; updated_at?: string; deleted_at?: string | null } & Record<string, unknown>;
 export type RecordField = { key: string; label: string; type?: 'text' | 'textarea' | 'number' | 'date' | 'time' | 'datetime' | 'coordinates' | 'boolean' | 'list' | 'select';
-  required?: boolean; min?: number; max?: number; options?: readonly { value: string; label: string }[]; source?: 'profile'; lookup?: 'residents' | 'documents' | 'admins' | 'categories' };
+  required?: boolean; readOnly?: boolean; min?: number; max?: number; options?: readonly { value: string; label: string }[]; source?: 'profile'; lookup?: 'residents' | 'documents' | 'admins' | 'categories' };
 const text = (key: string, label: string, required = false): RecordField => ({ key, label, required });
 const select = (key: string, label: string, values: string[]): RecordField => ({ key, label, type: 'select', required: true,
   options: values.map(value => ({ value, label: value.replaceAll('_', ' ') })) });
@@ -15,7 +17,8 @@ export const RECORD_CONFIG: Record<TableName, { label: string; path: string; ent
     { key: 'document_type_id', label: 'Document type', type: 'select', required: true, lookup: 'documents' },
     select('status', 'Status', ['submitted', 'in_progress', 'ready_for_pickup', 'completed', 'cancelled']),
     { key: 'requester_notes', label: 'Notes', type: 'textarea' },
-    select('payment_status', 'Payment status', ['pending', 'paid', 'waived']), select('payment_method', 'Payment method', ['pickup', 'qrph']),
+    { key: 'payment_method', label: 'Payment method', type: 'select', required: true, options: REQUEST_PAYMENT_METHOD_OPTIONS },
+    { key: 'payment_status', label: 'Payment status', type: 'select', required: true, options: REQUEST_PAYMENT_STATUS_OPTIONS },
     { key: 'created_at', label: 'Submitted on', type: 'datetime', required: true },
   ] },
   transactions: { label: 'Transactions', path: '/transactions', entity: 'payment', fields: [
@@ -80,11 +83,17 @@ export function fieldValue(row: RecordData, field: RecordField) {
   if (field.key === 'linked_document_type_id') return request?.document_type_id;
   return row[field.key];
 }
-export function editableFields(name: TableName, row: RecordData): RecordField[] {
-  // Version 2 requests use the existing assessment/review workflow; paid amounts are ledger snapshots.
-  if (name === 'requests' && row.contract_version === 2) return RECORD_CONFIG.requests.fields.filter(field => field.key === 'payment_method');
+export function recordFields(name: TableName, row: RecordData): RecordField[] {
+  if (name === 'requests' && row.contract_version === 2) return [
+    ...RECORD_CONFIG.requests.fields.map(field => field.key === 'resident_id' || field.key === 'document_type_id' ? { ...field, readOnly: true }
+      : field.key === 'status' ? { ...field, options: requestStatusOptions(row) } : field),
+    { key: 'status_change_reason', label: 'Status change reason', type: 'textarea' },
+  ];
   if (name === 'transactions' && row.status !== 'pending') return RECORD_CONFIG.transactions.fields.filter(field => field.key !== 'amount_centavos');
   return RECORD_CONFIG[name].fields;
+}
+export function editableFields(name: TableName, row: RecordData): RecordField[] {
+  return recordFields(name, row).filter(field => !field.readOnly);
 }
 export function recordDraft(name: TableName, row: RecordData): Record<string, unknown> {
   return Object.fromEntries(editableFields(name, row).map(field => {
@@ -146,6 +155,8 @@ export function validateRecordPatch(name: TableName, row: RecordData, input: unk
   }
   if (!Object.keys(patch).length) throw new Error('There are no editable changes to save.');
   const next = { ...row, ...patch };
+  if (name === 'requests' && row.contract_version === 2 && patch.status === 'cancelled' && row.status !== 'cancelled' && !String(patch.status_change_reason ?? '').trim())
+    throw new Error('Enter a reason for cancelling the request.');
   if (patch.email && !EMAIL_REGEX.test(String(patch.email))) throw new Error('Enter a valid email address.');
   if (patch.mobile_number && !MOBILE_NUMBER_REGEX.test(String(patch.mobile_number))) throw new Error('Enter an 11-digit mobile number starting with 09.');
   if (name === 'health' && Number(next.stock_remaining) > Number(next.stock_total)) throw new Error('Remaining stock cannot exceed total stock.');

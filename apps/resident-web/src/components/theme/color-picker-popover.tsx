@@ -11,6 +11,7 @@
 
 import { Pipette } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
 
 // ─── color math ────────────────────────────────────────────────────────────
 
@@ -134,6 +135,9 @@ export function ColorPickerSwatch({
 function ColorPickerPanel({ initialColor, onChange }: { initialColor: string; onChange: (hex: string) => void }) {
   const svRef = useRef<HTMLDivElement>(null);
   const hueRef = useRef<HTMLDivElement>(null);
+  const picking = useRef(false);
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
 
   const [{ h: hue, s: sat, v: val }, setHsv] = useState(() => hexToHsv(initialColor));
 
@@ -172,14 +176,18 @@ function ColorPickerPanel({ initialColor, onChange }: { initialColor: string; on
   const eyeDropperSupported = typeof window !== 'undefined' && !!window.EyeDropper;
 
   async function handleEyedropper() {
-    if (!window.EyeDropper) return;
+    if (!window.EyeDropper || picking.current) return;
+    picking.current = true;
+    const attempt = beginAttempt('screen-color');
     try {
       const result = await new window.EyeDropper().open();
+      if (!mounted.current) return;
       const hsv = hexToHsv(result.sRGBHex);
       applyHsv(hsv.h, hsv.s, hsv.v);
-    } catch {
-      // User cancelled the screen pick — no-op.
-    }
+    } catch (cause) {
+      if (cause instanceof DOMException && cause.name === 'AbortError') return;
+      if (mounted.current) notify.error("Couldn't pick a screen color. Choose a color manually.", { id: attempt });
+    } finally { picking.current = false; }
   }
 
   return (

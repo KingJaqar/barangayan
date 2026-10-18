@@ -34,6 +34,8 @@ import { ServiceScreenHeader } from '@/components/services/service-screen-header
 import { ServiceErrorToast } from '@/components/services/service-error-toast';
 import { ThemedText } from '@/components/themed-text';
 import { TextField } from '@/components/text-field';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
@@ -62,6 +64,7 @@ function Field({
   onLayout?: (event: LayoutChangeEvent) => void;
 }) {
   const theme = useTheme();
+  const { fontId } = useFontPreference();
   return (
     <View style={styles.field} onLayout={onLayout}>
       <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
@@ -74,7 +77,7 @@ function Field({
         multiline={!numeric}
         editable={!disabled}
         error={error}
-        style={error ? { borderColor: theme.accentRed, borderWidth: 1.5 } : undefined}
+        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.accentRed, borderWidth: 1.5 } : undefined]}
       />
     </View>
   );
@@ -306,8 +309,8 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
     </View>
   );
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
-      <ServiceScreenHeader title="Request Document" backLabel="Back to document" />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.primary }}>
+      <ServiceScreenHeader title="Request Document" backLabel="Back to document" compact />
       <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <View style={styles.hero}>
@@ -328,16 +331,14 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
               <ThemedText type="heading" style={styles.cardTitle}>
                 Resident Details
               </ThemedText>
+              <View style={styles.inlineAction}>
+                <PrimaryButton label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
+              </View>
             </View>
-            <ThemedText>
+            <ThemedText type="small">
               {profile?.full_name ?? 'Loading resident details…'} ·{' '}
               {profile?.mobile_number ?? 'No mobile number on file'}
             </ThemedText>
-            <PrimaryButton
-              label="Edit in Profile"
-              variant="secondary"
-              onPress={() => router.push('/settings/profile')}
-            />
           </View>
           <View style={[styles.card, { borderColor: theme.backgroundSelected }]}>
             <View style={styles.cardTitleRow}>
@@ -346,15 +347,15 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
                 Approved profile ID
               </ThemedText>
             </View>
-            <ThemedText themeColor="textSecondary">
+            <ThemedText type="small" themeColor="textSecondary">
               {verificationError ?? (isLoading ? 'Checking verification…' : idVerificationMessages[idVerificationState(profile)])}
             </ThemedText>
             {approved && approved.id === approvedId ? (
               <>
-                <ThemedText>
+                <ThemedText type="small">
                   {profile?.full_name} · {profile?.mobile_number}
                 </ThemedText>
-                <ThemedText>
+                <ThemedText type="small">
                   {approved.id_type} · version {approved.version}
                 </ThemedText>
                 <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -364,7 +365,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
                       source={{ uri }}
                       accessibilityLabel={`Approved ID ${index === 0 ? 'front' : 'back'}`}
                       contentFit="contain"
-                      style={{ flex: 1, height: 120, borderRadius: 12 }}
+                      style={{ flex: 1, height: 96, borderRadius: 12 }}
                     />
                   ))}
                 </View>
@@ -486,24 +487,26 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   );
 }
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: 24, paddingTop: 24, gap: 16, paddingBottom: 32 },
-  hero: { gap: 12, marginBottom: 4 },
-  heroTitle: { fontSize: 28, lineHeight: 34, fontWeight: '700', letterSpacing: -0.4 },
+  content: { paddingHorizontal: 16, paddingTop: 16, gap: 12, paddingBottom: 24 },
+  hero: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 },
+  heroTitle: { flexGrow: 1, flexShrink: 1, fontSize: 22, lineHeight: 28, fontWeight: '700', letterSpacing: -0.4 },
   priceChip: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: 6,
     maxWidth: '100%',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 999,
   },
-  field: { gap: 8 },
+  field: { gap: 4 },
+  input: { minHeight: 44 },
   invalid: { borderWidth: 1.5, borderRadius: 12, padding: 4 },
-  card: { padding: 16, borderWidth: 1, borderRadius: 16, gap: 12 },
-  cardTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  cardTitle: { fontSize: 18, lineHeight: 24 },
+  card: { padding: 12, borderWidth: 1, borderRadius: 12, gap: 8 },
+  cardTitleRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 },
+  cardTitle: { flexShrink: 1, fontSize: 16, lineHeight: 22 },
+  inlineAction: { marginLeft: 'auto', minWidth: 112 },
   toggle: {
     minHeight: 56,
     flexDirection: 'row',
@@ -517,8 +520,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   footerPrice: { flex: 1 },

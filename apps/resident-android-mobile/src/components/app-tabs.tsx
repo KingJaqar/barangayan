@@ -1,200 +1,114 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Tabs, TabList, TabTrigger, TabSlot, type TabTriggerSlotProps } from 'expo-router/ui';
-import { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing } from 'react-native-reanimated';
+import { Tabs } from 'expo-router';
+import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import { useEffect, useState } from 'react';
+import { Keyboard, Platform, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { CountBadge } from '@/components/count-badge';
+import { DrrmTabIcon } from '@/components/drrm-tab-icon';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useUnreadCounts } from '@/hooks/use-unread-counts';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 
-/** Base Ionicons name per tab — the outline variant is used when inactive and the solid
- * fill when active, which is what makes the selected tab read at a glance even before
- * you notice the color. */
-type TabIcon = 'home' | 'clipboard' | 'location' | 'heart' | 'notifications' | 'settings';
-
-// 6-tab bottom bar confirmed against the design file (see the plan's Design Reference
-// Review) — Home, Services, Maps, Health, Reports, Settings. "Maps" is the Emergency &
-// DRRM Info section under a shorter tab label; "Reports" is the Incident Reporting
-// section (titled "Reports and Announcements" — Announcements lives as a sub-tab there,
-// not its own bottom-tab item).
-//
-// Built on expo-router/ui's custom-tabs primitives — the same foundation
-// app-tabs.web.tsx already used — instead of NativeTabs (expo-router/unstable-native-
-// tabs). NativeTabs renders the OS's own native tab bar, which supports at most one
-// system-styled badge per tab; the Reports tab needs three simultaneously-visible,
-// independently-colored badges (active/resolved/announcements unread counts) stacked
-// above one icon, which a native tab bar cannot render. Rebuilding on custom tabs also
-// puts native and web on the same rendering model instead of two different tab-bar
-// technologies, per the requirement.
-export default function AppTabs() {
+const TABS = [
+  { name: 'home', label: 'Home', icon: 'home' },
+  { name: 'services', label: 'Services', icon: 'clipboard' },
+  { name: 'drrm', label: 'DRRM' },
+  { name: 'maps', label: 'Maps', icon: 'location' },
+  { name: 'health', label: 'Health', icon: 'heart' },
+  { name: 'reports', label: 'Reports', icon: 'warning' },
+] as const;
+export default function ResidentTabs() {
+  const theme = useTheme();
+  const reducedMotion = useReducedMotion();
+  return <Tabs
+    initialRouteName="home"
+    backBehavior="history"
+    tabBar={props => <FloatingTabBar {...props} />}
+    screenOptions={{
+      headerShown: false,
+      // Switching Android tabs should replace the scene in place. Crossfading
+      // different layouts briefly overlays the outgoing content under the new
+      // header and makes the screen appear to jump. The bar indicator still slides.
+      animation: Platform.OS === 'android' || reducedMotion ? 'none' : 'fade',
+      sceneStyle: { backgroundColor: theme.background },
+    }}>
+    {TABS.map(tab => <Tabs.Screen key={tab.name} name={tab.name} options={{ title: tab.label }} />)}
+    <Tabs.Screen name="settings" options={{ href: null }} />
+    <Tabs.Screen name="announcements" options={{ href: null }} />
+    <Tabs.Screen name="search" options={{ href: null }} />
+  </Tabs>;
+}
+function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-
-  return (
-    <Tabs>
-      <TabSlot />
-      <TabList asChild>
-        {/* StyleSheet.flatten is required, not cosmetic: TabList asChild renders its
-            child through expo-router's <Slot>, which throws in dev if that child's
-            `style` prop is an array ("You are passing an array of styles to a child of
-            <Slot>"). Keep this a single flattened object. */}
-        <View
-          style={StyleSheet.flatten([
-            styles.bar,
-            {
-              backgroundColor: theme.background,
-              borderTopColor: theme.backgroundSelected,
-              paddingBottom: Math.max(insets.bottom, Spacing.two),
-            },
-          ])}>
-          <TabTrigger name="home" href="/home" asChild>
-            <TabButton icon="home">Home</TabButton>
-          </TabTrigger>
-          <TabTrigger name="services" href="/services" asChild>
-            <TabButton icon="clipboard">Services</TabButton>
-          </TabTrigger>
-          <TabTrigger name="maps" href="/maps" asChild>
-            <TabButton icon="location">Maps</TabButton>
-          </TabTrigger>
-          <TabTrigger name="health" href="/health" asChild>
-            <TabButton icon="heart">Health</TabButton>
-          </TabTrigger>
-          <TabTrigger name="reports" href="/reports" asChild>
-            <TabButton icon="notifications" showUnreadBadges>
-              Reports
-            </TabButton>
-          </TabTrigger>
-          <TabTrigger name="settings" href="/settings" asChild>
-            <TabButton icon="settings">Settings</TabButton>
-          </TabTrigger>
-        </View>
-      </TabList>
-    </Tabs>
-  );
-}
-
-function TabButton({
-  children,
-  icon,
-  isFocused,
-  showUnreadBadges,
-  ...props
-}: TabTriggerSlotProps & {
-  icon: TabIcon;
-  /** Only the Reports tab renders the three live-count badges above its icon. */
-  showUnreadBadges?: boolean;
-}) {
-  const theme = useTheme();
-  const color = isFocused ? theme.primary : theme.textSecondary;
-  // Cheap context read (no new subscriptions) — safe to call even on tabs that don't
-  // render the badges, keeping this one component's hook usage unconditional.
-  const { activeReportsCount, resolvedUnreadCount, announcementsUnreadCount } = useUnreadCounts();
-
-  // 0 = inactive, 1 = active. One shared value drives the pill and the icon lift together
-  // so they can never animate out of step.
-  const progress = useSharedValue(isFocused ? 1 : 0);
+  const floatingInset = useFloatingTabInset();
+  const { activeReportsCount, resolvedUnreadCount } = useUnreadCounts();
+  const [keyboardVisible, setKeyboardVisible] = useState(Keyboard.isVisible());
+  const [width, setWidth] = useState(0);
+  const selected = TABS.findIndex(tab => tab.name === state.routes[state.index].name);
+  const position = useSharedValue(Math.max(0, selected));
+  const opacity = useSharedValue(selected >= 0 ? 1 : 0);
   useEffect(() => {
-    progress.value = withTiming(isFocused ? 1 : 0, {
-      duration: 220,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [isFocused, progress]);
-
-  // The highlight pill grows horizontally out of the icon rather than just fading, which
-  // reads as the selection moving between tabs instead of two unrelated cross-fades.
-  const pillStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [{ scaleX: 0.55 + progress.value * 0.45 }],
+    position.value = withTiming(Math.max(0, selected), { duration: 220 });
+    opacity.value = withTiming(selected >= 0 ? 1 : 0, { duration: 160 });
+  }, [selected, position, opacity]);
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
+  const indicator = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateX: position.value * width / TABS.length }],
   }));
-
-  // Slight lift + scale on the icon itself — the part that makes the bar feel responsive
-  // rather than static.
-  const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: -2 * progress.value }, { scale: 1 + 0.08 * progress.value }],
-  }));
-
-  return (
-    <Pressable
-      {...props}
-      accessibilityRole="button"
-      accessibilityState={{ selected: isFocused }}
-      style={({ pressed }) => [styles.tabButton, pressed && styles.pressed]}>
-      <View style={styles.iconArea}>
-        {/* Highlight sits behind the icon. `${color}2E` is ~18% alpha — the same
-            hex-suffix alpha convention SettingsIcon and StatusBadge already use. */}
-        <Animated.View
-          style={[styles.pill, { backgroundColor: `${theme.primary}2E` }, pillStyle]}
-          pointerEvents="none"
-        />
-        <Animated.View style={iconStyle} pointerEvents="none">
-          <Ionicons name={isFocused ? icon : `${icon}-outline`} size={22} color={color} />
-        </Animated.View>
-
-        {showUnreadBadges && (
-          <View style={styles.badgeRow} pointerEvents="none">
-            <CountBadge count={activeReportsCount} background={theme.accentOrange} />
-            <CountBadge count={resolvedUnreadCount} background={theme.accentGreen} />
-            <CountBadge count={announcementsUnreadCount} background={theme.accentRed} />
-          </View>
-        )}
-      </View>
-
-      <ThemedText
-        type={isFocused ? 'smallBold' : 'small'}
-        numberOfLines={1}
-        style={[styles.label, { color }]}>
-        {children}
-      </ThemedText>
-    </Pressable>
-  );
+  if (keyboardVisible || !floatingInset) return null;
+  return <View pointerEvents="box-none" style={{
+    backgroundColor: 'transparent',
+    ...(floatingInset ? { position: 'absolute', bottom: 0, left: 0, right: 0 } as const : {}),
+    paddingBottom: Math.max(insets.bottom, 8),
+    paddingHorizontal: 12 + Math.max(insets.left, insets.right),
+    paddingTop: 8,
+  }}>
+    {/* Root screens scroll beneath the bar and reserve clearance for their controls. */}
+    <View style={[styles.bar, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}
+      onLayout={event => setWidth(event.nativeEvent.layout.width - 2)}>
+      <Animated.View pointerEvents="none"
+        style={[styles.indicator, { width: width / TABS.length, backgroundColor: `${theme.primary}24` }, indicator]} />
+      {TABS.map((tab, index) => {
+        const route = state.routes.find(route => route.name === tab.name);
+        if (!route) return null;
+        const active = selected === index;
+        const color = active ? theme.primary : theme.textSecondary;
+        return <Pressable key={tab.name} accessibilityRole="tab" accessibilityLabel={tab.label}
+          accessibilityState={{ selected: active }} style={styles.tab}
+          onPress={() => {
+            const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+            if (!event.defaultPrevented && !active) navigation.navigate(route.name);
+          }}
+          onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}>
+          {tab.name === 'drrm' ? <DrrmTabIcon color={color} /> : (
+            <Ionicons name={active ? tab.icon : `${tab.icon}-outline`} size={23} color={color} />
+          )}
+          <ThemedText type={active ? 'smallBold' : 'small'} numberOfLines={1}
+            style={[styles.label, { color }]}>{tab.label}</ThemedText>
+          {tab.name === 'reports' ? (
+            <View style={styles.badges} pointerEvents="none">
+              <CountBadge count={activeReportsCount} background={theme.accentOrange} />
+              <CountBadge count={resolvedUnreadCount} background={theme.accentGreen} />
+            </View>
+          ) : null}
+        </Pressable>;
+      })}
+    </View>
+  </View>;
 }
-
 const styles = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    // Room above the icons for the badge row to sit in without clipping.
-    paddingTop: 14,
-  },
-  tabButton: {
-    flex: 1,
-    alignItems: 'center',
-    gap: Spacing.half,
-  },
-  pressed: {
-    opacity: 0.6,
-  },
-  iconArea: {
-    width: 56,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pill: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: 15,
-  },
-  // Always-visible slot for up to 3 stacked badges — CountBadge itself renders nothing
-  // at count 0, so the row's width just shrinks/grows as counts come and go.
-  badgeRow: {
-    position: 'absolute',
-    top: -11,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 2,
-  },
-  label: {
-    fontSize: 11,
-    lineHeight: 14,
-  },
+  bar: { flexDirection: 'row', borderWidth: 1, borderRadius: 28, elevation: 5, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 10, shadowOffset: { width: 0, height: 3 } },
+  indicator: { position: 'absolute', top: 5, bottom: 5, left: 0, borderRadius: 24 },
+  tab: { flex: 1, minHeight: 64, alignItems: 'center', justifyContent: 'center', gap: 3, paddingTop: 4 },
+  label: { fontSize: 11, lineHeight: 16 },
+  badges: { position: 'absolute', top: 0, flexDirection: 'row', gap: 2 },
 });

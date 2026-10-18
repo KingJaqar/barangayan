@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { HouseholdMemberFormValues } from '@barangayan/shared';
@@ -37,7 +37,6 @@ export type HouseholdsData = {
 };
 
 export function useHouseholds(barangayId: string | null) {
-  const toast = useToast();
   const [data, setData] = useState<HouseholdsData>({ residents: [], members: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,22 +97,29 @@ export function useHouseholds(barangayId: string | null) {
   }, [barangayId]);
 
   async function addMember(profileId: string, values: HouseholdMemberFormValues) {
-    const supabase = createSupabaseBrowserClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase as any).rpc('admin_add_household_member', {
-      p_profile_id: profileId,
-      p_name: values.name,
-      p_relation: values.relation,
-      p_role: values.role,
-    });
+    const toastAttempt = beginAttempt('addMember');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any).rpc('admin_add_household_member', {
+        p_profile_id: profileId,
+        p_name: values.name,
+        p_relation: values.relation,
+        p_role: values.role,
+      });
 
-    if (error) {
-      toast.showError(`Failed to add member: ${error.message}`);
-      throw error;
+      if (error) {
+        toast.error(`Failed to add member: ${error.message}`, { id: toastAttempt });
+        throw error;
+      }
+
+      toast.success('Household member added.', { id: toastAttempt });
+      await fetchHouseholds();
+
+    } catch (cause) {
+      toast.warning('The change could not be confirmed. Refresh before trying again.', { id: toastAttempt });
+      throw cause;
     }
-
-    toast.showSuccess('Household member added.');
-    await fetchHouseholds();
   }
 
   async function updateMember(
@@ -121,40 +127,54 @@ export function useHouseholds(barangayId: string | null) {
     memberId: string,
     values: { name: string; relation: string; role: string },
   ) {
-    const supabase = createSupabaseBrowserClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase as any).rpc('admin_update_household_member', {
-      p_profile_id: profileId,
-      p_member_id: memberId,
-      p_name: values.name,
-      p_relation: values.relation,
-      p_role: values.role,
-    });
+    const toastAttempt = beginAttempt('updateMember');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any).rpc('admin_update_household_member', {
+        p_profile_id: profileId,
+        p_member_id: memberId,
+        p_name: values.name,
+        p_relation: values.relation,
+        p_role: values.role,
+      });
 
-    if (error) {
-      toast.showError(`Failed to update member: ${error.message}`);
-      throw error;
+      if (error) {
+        toast.error(`Failed to update member: ${error.message}`, { id: toastAttempt });
+        throw error;
+      }
+
+      toast.success('Household member updated.', { id: toastAttempt });
+      await fetchHouseholds();
+
+    } catch (cause) {
+      toast.warning('The change could not be confirmed. Refresh before trying again.', { id: toastAttempt });
+      throw cause;
     }
-
-    toast.showSuccess('Household member updated.');
-    await fetchHouseholds();
   }
 
   async function removeMember(profileId: string, memberId: string) {
-    const supabase = createSupabaseBrowserClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase as any).rpc('admin_remove_household_member', {
-      p_profile_id: profileId,
-      p_member_id: memberId,
-    });
+    const toastAttempt = beginAttempt('removeMember');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any).rpc('admin_remove_household_member', {
+        p_profile_id: profileId,
+        p_member_id: memberId,
+      });
 
-    if (error) {
-      toast.showError(`Failed to remove member: ${error.message}`);
-      throw error;
+      if (error) {
+        toast.error(`Failed to remove member: ${error.message}`, { id: toastAttempt });
+        throw error;
+      }
+
+      toast.success('Household member removed.', { id: toastAttempt });
+      await fetchHouseholds();
+
+    } catch (cause) {
+      toast.warning('The change could not be confirmed. Refresh before trying again.', { id: toastAttempt });
+      throw cause;
     }
-
-    toast.showSuccess('Household member removed.');
-    await fetchHouseholds();
   }
 
   return {

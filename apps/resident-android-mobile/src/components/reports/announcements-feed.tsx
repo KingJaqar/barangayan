@@ -1,3 +1,4 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { Ionicons } from '@expo/vector-icons';
 import {
   ANNOUNCEMENT_CATEGORIES,
@@ -5,8 +6,8 @@ import {
   type AnnouncementCategory,
   type Tables,
 } from '@barangayan/shared';
-import { useState, type ReactNode } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { type FilterChip } from '@/components/filter-chips';
 import { AnnouncementCard } from '@/components/reports/announcement-card';
@@ -23,6 +24,8 @@ type Announcement = Tables<'announcements'>;
 export type FilterKey = AnnouncementCategory | 'all';
 
 type AnnouncementsFeedProps = {
+  openId?: string;
+  onOpenHandled?: () => void;
   categoryFilter?: 'emergency';
   emptyLabel?: string;
   /** Optional heading rendered above the list. */
@@ -144,6 +147,8 @@ export function useAnnouncementChips(): FilterChip<FilterKey>[] {
 
 /** The full "What's New?" announcements feed — filter chips + list of AnnouncementCards. */
 export function AnnouncementsFeed({
+  openId,
+  onOpenHandled,
   categoryFilter,
   emptyLabel = 'No announcements yet.',
   heading,
@@ -151,6 +156,7 @@ export function AnnouncementsFeed({
   activeFilter: controlledActiveFilter,
   onFilterChange,
 }: AnnouncementsFeedProps) {
+  const bottomTabInset = useFloatingTabInset();
   const [internalActiveFilter] = useState<FilterKey>(categoryFilter ?? 'all');
   // The announcement shown in the detail bottom sheet, and whether it's open. Kept as two
   // separate pieces of state (rather than clearing `selected` to null on close) so the
@@ -162,16 +168,25 @@ export function AnnouncementsFeed({
   const activeFilter = controlledActiveFilter ?? internalActiveFilter;
 
   const queryCategory = categoryFilter === 'emergency' ? 'emergency' : activeFilter;
-  const { items, loading } = useAnnouncements(queryCategory);
+  const { items, loading, error, retry } = useAnnouncements(queryCategory);
+  const [unavailable, setUnavailable] = useState(false);
+  useEffect(() => {
+    if (!openId || loading || error) return;
+    const item = items.find(item => item.id === openId);
+    setUnavailable(!item);
+    if (item) { setSelected(item); setModalVisible(true); }
+    onOpenHandled?.();
+  }, [openId, items, loading, error, onOpenHandled]);
 
   return (
     <View style={styles.container}>
       {heading}
       {filters}
+      {unavailable ? <ThemedText style={{ padding: 16 }} accessibilityRole="alert">This announcement is no longer available.</ThemedText> : null}
 
       {/* Content: the list of announcement items */}
       <View style={styles.contentSection}>
-        {loading ? (
+        {error ? <View style={{ padding: 16, gap: 8 }}><ThemedText accessibilityRole="alert">{error}</ThemedText><Pressable accessibilityRole="button" onPress={retry} style={{ minHeight: 48, justifyContent: 'center' }}><ThemedText>Retry announcements</ThemedText></Pressable></View> : loading ? (
           <View style={styles.list}>
             <SkeletonCard />
             <SkeletonCard />
@@ -185,12 +200,13 @@ export function AnnouncementsFeed({
               <AnnouncementCard
                 announcement={item}
                 onPress={() => {
+                  setUnavailable(false);
                   setSelected(item);
                   setModalVisible(true);
                 }}
               />
             )}
-            contentContainerStyle={styles.list}
+            contentContainerStyle={[styles.list, { paddingBottom: bottomTabInset + Spacing.four }]}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             ListEmptyComponent={
               <EmptyState label={categoryFilter === 'emergency' ? 'No active emergency alerts.' : emptyLabel} />

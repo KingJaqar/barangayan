@@ -44,9 +44,17 @@ describe('record detail edit boundaries', () => {
   });
   it('keeps versioned request snapshots and collected payment amounts protected', () => {
     const request = { id: 'fixture', contract_version: 2 };
-    expect(editableFields('requests', request).map(field => field.key)).toEqual(['payment_method']);
+    expect(editableFields('requests', request).map(field => field.key)).toEqual(['payment_method', 'payment_status']);
     expect(() => validateRecordPatch('requests', request, { requester_notes: 'changed' })).toThrow();
     expect(() => validateRecordPatch('transactions', { id: 'fixture', status: 'paid' }, { amount_centavos: 100 })).toThrow();
+  });
+  it.each([1, 2])('supports both request payment editors for contract %s', contract_version => {
+    const request = { id: 'fixture', contract_version, payment_method: 'qrph', payment_status: 'failed' };
+    expect(recordDraft('requests', request)).toMatchObject({ payment_method: 'qrph', payment_status: 'failed' });
+    for (const payment_status of ['paid', 'pending', 'failed', 'refunded']) {
+      expect(validateRecordPatch('requests', request, { payment_method: 'pickup', payment_status })).toEqual({ payment_method: 'pickup', payment_status });
+    }
+    for (const payment_status of ['expired', 'cancelled', 'waived', 'invalid']) expect(() => validateRecordPatch('requests', request, { payment_status })).toThrow('valid');
   });
   it('validates numeric, date, contact, stock and time changes before saving', () => {
     expect(() => validateRecordPatch('applicants', { id: 'fixture' }, { age: 130.5 })).toThrow();

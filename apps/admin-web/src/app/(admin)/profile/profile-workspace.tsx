@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import Image from 'next/image';
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
@@ -127,12 +128,18 @@ export function ProfileWorkspace({ profile, barangayName, staff, initialResident
     setDraft(draftFor(saved)); setPhoto(null); setRemovePhoto(false); setPhotoEditing(true); setMessage(null);
   }
   function accountOperation(value: boolean) { busy.current = value; setAccountBusy(value); }
-  function announce(value: string, failure = false) { setMessage(value); setError(failure); }
+  const noticeAttempt = useRef<ReturnType<typeof beginAttempt> | undefined>(undefined);
+  function announce(value: string, failure = false) {
+    setMessage(value); setError(failure);
+    const uncertain = /could not be confirmed|cleanup|could not be retired|saved, but|incomplete/i.test(value);
+    notify[uncertain ? 'warning' : failure ? 'error' : 'success'](value, { id: noticeAttempt.current });
+  }
   function expireAccess() { setAccessExpired(true); setPhoto(null); setResident({ state: 'error', message: 'Sign in again to view associated account details.' }); }
   function cancel() { requestLeave(() => { setDraft(draftFor(saved)); setPhoto(null); setRemovePhoto(false); setEditing(false); setPhotoEditing(false); setConflict(false); setMessage(null); }); }
   async function reload() {
     if (busy.current || refreshing) return;
     busy.current = true; setReloading(true);
+    noticeAttempt.current = beginAttempt('profile-reload');
     try {
       const result = await readAdminProfile();
       if (!result.ok) { if (result.code === 'access') expireAccess(); announce(result.message, true); return; }
@@ -146,6 +153,7 @@ export function ProfileWorkspace({ profile, barangayName, staff, initialResident
     event.preventDefault();
     if (busy.current || refreshing || !dirty || !valid || conflict) return;
     busy.current = true; setSaving(true); setMessage(null);
+    noticeAttempt.current = beginAttempt('admin-profile-save');
     const client = createSupabaseBrowserClient();
     const savePatch = { ...patch };
     let newPath: string | null = null;
@@ -220,13 +228,15 @@ export function ProfileWorkspace({ profile, barangayName, staff, initialResident
     if (readingResident.current) return;
     readingResident.current = true;
     setResidentLoading(true);
-    try { const result = await readAssociatedResident(); if (result.ok) setResident(result.value); else { if (result.code === 'access') expireAccess(); announce(result.message, true); } }
+    noticeAttempt.current = beginAttempt('associated-account-read');
+    try { const result = await readAssociatedResident(); if (result.ok) { setResident(result.value); announce('Associated account details refreshed.'); } else { if (result.code === 'access') expireAccess(); announce(result.message, true); } }
     catch { announce('Associated account details could not be loaded. Try again.', true); }
     finally { readingResident.current = false; setResidentLoading(false); }
   }
   async function unlink() {
     if (busy.current || refreshing || (resident.state !== 'linked' && resident.state !== 'unavailable')) return;
     busy.current = true; setUnlinking(true);
+    noticeAttempt.current = beginAttempt('unlink-account');
     try {
       const result: Outcome<boolean> = await unlinkResidentAssociation({ residentId: resident.state === 'linked' ? resident.profile.id : resident.residentId, linkedAt: resident.linkedAt });
       const refreshed = await readAssociatedResident();

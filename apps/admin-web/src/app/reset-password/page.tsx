@@ -4,7 +4,7 @@ import { newPasswordSchema } from '@barangayan/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 const RESEND_COOLDOWN_SECONDS = 45;
@@ -16,7 +16,6 @@ const RESEND_COOLDOWN_SECONDS = 45;
 // mobile OTP screen's own cooldown pattern.
 function ResetPasswordForm() {
   const router = useRouter();
-  const toast = useToast();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') ?? '';
 
@@ -36,59 +35,71 @@ function ResetPasswordForm() {
   }, [secondsLeft]);
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    setFieldErrors({});
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
+      setFieldErrors({});
 
-    const result = newPasswordSchema.safeParse({ password, confirmPassword });
-    if (!result.success) {
-      const errors: Record<string, string> = {};
-      for (const issue of result.error.issues) {
-        errors[String(issue.path[0])] = issue.message;
+      const result = newPasswordSchema.safeParse({ password, confirmPassword });
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        const errors: Record<string, string> = {};
+        for (const issue of result.error.issues) {
+          errors[String(issue.path[0])] = issue.message;
+        }
+        setFieldErrors(errors);
+        return;
       }
-      setFieldErrors(errors);
-      return;
-    }
 
-    setLoading(true);
-    const supabase = createSupabaseBrowserClient();
+      setLoading(true);
+      const supabase = createSupabaseBrowserClient();
 
-    const { error: verifyError } = await supabase.auth.verifyOtp({ type: 'recovery', email, token: code });
-    if (verifyError) {
+      const { error: verifyError } = await supabase.auth.verifyOtp({ type: 'recovery', email, token: code });
+      if (verifyError) {
+        setLoading(false);
+        setError(verifyError.message);
+        toast.error(`Invalid or expired code: ${verifyError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({ password: result.data.password });
       setLoading(false);
-      setError(verifyError.message);
-      toast.showError(`Invalid or expired code: ${verifyError.message}`);
-      return;
-    }
 
-    const { error: updateError } = await supabase.auth.updateUser({ password: result.data.password });
-    setLoading(false);
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Could not update password: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Could not update password: ${updateError.message}`);
-      return;
-    }
+      toast.success('Password updated — please log in.', { id: toastAttempt });
+      router.replace('/login');
 
-    toast.showSuccess('Password updated — please log in.');
-    router.replace('/login');
+    } catch {
+      toast.warning('The password change could not be confirmed. Try signing in before resetting it again.', { id: toastAttempt });
+    } finally { setLoading(false); }
   }
 
   async function handleResend() {
-    setError(null);
-    setResending(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: resendError } = await supabase.auth.resetPasswordForEmail(email);
-    setResending(false);
+    const toastAttempt = beginAttempt('handleResend');
+    try {
+      setError(null);
+      setResending(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: resendError } = await supabase.auth.resetPasswordForEmail(email);
+      setResending(false);
 
-    if (resendError) {
-      setError(resendError.message);
-      toast.showError(`Could not resend code: ${resendError.message}`);
-      return;
-    }
+      if (resendError) {
+        setError(resendError.message);
+        toast.error(`Could not resend code: ${resendError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    toast.showSuccess('A new code has been sent.');
-    setSecondsLeft(RESEND_COOLDOWN_SECONDS);
+      toast.success('A new code has been sent.', { id: toastAttempt });
+      setSecondsLeft(RESEND_COOLDOWN_SECONDS);
+    } catch {
+      toast.warning('The code request could not be confirmed. Check your email before trying again.', { id: toastAttempt });
+    } finally { setResending(false); }
   }
 
   const inputClass =

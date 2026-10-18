@@ -1,3 +1,4 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { ProfileCompletionBanner } from '@/components/profile-completion-banner';
 import { idVerificationMessages, idVerificationState } from '@barangayan/shared';
 import { useProfile } from '@/hooks/use-profile';
@@ -5,15 +6,14 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Image } from 'expo-image';
 import { DocumentsList } from '@/components/services/documents-list';
 import { LogsList } from '@/components/services/logs-list';
 import { RequestsList } from '@/components/services/requests-list';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -27,12 +27,6 @@ const TABS: { key: ServicesSegment; label: string }[] = [
   { key: 'logs', label: 'Logs' },
 ];
 
-const SEARCH_PLACEHOLDER: Record<ServicesSegment, string> = {
-  documents: 'Search documents...',
-  requests: 'Search requests...',
-  logs: 'Search logs...',
-};
-
 // Documents/Requests/Logs — confirmed against the design file. Guests only ever see
 // Documents (real, guest-readable data per the 0005 migration's anon RLS policy) —
 // Requests/Logs require a real identity, so the control that would reach them isn't
@@ -43,7 +37,7 @@ export default function ServicesScreen() {
   const { profile, refetch, isLoading, error } = useProfile();
   useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
+  const bottomTabInset = useFloatingTabInset();
 
   const { segment: segmentParam } = useLocalSearchParams<{ segment?: string }>();
   const initialSegment: ServicesSegment =
@@ -56,15 +50,19 @@ export default function ServicesScreen() {
   const statusBlock = (
     <>
       <ProfileCompletionBanner />
-      {session && !isLoading && !error && idVerificationState(profile) === 'verified' ? (
+      {/* Keep an already-verified profile's compact status while focus refreshes it.
+          Expanding it into the verification card on every tab visit moves the list
+          down and back up. Pending text is informational; action guards still use
+          the profile's loading/error state. */}
+      {session && !error && idVerificationState(profile) === 'verified' ? (
         <View style={[styles.verifiedChip, { backgroundColor: `${theme.primary}1A` }]}>
           <Ionicons name="shield-checkmark" size={18} color={theme.primary} />
           <ThemedText type="smallBold" style={{ color: theme.primary }}>
-            Valid ID Verified
+            {isLoading ? 'Checking ID verification…' : 'Valid ID Verified'}
           </ThemedText>
         </View>
       ) : null}
-      {session && (isLoading || error || idVerificationState(profile) !== 'verified') ? (
+      {session && (error || idVerificationState(profile) !== 'verified') ? (
         <View
           style={[
             styles.verifyCard,
@@ -86,44 +84,9 @@ export default function ServicesScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
-        ]}
-      >
-        <View style={styles.headerContent}>
-          <Image
-            source={require('@/assets/logo/barangayan-logo-1024.png')}
-            style={styles.headerLogo}
-            contentFit="contain"
-          />
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Barangayan
-          </ThemedText>
-        </View>
-      </View>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.contentWrapper, { backgroundColor: theme.background }]}>
         <View style={styles.controls}>
-          <View
-            style={[
-              styles.search,
-              {
-                backgroundColor: theme.background,
-                borderColor: theme.backgroundSelected,
-                shadowColor: theme.text,
-              },
-            ]}>
-            <Ionicons name="search" size={20} color={theme.text} />
-            <TextInput
-              placeholder={SEARCH_PLACEHOLDER[segment]}
-              placeholderTextColor={theme.textSecondary}
-              accessibilityLabel={SEARCH_PLACEHOLDER[segment]}
-              style={[styles.searchInput, { color: theme.text }]}
-            />
-          </View>
-
           <View style={[styles.tabs, { borderBottomColor: theme.backgroundSelected }]}>
             {(session ? TABS : TABS.slice(0, 1)).map((tab) => {
               const isActive = tab.key === segment;
@@ -158,11 +121,11 @@ export default function ServicesScreen() {
         {session && segment === 'requests' ? (
           // RequestsList owns its scroller so its filter chips can stay pinned while the
           // list scrolls; the banner/verification block scrolls away above them.
-          <RequestsList header={statusBlock} contentContainerStyle={styles.scrollContent} />
+          <RequestsList header={statusBlock} contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomTabInset + 120 }]} />
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}>
+            contentContainerStyle={[styles.scrollContent, { paddingBottom: bottomTabInset + 120 }]}>
             {statusBlock}
             {!session || segment === 'documents' ? <DocumentsList /> : null}
             {session && segment === 'logs' && <LogsList />}
@@ -174,7 +137,7 @@ export default function ServicesScreen() {
           onPress={() => setSegment('documents')}
           style={({ pressed }) => [
             styles.fab,
-            { backgroundColor: theme.primary, bottom: 28 },
+            { backgroundColor: theme.primary, bottom: bottomTabInset + 28 },
             pressed && styles.fabPressed,
           ]}
           accessibilityRole="button"
@@ -194,26 +157,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  headerLogo: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
-  },
+
   contentWrapper: {
     flex: 1,
   },
@@ -221,24 +165,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: Spacing.three,
     gap: Spacing.three,
-  },
-  search: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    height: 52,
-    borderRadius: 26,
-    borderWidth: StyleSheet.hairlineWidth,
-    paddingHorizontal: 18,
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    paddingVertical: 0,
   },
   tabs: {
     flexDirection: 'row',

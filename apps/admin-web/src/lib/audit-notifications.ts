@@ -1,4 +1,5 @@
 import { entityTypeToCategory, type AdminAuditLogCategory, type AdminAuditLogRow, type AdminEntityType } from '@barangayan/shared';
+import { requestRecordHref } from './request-record-link';
 
 // ---------------------------------------------------------------------------
 // Module concept — finer-grained than the 9-category settings toggle, used
@@ -259,7 +260,7 @@ export function buildHref(row: AdminAuditLogRow): string | null {
   if (!meta.href) return null;
 
   const id = row.entity_id;
-  if (row.entity_type === 'service_request') return id ? `/requests/${id}` : meta.href;
+  if (row.entity_type === 'service_request') return id ? requestRecordHref(id) : meta.href;
   if (row.entity_type === 'resident') return id ? `/residents?q=${id}` : meta.href;
   return meta.href;
 }

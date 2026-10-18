@@ -1,0 +1,108 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Emergency & DRRM Info
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - tablist "Emergency and DRRM":
+    - tab "Hub"
+    - tab "Centers"
+    - tab "Scan"
+    - tab "Family"
+    - tab "Alerts" [selected]: Alerts
+  - heading "Emergency Alerts" [level=2]
+  - generic: "2"
+  - group "Filter alerts by period":
+    - button "All" [pressed]
+    - button "Today"
+    - button "Last Week"
+    - button "Last Month"
+    - button "Last Year"
+    - button "Scroll alerts by period left":
+    - button "Scroll alerts by period right":
+  - button "Filter by specific date" [expanded] [active]:
+    - text: Filter by specific date
+  - generic: Month
+  - listbox "Month":
+    - option "Jan"
+    - option "Feb"
+    - option "Mar"
+    - option "Apr"
+    - option "May"
+    - option "Jun"
+    - option "Jul"
+    - option "Aug"
+    - option "Sep"
+    - option "Oct" [selected]
+    - option "Nov"
+    - option "Dec"
+  - generic: Day
+  - listbox "Day":
+    - option "1"
+    - option "2"
+    - option "3"
+    - option "4"
+    - option "5"
+    - option "6"
+    - option "7"
+    - option "8"
+    - option "9"
+    - option "10"
+    - option "11"
+    - option "12"
+    - option "13"
+    - option "14"
+    - option "15"
+    - option "16"
+    - option "17"
+    - option "18" [selected]
+    - option "19"
+    - option "20"
+    - option "21"
+    - option "22"
+    - option "23"
+    - option "24"
+    - option "25"
+    - option "26"
+    - option "27"
+    - option "28"
+    - option "29"
+    - option "30"
+    - option "31"
+  - generic: Year
+  - listbox "Year":
+    - option "2024"
+    - option "2025"
+    - option "2026" [selected]
+    - option "2027"
+  - button "Clear"
+  - button "Show Oct 18"
+  - paragraph: Showing 2 of 2 alerts
+  - list:
+    - generic: EMERGENCY
+    - generic: Sep 26, 2026 · 8:53 PM
+    - heading "Sample Announcement1" [level=3]
+    - paragraph: Announcement for all1
+    - generic: EMERGENCY
+    - generic: Aug 6, 2026 · 10:53 AM
+    - heading "Typhoon Advisory Signal No. 2" [level=3]
+    - paragraph: PAGASA has raised Signal No. 2 over San Mateo, Rizal. Residents in low-lying areas are advised to prepare for possible evacuation.
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports

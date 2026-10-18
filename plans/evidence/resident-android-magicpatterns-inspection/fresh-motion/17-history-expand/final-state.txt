@@ -1,0 +1,63 @@
+- generic: 12:17
+- banner:
+  - button "Back":
+  - generic: About Us
+- main:
+  - img "Barangayan logo"
+  - heading "Barangayan" [level=1]
+  - paragraph: Digital services for Barangay Ampid I
+  - generic: v1.0.0
+  - region "Mission and vision":
+    - tablist "Mission and vision":
+      - tab "Mission"
+      - tab "Vision" [selected]: Vision
+    - tabpanel "Vision":
+      - paragraph: Barangay Ampid I envisions a thriving, disaster-resilient, and digitally connected community where every household has access to timely information, responsive public services, and equal opportunity to participate in local governance.
+  - region "History":
+    - heading "History" [level=2]
+    - button "Show less" [expanded] [active]:
+      - text: Show less
+    - list:
+      - generic: "1991"
+      - heading "Established" [level=3]
+      - paragraph: Barangay Ampid I was established as an administrative unit under the Local Government Code of 1991 (Republic Act No. 7160). Over the decades it has grown from a small rural settlement into a vibrant community of families, small enterprises, and civic organizations.
+      - generic: "2019"
+      - heading "Records go digital" [level=3]
+      - paragraph: In the early years, barangay records were maintained entirely on paper, making access to services slow and prone to errors. Recognizing this challenge, local leaders began digitizing household records in 2019 as part of a broader local government modernization drive.
+      - generic: "2024"
+      - heading "Barangayan launches" [level=3]
+      - paragraph: The Barangayan platform was introduced in 2024 to connect residents directly with barangay services — from emergency alerts and household registration to community announcements and official document requests — bringing governance closer to the people it serves.
+      - generic: Today
+      - heading "Bayanihan, online" [level=3]
+      - paragraph: Today, Barangay Ampid I continues to build on its tradition of community solidarity (bayanihan), leveraging technology to make local governance more accessible, efficient, and transparent for all.
+  - region "Contact":
+    - heading "Contact" [level=2]
+    - list:
+      - 'link "Email: barangay.barangayampidi@lgu.gov.ph"':
+        - /url: mailto:barangay.barangayampidi@lgu.gov.ph
+        - generic: barangay.barangayampidi@lgu.gov.ph
+        - generic: Email
+      - 'link "Call: +63 2 81001 1007"':
+        - /url: tel:+63281001007
+        - generic: +63 2 81001 1007
+        - generic: Call
+      - 'link "Map: Barangay Hall, Barangay Ampid I, Philippines"':
+        - /url: https://www.google.com/maps/search/?api=1&query=Barangay%20Hall%2C%20Barangay%20Ampid%20I%2C%20Philippines
+        - generic: Barangay Hall, Barangay Ampid I, Philippines
+        - generic: Map
+  - region "Development Team":
+    - heading "Development Team" [level=2]
+    - list:
+      - generic: AE
+      - paragraph: Alex Arthur P. Enzon
+      - paragraph: Mobile Developer
+      - generic: GM
+      - paragraph: Gabriel Ellis P. Muega
+      - paragraph: Web Developer
+      - generic: LA
+      - paragraph: Lorenzo P. Arrojado
+      - paragraph: Backend Engineer
+      - generic: IA
+      - paragraph: Ian Darrick Alcantara
+      - paragraph: Quality Assurance Engineer
+  - paragraph: © 2026 Barangay Ampid I

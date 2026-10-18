@@ -19,7 +19,8 @@ export function useEmergencyQrContent(barangayId: string | null): {
   isRefreshing: boolean;
   isReady: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
   const read = useScopedRead<EmergencyQrContentRow[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
@@ -61,6 +62,7 @@ export function useEmergencyQrContent(barangayId: string | null): {
     isRefreshing: read.isRefreshing,
     isReady: read.isReady,
     error: read.error,
+    errorAnnounced: read.errorAnnounced,
     refetch,
   };
 }

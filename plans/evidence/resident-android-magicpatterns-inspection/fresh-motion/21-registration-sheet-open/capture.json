@@ -1,0 +1,159 @@
+{
+  "name": "21-registration-sheet-open",
+  "source": "Brave screenshot API, sampled viewport JPEG sequence; not continuous video",
+  "startedAt": "2026-10-18T13:58:52.557Z",
+  "actionStartMs": 85,
+  "elapsedMs": 2059,
+  "frames": [
+    {
+      "file": "frame-000.jpg",
+      "requestMs": 1,
+      "responseMs": 83
+    },
+    {
+      "file": "frame-001.jpg",
+      "requestMs": 85,
+      "responseMs": 156
+    },
+    {
+      "file": "frame-002.jpg",
+      "requestMs": 157,
+      "responseMs": 236
+    },
+    {
+      "file": "frame-003.jpg",
+      "requestMs": 241,
+      "responseMs": 308
+    },
+    {
+      "file": "frame-004.jpg",
+      "requestMs": 310,
+      "responseMs": 375
+    },
+    {
+      "file": "frame-005.jpg",
+      "requestMs": 377,
+      "responseMs": 447
+    },
+    {
+      "file": "frame-006.jpg",
+      "requestMs": 449,
+      "responseMs": 517
+    },
+    {
+      "file": "frame-007.jpg",
+      "requestMs": 519,
+      "responseMs": 570
+    },
+    {
+      "file": "frame-008.jpg",
+      "requestMs": 571,
+      "responseMs": 615
+    },
+    {
+      "file": "frame-009.jpg",
+      "requestMs": 617,
+      "responseMs": 664
+    },
+    {
+      "file": "frame-010.jpg",
+      "requestMs": 665,
+      "responseMs": 716
+    },
+    {
+      "file": "frame-011.jpg",
+      "requestMs": 717,
+      "responseMs": 765
+    },
+    {
+      "file": "frame-012.jpg",
+      "requestMs": 767,
+      "responseMs": 824
+    },
+    {
+      "file": "frame-013.jpg",
+      "requestMs": 826,
+      "responseMs": 889
+    },
+    {
+      "file": "frame-014.jpg",
+      "requestMs": 891,
+      "responseMs": 942
+    },
+    {
+      "file": "frame-015.jpg",
+      "requestMs": 944,
+      "responseMs": 997
+    },
+    {
+      "file": "frame-016.jpg",
+      "requestMs": 999,
+      "responseMs": 1059
+    },
+    {
+      "file": "frame-017.jpg",
+      "requestMs": 1061,
+      "responseMs": 1127
+    },
+    {
+      "file": "frame-018.jpg",
+      "requestMs": 1131,
+      "responseMs": 1186
+    },
+    {
+      "file": "frame-019.jpg",
+      "requestMs": 1188,
+      "responseMs": 1253
+    },
+    {
+      "file": "frame-020.jpg",
+      "requestMs": 1256,
+      "responseMs": 1320
+    },
+    {
+      "file": "frame-021.jpg",
+      "requestMs": 1321,
+      "responseMs": 1380
+    },
+    {
+      "file": "frame-022.jpg",
+      "requestMs": 1382,
+      "responseMs": 1440
+    },
+    {
+      "file": "frame-023.jpg",
+      "requestMs": 1442,
+      "responseMs": 1501
+    },
+    {
+      "file": "frame-024.jpg",
+      "requestMs": 1503,
+      "responseMs": 1564
+    },
+    {
+      "file": "frame-025.jpg",
+      "requestMs": 1566,
+      "responseMs": 1630
+    },
+    {
+      "file": "frame-026.jpg",
+      "requestMs": 1634,
+      "responseMs": 1701
+    },
+    {
+      "file": "frame-027.jpg",
+      "requestMs": 1705,
+      "responseMs": 1767
+    },
+    {
+      "file": "frame-028.jpg",
+      "requestMs": 1769,
+      "responseMs": 1827
+    },
+    {
+      "file": "frame-029.jpg",
+      "requestMs": 1828,
+      "responseMs": 1891
+    }
+  ]
+}

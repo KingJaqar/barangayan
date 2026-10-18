@@ -3,25 +3,28 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TriangleAlert, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { MultiPolygon, Polygon } from 'geojson';
-import { needsResidentProfile, residentCompletionDestination } from '@barangayan/shared';
+import { ResidentActionGuard } from '@/components/auth/resident-action-guard';
 import { NewReportForm, type NewReportFormProps } from '@/app/(resident)/reports/new/new-report-form';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { withBoundaryFallback } from '@/lib/barangay-boundary';
 import { drawerTransition } from '@/lib/motion';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 function ReportFormContent({ onClose, onSubmitted }: { onClose: () => void; onSubmitted: () => void }) {
   const router = useRouter();
   const [data, setData] = useState<NewReportFormProps | null>(null);
   const [error, setError] = useState(false);
   const [retry, setRetry] = useState(0);
+  const feedback = useRef<OperationId | null>(null);
 
   useEffect(() => {
     let active = true;
+    const notification = feedback.current;
     async function load() {
       setError(false);
       try {
@@ -31,12 +34,6 @@ function ReportFormContent({ onClose, onSubmitted }: { onClose: () => void; onSu
         if (authError) throw authError;
         if (!user) {
           router.push('/login?next=%2Freports%2Fnew');
-          return;
-        }
-        const incomplete = await needsResidentProfile(client, user.id);
-        if (!active) return;
-        if (incomplete) {
-          router.push(residentCompletionDestination('/reports/new'));
           return;
         }
         const { data: profile, error: profileError } = await client.from('profiles')
@@ -55,7 +52,7 @@ function ReportFormContent({ onClose, onSubmitted }: { onClose: () => void; onSu
           boundary: withBoundaryFallback((barangay.data?.boundary as Polygon | MultiPolygon | null) ?? null),
         });
       } catch {
-        if (active) setError(true);
+        if (active) { setError(true); if (notification) notify.error("Couldn't refresh the report form. Please try again.", { id: notification }); }
       }
     }
     void Promise.resolve().then(() => { if (active) void load(); });
@@ -63,9 +60,9 @@ function ReportFormContent({ onClose, onSubmitted }: { onClose: () => void; onSu
   }, [router, retry]);
 
   if (error) return (
-    <div role="alert" className="flex flex-col items-start gap-3 text-sm">
+    <div role={retry ? undefined : 'alert'} className="flex flex-col items-start gap-3 text-sm">
       <p>We couldn&apos;t load the report form. Check your connection, then try again.</p>
-      <Button type="button" size="sm" onClick={() => setRetry((value) => value + 1)}>Retry loading form</Button>
+      <Button type="button" size="sm" onClick={() => { feedback.current = beginAttempt('report-form-retry'); setRetry((value) => value + 1); }}>Retry loading form</Button>
     </div>
   );
   if (!data) return <LoadingStatus active label="Loading report form…" />;
@@ -104,7 +101,9 @@ export function NewReportDrawer({ open, onClose, onSubmitted }: {
                   </div>
                 </div>
                 <div className="flex-1 overflow-y-auto px-6 py-6">
-                  <ReportFormContent onClose={onClose} onSubmitted={onSubmitted} />
+                  <ResidentActionGuard action="report" next="/reports/new" onClose={onClose}>
+                    <ReportFormContent onClose={onClose} onSubmitted={onSubmitted} />
+                  </ResidentActionGuard>
                 </div>
               </motion.div>
             </DialogPrimitive.Content>

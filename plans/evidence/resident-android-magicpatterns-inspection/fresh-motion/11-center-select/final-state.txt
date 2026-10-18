@@ -1,0 +1,56 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Emergency & DRRM Info
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - tablist "Emergency and DRRM":
+    - tab "Hub"
+    - tab "Centers" [selected]: Centers
+    - tab "Scan"
+    - tab "Family"
+    - tab "Alerts"
+  - tablist "Centers view":
+    - tab "List"
+    - tab "Map" [selected]: Map
+  - button "Sorted by nearest. Change sort":
+    - text: Nearest
+  - application "Barangay map" [active]:
+    - button "St. Joseph School Evacuation Center":
+    - button "Malanday National High School":
+    - button "Dulong Bayan Covered Court":
+    - button "Ampid 1 Elementary":
+    - button "San Mateo Civic Center":
+    - button "Ampid I Barangay Hall Evacuation Center":
+    - button "Ampid I Health Center Evacuation Center":
+    - generic: © OpenStreetMap contributors
+  - searchbox
+  - button "Show full routing status":
+    - generic: You are outside the Ampid I route area. Walking routes are only available inside Ampid I.
+    - generic: "+2"
+  - button "Maps":
+    - text: Maps
+  - button "You":
+    - text: You
+  - button "Zoom out":
+  - button "Zoom in":
+- navigation:
+  - list:
+    - button:
+      - generic: Home
+    - button:
+      - generic: Services
+    - button:
+      - generic: DRRM
+    - button:
+      - generic: Maps
+    - button:
+      - generic: Health
+    - button:
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports
+- button "Show bottom tabs":

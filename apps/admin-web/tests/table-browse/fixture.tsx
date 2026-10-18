@@ -2,7 +2,8 @@ import { StrictMode, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { EditableDataTable, type TableEditHandle } from '../../src/components/admin/editable-data-table';
 import { DataTable } from '../../src/components/admin/data-table';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 import { TableBrowsePanel } from '../../src/components/admin/table-browse-panel';
 import { TableBrowseControls } from '../../src/components/admin/table-browse-controls';
 import { TablePagination } from '../../src/components/admin/table-pagination';
@@ -63,11 +64,11 @@ function Fixture() {
 function App() {
   const [mounted, setMounted] = useState(true);
   const [sidebar, setSidebar] = useState(false);
-  return <ToastProvider><button id="mount" onClick={() => setMounted(!mounted)}>Toggle mount</button>
+  return <ThemeControllerProvider><Toaster /><button id="mount" onClick={() => setMounted(!mounted)}>Toggle mount</button>
     <button id="sidebar" onClick={() => setSidebar(!sidebar)}>Toggle sidebar</button>
     <div style={{ display: 'flex', width: '100%' }}><aside style={{ width: sidebar ? 250 : 0, flexShrink: 0 }} />
       <main data-admin-viewport style={{ minWidth: 0, flex: 1, height: 'calc(100vh - 60px)', overflow: 'auto', padding: 16 }}>
         {mounted && <Fixture />}<div style={{ height: 800 }}>Outside scroll space</div>
-      </main></div></ToastProvider>;
+      </main></div></ThemeControllerProvider>;
 }
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);

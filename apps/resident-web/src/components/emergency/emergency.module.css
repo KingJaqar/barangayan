@@ -65,6 +65,12 @@
 
 .content { display: flex; flex-direction: column; gap: 24px; }
 
+/* Separate grid items let only the view tabs stick for the full directory height. */
+.centersContent { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; }
+.centersContent > * { grid-column: 1 / -1; min-width: 0; }
+.centersContent > .centersTitle { grid-column: 1; align-self: center; }
+.centersContent > .centersViewToggle { grid-column: 2; justify-self: end; }
+
 /* Reserve the Hub's scroll space before expanding a guideline. */
 :global(main):has(.hubGrid) { scrollbar-gutter: stable; }
 .hubGrid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; gap: 24px; overflow-anchor: none; }
@@ -222,6 +228,7 @@
 }
 
 @media (max-width: 480px) {
+  .centersContent > .centersTitle, .centersContent > .centersViewToggle { grid-column: 1 / -1; }
   .viewToggle, .filters { width: 100%; gap: 3px; }
   .viewButton, .filterButton { flex: 1; padding-inline: 10px; font-size: 12px; }
 }

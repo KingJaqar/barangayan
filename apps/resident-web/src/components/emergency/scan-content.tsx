@@ -21,7 +21,7 @@ import styles from './emergency.module.css';
  * [C-014] plus Scan/Show entry points [C-011, C-012]. Guests see EmergencyAuthGate
  * instead — see emergency/scan/page.tsx's doc comment. */
 export function ScanContent({ userId, barangayId }: { userId: string | null; barangayId: string | null }) {
-  const { content, isInitialLoading, isReady, error, refetch } = useEmergencyQrContent(barangayId);
+  const { content, isInitialLoading, isReady, error, errorAnnounced, refetch } = useEmergencyQrContent(barangayId);
   const centersRead = useEvacuationCenters({ barangayId });
   const [showScanner, setShowScanner] = useState(false);
   const [showQr, setShowQr] = useState(false);
@@ -50,7 +50,7 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
           <Skeleton className="h-40 rounded-2xl" />
         </div>
       ) : !isReady ? (
-        <InlineReadError message="We couldn't load the check-in instructions. You can still scan or show a QR code below." onRetry={refetch} />
+        <InlineReadError announce={!errorAnnounced} message="We couldn't load the check-in instructions. You can still scan or show a QR code below." onRetry={() => refetch('check-in instructions')} />
       ) : (
         <>
           {whyScan ? (
@@ -95,10 +95,10 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
       )}
 
       {isReady && error ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           tone="warning"
           message="Couldn't update the instructions. Showing the last loaded version."
-          onRetry={refetch}
+          onRetry={() => refetch('check-in instructions')}
         />
       ) : null}
       <LoadingStatus active={isInitialLoading} label="Loading check-in instructions…" />
@@ -124,7 +124,7 @@ export function ScanContent({ userId, barangayId }: { userId: string | null; bar
       <QrShowDialog open={showQr} onClose={() => setShowQr(false)} centers={centersRead.centers}
         barangayId={barangayId}
         centersStatus={centersRead.isInitialLoading ? 'loading' : centersRead.isReady ? 'ready' : 'error'}
-        onRetryCenters={centersRead.refetch}
+        onRetryCenters={() => centersRead.refetch('evacuation centers')}
       />
     </div>
   );

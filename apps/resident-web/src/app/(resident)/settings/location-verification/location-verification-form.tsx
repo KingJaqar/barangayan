@@ -20,11 +20,12 @@ import { reverseGeocode, isPointInPolygon } from '@barangayan/shared';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { AlertTriangle, CheckCircle2, Loader2, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 import { LocationVerificationMapWrapper } from './location-verification-map-wrapper';
 
 export function LocationVerificationForm({
@@ -55,18 +56,30 @@ export function LocationVerificationForm({
   const [saved, setSaved] = useState(false);
   const geocodeRequestId = useRef(0);
   const autoLocateAttempted = useRef(false);
+  const mounted = useRef(false);
+  const locationRequest = useRef(0);
+  const detecting = useRef(false);
+  useEffect(() => {
+    const locations = locationRequest;
+    const addresses = geocodeRequestId;
+    mounted.current = true;
+    return () => { mounted.current = false; ++locations.current; ++addresses.current; };
+  }, [profileId]);
 
-  async function fetchAddressFor(pos: LatLng) {
+  const fetchAddressFor = useCallback(async (pos: LatLng, attempt: OperationId | null = null) => {
     const requestId = ++geocodeRequestId.current;
     setAddressLoading(true);
     setAddressDetectFailed(false);
-    const result = await reverseGeocode(pos);
+    const result = await reverseGeocode(pos).catch(() => null);
     // Ignore a stale response from a since-superseded pin placement.
-    if (requestId !== geocodeRequestId.current) return;
+    if (!mounted.current || requestId !== geocodeRequestId.current) return;
     setAddressLoading(false);
     if (result) setAddress(result);
-    else setAddressDetectFailed(true);
-  }
+    else {
+      setAddressDetectFailed(true);
+      if (attempt) notify.warning("Couldn't find the address. You can enter it manually.", { id: attempt });
+    }
+  }, []);
 
   // If there's no previously-saved location, try a live GPS fix on first load —
   // auto-detecting its address — same as mobile's screen. A denied/unavailable fix
@@ -77,21 +90,24 @@ export function LocationVerificationForm({
     // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
     // react-hooks/set-state-in-effect.
     Promise.resolve().then(() => {
+      if (!mounted.current) return;
       if (!('geolocation' in navigator)) return;
+      const request = ++locationRequest.current;
       setLocating(true);
       navigator.geolocation.getCurrentPosition(
         (pos) => {
+          if (!mounted.current || request !== locationRequest.current) return;
           const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           if (!isPointInPolygon(point, boundary)) { setRejectedNotice(true); setLocating(false); return; }
           setPosition(point);
           void fetchAddressFor(point);
           setLocating(false);
         },
-        () => setLocating(false),
+        () => { if (mounted.current && request === locationRequest.current) setLocating(false); },
         { enableHighAccuracy: true, timeout: 10_000 },
       );
     });
-  }, [savedLocation]);
+  }, [savedLocation, boundary, fetchAddressFor]);
 
   /** "Detect Your Location" — a manual, explicit re-run of the same GPS fix the effect
    * above tries automatically on first load, for a resident who wants to re-center on
@@ -99,23 +115,33 @@ export function LocationVerificationForm({
    * first-load attempt, a failure here is a direct result of this click, so it's reported
    * with a toast rather than failing silently. */
   function handleDetectLocation() {
+    if (detecting.current) return;
+    const attempt = beginAttempt('verify-location');
+    const addressAttempt = beginAttempt('pin-address');
+    const request = ++locationRequest.current;
     if (!('geolocation' in navigator)) {
-      toast.error('Geolocation is not supported by your browser.');
+      notify.error('Geolocation is not supported by your browser.', { id: attempt });
       return;
     }
     setLocating(true);
+    detecting.current = true;
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        detecting.current = false;
+        if (!mounted.current || request !== locationRequest.current) return;
         const point = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        if (!isPointInPolygon(point, boundary)) { setRejectedNotice(true); setLocating(false); return; }
+        if (!isPointInPolygon(point, boundary)) { handleRejected(attempt); setLocating(false); return; }
         setPosition(point);
         setRejectedNotice(false);
         setSaved(false);
-        void fetchAddressFor(point);
+        void fetchAddressFor(point, addressAttempt);
         setLocating(false);
+        notify.success('Location found. Review the pin and save it.', { id: attempt });
       },
       () => {
-        toast.error("Couldn't detect your location. Please try again or drag the pin manually.");
+        detecting.current = false;
+        if (!mounted.current || request !== locationRequest.current) return;
+        notify.error("Couldn't detect your location. Please try again or drag the pin manually.", { id: attempt });
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10_000 },
@@ -126,16 +152,17 @@ export function LocationVerificationForm({
     setPosition(pos);
     setRejectedNotice(false);
     setSaved(false);
-    void fetchAddressFor(pos);
+    void fetchAddressFor(pos, beginAttempt('pin-address'));
   }
 
-  function handleRejected() {
+  function handleRejected(attempt = beginAttempt('location-boundary')) {
     setRejectedNotice(true);
+    notify.warning('This location is outside the barangay boundary. Choose a location inside the outlined area.', { id: attempt });
   }
 
   async function handleSave() {
     if (!position) return;
-    if (!isPointInPolygon(position, boundary)) { setRejectedNotice(true); return; }
+    if (!isPointInPolygon(position, boundary)) { handleRejected(); return; }
     setSaving(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase

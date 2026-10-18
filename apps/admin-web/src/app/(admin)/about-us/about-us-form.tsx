@@ -9,7 +9,7 @@ import { Building2, Eye, Pencil, Plus, Save, Users } from 'lucide-react';
 import styles from './about-us.module.css';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -63,7 +63,6 @@ export function AboutUsForm({
   initialDevelopers: DeveloperProfileRow[];
 }) {
   const router = useRouter();
-  const toast = useToast();
 
   const [title, setTitle] = useState(initialAbout?.title ?? 'Barangayan');
   const [mission, setMission] = useState(initialAbout?.mission ?? '');
@@ -131,6 +130,7 @@ export function AboutUsForm({
   }
 
   async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('handleSubmit');
     event.preventDefault();
     setError(null);
 
@@ -147,6 +147,7 @@ export function AboutUsForm({
     });
 
     if (!parsed.success) {
+      toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
       setError(parsed.error.issues[0]?.message ?? 'Invalid input');
       return;
     }
@@ -178,7 +179,7 @@ export function AboutUsForm({
           .from('site-content')
           .upload(path, logoFile, { upsert: true, contentType: logoFile.type });
         if (uploadErr) {
-          toast.showError(`Logo upload failed: ${uploadErr.message}`);
+          toast.error(`Logo upload failed: ${uploadErr.message}`, { id: toastAttempt });
           setError(uploadErr.message);
           return;
         }
@@ -199,7 +200,7 @@ export function AboutUsForm({
             .from('site-content')
             .upload(path, dev.photoFile, { upsert: true, contentType: dev.photoFile.type });
           if (uploadErr) {
-            toast.showError(`Photo upload failed for ${dev.name || 'developer'}: ${uploadErr.message}`);
+            toast.error(`Photo upload failed for ${dev.name || 'developer'}: ${uploadErr.message}`, { id: toastAttempt });
             setError(uploadErr.message);
             return;
           }
@@ -238,9 +239,9 @@ export function AboutUsForm({
           await supabase.storage.from('site-content').remove(uploadedPaths);
         }
         if (rpcError.code === '42501') {
-          toast.showError('Permission denied. You must be an admin.');
+          toast.error('Permission denied. You must be an admin.', { id: toastAttempt });
         } else {
-          toast.showError(`Save failed: ${rpcError.message}`);
+          toast.error(`Save failed: ${rpcError.message}`, { id: toastAttempt });
         }
         setError(rpcError.message);
         return;
@@ -277,11 +278,11 @@ export function AboutUsForm({
         }
       }
 
-      toast.showSuccess('Saved successfully.');
+      toast.success('Saved successfully.', { id: toastAttempt });
       router.refresh();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
-      toast.showError(message);
+      toast.error(message, { id: toastAttempt });
       setError(message);
     } finally {
       setSubmitting(false);

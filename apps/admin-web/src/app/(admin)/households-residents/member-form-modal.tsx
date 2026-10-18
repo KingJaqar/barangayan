@@ -1,4 +1,5 @@
 'use client';
+import { notify as toast } from '@/lib/notify';
 
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
@@ -62,6 +63,7 @@ export function MemberFormModal({
     });
 
     if (!result.success) {
+      toast.error('Review the highlighted fields before continuing.');
       setError(result.error.issues[0]?.message ?? 'Invalid input');
       return;
     }

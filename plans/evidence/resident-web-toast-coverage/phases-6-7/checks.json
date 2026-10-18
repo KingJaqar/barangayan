@@ -1,0 +1,118 @@
+{
+  "date": "2026-10-17 Asia/Manila",
+  "phase6": "partially complete: physical/native/spoken manual verification pending",
+  "phase7": "partially complete: all application wiring verified, physical/spoken manual verification pending; server retry blocker resolved under user-approved result-prop exception",
+  "baseline": {
+    "typecheck": "pass",
+    "lint": {
+      "errors": 0,
+      "preExistingWarnings": 2
+    },
+    "vitest": {
+      "passed": 181,
+      "preExistingFailures": 1,
+      "failure": "tests/search.test.ts:74 pricing copy"
+    },
+    "productionBuild": "initial Turbopack interrupted after no progress; not passed"
+  },
+  "final": {
+    "typecheck": {
+      "command": "npm run typecheck --workspace=@barangayan/resident-web",
+      "status": "pass",
+      "log": "server-retries/final-typecheck.log"
+    },
+    "lint": {
+      "command": "npm run lint --workspace=@barangayan/resident-web",
+      "status": "pass with pre-existing warning",
+      "errors": 0,
+      "preExistingWarnings": 1,
+      "log": "server-retries/final-lint.log"
+    },
+    "vitest": {
+      "command": "npx vitest run --config vitest.config.ts (cwd apps/resident-web)",
+      "status": "pre-existing failure only",
+      "passed": 189,
+      "failed": 1,
+      "failure": "tests/search.test.ts:74 pricing copy",
+      "log": "server-retries/final-tests.log",
+      "note": "Eight concurrent create-payment-source handler tests were added outside this execution; all eight passed. Five temporary Valid ID fixture failures from the new client boundary were resolved by rendering with the actual root provider and a router mock."
+    },
+    "productionBuild": {
+      "command": "npm run build --workspace=@barangayan/resident-web -- --webpack",
+      "outputDirectory": "temporary isolated output using existing BARANGAYAN_PREVIEW_DIST_DIR",
+      "status": "pass",
+      "log": "server-retries/final-build.log"
+    },
+    "browser": {
+      "phases67": {
+        "status": "pass",
+        "scenarios": 49,
+        "runtimeErrors": 0,
+        "consoleErrors": 0,
+        "warnings": 0,
+        "boundaries": "synthetic browser/service outcomes; actual frontend owners"
+      },
+      "auth-preferences-regression": {
+        "status": "pass",
+        "scenarios": 33,
+        "runtimeErrors": 0,
+        "consoleErrors": 0,
+        "warnings": 0,
+        "boundaries": "synthetic browser/service outcomes; actual frontend owners"
+      },
+      "prerequisite-regression": {
+        "status": "pass",
+        "scenarios": 66,
+        "runtimeErrors": 0,
+        "consoleErrors": 0,
+        "warnings": 0,
+        "boundaries": "synthetic browser/service outcomes; actual frontend owners"
+      },
+      "serverRetries": {
+        "status": "pass",
+        "scenarios": 11,
+        "runtimeErrors": 0,
+        "consoleErrors": 0,
+        "warnings": 0,
+        "expectedErrors": "Deliberately injected Server Component failure produces Next HTTP 500 / React error 441; separately captured and reviewed, never treated as unexpected-free runtime.",
+        "boundaries": "actual Next 16.3 production RSC refresh/retry transport with local synthetic reads"
+      }
+    },
+    "sourceReview": {
+      "requestQueryGeolocationTimerArguments": "unchanged",
+      "files": 66,
+      "newDependencies": 0,
+      "newProductionFiles": 0,
+      "backendChanges": "server render props and root client retry provider only, explicitly user-approved; no auth/data queries or mutation changes by this execution",
+      "otherPlatformChanges": 0,
+      "concurrentUserWorkExcluded": [
+        "six document-request-modal sources",
+        "resident-service-form.tsx",
+        "use-paymongo-source.ts",
+        "create-payment-source function and tests",
+        "admin work"
+      ],
+      "serverPageDiff": "13 pages compared to HEAD: only failure feedback props differ",
+      "closingHashes": "all 66 source hashes matched after final checks",
+      "hostAdapterDependencies": "unchanged, verified with git diff"
+    },
+    "diffCheck": "pass",
+    "planScope": "Only Phase 6-7 progress/status/checklist sections and corresponding status-table rows changed by this execution; concurrent Phase 5 updates preserved."
+  },
+  "limitations": [
+    "Physical GPS/camera/permission and native-share/fullscreen/eyedropper APIs not exercised",
+    "Spoken screen-reader acceptance pending",
+    "Onboarding completion/storage route/helper removed before this execution; no workflow recreated",
+    "No real provider, hosted write, account deletion, payment or deployment performed"
+  ],
+  "continuationBaseline": {
+    "typecheck": "pass",
+    "lint": "one pre-existing map warning and one unrelated concurrent service-sheet fixture immutability error; the latter was corrected outside this execution before final lint",
+    "vitest": {
+      "passed": 181,
+      "failed": 1,
+      "failure": "pre-existing tests/search.test.ts:74 pricing copy"
+    },
+    "productionBuild": "interrupted after no visible progress; not counted as passed"
+  }
+}

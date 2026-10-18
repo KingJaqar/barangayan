@@ -3,12 +3,11 @@
 import { useRouter } from 'next/navigation';
 
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export function CancelRequestButton({ requestId }: { requestId: string }) {
   const router = useRouter();
-  const toast = useToast();
 
   async function handleCancel() {
     const supabase = createSupabaseBrowserClient();
@@ -17,10 +16,10 @@ export function CancelRequestButton({ requestId }: { requestId: string }) {
       p_note: 'Cancelled by resident',
     });
     if (error) {
-      toast.showError(`Failed to cancel: ${error.message}`);
+      toast.error(`Failed to cancel: ${error.message}`);
       return;
     }
-    toast.showSuccess('Request cancelled.');
+    toast.success('Request cancelled.');
     router.refresh();
   }
 

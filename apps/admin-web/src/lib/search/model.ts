@@ -1,3 +1,5 @@
+import { requestRecordHref } from '../request-record-link';
+
 export const SEARCH_CATEGORIES = [
   { id: 'residents', label: 'Residents', path: '/residents' },
   { id: 'requests', label: 'Requests', path: '/requests' },
@@ -80,7 +82,7 @@ export function isSearchResponse(value: unknown): value is SearchResponse {
     return group.hits.every(hit => hit && hit.category === group.category && typeof hit.id === 'string' && hit.id.length <= 64
       && typeof hit.title === 'string' && hit.title.length <= 240 && typeof hit.preview === 'string' && hit.preview.length <= 200
       && typeof hit.meta === 'string' && hit.meta.length <= 300 && typeof hit.href === 'string'
-      && hit.href.startsWith(hit.category === 'requests' ? '/requests/' : `/search/${hit.category}/`));
+      && (hit.category === 'requests' ? hit.href === requestRecordHref(hit.id) : hit.href.startsWith(`/search/${hit.category}/`)));
   });
 }
 export type SearchRow = Record<string, unknown>;
@@ -126,7 +128,7 @@ export function makeHit(category: SearchCategory, row: SearchRow, query = ''): S
       return !value ? '' : path === 'email_verification_status' ? `Email ${value}`
         : path === 'is_active' ? (row.is_active ? 'Active' : 'Inactive') : path === 'capacity' ? `Capacity: ${value}` : value;
     }).filter(Boolean).join(' · '),
-    href: category === 'requests' ? `/requests/${encodeURIComponent(id)}` : `/search/${category}/${encodeURIComponent(id)}${query ? `?${new URLSearchParams({ q: query })}` : ''}` };
+    href: category === 'requests' ? requestRecordHref(id) : `/search/${category}/${encodeURIComponent(id)}${query ? `?${new URLSearchParams({ q: query })}` : ''}` };
 }
 
 // Only these human-readable fields can leave the server on a record detail page.

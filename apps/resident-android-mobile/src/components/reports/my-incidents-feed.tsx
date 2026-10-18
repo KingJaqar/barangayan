@@ -1,3 +1,4 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
@@ -100,8 +101,9 @@ const emptyStyles = StyleSheet.create({
 
 function ReportFab() {
   const theme = useTheme();
+  const bottomTabInset = useFloatingTabInset();
   return (
-    <View style={fabStyles.wrap}>
+    <View style={[fabStyles.wrap, { bottom: bottomTabInset + 28 }]}>
       <Pressable
         style={({ pressed }) => [fabStyles.fab, { backgroundColor: theme.primary }, pressed && fabStyles.fabPressed]}
         onPress={() => router.push('/(app)/reports/new')}
@@ -196,6 +198,7 @@ export function MyIncidentsFeed({
   activeFilter: controlledActiveFilter,
   onFilterChange,
 }: MyIncidentsFeedProps) {
+  const bottomTabInset = useFloatingTabInset();
   const [internalActiveFilter] = useState<StatusFilterKey>('all');
 
   const activeFilter = controlledActiveFilter ?? internalActiveFilter;
@@ -228,7 +231,7 @@ export function MyIncidentsFeed({
           data={incidents}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <IncidentCard incident={item} />}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { paddingBottom: bottomTabInset + 96 }]}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           ListEmptyComponent={<EmptyState label={emptyMessage} />}
           showsVerticalScrollIndicator={false}

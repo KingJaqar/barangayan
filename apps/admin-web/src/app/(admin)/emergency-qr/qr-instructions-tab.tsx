@@ -6,7 +6,7 @@ import styles from './emergency-qr.module.css';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { QrInstructionsModal } from './qr-instructions-modal';
 import { MobilePreviewCard } from './mobile-preview-card';
 import type { Tables } from '@barangayan/shared';
@@ -26,7 +26,6 @@ export function QrInstructionsTab({
   barangayId: string;
 }) {
   const router = useRouter();
-  const toast = useToast();
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [content, setContent] = useState<DbEmergencyQrContent[]>(initialContent);
 
@@ -43,30 +42,36 @@ export function QrInstructionsTab({
   const howItWorks = content.find((c) => c.section === 'how_it_works');
 
   async function toggleActive(section: string, current: boolean) {
-    const existing = content.find((c) => c.section === section);
-    if (!existing?.id) return;
+    const toastAttempt = beginAttempt('toggleActive');
+    try {
+      const existing = content.find((c) => c.section === section);
+      if (!existing?.id) return;
 
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
-      .from('emergency_qr_content')
-      .update({ is_active: !current })
-      .eq('id', existing.id);
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase
+        .from('emergency_qr_content')
+        .update({ is_active: !current })
+        .eq('id', existing.id);
 
-    if (error) {
-      toast.showError(`Failed to update: ${error.message}`);
-      return;
+      if (error) {
+        toast.error(`Failed to update: ${error.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'status_change',
+        entityType: 'emergency_qr',
+        entityId: existing.id,
+        entityLabel: SECTION_META[section].label,
+        changes: { before: { is_active: current }, after: { is_active: !current } },
+      }).catch(() => {});
+
+      setContent((prev) => prev.map((c) => (c.section === section ? { ...c, is_active: !current } : c)));
+      toast.success('Status updated.', { id: toastAttempt });
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'emergency_qr',
-      entityId: existing.id,
-      entityLabel: SECTION_META[section].label,
-      changes: { before: { is_active: current }, after: { is_active: !current } },
-    }).catch(() => {});
-
-    setContent((prev) => prev.map((c) => (c.section === section ? { ...c, is_active: !current } : c)));
-    toast.showSuccess('Status updated.');
   }
 
   return (

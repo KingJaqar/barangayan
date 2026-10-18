@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -19,7 +19,7 @@ const inputClass =
 
 export function FaqForm({ barangayId }: { barangayId: string }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [category, setCategory] = useState<string>('general');
@@ -29,65 +29,72 @@ export function FaqForm({ barangayId }: { barangayId: string }) {
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const parsed = faqArticleSchema.safeParse({
-      question,
-      answer,
-      category,
-      sort_order: sortOrder ? parseInt(sortOrder, 10) : 0,
-      is_active: isActive,
-    });
+      const parsed = faqArticleSchema.safeParse({
+        question,
+        answer,
+        category,
+        sort_order: sortOrder ? parseInt(sortOrder, 10) : 0,
+        is_active: isActive,
+      });
 
-    if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!parsed.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(parsed.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data: insertedArticle, error: insertError } = await supabase
-      .from('faq_articles')
-      .insert({
-        barangay_id: barangayId,
-        question: parsed.data.question,
-        answer: parsed.data.answer,
-        category: parsed.data.category,
-        sort_order: parsed.data.sort_order,
-        is_active: parsed.data.is_active,
-      })
-      .select('id')
-      .single();
-    setSubmitting(false);
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data: insertedArticle, error: insertError } = await supabase
+        .from('faq_articles')
+        .insert({
+          barangay_id: barangayId,
+          question: parsed.data.question,
+          answer: parsed.data.answer,
+          category: parsed.data.category,
+          sort_order: parsed.data.sort_order,
+          is_active: parsed.data.is_active,
+        })
+        .select('id')
+        .single();
+      setSubmitting(false);
 
-    if (insertError) {
-      setError(insertError.message);
-      toast.showError(`Failed to create article: ${insertError.message}`);
-      return;
-    }
+      if (insertError) {
+        setError(insertError.message);
+        toast.error(`Failed to create article: ${insertError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'faq_article',
-      entityId: insertedArticle?.id,
-      entityLabel: parsed.data.question,
-      metadata: {
-        question: parsed.data.question,
-        answer: parsed.data.answer,
-        category: parsed.data.category,
-        sort_order: parsed.data.sort_order,
-        is_active: parsed.data.is_active,
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'faq_article',
+        entityId: insertedArticle?.id,
+        entityLabel: parsed.data.question,
+        metadata: {
+          question: parsed.data.question,
+          answer: parsed.data.answer,
+          category: parsed.data.category,
+          sort_order: parsed.data.sort_order,
+          is_active: parsed.data.is_active,
+        },
+      }).catch(() => {});
 
-    setQuestion('');
-    setAnswer('');
-    setCategory('general');
-    setSortOrder('0');
-    setIsActive(true);
-    toast.showSuccess('FAQ article published.');
-    router.refresh();
+      setQuestion('');
+      setAnswer('');
+      setCategory('general');
+      setSortOrder('0');
+      setIsActive(true);
+      toast.success('FAQ article published.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

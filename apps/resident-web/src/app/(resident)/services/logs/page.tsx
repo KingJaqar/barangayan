@@ -34,7 +34,7 @@ export default async function LogsPage() {
       </div>
 
       {error ? (
-        <ReadFailure message="We couldn't load your activity." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="your activity" message="We couldn't load your activity." />
       ) : requests && requests.length > 0 ? (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {requests.map((r) => (

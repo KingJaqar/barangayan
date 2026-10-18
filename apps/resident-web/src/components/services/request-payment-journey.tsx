@@ -37,9 +37,12 @@ function JourneySkeleton() {
 export function RequestPaymentJourney({
   requestId,
   initialStep = 'method',
+  onStepChange,
 }: {
   requestId: string;
   initialStep?: 'method' | 'pickup' | 'qrph';
+  /** Lets the document sheet start each payment screen at its heading. */
+  onStepChange?: () => void;
 }) {
   const [client] = useState(createSupabaseBrowserClient);
   const [step, setStep] = useState<'method' | 'pickup' | 'qrph' | 'success'>(initialStep);
@@ -49,6 +52,7 @@ export function RequestPaymentJourney({
   // summary and never mounts the step (no payment attempt is created).
   const [qrEngaged, setQrEngaged] = useState(false);
   const [confirmedPaymentId, setConfirmedPaymentId] = useState<string | null>(null);
+  useEffect(() => { onStepChange?.(); }, [step, onStepChange]);
 
   // Read state is scoped to this request: a refresh keeps the last valid payment details on
   // screen (a failed refresh shows a warning instead of replacing it), and an obsolete
@@ -83,10 +87,10 @@ export function RequestPaymentJourney({
   if (!request) {
     if (read.error)
       return (
-        <InlineReadError
+        <InlineReadError announce={!read.errorAnnounced}
           message="We couldn't load the payment details. Reconnect and try again."
           retrying={read.isRefreshing}
-          onRetry={refetch}
+          onRetry={() => refetch('payment details')}
         />
       );
     return (
@@ -97,12 +101,12 @@ export function RequestPaymentJourney({
     );
   }
   const staleWarning = read.error ? (
-    <InlineReadError
+    <InlineReadError announce={!read.errorAnnounced}
       tone="warning"
       className="mb-4"
       message="We couldn't refresh the payment details. What you see may be out of date."
       retrying={read.isRefreshing}
-      onRetry={refetch}
+      onRetry={() => refetch('payment details')}
     />
   ) : null;
   const recorded =

@@ -1,0 +1,24 @@
+{
+  "checks": [
+    "Rapid repeated fulfillment activation produces one write and one success toast.",
+    "Returned rejection produces one error toast and retains inline recovery.",
+    "Thrown write failure produces an uncertainty warning and releases the action guard.",
+    "Resident-style top-center card sits below the header; duplicate attempt is suppressed.",
+    "One stable host enters the native modal top layer; keyboard focus pauses dismissal and closing the toast preserves the dialog.",
+    "Closing a native modal preserves the existing toast without a duplicate host.",
+    "Dark theme changes the toast surface and retains the shared layout.",
+    "Long text wraps on a narrow viewport; account change clears prior-account notifications.",
+    "Unmount cleans up the portal; no uncaught browser errors."
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "Isolated component fixture with mocked service outcomes; no live backend writes or payment/refund operations."
+  ],
+  "position": {
+    "x": 440,
+    "y": 71.88130187988281,
+    "width": 400,
+    "height": 55
+  },
+  "status": "passed"
+}

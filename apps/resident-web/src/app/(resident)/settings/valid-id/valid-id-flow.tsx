@@ -288,7 +288,7 @@ function ResidentIdDraft({ userId }: { userId: string }) {
   const saved = !status.loading && !status.error && status.access && (verification === 'verified' || verification === 'pending');
   const summaryId = submitted ? status.profile?.current_id_submission_id ?? submitted : saved && !replacing ? status.profile?.current_id_submission_id : null;
   if (summaryId) return <SavedId key={summaryId} userId={userId} submissionId={summaryId} lastSubmittedId={submitted} onReplace={startReplacement} />;
-  if ((status.loading || status.error) && !replacing && !submitted && step === 1 && !type) return <div className="mx-auto max-w-2xl space-y-4 px-4 py-5 sm:px-6 sm:py-8"><h1 className="text-2xl font-bold">Valid ID</h1>{status.loading ? <LoadingStatus active label="Checking verification status…" /> : <InlineReadError message={status.error!} onRetry={() => void status.refresh()} />}</div>;
+  if ((status.loading || status.error) && !replacing && !submitted && step === 1 && !type) return <div className="mx-auto max-w-2xl space-y-4 px-4 py-5 sm:px-6 sm:py-8"><h1 className="text-2xl font-bold">Valid ID</h1>{status.loading ? <LoadingStatus active label="Checking verification status…" /> : <InlineReadError message={status.error!} announce={!status.errorAnnounced} onRetry={() => void status.refresh(true)} />}</div>;
   return <div className="mx-auto max-w-2xl space-y-6 px-4 py-5 sm:px-6 sm:py-8">
     {saved && replacing && !busy && !uncertain && !submitted ? <Button variant="outline" onClick={() => setReplacing(false)}>{verification === 'verified' ? 'Back to verified ID' : 'Back to submitted ID'}</Button> : null}
     <div className="space-y-3" aria-label={`Valid ID submission, step ${step} of 4`}>
@@ -298,7 +298,7 @@ function ResidentIdDraft({ userId }: { userId: string }) {
     <div><h1 ref={heading} tabIndex={-1} className="scroll-mt-6 text-2xl font-bold tracking-tight outline-none">{intro.title}</h1>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{intro.description}</p></div>
     <aside className="rounded-xl border border-border bg-muted/30 p-4 text-sm" aria-live="polite">
-      {status.loading ? <LoadingStatus active label="Checking verification status…" /> : status.error ? <InlineReadError message={submitted ? 'Your ID was submitted. Verification status is temporarily unavailable.' : status.error} onRetry={() => void status.refresh()} /> : <><p>{statusCopy[idVerificationState(status.profile)]}</p>{status.reason ? <p className="mt-2 whitespace-pre-wrap break-words">Reason: {status.reason}</p> : null}</>}
+      {status.loading ? <LoadingStatus active label="Checking verification status…" /> : status.error ? <InlineReadError message={submitted ? 'Your ID was submitted. Verification status is temporarily unavailable.' : status.error} announce={!status.errorAnnounced} onRetry={() => void status.refresh(true)} /> : <><p>{statusCopy[idVerificationState(status.profile)]}</p>{status.reason ? <p className="mt-2 whitespace-pre-wrap break-words">Reason: {status.reason}</p> : null}</>}
     </aside>
       {step === 1 ? <div className="space-y-4"><label className="block text-sm font-semibold" htmlFor="valid-id-type">ID type</label>
         <select id="valid-id-type" className={inputClass} value={type} disabled={locked} onChange={event => { cancel(); setType(event.target.value); publication.current = null; setOcrFeedback(''); setOcrRetry(false); setError(''); }}><option value="">Select ID type</option>{ID_TYPES.map(item => <option key={item} value={item}>{item}</option>)}</select>

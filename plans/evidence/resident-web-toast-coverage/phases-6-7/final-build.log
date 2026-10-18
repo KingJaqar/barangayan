@@ -1,0 +1,94 @@
+
+> @barangayan/resident-web@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.0 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 125ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 20.2s
+  Running TypeScript ...
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+  	- include was updated to add '../../tmp/toast-phases67/verified-build/types/**/*.ts'
+  	- include was updated to add '../../tmp/toast-phases67/verified-build/dev/types/**/*.ts'
+
+  Finished TypeScript in 8.6s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/48) ...
+  Generating static pages using 31 workers (12/48) 
+  Generating static pages using 31 workers (24/48) 
+  Generating static pages using 31 workers (36/48) 
+✓ Generating static pages using 31 workers (48/48) in 4.6s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /announcements
+├ ƒ /announcements/[announcementId]
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /auth/callback
+├ ƒ /auth/email-change
+├ ○ /auth/error
+├ ƒ /complete-profile
+├ ƒ /emergency
+├ ƒ /emergency/alerts
+├ ƒ /emergency/centers
+├ ƒ /emergency/family
+├ ƒ /emergency/scan
+├ ƒ /forgot-password
+├ ƒ /health
+├ ƒ /health/drives/[driveId]
+├ ƒ /health/my-registrations
+├ ƒ /health/register/[driveId]
+├ ƒ /home
+├ ○ /icon.png
+├ ƒ /login
+├ ƒ /maps
+├ ƒ /maps/directory
+├ ƒ /maps/preparedness
+├ ƒ /register
+├ ƒ /reports
+├ ƒ /reports/[incidentId]
+├ ƒ /reports/new
+├ ƒ /reset-password
+├ ƒ /search
+├ ƒ /services
+├ ƒ /services/[documentId]
+├ ƒ /services/documents
+├ ƒ /services/logs
+├ ƒ /services/payment/[requestId]
+├ ƒ /services/payment/pickup/[requestId]
+├ ƒ /services/payment/qrph/[requestId]
+├ ƒ /services/payment/success
+├ ƒ /services/requests
+├ ƒ /services/requests/[requestId]
+├ ƒ /services/requests/new/[documentId]
+├ ƒ /settings
+├ ƒ /settings/about
+├ ƒ /settings/change-password
+├ ƒ /settings/delete-account
+├ ƒ /settings/download-data
+├ ƒ /settings/email-verification
+├ ƒ /settings/help
+├ ƒ /settings/help/[articleId]
+├ ƒ /settings/location-verification
+├ ƒ /settings/notifications
+├ ƒ /settings/profile
+├ ƒ /settings/terms-privacy
+├ ƒ /settings/theme
+├ ƒ /settings/valid-id
+└ ƒ /verify-otp
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

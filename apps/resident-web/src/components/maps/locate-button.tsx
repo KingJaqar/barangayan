@@ -69,6 +69,7 @@ export function LocateButton(
         onLocated(next);
         map.flyTo([next.lat, next.lng], 17);
         setIsLocating(false);
+        notify.success('Your location is shown on the map.', { id: attempt });
       },
       (failure) => {
         requestingRef.current = false;

@@ -32,7 +32,8 @@ export function useEvacuationCenters(options: { barangayId: string | null; userP
   isRefreshing: boolean;
   isReady: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
   const { barangayId, userPosition } = options;
 
@@ -79,6 +80,7 @@ export function useEvacuationCenters(options: { barangayId: string | null; userP
     isRefreshing: read.isRefreshing,
     isReady: read.isReady,
     error: read.error,
+    errorAnnounced: read.errorAnnounced,
     refetch: read.refetch,
   };
 }

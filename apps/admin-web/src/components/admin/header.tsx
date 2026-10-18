@@ -19,6 +19,7 @@ import { ScrollableChipRow } from './scrollable-chip-row';
 import { Spinner } from '@/components/loading/spinner';
 import { NavbarSearch } from './search/navbar-search';
 import { useProfileNavigation } from './profile-navigation-guard';
+import { toastAnchorRef } from '@/components/ui/sonner';
 
 type NotificationFilter = 'all' | 'unread' | ModuleKey;
 
@@ -78,7 +79,7 @@ export function Header({ barangayName, adminName, adminAvatarUrl, barangayId, si
   }
 
   return (
-    <header className={`flex items-center border-b ${styles.header}`}>
+    <header ref={toastAnchorRef} data-toast-anchor className={`flex items-center border-b ${styles.header}`}>
       <button onClick={onToggleSidebar} className={styles.menuButton} aria-label="Toggle sidebar" aria-expanded={!sidebarCollapsed} aria-controls="admin-sidebar">
         <Menu className="size-5" {...ICON_STROKE} />
       </button>

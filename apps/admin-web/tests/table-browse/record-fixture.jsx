@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 import { RequestsTable } from '../../src/app/(admin)/requests/requests-table';
 import { TransactionsTable } from '../../src/app/(admin)/transactions/transactions-table';
 import { ResidentDirectory } from '../../src/app/(admin)/residents/resident-directory';
@@ -50,16 +51,16 @@ function Fixture() {
   const name = window.recordFixture.name;
   const row = window.recordFixture.rows[name];
   const state = parseBrowseState(new URLSearchParams({ tab: 'all' }), TABLE_CONFIGS[name]);
-  const rows = row && !!row.deleted_at === archive ? [{ ...row }] : [];
+  const rows = row && !!row.deleted_at === archive && !new URLSearchParams(location.search).has('hideRows') ? [{ ...row }] : [];
   const result = { status: 'success', value: { rows, total: rows.length, state, queryIdentity: queryIdentity(state) } };
   const summary = { status: 'success', value: Object.fromEntries(TABLE_SUMMARY_KEYS[name].map(key => [key, 0])) };
   const Component = components[name];
-  return <ToastProvider><main className="mx-auto max-w-[1440px] p-6" data-revision={revision}>
+  return <ThemeControllerProvider><Toaster /><main className="mx-auto max-w-[1440px] p-6" data-revision={revision}>
     <h1 className="mb-4 text-xl">{RECORD_CONFIG[name].label} lifecycle fixture</h1>
     <button id="fixture-archive" className="mb-4 rounded border p-2" onClick={() => setArchive(value => !value)}>{archive ? 'Active fixture' : 'Archive fixture'}</button>
     {archive ? <ArchivedRecords name={name} result={result} requestedState={state} currentUserId="signed-in-admin" />
       : <Component result={result} summary={summary} requestedState={state} barangayId={base.barangay_id} currentUserId="signed-in-admin"
         residents={[profile]} documentTypes={[]} categories={[]} optionsError={null} referenceOptions={[]} admins={[profile]} drives={[]} />}
-  </main></ToastProvider>;
+  </main></ThemeControllerProvider>;
 }
 createRoot(document.getElementById('root')).render(<Fixture />);

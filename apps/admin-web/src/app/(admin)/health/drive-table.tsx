@@ -16,7 +16,7 @@ import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state'
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { DriveRow } from './types';
@@ -53,7 +53,7 @@ function currentDateISO() {
 }
 
 function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string; onClose: () => void; onChanged: () => void }) {
-  const toast = useToast();
+
   const [title, setTitle] = useState('');
   const [type, setType] = useState<(typeof DRIVE_TYPES)[number]>('vaccination');
   const [driveDate, setDriveDate] = useState(currentDateISO);
@@ -67,78 +67,84 @@ function AddDriveForm({ barangayId, onClose, onChanged }: { barangayId: string; 
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!title.trim()) {
-      toast.showError('Drive title is required.');
-      return;
-    }
-    if (!eligibleCriteria.trim()) {
-      toast.showError('Eligibility criteria is required.');
-      return;
-    }
-    if (!Number.isFinite(stockTotal) || stockTotal <= 0) {
-      toast.showError('Stock total must be a positive number.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data, error } = await supabase
-      .from('medical_drives')
-      .insert({
-        barangay_id: barangayId,
-        title: title.trim(),
-        type,
-        drive_date: driveDate,
-        time_start: timeStart,
-        time_end: timeEnd,
-        location: location.trim() || 'Barangay Health Center',
-        eligible_criteria: eligibleCriteria.trim(),
-        stock_label: stockLabel.trim() || 'Remaining Slots',
-        stock_unit: stockUnit.trim() || 'slots',
-        stock_total: Math.trunc(stockTotal),
-        stock_remaining: Math.trunc(stockTotal),
-        is_active: true,
-      })
-      .select(
-        'id, title, type, drive_date, time_start, time_end, location, eligible_criteria, stock_label, stock_unit, stock_total, stock_remaining, is_active',
-      )
-      .single();
-    setSubmitting(false);
-    if (error || !data) {
-      toast.showError(`Failed to create drive: ${error?.message ?? 'The created drive could not be confirmed.'}`);
-      return;
-    }
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!title.trim()) {
+        toast.error('Drive title is required.', { id: toastAttempt });
+        return;
+      }
+      if (!eligibleCriteria.trim()) {
+        toast.error('Eligibility criteria is required.', { id: toastAttempt });
+        return;
+      }
+      if (!Number.isFinite(stockTotal) || stockTotal <= 0) {
+        toast.error('Stock total must be a positive number.', { id: toastAttempt });
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data, error } = await supabase
+        .from('medical_drives')
+        .insert({
+          barangay_id: barangayId,
+          title: title.trim(),
+          type,
+          drive_date: driveDate,
+          time_start: timeStart,
+          time_end: timeEnd,
+          location: location.trim() || 'Barangay Health Center',
+          eligible_criteria: eligibleCriteria.trim(),
+          stock_label: stockLabel.trim() || 'Remaining Slots',
+          stock_unit: stockUnit.trim() || 'slots',
+          stock_total: Math.trunc(stockTotal),
+          stock_remaining: Math.trunc(stockTotal),
+          is_active: true,
+        })
+        .select(
+          'id, title, type, drive_date, time_start, time_end, location, eligible_criteria, stock_label, stock_unit, stock_total, stock_remaining, is_active',
+        )
+        .single();
+      setSubmitting(false);
+      if (error || !data) {
+        toast.error(`Failed to create drive: ${error?.message ?? 'The created drive could not be confirmed.'}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'medical_drive',
-      entityId: data?.id,
-      entityLabel: title.trim(),
-      metadata: {
-        title: title.trim(),
-        type,
-        drive_date: driveDate,
-        time_start: timeStart,
-        time_end: timeEnd,
-        location: location.trim() || 'Barangay Health Center',
-        eligible_criteria: eligibleCriteria.trim(),
-        stock_total: Math.trunc(stockTotal),
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'medical_drive',
+        entityId: data?.id,
+        entityLabel: title.trim(),
+        metadata: {
+          title: title.trim(),
+          type,
+          drive_date: driveDate,
+          time_start: timeStart,
+          time_end: timeEnd,
+          location: location.trim() || 'Barangay Health Center',
+          eligible_criteria: eligibleCriteria.trim(),
+          stock_total: Math.trunc(stockTotal),
+        },
+      }).catch(() => {});
 
-    toast.showSuccess('Medical drive created.');
-    setTitle('');
-    setType('vaccination');
-    setDriveDate(currentDateISO());
-    setTimeStart('08:00');
-    setTimeEnd('17:00');
-    setLocation('Barangay Health Center');
-    setEligibleCriteria('');
-    setStockLabel('Remaining Slots');
-    setStockUnit('slots');
-    setStockTotal(50);
-    onClose();
-    onChanged();
+      toast.success('Medical drive created.', { id: toastAttempt });
+      setTitle('');
+      setType('vaccination');
+      setDriveDate(currentDateISO());
+      setTimeStart('08:00');
+      setTimeEnd('17:00');
+      setLocation('Barangay Health Center');
+      setEligibleCriteria('');
+      setStockLabel('Remaining Slots');
+      setStockUnit('slots');
+      setStockTotal(50);
+      onClose();
+      onChanged();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

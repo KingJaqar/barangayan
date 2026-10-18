@@ -29,7 +29,8 @@ type UseFamilyMembersResult = {
   isReady: boolean;
   /** The current profile's latest *read* failure (write failures use `lastWriteFailure`). */
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
   addMember: (member: { name: string; relation: string; role?: string }) => Promise<HouseholdMember | null>;
   updateMember: (id: string, updates: Partial<Omit<HouseholdMember, 'id'>>) => Promise<HouseholdMember | null>;
   removeMember: (id: string) => Promise<boolean>;
@@ -173,6 +174,7 @@ export function useFamilyMembers(profileId: string | null): UseFamilyMembersResu
     isRefreshing: read.isRefreshing,
     isReady: read.isReady,
     error: read.error,
+    errorAnnounced: read.errorAnnounced,
     refetch: read.refetch,
     addMember,
     updateMember,

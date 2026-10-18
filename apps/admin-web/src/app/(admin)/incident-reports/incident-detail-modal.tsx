@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { IncidentActions } from './incident-actions';
@@ -23,7 +23,7 @@ export function IncidentDetailModal({ incident, onClose, onChanged, onEditingCha
   incident: IncidentRow; onClose: () => void; onChanged: () => void; onEditingChange: (editing: boolean) => void;
   detailStatus: 'loading' | 'ready' | 'error' | 'unavailable'; onRetry: () => void;
 }) {
-  const toast = useToast();
+
   const [activePhoto, setActivePhoto] = useState(0);
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(incident.title);
@@ -39,9 +39,10 @@ export function IncidentDetailModal({ incident, onClose, onChanged, onEditingCha
   }, [editing, onEditingChange]);
 
   async function saveDetails() {
+    const toastAttempt = beginAttempt('saveDetails');
     if (savingRef.current) return;
     if (!title.trim()) {
-      toast.showError('Title cannot be empty.');
+      toast.error('Title cannot be empty.', { id: toastAttempt });
       return;
     }
     savingRef.current = true;
@@ -59,12 +60,12 @@ export function IncidentDetailModal({ incident, onClose, onChanged, onEditingCha
       .eq('id', incident.id).select('id').maybeSingle();
     } catch (cause) {
       savingRef.current = false; setSaving(false);
-      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`); return;
+      toast.error(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`, { id: toastAttempt }); return;
     }
     savingRef.current = false; setSaving(false);
     const { error, data: updated } = result;
     if (error || !updated) {
-      toast.showError(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`);
+      toast.error(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`, { id: toastAttempt });
       return;
     }
 
@@ -89,7 +90,7 @@ export function IncidentDetailModal({ incident, onClose, onChanged, onEditingCha
       },
     }).catch(() => {});
 
-    toast.showSuccess('Incident details updated.');
+    toast.success('Incident details updated.', { id: toastAttempt });
     setEditing(false);
     onChanged();
   }

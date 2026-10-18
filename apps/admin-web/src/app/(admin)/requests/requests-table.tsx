@@ -3,8 +3,7 @@
 import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 
 import { RecordArchiveLink, useRecordWorkspace } from '@/components/admin/record-workspace';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { RequestLinkedRecordSheet } from '@/components/admin/request-linked-record-sheet';
 import { RequestStatusActions } from '@/components/admin/request-status-actions';
 
 import { type Tables } from '@barangayan/shared';
@@ -22,9 +21,12 @@ import { directionLabel } from '@/lib/admin-tables/sort-definitions';
 import { formatAdminTimestamp } from '@/lib/admin-tables/pilot-config';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
+import { mutateAdminRecord } from '@/actions/admin-record-actions';
+import { REQUEST_PAYMENT_METHOD_OPTIONS, REQUEST_PAYMENT_STATUS_OPTIONS } from '@/lib/request-payment-fields';
+import { requestStatusOptions } from '@/lib/request-edit-fields';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { ServiceRequest } from './page';
@@ -60,7 +62,7 @@ function AddRequestForm({
   onClose: () => void;
   onChanged: () => void;
 }) {
-  const toast = useToast();
+
   const [referenceNumber, setReferenceNumber] = useState('');
   const [residentId, setResidentId] = useState('');
   const [documentTypeId, setDocumentTypeId] = useState('');
@@ -71,57 +73,63 @@ function AddRequestForm({
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!residentId || !documentTypeId) {
-      toast.showError('Resident and document type are required.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data: inserted, error } = await supabase
-      .from('service_requests')
-      .insert({
-        resident_id: residentId,
-        document_type_id: documentTypeId,
-        barangay_id: barangayId,
-        ...(referenceNumber.trim() ? { reference_number: referenceNumber.trim().replace(/^#/, '') } : {}),
-        status,
-        payment_status: paymentStatus,
-        created_at: new Date(submittedAt).toISOString(),
-        requester_notes: notes || null,
-      })
-      .select('id')
-      .single();
-    setSubmitting(false);
-    if (error) {
-      toast.showError(`Failed to create request: ${error.message}`);
-      return;
-    }
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!residentId || !documentTypeId) {
+        toast.error('Resident and document type are required.', { id: toastAttempt });
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data: inserted, error } = await supabase
+        .from('service_requests')
+        .insert({
+          resident_id: residentId,
+          document_type_id: documentTypeId,
+          barangay_id: barangayId,
+          ...(referenceNumber.trim() ? { reference_number: referenceNumber.trim().replace(/^#/, '') } : {}),
+          status,
+          payment_status: paymentStatus,
+          created_at: new Date(submittedAt).toISOString(),
+          requester_notes: notes || null,
+        })
+        .select('id')
+        .single();
+      setSubmitting(false);
+      if (error) {
+        toast.error(`Failed to create request: ${error.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'service_request',
-      entityId: inserted?.id,
-      entityLabel: referenceNumber.trim() || residents.find((r) => r.id === residentId)?.full_name || 'Service Request',
-      metadata: {
-        resident: residents.find((r) => r.id === residentId)?.full_name ?? null,
-        document_type: documentTypes.find((d) => d.id === documentTypeId)?.name ?? null,
-        status,
-        payment_status: paymentStatus,
-        notes: notes || null,
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'service_request',
+        entityId: inserted?.id,
+        entityLabel: referenceNumber.trim() || residents.find((r) => r.id === residentId)?.full_name || 'Service Request',
+        metadata: {
+          resident: residents.find((r) => r.id === residentId)?.full_name ?? null,
+          document_type: documentTypes.find((d) => d.id === documentTypeId)?.name ?? null,
+          status,
+          payment_status: paymentStatus,
+          notes: notes || null,
+        },
+      }).catch(() => {});
 
-    toast.showSuccess('Request created.');
-    setReferenceNumber('');
-    setResidentId('');
-    setDocumentTypeId('');
-    setStatus('submitted');
-    setPaymentStatus('pending');
-    setSubmittedAt(currentDateTimeLocal());
-    setNotes('');
-    onClose();
-    onChanged();
+      toast.success('Request created.', { id: toastAttempt });
+      setReferenceNumber('');
+      setResidentId('');
+      setDocumentTypeId('');
+      setStatus('submitted');
+      setPaymentStatus('pending');
+      setSubmittedAt(currentDateTimeLocal());
+      setNotes('');
+      onClose();
+      onChanged();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (
@@ -209,7 +217,6 @@ export function RequestsTable({
   result: QueryOutcome<BrowseResult<ServiceRequest>>; summary: QueryOutcome<Summary>; requestedState: BrowseState;
   optionsError: string | null; residents: Resident[]; documentTypes: DocumentTypeOption[]; barangayId: string;
 }) {
-  const router = useRouter();
   const [addOpen, setAddOpen] = useState(false);
   const browse = usePilotTableBrowse('requests', requestedState, result);
   const { state, value } = browse;
@@ -235,12 +242,18 @@ export function RequestsTable({
 
     if (!changed) return { error: null };
 
+    if (request.contract_version === 2 || 'payment_method' in patch || 'payment_status' in patch) {
+      const result = await mutateAdminRecord('requests', request.id, 'save', request.updated_at, patch);
+      if (!result.error) browse.refresh();
+      return result;
+    }
+
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('service_requests')
       .update(patch)
       .eq('id', request.id)
-      .select('id, reference_number, status, payment_status, resident_id, document_type_id, created_at, requester_notes')
+      .select('id, reference_number, status, payment_method, payment_status, resident_id, document_type_id, created_at, requester_notes, updated_at')
       .maybeSingle();
     if (error) return { error: error.message };
     if (!updated) return { error: 'No request was updated. Check that you still have access to this barangay.' };
@@ -264,17 +277,8 @@ export function RequestsTable({
       if (row.status === 'completed') return 420;
       return 240;
     })),
-    workflowActions: row => <>
-      <RequestStatusActions requestId={row.id} referenceNumber={row.reference_number} status={row.status}
-        paymentStatus={row.payment_status} paymentMethod={row.payment_method} workflowRequest={row} variant="row" onBeforeAction={browse.settle} onChanged={browse.refresh} />
-      {row.contract_version === 2 && <Link href={`/requests/${row.id}`}
-      className="inline-flex min-h-9 items-center rounded-md bg-[var(--accent)] px-3 text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-      onClick={event => {
-        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-        event.preventDefault();
-        void browse.settle().then(saved => { if (saved) router.push(`/requests/${row.id}`); });
-      }}>Details</Link>}
-    </>,
+    workflowActions: row => <RequestStatusActions requestId={row.id} referenceNumber={row.reference_number} status={row.status}
+      paymentStatus={row.payment_status} paymentMethod={row.payment_method} workflowRequest={row} variant="row" onBeforeAction={browse.settle} onChanged={browse.refresh} />,
   });
 
   const columns: EditableDataTableColumn<ServiceRequest>[] = [
@@ -289,7 +293,6 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <span className="font-mono text-xs font-medium tabular-nums">#{r.reference_number}</span>,
       edit: {
-        canEdit: r => r.contract_version === 1,
         type: 'text',
         getValue: (r) => r.reference_number,
         onSave: async (r, value) => {
@@ -338,47 +341,46 @@ export function RequestsTable({
       minWidth: 136,
       wrap: 'nowrap',
       render: (r) => <StatusPill status={r.status} />,
-      edit: {
-        canEdit: r => r.contract_version === 1,
+      edit: r => ({
         type: 'select', selectKind: 'status',
-        options: [
+        options: r.contract_version === 2 ? requestStatusOptions(r, false) : [
           { value: 'submitted', label: 'Submitted' },
           { value: 'in_progress', label: 'Processing' },
           { value: 'ready_for_pickup', label: 'Ready for Pickup' },
           { value: 'completed', label: 'Completed' },
           { value: 'cancelled', label: 'Cancelled' },
         ],
-        // Same bare .update({status}) the FSM buttons in RequestStatusActions use — the
-        // track_service_request_status trigger (0002/0007) appends a status_history entry
-        // on any status-changing UPDATE, so this stays consistent with that audit trail.
+        // Newer records use the same controlled transitions as request review.
         getValue: (r) => r.status,
         onSave: (r, value) => updateField(r, { status: String(value) }),
+        commitOnChange: true,
+      }),
+    },
+    {
+      id: 'payment_method',
+      header: 'Payment method',
+      initialWidth: 188,
+      minWidth: 180,
+      wrap: 'nowrap',
+      render: r => <span>{REQUEST_PAYMENT_METHOD_OPTIONS.find(option => option.value === r.payment_method)?.label ?? '—'}</span>,
+      edit: {
+        type: 'select', selectKind: 'payment',
+        options: REQUEST_PAYMENT_METHOD_OPTIONS,
+        getValue: r => r.payment_method ?? '',
+        onSave: (r, value) => updateField(r, { payment_method: String(value) }),
         commitOnChange: true,
       },
     },
     {
       id: 'payment_status',
-      header: 'Payment',
-      initialWidth: 116,
-      minWidth: 106,
+      header: 'Payment status',
+      initialWidth: 164,
+      minWidth: 156,
       wrap: 'nowrap',
-      render: (r) => <StatusPill status={r.payment_status} />,
-      rowEdit: [
-        { label: 'Payment', edit: { type: 'select', selectKind: 'status', canEdit: r => r.contract_version === 1,
-          options: [{ value: 'pending', label: 'Pending' }, { value: 'paid', label: 'Paid' }, { value: 'waived', label: 'Waived' }],
-          getValue: r => r.payment_status, onSave: (r, value) => updateField(r, { payment_status: String(value) }) } },
-        { label: 'Payment method', edit: { type: 'select', selectKind: 'payment', canEdit: r => r.contract_version === 2,
-          options: [{ value: 'pickup', label: 'Pay at Pickup' }, { value: 'qrph', label: 'QR PH' }],
-          getValue: r => r.payment_method ?? 'pickup', onSave: (r, value) => updateField(r, { payment_method: String(value) }) } },
-      ],
+      render: r => <StatusPill status={r.payment_status} />,
       edit: {
-        canEdit: r => r.contract_version === 1,
         type: 'select', selectKind: 'status',
-        options: [
-          { value: 'pending', label: 'Pending' },
-          { value: 'paid', label: 'Paid' },
-          { value: 'waived', label: 'Waived' },
-        ],
+        options: REQUEST_PAYMENT_STATUS_OPTIONS,
         getValue: (r) => r.payment_status,
         onSave: (r, value) => updateField(r, { payment_status: String(value) }),
         commitOnChange: true,
@@ -392,7 +394,6 @@ export function RequestsTable({
       wrap: 'nowrap',
       render: (r) => <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-300">{formatAdminTimestamp(r.created_at)}</span>,
       edit: {
-        canEdit: r => r.contract_version === 1,
         type: 'datetime',
         getValue: (r) => r.created_at,
         onSave: (r, value) => updateField(r, { created_at: String(value) }),
@@ -406,7 +407,6 @@ export function RequestsTable({
       wrap: 'break-word',
       render: (r) => <span className="leading-snug text-zinc-600 dark:text-zinc-300">{r.requester_notes ?? '—'}</span>,
       edit: {
-        canEdit: r => r.contract_version === 1,
         type: 'text',
         getValue: (r) => r.requester_notes ?? '',
         onSave: (r, value) => updateField(r, { requester_notes: String(value) || null }),
@@ -442,8 +442,9 @@ export function RequestsTable({
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: browse.config.sorts, onChange: (sort, dir) => void browse.commit({ sort, dir }) }}
         emptyLabel={browse.pending ? 'Updating results…' : 'No requests in this view.'}
-        resizableColumns density="compact" tableMinWidth={1360}  />
+        resizableColumns density="compact" tableMinWidth={1540}  />
     </TableBrowsePanel>
     {lifecycle.view}
+    <RequestLinkedRecordSheet onChanged={browse.refresh} />
   </>;
 }

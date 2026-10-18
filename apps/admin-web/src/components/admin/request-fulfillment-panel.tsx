@@ -1,8 +1,10 @@
 'use client';
 
+import { beginAttempt, notify } from '@/lib/notify';
+
 import { formatCentavosAsPHP, serviceFoundationOperations, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { markPaymentCollected } from '@/lib/payments';
 
@@ -14,9 +16,11 @@ const button = 'rounded-lg bg-[var(--accent)] px-4 py-2 text-sm text-white disab
 export function RequestFulfillmentPanel({
   request: r,
   onChanged,
+  onBusyChange,
 }: {
   request: Request;
   onChanged?: () => void;
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const router = useRouter();
   const [collectionAmount, setCollectionAmount] = useState('');
@@ -25,6 +29,7 @@ export function RequestFulfillmentPanel({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const inFlight = useRef(false);
   const editable = r.sla_state === 'pre_processing';
   const payable = r.fee_assessment_state === 'assessed' && (r.assessed_amount_centavos ?? 0) > 0;
   const paid =
@@ -33,20 +38,31 @@ export function RequestFulfillmentPanel({
     (r.fee_assessment_state === 'assessed' && r.assessed_amount_centavos === 0);
 
   async function act(operation: () => PromiseLike<{ error: { message: string } | null }>, message: string) {
-    if (busy) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
+    const attempt = beginAttempt('request-fulfillment');
     setBusy(true);
+    onBusyChange?.(true);
     setError('');
     setNotice('');
     try {
       const result = await operation();
-      if (result.error) throw new Error(result.error.message);
+      if (result.error) {
+        setError(result.error.message);
+        notify.error('Could not update the request. Review the details and try again.', { id: attempt });
+        return;
+      }
       setNotice(message);
+      notify.success(message, { id: attempt });
       if (onChanged) onChanged();
       else router.refresh();
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : 'Operation failed. Refresh and retry.');
+      notify.warning("We couldn't confirm the request change. Refresh before trying again.", { id: attempt });
     } finally {
+      inFlight.current = false;
       setBusy(false);
+      onBusyChange?.(false);
     }
   }
   const operations = () => serviceFoundationOperations(createSupabaseBrowserClient());
@@ -156,12 +172,12 @@ export function RequestFulfillmentPanel({
         </div>
       ) : null}
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p className="text-sm text-red-600">
           {error}
         </p>
       ) : null}
       {notice ? (
-        <p role="status" className="text-sm text-green-700 dark:text-green-400">
+        <p className="text-sm text-green-700 dark:text-green-400">
           {notice}
         </p>
       ) : null}

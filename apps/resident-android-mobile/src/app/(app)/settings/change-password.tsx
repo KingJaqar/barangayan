@@ -12,9 +12,11 @@ import { PrimaryButton } from '@/components/primary-button';
 import { ResidentPasswordStep, type ResidentPasswordDraft } from '@/components/resident-password-step';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
 import { clearGoogleReauthentication, googleReauthentication } from '@/lib/google-auth';
 import { passwordMode, type ReauthenticationState } from '@/lib/sensitive-auth';
 import { authSetupRequests } from '@/lib/setup-request';
@@ -75,7 +77,7 @@ function ResultPopup({
 
   return (
     <Modal transparent visible={visible} animationType="none" statusBarTranslucent onRequestClose={onDismiss}>
-      <Animated.View entering={FadeIn.duration(160)} exiting={FadeOut.duration(140)} style={styles.popupBackdrop}>
+      <Animated.View entering={FadeIn.duration(160)} exiting={FadeOut.duration(140)} style={[styles.popupBackdrop, { backgroundColor: theme.text + '73' }]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onDismiss} accessibilityLabel="Dismiss" />
         <Animated.View
           style={[
@@ -114,6 +116,7 @@ export default function ChangePasswordScreen() {
 }
 
 function ChangeOrManagePassword() {
+  const { fontId } = useFontPreference();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -211,16 +214,19 @@ function ChangeOrManagePassword() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => {
+              if (router.canGoBack()) router.back();
+              else router.replace('/settings');
+            }}
             style={styles.backBtn}
             accessibilityRole="button"
             accessibilityLabel="Go back"
             hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
@@ -249,16 +255,14 @@ function ChangeOrManagePassword() {
           </View>
         ) : (
           <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={[styles.content, styles.passwordContent]} keyboardShouldPersistTaps="handled">
               <View
                 style={[
                   styles.introCard,
+                  styles.passwordIntroCard,
                   { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
                 ]}>
-                <View style={[styles.introIconWrap, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-                  <Ionicons name="shield-checkmark-outline" size={20} color={theme.primary} />
-                </View>
-                <ThemedText themeColor="textSecondary" style={styles.intro}>
+                <ThemedText type="small" themeColor="textSecondary" style={styles.intro}>
                   {mode === 'manage'
                     ? 'Your account has an existing password we cannot confirm. Enter it to change it, or recover it by email if you do not know it.'
                     : 'Enter your current password, then choose a new one — at least 8 characters, with an uppercase letter, a number, and a special character.'}
@@ -276,6 +280,7 @@ function ChangeOrManagePassword() {
                   { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
                 ]}>
                 <TextField
+                  style={{ fontFamily: getMobileFontFamily(fontId) }}
                   label="Current Password"
                   required
                   value={currentPassword}
@@ -297,6 +302,7 @@ function ChangeOrManagePassword() {
                 </Pressable>
                 <View style={[styles.divider, { backgroundColor: theme.backgroundSelected }]} />
                 <TextField
+                  style={{ fontFamily: getMobileFontFamily(fontId) }}
                   label="New Password"
                   required
                   value={newPassword}
@@ -307,6 +313,7 @@ function ChangeOrManagePassword() {
                   passwordVisibility={{ visible: showNew, onToggle: () => setShowNew((v) => !v) }}
                 />
                 <TextField
+                  style={{ fontFamily: getMobileFontFamily(fontId) }}
                   label="Confirm New Password"
                   required
                   value={confirmPassword}
@@ -342,9 +349,7 @@ function ChangeOrManagePassword() {
                 </Animated.View>
               ) : null}
 
-              <View style={styles.submitBtn}>
-                <PrimaryButton label="Update Password" loading={loading} onPress={handleUpdate} />
-              </View>
+              <PrimaryButton label="Update Password" loading={loading} onPress={handleUpdate} />
               {mode === 'manage' ? (
                 <PrimaryButton
                   label="Recover password by email"
@@ -358,7 +363,7 @@ function ChangeOrManagePassword() {
         )}
       </View>
 
-      <ResultPopup visible={showSuccess} onDismiss={() => { setShowSuccess(false); router.back(); }} />
+      <ResultPopup visible={showSuccess} onDismiss={() => { setShowSuccess(false); router.dismissTo('/settings'); }} />
     </SafeAreaView>
   );
 }
@@ -387,7 +392,8 @@ function FirstPasswordFromSettings() {
     if (draft.uncertain) { setNotice('Confirm whether your entered password was saved, or use password recovery, before leaving.'); return true; }
     setDraft({ password: '', confirmPassword: '', uncertain: false });
     void clearGoogleReauthentication().catch(() => {});
-    router.back();
+    if (router.canGoBack()) router.back();
+    else router.replace('/settings');
     return true;
   }
   useEffect(() => {
@@ -430,11 +436,11 @@ function FirstPasswordFromSettings() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable onPress={leave} style={styles.backBtn} accessibilityRole="button" accessibilityLabel="Go back" hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>Set Password</ThemedText>
@@ -442,10 +448,7 @@ function FirstPasswordFromSettings() {
         </View>
         <ScrollView contentContainerStyle={styles.content}>
           <View style={[styles.introCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
-            <View style={[styles.introIconWrap, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }]}>
-              <Ionicons name="shield-checkmark-outline" size={20} color={theme.primary} />
-            </View>
-            <ThemedText themeColor="textSecondary" style={styles.intro}>
+            <ThemedText type="small" themeColor="textSecondary" style={styles.intro}>
               Your account does not have a password yet. To protect it, first confirm it is you with the same
               Google account. You will then have 5 minutes to set your password.
             </ThemedText>
@@ -492,11 +495,16 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
   content: {
     padding: Spacing.three,
-    gap: Spacing.three,
+    gap: Spacing.two + Spacing.one,
+  },
+  passwordContent: {
+    gap: Spacing.two,
+  },
+  passwordIntroCard: {
+    paddingVertical: Spacing.two,
   },
   introCard: {
     flexDirection: 'row',
@@ -504,15 +512,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     borderWidth: 1,
     borderRadius: Spacing.three,
-    padding: Spacing.three,
-  },
-  introIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: Spacing.two + Spacing.one,
   },
   intro: {
     flex: 1,
@@ -521,8 +521,9 @@ const styles = StyleSheet.create({
   fieldsCard: {
     borderWidth: 1,
     borderRadius: Spacing.three,
-    padding: Spacing.three,
-    gap: Spacing.three,
+    padding: Spacing.two + Spacing.one,
+    paddingVertical: Spacing.two,
+    gap: Spacing.two,
   },
   divider: {
     height: StyleSheet.hairlineWidth,
@@ -530,7 +531,9 @@ const styles = StyleSheet.create({
   },
   forgotLink: {
     alignSelf: 'flex-end',
-    marginTop: -Spacing.two,
+    minHeight: 44,
+    justifyContent: 'center',
+    marginVertical: -Spacing.one,
   },
   passwordMatchIndicator: {
     flexDirection: 'row',
@@ -543,20 +546,16 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     borderWidth: 1,
     borderRadius: Spacing.two,
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
   },
   errorText: {
     flex: 1,
     lineHeight: 18,
   },
-  submitBtn: {
-    marginTop: Spacing.one,
-  },
   popupBackdrop: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.45)',
     padding: Spacing.four,
   },
   popupCard: {

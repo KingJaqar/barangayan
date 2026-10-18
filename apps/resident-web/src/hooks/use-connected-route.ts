@@ -9,6 +9,7 @@ import {
 import type { CenterRouteSummary } from '@barangayan/shared/src/lib/evacuation-routing';
 import type { RouteServiceProvenance } from '@barangayan/shared/src/lib/evacuation-route-service';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 /** Plan section 4: refresh every 30 s while visible, backing off after failures up to 5 minutes. */
 const REFRESH_INTERVAL_MS = 30_000;
@@ -30,6 +31,8 @@ export interface ConnectedRouteState {
   attribution: string | null;
   /** One-to-many walking distances for the current origin; reachable centers first. */
   ranking: CenterRouteSummary[] | null;
+  /** A terminal explicit result was assigned to the toast announcement owner. */
+  outcomeAnnounced: boolean;
   retry: () => void;
 }
 
@@ -38,11 +41,13 @@ interface RouteEntry {
   result: ConnectedRouteResult;
   service: RouteServiceProvenance;
   checkedAt: number;
+  announced: boolean;
 }
 
 interface FailureEntry {
   key: string;
   failure: ConnectedRouteFailure;
+  announced: boolean;
 }
 
 /** A street picked from the attachment chooser; it belongs to the graph named in the answer that offered it. */
@@ -62,12 +67,20 @@ export function useConnectedRoute(options: {
   origin: ConfirmedOrigin | null;
   centerId: string | null;
   segment: SegmentChoice | null;
+  explicitOriginRevision?: number | null;
+  originNotificationId?: OperationId | null;
+  selectionNotificationId?: OperationId | null;
 }): ConnectedRouteState {
   const { origin, centerId, segment } = options;
+  const feedback = useRef(options);
+  useEffect(() => { feedback.current = options; });
   const [routeEntry, setRouteEntry] = useState<RouteEntry | null>(null);
   const [failureEntry, setFailureEntry] = useState<FailureEntry | null>(null);
   const [nonce, setNonce] = useState(0);
   const newestRevision = useRef<number | null>(null);
+  const retryAttempt = useRef<OperationId | null>(null);
+  const selectionAttempt = useRef<{ key: string; id: OperationId | null } | null>(null);
+  const previousSelection = useRef<{ centerId: string | null; revision: number | undefined; graph: string | null; edge: string | null } | null>(null);
 
   const lat = origin?.lat;
   const lng = origin?.lng;
@@ -81,6 +94,14 @@ export function useConnectedRoute(options: {
     if (key === null || lat === undefined || lng === undefined || revision === undefined) return;
     const requestKey: string = key;
     const requestOrigin = { lat, lng, accuracyMeters, revision };
+    const previous = previousSelection.current;
+    const selectionChanged = (centerId !== null && centerId !== (previous?.centerId ?? null)) || (revision === previous?.revision && (segmentGraph !== previous.graph || segmentEdge !== previous.edge));
+    const originChanged = revision !== previous?.revision && revision === feedback.current.explicitOriginRevision;
+    const attemptKey = JSON.stringify([key, nonce]);
+    if (selectionAttempt.current?.key !== attemptKey) selectionAttempt.current = { key: attemptKey, id: retryAttempt.current ?? (selectionChanged ? feedback.current.selectionNotificationId ?? null : originChanged ? feedback.current.originNotificationId ?? null : null) };
+    const receipt = selectionAttempt.current;
+    retryAttempt.current = null;
+    previousSelection.current = { centerId, revision, graph: segmentGraph, edge: segmentEdge };
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | null = null;
     let failures = 0;
@@ -109,14 +130,21 @@ export function useConnectedRoute(options: {
         },
       });
       if (controller.signal.aborted || outcome.kind === 'cancelled') return;
+      const notification = receipt.id;
+      receipt.id = null;
+      if (notification) {
+        if (outcome.kind !== 'route') notify.error("Couldn't calculate the route. Check your connection and try again.", { id: notification });
+        else if (outcome.result.status === 'ok') notify.success('Walking route ready. Review the route guidance.', { id: notification });
+        else if (outcome.result.status !== 'attachment_ambiguous') notify.warning('No available walking route was found. Review the guidance below.', { id: notification });
+      }
       if (outcome.kind === 'route') {
         newestRevision.current = Math.max(newestRevision.current ?? 0, outcome.result.provenance.conditionsRevision);
         failures = 0;
-        setRouteEntry({ key: requestKey, result: outcome.result, service: outcome.service, checkedAt: Date.now() });
+        setRouteEntry({ key: requestKey, result: outcome.result, service: outcome.service, checkedAt: Date.now(), announced: notification !== null && outcome.result.status !== 'attachment_ambiguous' });
         setFailureEntry(null);
       } else {
         failures += 1;
-        setFailureEntry({ key: requestKey, failure: outcome.failure });
+        setFailureEntry({ key: requestKey, failure: outcome.failure, announced: notification !== null });
       }
       schedule(failures === 0 ? REFRESH_INTERVAL_MS : Math.min(MAX_REFRESH_INTERVAL_MS, REFRESH_INTERVAL_MS * 2 ** failures));
     }
@@ -128,9 +156,9 @@ export function useConnectedRoute(options: {
     };
   }, [key, lat, lng, accuracyMeters, revision, centerId, segmentGraph, segmentEdge, nonce]);
 
-  const retry = useCallback(() => setNonce(n => n + 1), []);
+  const retry = useCallback(() => { retryAttempt.current = beginAttempt('walking-route'); setNonce(n => n + 1); }, []);
 
-  const base = { result: null, failure: null, stale: false, checkedAt: null, attribution: null, ranking: null, retry };
+  const base = { result: null, failure: null, stale: false, checkedAt: null, attribution: null, ranking: null, outcomeAnnounced: false, retry };
   if (key === null) return { ...base, status: 'idle' };
   const current = routeEntry !== null && routeEntry.key === key ? routeEntry : null;
   const failure = failureEntry !== null && failureEntry.key === key ? failureEntry.failure : null;
@@ -146,8 +174,9 @@ export function useConnectedRoute(options: {
       stale: failure !== null,
       checkedAt: current.checkedAt,
       attribution: service.attribution,
+      outcomeAnnounced: failure ? failureEntry?.announced === true : current.announced,
     };
   }
-  if (failure !== null) return { ...base, status: 'failed', failure };
+  if (failure !== null) return { ...base, status: 'failed', failure, outcomeAnnounced: failureEntry?.announced === true };
   return { ...base, status: 'loading' };
 }

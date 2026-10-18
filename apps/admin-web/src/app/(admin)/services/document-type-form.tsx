@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 type DocumentType = Tables<'document_types'>;
@@ -34,7 +34,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
   barangayId: string; documentType?: DocumentType; onSaved?: () => void; onCancel?: () => void;
 }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [name, setName] = useState(row?.name ?? '');
   const [description, setDescription] = useState(row?.description ?? '');
   const [fee, setFee] = useState(String((row?.fee_centavos ?? 0) / 100));
@@ -45,6 +45,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
   const createId = useRef<string | null>(null);
 
   async function save(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('save');
     event.preventDefault();
     if (inFlight.current) return;
     setError('');
@@ -60,6 +61,7 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       } as Record<string, string>)[String(field)] ?? 'Form';
       const message = issue?.code === 'too_small' && issue.type === 'string' ? 'Enter a value.' : issue?.message ?? 'Check your entries.';
       setError(`${label}: ${message}`);
+      toast.error('Check the highlighted service details.', { id: toastAttempt });
       return;
     }
     inFlight.current = true; setBusy(true);
@@ -88,10 +90,11 @@ export function DocumentTypeForm({ barangayId, documentType: row, onSaved, onCan
       }
       void logAdminAction({ action: row ? 'update' : 'create', entityType: 'document_type',
         entityId: id, entityLabel: values.name, metadata: values }).catch(() => {});
-      toast.showSuccess(`"${values.name}" ${row ? 'updated' : 'added'}.`);
+      toast.success(`"${values.name}" ${row ? 'updated' : 'added'}.`, { id: toastAttempt });
       if (!row) { setName(''); setDescription(''); setFee('0'); setDraft(initialCatalog()); createId.current = null; }
       onSaved?.(); router.refresh();
     } catch (failure) {
+      toast.warning("We couldn't confirm the service save. Refresh before trying again.", { id: toastAttempt });
       setError(failure instanceof Error ? failure.message : String((failure as { message?: string }).message ?? failure));
     } finally { inFlight.current = false; setBusy(false); }
   }

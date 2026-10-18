@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 
 // Mirrors the mobile app's (auth)/forgot-password.tsx exactly — same
 // resetPasswordForEmail() call, same 6-digit-code recovery flow (this Supabase
@@ -13,28 +13,33 @@ import { useToast } from '@/components/ui/toast';
 // entry point since (admin)/login/page.tsx never had one.
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const toast = useToast();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    setLoading(true);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
+      setLoading(true);
 
-    const supabase = createSupabaseBrowserClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email);
-    setLoading(false);
+      const supabase = createSupabaseBrowserClient();
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email);
+      setLoading(false);
 
-    if (resetError) {
-      setError(resetError.message);
-      toast.showError(`Could not send reset code: ${resetError.message}`);
-      return;
-    }
+      if (resetError) {
+        setError(resetError.message);
+        toast.error(`Could not send reset code: ${resetError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    toast.showSuccess('Reset code sent — check your email.');
-    router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+      toast.success('Reset code sent — check your email.', { id: toastAttempt });
+      router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+
+    } catch {
+      toast.warning('The code request could not be confirmed. Check your email before trying again.', { id: toastAttempt });
+    } finally { setLoading(false); }
   }
 
   const inputClass =

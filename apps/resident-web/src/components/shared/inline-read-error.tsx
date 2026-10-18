@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils';
  * - `tone="error"` replaces content that never loaded; it is announced once (role alert).
  * - `tone="warning"` sits above a retained, same-identity result whose refresh failed, so
  *   the content is not presented as current (role status).
- * Failed reads do not toast: this notice is the persistent, single report.
+ * Explicit retry owners may toast a failure; `announce=false` keeps its persistent
+ * recovery text readable without announcing the same outcome twice.
  */
 export function InlineReadError({
   message,
@@ -20,17 +21,19 @@ export function InlineReadError({
   retrying = false,
   tone = 'error',
   className,
+  announce = true,
 }: {
   message: string;
   onRetry: () => void;
   retrying?: boolean;
   tone?: 'error' | 'warning';
   className?: string;
+  announce?: boolean;
 }) {
   const isWarning = tone === 'warning';
   return (
     <div
-      role={isWarning ? 'status' : 'alert'}
+      role={announce ? isWarning ? 'status' : 'alert' : undefined}
       className={cn(
         'flex flex-wrap items-center gap-x-3 gap-y-1 text-sm',
         isWarning

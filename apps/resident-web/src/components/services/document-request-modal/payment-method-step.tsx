@@ -87,14 +87,14 @@ export function PaymentMethodStep({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div data-document-step="method" className="flex flex-col gap-4">
+      <div data-document-part="heading">
         <p className="text-sm font-semibold">Payment Method</p>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-5">
+      <div data-document-part="fee" data-fixed-fee={totalDue !== null} className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Document Fee</span>
           <span>{feeCentavos === 0 ? 'Free' : feeCentavos === null ? feeDescription : formatCentavosAsPHP(feeCentavos)}</span>
@@ -107,7 +107,7 @@ export function PaymentMethodStep({
 
       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Choose Payment Method</p>
 
-      <div className="flex flex-col gap-3">
+      <div data-document-part="methods" className="flex flex-col gap-3">
         {availableOptions.map((option) => {
           const isSelected = selected === option.key;
           const isGated = option.key === 'qrph' && !PAYMENT_SETTLEMENT_READY;

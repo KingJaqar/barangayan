@@ -124,14 +124,15 @@ export function QrphStep({
   const expiryPassed = status === 'pending' && remaining !== null && remaining <= 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div data-document-step="qrph" className="flex flex-col gap-4">
       <PaymentConfirmedDialog open={status === 'paid'} onConfirm={() => { if (paymentId) onPaid(paymentId); }} />
-      <div>
+      <div data-document-part="heading">
+        <p data-document-part="eyebrow">Payment Details · QR PH</p>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
       </div>
 
-      <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-6 text-center">
+      <div data-document-part="fee" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-6 text-center">
         <p className="text-sm text-muted-foreground">Document Fee</p>
         <p className="text-sm">{formatCentavosAsPHP(source?.documentFeeCentavos ?? documentFeeCentavos)}</p>
         <p className="mt-2 text-3xl font-bold text-primary">{totalDue === 0 ? 'Free' : formatCentavosAsPHP(totalDue)}</p>
@@ -145,7 +146,7 @@ export function QrphStep({
         ) : null}
       </div>
 
-      <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 text-center">
+      <div data-document-part="qr" className="flex min-h-[280px] flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 text-center">
         {status === 'loading' || (!source && status !== 'error') ? (
           // Same 256 px frame as the finished QR so nothing shifts when it arrives; steady
           // (non-pulsing) because a payment code is not a decorative placeholder.
@@ -185,7 +186,7 @@ export function QrphStep({
       <LoadingStatus active={status === 'loading' || (!source && status !== 'error')} label="Generating your QR code…" className="text-center" />
 
       {status === 'pending' || status === 'paid' ? (
-        <div className="rounded-2xl border border-border bg-card p-5">
+        <div data-document-part="instructions" className="rounded-2xl border border-border bg-card p-5">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">How to Pay</p>
           <ol className="flex flex-col gap-2">
             {PAYMENT_STEPS.map((step, index) => (
@@ -202,7 +203,7 @@ export function QrphStep({
 
       {status === 'pending' ? (
         <>
-          <div className="flex items-center gap-3 rounded-2xl bg-primary/10 p-4">
+          <div data-document-part="waiting" className="flex items-center gap-3 rounded-2xl bg-primary/10 p-4">
             <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-primary" />
             <div>
               <p className="text-sm font-semibold text-primary">Waiting for payment...</p>

@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 
 import { MotionProvider } from '@/components/shared/motion-provider';
+import { ReadRetryProvider } from '@/components/shared/read-failure';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeControllerProvider, THEME_INIT_SCRIPT } from '@/components/theme/theme-controller';
 import { AccentControllerProvider, ACCENT_INIT_SCRIPT } from '@/components/theme/accent-controller';
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AccentControllerProvider>
             <FontControllerProvider>
               <MotionProvider>
-                {children}
+                <ReadRetryProvider>{children}</ReadRetryProvider>
                 <Toaster />
               </MotionProvider>
             </FontControllerProvider>

@@ -11,6 +11,7 @@ import { AlertTriangle, ArrowUpRight, Clock, PackageCheck, Users, Wallet } from 
 import { DashboardTable } from './dashboard-table';
 import { StatusPill } from '@/components/admin/status-pill';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requestRecordHref } from '@/lib/request-record-link';
 import styles from './dashboard.module.css';
 
 type ServiceRequest = Tables<'service_requests'> & {
@@ -174,7 +175,7 @@ async function RecentRequests() {
           header: 'Reference',
           render: (r) => (
             <Link
-              href={`/requests/${r.id}`}
+              href={requestRecordHref(r.id)}
               className="font-medium text-[var(--accent)] transition-colors duration-150 hover:text-[#0c5747] hover:underline">
               #{r.reference_number}
             </Link>
@@ -255,7 +256,7 @@ async function NeedsAttention() {
   const items: AttentionItem[] = [
     ...flaggedRequests.map(({ request: r, flag }) => ({
       id: `req-${r.id}`,
-      href: `/requests/${r.id}`,
+      href: requestRecordHref(r.id),
       label: `#${r.reference_number}`,
       detail: `${flag === 'overdue' ? 'Overdue' : 'Nearing target'} — submitted ${formatDateTime(r.created_at)}`,
     })),

@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import type { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -25,12 +26,13 @@ export function ProfileMfaForm({ auth, onVerified, onBusy }: { auth: ProfileAuth
   async function submit(event: FormEvent) {
     event.preventDefault(); if (submitting.current) return;
     submitting.current = true; setBusy(true); onBusy?.(true);
+    const attempt = beginAttempt('authenticator-verification');
     try {
       if (!factors.some(factor => factor.id === factorId) || !/^\d{6}$/.test(code)) throw new Error('Enter the six-digit code from your authenticator app.');
       const result = await auth.mfa.challengeAndVerify({ factorId, code }); setCode('');
       if (result.error) throw new Error('Authenticator verification failed. Check the current code and try again.');
       await onVerified();
-    } catch (failure) { setCode(''); setMessage(failure instanceof Error ? failure.message : 'Authenticator verification is unavailable.'); summary.current?.focus(); }
+    } catch (failure) { notify.error('Could not complete authenticator verification. Check the code and review the details below.', { id: attempt }); setCode(''); setMessage(failure instanceof Error ? failure.message : 'Authenticator verification is unavailable.'); summary.current?.focus(); }
     finally { submitting.current = false; setBusy(false); onBusy?.(false); }
   }
   return <form onSubmit={submit} className="grid gap-4"><p ref={summary} tabIndex={-1} role="status">{message}</p>{factors.length > 0 && <><label className="grid gap-2">Authenticator app<select className="rounded-lg border bg-transparent p-3" value={factorId} onChange={event => { setFactorId(event.target.value); setCode(''); }} disabled={busy}>{factors.map(factor => <option key={factor.id} value={factor.id}>{factor.name}</option>)}</select></label><label className="grid gap-2">Authenticator code<input autoFocus className="rounded-lg border bg-transparent p-3" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required value={code} onChange={event => setCode(event.target.value)} disabled={busy} /></label><button disabled={busy} className="rounded-lg bg-[var(--accent)] p-3 text-white">Verify authenticator</button></>}</form>;

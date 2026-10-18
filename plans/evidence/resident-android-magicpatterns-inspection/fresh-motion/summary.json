@@ -1,0 +1,310 @@
+[
+  {
+    "name": "01-home-to-services",
+    "rawFrames": 28,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1665,
+      865
+    ],
+    "medianMidpointIntervalMs": 63.0,
+    "maxMidpointIntervalMs": 126.0,
+    "approxSampleHz": 15.9,
+    "replayDurationMs": 1890,
+    "actionStartMs": 92
+  },
+  {
+    "name": "02-documents-to-requests",
+    "rawFrames": 30,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 64.0,
+    "maxMidpointIntervalMs": 86.5,
+    "approxSampleHz": 15.6,
+    "replayDurationMs": 1900,
+    "actionStartMs": 79
+  },
+  {
+    "name": "03-active-to-paid",
+    "rawFrames": 31,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 62.5,
+    "maxMidpointIntervalMs": 78.0,
+    "approxSampleHz": 16.0,
+    "replayDurationMs": 1890,
+    "actionStartMs": 93
+  },
+  {
+    "name": "04-home-summary-open",
+    "rawFrames": 28,
+    "changedFramePairs": 6,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 65.5,
+    "maxMidpointIntervalMs": 83.5,
+    "approxSampleHz": 15.3,
+    "replayDurationMs": 1900,
+    "actionStartMs": 81
+  },
+  {
+    "name": "05-home-summary-close",
+    "rawFrames": 30,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 64.5,
+    "maxMidpointIntervalMs": 81.5,
+    "approxSampleHz": 15.5,
+    "replayDurationMs": 1950,
+    "actionStartMs": 88
+  },
+  {
+    "name": "06-home-shelf-scroll",
+    "rawFrames": 30,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 64.5,
+    "maxMidpointIntervalMs": 78.5,
+    "approxSampleHz": 15.5,
+    "replayDurationMs": 1970,
+    "actionStartMs": 67
+  },
+  {
+    "name": "07-typhoon-expand",
+    "rawFrames": 30,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 62.0,
+    "maxMidpointIntervalMs": 82.5,
+    "approxSampleHz": 16.1,
+    "replayDurationMs": 1890,
+    "actionStartMs": 82
+  },
+  {
+    "name": "08-typhoon-collapse",
+    "rawFrames": 29,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 65.0,
+    "maxMidpointIntervalMs": 73.0,
+    "approxSampleHz": 15.4,
+    "replayDurationMs": 1900,
+    "actionStartMs": 72
+  },
+  {
+    "name": "09-centers-map-entry",
+    "rawFrames": 25,
+    "changedFramePairs": 6,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 70.5,
+    "maxMidpointIntervalMs": 148.0,
+    "approxSampleHz": 14.2,
+    "replayDurationMs": 1960,
+    "actionStartMs": 98
+  },
+  {
+    "name": "10-centers-nav-reveal",
+    "rawFrames": 27,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 70.5,
+    "maxMidpointIntervalMs": 86.0,
+    "approxSampleHz": 14.2,
+    "replayDurationMs": 1940,
+    "actionStartMs": 89
+  },
+  {
+    "name": "11-center-select",
+    "rawFrames": 26,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 71.5,
+    "maxMidpointIntervalMs": 90.5,
+    "approxSampleHz": 14.0,
+    "replayDurationMs": 1900,
+    "actionStartMs": 79
+  },
+  {
+    "name": "12-center-row-to-map",
+    "rawFrames": 24,
+    "changedFramePairs": 10,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 79.5,
+    "maxMidpointIntervalMs": 91.5,
+    "approxSampleHz": 12.6,
+    "replayDurationMs": 1930,
+    "actionStartMs": 62
+  },
+  {
+    "name": "13-center-card-close",
+    "rawFrames": 27,
+    "changedFramePairs": 7,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 70.8,
+    "maxMidpointIntervalMs": 85.5,
+    "approxSampleHz": 14.1,
+    "replayDurationMs": 1930,
+    "actionStartMs": 88
+  },
+  {
+    "name": "14-alert-date-expand",
+    "rawFrames": 29,
+    "changedFramePairs": 4,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 67.0,
+    "maxMidpointIntervalMs": 76.0,
+    "approxSampleHz": 14.9,
+    "replayDurationMs": 1950,
+    "actionStartMs": 86
+  },
+  {
+    "name": "15-about-entry",
+    "rawFrames": 28,
+    "changedFramePairs": 2,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 68.5,
+    "maxMidpointIntervalMs": 87.5,
+    "approxSampleHz": 14.6,
+    "replayDurationMs": 1920,
+    "actionStartMs": 57
+  },
+  {
+    "name": "16-mission-to-vision",
+    "rawFrames": 28,
+    "changedFramePairs": 6,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 69.0,
+    "maxMidpointIntervalMs": 79.0,
+    "approxSampleHz": 14.5,
+    "replayDurationMs": 1870,
+    "actionStartMs": 83
+  },
+  {
+    "name": "17-history-expand",
+    "rawFrames": 28,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 70.0,
+    "maxMidpointIntervalMs": 77.0,
+    "approxSampleHz": 14.3,
+    "replayDurationMs": 1930,
+    "actionStartMs": 76
+  },
+  {
+    "name": "18-theme-dark-select",
+    "rawFrames": 27,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 68.8,
+    "maxMidpointIntervalMs": 90.5,
+    "approxSampleHz": 14.5,
+    "replayDurationMs": 1900,
+    "actionStartMs": 78
+  },
+  {
+    "name": "19-search-open",
+    "rawFrames": 33,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 56.5,
+    "maxMidpointIntervalMs": 70.0,
+    "approxSampleHz": 17.7,
+    "replayDurationMs": 1950,
+    "actionStartMs": 54
+  },
+  {
+    "name": "20-search-back",
+    "rawFrames": 29,
+    "changedFramePairs": 1,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 65.2,
+    "maxMidpointIntervalMs": 74.5,
+    "approxSampleHz": 15.3,
+    "replayDurationMs": 1920,
+    "actionStartMs": 69
+  },
+  {
+    "name": "21-registration-sheet-open",
+    "rawFrames": 30,
+    "changedFramePairs": 5,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 62.0,
+    "maxMidpointIntervalMs": 78.5,
+    "approxSampleHz": 16.1,
+    "replayDurationMs": 1900,
+    "actionStartMs": 85
+  },
+  {
+    "name": "22-registration-sheet-close",
+    "rawFrames": 27,
+    "changedFramePairs": 8,
+    "screenshotSize": [
+      1651,
+      858
+    ],
+    "medianMidpointIntervalMs": 70.0,
+    "maxMidpointIntervalMs": 83.0,
+    "approxSampleHz": 14.3,
+    "replayDurationMs": 1920,
+    "actionStartMs": 67
+  }
+]

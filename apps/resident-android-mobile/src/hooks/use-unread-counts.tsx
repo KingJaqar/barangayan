@@ -24,7 +24,7 @@ interface UnreadCountsValue {
   /** Marks a single resolved incident unread again — the per-card "mark as unread" icon. */
   markIncidentUnread: (incidentId: string) => Promise<void>;
   /** Marks every currently-unread announcement as read (bulk — shared by the
-   * Announcements segment's button and, implicitly, the Home bell it clears). */
+   * Announcements screen's button and the shared header bell it clears). */
   markAnnouncementsRead: () => Promise<void>;
   /** Marks a single announcement read — the per-card "mark as read" icon. */
   markAnnouncementRead: (announcementId: string) => Promise<void>;
@@ -46,7 +46,7 @@ const UnreadCountsContext = createContext<UnreadCountsValue>({
 });
 
 /**
- * Single source of truth for the Reports bottom-tab's three live badges and the Home
+ * Single source of truth for the Reports tab's incident badges and the shared header
  * bell's announcement count. Mounted once in (app)/_layout.tsx — alongside AppTabs, not
  * inside the Reports screen — so the counts (and their Realtime subscriptions) stay live
  * while the resident is on any tab, not just while Reports is focused.

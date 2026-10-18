@@ -16,10 +16,12 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Card } from '@/components/card';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAboutUs } from '@/hooks/use-about-us';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
 
 // ─── Shimmer skeleton atom ─────────────────────────────────────────────────────
 function ShimmerSkeleton({
@@ -69,7 +71,7 @@ function AboutSkeleton({ theme }: { theme: ReturnType<typeof useTheme> }) {
       {([0, 1, 2] as const).map((i) => (
         <Card key={i} style={[sk.card, { borderColor: theme.backgroundSelected }]}>
           <View style={sk.cardHead}>
-            <ShimmerSkeleton theme={theme} width={36} height={36} borderRadius={10} />
+            <ShimmerSkeleton theme={theme} width={32} height={32} borderRadius={10} />
             <ShimmerSkeleton theme={theme} width="45%" height={16} />
           </View>
           <View style={sk.cardBody}>
@@ -83,7 +85,7 @@ function AboutSkeleton({ theme }: { theme: ReturnType<typeof useTheme> }) {
       {/* Developer section skeleton */}
       <Card style={[sk.card, { borderColor: theme.backgroundSelected }]}>
         <View style={sk.cardHead}>
-          <ShimmerSkeleton theme={theme} width={36} height={36} borderRadius={10} />
+          <ShimmerSkeleton theme={theme} width={32} height={32} borderRadius={10} />
           <ShimmerSkeleton theme={theme} width="42%" height={16} />
         </View>
         {([0, 1] as const).map((j) => (
@@ -101,10 +103,10 @@ function AboutSkeleton({ theme }: { theme: ReturnType<typeof useTheme> }) {
 }
 
 const sk = StyleSheet.create({
-  wrap: { gap: Spacing.three },
+  wrap: { gap: Spacing.two + Spacing.one },
   logoRow: { alignItems: 'center', paddingVertical: Spacing.two },
   card: {
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
     gap: Spacing.two,
     borderWidth: 1,
     borderRadius: Spacing.three,
@@ -165,20 +167,24 @@ export default function AboutScreen() {
   const { profile } = useProfile();
   const { about, developers, isLoading } = useAboutUs(profile?.barangay_id ?? null);
 
+  const { fontId } = useFontPreference();
+  const fontFamily = getMobileFontFamily(fontId);
   const markdownStyle = {
-    body: { color: theme.text, fontSize: 14, lineHeight: 22, fontWeight: 500 as const },
+    body: { color: theme.text, fontFamily, fontSize: 14, lineHeight: 21, fontWeight: 500 as const },
+    paragraph: { marginTop: Spacing.one, marginBottom: Spacing.one },
+    link: { color: theme.primary },
     heading2: {
       color: theme.text,
-      fontFamily: Fonts.gideonRoman,
+      fontFamily,
       fontSize: 16,
       fontWeight: '600' as const,
     },
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
-        {/* ── Header — NOT MODIFIED ─────────────────────────────────── */}
+        {/* ── Header ─────────────────────────────────── */}
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
             onPress={() => router.back()}
@@ -186,7 +192,7 @@ export default function AboutScreen() {
             accessibilityRole="button"
             accessibilityLabel="Go back"
             hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>About Us</ThemedText>
@@ -354,7 +360,7 @@ export default function AboutScreen() {
 }
 
 const styles = StyleSheet.create({
-  // ── Header (UNCHANGED from original) ────────────────────────
+  // ── Header ────────────────────────
   header: {
     paddingBottom: Spacing.three,
     alignItems: 'center',
@@ -375,22 +381,21 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
 
   // ── Scroll content ──────────────────────────────────────────
   content: {
-    padding: Spacing.three,
-    paddingBottom: Spacing.six,
+    padding: Spacing.two + Spacing.one,
+    paddingBottom: Spacing.four,
   },
   sections: {
-    gap: Spacing.three,
+    gap: Spacing.two + Spacing.one,
   },
 
   // ── Logo hero ───────────────────────────────────────────────
   logoWrap: {
     alignItems: 'center',
-    paddingVertical: Spacing.three,
+    paddingVertical: Spacing.two,
     gap: Spacing.two,
   },
   logoRing: {
@@ -400,7 +405,6 @@ const styles = StyleSheet.create({
   },
   logoTitle: {
     fontSize: 22,
-    fontFamily: Fonts.gideonRoman,
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -410,7 +414,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: Spacing.three,
     overflow: 'hidden',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -420,25 +423,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
   },
   iconBadge: {
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sectionTitle: {
     fontSize: 16,
-    fontFamily: Fonts.gideonRoman,
     fontWeight: '600',
     flex: 1,
   },
   sectionBody: {
-    paddingHorizontal: Spacing.three,
-    paddingBottom: Spacing.three,
-    paddingTop: Spacing.two,
+    paddingHorizontal: Spacing.two + Spacing.one,
+    paddingBottom: Spacing.two + Spacing.one,
+    paddingTop: Spacing.one,
     borderTopWidth: 1,
   },
 
@@ -533,7 +535,6 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontFamily: Fonts.gideonRoman,
     fontWeight: '600',
   },
 });

@@ -20,13 +20,14 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import type { Tables } from '@barangayan/shared';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FileText, SearchX, TriangleAlert, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/loading';
 import { drawerTransition } from '@/lib/motion';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 import { RequestTracking } from './[requestId]/request-tracking';
 
 type ServiceRequest = Tables<'service_requests'> & {
@@ -63,16 +64,18 @@ function DrawerMessage({
   title,
   body,
   children,
+  announce = true,
 }: {
   icon: React.ComponentType<{ size?: number; className?: string; 'aria-hidden'?: boolean }>;
   title: string;
   body: string;
   children: React.ReactNode;
+  announce?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center gap-3 px-2 py-12 text-center">
       <Icon aria-hidden size={30} className="text-muted-foreground" />
-      <div role="alert" className="flex flex-col gap-1">
+      <div role={announce ? 'alert' : undefined} className="flex flex-col gap-1">
         <p className="text-sm font-semibold">{title}</p>
         <p className="text-sm text-muted-foreground">{body}</p>
       </div>
@@ -84,6 +87,7 @@ function DrawerMessage({
 export function RequestDrawer({ requestId, open, onClose }: { requestId: string | null; open: boolean; onClose: () => void }) {
   const [read, setRead] = useState<DrawerRead | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const feedback = useRef<{ requestId: string; id: OperationId } | null>(null);
 
   useEffect(() => {
     if (!requestId) {
@@ -98,6 +102,7 @@ export function RequestDrawer({ requestId, open, onClose }: { requestId: string 
     // `cancelled` drops the response of a selection the resident has already moved
     // away from (or closed), so an older request can never replace the current one.
     let cancelled = false;
+    const notification = feedback.current?.requestId === requestId ? feedback.current.id : null;
     const supabase = createSupabaseBrowserClient();
     supabase
       .from('service_requests')
@@ -109,10 +114,10 @@ export function RequestDrawer({ requestId, open, onClose }: { requestId: string 
           if (cancelled) return;
           if (data) setRead({ id: requestId, status: 'ready', request: data as ServiceRequest });
           else if (!error || error.code === NO_ROW) setRead({ id: requestId, status: 'unavailable' });
-          else setRead({ id: requestId, status: 'error' });
+          else { setRead({ id: requestId, status: 'error' }); if (notification) notify.error("Couldn't refresh your request. Please try again.", { id: notification }); }
         },
         () => {
-          if (!cancelled) setRead({ id: requestId, status: 'error' });
+          if (!cancelled) { setRead({ id: requestId, status: 'error' }); if (notification) notify.error("Couldn't refresh your request. Please try again.", { id: notification }); }
         },
       );
 
@@ -127,6 +132,8 @@ export function RequestDrawer({ requestId, open, onClose }: { requestId: string 
   const pending = requestId !== null && current === null;
 
   function retry() {
+    if (!requestId) return;
+    feedback.current = { requestId, id: beginAttempt('request-detail-retry') };
     // Read-only: repeats the same select, nothing else.
     setRead(null);
     setAttempt((n) => n + 1);
@@ -186,6 +193,7 @@ export function RequestDrawer({ requestId, open, onClose }: { requestId: string 
                     ) : current?.status === 'error' ? (
                       <DrawerMessage
                         icon={TriangleAlert}
+                        announce={attempt === 0}
                         title="We couldn't load this request"
                         body="Check your connection, then try again. Nothing about the request was changed.">
                         <Button type="button" size="sm" onClick={retry}>

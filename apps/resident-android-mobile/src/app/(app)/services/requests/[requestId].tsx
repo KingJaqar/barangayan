@@ -280,28 +280,37 @@ export default function RequestTrackingScreen() {
   const recordedPayment = request.payments?.find(payment => payment.status === 'paid') ?? request.payments?.[0];
   const fee = requestFee(request, request.document_types?.fee_centavos ?? 0, recordedPayment?.document_fee_centavos ?? recordedPayment?.amount_centavos);
   const totalDue = fee;
+  const isPaid = request.payment_status === 'paid';
+  const isRefunded = request.payment_status === 'refunded';
+  const isWaived = request.payment_status === 'waived';
+  const noPaymentRequired = isWaived || totalDue === 0;
   // payment_method is null until the resident reaches the payment selection screen
   // (Stage 4). Show a "Not yet selected" fallback for requests still in that gap.
   const paymentMethodLabel =
-    request.payment_method === 'pickup'
-      ? 'Pay at Pickup'
-      : request.payment_method === 'qrph'
-        ? 'QR PH'
-        : 'Not yet selected';
+    noPaymentRequired
+      ? 'Not required'
+      : request.payment_method === 'pickup'
+        ? 'Pay at Pickup'
+        : request.payment_method === 'qrph'
+          ? 'QR PH'
+          : 'Not yet selected';
   const paymentMethodIcon: keyof typeof Ionicons.glyphMap =
-    request.payment_method === 'pickup'
-      ? 'cash-outline'
-      : request.payment_method === 'qrph'
-        ? 'qr-code-outline'
-        : 'help-circle-outline';
-  const isPaid = request.payment_status === 'paid';
-  const isRefunded = request.payment_status === 'refunded';
-  const paymentStatusLabel = request.payment_status === 'waived' ? 'Waived' : isRefunded ? 'Refunded' : isPaid ? 'Paid' : 'Pending';
+    noPaymentRequired
+      ? 'checkmark-circle-outline'
+      : request.payment_method === 'pickup'
+        ? 'cash-outline'
+        : request.payment_method === 'qrph'
+          ? 'qr-code-outline'
+          : 'help-circle-outline';
+  const paymentStatusLabel = isWaived ? 'Fee waived' : isRefunded ? 'Refunded' : isPaid ? 'Paid' : noPaymentRequired ? 'No payment required' : 'Pending';
   const paymentStatusColor = isRefunded ? theme.accentRed : isPaid ? theme.primary : theme.textSecondary;
-  // Payment also requires a confirmed positive assessment in the guards below.
-  const canPayNow = request.status !== 'cancelled' && request.status !== 'completed';
+  const canPayNow =
+    request.status !== 'cancelled' && request.status !== 'completed' &&
+    !isPaid && !isRefunded && !noPaymentRequired && totalDue !== null && totalDue > 0;
+  const showChoosePaymentMethod = request.payment_method === null && canPayNow;
+  const showPickupMessage = request.payment_method === 'pickup' && canPayNow;
   const showQrPayNow =
-    request.payment_method === 'qrph' && !isPaid && !isRefunded && canPayNow && totalDue !== null && totalDue >= 100 && PAYMENT_SETTLEMENT_READY;
+    request.payment_method === 'qrph' && canPayNow && totalDue !== null && totalDue >= 100 && PAYMENT_SETTLEMENT_READY;
   // A pending QR row whose expires_at has already passed is functionally gone —
   // create-payment-source will self-heal it into a fresh QR on next open (see its resume
   // check) — so the button should read "Pay Now" again rather than "Continue Payment
@@ -388,11 +397,22 @@ export default function RequestTrackingScreen() {
           <View style={styles.paymentAmountRow}>
             <ThemedText type="small" themeColor="textSecondary">Total Amount Due</ThemedText>
             <ThemedText type="smallBold">
-              {totalDue === null ? requestFeeLabel(request, null) : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
+              {isWaived ? 'Fee waived' : totalDue === null ? requestFeeLabel(request, null) : totalDue === 0 ? 'No payment required' : formatCentavosAsPHP(totalDue)}
             </ThemedText>
           </View>
-          {showQrPayNow || showCancelSlot ? (
+          {showPickupMessage ? (
+            <ThemedText type="small" themeColor="textSecondary">
+              Pay when collecting your document.
+            </ThemedText>
+          ) : null}
+          {showChoosePaymentMethod || showQrPayNow || showCancelSlot ? (
             <AnimatedAppear style={styles.buttonSlot}>
+              {showChoosePaymentMethod ? (
+                <PrimaryButton
+                  label="Choose payment method"
+                  onPress={() => router.push(`/services/payment/${requestId}`)}
+                />
+              ) : null}
               {showQrPayNow ? (
                 <AnimatedAppear key={hasActivePendingPayment ? 'continue' : 'pay-now'}>
                   <PrimaryButton
@@ -401,7 +421,7 @@ export default function RequestTrackingScreen() {
                     // rather than "pay now" once a payment attempt is already in flight.
                     label={
                       hasActivePendingPayment
-                        ? `Continue Payment ${formatButtonCountdown(pendingRemaining ?? 0)}`
+                        ? `Continue Payment · ${formatButtonCountdown(pendingRemaining ?? 0)}`
                         : 'Pay Now with QR PH'
                     }
                     onPress={() => router.push(`/services/payment/qrph/${requestId}`)}
@@ -412,8 +432,8 @@ export default function RequestTrackingScreen() {
                   payment attempt takes priority (cancelling it is reversible — the
                   resident can start a fresh payment) over cancelling the whole request. */}
               {showCancelSlot ? (
-                <AnimatedAppear key={pendingPayment ? 'cancel-payment' : 'cancel-request'}>
-                  {pendingPayment ? (
+                <AnimatedAppear key={showQrPayNow && hasActivePendingPayment ? 'cancel-payment' : 'cancel-request'}>
+                  {showQrPayNow && hasActivePendingPayment ? (
                     <PrimaryButton
                       label="Cancel Payment"
                       variant="destructive"
@@ -514,7 +534,6 @@ export default function RequestTrackingScreen() {
         </ThemedView>
 
         {request.purpose_label ? <ThemedView type="backgroundElement" style={styles.section}><ThemedText type="smallBold">Purpose</ThemedText><ThemedText>{request.purpose_label}</ThemedText>{request.purpose_explanation ? <ThemedText>{request.purpose_explanation}</ThemedText> : null}{submittedDetailLines(request.supporting_details).map(([label,value])=><View key={label}><ThemedText type="smallBold">{label}</ThemedText><ThemedText>{value}</ThemedText></View>)}</ThemedView> : null}
-        {(fee === null || fee > 0) && !isPaid && !isRefunded && canPayNow ? <PrimaryButton label="Choose or continue payment" onPress={()=>router.push(`/services/payment/${requestId}`)}/> : null}
         {request.requester_notes ? (
           <AnimatedAppear>
             <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>

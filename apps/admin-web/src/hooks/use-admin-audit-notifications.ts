@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -78,14 +79,17 @@ export function useAdminAuditNotifications(barangayId: string | null) {
   // Mark a single notification as read.
   const markAsRead = useCallback(
     async (id: string) => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
-      );
-      setUnreadCount((prev) => Math.max(0, prev - 1));
-      await supabase
-        .from('admin_audit_log')
-        .update({ is_read: true })
-        .eq('id', id);
+      const attempt = beginAttempt('notification-read');
+      try {
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+        );
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+        const { error } = await supabase.from('admin_audit_log')
+          .update({ is_read: true })
+          .eq('id', id);
+        if (error) notify.error('Could not mark the notification as read. Refresh to check its status.', { id: attempt });
+      } catch { notify.warning('Notification read status could not be confirmed. Refresh before trying again.', { id: attempt }); }
     },
     [supabase],
   );
@@ -95,13 +99,18 @@ export function useAdminAuditNotifications(barangayId: string | null) {
   const markAllAsRead = useCallback(
     async () => {
       if (!barangayId) return;
-      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
-      setUnreadCount(0);
-      await supabase
-        .from('admin_audit_log')
-        .update({ is_read: true })
-        .eq('barangay_id', barangayId)
-        .eq('is_read', false);
+      const attempt = beginAttempt('notifications-read-all');
+      try {
+        setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+        setUnreadCount(0);
+        const { error } = await supabase
+          .from('admin_audit_log')
+          .update({ is_read: true })
+          .eq('barangay_id', barangayId)
+          .eq('is_read', false);
+        if (error) notify.error('Could not mark all notifications as read. Refresh to check their status.', { id: attempt });
+        else notify.success('All notifications marked as read.', { id: attempt });
+      } catch { notify.warning('Notification read status could not be confirmed. Refresh before trying again.', { id: attempt }); }
     },
     [barangayId, supabase],
   );

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/loading';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify } from '@/lib/notify';
 import styles from './emergency.module.css';
 
 /**
@@ -28,6 +29,7 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
     if (!open) return;
     let cancelled = false;
     let objectUrl: string | null = null;
+    const notification = beginAttempt('household-qr');
 
     async function load() {
       setLoading(true);
@@ -41,12 +43,19 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
         if (cancelled) return;
         if (!session?.access_token) {
           setFailure('session');
+          notify.error('Log in again to view your household QR code.', { id: notification });
           return;
         }
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-household-qr?profileId=${profileId}`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
+        if (cancelled) return;
+        if (res.status === 401) {
+          setFailure('session');
+          notify.error('Log in again to view your household QR code.', { id: notification });
+          return;
+        }
         if (!res.ok) throw new Error('Failed to generate QR code');
         const blob = await res.blob();
         // Created only while this request is still the current one, so a late response
@@ -55,7 +64,10 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
         objectUrl = URL.createObjectURL(blob);
         setImageUrl(objectUrl);
       } catch {
-        if (!cancelled) setFailure('unavailable');
+        if (!cancelled) {
+          setFailure('unavailable');
+          notify.error("Couldn't load your household QR code. Please try again.", { id: notification });
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -84,7 +96,7 @@ export function HouseholdQrDialog({ open, onClose, profileId, residentName }: { 
             // eslint-disable-next-line @next/next/no-img-element -- server-issued PNG blob URL, not a next/image-eligible remote asset
             <img src={imageUrl} alt="Household QR code" className="h-full w-full object-contain" />
           ) : failure ? (
-            <div role="alert" className="flex flex-col items-center gap-2 text-center">
+            <div className="flex flex-col items-center gap-2 text-center">
               <p className="text-xs text-muted-foreground">
                 {failure === 'session' ? 'Your session has ended. Log in again to show your household code.' : "We couldn't generate your QR code."}
               </p>

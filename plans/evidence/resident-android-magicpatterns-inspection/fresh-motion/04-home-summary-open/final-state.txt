@@ -1,0 +1,95 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Home
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - generic: PT
+  - paragraph:
+    - text: Barangay Ampid I
+  - heading "Good evening, Phase" [level=1]
+  - region "Quick actions":
+    - list:
+      - button "Documents":
+        - generic: Documents
+      - button "Report":
+        - generic: Report
+      - button "Emergency":
+        - generic: Emergency
+      - button "Maps":
+        - generic: Maps
+      - button "Health":
+        - generic: Health
+  - region "Your requests":
+    - heading "Your requests" [level=2]
+    - paragraph: 3 in progress
+    - button "See all"
+    - 'button "Certificate of Indigency #REQ-2026-00074 · Social welfare Submitted Est. Oct 21" [active]':
+      - heading "Certificate of Indigency" [level=3]
+      - paragraph: "#REQ-2026-00074 · Social welfare"
+      - generic: Submitted
+      - generic: Est. Oct 21
+    - 'button "Certificate of Indigency #REQ-2026-00073 · Social welfare Processing Est. Oct 19"':
+      - heading "Certificate of Indigency" [level=3]
+      - paragraph: "#REQ-2026-00073 · Social welfare"
+      - generic: Processing
+      - generic: Est. Oct 19
+    - 'button "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) #REQ-2026-00072 · Records Ready for pickup Pick up at hall"':
+      - heading "Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)" [level=3]
+      - paragraph: "#REQ-2026-00072 · Records"
+      - generic: Ready for pickup
+      - generic: Pick up at hall
+    - button "Scroll requests left":
+    - button "Scroll requests right":
+  - region "Around the barangay":
+    - heading "Around the barangay" [level=2]
+    - paragraph: Latest announcements
+    - button "See all"
+    - 'button "Emergency Sep 26, 8:53 pm Flood advisory: pre-emptive evacuation for low-lying puroks"':
+      - generic: Emergency
+      - generic: Sep 26, 8:53 pm
+      - 'heading "Flood advisory: pre-emptive evacuation for low-lying puroks" [level=3]'
+    - button "Health Sep 24, 9:00 am Free flu vaccines for seniors at the health center":
+      - generic: Health
+      - generic: Sep 24, 9:00 am
+      - heading "Free flu vaccines for seniors at the health center" [level=3]
+    - button "Community Sep 22, 5:15 pm Barangay clean-up drive this Saturday, 6 am":
+      - generic: Community
+      - generic: Sep 22, 5:15 pm
+      - heading "Barangay clean-up drive this Saturday, 6 am" [level=3]
+    - button "Scroll announcements left":
+    - button "Scroll announcements right":
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports
+- dialog "Certificate of Indigency":
+  - paragraph: Social welfare
+  - heading "Certificate of Indigency" [level=2]
+  - paragraph: "Ref #REQ-2026-00074"
+  - button "Close":
+  - list:
+    - paragraph: Submitted
+    - paragraph: Oct 16, 9:12 am
+    - paragraph: Processing
+    - paragraph: Pending
+    - paragraph: Ready for pickup
+    - paragraph: Pending
+    - paragraph: Released
+    - paragraph: Pending
+  - button "View full request"

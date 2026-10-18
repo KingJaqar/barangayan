@@ -17,7 +17,7 @@ import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state'
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { formatDriveDate } from '../drive-table';
@@ -53,7 +53,7 @@ type DriveOption = { id: string; title: string; drive_date: string };
 type ResidentOption = { id: string; full_name: string };
 
 function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: () => void; onChanged: () => void; drives: DriveOption[]; residents: ResidentOption[] }) {
-  const toast = useToast();
+
   const [driveId, setDriveId] = useState('');
   const [residentId, setResidentId] = useState('');
   const [age, setAge] = useState(30);
@@ -63,60 +63,66 @@ function AddApplicantForm({ onClose, onChanged, drives, residents }: { onClose: 
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!driveId || !residentId) {
-      toast.showError('Select a drive and a resident.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const comorbsArray = comorbidities
-      .split(',')
-      .map((c) => c.trim())
-      .filter(Boolean);
-    // admin_register_for_drive (migration 0072) takes an explicit target resident and
-    // re-verifies caller is admin + target is in the caller's own barangay server-side —
-    // fixes BUG-07, where register_for_drive's auth.uid() silently registered the admin.
-    const { error } = await supabase.rpc('admin_register_for_drive', {
-      p_target_user_id: residentId,
-      p_drive_id: driveId,
-      p_age: age,
-      p_is_pwd: isPwd === 'true',
-      p_comorbidities: comorbsArray,
-      p_prior_dose_date: priorDoseDate || undefined,
-    });
-    setSubmitting(false);
-    if (error) {
-      toast.showError(`Failed to register: ${error.message}`);
-      return;
-    }
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!driveId || !residentId) {
+        toast.error('Select a drive and a resident.', { id: toastAttempt });
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const comorbsArray = comorbidities
+        .split(',')
+        .map((c) => c.trim())
+        .filter(Boolean);
+      // admin_register_for_drive (migration 0072) takes an explicit target resident and
+      // re-verifies caller is admin + target is in the caller's own barangay server-side —
+      // fixes BUG-07, where register_for_drive's auth.uid() silently registered the admin.
+      const { error } = await supabase.rpc('admin_register_for_drive', {
+        p_target_user_id: residentId,
+        p_drive_id: driveId,
+        p_age: age,
+        p_is_pwd: isPwd === 'true',
+        p_comorbidities: comorbsArray,
+        p_prior_dose_date: priorDoseDate || undefined,
+      });
+      setSubmitting(false);
+      if (error) {
+        toast.error(`Failed to register: ${error.message}`, { id: toastAttempt });
+        return;
+      }
 
-    // admin_register_for_drive doesn't return the new row's id, so entityId is omitted.
-    const residentName = residents.find((r) => r.id === residentId)?.full_name;
-    const driveTitle = drives.find((d) => d.id === driveId)?.title;
-    logAdminAction({
-      action: 'create',
-      entityType: 'drive_registration',
-      entityLabel: residentName ?? driveTitle ?? 'Drive registration',
-      metadata: {
-        resident: residentName ?? null,
-        drive: driveTitle ?? null,
-        age,
-        is_pwd: isPwd === 'true',
-        comorbidities: comorbsArray,
-        prior_dose_date: priorDoseDate || null,
-      },
-    }).catch(() => {});
+      // admin_register_for_drive doesn't return the new row's id, so entityId is omitted.
+      const residentName = residents.find((r) => r.id === residentId)?.full_name;
+      const driveTitle = drives.find((d) => d.id === driveId)?.title;
+      logAdminAction({
+        action: 'create',
+        entityType: 'drive_registration',
+        entityLabel: residentName ?? driveTitle ?? 'Drive registration',
+        metadata: {
+          resident: residentName ?? null,
+          drive: driveTitle ?? null,
+          age,
+          is_pwd: isPwd === 'true',
+          comorbidities: comorbsArray,
+          prior_dose_date: priorDoseDate || null,
+        },
+      }).catch(() => {});
 
-    toast.showSuccess('Registration created.');
-    setDriveId('');
-    setResidentId('');
-    setAge(30);
-    setIsPwd('false');
-    setComorbidities('');
-    setPriorDoseDate('');
-    onClose();
-    onChanged();
+      toast.success('Registration created.', { id: toastAttempt });
+      setDriveId('');
+      setResidentId('');
+      setAge(30);
+      setIsPwd('false');
+      setComorbidities('');
+      setPriorDoseDate('');
+      onClose();
+      onChanged();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (
@@ -199,7 +205,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
   barangayId: string;
   drives: DriveOption[]; residents: ResidentOption[]; optionsError: string | null;
 }) {
-  const toast = useToast();
+
   const config = useMemo(() => operationsConfig('applicants'), []);
   const browse = useConfiguredTableBrowse(config, requestedState, result, true);
   const { state, value } = browse;
@@ -259,10 +265,11 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
     workflowActions: row => row.status !== 'cancelled' && row.status !== 'attended' ? <ConfirmButton label="Cancel Registration" confirmLabel="Cancel registration?"
       ariaLabel="Cancel Registration" title="Cancel this medical registration" className="inline-flex min-h-9 shrink-0 items-center rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-950 dark:text-red-200"
       onConfirm={async () => {
+    const toastAttempt = beginAttempt('admin-action');
         if (!await browse.settle()) return;
         const result = await updateField(row, { status: 'cancelled' });
-        if (result.error) toast.showError(`Failed to cancel registration: ${result.error}`);
-        else toast.showSuccess('Registration cancelled.');
+        if (result.error) toast.error(`Failed to cancel registration: ${result.error}`, { id: toastAttempt });
+        else toast.success('Registration cancelled.', { id: toastAttempt });
       }} /> : null,
   });
 
@@ -296,6 +303,13 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
       minWidth: 160,
       wrap: 'break-word',
       render: (r) => <span className="font-medium leading-snug">{r.profiles?.full_name ?? '—'}</span>,
+    },
+    {
+      id: 'email', header: 'Email',
+      initialWidth: 240,
+      minWidth: 180,
+      wrap: 'break-word',
+      render: (r) => r.profiles?.email || '—',
     },
     {
       id: 'age', header: 'Age',
@@ -393,7 +407,7 @@ export function ApplicantsTable({ result, summary, requestedState, barangayId, d
       <EditableDataTable contextMenuColumnId="actions" rows={value?.rows ?? []} rowKey={row => row.id} columns={columns}
         emptyLabel="No registrations found."
         onRowClick={row => lifecycle.open(row)} resizableColumns  density="compact"
-        tableMinWidth={1320} cellOverflow="hidden"
+        tableMinWidth={1560} cellOverflow="hidden"
         editHandleRef={browse.editHandle} onEditingChange={browse.onEditingChange}
         sorting={{ descriptor: activeSort, direction: state.dir, choices: config.sorts,
           onChange: (sort, dir) => void browse.commit({ sort, dir }) }} />

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { calculateAgencySla, summarizeAgencySla, formatSlaDuration, AGENCY_SLA_LABEL, computeDocumentTypeTrends, type SlaRequest, type SlaPause } from '@barangayan/shared';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { requestRecordHref } from '@/lib/request-record-link';
 
 type Row = SlaRequest & { id:string; reference_number:string; status:string; document_type_id:string; document_type_name:string; legacy_target_hours:number; status_history:unknown; pauses:SlaPause[] };
 export function ServiceSlaReport() {
@@ -57,11 +58,11 @@ export function ServiceSlaReport() {
       <p className="text-sm">Previous timing model: {report.legacyCount} retained requests; {legacyRows.length} completed in this window. These samples are separate from agency-minute compliance.</p>
       <ul>{legacyTrends.map(t=><li key={t.documentTypeId}>{t.documentTypeName} · {t.completedCount} completed · original target {t.targetHours}h · {t.averageHours===null?'No samples':`${t.averageHours.toFixed(1)}h average submission-to-completion`}</li>)}</ul>
       <h3 className="font-semibold">Requests needing attention</h3>
-      <ul className="space-y-2">{data!.requests.filter(r=>r.timing_model==='agency_minutes_v1').map(r=>({r,m:calculateAgencySla(r,r.pauses,data!.evaluated_at)})).filter(({r,m})=>m.position==='overdue'||r.sla_state==='paused').map(({r,m})=><li key={r.id}><Link className="underline" href={`/requests/${r.id}`}>#{r.reference_number}</Link> · {AGENCY_SLA_LABEL[m.position]} · {formatSlaDuration(m.agencySeconds)}{m.waitingReason?` · Waiting: ${m.waitingReason}`:''}</li>)}</ul>
+      <ul className="space-y-2">{data!.requests.filter(r=>r.timing_model==='agency_minutes_v1').map(r=>({r,m:calculateAgencySla(r,r.pauses,data!.evaluated_at)})).filter(({r,m})=>m.position==='overdue'||r.sla_state==='paused').map(({r,m})=><li key={r.id}><Link className="underline" href={requestRecordHref(r.id)}>#{r.reference_number}</Link> · {AGENCY_SLA_LABEL[m.position]} · {formatSlaDuration(m.agencySeconds)}{m.waitingReason?` · Waiting: ${m.waitingReason}`:''}</li>)}</ul>
       {!report.overdueCount&&!report.pausedCount?<p>No overdue or paused requests.</p>:null}
       <h3 className="font-semibold">Recorded threshold alerts</h3>
       <p className="text-xs">Each threshold is recorded once per request. Delayed evaluation retains both crossed thresholds. Alerts remain available after readiness.</p>
-      <ul className="space-y-2">{windowAlerts.map(a=><li key={a.id}><Link className="underline" href={`/requests/${a.request_id}`}>#{data!.requests.find(r=>r.id===a.request_id)?.reference_number??'Request'}</Link> · {a.threshold==='overdue'?'Overdue':'Near Target'} · {formatSlaDuration(Number(a.agency_seconds))} at evaluation · {new Date(a.evaluated_at).toLocaleString()}</li>)}</ul>
+      <ul className="space-y-2">{windowAlerts.map(a=><li key={a.id}><Link className="underline" href={requestRecordHref(a.request_id)}>#{data!.requests.find(r=>r.id===a.request_id)?.reference_number??'Request'}</Link> · {a.threshold==='overdue'?'Overdue':'Near Target'} · {formatSlaDuration(Number(a.agency_seconds))} at evaluation · {new Date(a.evaluated_at).toLocaleString()}</li>)}</ul>
       {!windowAlerts.length?<p>No recorded threshold alerts in this window.</p>:null}
     </>:null}
   </section>;

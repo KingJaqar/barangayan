@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { StatusPill } from '@/components/admin/status-pill';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 interface PaymentRefundActionProps {
   onChanged?: () => void;
+  onBusyChange?: (busy: boolean) => void;
   paymentId: string;
   /** Threaded down purely so the audit log entry this action writes has a meaningful
    * `entityLabel` — this component otherwise only deals in ids. */
@@ -33,32 +34,38 @@ export function PaymentRefundAction({
   refundStatus,
   refundTransferLink,
   onChanged,
+  onBusyChange,
 }: PaymentRefundActionProps) {
   const router = useRouter();
-  const toast = useToast();
 
   async function refund() {
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase.functions.invoke('refund-payment', {
-      body: { paymentId, reason: 'requested_by_customer' },
-    });
-    if (error) {
-      toast.showError(`Failed to submit refund: ${error.message}`);
-      return;
-    }
+    const toastAttempt = beginAttempt('refund');
+    onBusyChange?.(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase.functions.invoke('refund-payment', {
+        body: { paymentId, reason: 'requested_by_customer' },
+      });
+      if (error) {
+        toast.error(`Failed to submit refund: ${error.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'payment',
-      entityId: paymentId,
-      entityLabel: referenceNumber,
-      changes: { before: { status }, after: { status: 'refund_requested' } },
-      metadata: { reason: 'requested_by_customer' },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'status_change',
+        entityType: 'payment',
+        entityId: paymentId,
+        entityLabel: referenceNumber,
+        changes: { before: { status }, after: { status: 'refund_requested' } },
+        metadata: { reason: 'requested_by_customer' },
+      }).catch(() => {});
 
-    toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
-    if (onChanged) onChanged();
-    else router.refresh();
+      toast.success('Refund submitted to PayMongo — status will update once confirmed.', { id: toastAttempt });
+      if (onChanged) onChanged();
+      else router.refresh();
+    } catch {
+      toast.warning("We couldn't confirm the refund request. Check the payment before trying again.", { id: toastAttempt });
+    } finally { onBusyChange?.(false); }
   }
 
   const claimLink = refundTransferLink ? (

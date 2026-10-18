@@ -1,0 +1,65 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Emergency & DRRM Info
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - tablist "Emergency and DRRM":
+    - tab "Hub" [selected]: Hub
+    - tab "Centers"
+    - tab "Scan"
+    - tab "Family"
+    - tab "Alerts"
+  - heading "Emergency Info" [level=2]
+  - paragraph: Be Prepared
+  - region "Disaster Preparedness Guidelines":
+    - heading "Disaster Preparedness Guidelines" [level=3]
+    - generic "Available offline":
+      - text: Offline
+    - list:
+      - button "Sample Guideline":
+        - generic: Sample Guideline
+      - button "Sample":
+        - generic: Sample
+      - button "Typhoon Preparedness" [active]:
+        - generic: Typhoon Preparedness
+      - button "Earthquake Safety":
+        - generic: Earthquake Safety
+      - button "Fire Emergency Response":
+        - generic: Fire Emergency Response
+  - region "Emergency Hotlines":
+    - heading "Emergency Hotlines" [level=3]
+    - generic "Available offline":
+      - text: Offline
+    - list:
+      - paragraph: Police
+      - paragraph: 117 / (02) 8123-4567
+      - link "Call Police":
+        - /url: tel:117
+      - paragraph: Fire Department
+      - paragraph: 911 / (02) 8765-4321
+      - link "Call Fire Department":
+        - /url: tel:911
+      - paragraph: Barangay DRRM Office
+      - paragraph: 0917 123 4567
+      - link "Call Barangay DRRM Office":
+        - /url: tel:09171234567
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports

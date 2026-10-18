@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { createElement } from 'react';
 import ValidIdPage from '../src/app/(resident)/settings/valid-id/page';
+import { ReadRetryProvider } from '../src/components/shared/read-failure';
 
 const fixture = vi.hoisted(() => ({ account: vi.fn(), client: {} }));
 vi.mock('@/lib/auth/get-optional-user', () => ({ getOptionalUser: fixture.account }));
 vi.mock('@/lib/supabase/server', () => ({ createSupabaseServerClient: async () => fixture.client }));
 vi.mock('next/link', () => ({ default: 'a' }));
-vi.mock('next/navigation', () => ({ redirect: (path: string) => { throw new Error(`redirect:${path}`); } }));
+vi.mock('next/navigation', () => ({ redirect: (path: string) => { throw new Error(`redirect:${path}`); }, useRouter: () => ({ refresh: vi.fn() }) }));
 beforeEach(() => { fixture.account.mockReset(); });
 describe('Valid ID server access guard', () => {
   it('sends guests through login to the fixed local ID destination', async () => {
@@ -26,12 +28,13 @@ describe('Valid ID server access guard', () => {
     { user: { id: 'staff' }, profile: { role: 'unsupported' }, profileSetupPending: false },
   ])('keeps unavailable/setup-pending/nonresident accounts out without a completion redirect', async account => {
     fixture.account.mockResolvedValue(account);
-    const html = renderToStaticMarkup(await ValidIdPage());
+    const html = renderToStaticMarkup(createElement(ReadRetryProvider, null, await ValidIdPage()));
     expect(html).toContain('role="alert"'); expect(html).not.toContain('Submit'); expect(html).not.toContain('complete-profile');
+    expect(html).toContain('href="/settings/valid-id"');
   });
   it('uses retry feedback instead of a guest redirect when account retrieval fails', async () => {
     fixture.account.mockRejectedValue(new Error('private backend error'));
-    const html = renderToStaticMarkup(await ValidIdPage());
+    const html = renderToStaticMarkup(createElement(ReadRetryProvider, null, await ValidIdPage()));
     expect(html).toContain('Your account information is unavailable'); expect(html).not.toContain('private backend error');
   });
 });

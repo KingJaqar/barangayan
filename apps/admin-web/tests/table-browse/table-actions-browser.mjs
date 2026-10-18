@@ -149,13 +149,116 @@ try {
   await page.evaluate(() => { window.recordFixture.rows.requests.contract_version = 2; window.dispatchEvent(new Event('record-refresh')); });
   await table.getByRole('button', { name: 'Edit', exact: true }).click();
   await table.getByRole('button', { name: 'Save row', exact: true }).waitFor();
-  assert.equal(await table.locator('[data-inline-editor]').count(), 1, 'Versioned requests retain snapshot protection');
+  assert.equal(await table.locator('[data-inline-editor]').count(), 2, 'Versioned requests expose both payment fields and retain snapshot protection');
+  const paymentEditor = table.getByRole('combobox', { name: 'Edit Payment method', exact: true });
+  await viewport.evaluate(element => { element.scrollLeft = 0; });
+  await assertScroll(0, 'Payment editor remains visible beside frozen resident column');
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate(theme => document.documentElement.classList.toggle('dark', theme === 'dark'), theme);
+    await page.waitForTimeout(250); // Let the dropdown's theme transition finish before visual capture.
+    const layout = await paymentEditor.evaluate(element => {
+      const label = [...element.querySelectorAll('span')].find(span => span.textContent === 'Pay at Pickup');
+      const style = getComputedStyle(label);
+      return { height: element.getBoundingClientRect().height, whiteSpace: style.whiteSpace,
+        labelWidth: label.clientWidth, textWidth: label.scrollWidth };
+    });
+    assert.equal(layout.whiteSpace, 'nowrap', 'Payment label stays on one line');
+    assert.ok(layout.height <= 36, 'Payment editor does not inflate row height');
+    assert.ok(layout.labelWidth >= layout.textWidth, 'Default payment column fits the full label');
+    await page.screenshot({ path: path.join(evidence, 'payment-edit-' + theme + '.png') });
+  }
+  await page.evaluate(() => document.documentElement.classList.remove('dark'));
   await table.getByRole('combobox', { name: 'Edit Payment method', exact: true }).click();
   await page.getByRole('option', { name: 'QR PH', exact: true }).click();
   await table.getByRole('button', { name: 'Save row', exact: true }).click();
   await table.getByRole('button', { name: 'Edit', exact: true }).waitFor();
   assert.equal(await page.evaluate(() => window.recordFixture.rows.requests.payment_method), 'qrph');
+  for (const [label,status] of [['Failed','failed'],['Refunded','refunded'],['Pending','pending'],['Paid','paid']]) {
+    const current = await page.evaluate(() => window.recordFixture.rows.requests.payment_status);
+    await row.getByText(current[0].toUpperCase()+current.slice(1), {exact:true}).click();
+    await table.getByRole('combobox', {name:'Edit Payment status',exact:true}).click();
+    assert.deepEqual(await page.getByRole('option').allTextContents(), ['Paid','Pending','Failed','Refunded'], 'Status editor offers requested statuses');
+    await page.getByRole('option',{name:label,exact:true}).click();
+    await table.getByRole('combobox', {name:'Edit Payment status',exact:true}).waitFor({state:'detached'});
+    assert.equal(await page.evaluate(() => window.recordFixture.rows.requests.payment_status), status, 'Single-cell status save persists');
+  }
   report.checks.push({ screen: 'versioned request edit guards', status: 'passed' });
+
+  for (const contract of [1,2]) {
+    await page.goto(url + '?screen=requests');
+    await page.evaluate(contract => { window.recordFixture.rows.requests.contract_version=contract; window.recordFixture.enforceExpected=true; window.dispatchEvent(new Event('record-refresh')); },contract);
+    const headers=await table.locator('thead th').allTextContents();
+    assert.ok(headers.includes('Payment method') && headers.includes('Payment status'), 'Two separate payment columns');
+    assert.ok(!headers.includes('Payment'), 'Combined payment column removed');
+    await openMenu('Edit (table)');
+    await table.getByRole('combobox',{name:'Edit Payment method',exact:true}).click();
+    await page.getByRole('option',{name:'QR PH',exact:true}).click();
+    await table.getByRole('combobox',{name:'Edit Payment status',exact:true}).click();
+    await page.getByRole('option',{name:'Failed',exact:true}).click();
+    await table.getByRole('button',{name:'Save row',exact:true}).click();
+    await table.getByRole('button',{name:'Edit',exact:true}).waitFor();
+    assert.deepEqual(await page.evaluate(() => [window.recordFixture.rows.requests.payment_method,window.recordFixture.rows.requests.payment_status]),['qrph','failed']);
+    await openMenu('Edit (view details)');
+    await sheet.getByRole('combobox',{name:'Payment method',exact:false}).click();
+    await page.getByRole('option',{name:'Pay at Pickup',exact:true}).click();
+    await sheet.getByRole('combobox',{name:'Payment status',exact:false}).click();
+    await page.getByRole('option',{name:'Refunded',exact:true}).click();
+    await sheet.getByRole('button',{name:'Save',exact:true}).click();
+    await sheet.getByRole('button',{name:'Edit',exact:true}).waitFor();
+    assert.deepEqual(await page.evaluate(() => [window.recordFixture.rows.requests.payment_method,window.recordFixture.rows.requests.payment_status]),['pickup','refunded']);
+    await sheet.getByRole('button',{name:'Edit',exact:true}).click();
+    assert.match(await sheet.getByRole('combobox',{name:'Payment method',exact:false}).innerText(),/Pay at Pickup/);
+    assert.match(await sheet.getByRole('combobox',{name:'Payment status',exact:false}).innerText(),/Refunded/);
+    await page.screenshot({path:path.join(evidence,'split-payment-sheet-v'+contract+'.png')});
+    await sheet.getByRole('button',{name:'Close form',exact:true}).click();
+    report.checks.push({screen:'contract '+contract+' payment method and status row and sheet editors',status:'passed'});
+  }
+
+  for (const accountRole of ['resident', 'admin']) {
+    await page.goto(url + '?screen=requests');
+    await page.evaluate(role => {
+      Object.assign(window.recordFixture.rows.requests, { contract_version: 2, sla_state: 'pre_processing', fee_assessment_state: 'assessed', assessed_amount_centavos: 5000 });
+      window.recordFixture.rows.requests.profiles.role = role;
+      window.dispatchEvent(new Event('record-refresh'));
+    }, accountRole);
+    await row.locator('td').first().click({ button: 'right' });
+    assert.equal(await menu.getByRole('menuitem', { name: 'Details', exact: true }).count(), 0, 'Duplicate full-page Details action removed');
+    assert.equal(await menu.getByRole('menuitem', { name: 'View Details', exact: true }).count(), 1, 'One View Details action remains');
+    await menu.getByRole('menuitem', { name: 'View Details', exact: true }).click();
+    await sheet.getByText('Processing and release readiness', { exact: true }).waitFor();
+    await sheet.getByRole('button', { name: 'Close form', exact: true }).click();
+    await page.getByRole('dialog').waitFor({ state: 'detached' });
+    await openMenu('Edit (view details)');
+    await sheet.getByText('Processing and release readiness', { exact: true }).waitFor();
+    assert.equal(await sheet.getByLabel('Resident', { exact: true }).count(), 0, 'Original resident stays immutable');
+    assert.equal(await sheet.getByLabel('Document type', { exact: true }).count(), 0, 'Original document stays immutable');
+    const method = sheet.getByRole('combobox', { name: 'Payment method', exact: false });
+    await method.click();
+    await page.getByRole('option', { name: 'QR PH', exact: true }).click();
+    assert.ok(await sheet.getByRole('button', { name: 'Start processing', exact: true }).isDisabled(), 'Dirty draft cannot race a review action');
+    await method.click();
+    await page.getByRole('option', { name: 'Pay at Pickup', exact: true }).click();
+    await page.screenshot({ path: path.join(evidence, 'request-editor-' + accountRole + '.png') });
+    await page.evaluate(() => { window.recordFixture.workflowDelay = 500; window.recordFixture.failNext = true; });
+    await sheet.getByRole('button', { name: 'Start processing', exact: true }).click();
+    assert.ok(await sheet.getByRole('button', { name: 'Save', exact: true }).isDisabled(), 'Save waits for review writes');
+    await sheet.getByText('Workflow permission failure.', { exact: true }).waitFor();
+    assert.ok(await sheet.getByRole('button', { name: 'Save', exact: true }).isEnabled(), 'Workflow failure leaves editor usable');
+    await sheet.getByRole('button', { name: 'Start processing', exact: true }).click();
+    await sheet.getByRole('button', { name: 'Edit', exact: true }).waitFor();
+    assert.equal(await page.evaluate(() => window.recordFixture.rows.requests.status), 'in_progress', 'Review workflow runs from edit mode');
+    report.checks.push({ screen: accountRole + ' request sheet review in edit mode', status: 'passed' });
+  }
+
+  await page.goto(url + '?screen=requests&hideRows=1&record=f1150000-0000-0000-0000-000000000001');
+  await sheet.getByRole('button', { name: 'Edit', exact: true }).waitFor();
+  assert.equal(await table.locator('tbody tr [data-record-actions]').count(), 0, 'Linked record need not be in the filtered table page');
+  assert.equal(await sheet.getByText('Requests · Record details', { exact: true }).count(), 1, 'Linked request opens existing record sheet');
+  await sheet.getByRole('button', { name: 'Close form', exact: true }).click();
+  await page.getByRole('dialog').waitFor({ state: 'detached' });
+  assert.equal(new URL(page.url()).searchParams.get('record'), null, 'Closing the sheet clears its link parameter');
+  assert.equal(new URL(page.url()).searchParams.get('tab'), 'all', 'Closing the sheet preserves table filters');
+  report.checks.push({ screen: 'request links open the record sheet independently of the visible rows', status: 'passed' });
 
   await page.goto(url + '?screen=staff');
   await page.evaluate(() => { window.recordFixture.rows.staff.profile_id = 'signed-in-admin'; window.dispatchEvent(new Event('record-refresh')); });

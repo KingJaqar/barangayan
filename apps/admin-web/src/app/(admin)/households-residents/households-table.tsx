@@ -17,7 +17,7 @@ import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { HouseholdMemberRow } from './types';
@@ -242,7 +242,7 @@ export function HouseholdsTable({ result, summary, requestedState, barangayId, r
 function AddMemberForm({ residents, onClose, onChanged }: {
   residents: { id: string; full_name: string }[]; onClose: () => void; onChanged: () => void;
 }) {
-  const toast = useToast();
+
   const [profileId, setProfileId] = useState('');
   const [name, setName] = useState('');
   const [relation, setRelation] = useState('other');
@@ -251,68 +251,74 @@ function AddMemberForm({ residents, onClose, onChanged }: {
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    if (!profileId || !name.trim()) {
-      setError('Select a resident and enter a name.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: memberId, error: rpcError } = await (supabase as any).rpc('admin_add_household_member', {
-      p_profile_id: profileId,
-      p_name: name.trim(),
-      p_relation: relation,
-      p_role: role,
-    });
-    if (rpcError) {
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      setError(null);
+      if (!profileId || !name.trim()) {
+        setError('Select a resident and enter a name.');
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: memberId, error: rpcError } = await (supabase as any).rpc('admin_add_household_member', {
+        p_profile_id: profileId,
+        p_name: name.trim(),
+        p_relation: relation,
+        p_role: role,
+      });
+      if (rpcError) {
+        setSubmitting(false);
+        setError(rpcError.message);
+        toast.error(`Failed to add member: ${rpcError.message}`, { id: toastAttempt });
+        return;
+      }
+      if (typeof memberId !== 'string' || !memberId) {
+        setSubmitting(false);
+        const message = 'The member was not returned after creation. Refresh the page before trying again.';
+        setError(message);
+        toast.error(`Failed to add member: ${message}`, { id: toastAttempt });
+        return;
+      }
+
+      const { data: createdMember, error: fetchError } = await supabase
+        .from('household_members')
+        .select('id, profile_id, name, relation, role, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, created_at, updated_at')
+        .eq('id', memberId)
+        .maybeSingle();
       setSubmitting(false);
-      setError(rpcError.message);
-      toast.showError(`Failed to add member: ${rpcError.message}`);
-      return;
-    }
-    if (typeof memberId !== 'string' || !memberId) {
-      setSubmitting(false);
-      const message = 'The member was not returned after creation. Refresh the page before trying again.';
-      setError(message);
-      toast.showError(`Failed to add member: ${message}`);
-      return;
-    }
+      if (fetchError || !createdMember) {
+        const message = fetchError?.message ?? 'The created member could not be loaded. Refresh the page before trying again.';
+        setError(message);
+        toast.error(`Failed to add member: ${message}`, { id: toastAttempt });
+        return;
+      }
 
-    const { data: createdMember, error: fetchError } = await supabase
-      .from('household_members')
-      .select('id, profile_id, name, relation, role, is_checked_in, checked_in_at, checked_in_center_id, checked_in_center_name, created_at, updated_at')
-      .eq('id', memberId)
-      .maybeSingle();
-    setSubmitting(false);
-    if (fetchError || !createdMember) {
-      const message = fetchError?.message ?? 'The created member could not be loaded. Refresh the page before trying again.';
-      setError(message);
-      toast.showError(`Failed to add member: ${message}`);
-      return;
-    }
+      logAdminAction({
+        action: 'create',
+        entityType: 'household',
+        entityId: createdMember.id,
+        entityLabel: name.trim(),
+        metadata: {
+          name: name.trim(),
+          resident: residents.find((r) => r.id === profileId)?.full_name ?? null,
+          relation,
+          role,
+        },
+      }).catch(() => {});
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'household',
-      entityId: createdMember.id,
-      entityLabel: name.trim(),
-      metadata: {
-        name: name.trim(),
-        resident: residents.find((r) => r.id === profileId)?.full_name ?? null,
-        relation,
-        role,
-      },
-    }).catch(() => {});
+      toast.success('Household member added.', { id: toastAttempt });
+      setProfileId('');
+      setName('');
+      setRelation('other');
+      setRole('member');
+      onClose();
+      onChanged();
 
-    toast.showSuccess('Household member added.');
-    setProfileId('');
-    setName('');
-    setRelation('other');
-    setRole('member');
-    onClose();
-    onChanged();
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

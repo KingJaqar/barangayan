@@ -155,6 +155,102 @@ try {
   await page.getByRole('dialog').waitFor({ state: 'detached' });
   report.checks.push('Accounts without ID evidence cannot be approved; Escape closes the editor');
 
+  async function editResident(hasEvidence = true) {
+    // Keyboard activation also reaches the table action when frozen columns cover it at narrow widths.
+    await page.getByRole('button', { name: 'View Details', exact: true }).press('Enter');
+    const sheet = page.getByRole('dialog').first();
+    await sheet.getByRole('button', { name: 'Edit', exact: true }).click();
+    if (hasEvidence) await sheet.getByRole('combobox', { name: 'Update ID status', exact: true }).waitFor();
+    else await sheet.getByText('Current: No ID', { exact: true }).waitFor();
+    assert.equal(await sheet.locator('form form').count(), 0, 'Profile and ID review forms must be siblings');
+    return sheet;
+  }
+
+  await seed();
+  dialog = await editResident();
+  await dialog.getByLabel('Occupation', { exact: true }).fill('Draft occupation');
+  await page.evaluate(() => {
+    window.recordFixture.enforceExpected = true;
+    window.recordFixture.idReviewProfilePatch = { updated_at: '2026-10-18T08:00:00Z' };
+    window.recordFixture.workflowDelay = 800;
+  });
+  await choose(dialog, 'Verified ID');
+  await saveButton(dialog).click();
+  assert.ok(await dialog.getByRole('button', { name: 'Save', exact: true }).isDisabled());
+  assert.ok(await dialog.getByRole('button', { name: 'Cancel', exact: true }).isDisabled());
+  await page.keyboard.press('Escape');
+  assert.ok(await dialog.isVisible(), 'The editor stays open during an ID decision');
+  await dialog.getByText('Current: Verified ID', { exact: true }).waitFor();
+  await dialog.getByRole('button', { name: 'Save', exact: true }).waitFor();
+  await page.waitForFunction(() => !document.querySelector('button[form]')?.disabled);
+  assert.equal(await dialog.getByLabel('Occupation', { exact: true }).inputValue(), 'Draft occupation');
+  assert.equal(await page.evaluate(() => window.recordFixture.mutations.length), 0, 'Saving an ID must not save profile fields');
+  await page.screenshot({ path: path.join(evidence, 'edit-mode-id-review.png') });
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Edit', exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => window.recordFixture.rows.residents.occupation), 'Draft occupation');
+  report.checks.push('Edit mode reviews ID separately, preserves drafts, protects in-flight saves and refreshes the profile version');
+
+  await seed('verified'); dialog = await editResident();
+  await choose(dialog, 'Verification Failed (revoke approval)');
+  assert.ok(await saveButton(dialog).isDisabled());
+  await dialog.getByRole('textbox', { name: 'Reason for revocation' }).fill('The ID document needs replacement.');
+  await saveButton(dialog).click(); await waitStatus('verification_failed');
+  await dialog.getByText('Current: Verification Failed, Try Again', { exact: true }).waitFor();
+  assert.ok(await dialog.getByLabel('Occupation', { exact: true }).isVisible());
+  report.checks.push('Edit mode can revoke approval with a required reason while keeping profile editing open');
+
+  await seed(); dialog = await editResident();
+  await dialog.getByLabel('Occupation', { exact: true }).fill('Keep my draft');
+  await page.evaluate(() => { window.recordFixture.failNext = true; });
+  await choose(dialog, 'Verified ID'); await saveButton(dialog).click();
+  await dialog.getByRole('alert').filter({ hasText: 'Workflow permission failure.' }).waitFor();
+  assert.equal(await dialog.getByLabel('Occupation', { exact: true }).inputValue(), 'Keep my draft');
+  assert.ok(await dialog.getByRole('button', { name: 'Save', exact: true }).isEnabled());
+  report.checks.push('Failed ID decisions preserve profile drafts and release the editor controls');
+
+  await seed(); dialog = await editResident();
+  await dialog.getByLabel('Occupation', { exact: true }).fill('My profile draft');
+  await page.evaluate(() => {
+    window.recordFixture.enforceExpected = true;
+    window.recordFixture.idReviewProfilePatch = { occupation: 'Concurrent change', updated_at: '2026-10-18T09:00:00Z' };
+  });
+  await choose(dialog, 'Verified ID'); await saveButton(dialog).click();
+  await dialog.getByRole('alert').filter({ hasText: 'The resident profile also changed.' }).waitFor();
+  await page.waitForFunction(() => !document.querySelector('button[form]')?.disabled);
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await dialog.getByRole('alert').filter({ hasText: 'Fixture stale profile version.' }).waitFor();
+  assert.equal(await page.evaluate(() => window.recordFixture.rows.residents.occupation), 'Concurrent change');
+  assert.equal(await dialog.getByLabel('Occupation', { exact: true }).inputValue(), 'My profile draft');
+  report.checks.push('ID decisions never bypass conflict protection for concurrent profile edits');
+
+  await seed(null); dialog = await editResident(false);
+  await dialog.getByText('No current ID submission. Ask the resident to upload an ID before updating its status.', { exact: true }).waitFor();
+  assert.equal(await saveButton(dialog).count(), 0);
+  report.checks.push('Edit mode displays No ID without allowing approval of missing evidence');
+
+  for (const width of [360, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await seed('pending', true);
+    await page.evaluate(() => { document.documentElement.classList.add('dark'); document.documentElement.style.setProperty('--accent', '#8855bb'); });
+    dialog = await editResident();
+    await saveButton(dialog).scrollIntoViewIfNeeded();
+    assert.ok(await dialog.locator('section').first().evaluate(element => element.scrollWidth <= element.clientWidth + 1), 'Edit sheet must not overflow horizontally');
+    await page.screenshot({ path: path.join(evidence, `edit-mode-dark-${width}.png`) });
+  }
+  report.checks.push('ID review remains usable in the edit sheet at 360px and 768px with dark mode and a custom accent');
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(`${url}?screen=health`);
+  await page.getByRole('button', { name: 'View Details', exact: true }).click();
+  dialog = page.getByRole('dialog').first();
+  await dialog.getByRole('button', { name: 'Edit', exact: true }).click();
+  await dialog.getByLabel('Location *', { exact: true }).fill('Updated fixture clinic');
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Edit', exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => window.recordFixture.rows.health.location), 'Updated fixture clinic');
+  report.checks.push('Other record-sheet editors retain their profile Save action and form association');
+
   assert.deepEqual(report.errors, []);
   report.status = 'passed';
 } catch (error) {

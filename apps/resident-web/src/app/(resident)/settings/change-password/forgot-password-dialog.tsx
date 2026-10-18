@@ -97,6 +97,7 @@ export function ForgotPasswordDialog({ userId, email, unavailable, checkEligibil
         const errors: Record<string, string> = {};
         for (const issue of result.error.issues) errors[String(issue.path[0])] = issue.message;
         setFieldErrors(errors);
+        notify.error('Check the password requirements and confirmation.', { id: beginAttempt('password-validation') });
         document.getElementById(errors.password ? 'recovery-password' : 'recovery-confirm-password')?.focus();
         return;
       }

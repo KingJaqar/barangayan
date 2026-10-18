@@ -19,6 +19,8 @@ import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
@@ -39,9 +41,9 @@ const MAX_ID_BYTES = 5 * 1024 * 1024;
 function Chip({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) {
   const theme = useTheme();
   return (
-    <ThemedView type="backgroundElement" style={[styles.chip, styles.hairline]}>
+    <ThemedView type="backgroundElement" style={[styles.chip, styles.hairline, { borderColor: theme.backgroundSelected }]}>
       <Ionicons name={icon} size={14} color={theme.textSecondary} />
-      <ThemedText type="small">{label}</ThemedText>
+      <ThemedText type="small" style={{ flexShrink: 1 }}>{label}</ThemedText>
     </ThemedView>
   );
 }
@@ -75,6 +77,8 @@ function RequestFormContent() {
   const { session } = useAuth();
   const { profile } = useProfile();
   const theme = useTheme();
+  const { fontId } = useFontPreference();
+  const cardTheme = { borderColor: theme.backgroundSelected, shadowColor: theme.text };
 
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [notes, setNotes] = useState('');
@@ -193,11 +197,11 @@ function RequestFormContent() {
   if (catalogContract(doc)) return <CharterRequestForm key={doc.id} doc={doc}/>;
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <ServiceScreenHeader title="Request Document" backLabel="Back to document" />
+        <ServiceScreenHeader title="Request Document" backLabel="Back to document" compact />
         <ScrollView contentContainerStyle={styles.content}>
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
             <ThemedText type="small" style={{ color: theme.primary }}>
               Purpose of Request
             </ThemedText>
@@ -207,11 +211,12 @@ function RequestFormContent() {
               onChangeText={setNotes}
               multiline
               maxLength={1000}
+              style={{ minHeight: 64, fontFamily: getMobileFontFamily(fontId) }}
             />
 
           </ThemedView>
 
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
             <View style={styles.rowBetween}>
               <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
                 Resident Details
@@ -226,14 +231,14 @@ function RequestFormContent() {
             </View>
           </ThemedView>
 
-          <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.noticeCard, styles.shadowSm, styles.hairline, cardTheme]}>
             <Ionicons name="storefront-outline" size={18} color={theme.primary} />
             <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
               You&apos;ll pick up this document in person at the Barangay Hall once it&apos;s ready.
             </ThemedText>
           </ThemedView>
 
-          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.section, styles.shadowSm, styles.hairline, cardTheme]}>
             <ThemedText type="small">Valid ID Upload</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
               Please upload a clear copy of a government-issued ID.
@@ -299,13 +304,12 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
   content: {
-    padding: Spacing.four,
-    gap: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.two,
   },
 
   /* Design-system recipes (shared literally across the Services screens) */
   shadowSm: {
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -313,7 +317,6 @@ const styles = StyleSheet.create({
   },
   hairline: {
     borderWidth: 1,
-    borderColor: 'rgba(128,128,128,0.25)',
   },
   sectionLabel: {
     textTransform: 'uppercase',
@@ -322,12 +325,14 @@ const styles = StyleSheet.create({
   },
 
   section: {
-    padding: Spacing.three,
+    padding: 12,
     borderRadius: Spacing.three,
     gap: Spacing.one,
   },
   rowBetween: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.two,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -341,7 +346,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,
-    paddingHorizontal: Spacing.three,
+    maxWidth: '100%',
+    paddingHorizontal: Spacing.two,
     paddingVertical: Spacing.one,
     borderRadius: 999,
   },
@@ -349,7 +355,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-    padding: Spacing.three,
+    padding: 12,
     borderRadius: Spacing.three,
   },
   noticeText: {
@@ -360,7 +366,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderStyle: 'dashed',
     borderRadius: Spacing.three,
-    paddingVertical: Spacing.five,
+    paddingVertical: Spacing.three,
     alignItems: 'center',
     gap: Spacing.one,
   },
@@ -374,7 +380,7 @@ const styles = StyleSheet.create({
   },
   idPreviewImage: {
     width: '100%',
-    height: 220,
+    height: 160,
     borderRadius: Spacing.three,
   },
   idPreviewFooter: {
@@ -391,7 +397,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   footer: {
-    padding: Spacing.four,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
 

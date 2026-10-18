@@ -1,8 +1,8 @@
-import { catalogContract, charterSections, servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
+import { catalogContract, charterSections, idVerificationState, servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import { type Tables } from '@barangayan/shared';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Collapsible } from '@/components/ui/collapsible';
 import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
+import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 
@@ -40,10 +41,9 @@ function DocumentDetailSkeleton() {
   const theme = useTheme();
   return (
     <View style={[styles.skeletonContainer, { backgroundColor: theme.background }]}>
-      <SkeletonBlock width={56} height={56} borderRadius={16} />
       <View style={styles.skeletonTitleRow}>
-        <SkeletonBlock width="70%" height={30} />
-        <SkeletonBlock width={72} height={26} borderRadius={Spacing.four} />
+        <SkeletonBlock width={40} height={40} borderRadius={12} />
+        <SkeletonBlock width="70%" height={28} />
       </View>
       <SkeletonBlock width="90%" height={16} />
       <SkeletonBlock width="60%" height={16} />
@@ -85,6 +85,9 @@ function DocumentDetailContent() {
   const { documentId } = useLocalSearchParams<{ documentId: string }>();
   const router = useRouter();
   const { session } = useAuth();
+  const { profile, isLoading: isProfileLoading, error: profileError, refetch } = useProfile();
+  const hasVerifiedId = !profileError && idVerificationState(profile) === 'verified';
+  useFocusEffect(useCallback(() => { if (session) refetch(); }, [refetch, session]));
   const theme = useTheme();
   const [doc, setDoc] = useState<DocumentType | null | undefined>(undefined);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -112,18 +115,20 @@ function DocumentDetailContent() {
   const contract = catalogContract(doc);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <ServiceScreenHeader title="Requirements & Guidelines" />
+        <ServiceScreenHeader title="Requirements & Guidelines" compact />
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
-            <View style={[styles.heroIcon, { backgroundColor: `${theme.primary}1F` }]}>
-              <Ionicons name="document-text-outline" size={30} color={theme.primary} />
+            <View style={styles.heroHeading}>
+              <View style={[styles.heroIcon, { backgroundColor: `${theme.primary}1F` }]}>
+                <Ionicons name="document-text-outline" size={24} color={theme.primary} />
+              </View>
+              <ThemedText type="title" style={styles.title}>
+                {doc.name}
+              </ThemedText>
             </View>
-            <ThemedText type="title" style={styles.title}>
-              {doc.name}
-            </ThemedText>
             {doc.description ? (
               <ThemedText themeColor="textSecondary" style={styles.description}>
                 {doc.description}
@@ -205,8 +210,9 @@ function DocumentDetailContent() {
           <View style={styles.footerAction}>
             {session ? (
               <PrimaryButton
-                label="Request This Document"
-                onPress={() => router.push(`/services/request/${doc.id}`)}
+                label={isProfileLoading ? 'Checking Valid ID…' : hasVerifiedId ? 'Request' : 'Verify Valid ID'}
+                disabled={isProfileLoading}
+                onPress={() => router.push(hasVerifiedId ? `/services/request/${doc.id}` : '/settings/valid-id')}
               />
             ) : (
               // Submitting a request requires an identity — guests get routed to Login
@@ -227,26 +233,27 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
 
   content: {
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.five,
+    paddingHorizontal: Spacing.three,
+    paddingTop: Spacing.three,
+    paddingBottom: Spacing.three,
   },
 
   hero: {
     gap: Spacing.two,
-    paddingBottom: Spacing.four,
+    paddingBottom: Spacing.three,
   },
+  heroHeading: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
   heroIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.one,
   },
   title: {
-    fontSize: 28,
-    lineHeight: 34,
+    flex: 1,
+    fontSize: 22,
+    lineHeight: 28,
     fontWeight: '700',
     letterSpacing: -0.4,
   },
@@ -264,8 +271,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     maxWidth: '100%',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
     borderRadius: 999,
   },
   metaText: {
@@ -274,8 +281,8 @@ const styles = StyleSheet.create({
 
   section: {
     flexDirection: 'row',
-    gap: Spacing.three,
-    paddingVertical: Spacing.four,
+    gap: Spacing.two,
+    paddingVertical: Spacing.three,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   sectionIcon: {
@@ -284,11 +291,11 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     flex: 1,
-    gap: Spacing.two,
+    gap: Spacing.one,
   },
   sectionTitle: {
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: 16,
+    lineHeight: 22,
   },
   bodyText: {
     fontSize: 15,
@@ -315,8 +322,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.three,
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.three,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   footerPrice: {
@@ -329,11 +336,12 @@ const styles = StyleSheet.create({
   /* Loading skeleton */
   skeletonContainer: {
     flex: 1,
-    padding: Spacing.four,
+    padding: Spacing.three,
     gap: Spacing.two,
   },
   skeletonTitleRow: {
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: Spacing.two,
     marginTop: Spacing.two,
   },

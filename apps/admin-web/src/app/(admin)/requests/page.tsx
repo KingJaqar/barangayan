@@ -24,7 +24,7 @@ export default async function RequestsPage({ searchParams }: {
   if (!profile || profile.role !== 'admin') redirect('/login');
   const [results, residents, documents] = await Promise.all([
     loadTable('requests', params, supabase),
-    pilotOptions(supabase, 'profiles', profile.barangay_id, 'resident'),
+    pilotOptions(supabase, 'profiles', profile.barangay_id, 'requester'),
     pilotOptions(supabase, 'document_types', profile.barangay_id, undefined, true),
   ]);
   return <div className="mx-auto min-w-0 max-w-6xl">

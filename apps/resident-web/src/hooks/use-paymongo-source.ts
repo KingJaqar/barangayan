@@ -29,12 +29,6 @@ const POLL_INTERVAL_MS = 5000;
 export type CancelOutcome = 'cancelled' | 'paid' | 'rejected' | 'unconfirmed' | 'ignored';
 
 /**
- * Near-verbatim port of apps/resident-android-mobile/src/hooks/use-paymongo-source.ts
- * (plan's Phase 3 instruction: keep the cancelledRef race guard and per-instance channel
- * naming exactly as-is — this is the exact fix for the "stale poll overwrites a
- * just-cancelled payment" race named in the plan's Risk Register). Only the Supabase
- * client import changes (browser client instead of the mobile app's singleton).
- *
  * Creates a PayMongo QR PH charge for a service request (via the create-payment-source
  * Edge Function, which holds the secret key — never in this app) and watches for
  * settlement until paid or expired.
@@ -43,9 +37,7 @@ export type CancelOutcome = 'cancelled' | 'paid' | 'rejected' | 'unconfirmed' | 
  * Function's own comment. The hook name is kept for continuity with its mobile
  * counterpart.
  *
- * S0-2: only `requestId` is sent — the Edge Function derives the fee itself from
- * document_types, so a tampered amount here has no effect on what's actually charged or
- * recorded.
+ * Only `requestId` is sent; the server derives the confirmed request amount.
  */
 export function usePaymongoSource(requestId: string) {
   const [source, setSource] = useState<PaymongoSource | null>(null);
@@ -70,21 +62,13 @@ export function usePaymongoSource(requestId: string) {
 
   useEffect(() => {
     let cancelled = false;
+    let preparationChecks = 0;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
     const setupId = beginAttempt('qrph-setup');
-    // Routed through a microtask, not called synchronously — react-hooks/set-state-in-
-    // effect flags any setState reachable synchronously from an effect body (see
-    // use-unread-counts.tsx's identical pattern/comment). Resets state for a fresh
-    // requestId before kicking off the Edge Function call below.
-    Promise.resolve().then(() => {
+    async function prepare() {
       if (cancelled) return;
-      setStatus('loading');
-      setErrorMessage(null);
-      setSetupResult(null);
-    });
-
-    supabase.functions
-      .invoke('create-payment-source', { body: { requestId } })
-      .then(async ({ data, error }) => {
+      try {
+        const { data, error } = await supabase.functions.invoke('create-payment-source', { body: { requestId } });
         if (cancelled) return;
 
         if (error) {
@@ -106,6 +90,19 @@ export function usePaymongoSource(requestId: string) {
             const response = error.context;
             const uncertain = isNoAnswer(error) || !(response instanceof Response) || response.status >= 500;
             setSetupResult({ id: setupId, uncertain });
+            setStatus('error');
+          }
+          return;
+        }
+
+        // Another caller owns the reservation. Retry only this explicit response;
+        // transport errors must never blindly start another charge.
+        if (data?.status === 'preparing') {
+          if (++preparationChecks < 30) {
+            retryTimer = setTimeout(() => { void prepare(); }, 1000);
+          } else {
+            setErrorMessage('Your QR payment is still being prepared. Reopen this request to check it before starting another payment.');
+            setSetupResult({ id: setupId, uncertain: true });
             setStatus('error');
           }
           return;
@@ -138,16 +135,28 @@ export function usePaymongoSource(requestId: string) {
         });
         setStatus('pending');
         setSetupResult({ id: setupId, uncertain: false });
-      })
-      .catch(() => {
+      } catch {
         // Network-level failure (e.g. unreachable Edge Function) — the destructured
         // {error} above only covers HTTP-level errors, so a thrown rejection needs its
         // own catch or the UI hangs on "Generating…" forever.
         if (!cancelled) { setSetupResult({ id: setupId, uncertain: true }); setStatus('error'); }
-      });
+      }
+    }
+
+    // Strict Mode cleans up its replayed effect before this microtask runs. Keep
+    // the network write behind the guard as well as the state updates.
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      setStatus('loading');
+      setSource(null);
+      setErrorMessage(null);
+      setSetupResult(null);
+      void prepare();
+    });
 
     return () => {
       cancelled = true;
+      clearTimeout(retryTimer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestId]);

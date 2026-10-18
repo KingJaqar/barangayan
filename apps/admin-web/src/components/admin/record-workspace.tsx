@@ -10,13 +10,13 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { Archive, Eye, Pencil, RotateCcw, Save, Trash2, X } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { loadAdminRecordOptions, mutateAdminRecord } from '@/actions/admin-record-actions';
-import { changedRecordDraft, editableFields, fieldValue, recordDraft, RECORD_CONFIG, recordLabel, validateRecordPatch, type RecordData, type RecordField } from '@/lib/admin-tables/record-config';
+import { changedRecordDraft, editableFields, fieldValue, recordDraft, recordFields, RECORD_CONFIG, recordLabel, validateRecordPatch, type RecordData, type RecordField } from '@/lib/admin-tables/record-config';
 import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
 import type { TableName } from '@/lib/admin-tables/table-configs';
 import type { EditableDataTableColumn, TableEditHandle } from './editable-data-table';
 import { ContentSideSheet } from './content-create-panel';
 import { TableDetailDialog } from './table-detail-dialog';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import styles from './content-forms.module.css';
 import reviewStyles from './request-review.module.css';
 import residentStyles from './resident-record.module.css';
@@ -24,12 +24,15 @@ import { IncidentRecordDetails } from './incident-record-details';
 import { Spinner } from '@/components/loading/spinner';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import incidentStyles from './incident-record.module.css';
-import { formatCentavosAsPHP } from '@barangayan/shared';
+import { formatCentavosAsPHP, type IdVerificationStatus } from '@barangayan/shared';
 import { isOperationalRecord, operationalRecordLabel, OperationalRecordDetails, type RecordDetailEntry } from './operational-record-details';
 import detailStyles from './operational-record.module.css';
 import sheetStyles from './record-sheet.module.css';
+import { ResidentIdReview } from '@/app/(admin)/residents/resident-id-review';
+import type { ResidentRow } from '@/app/(admin)/residents/types';
 
 const buttonClass = 'inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-zinc-200 px-2.5 text-xs font-medium hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-800';
+const residentEditColumns = 'first_name,last_name,middle_name,suffix,sex,email,mobile_number,birth_date,house_no,street,city,employment_status,occupation,full_name,home_address,updated_at';
 
 export { RecordArchiveLink } from './record-archive-link';
 
@@ -86,7 +89,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
   onChanged: () => void; currentUserId?: string; extra?: (row: RecordData) => ReactNode;
 }) {
   const sheetId = useId();
-  const toast = useToast();
+
   const [row, setRow] = useState<RecordData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [revision, setRevision] = useState(0);
@@ -100,6 +103,8 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
   const [confirmation, setConfirmation] = useState<'archive' | 'restore' | 'delete' | null>(standaloneConfirmation ? initialMode : null);
   const [pending, startTransition] = useTransition();
   const busy = useRef(false);
+  const idReviewBusy = useRef(false);
+  const [reviewPending, setReviewPending] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
@@ -115,7 +120,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
         if (value.id !== id) throw new Error('Could not load this record.');
         if (name === 'residents') {
           // Browse projections may lag profile fields; edit only the authoritative current values.
-          const profile = await db.from('profiles').select('first_name,last_name,middle_name,suffix,sex,email,mobile_number,birth_date,house_no,street,city,employment_status,occupation,full_name,home_address,updated_at')
+          const profile = await db.from('profiles').select(residentEditColumns)
             .eq('id', id).retry(false).abortSignal(controller.signal).maybeSingle();
           if (!current) return;
           if (profile.error || !profile.data) throw new Error('Could not load current resident fields. Please retry.');
@@ -141,61 +146,95 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
     return () => { current = false; controller.abort(); clearTimeout(timeout); };
   }, [name, id, revision, initialMode, currentUserId]);
 
-  const fields = row ? editableFields(name, row) : [];
+  const fields = row ? recordFields(name, row) : [];
   const protectedRecord = name === 'staff' && row?.profile_id === currentUserId;
-  function close() { if (!busy.current && !loadingOptions) onClose(); }
+  function close() { if (!busy.current && !idReviewBusy.current && !loadingOptions) onClose(); }
+  async function residentIdChanged(residentId: string, status: IdVerificationStatus | null) {
+    if (!row) return;
+    setRow(current => current ? { ...current, id_verification_status: status } : current);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const profile = await createSupabaseBrowserClient().from('profiles').select(residentEditColumns)
+        .eq('id', residentId).is('deleted_at', null).retry(false).abortSignal(controller.signal).maybeSingle();
+      if (profile.error || !profile.data) throw new Error('ID status saved. Could not refresh the resident details. Reload them before saving profile changes.');
+      const refreshed = { ...row, ...profile.data };
+      // Advance the version for our ID decision only; concurrent profile edits must still conflict.
+      if (Object.keys(changedRecordDraft('residents', row, recordDraft('residents', refreshed))).length) {
+        throw new Error('ID status saved. The resident profile also changed. Reload the details before saving profile changes.');
+      }
+      const updatedAt = profile.data.updated_at;
+      setRow(current => current?.id === residentId ? { ...current, updated_at: updatedAt } : current);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'ID status saved. Reload the resident details before saving profile changes.');
+    } finally { clearTimeout(timeout); }
+    onChanged();
+  }
   async function edit() {
-    if (!row || busy.current) return;
+    if (!row || busy.current || idReviewBusy.current) return;
     setError(null); setSuccess(null);
-    if (fields.some(field => field.lookup)) {
+    if (fields.some(field => field.lookup && !field.readOnly)) {
       busy.current = true; setLoadingOptions(true);
       try {
         const result = await loadAdminRecordOptions(name, id);
-        if (result.error || !result.options) { setError(result.error ?? 'Could not load edit options. Please retry.'); return; }
+        if (result.error || !result.options) { setError(result.error ?? 'Could not load edit options. Please retry.'); toast.error('Could not load edit options. Please try again.'); return; }
         setEditOptions(result.options);
-      } catch { setError('Could not load edit options. Please retry.'); return; }
+      } catch { setError('Could not load edit options. Please retry.'); toast.error('Could not load edit options. Please try again.'); return; }
       finally { busy.current = false; setLoadingOptions(false); }
     }
     setDraft(recordDraft(name, row)); setEditing(true);
   }
   function mutate(operation: 'save' | 'archive' | 'restore' | 'delete') {
-    if (!row || busy.current) return;
+    if (!row || busy.current || idReviewBusy.current) return;
     let patch: Record<string, unknown> = {};
     try { if (operation === 'save') {
       const changes = changedRecordDraft(name, row, draft);
       if (!Object.keys(changes).length) { setEditing(false); setDraft({}); return; }
       patch = validateRecordPatch(name, row, changes);
     } }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Check your changes.'); return; }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Check your changes.'); toast.error('Review the highlighted changes before saving.'); return; }
     busy.current = true; setError(null);
     startTransition(async () => {
+    const toastAttempt = beginAttempt('admin-action');
       try {
         const result = await mutateAdminRecord(name, row.id, operation, row.updated_at ?? '', patch);
-        if (result.error) { setError(result.error); toast.showError(result.error); return; }
-        toast.showSuccess(operation === 'save' ? 'Changes saved.' : operation === 'delete' ? 'Record permanently deleted.' : operation === 'archive' ? 'Record archived.' : 'Record restored.');
+        if (result.error) { setError(result.error); toast.error(result.error, { id: toastAttempt }); return; }
+        toast.success(operation === 'save' ? 'Changes saved.' : operation === 'delete' ? 'Record permanently deleted.' : operation === 'archive' ? 'Record archived.' : 'Record restored.', { id: toastAttempt });
         onChanged();
         if (operation === 'save') { setSuccess('Changes saved.'); setEditing(false); setRow(null); setRevision(value => value + 1); }
         else onClose();
-      } catch { setError('The action could not be completed. Please retry.'); toast.showError('The action could not be completed. Please retry.'); }
+      } catch { setError('The action could not be completed. Please retry.'); toast.error('The action could not be completed. Please retry.', { id: toastAttempt }); }
       finally { busy.current = false; }
     });
   }
   const title = row ? recordLabel(row) : 'Record details';
   const operational = isOperationalRecord(name);
   const actionClass = `${styles.actions} ${operational ? detailStyles.recordActions : ''} ${sheetStyles.actions}`;
+  const editActions = <div className={actionClass}><button type="submit" form={`${sheetId}-edit`} disabled={pending || reviewPending} aria-busy={pending} className={`${styles.createButton} ${sheetStyles.edit}`}><Save size={17} aria-hidden="true" />{pending ? 'Saving…' : 'Save'}</button>
+    <button type="button" disabled={pending || reviewPending} className={styles.secondaryButton} onClick={() => { setEditing(false); setDraft({}); setError(null); }}><X size={17} aria-hidden="true" />Cancel</button></div>;
   const form = <div className={`${styles.form} ${operational ? detailStyles.recordForm : ''} ${name === 'requests' ? reviewStyles.recordForm : ''} ${name === 'residents' ? residentStyles.recordForm : ''} ${name === 'incidents' ? incidentStyles.recordForm : ''}`}>
     {loadError ? <div role="alert" className={operational ? detailStyles.loadState : undefined}><p>{loadError}</p><button type="button" className={buttonClass} onClick={() => { setLoadError(null); setRow(null); setRevision(value => value + 1); }}>Retry details</button></div>
       : !row ? <p role="status" className={operational ? detailStyles.loadState : name === 'incidents' ? 'flex items-center gap-2 py-6 text-sm' : undefined}>{name === 'incidents' && <Spinner />}Loading current details…</p> : <>
         {row.deleted_at && <p className={operational ? detailStyles.notice : 'mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200'}>Archived record</p>}
         {success && <p role="status" className={operational ? detailStyles.notice : 'mb-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'}>{success}</p>}
         {error && <p role="alert" className={operational ? detailStyles.notice : 'mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-200'}>{error}</p>}
-        {editing ? <form noValidate onSubmit={event => { event.preventDefault(); mutate('save'); }}>
-          <fieldset disabled={pending} className="grid gap-5 sm:grid-cols-2">
-            {fields.map(field => <RecordInput key={field.key} field={field.lookup ? { ...field, options: editOptions[field.lookup] ?? [] } : field} value={draft[field.key]} currentLabel={currentChoiceLabel(row, field.key)} onChange={value => setDraft(current => ({ ...current, [field.key]: value }))} />)}
+        {editing ? <><form id={`${sheetId}-edit`} noValidate onSubmit={event => { event.preventDefault(); mutate('save'); }}>
+          {name === 'requests' && row.contract_version === 2 && <p className="mb-5 text-sm text-zinc-500">Resident and document are kept from the original submission. Other record fields can be edited below.</p>}
+          {name === 'requests' && <p className="mb-5 text-sm text-zinc-500">Payment status edits update payment records. Use the Refund action to return a QR PH payment.</p>}
+          <fieldset disabled={pending || reviewPending} className="grid gap-5 sm:grid-cols-2">
+            {fields.filter(field => field.key !== 'status_change_reason' || (draft.status !== row.status && draft.status === 'cancelled')).map(field => <RecordInput key={field.key} field={field.lookup ? { ...field, options: editOptions[field.lookup] ?? [] } : field} value={field.readOnly ? fieldValue(row, field) : draft[field.key]} currentLabel={currentChoiceLabel(row, field.key)} onChange={value => setDraft(current => ({ ...current, [field.key]: value }))} />)}
           </fieldset>
-          <div className={actionClass}><button type="submit" disabled={pending} aria-busy={pending} className={`${styles.createButton} ${sheetStyles.edit}`}><Save size={17} aria-hidden="true" />{pending ? 'Saving…' : 'Save'}</button>
-            <button type="button" disabled={pending} className={styles.secondaryButton} onClick={() => { setEditing(false); setDraft({}); setError(null); }}><X size={17} aria-hidden="true" />Cancel</button></div>
-        </form> : <>
+          {name !== 'residents' && editActions}
+        </form>
+          {name === 'residents' && <>
+            <fieldset disabled={pending} className={residentStyles.idReviewEditor}>
+              <p className={residentStyles.hint}>Valid ID status is saved separately from profile details using Save ID status.</p>
+              <ResidentIdReview resident={row as unknown as ResidentRow} onStatusChange={residentIdChanged}
+                onBusyChange={value => { idReviewBusy.current = value; setReviewPending(value); }} />
+            </fieldset>
+            {editActions}
+          </>}
+        </> : <>
           {name === 'incidents' ? <IncidentRecordDetails key={revision} row={row} /> : name === 'residents' && extra ? extra(row) : name === 'requests' && !row.deleted_at ? <>
             <RequestRecordReview key={revision} requestId={id} onChanged={() => { onChanged(); setRevision(value => value + 1); }} />
           </> : <RecordDetails name={name} row={row} />}
@@ -229,6 +268,7 @@ export function RecordSheet({ name, id, initialMode = 'details', onClose, onChan
 }
 
 function currentChoiceLabel(row: RecordData, key: string): string | undefined {
+  if (key === 'payment_status' && row.payment_status === 'waived') return 'Waived';
   const request = row.service_requests as Record<string, unknown> | undefined;
   const source = key === 'linked_resident_id' ? request?.profiles : key === 'linked_document_type_id' ? request?.document_types
     : key === 'document_type_id' ? row.document_types : key === 'collected_by' ? row.collector
@@ -240,8 +280,8 @@ function currentChoiceLabel(row: RecordData, key: string): string | undefined {
 function RecordInput({ field, value, currentLabel, onChange }: { field: RecordField; value: unknown; currentLabel?: string; onChange: (value: unknown) => void }) {
   const id = useId();
   const display = Array.isArray(value) ? value.join(', ') : String(value ?? '');
-  return <label htmlFor={id} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}><span className="block">{field.label}{field.required ? ' *' : ''}</span>
-    {field.type === 'boolean' ? <AdminSelect kind={recordSelectKind(field.key)} id={id} value={String(value)} onValueChange={nextValue => onChange(nextValue === 'true')}><option value="false">No</option><option value="true">Yes</option></AdminSelect>
+  return <label htmlFor={id} className={field.type === 'textarea' ? 'sm:col-span-2' : ''}><span className="block">{field.label}{field.required && !field.readOnly ? ' *' : ''}</span>
+    {field.readOnly ? <input id={id} value={currentLabel ?? display} readOnly aria-readonly="true" /> : field.type === 'boolean' ? <AdminSelect kind={recordSelectKind(field.key)} id={id} value={String(value)} onValueChange={nextValue => onChange(nextValue === 'true')}><option value="false">No</option><option value="true">Yes</option></AdminSelect>
       : field.type === 'select' ? <AdminSelect kind={recordSelectKind(field.key)} id={id} value={display} required={field.required} onValueChange={nextValue => onChange(nextValue)}><option value="">{field.required ? 'Select…' : 'None'}</option>{display && !field.options?.some(option => option.value === display) && <option value={display}>{currentLabel ?? 'Current selection (unavailable)'}</option>}{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</AdminSelect>
       : field.type === 'textarea' ? <textarea id={id} rows={4} value={display} required={field.required} onChange={event => onChange(event.target.value)} />
       : <input id={id} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'time' ? 'time' : field.type === 'datetime' ? 'datetime-local' : 'text'}
@@ -271,7 +311,7 @@ const detailFields: Record<TableName, [string, string][]> = {
   residents: [['full_name', 'Full name'], ['home_address', 'Address'], ['email_verification_status', 'Email verification'], ['id_type', 'ID type'], ['id_verification_status', 'ID verification'], ['verified_location_address', 'Verified location']],
   incidents: [['reporter_name', 'Reporter'], ['category_name', 'Category'], ['confirmation_count', 'Resident confirmations'], ['location', 'Coordinates'], ['photo_urls', 'Photos']],
   health: [['registration_count', 'Registrations']],
-  applicants: [['applicant_number', 'Applicant number'], ['resident_name', 'Resident'], ['drive_title', 'Medical drive'], ['drive_date', 'Drive date'], ['drive_location', 'Drive location'], ['priority_score', 'Priority score']],
+  applicants: [['applicant_number', 'Applicant number'], ['resident_name', 'Resident'], ['email', 'Email'], ['drive_title', 'Medical drive'], ['drive_date', 'Drive date'], ['drive_location', 'Drive location'], ['priority_score', 'Priority score']],
   households: [['resident_name', 'Head of household'], ['is_checked_in', 'Checked in'], ['checked_in_at', 'Check-in date'], ['checked_in_center_name', 'Evacuation center']],
   staff: [['email', 'Email']],
 };

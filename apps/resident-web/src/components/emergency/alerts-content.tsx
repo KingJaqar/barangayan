@@ -48,7 +48,7 @@ function isSameDay(a: Date, b: Date) {
  * feed (resolves the plan's CC-004). `barangayId` is null for guests — announcements are
  * publicly readable regardless (matches /home's guest branch). */
 export function AlertsContent({ barangayId }: { barangayId: string | null }) {
-  const { announcements, isInitialLoading, isRefreshing, isReady, error, refetch } = useAnnouncements({ barangayId, category: 'emergency' });
+  const { announcements, isInitialLoading, isRefreshing, isReady, error, errorAnnounced, refetch } = useAnnouncements({ barangayId, category: 'emergency' });
 
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
   const [showCustomFilter, setShowCustomFilter] = useState(false);
@@ -106,10 +106,10 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
       </div>
 
       {isReady && error ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           tone="warning"
           message="Couldn't update emergency alerts. Showing the last loaded alerts, which may be out of date."
-          onRetry={refetch}
+          onRetry={() => refetch('emergency alerts')}
         />
       ) : null}
 
@@ -190,7 +190,7 @@ export function AlertsContent({ barangayId }: { barangayId: string | null }) {
           ))}
         </div>
       ) : !isReady ? (
-        <InlineReadError message="We couldn't load emergency alerts. Check your connection, then try again." onRetry={refetch} />
+        <InlineReadError announce={!errorAnnounced} message="We couldn't load emergency alerts. Check your connection, then try again." onRetry={() => refetch('emergency alerts')} />
       ) : filteredAlerts.length === 0 ? (
         <div className={styles.empty}>
           <span className={styles.emptyIcon}><Bell size={26} strokeWidth={1.5} aria-hidden="true" /></span>

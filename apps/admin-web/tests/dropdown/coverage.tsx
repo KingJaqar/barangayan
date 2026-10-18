@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 import { ProfileForm } from '../../src/app/resident/profile/profile-form';
 import { IdUpload } from '../../src/app/resident/profile/id-upload';
 import { NewRequestForm } from '../../src/app/resident/requests/new/new-request-form';
@@ -43,11 +44,11 @@ function Coverage() {
       onSubmit={async () => { setWrites(current => current + 1); }} /></div>}
     {modal === 'applicant' && <ApplicantDetailModal row={{ id: 'fixture-applicant', drive_id: 'fixture-drive', user_id: 'fixture-profile', applicant_number: 'AP-001',
       age: 26, is_pwd: false, comorbidities: [], prior_dose_date: null, priority_score: 0, status: 'pending', created_at: '2026-10-14T08:00:00Z', updated_at: '2026-10-14T08:00:00Z',
-      medical_drives: null, profiles: { full_name: 'Fixture Applicant' } }} detailStatus="ready" onRetry={() => {}} onClose={() => setModal('')}
+      medical_drives: null, profiles: { full_name: 'Fixture Applicant', email: 'fixture@example.test' } }} detailStatus="ready" onRetry={() => {}} onClose={() => setModal('')}
       onChanged={() => setWrites(current => current + 1)} onEditingChange={() => {}} />}
     {modal === 'qr' && <QrInstructionsModal section="why_scan" barangayId="fixture-barangay" existing={undefined} onClose={() => setModal('')}
       onSaved={() => setWrites(current => current + 1)} />}
   </>;
 }
 const root = document.getElementById('root');
-if (root) createRoot(root).render(<ToastProvider><main style={{ padding: 16 }}><Coverage /></main></ToastProvider>);
+if (root) createRoot(root).render(<ThemeControllerProvider><Toaster /><main style={{ padding: 16 }}><Coverage /></main></ThemeControllerProvider>);

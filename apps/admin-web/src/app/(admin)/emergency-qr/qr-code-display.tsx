@@ -7,7 +7,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import type { Json, Tables } from '@barangayan/shared';
 
 type EvacuationCenter = Tables<'evacuation_centers'>;
@@ -20,56 +20,65 @@ export function QrCodeDisplay({
   payload: Json;
 }) {
   const router = useRouter();
-  const toast = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState(false);
 
   function downloadPng() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const url = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.download = `${center.name.replace(/\s+/g, '_')}_qr.png`;
-    link.href = url;
-    link.click();
+    try {
+      const canvas = canvasRef.current;
+      if (!canvas) throw new Error('QR not ready');
+      const url = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `${center.name.replace(/\s+/g, '_')}_qr.png`;
+      link.href = url;
+      link.click();
+      toast.success('QR image download started.');
+    } catch { toast.error('Could not prepare the QR image. Please try again.'); }
   }
 
   async function copyPayload() {
+    const toastAttempt = beginAttempt('copyPayload');
     try {
       await navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
       setCopied(true);
-      toast.showSuccess('Payload copied to clipboard.');
+      toast.success('Payload copied to clipboard.', { id: toastAttempt });
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.showError('Failed to copy payload.');
+      toast.error('Failed to copy payload.', { id: toastAttempt });
     }
   }
 
   async function saveToDb() {
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
-      .from('evacuation_center_qr_codes')
-      // No barangay_id column here — the row is scoped to a barangay through its
-      // evacuation center (see migration 0050).
-      .upsert({ evacuation_center_id: center.id, qr_payload: payload }, {
-        onConflict: 'evacuation_center_id',
-      });
-    if (error) {
-      toast.showError(`Failed to save: ${error.message}`);
-      return;
+    const toastAttempt = beginAttempt('saveToDb');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase
+        .from('evacuation_center_qr_codes')
+        // No barangay_id column here — the row is scoped to a barangay through its
+        // evacuation center (see migration 0050).
+        .upsert({ evacuation_center_id: center.id, qr_payload: payload }, {
+          onConflict: 'evacuation_center_id',
+        });
+      if (error) {
+        toast.error(`Failed to save: ${error.message}`, { id: toastAttempt });
+        return;
+      }
+
+      // The QR row's own id isn't returned by this upsert; evacuationCenterId is metadata,
+      // not entityId — that field belongs to the evacuation center, not this QR row.
+      logAdminAction({
+        action: 'update',
+        entityType: 'emergency_qr',
+        entityLabel: center.name,
+        metadata: { evacuationCenterId: center.id },
+      }).catch(() => {});
+
+      toast.success('QR code saved to database.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    // The QR row's own id isn't returned by this upsert; evacuationCenterId is metadata,
-    // not entityId — that field belongs to the evacuation center, not this QR row.
-    logAdminAction({
-      action: 'update',
-      entityType: 'emergency_qr',
-      entityLabel: center.name,
-      metadata: { evacuationCenterId: center.id },
-    }).catch(() => {});
-
-    toast.showSuccess('QR code saved to database.');
-    router.refresh();
   }
 
   return (

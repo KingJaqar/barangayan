@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -26,7 +26,7 @@ const DEFAULT_ICON_BG = '#E6F2EF';
 
 export function EmergencyForm({ barangayId, item }: { barangayId: string; item?: EmergencyInformation }) {
   const router = useRouter();
-  const toast = useToast();
+
   const isEditing = !!item;
 
   const [title, setTitle] = useState(item?.title ?? '');
@@ -68,116 +68,123 @@ export function EmergencyForm({ barangayId, item }: { barangayId: string; item?:
   }
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const content = parseContent(contentLines);
+      const content = parseContent(contentLines);
 
-    const result = emergencyInformationSchema.safeParse({
-      title,
-      body,
-      category,
-      icon: icon || DEFAULT_ICON,
-      icon_color: iconColor || DEFAULT_ICON_COLOR,
-      icon_bg: iconBg || DEFAULT_ICON_BG,
-      content,
-      sort_order: sortOrder ? Number(sortOrder) : 0,
-      is_active: isActive,
-      published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
-    });
+      const result = emergencyInformationSchema.safeParse({
+        title,
+        body,
+        category,
+        icon: icon || DEFAULT_ICON,
+        icon_color: iconColor || DEFAULT_ICON_COLOR,
+        icon_bg: iconBg || DEFAULT_ICON_BG,
+        content,
+        sort_order: sortOrder ? Number(sortOrder) : 0,
+        is_active: isActive,
+        published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
-
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-
-    const payload = {
-      barangay_id: barangayId,
-      title: result.data.title,
-      body: result.data.body,
-      category: result.data.category,
-      icon: result.data.icon,
-      icon_color: result.data.icon_color,
-      icon_bg: result.data.icon_bg,
-      content: result.data.content,
-      sort_order: result.data.sort_order,
-      is_active: result.data.is_active,
-      published_at: result.data.published_at ?? new Date().toISOString(),
-    };
-
-    if (isEditing && item) {
-      const { data: updatedItem, error: updateError } = await supabase
-        .from('emergency_information')
-        .update(payload)
-        .eq('id', item.id)
-        .select('id, title')
-        .single();
-      if (updateError) {
-        setError(updateError.message);
-        toast.showError(`Failed to update: ${updateError.message}`);
-        setSubmitting(false);
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
         return;
       }
 
-      logAdminAction({
-        action: 'update',
-        entityType: 'emergency_information',
-        entityId: item.id,
-        entityLabel: updatedItem?.title ?? result.data.title,
-        changes: {
-          before: {
-            title: item.title,
-            body: item.body,
-            category: item.category,
-            content: item.content,
-            is_active: item.is_active,
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+
+      const payload = {
+        barangay_id: barangayId,
+        title: result.data.title,
+        body: result.data.body,
+        category: result.data.category,
+        icon: result.data.icon,
+        icon_color: result.data.icon_color,
+        icon_bg: result.data.icon_bg,
+        content: result.data.content,
+        sort_order: result.data.sort_order,
+        is_active: result.data.is_active,
+        published_at: result.data.published_at ?? new Date().toISOString(),
+      };
+
+      if (isEditing && item) {
+        const { data: updatedItem, error: updateError } = await supabase
+          .from('emergency_information')
+          .update(payload)
+          .eq('id', item.id)
+          .select('id, title')
+          .single();
+        if (updateError) {
+          setError(updateError.message);
+          toast.error(`Failed to update: ${updateError.message}`, { id: toastAttempt });
+          setSubmitting(false);
+          return;
+        }
+
+        logAdminAction({
+          action: 'update',
+          entityType: 'emergency_information',
+          entityId: item.id,
+          entityLabel: updatedItem?.title ?? result.data.title,
+          changes: {
+            before: {
+              title: item.title,
+              body: item.body,
+              category: item.category,
+              content: item.content,
+              is_active: item.is_active,
+            },
+            after: {
+              title: result.data.title,
+              body: result.data.body,
+              category: result.data.category,
+              content: result.data.content,
+              is_active: result.data.is_active,
+            },
           },
-          after: {
+        }).catch(() => {});
+
+        toast.success('Emergency information updated.', { id: toastAttempt });
+      } else {
+        const { data: insertedItem, error: insertError } = await supabase
+          .from('emergency_information')
+          .insert(payload)
+          .select('id, title')
+          .single();
+        if (insertError) {
+          setError(insertError.message);
+          toast.error(`Failed to create: ${insertError.message}`, { id: toastAttempt });
+          setSubmitting(false);
+          return;
+        }
+
+        logAdminAction({
+          action: 'create',
+          entityType: 'emergency_information',
+          entityId: insertedItem?.id,
+          entityLabel: insertedItem?.title ?? result.data.title,
+          metadata: {
             title: result.data.title,
             body: result.data.body,
             category: result.data.category,
             content: result.data.content,
             is_active: result.data.is_active,
           },
-        },
-      }).catch(() => {});
+        }).catch(() => {});
 
-      toast.showSuccess('Emergency information updated.');
-    } else {
-      const { data: insertedItem, error: insertError } = await supabase
-        .from('emergency_information')
-        .insert(payload)
-        .select('id, title')
-        .single();
-      if (insertError) {
-        setError(insertError.message);
-        toast.showError(`Failed to create: ${insertError.message}`);
-        setSubmitting(false);
-        return;
+        toast.success('Emergency information published.', { id: toastAttempt });
       }
 
-      logAdminAction({
-        action: 'create',
-        entityType: 'emergency_information',
-        entityId: insertedItem?.id,
-        entityLabel: insertedItem?.title ?? result.data.title,
-        metadata: {
-          title: result.data.title,
-          body: result.data.body,
-          category: result.data.category,
-          content: result.data.content,
-          is_active: result.data.is_active,
-        },
-      }).catch(() => {});
+      setSubmitting(false);
+      router.refresh();
 
-      toast.showSuccess('Emergency information published.');
-    }
-
-    setSubmitting(false);
-    router.refresh();
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

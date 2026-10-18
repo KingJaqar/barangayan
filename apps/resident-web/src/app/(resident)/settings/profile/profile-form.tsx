@@ -291,7 +291,7 @@ function AvatarSection({ profileId, currentUrl }: { profileId: string; currentUr
 // ─── Household section ──────────────────────────────────────────────────────
 
 function HouseholdSection({ profileId }: { profileId: string }) {
-  const { members, isInitialLoading, isReady, error, refetch, addMember, updateMember, removeMember, lastWriteFailure } = useFamilyMembers(profileId);
+  const { members, isInitialLoading, isReady, error, errorAnnounced, refetch, addMember, updateMember, removeMember, lastWriteFailure } = useFamilyMembers(profileId);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<(typeof members)[0] | null>(null);
   // Id of the member whose inline Remove is in flight; also blocks other roster edits so
@@ -353,10 +353,10 @@ function HouseholdSection({ profileId }: { profileId: string }) {
       </div>
 
       {isReady && error ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           tone="warning"
           message="Couldn't update the household list. Showing the last loaded list, which may be out of date."
-          onRetry={refetch}
+          onRetry={() => refetch('household members')}
         />
       ) : null}
 
@@ -365,7 +365,7 @@ function HouseholdSection({ profileId }: { profileId: string }) {
           {[1, 2].map((i) => <Skeleton key={i} className="h-10 rounded-lg" />)}
         </div>
       ) : !isReady ? (
-        <InlineReadError message="We couldn't load your household members. Check your connection, then try again." onRetry={refetch} />
+        <InlineReadError announce={!errorAnnounced} message="We couldn't load your household members. Check your connection, then try again." onRetry={() => refetch('household members')} />
       ) : members.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">No household members added yet.</p>
       ) : (

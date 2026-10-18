@@ -20,9 +20,11 @@ const ACTION_LABELS: Record<LocationAction, string> = {
 export function LocationStatusCard({
   state,
   onAction,
+  outcomeAnnounced = false,
 }: {
   state: DeviceLocationState;
   onAction: (action: LocationAction) => void;
+  outcomeAnnounced?: boolean;
 }) {
   const message = describeDeviceLocation(state, 'web');
   if (!message) return null;
@@ -30,7 +32,7 @@ export function LocationStatusCard({
   const Icon = message.tone === 'info' ? LocateFixed : message.tone === 'warning' ? AlertCircle : XCircle;
 
   return (
-    <div role="status" aria-live="polite" className={styles.locationCard}>
+    <div role={outcomeAnnounced ? undefined : 'status'} aria-live={outcomeAnnounced ? undefined : 'polite'} className={styles.locationCard}>
       <div className="flex items-start gap-2.5">
         {message.busy ? (
           <Spinner className="mt-0.5 text-primary" />

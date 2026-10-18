@@ -4,7 +4,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { AdminSelect } from '../../src/components/admin/dropdown/admin-select';
 import { ContentCreatePanel } from '../../src/components/admin/content-create-panel';
 import { EditableDataTable, type EditableDataTableColumn } from '../../src/components/admin/editable-data-table';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 import { DateRangePicker, type DateRangeValue } from '../../src/components/admin/date-range-picker';
 
 const options = [{ value: '', label: 'Select a resident…' }, { value: 'a', label: 'Alpha Resident' },
@@ -72,4 +73,4 @@ function Fixture() {
   </main>;
 }
 const root = document.getElementById('root');
-if (root) createRoot(root).render(<ToastProvider><Fixture /></ToastProvider>);
+if (root) createRoot(root).render(<ThemeControllerProvider><Toaster /><Fixture /></ThemeControllerProvider>);

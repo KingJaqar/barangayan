@@ -19,7 +19,7 @@ import type { BrowseResult, BrowseState } from '@/lib/admin-tables/browse-state'
 import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { IncidentRow } from './types';
@@ -80,7 +80,7 @@ function AddIncidentForm({
   barangayId: string;
   onClose: () => void; onChanged: () => void;
 }) {
-  const toast = useToast();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -92,63 +92,69 @@ function AddIncidentForm({
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!title.trim()) {
-      toast.showError('Incident title is required.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data, error } = await supabase
-      .from('incidents')
-      .insert({
-        barangay_id: barangayId,
-        title: title.trim(),
-        description: description.trim() || null,
-        address: address.trim() || null,
-        specific_area_details: specificAreaDetails.trim() || null,
-        category_id: categoryId || null,
-        reporter_id: reporterId || null,
-        status,
-        created_at: new Date(submittedAt).toISOString(),
-        // Walk-in/phoned-in reports have no map pin — address/specific area details are
-        // whatever the resident described verbally, entered by the admin above.
-        location: {},
-      })
-      .select('*')
-      .single();
-    setSubmitting(false);
-    if (error) {
-      toast.showError(`Failed to create incident: ${error.message}`);
-      return;
-    }
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!title.trim()) {
+        toast.error('Incident title is required.', { id: toastAttempt });
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data, error } = await supabase
+        .from('incidents')
+        .insert({
+          barangay_id: barangayId,
+          title: title.trim(),
+          description: description.trim() || null,
+          address: address.trim() || null,
+          specific_area_details: specificAreaDetails.trim() || null,
+          category_id: categoryId || null,
+          reporter_id: reporterId || null,
+          status,
+          created_at: new Date(submittedAt).toISOString(),
+          // Walk-in/phoned-in reports have no map pin — address/specific area details are
+          // whatever the resident described verbally, entered by the admin above.
+          location: {},
+        })
+        .select('*')
+        .single();
+      setSubmitting(false);
+      if (error) {
+        toast.error(`Failed to create incident: ${error.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'incident',
-      entityId: data?.id,
-      entityLabel: title.trim(),
-      metadata: {
-        title: title.trim(),
-        description: description.trim() || null,
-        address: address.trim() || null,
-        category: categories.find((c) => c.id === categoryId)?.name ?? null,
-        reporter: residents.find((r) => r.id === reporterId)?.full_name ?? 'Anonymous / Walk-in',
-        status,
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'incident',
+        entityId: data?.id,
+        entityLabel: title.trim(),
+        metadata: {
+          title: title.trim(),
+          description: description.trim() || null,
+          address: address.trim() || null,
+          category: categories.find((c) => c.id === categoryId)?.name ?? null,
+          reporter: residents.find((r) => r.id === reporterId)?.full_name ?? 'Anonymous / Walk-in',
+          status,
+        },
+      }).catch(() => {});
 
-    toast.showSuccess('Incident report created.');
-    setTitle('');
-    setDescription('');
-    setAddress('');
-    setSpecificAreaDetails('');
-    setCategoryId('');
-    setReporterId('');
-    setStatus('open');
-    setSubmittedAt(currentDateTimeLocal());
-    onClose();
-    onChanged();
+      toast.success('Incident report created.', { id: toastAttempt });
+      setTitle('');
+      setDescription('');
+      setAddress('');
+      setSpecificAreaDetails('');
+      setCategoryId('');
+      setReporterId('');
+      setStatus('open');
+      setSubmittedAt(currentDateTimeLocal());
+      onClose();
+      onChanged();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

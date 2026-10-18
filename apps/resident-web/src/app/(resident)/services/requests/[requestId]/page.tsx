@@ -32,7 +32,7 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
     if (isMissingRow(error)) notFound();
     return (
       <div className="mx-auto max-w-2xl">
-        <ReadFailure message="We couldn't load this request." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="this request" message="We couldn't load this request." />
       </div>
     );
   }

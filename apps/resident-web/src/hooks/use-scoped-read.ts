@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { beginAttempt, notify } from '@/lib/notify';
 
 type ReadResult<T> = PromiseLike<{ data: T | null; error: { message: string } | null }>;
 
@@ -18,7 +19,7 @@ type ReadResult<T> = PromiseLike<{ data: T | null; error: { message: string } | 
  */
 export function useScopedRead<T>(identity: string, load: () => ReadResult<T>) {
   const [result, setResult] = useState<{ identity: string; data: T } | null>(null);
-  const [failure, setFailure] = useState<{ identity: string; message: string } | null>(null);
+  const [failure, setFailure] = useState<{ identity: string; message: string; announced: boolean } | null>(null);
   const [fetching, setFetching] = useState<string | null>(null);
   const loadRef = useRef(load);
   const activeRef = useRef(false);
@@ -28,27 +29,34 @@ export function useScopedRead<T>(identity: string, load: () => ReadResult<T>) {
     loadRef.current = load;
   });
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback((contentName?: string) => {
+    const attempt = contentName ? beginAttempt('read-retry') : null;
     const generation = ++generationRef.current;
     const isCurrent = () => activeRef.current && generation === generationRef.current;
     setFetching(identity);
     setFailure(null);
-    loadRef.current().then(
+    function fail(thrown: unknown) {
+      if (!isCurrent()) return;
+      setFailure({ identity, message: thrown instanceof Error ? thrown.message : 'Request failed', announced: attempt !== null });
+      if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
+      setFetching(null);
+    }
+    try { loadRef.current().then(
       ({ data, error }) => {
         if (!isCurrent()) return;
-        if (error) setFailure({ identity, message: error.message });
+        if (error) {
+          setFailure({ identity, message: error.message, announced: attempt !== null });
+          if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
+        }
         else setResult({ identity, data: data as T });
         setFetching(null);
       },
-      (thrown: unknown) => {
-        if (!isCurrent()) return;
-        setFailure({ identity, message: thrown instanceof Error ? thrown.message : 'Request failed' });
-        setFetching(null);
-      },
-    );
+      fail,
+    ); } catch (thrown) { fail(thrown); }
   }, [identity]);
 
   useEffect(() => {
+    const requests = generationRef;
     activeRef.current = true;
     // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
     // react-hooks/set-state-in-effect.
@@ -57,6 +65,7 @@ export function useScopedRead<T>(identity: string, load: () => ReadResult<T>) {
     });
     return () => {
       activeRef.current = false;
+      ++requests.current;
     };
   }, [refetch]);
 
@@ -79,6 +88,7 @@ export function useScopedRead<T>(identity: string, load: () => ReadResult<T>) {
     isInitialLoading,
     isRefreshing,
     error,
+    errorAnnounced: failure?.identity === identity && failure.announced,
     refetch,
     setData,
     /** True while `refetch` has a request in flight for this identity. */

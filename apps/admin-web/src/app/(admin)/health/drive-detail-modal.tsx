@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { DriveTypeBadge, formatDriveDate } from './drive-table';
@@ -31,7 +31,7 @@ export function DriveDetailModal({ drive, onClose, onChanged, onEditingChange, d
   drive: DriveRow; onClose: () => void; onChanged: () => void; onEditingChange: (editing: boolean) => void;
   detailStatus: 'loading' | 'ready' | 'error' | 'unavailable'; onRetry: () => void;
 }) {
-  const toast = useToast();
+
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(drive.title);
   const [location, setLocation] = useState(drive.location);
@@ -49,13 +49,14 @@ export function DriveDetailModal({ drive, onClose, onChanged, onEditingChange, d
   }, [editing, onEditingChange]);
 
   async function saveDetails() {
+    const toastAttempt = beginAttempt('saveDetails');
     if (savingRef.current) return;
     if (!title.trim()) {
-      toast.showError('Title cannot be empty.');
+      toast.error('Title cannot be empty.', { id: toastAttempt });
       return;
     }
     if (!eligibleCriteria.trim()) {
-      toast.showError('Eligibility criteria cannot be empty.');
+      toast.error('Eligibility criteria cannot be empty.', { id: toastAttempt });
       return;
     }
     savingRef.current = true;
@@ -74,12 +75,12 @@ export function DriveDetailModal({ drive, onClose, onChanged, onEditingChange, d
     try { result = await supabase.from('medical_drives').update(newValues).eq('id', drive.id).select('id').maybeSingle(); }
     catch (cause) {
       savingRef.current = false; setSaving(false);
-      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`); return;
+      toast.error(`Failed to save: ${cause instanceof Error ? cause.message : 'The update could not be completed.'}`, { id: toastAttempt }); return;
     }
     savingRef.current = false; setSaving(false);
     const { error, data: updated } = result;
     if (error || !updated) {
-      toast.showError(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`);
+      toast.error(`Failed to save: ${error?.message ?? 'No record was updated. Check your access.'}`, { id: toastAttempt });
       return;
     }
 
@@ -102,7 +103,7 @@ export function DriveDetailModal({ drive, onClose, onChanged, onEditingChange, d
       },
     }).catch(() => {});
 
-    toast.showSuccess('Drive details updated.');
+    toast.success('Drive details updated.', { id: toastAttempt });
     setEditing(false);
     onChanged();
   }

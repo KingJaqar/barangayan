@@ -1,18 +1,21 @@
 'use client';
 
 import { AGENCY_SLA_LABEL, calculateAgencySla, projectSlaTime, formatSlaDuration, type SlaRequest, type SlaPause } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 export function AgencySlaStatus({ requestId, compact = false }: { requestId: string; compact?: boolean }) {
   const [snapshot, setSnapshot] = useState<{ request: SlaRequest; pauses: SlaPause[]; evaluated_at: string; receivedAt: number; receivedRequestId: string } | null>(null);
   const [error, setError] = useState('');
   const [tick, setTick] = useState(() => performance.now());
   const [retry, setRetry] = useState(0);
+  const feedback = useRef<{ requestId: string; id: OperationId } | null>(null);
   useEffect(() => {
     let active = true;
     let inFlight = false;
     let pending: AbortController | null = null;
+    let notification = feedback.current?.requestId === requestId ? feedback.current.id : null;
     const client = createSupabaseBrowserClient();
     async function load() {
       if (inFlight) return;
@@ -23,24 +26,25 @@ export function AgencySlaStatus({ requestId, compact = false }: { requestId: str
         const { data, error: failure } = await client.rpc('service_request_sla_tracking', { p_request_id: requestId }).abortSignal(pending.signal);
         if (failure || !data) throw new Error('Processing clock unavailable. Please retry.');
         if (active) { setSnapshot({ ...(data as unknown as Omit<NonNullable<typeof snapshot>, 'receivedAt' | 'receivedRequestId'>), receivedAt: performance.now(), receivedRequestId: requestId }); setError(''); }
-      } catch { if (active) setError('Processing clock unavailable. Please retry.'); }
-      finally { clearTimeout(timeout); pending = null; inFlight = false; }
+      } catch { if (active) { setError('Processing clock unavailable. Please retry.'); if (notification) notify.error("Couldn't refresh the processing clock. Please try again.", { id: notification }); } }
+      finally { notification = null; clearTimeout(timeout); pending = null; inFlight = false; }
     }
     void load();
     const refresh = setInterval(() => void load(), 15000);
     const timer = setInterval(() => setTick(performance.now()), 1000);
     return () => { active = false; pending?.abort(); clearInterval(refresh); clearInterval(timer); };
   }, [requestId, retry]);
+  function retryClock() { feedback.current = { requestId, id: beginAttempt('processing-clock-retry') }; setRetry(v => v + 1); }
   const hasSnapshot = !!snapshot && snapshot.receivedRequestId === requestId && snapshot.request.created_at !== undefined;
   // A failed refresh keeps the last valid clock for this request (marked out of date);
   // only a clock that never loaded is replaced by the error.
-  if (error && !hasSnapshot) return <span role="alert" className="block text-sm">{error}{!compact ? <button className="ml-2 underline" onClick={() => setRetry(v => v+1)}>Retry</button> : null}</span>;
+  if (error && !hasSnapshot) return <span role={retry ? undefined : 'alert'} className="block text-sm">{error}{!compact ? <button className="ml-2 underline" onClick={retryClock}>Retry</button> : null}</span>;
   if (!snapshot || !hasSnapshot) return <span role={compact ? undefined : 'status'} className="block text-sm">Loading processing clock…</span>;
   const r = snapshot.request;
   if (r.timing_model !== 'agency_minutes_v1') return <span className="block text-xs">Previous timing model · original processing estimate retained</span>;
   const value = calculateAgencySla(r, snapshot.pauses, projectSlaTime(snapshot.evaluated_at, Math.max(0,tick-snapshot.receivedAt)));
   return <div className={compact ? 'text-xs' : 'my-4 rounded-xl border p-4 text-sm'}>
-    {error ? <p data-slot="sla-stale" className="text-status-warning">Couldn&apos;t refresh — this may be out of date.{!compact ? <button className="ml-2 underline" onClick={() => setRetry(v => v+1)}>Retry</button> : null}</p> : null}
+    {error ? <p data-slot="sla-stale" className="text-status-warning">Couldn&apos;t refresh — this may be out of date.{!compact ? <button className="ml-2 underline" onClick={retryClock}>Retry</button> : null}</p> : null}
     <p className="font-semibold">{AGENCY_SLA_LABEL[value.position]}</p>
     {value.waitingReason ? <p>Waiting for resident: {value.waitingReason} · SLA position retained</p> : null}
     <p>Agency processing: {formatSlaDuration(value.agencySeconds)} / {r.target_minutes_snapshot} minutes</p>

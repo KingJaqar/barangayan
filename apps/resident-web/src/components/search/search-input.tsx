@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId, useRef, useState, useTransition, type KeyboardEvent } from 'react';
 import { useResidentSearch } from '@/hooks/use-resident-search';
+import { beginAttempt } from '@/lib/notify';
 import { normalizeSearchQuery, resultRelevance, SEARCH_CATEGORIES, searchHref } from '@/lib/search/types';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Spinner } from '@/components/ui/loading';
@@ -32,7 +33,7 @@ export function SearchInput({ initialQuery = '', onSearchAgain }: { initialQuery
   const [menuHeight, setMenuHeight] = useState(440);
   const [navigating, startNavigation] = useTransition();
   const normalized = normalizeSearchQuery(query);
-  const { data, loading, error, retry } = useResidentSearch(normalized, { suggestions: true, enabled: open && !composing });
+  const { data, loading, error, errorAnnounced, retry } = useResidentSearch(normalized, { suggestions: true, enabled: open && !composing });
   const suggestions = (data?.groups.flatMap(group => group.results) ?? []).sort((a, b) => resultRelevance(b, normalized) - resultRelevance(a, normalized)).slice(0, 6);
   const options = normalized ? [
     ...suggestions.map(result => ({ href: result.href, label: result.title, detail: SEARCH_CATEGORIES.find(category => category.key === result.category)!.label, Icon: SEARCH_ICONS[result.category] })),
@@ -77,7 +78,14 @@ export function SearchInput({ initialQuery = '', onSearchAgain }: { initialQuery
     if (rect.top < menuRect.top) menu.scrollTop -= menuRect.top - rect.top + 8;
   }, [activeOption, id]);
 
+  function rememberSearch(href: string) {
+    if (href === searchHref(normalized) && normalized) {
+      window.__residentSearchAttempt = { query: normalized, id: beginAttempt('search'), at: Date.now() };
+    }
+  }
+
   function navigate(href: string) {
+    rememberSearch(href);
     setOpen(false); setSelection(null);
     startNavigation(() => router.push(href));
   }
@@ -120,10 +128,10 @@ export function SearchInput({ initialQuery = '', onSearchAgain }: { initialQuery
           <div role="status" className={styles.message}>
             {!loading && !error && normalized && data && !suggestions.length && !failed.length ? 'No suggestions found. Try another word or see all results.' : ''}
           </div>
-          {error || failed.length ? <div className={styles.message}><p role="alert">{error ?? 'Some suggestions are unavailable.'}</p><button type="button" onClick={retry} className={styles.textLink}>Try again</button></div> : null}
+          {error || failed.length ? <div className={styles.message}><p role={errorAnnounced ? undefined : 'alert'}>{error ?? 'Some suggestions are unavailable.'}</p><button type="button" onClick={retry} className={styles.textLink}>Try again</button></div> : null}
           {loading && !suggestions.length ? <SuggestionSkeleton /> : null}
           <ul id={`${id}-options`} role="listbox" aria-label="Search suggestions" aria-busy={loading || undefined}>
-            {options.map((option, index) => <li key={option.href} role="presentation"><Link id={`${id}-${index}`} role="option" aria-selected={activeOption === index} href={option.href} prefetch={false} className={`${styles.option} ${activeOption === index ? styles.selected : ''}`} onClick={() => { setOpen(false); setSelection(null); }}>
+            {options.map((option, index) => <li key={option.href} role="presentation"><Link id={`${id}-${index}`} role="option" aria-selected={activeOption === index} href={option.href} prefetch={false} className={`${styles.option} ${activeOption === index ? styles.selected : ''}`} onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) rememberSearch(option.href); setOpen(false); setSelection(null); }}>
               <option.Icon aria-hidden size={18} strokeWidth={1.75} /><span><strong>{option.label}</strong><small>{option.detail}</small></span><ArrowRight aria-hidden size={14} />
             </Link></li>)}
           </ul>

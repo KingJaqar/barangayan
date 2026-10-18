@@ -6,7 +6,7 @@ import { RequestReview } from './request-review';
 
 type ReviewData = NonNullable<Awaited<ReturnType<typeof loadRequestReview>>>;
 
-export function RequestRecordReview({ requestId, onChanged }: { requestId: string; onChanged: () => void }) {
+export function RequestRecordReview({ requestId, onChanged, onBusyChange }: { requestId: string; onChanged: () => void; onBusyChange?: (busy: boolean) => void }) {
   const [data, setData] = useState<ReviewData | null>(null);
   const [error, setError] = useState('');
   const [revision, setRevision] = useState(0);
@@ -28,5 +28,5 @@ export function RequestRecordReview({ requestId, onChanged }: { requestId: strin
   }
   if (error) return <div role="alert" className="my-4 text-sm"><p>{error}</p><button type="button" className="mt-2 text-[var(--accent)] underline" onClick={reload}>Retry request review</button></div>;
   if (!data) return <p role="status" className="my-4 text-sm">Loading request review…</p>;
-  return <RequestReview key={revision} data={data} embedded onChanged={() => { reload(); onChanged(); }} />;
+  return <RequestReview key={revision} data={data} onBusyChange={onBusyChange} onChanged={() => { reload(); onChanged(); }} />;
 }

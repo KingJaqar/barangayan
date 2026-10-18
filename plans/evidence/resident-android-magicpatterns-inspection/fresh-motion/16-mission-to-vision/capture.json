@@ -1,0 +1,149 @@
+{
+  "name": "16-mission-to-vision",
+  "source": "Brave screenshot API, sampled viewport JPEG sequence; not continuous video",
+  "startedAt": "2026-10-18T13:58:10.943Z",
+  "actionStartMs": 83,
+  "elapsedMs": 2027,
+  "frames": [
+    {
+      "file": "frame-000.jpg",
+      "requestMs": 1,
+      "responseMs": 82
+    },
+    {
+      "file": "frame-001.jpg",
+      "requestMs": 83,
+      "responseMs": 158
+    },
+    {
+      "file": "frame-002.jpg",
+      "requestMs": 160,
+      "responseMs": 229
+    },
+    {
+      "file": "frame-003.jpg",
+      "requestMs": 232,
+      "responseMs": 300
+    },
+    {
+      "file": "frame-004.jpg",
+      "requestMs": 302,
+      "responseMs": 373
+    },
+    {
+      "file": "frame-005.jpg",
+      "requestMs": 375,
+      "responseMs": 445
+    },
+    {
+      "file": "frame-006.jpg",
+      "requestMs": 449,
+      "responseMs": 516
+    },
+    {
+      "file": "frame-007.jpg",
+      "requestMs": 519,
+      "responseMs": 572
+    },
+    {
+      "file": "frame-008.jpg",
+      "requestMs": 573,
+      "responseMs": 623
+    },
+    {
+      "file": "frame-009.jpg",
+      "requestMs": 625,
+      "responseMs": 680
+    },
+    {
+      "file": "frame-010.jpg",
+      "requestMs": 681,
+      "responseMs": 733
+    },
+    {
+      "file": "frame-011.jpg",
+      "requestMs": 735,
+      "responseMs": 802
+    },
+    {
+      "file": "frame-012.jpg",
+      "requestMs": 804,
+      "responseMs": 869
+    },
+    {
+      "file": "frame-013.jpg",
+      "requestMs": 874,
+      "responseMs": 937
+    },
+    {
+      "file": "frame-014.jpg",
+      "requestMs": 940,
+      "responseMs": 997
+    },
+    {
+      "file": "frame-015.jpg",
+      "requestMs": 999,
+      "responseMs": 1067
+    },
+    {
+      "file": "frame-016.jpg",
+      "requestMs": 1070,
+      "responseMs": 1143
+    },
+    {
+      "file": "frame-017.jpg",
+      "requestMs": 1145,
+      "responseMs": 1214
+    },
+    {
+      "file": "frame-018.jpg",
+      "requestMs": 1218,
+      "responseMs": 1289
+    },
+    {
+      "file": "frame-019.jpg",
+      "requestMs": 1291,
+      "responseMs": 1354
+    },
+    {
+      "file": "frame-020.jpg",
+      "requestMs": 1356,
+      "responseMs": 1427
+    },
+    {
+      "file": "frame-021.jpg",
+      "requestMs": 1429,
+      "responseMs": 1481
+    },
+    {
+      "file": "frame-022.jpg",
+      "requestMs": 1483,
+      "responseMs": 1543
+    },
+    {
+      "file": "frame-023.jpg",
+      "requestMs": 1546,
+      "responseMs": 1610
+    },
+    {
+      "file": "frame-024.jpg",
+      "requestMs": 1612,
+      "responseMs": 1685
+    },
+    {
+      "file": "frame-025.jpg",
+      "requestMs": 1687,
+      "responseMs": 1755
+    },
+    {
+      "file": "frame-026.jpg",
+      "requestMs": 1758,
+      "responseMs": 1826
+    },
+    {
+      "file": "frame-027.jpg",
+      "requestMs": 1829,
+      "responseMs": 1899
+    }
+  ]
+}

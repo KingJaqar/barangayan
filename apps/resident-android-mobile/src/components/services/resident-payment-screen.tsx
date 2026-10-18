@@ -1,12 +1,14 @@
 import { formatCentavosAsPHP, requestFee, requestFeeLabel, type Tables } from '@barangayan/shared';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '@/components/primary-button';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ThemedText } from '@/components/themed-text';
 import { PAYMENT_SETTLEMENT_READY } from '@/constants/payment';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
 type Request = Tables<'service_requests'> & {
@@ -21,6 +23,7 @@ export function ResidentPaymentScreen({
   pickup?: boolean;
 }) {
   const theme = useTheme();
+  const { fontId } = useFontPreference();
   const router = useRouter();
   const [request, setRequest] = useState<Request | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -115,20 +118,23 @@ export function ResidentPaymentScreen({
     finally {busy.current=false; setPending(false);}
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <ServiceScreenHeader
+        compact
         title={pickup ? "Payment" : "Payment Method"}
         backLabel="Back to Services"
         onBack={() => router.replace('/services?segment=requests')}
       />
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.background }}
-        contentContainerStyle={{ padding: 20, gap: 20 }}>
+        contentContainerStyle={styles.content}>
         {request ? (
           <>
-            <ThemedText type="subtitle">{request.document_types?.name ?? 'Document Request'}</ThemedText>
-            <ThemedText>Ref #{request.reference_number}</ThemedText>
-            <View style={{ padding: 20, borderWidth: 1, borderColor: '#8888', borderRadius: 16, gap: 12 }}>
+            <View style={styles.requestSummary}>
+              <ThemedText type="heading">{request.document_types?.name ?? 'Document Request'}</ThemedText>
+              <ThemedText type="small" themeColor="textSecondary">Ref #{request.reference_number}</ThemedText>
+            </View>
+            <View style={[styles.feeCard, { backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected }]}>
               <ThemedText type="smallBold">
                 {amount === null
                   ? 'Document Fee'
@@ -141,20 +147,20 @@ export function ResidentPaymentScreen({
                         : 'Confirmed amount due'}
               </ThemedText>
               {amount !== null ? (
-                <ThemedText type="title">{formatCentavosAsPHP(amount)}</ThemedText>
+                <ThemedText type="subtitle" style={styles.amount}>{formatCentavosAsPHP(amount)}</ThemedText>
               ) : (
                 <ThemedText>
                   {requestFeeLabel(request, amount)}
                 </ThemedText>
               )}
-              {request.billable_pages ? <ThemedText>{request.billable_pages} pages × ₱10.00 per page</ThemedText> : null}
+              {request.billable_pages ? <ThemedText type="small" themeColor="textSecondary">{request.billable_pages} pages × ₱10.00 per page</ThemedText> : null}
             </View>
-            {request.fee_assessment_state === 'page_count_required' && !['completed', 'cancelled'].includes(request.status) ? <>
+            {request.fee_assessment_state === 'page_count_required' && !['completed', 'cancelled'].includes(request.status) ? <View style={styles.actionGroup}>
               <ThemedText>Total pages across all copies</ThemedText>
-              <TextInput accessibilityLabel="Total pages across all copies" keyboardType="number-pad" value={pages} onChangeText={setPages} editable={!pending} style={{borderWidth:1,borderColor:theme.textSecondary,color:theme.text,padding:12,borderRadius:8}} />
-              <ThemedText>₱10.00 per page</ThemedText>
+              <TextInput accessibilityLabel="Total pages across all copies" keyboardType="number-pad" value={pages} onChangeText={setPages} editable={!pending} style={[styles.pageInput, {borderColor:theme.textSecondary,color:theme.text,fontFamily:getMobileFontFamily(fontId)}]} />
+              <ThemedText type="small" themeColor="textSecondary">₱10.00 per page</ThemedText>
               <PrimaryButton label="Continue to payment methods" loading={pending} onPress={() => void savePages()} />
-            </> : null}
+            </View> : null}
             {payable ? (
               confirmed ? (
                 <ThemedText>
@@ -162,7 +168,7 @@ export function ResidentPaymentScreen({
                   Hall. Your pickup payment has been recorded.
                 </ThemedText>
               ) : (
-                <>
+                <View style={styles.actionGroup}>
                   <PrimaryButton label="Pay at Pickup" loading={pending} onPress={() => pickup ? void startPickup() : router.push(`/services/payment/pickup/${requestId}`)} />
                   {!pickupOnly && PAYMENT_SETTLEMENT_READY && amount !== null && amount >= 100 ? (
                     <PrimaryButton label="Pay with QR PH" disabled={pending} onPress={() => void startQr()} />
@@ -171,7 +177,7 @@ export function ResidentPaymentScreen({
                       QR PH setup is in progress. Pay at Pickup is available.
                     </ThemedText>
                   ) : null}
-                </>
+                </View>
               )
             ) : null}
             <PrimaryButton
@@ -197,3 +203,12 @@ export function ResidentPaymentScreen({
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  content: { padding: 16, gap: 12 },
+  requestSummary: { gap: 4 },
+  feeCard: { padding: 14, borderWidth: 1, borderRadius: 14, gap: 4 },
+  amount: { lineHeight: 38 },
+  actionGroup: { gap: 8 },
+  pageInput: { minHeight: 48, borderWidth: 1, padding: 12, borderRadius: 8, fontSize: 16 },
+});

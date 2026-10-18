@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { serviceFoundationOperations, type Tables } from '@barangayan/shared';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { markPaymentCollected as markPaymentCollectedRequest } from '@/lib/payments';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Spinner } from '@/components/loading/spinner';
@@ -43,7 +43,7 @@ export function RequestStatusActions({
   workflowRequest,
 }: RequestStatusActionsProps) {
   const router = useRouter();
-  const toast = useToast();
+
   const { busy, runAction } = useRowAction();
   const [cancelNote, setCancelNote] = useState('');
   const [showCancelForm, setShowCancelForm] = useState(false);
@@ -72,6 +72,7 @@ export function RequestStatusActions({
 
   async function beginProcessing() {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     // S0-4: validated submitted -> in_progress transition (barangay + status checked
     // server-side), replacing the previous unguarded raw update.
@@ -79,7 +80,7 @@ export function RequestStatusActions({
       ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'accept' })
       : await supabase.rpc('begin_processing_request', { request_id: requestId });
     if (error) {
-      toast.showError(`Failed to update status: ${error.message}`);
+      toast.error(`Failed to update status: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -89,7 +90,7 @@ export function RequestStatusActions({
       .eq('id', requestId)
       .maybeSingle();
     if (readError || !updated || updated.status !== 'in_progress') {
-      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      toast.error(readError?.message ?? 'The request status could not be confirmed.', { id: toastAttempt });
       return;
     }
 
@@ -101,19 +102,20 @@ export function RequestStatusActions({
       changes: { before: { status }, after: { status: 'in_progress' } },
     }).catch(() => {});
 
-    toast.showSuccess('Request moved to processing.');
+    toast.success('Request moved to processing.', { id: toastAttempt });
     refresh();
     }, onBeforeAction);
   }
 
   async function completeRequest() {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { error } = versioned
       ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'release' })
       : await supabase.rpc('complete_service_request', { p_request_id: requestId });
     if (error) {
-      toast.showError(`Failed to complete request: ${error.message}`);
+      toast.error(`Failed to complete request: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -123,7 +125,7 @@ export function RequestStatusActions({
       .eq('id', requestId)
       .maybeSingle();
     if (readError || !updated || updated.status !== 'completed') {
-      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      toast.error(readError?.message ?? 'The request status could not be confirmed.', { id: toastAttempt });
       return;
     }
 
@@ -135,19 +137,20 @@ export function RequestStatusActions({
       changes: { before: { status }, after: { status: 'completed' } },
     }).catch(() => {});
 
-    toast.showSuccess('Request marked as completed.');
+    toast.success('Request marked as completed.', { id: toastAttempt });
     refresh();
     }, onBeforeAction);
   }
 
   async function markReadyForPickup() {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { error } = versioned
       ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'ready' })
       : await supabase.rpc('mark_request_ready_for_pickup', { p_request_id: requestId });
     if (error) {
-      toast.showError(`Failed to mark request ready for pickup: ${error.message}`);
+      toast.error(`Failed to mark request ready for pickup: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -157,7 +160,7 @@ export function RequestStatusActions({
       .eq('id', requestId)
       .maybeSingle();
     if (readError || !updated || updated.status !== 'ready_for_pickup') {
-      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      toast.error(readError?.message ?? 'The request status could not be confirmed.', { id: toastAttempt });
       return;
     }
 
@@ -169,7 +172,7 @@ export function RequestStatusActions({
       changes: { before: { status }, after: { status: 'ready_for_pickup' } },
     }).catch(() => {});
 
-    toast.showSuccess('Request marked ready for pickup.');
+    toast.success('Request marked ready for pickup.', { id: toastAttempt });
     refresh();
     }, onBeforeAction);
   }
@@ -177,12 +180,13 @@ export function RequestStatusActions({
   async function handleCancel() {
     if (!cancelNote.trim()) return;
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { error } = versioned
       ? await serviceFoundationOperations(supabase).transitionSla({ requestId, action: 'cancel', reason: cancelNote.trim() })
       : await supabase.rpc('cancel_service_request', { p_request_id: requestId, p_note: cancelNote.trim() });
     if (error) {
-      toast.showError(`Failed to cancel request: ${error.message}`);
+      toast.error(`Failed to cancel request: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -192,7 +196,7 @@ export function RequestStatusActions({
       .eq('id', requestId)
       .maybeSingle();
     if (readError || !updated || updated.status !== 'cancelled') {
-      toast.showError(readError?.message ?? 'The request status could not be confirmed.');
+      toast.error(readError?.message ?? 'The request status could not be confirmed.', { id: toastAttempt });
       return;
     }
 
@@ -207,17 +211,18 @@ export function RequestStatusActions({
 
     setShowCancelForm(false);
     setCancelNote('');
-    toast.showSuccess('Request cancelled.');
+    toast.success('Request cancelled.', { id: toastAttempt });
     refresh();
     }, onBeforeAction);
   }
 
   async function markPaymentCollected() {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { error, paymentId, wasCreate } = await markPaymentCollectedRequest(supabase, requestId);
     if (error) {
-      toast.showError(`Failed to mark payment collected: ${error}`);
+      toast.error(`Failed to mark payment collected: ${error}`, { id: toastAttempt });
       return;
     }
 
@@ -227,7 +232,7 @@ export function RequestStatusActions({
       .eq('id', requestId)
       .maybeSingle();
     if (readError || !updated || updated.payment_status !== 'paid') {
-      toast.showError(readError?.message ?? 'The payment status could not be confirmed.');
+      toast.error(readError?.message ?? 'The payment status could not be confirmed.', { id: toastAttempt });
       return;
     }
 
@@ -248,7 +253,7 @@ export function RequestStatusActions({
       metadata: { method: paymentMethod, reference_number: referenceNumber },
     }).catch(() => {});
 
-    toast.showSuccess('Payment marked as collected.');
+    toast.success('Payment marked as collected.', { id: toastAttempt });
     refresh();
     }, onBeforeAction);
   }

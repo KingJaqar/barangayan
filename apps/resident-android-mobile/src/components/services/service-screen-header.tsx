@@ -11,10 +11,12 @@ export function ServiceScreenHeader({
   title,
   backLabel = 'Go back',
   onBack,
+  compact = false,
 }: {
   title: string;
   backLabel?: string;
   onBack?: () => void;
+  compact?: boolean;
 }) {
   const router = useRouter();
   const theme = useTheme();
@@ -30,8 +32,8 @@ export function ServiceScreenHeader({
         hitSlop={Spacing.two}>
         <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
       </Pressable>
-      <View style={styles.headerContent}>
-        <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
+      <View style={[styles.headerContent, compact && styles.compactContent]}>
+        <ThemedText style={[compact ? styles.compactTitle : styles.headerTitle, { color: theme.onPrimary }]}>
           {title}
         </ThemedText>
       </View>
@@ -59,4 +61,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+  compactContent: { height: 'auto', minHeight: 28, paddingHorizontal: 52 },
+  compactTitle: { fontSize: 18, lineHeight: 24, fontWeight: '700', textAlign: 'center' },
 });

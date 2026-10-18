@@ -11,6 +11,7 @@ import { useSettingsIdStatus } from '../settings-id-status';
 import { scrollSettingsContentToTop } from '../settings-content';
 import { detailFields, detailLabels } from './draft';
 import { abortable, createIdClient } from './transport';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 type Evidence = Pick<Tables<'id_submissions'>, 'id_type' | 'front_path' | 'confirmed_details'>;
 type Result = { evidence: Evidence; photoUrl: string | null } | { error: true };
@@ -24,6 +25,7 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
   const [attempt, setAttempt] = useState(0);
   const [photoFailed, setPhotoFailed] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
+  const feedback = useRef<{ submissionId: string; id: OperationId } | null>(null);
 
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
@@ -35,6 +37,7 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
     const timer = setTimeout(() => controller.abort(), 15000);
     let mounted = true;
     const current = () => mounted && isOwner(userId);
+    const notification = feedback.current?.submissionId === submissionId ? feedback.current.id : null;
     void (async () => {
       try {
         const client = createIdClient(controller.signal);
@@ -51,15 +54,21 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
             if (!photo.error) photoUrl = photo.data.signedUrl;
           } catch { /* Keep the saved details available when the photo cannot load. */ }
         }
-        if (current()) setResult({ evidence: data, photoUrl });
+        if (current()) {
+          setResult({ evidence: data, photoUrl });
+          if (!photoUrl && notification) notify.error("Couldn't refresh your ID photo. Please try again.", { id: notification });
+        }
       } catch {
-        if (current()) setResult({ error: true });
+        if (current()) {
+          setResult({ error: true });
+          if (notification) notify.error("Couldn't refresh your saved ID. Please try again.", { id: notification });
+        }
       } finally { clearTimeout(timer); }
     })();
     return () => { mounted = false; controller.abort(); clearTimeout(timer); };
   }, [userId, submissionId, isOwner, attempt]);
 
-  function retry() { setResult(null); setPhotoFailed(false); setAttempt(previous => previous + 1); }
+  function retry() { feedback.current = { submissionId, id: beginAttempt('saved-id-retry') }; setResult(null); setPhotoFailed(false); setAttempt(previous => previous + 1); }
 
   return <div className="mx-auto max-w-2xl space-y-6 px-4 py-5 sm:px-6 sm:py-8">
     <div>
@@ -67,7 +76,7 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{verified ? 'View your verified ID and the details saved with it.' : 'View your submitted ID and the details saved with it.'}</p>
     </div>
     {status.loading ? <LoadingStatus active label="Checking verification status…" /> : status.error ?
-      <InlineReadError message={lastSubmittedId ? 'Your ID was submitted. Verification status is temporarily unavailable.' : status.error} onRetry={() => void status.refresh()} /> : verified ? <div role="status" className="rounded-xl border border-emerald-600/25 bg-emerald-600/10 p-4">
+      <InlineReadError message={lastSubmittedId ? 'Your ID was submitted. Verification status is temporarily unavailable.' : status.error} announce={!status.errorAnnounced} onRetry={() => void status.refresh(true)} /> : verified ? <div role="status" className="rounded-xl border border-emerald-600/25 bg-emerald-600/10 p-4">
       <div><p className="font-semibold">Your valid ID has been verified</p><p className="mt-1 text-sm text-muted-foreground">You can use this ID for service requests.</p></div>
     </div> : <div role={lastSubmittedId === submissionId && (state === 'pending' || state === 'missing') ? undefined : 'status'} className="flex items-start gap-3 rounded-xl border border-status-warning/40 bg-status-warning/10 p-4">
       {state === 'pending' ? <Clock3 aria-hidden className="mt-0.5 size-5 shrink-0 text-status-warning" /> : <TriangleAlert aria-hidden className="mt-0.5 size-5 shrink-0 text-status-warning" />}
@@ -78,7 +87,7 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
     </div>}
     {!status.loading && !status.error && lastSubmittedId && lastSubmittedId !== submissionId ? <p role="status" className="text-sm">A newer ID submission is now current. The verification status above applies to that submission.</p> : null}
     {!result ? <LoadingStatus active label={verified ? 'Loading your verified ID…' : 'Loading your submitted ID…'} /> : 'error' in result ?
-      <InlineReadError message={verified ? 'Your ID is verified, but its saved details and photo could not be loaded.' : 'Your submitted ID details and photo could not be loaded.'} onRetry={retry} /> : <>
+      <InlineReadError message={verified ? 'Your ID is verified, but its saved details and photo could not be loaded.' : 'Your submitted ID details and photo could not be loaded.'} announce={attempt === 0} onRetry={retry} /> : <>
         <section aria-labelledby="verified-id-details" className="rounded-2xl border border-border p-5 sm:p-6">
           <h2 id="verified-id-details" className="font-semibold">ID details</h2>
           <dl className="mt-5 grid min-w-0 gap-5 sm:grid-cols-2">
@@ -91,8 +100,8 @@ export function SavedId({ userId, submissionId, lastSubmittedId, onReplace }: { 
         </section>
         <section aria-labelledby="verified-id-photo" className="space-y-3">
           <h2 id="verified-id-photo" className="font-semibold">ID photo</h2>
-          {result.photoUrl && !photoFailed ? <Image unoptimized src={result.photoUrl} alt={verified ? 'Front of your verified valid ID' : 'Front of your submitted valid ID'} width={800} height={500} referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} className="max-h-96 w-full rounded-xl border border-border bg-muted/30 object-contain" /> :
-            <InlineReadError message={verified ? 'Your ID photo could not be loaded. Your ID is still verified.' : 'Your submitted ID photo could not be loaded.'} onRetry={retry} />}
+          {result.photoUrl && !photoFailed ? <Image unoptimized src={result.photoUrl} alt={verified ? 'Front of your verified valid ID' : 'Front of your submitted valid ID'} width={800} height={500} referrerPolicy="no-referrer" onError={() => { setPhotoFailed(true); if (feedback.current?.submissionId === submissionId) notify.error("Couldn't refresh your ID photo. Please try again.", { id: feedback.current.id }); }} className="max-h-96 w-full rounded-xl border border-border bg-muted/30 object-contain" /> :
+            <InlineReadError message={verified ? 'Your ID photo could not be loaded. Your ID is still verified.' : 'Your submitted ID photo could not be loaded.'} announce={attempt === 0} onRetry={retry} />}
         </section>
       </>}
     {!status.loading && !status.error && status.access ? <div className="space-y-3 border-t border-border pt-5">

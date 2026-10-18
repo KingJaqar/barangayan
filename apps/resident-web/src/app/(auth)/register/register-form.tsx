@@ -197,6 +197,8 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
   const submitting = useRef(false);
   const mounted = useRef(true);
   const registrationOwner = useRef<{ email: string; changed: boolean } | null>(null);
+  const localityFeedback = useRef<OperationId | null>(null);
+  const prefillFeedback = useRef<OperationId | null>(null);
   useEffect(() => {
     mounted.current = true;
     const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((event, session) => {
@@ -253,9 +255,10 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
 
   useEffect(() => {
     let active = true;
+    const notification = localityFeedback.current;
     void registrationLocality(createSupabaseBrowserClient()).then(data => {
       if (active) { setBarangay({ ...data, boundary: data.boundary as Polygon | MultiPolygon | null }); setLocalityError(null); }
-    }).catch(cause => { if (active) setLocalityError(cause instanceof Error ? cause.message : 'Registration locality unavailable. Please retry.'); });
+    }).catch(cause => { if (active) { setLocalityError(cause instanceof Error ? cause.message : 'Registration locality unavailable. Please retry.'); if (notification) notify.error("Couldn't refresh registration locality. Please try again.", { id: notification }); } });
     return () => { active = false; };
   }, [localityAttempt]);
 
@@ -264,6 +267,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
   useEffect(() => {
     if (!completing) return;
     let active = true;
+    const notification = prefillFeedback.current;
     const client = createSupabaseBrowserClient();
     void client.auth.getUser().then(async ({ data: { user } }) => {
       if (!user || !active) return;
@@ -281,7 +285,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         setSex(profile.sex as Sex | null); setEmploymentStatus(profile.employment_status as EmploymentStatus | null);
         setOccupation(profile.occupation ?? ''); setBirthDate(profile.birth_date ?? '');
       }
-    }).catch(() => { if (active) setPrefillError('Unable to load your saved details. Check your connection, then try again.'); });
+    }).catch(() => { if (active) { setPrefillError('Unable to load your saved details. Check your connection, then try again.'); if (notification) notify.error("Couldn't refresh your saved details. Please try again.", { id: notification }); } });
     return () => { active = false; };
   }, [completing, prefillAttempt]);
 
@@ -325,7 +329,7 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
         errors[String(issue.path[0])] = issue.message;
       }
       setFieldErrors(errors);
-      // Inline field messages only (no toast); focus the first field that needs work.
+      notify.error('Check the highlighted registration details.', { id: beginAttempt('registration-validation') });
       focusFirstInvalid(errors);
       return;
     }
@@ -730,8 +734,8 @@ export function RegisterForm({ completing = false }: { completing?: boolean }) {
 
         </>}
         <RegistrationMap boundary={barangay?.boundary ?? null} onConfirm={setRegistrationLocation} />
-        {localityError && <><p role="alert">{localityError}</p><Button type="button" onClick={() => { setLocalityError(null); setLocalityAttempt(value => value + 1); }}>Retry locality</Button></>}
-        {prefillError && <><p role="alert">{prefillError}</p><Button type="button" onClick={() => { setPrefillError(null); setPrefillAttempt(value => value + 1); }}>Reload saved details</Button></>}
+        {localityError && <><p role={localityAttempt ? undefined : 'alert'}>{localityError}</p><Button type="button" onClick={() => { localityFeedback.current = beginAttempt('locality-retry'); setLocalityError(null); setLocalityAttempt(value => value + 1); }}>Retry locality</Button></>}
+        {prefillError && <><p role={prefillAttempt ? undefined : 'alert'}>{prefillError}</p><Button type="button" onClick={() => { prefillFeedback.current = beginAttempt('prefill-retry'); setPrefillError(null); setPrefillAttempt(value => value + 1); }}>Reload saved details</Button></>}
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
         <div className="flex flex-col items-center gap-3">

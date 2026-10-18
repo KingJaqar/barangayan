@@ -6,6 +6,7 @@ import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { BoundaryFitButton } from './BoundaryFitButton';
 import styles from './incident-map.module.css';
+import { notify } from '@/lib/notify';
 
 interface MapViewportControlsProps {
   viewport: RefObject<HTMLElement | null>;
@@ -54,7 +55,10 @@ export function MapViewportControls({ viewport, ...fitProps }: MapViewportContro
       if (event.key !== 'Escape' || document.fullscreenElement !== target) return;
       event.preventDefault();
       event.stopPropagation();
-      void document.exitFullscreen().catch(() => setError('Full screen could not close. Use the browser’s exit full screen control.'));
+      void document.exitFullscreen().catch(() => {
+        setError('Full screen could not close. Use the browser’s exit full screen control.');
+        notify.error('Could not close full screen. Use the browser’s exit full screen control.');
+      });
     };
     target.addEventListener('keydown', onEscape);
     return () => target.removeEventListener('keydown', onEscape);
@@ -135,6 +139,7 @@ export function MapViewportControls({ viewport, ...fitProps }: MapViewportContro
       } else setFallbackExpanded(true);
     } catch {
       setError('Full screen could not close. Press Escape to return to the page.');
+      notify.error('Could not close full screen. Press Escape to return to the page.');
     } finally { setPending(false); }
   }
 

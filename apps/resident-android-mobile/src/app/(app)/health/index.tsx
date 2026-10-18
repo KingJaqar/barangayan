@@ -1,3 +1,4 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 /**
  * Health & Medical Drive screen — Module 10.
  *
@@ -19,7 +20,7 @@
  */
 import { DRIVE_TYPES, DRIVE_TYPE_CONFIG as SHARED_DRIVE_TYPE_CONFIG } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -42,7 +43,7 @@ import { ProgressBar } from '@/components/progress-bar';
 import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors, Fonts, Spacing } from '@/constants/theme';
+import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { type DriveRegistration, type DriveType, type MedicalDrive, useMedicalDrives } from '@/hooks/use-medical-drives';
 import { useTheme } from '@/hooks/use-theme';
@@ -1970,6 +1971,7 @@ function MyRegistrationsPanel({
   loading: boolean;
 }) {
   const theme = useTheme();
+  const bottomTabInset = useFloatingTabInset();
   // Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
   const PRIMARY_GREEN = theme.primary;
   const [statusFilter, setStatusFilter] = useState<RegStatusFilter>('all');
@@ -1997,7 +1999,7 @@ function MyRegistrationsPanel({
     <>
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={myRegStyles.outerList}
+        contentContainerStyle={[myRegStyles.outerList, { paddingBottom: bottomTabInset + 40 }]}
         showsVerticalScrollIndicator={false}>
 
         {/* ════════════════════════════════════════════════════════════════
@@ -2208,9 +2210,9 @@ type HealthSegment = 'active-drives' | 'my-registrations';
 
 export default function HealthScreen() {
   const theme = useTheme();
+  const bottomTabInset = useFloatingTabInset();
   // Shadows the module-level fallback — see the shadow comment in MonthYearPicker above.
   const PRIMARY_GREEN = theme.primary;
-  const insets = useSafeAreaInsets();
   const { session } = useAuth();
 
   const [requestedSegment, setSegment] = useState<HealthSegment>('active-drives');
@@ -2239,6 +2241,19 @@ export default function HealthScreen() {
     registerForDrive,
     error,
   } = useMedicalDrives({ selectedDate, typeFilter });
+
+  const { searchDate } = useLocalSearchParams<{ searchDate?: string }>();
+  useEffect(() => {
+    if (!searchDate || !/^\d{4}-\d{2}-\d{2}$/.test(searchDate)) return;
+    const date = parseLocalDate(searchDate);
+    if (Number.isNaN(date.getTime())) return;
+    setSelectedDate(searchDate);
+    setCurrentMonth({ year: date.getFullYear(), month: date.getMonth() + 1 });
+    setMonthViewActive(false);
+    setTypeFilter('all');
+    setSegment('active-drives');
+    router.setParams({ searchDate: undefined });
+  }, [searchDate]);
 
   // Re-fetch calendar event dots whenever the visible month changes
   useEffect(() => {
@@ -2295,22 +2310,8 @@ export default function HealthScreen() {
   const activeDriveLoading = monthViewActive ? loadingMonthDrives : loadingDrives;
 
   return (
-    <SafeAreaView style={[rootStyles.safeArea, { backgroundColor: PRIMARY_GREEN }]}>
+    <SafeAreaView edges={['left', 'right']} style={[rootStyles.safeArea, { backgroundColor: PRIMARY_GREEN }]}>
       <View style={[rootStyles.root, { backgroundColor: theme.background }]}>
-        {/* ── Green header bar ─────────────────────────────────────────────── */}
-        <View
-          style={[
-            rootStyles.header,
-            { backgroundColor: PRIMARY_GREEN, paddingTop: insets.top + Spacing.two },
-          ]}>
-          {/* height:25 matches maps screen headerContent height */}
-          <View style={rootStyles.headerContent}>
-            <ThemedText style={[rootStyles.headerTitle, { color: theme.onPrimary }]}>
-              Health and Medical Drive Info
-            </ThemedText>
-          </View>
-        </View>
-
       {/* ── Segmented control ────────────────────────────────────────────── */}
       {session && (
         <ThemedView style={rootStyles.segmentRow}>
@@ -2329,7 +2330,7 @@ export default function HealthScreen() {
       {segment === 'active-drives' && (
         <ScrollView
           style={rootStyles.scroll}
-          contentContainerStyle={rootStyles.scrollContent}
+          contentContainerStyle={[rootStyles.scrollContent, { paddingBottom: bottomTabInset + 40 }]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
 
@@ -2543,18 +2544,7 @@ const rootStyles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  header: {
-    alignItems: 'center',
-    paddingBottom: Spacing.three,
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
-  },
+
   segmentRow: {
     padding: Spacing.three,
   },

@@ -1,7 +1,8 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Modal, Platform, Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
+import { Alert, Modal, Platform, Pressable, ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   Easing as ReanimatedEasing,
   runOnJS,
@@ -38,6 +39,9 @@ const SHEET_OFFSET = 800;
 
 export function QrShowModal({ visible, onClose }: QrShowModalProps) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+  const { height: windowHeight, width: windowWidth, fontScale } = useWindowDimensions();
+  const qrFrameSize = Math.min(260, windowWidth - 32);
   const { profile } = useProfile();
   const barangayId = profile?.barangay_id ?? null;
   const { centers, isLoading: centersLoading } = useEvacuationCenters({ barangayId });
@@ -183,81 +187,96 @@ export function QrShowModal({ visible, onClose }: QrShowModalProps) {
       {/* Animated dim backdrop */}
       <Animated.View style={[StyleSheet.absoluteFill, styles.overlayDim, backdropStyle]} pointerEvents="none" />
 
-      <Pressable style={styles.overlay} onPress={handleClose}>
+      <Pressable style={[styles.overlay, { paddingTop: insets.top + Spacing.three }]} onPress={handleClose}>
         {/* Animated sheet */}
-        <Animated.View style={sheetStyle}>
-        <Pressable style={[styles.container, { backgroundColor: theme.background }]} onPress={() => { }}>
-          <View style={styles.handle} />
-          <View style={styles.header}>
-            <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
-              Show QR Code
-            </ThemedText>
-            <Pressable onPress={handleClose} hitSlop={Spacing.two}>
-              <Ionicons name="close" size={24} color={theme.textSecondary} />
-            </Pressable>
-          </View>
-
-          <Pressable
-            style={[styles.centerPicker, { borderColor: theme.backgroundSelected }]}
-            onPress={() => setShowCenterPicker(true)}>
-            <View style={styles.centerPickerContent}>
-              <Ionicons name="location-outline" size={20} color={theme.primary} />
-              <ThemedText style={[styles.centerPickerText, { color: theme.text }]}>
-                {selectedCenter ? selectedCenter.name : 'Select Evacuation Center'}
+        <Animated.View style={[styles.sheet, sheetStyle]}>
+          <Pressable style={[styles.container, {
+            backgroundColor: theme.background,
+            maxHeight: windowHeight - insets.top - Spacing.three,
+          }]} onPress={() => { }}>
+            <View style={styles.handle} />
+            <View style={styles.header}>
+              <ThemedText type="smallBold" style={[styles.title, { color: theme.text }]}>
+                Show QR Code
               </ThemedText>
-              <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
+              <Pressable onPress={handleClose} style={styles.closeButton} hitSlop={Spacing.one}
+                accessibilityRole="button" accessibilityLabel="Close QR code">
+                <Ionicons name="close" size={24} color={theme.textSecondary} />
+              </Pressable>
             </View>
-          </Pressable>
 
-          {selectedCenter && (
-            <View style={styles.centerInfo}>
-              <Ionicons name="map-outline" size={16} color={theme.textSecondary} />
-              <ThemedText themeColor="textSecondary" style={styles.centerAddress}>
-                {selectedCenter.address ?? 'No address provided'}
+            {/* Keep the close control outside the scrolling sheet body. */}
+            <ScrollView style={styles.sheetScroll} contentContainerStyle={[styles.sheetContent, {
+              paddingBottom: Math.max(insets.bottom, 16),
+            }]} showsVerticalScrollIndicator={false}>
+              <Pressable
+                style={[styles.centerPicker, { borderColor: theme.backgroundSelected }]}
+                onPress={() => setShowCenterPicker(true)}>
+                <View style={styles.centerPickerContent}>
+                  <Ionicons name="location-outline" size={20} color={theme.primary} />
+                  <ThemedText style={[styles.centerPickerText, { color: theme.text }]}>
+                    {selectedCenter ? selectedCenter.name : 'Select Evacuation Center'}
+                  </ThemedText>
+                  <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
+                </View>
+              </Pressable>
+
+              {selectedCenter && (
+                <View style={styles.centerInfo}>
+                  <Ionicons name="map-outline" size={16} color={theme.textSecondary} />
+                  <ThemedText themeColor="textSecondary" style={styles.centerAddress}>
+                    {selectedCenter.address ?? 'No address provided'}
+                  </ThemedText>
+                </View>
+              )}
+
+              <View ref={qrFrameRef} collapsable={false} style={[styles.qrFrame, {
+                borderColor: theme.backgroundSelected, width: qrFrameSize, height: qrFrameSize,
+              }]}>
+                {centersLoading ? (
+                  <ThemedText themeColor="textSecondary">Loading centers...</ThemedText>
+                ) : !selectedCenter ? (
+                  <ThemedText themeColor="textSecondary">Select a center to generate QR</ThemedText>
+                ) : !qrValue ? (
+                  <ThemedText themeColor="textSecondary">Unable to generate QR code</ThemedText>
+                ) : (
+                  <QRCode value={qrValue} size={qrFrameSize - 40} backgroundColor="#FFFFFF" color="#000000" />
+                )}
+              </View>
+
+              <ThemedText themeColor="textSecondary" style={styles.helperText}>
+                Show this screen to center staff so they can scan it at the desk.
               </ThemedText>
-            </View>
-          )}
 
-          <View ref={qrFrameRef} collapsable={false} style={[styles.qrFrame, { borderColor: theme.backgroundSelected }]}>
-            {centersLoading ? (
-              <ThemedText themeColor="textSecondary">Loading centers...</ThemedText>
-            ) : !selectedCenter ? (
-              <ThemedText themeColor="textSecondary">Select a center to generate QR</ThemedText>
-            ) : !qrValue ? (
-              <ThemedText themeColor="textSecondary">Unable to generate QR code</ThemedText>
-            ) : (
-              <QRCode value={qrValue} size={220} backgroundColor="#FFFFFF" color="#000000" />
-            )}
-          </View>
+              <View style={[styles.actionRow, (windowWidth < 360 || fontScale > 1.2) && styles.actionColumn]}>
+                <Pressable
+                  style={[styles.shareButton, { backgroundColor: theme.primary }]}
+                  onPress={handleShare}
+                  accessibilityRole="button"
+                  disabled={!qrValue}>
+                  <Ionicons name="share-outline" size={18} color={theme.onPrimary} />
+                  <ThemedText style={[styles.shareButtonText, { color: theme.onPrimary }]}>
+                    Share QR Code
+                  </ThemedText>
+                </Pressable>
 
-          <ThemedText themeColor="textSecondary" style={styles.helperText}>
-            Show this screen to center staff so they can scan it at the desk.
-          </ThemedText>
-
-          <Pressable
-            style={[styles.shareButton, { backgroundColor: theme.primary }]}
-            onPress={handleShare}
-            disabled={!qrValue}>
-            <Ionicons name="share-outline" size={20} color={theme.onPrimary} />
-            <ThemedText style={[styles.shareButtonText, { color: theme.onPrimary }]}>
-              Share QR Code
-            </ThemedText>
+                <Pressable
+                  style={[styles.downloadButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
+                  onPress={handleDownloadQr}
+                  accessibilityRole="button"
+                  disabled={!qrValue || downloading}>
+                  <Ionicons
+                    name={downloading ? 'reload' : 'download-outline'}
+                    size={18}
+                    color={theme.primary}
+                  />
+                  <ThemedText style={[styles.downloadButtonText, { color: theme.primary }]}>
+                    {downloading ? 'Saving...' : 'Download QR'}
+                  </ThemedText>
+                </Pressable>
+              </View>
+            </ScrollView>
           </Pressable>
-
-          <Pressable
-            style={[styles.downloadButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
-            onPress={handleDownloadQr}
-            disabled={!qrValue || downloading}>
-            <Ionicons
-              name={downloading ? 'reload' : 'download-outline'}
-              size={20}
-              color={theme.primary}
-            />
-            <ThemedText style={[styles.downloadButtonText, { color: theme.primary }]}>
-              {downloading ? 'Saving...' : 'Download QR'}
-            </ThemedText>
-          </Pressable>
-        </Pressable>
         </Animated.View>
       </Pressable>
 
@@ -330,13 +349,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'flex-end',
   },
+  sheet: {
+    flexShrink: 1,
+  },
+  sheetScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
+  },
+  sheetContent: {
+    gap: 12,
+  },
   container: {
+    flexShrink: 1,
+    overflow: 'hidden',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingHorizontal: Spacing.five,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.six,
-    gap: Spacing.four,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    gap: 8,
   },
   handle: {
     width: 36,
@@ -344,7 +374,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: '#D1D5DB',
     alignSelf: 'center',
-    marginBottom: Spacing.two,
   },
   header: {
     flexDirection: 'row',
@@ -352,14 +381,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 20,
+    flex: 1,
+    fontSize: 18,
+    lineHeight: 24,
     fontWeight: '700',
+  },
+  closeButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   centerPicker: {
     borderWidth: 1,
     borderRadius: 12,
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.three,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    minHeight: 48,
   },
   centerPickerContent: {
     flexDirection: 'row',
@@ -368,23 +406,23 @@ const styles = StyleSheet.create({
   },
   centerPickerText: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '600',
   },
   centerInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,
-    marginTop: -Spacing.two,
+    marginTop: -4,
   },
   centerAddress: {
+    flex: 1,
     fontSize: 13,
     lineHeight: 18,
   },
   qrFrame: {
-    width: 260,
-    height: 260,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -396,28 +434,47 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 18,
   },
+  actionRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  actionColumn: {
+    flexDirection: 'column',
+  },
   shareButton: {
+    flexGrow: 1,
+    flexBasis: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Spacing.two,
-    height: 52,
-    borderRadius: 26,
+    gap: 6,
+    minHeight: 48,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
   },
   shareButtonText: {
-    fontSize: 16,
+    flexShrink: 1,
+    fontSize: 13,
+    lineHeight: 18,
     fontWeight: '700',
   },
   downloadButton: {
+    flexGrow: 1,
+    flexBasis: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Spacing.two,
-    height: 52,
-    borderRadius: 26,
+    gap: 6,
+    minHeight: 48,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
   },
   downloadButtonText: {
-    fontSize: 16,
+    flexShrink: 1,
+    fontSize: 13,
+    lineHeight: 18,
     fontWeight: '700',
   },
   pickerOverlay: {
@@ -425,13 +482,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Spacing.four,
+    padding: 16,
   },
   pickerContainer: {
     borderRadius: 24,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.six,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
     width: '100%',
     maxWidth: 600,
     maxHeight: '80%',
@@ -451,14 +508,14 @@ const styles = StyleSheet.create({
   },
   pickerEmpty: {
     textAlign: 'center',
-    paddingVertical: Spacing.six,
+    paddingVertical: 24,
   },
   pickerItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: Spacing.three,
-    paddingHorizontal: Spacing.three,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     borderRadius: 12,
     marginBottom: Spacing.one,
   },

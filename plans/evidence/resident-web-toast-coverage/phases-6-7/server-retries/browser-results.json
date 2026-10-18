@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "checks": [
+    "initial server failures and background refresh are quiet",
+    "only the clicked server slot reports the fresh failure, once",
+    "successful server retry is quiet, later background failure has no receipt",
+    "synchronous repeated activation makes one server retry",
+    "server result from a previous account is suppressed",
+    "navigation during retry cannot leak its result",
+    "profile setup fresh failure versus quiet initial/success",
+    "account recovery link retains href and reports only a failed retry",
+    "real Next boundary retry suppresses cached error, reports fresh same-digest failure once",
+    "boundary success clears receipt before a later unrelated error",
+    "a read retry that reaches an unexpected boundary has one named outcome"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "warnings": [],
+  "expectedBoundaryErrors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+    "Error: Minified React error #441; visit https://react.dev/errors/441 for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+  ],
+  "limitations": [
+    "Local synthetic reads; actual installed Next RSC transport. No hosted resident credentials, physical APIs or spoken screen reader."
+  ]
+}

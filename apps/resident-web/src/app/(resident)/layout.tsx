@@ -26,7 +26,7 @@ export default async function ResidentLayout({ children }: { children: React.Rea
         residentName={profile?.full_name ?? null}
         avatarUrl={profile?.avatar_url ?? null}
         isAuthenticated={user !== null}>
-        {profileSetupPending ? <ProfileSetupNotice /> : user && <ProfileCompletionBanner userId={user.id} />}
+        {profileSetupPending ? <ProfileSetupNotice resultId={crypto.randomUUID()} /> : user && <ProfileCompletionBanner userId={user.id} />}
         {children}
       </ResidentShell>
     </UnreadCountsProvider>

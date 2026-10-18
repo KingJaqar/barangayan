@@ -21,7 +21,7 @@ export default async function TransactionsPage({ searchParams }: {
     supabase.from('service_requests').select('reference_number').eq('barangay_id', profile.barangay_id)
       .is('deleted_at', null).order('created_at', { ascending: false }).limit(100).retry(false).abortSignal(AbortSignal.timeout(15000)),
     pilotOptions(supabase, 'profiles', profile.barangay_id, 'admin'),
-    pilotOptions(supabase, 'profiles', profile.barangay_id, 'resident'),
+    pilotOptions(supabase, 'profiles', profile.barangay_id, 'requester'),
     pilotOptions(supabase, 'document_types', profile.barangay_id),
   ]);
   const optionsError = [admins, residents, documents].find(outcome => outcome.status === 'error');

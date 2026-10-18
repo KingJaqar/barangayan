@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
+import { beginAttempt, notify } from '@/lib/notify';
 
 export type IncidentStatus = 'open' | 'in_progress' | 'resolved' | 'withdrawn';
 
@@ -40,7 +41,8 @@ export function useMyIncidents({ status }: UseMyIncidentsOptions = {}): {
   incidents: MyIncidentRow[];
   isLoading: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
   // Convert to a stable sorted comma-separated key once, outside callbacks.
   const statusKey = status === undefined
@@ -52,17 +54,26 @@ export function useMyIncidents({ status }: UseMyIncidentsOptions = {}): {
   const [incidents, setIncidents] = useState<MyIncidentRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorAnnounced, setErrorAnnounced] = useState(false);
   const cancelledRef = useRef(false);
   const channelCleanupRef = useRef<(() => void) | null>(null);
+  const generation = useRef(0);
 
-  const doFetch = useCallback(() => {
+  const doFetch = useCallback((contentName?: string) => {
+    const attempt = contentName ? beginAttempt('reports-retry') : null;
+    const ticket = ++generation.current;
+    const current = () => !cancelledRef.current && generation.current === ticket;
     setIsLoading(true);
     setError(null);
+    setErrorAnnounced(false);
     const supabase = createSupabaseBrowserClient();
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (cancelledRef.current || !user) {
-        if (!cancelledRef.current) setIsLoading(false);
+    void supabase.auth.getUser().then(async ({ data: { user }, error: authError }) => {
+      if (!current()) return;
+      if (authError) throw authError;
+      if (!user) {
+        if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
+        setIsLoading(false);
         return;
       }
 
@@ -81,19 +92,28 @@ export function useMyIncidents({ status }: UseMyIncidentsOptions = {}): {
         query = query.in('status', statuses);
       }
 
-      query.then(({ data, error: qErr }) => {
-        if (cancelledRef.current) return;
+      await query.then(({ data, error: qErr }) => {
+        if (!current()) return;
         if (qErr) {
           setError(qErr.message);
+          setErrorAnnounced(attempt !== null);
+          if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
         } else {
           setIncidents((data ?? []) as unknown as MyIncidentRow[]);
         }
         setIsLoading(false);
       });
+    }).catch(() => {
+      if (!current()) return;
+      setError('Reports are temporarily unavailable. Please try again.');
+      setErrorAnnounced(attempt !== null);
+      setIsLoading(false);
+      if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
     });
   }, [statusKey]);
 
   useEffect(() => {
+    const requests = generation;
     cancelledRef.current = false;
     // Microtask-wrapped to keep setState out of the synchronous effect body.
     Promise.resolve().then(() => doFetch());
@@ -116,10 +136,11 @@ export function useMyIncidents({ status }: UseMyIncidentsOptions = {}): {
 
     return () => {
       cancelledRef.current = true;
+      ++requests.current;
       channelCleanupRef.current?.();
       channelCleanupRef.current = null;
     };
   }, [doFetch, statusKey]);
 
-  return { incidents, isLoading, error, refetch: doFetch };
+  return { incidents, isLoading, error, errorAnnounced, refetch: doFetch };
 }

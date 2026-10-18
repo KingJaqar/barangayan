@@ -24,7 +24,7 @@ import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { EditableDataTable, type EditableCellConfig, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { TABS } from './types';
@@ -92,7 +92,7 @@ function AddTransactionForm({
   onClose: () => void;
   onChanged: () => void;
 }) {
-  const toast = useToast();
+
   const [reference, setReference] = useState('');
   const [method, setMethod] = useState<'pickup' | 'qrph'>('pickup');
   const [amountPesos, setAmountPesos] = useState('');
@@ -175,69 +175,75 @@ function AddTransactionForm({
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!matchedRequest) {
-      toast.showError('Select a valid request reference first.');
-      return;
-    }
-    const pesos = Number(amountPesos);
-    if (!amountPesos || Number.isNaN(pesos) || pesos < 0) {
-      toast.showError('Amount must be a number of 0 or more.');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!matchedRequest) {
+        toast.error('Select a valid request reference first.', { id: toastAttempt });
+        return;
+      }
+      const pesos = Number(amountPesos);
+      if (!amountPesos || Number.isNaN(pesos) || pesos < 0) {
+        toast.error('Amount must be a number of 0 or more.', { id: toastAttempt });
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
 
-    let resolvedCollectedBy: string | null = method === 'pickup' ? collectedBy || null : null;
-    if (method === 'pickup' && !resolvedCollectedBy && status === 'paid') {
-      // No admin explicitly picked but this is being recorded as already paid — default
-      // to whoever's entering it, same fallback the row-level "Mark Payment Collected"
-      // action already uses.
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      resolvedCollectedBy = user?.id ?? null;
-    }
+      let resolvedCollectedBy: string | null = method === 'pickup' ? collectedBy || null : null;
+      if (method === 'pickup' && !resolvedCollectedBy && status === 'paid') {
+        // No admin explicitly picked but this is being recorded as already paid — default
+        // to whoever's entering it, same fallback the row-level "Mark Payment Collected"
+        // action already uses.
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        resolvedCollectedBy = user?.id ?? null;
+      }
 
-    const { data: inserted, error: insertError } = await supabase
-      .from('payments')
-      .insert({
-        service_request_id: matchedRequest.id,
-        barangay_id: matchedRequest.barangayId,
-        method,
-        amount_centavos: Math.round(pesos * 100),
-        status,
-        paid_at: status === 'paid' ? new Date().toISOString() : null,
-        collected_by: resolvedCollectedBy,
-        paymongo_source_id: method === 'qrph' ? sourceId.trim() || null : null,
-      })
-      .select('id')
-      .single();
+      const { data: inserted, error: insertError } = await supabase
+        .from('payments')
+        .insert({
+          service_request_id: matchedRequest.id,
+          barangay_id: matchedRequest.barangayId,
+          method,
+          amount_centavos: Math.round(pesos * 100),
+          status,
+          paid_at: status === 'paid' ? new Date().toISOString() : null,
+          collected_by: resolvedCollectedBy,
+          paymongo_source_id: method === 'qrph' ? sourceId.trim() || null : null,
+        })
+        .select('id')
+        .single();
 
-    setSubmitting(false);
-    if (insertError || !inserted) {
-      toast.showError(`Failed to add transaction: ${insertError?.message ?? 'No transaction was created.'}`);
-      return;
-    }
+      setSubmitting(false);
+      if (insertError || !inserted) {
+        toast.error(`Failed to add transaction: ${insertError?.message ?? 'No transaction was created.'}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'payment',
-      entityId: inserted?.id,
-      entityLabel: `#${reference.trim().replace(/^#/, '')} — ${matchedRequest.residentName}`,
-      metadata: {
-        reference_number: reference.trim().replace(/^#/, ''),
-        resident: matchedRequest.residentName,
-        method,
-        amount_centavos: Math.round(pesos * 100),
-        status,
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'payment',
+        entityId: inserted?.id,
+        entityLabel: `#${reference.trim().replace(/^#/, '')} — ${matchedRequest.residentName}`,
+        metadata: {
+          reference_number: reference.trim().replace(/^#/, ''),
+          resident: matchedRequest.residentName,
+          method,
+          amount_centavos: Math.round(pesos * 100),
+          status,
+        },
+      }).catch(() => {});
 
-    toast.showSuccess('Transaction added.');
-    resetForm();
-    onClose();
-    onChanged();
+      toast.success('Transaction added.', { id: toastAttempt });
+      resetForm();
+      onClose();
+      onChanged();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   const residentDisplay =
@@ -374,7 +380,6 @@ export function TransactionsTable({
   optionsError: string | null; barangayId: string; referenceOptions: string[]; admins: AdminOption[]; residents: ResidentOption[]; documentTypes: DocumentTypeOption[];
 }) {
 
-  const toast = useToast();
   const [addOpen, setAddOpen] = useState(false);
   const browse = usePilotTableBrowse('transactions', requestedState, result);
   const { state, value } = browse;
@@ -506,6 +511,7 @@ export function TransactionsTable({
   // refund_status moves from 'pending' to 'refunded'/'failed' once the paymongo-webhook
   // function's refund.updated handler confirms it.
   async function refund(payment: Payment) {
+    const toastAttempt = beginAttempt('refund');
     if (!await browse.settle()) return;
     const supabase = createSupabaseBrowserClient();
     const { data: refundResult, error } = await supabase.functions.invoke<{ paymentId: string; status: string }>('refund-payment', {
@@ -514,7 +520,7 @@ export function TransactionsTable({
     if (error) {
       const context = (error as { context?: unknown }).context;
       const details = context instanceof Response ? await context.clone().json().catch(() => null) : null;
-      toast.showError(`Failed to submit refund: ${typeof details?.error === 'string' ? details.error : error.message}`);
+      toast.error(`Failed to submit refund: ${typeof details?.error === 'string' ? details.error : error.message}`, { id: toastAttempt });
       browse.refresh();
       return;
     }
@@ -525,7 +531,7 @@ export function TransactionsTable({
       .eq('id', refundResult?.paymentId ?? payment.id)
       .maybeSingle();
     if (refreshError || !updated || (refundResult?.status && updated.refund_status !== refundResult.status)) {
-      toast.showError(`Refund was submitted but the changed transaction could not be confirmed: ${refreshError?.message ?? 'no transaction was returned'}`);
+      toast.error(`Refund was submitted but the changed transaction could not be confirmed: ${refreshError?.message ?? 'no transaction was returned'}`, { id: toastAttempt });
       return;
     }
 
@@ -538,7 +544,7 @@ export function TransactionsTable({
       metadata: { reason: 'requested_by_customer' },
     }).catch(() => {});
 
-    toast.showSuccess('Refund submitted to PayMongo — status will update once confirmed.');
+    toast.success('Refund submitted to PayMongo — status will update once confirmed.', { id: toastAttempt });
     browse.refresh();
   }
 

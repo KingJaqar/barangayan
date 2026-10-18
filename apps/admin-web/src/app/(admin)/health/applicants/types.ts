@@ -31,5 +31,5 @@ export type ApplicantRow = {
   created_at: string;
   updated_at: string;
   medical_drives: { id: string; title: string; type: string; drive_date: string; location: string } | null;
-  profiles: { full_name: string } | null;
+  profiles: { full_name: string; email: string | null } | null;
 };

@@ -28,6 +28,7 @@
 .row[aria-disabled='true'], .row:disabled { opacity: .5; cursor: not-allowed; }
 .check { margin-left: auto; flex-shrink: 0; color: var(--dd-accent); }
 .compact .trigger, .compact .row { min-height: 32px; padding-block: 6px; }
+.compact .trigger .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .backing { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; padding: 0; border: 0; clip-path: inset(50%); }
 .error { display: block; margin-top: 5px; color: var(--dd-text); font-size: 12px; }
 .destructive { color: var(--foreground); }

@@ -1,5 +1,7 @@
 'use client';
 
+import { beginAttempt, notify } from '@/lib/notify';
+
 import { catalogContract, charterSections, servicePriceLabel, serviceProcessingLabel, type Tables } from '@barangayan/shared';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -22,14 +24,17 @@ export function ServiceCatalogEditor({ documentType: row }: { documentType: Docu
   async function change(values: { is_active?: boolean; deleted_at?: string }) {
     if (inFlight.current) return;
     inFlight.current = true; setBusy(true); setError('');
+    const attempt = beginAttempt('service-catalog');
     try {
       const { error: failure } = await createSupabaseBrowserClient().from('document_types').update(values)
         .eq('id', row.id).eq('barangay_id', row.barangay_id).select('id').single();
       if (failure) throw failure;
+      notify.success(values.deleted_at ? 'Service archived.' : values.is_active ? 'Service activated.' : 'Service deactivated.', { id: attempt });
       void logAdminAction({ action: values.deleted_at ? 'delete' : 'status_change', entityType: 'document_type',
         entityId: row.id, entityLabel: row.name, metadata: values }).catch(() => {});
       router.refresh();
     } catch (failure) {
+      notify.warning("We couldn't confirm the service change. Refresh before trying again.", { id: attempt });
       setError(failure instanceof Error ? failure.message : String((failure as { message?: string }).message ?? failure));
     } finally { inFlight.current = false; setBusy(false); }
   }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ActivityIndicator, Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CameraView, BarcodeScanningResult } from 'expo-camera';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Ionicons } from '@expo/vector-icons';
 import { Spacing } from '@/constants/theme';
@@ -17,6 +18,7 @@ interface QrScannerOverlayProps {
 
 export function QrScannerOverlay({ visible, onClose }: QrScannerOverlayProps) {
   const [scanning, setScanning] = useState(false);
+  const [frameSize, setFrameSize] = useState(0);
   const { checkIn, updateHouseholdStatus } = useQrCheckins();
   const { session } = useAuth();
   const { profile } = useProfile();
@@ -80,53 +82,61 @@ export function QrScannerOverlay({ visible, onClose }: QrScannerOverlayProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        facing="back"
-        onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ['qr'],
-        }}
-      />
+    // A native modal escapes the guide's ScrollView and covers the floating tabs.
+    <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
+      <SafeAreaProvider style={styles.container}>
+        <CameraView
+          style={styles.camera}
+          facing="back"
+          onBarcodeScanned={scanning ? undefined : handleBarcodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: ['qr'],
+          }}
+        />
 
-      <View style={[styles.topBar, { paddingTop: Platform.select({ ios: 50, android: 20 }) }]}>
-        <Pressable onPress={onClose} style={styles.closeButton} hitSlop={Spacing.two}>
-          <Ionicons name="close" size={28} color="#FFFFFF" />
-        </Pressable>
-        <Text style={styles.scanTitle}>Scan QR Code</Text>
-        <View style={{ width: 44 }} />
-      </View>
-
-      <View style={styles.scanFrame}>
-        <View style={styles.cornerTL} />
-        <View style={styles.cornerTR} />
-        <View style={styles.cornerBL} />
-        <View style={styles.cornerBR} />
-      </View>
-
-      <View style={styles.bottomBar}>
-        <Text style={styles.instruction}>Position the barangay QR code within the frame</Text>
-        {scanning && (
-          <View style={styles.processingRow}>
-            <ActivityIndicator size="small" color="#FFFFFF" />
-            <Text style={styles.processingText}>Processing...</Text>
+        <SafeAreaView style={styles.controls}>
+          <View style={styles.topBar}>
+            <Pressable onPress={onClose} style={styles.closeButton} hitSlop={Spacing.two}
+              accessibilityRole="button" accessibilityLabel="Close QR scanner">
+              <Ionicons name="close" size={28} color="#FFFFFF" />
+            </Pressable>
+            <Text style={styles.scanTitle}>Scan QR Code</Text>
+            <View style={{ width: 44 }} />
           </View>
-        )}
-      </View>
-    </View>
+
+          <View style={styles.viewfinder} onLayout={({ nativeEvent: { layout } }) => {
+            setFrameSize(Math.min(layout.width * 0.7, layout.height * 0.8, 320));
+          }}>
+            <View style={[styles.scanFrame, { width: frameSize, height: frameSize }]}>
+              <View style={styles.cornerTL} />
+              <View style={styles.cornerTR} />
+              <View style={styles.cornerBL} />
+              <View style={styles.cornerBR} />
+            </View>
+          </View>
+
+          <View style={styles.bottomBar}>
+            <Text style={styles.instruction}>Position the barangay QR code within the frame</Text>
+            {scanning && (
+              <View style={styles.processingRow}>
+                <ActivityIndicator size="small" color="#FFFFFF" />
+                <Text style={styles.processingText}>Processing...</Text>
+              </View>
+            )}
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     backgroundColor: '#000000',
-    zIndex: 100,
+  },
+  controls: {
+    flex: 1,
   },
   camera: {
     position: 'absolute',
@@ -136,15 +146,11 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   topBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.two,
-    zIndex: 10,
+    paddingVertical: Spacing.two,
   },
   closeButton: {
     width: 44,
@@ -157,12 +163,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
   },
+  viewfinder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   scanFrame: {
-    position: 'absolute',
-    top: '30%',
-    left: '15%',
-    right: '15%',
-    height: 220,
     borderRadius: 24,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.3)',
@@ -216,13 +222,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 24,
   },
   bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     alignItems: 'center',
     paddingHorizontal: Spacing.four,
-    paddingBottom: Spacing.six,
+    paddingTop: Spacing.two,
+    paddingBottom: Spacing.three,
   },
   instruction: {
     color: '#FFFFFF',

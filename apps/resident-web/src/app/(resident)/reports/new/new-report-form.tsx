@@ -2,7 +2,7 @@
 
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, MapPin, ImagePlus, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -10,6 +10,7 @@ import { incidentReportSchema, reverseGeocode } from '@barangayan/shared';
 import { LocationPickerMapWrapper } from '@/components/reports/location-picker-map-wrapper';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { ACCEPTED_IMAGE_MIME_TYPES, isAcceptedImageType, isWithinSizeLimit, imageExtension } from '@/lib/image-upload';
+import { beginAttempt, notify } from '@/lib/notify';
 
 const MAX_PHOTOS = 5;
 const MAX_BYTES = 10 * 1024 * 1024; // 10 MB per photo
@@ -63,33 +64,54 @@ export function NewReportForm({ categories, zones, barangayId, boundary, onCance
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mounted = useRef(false);
+  const detecting = useRef(false);
+  const addressRequest = useRef(0);
+  useEffect(() => { const requests = addressRequest; mounted.current = true; return () => { mounted.current = false; ++requests.current; }; }, []);
 
   /** Sets the pinned point and auto-detects its address — shared by "Use My Location"
    * and the map picker (click/drag) so both stay wired to the same reverse-geocode flow. */
-  function applyLocation(point: { lat: number; lng: number }) {
+  function applyLocation(point: { lat: number; lng: number }, attempt = beginAttempt('report-address')) {
+    const request = ++addressRequest.current;
     setLocation(point);
     setError(null);
     setAddressLoading(true);
     reverseGeocode(point)
-      .then((result) => { if (result) setAddress(result); })
-      .finally(() => setAddressLoading(false));
+      .catch(() => null)
+      .then((result) => {
+        if (!mounted.current || request !== addressRequest.current) return;
+        if (result) setAddress(result);
+        else notify.warning("Couldn't find the address. You can enter it manually.", { id: attempt });
+        setAddressLoading(false);
+      });
   }
 
   function handleUseMyLocation() {
+    if (detecting.current) return;
+    const attempt = beginAttempt('report-location');
+    const addressAttempt = beginAttempt('report-address');
     if (!('geolocation' in navigator)) {
       setError('Geolocation is not supported by your browser.');
+      notify.error("Couldn't find your location. Allow location access and try again.", { id: attempt });
       return;
     }
     setLocating(true);
+    detecting.current = true;
     setError(null);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        detecting.current = false;
+        if (!mounted.current) return;
         setLocating(false);
-        applyLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        applyLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }, addressAttempt);
+        notify.success('Location found. Check the report pin before submitting.', { id: attempt });
       },
       () => {
+        detecting.current = false;
+        if (!mounted.current) return;
         setError('Could not get your location. Allow location access and try again.');
         setLocating(false);
+        notify.error("Couldn't find your location. Allow location access and try again.", { id: attempt });
       },
       { enableHighAccuracy: true, timeout: 10000 },
     );
@@ -171,10 +193,14 @@ export function NewReportForm({ categories, zones, barangayId, boundary, onCance
 
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? 'Please fill in all required fields.');
+      notify.error('Complete the required report details and select a location.', { id: beginAttempt('report-validation') });
+      const field = parsed.error.issues[0]?.path[0];
+      e.currentTarget.querySelector<HTMLElement>(field === 'title' ? '#incident-title' : field === 'categoryId' ? '[data-report-category]' : 'textarea')?.focus();
       return;
     }
     if (!location) {
       setError('Location is required. Click "Use My Location" below.');
+      notify.error('Complete the required report details and select a location.', { id: beginAttempt('report-validation') });
       return;
     }
 
@@ -247,6 +273,8 @@ export function NewReportForm({ categories, zones, barangayId, boundary, onCance
         </label>
         <input
           id="incident-title"
+          aria-invalid={!!error && title.length < 3}
+          aria-describedby={error ? 'report-error' : undefined}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={100}
@@ -264,6 +292,8 @@ export function NewReportForm({ categories, zones, barangayId, boundary, onCance
           {categories.map((cat) => (
             <button
               key={cat.id}
+              data-report-category
+              aria-describedby={error ? 'report-error' : undefined}
               type="button"
               onClick={() => setCategoryId(cat.id)}
               className="rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors"
@@ -404,7 +434,7 @@ export function NewReportForm({ categories, zones, barangayId, boundary, onCance
         />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p id="report-error" className="text-sm text-red-600">{error}</p>}
 
       <button
         type="submit"

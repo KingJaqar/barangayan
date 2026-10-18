@@ -1,0 +1,21 @@
+- generic: 12:17
+- banner:
+  - button "Back":
+  - search:
+    - searchbox "Search Barangayan" [active]
+- main:
+  - paragraph: Search services, announcements, medical drives, help, and your records.
+  - heading "Suggested searches" [level=2]
+  - list:
+    - button "Barangay clearance":
+      - text: Barangay clearance
+    - button "Certificate of residency":
+      - text: Certificate of residency
+    - button "Announcements":
+      - text: Announcements
+    - button "Medical drives":
+      - text: Medical drives
+    - button "Document requirements":
+      - text: Document requirements
+    - button "Emergency hotlines":
+      - text: Emergency hotlines

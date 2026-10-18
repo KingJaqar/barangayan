@@ -69,4 +69,18 @@ describe('pilot integration contracts', () => {
     expect(await options.pilotOptions(db, 'document_types', 'tenant-a', undefined, true)).toMatchObject({ status: 'error', code: 'query-failed' });
     expect(reads).toBe(2);
   });
+  it('includes resident and admin requesters while retaining tenant and active-profile filters', async () => {
+    let requested: URL | undefined;
+    const rows = [{ id: 'resident', full_name: 'Resident' }, { id: 'admin', full_name: 'Admin resident' }];
+    const db = createClient<Database>('https://fixture.invalid', 'fixture-key', { auth: { persistSession: false }, global: {
+      fetch: async url => {
+        requested = new URL(String(url));
+        return new Response(JSON.stringify(rows), { headers: { 'content-type': 'application/json' } });
+      },
+    } });
+    expect(await options.pilotOptions(db, 'profiles', 'tenant-a', 'requester')).toEqual({ status: 'success', value: rows });
+    expect(requested?.searchParams.get('role')).toBe('in.(resident,admin)');
+    expect(requested?.searchParams.get('barangay_id')).toBe('eq.tenant-a');
+    expect(requested?.searchParams.get('deleted_at')).toBe('is.null');
+  });
 });

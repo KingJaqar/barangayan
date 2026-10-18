@@ -9,7 +9,7 @@ import { TableScrollArea } from '@/components/admin/table-scroll-area';
 import { BROWSE_ROW_HEIGHT, BROWSE_VISIBLE_ROWS } from '@/components/admin/table-browse-layout';
 import { useSearchParams } from 'next/navigation';
 import { PAGE_SIZES, type PageSize } from '@/lib/admin-tables/browse-state';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { Spinner } from '@/components/loading/spinner';
 import { useBrowseViewport } from './table-browse-panel';
 import type { SortDescriptor, SortDirection } from '@/lib/admin-tables/sort-definitions';
@@ -129,7 +129,7 @@ interface EditableDataTableProps<T> {
 
 /** Same shell/markup as the read-only DataTable, plus click-to-edit cells: clicking a
  * cell with an `edit` config swaps it for an inline input/select, Enter or blur saves,
- * Escape cancels. Every save path is wired to useToast — this is also how the
+ * Escape cancels. Every save path uses the admin notification adapter — this is also how the
  * "silent failure" mutation gap across the admin panel gets closed, by construction. */
 export function EditableDataTable<T>({
   contextMenuColumnId,
@@ -159,7 +159,6 @@ export function EditableDataTable<T>({
     frozen: columnsProp.some(col => col.frozen),
     wrap: 'nowrap', className: 'tabular-nums text-zinc-500', render: (_row, index) => rowOffset + index + 1 }, ...columnsProp] : columnsProp,
     [bounded, columnsProp, rowOffset]);
-  const toast = useToast();
   const [editing, setEditing] = useState<{ row: string; col: string } | null>(null);
   const [rowEditing, setRowEditing] = useState<{ key: string; drafts: Record<string, string>; fields: RowEditField<T>[] } | null>(null);
   const rowSnapshot = useRef<{ row: T; fields: RowEditField<T>[] } | null>(null);
@@ -329,6 +328,7 @@ export function EditableDataTable<T>({
   }
 
   async function performRowCommit(): Promise<boolean> {
+    const toastAttempt = beginAttempt('performRowCommit');
     const snapshot = rowSnapshot.current;
     if (!snapshot || !rowEditing || savingRef.current) return false;
     // Parse numeric and datetime drafts before writing. Reuse the existing field handlers;
@@ -340,6 +340,7 @@ export function EditableDataTable<T>({
       const value = field.edit.type === 'number' ? Number(next) : field.edit.type === 'datetime' ? fromDatetimeLocal(next) : next;
       if (value === null || (field.edit.type === 'number' && (!next.trim() || !Number.isFinite(value)))) {
         setSaveError(`Enter a valid ${field.col.header.toLowerCase()}.`);
+        toast.error(`Enter a valid ${field.col.header.toLowerCase()}.`, { id: toastAttempt });
         return false;
       }
       changes.push({ field, draft: next, value });
@@ -354,11 +355,12 @@ export function EditableDataTable<T>({
           snapshot.row = { ...snapshot.row, ...result.row };
         }
       }
+      if (changes.length) toast.success('Changes saved.', { id: toastAttempt });
       if (mounted.current) { savingRef.current = false; cancelEdit(); }
       return true;
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : 'The update could not be completed.';
-      if (mounted.current) { setSaveError(message); toast.showError(`Update failed: ${message}`); }
+      if (mounted.current) { setSaveError(message); toast.error(`Update failed: ${message}`, { id: toastAttempt }); }
       return false;
     } finally {
       savingRef.current = false;
@@ -375,6 +377,7 @@ export function EditableDataTable<T>({
   }
 
   async function performCommit(row: T, col: EditableDataTableColumn<T>, draftOverride?: string): Promise<boolean> {
+    const toastAttempt = beginAttempt('performCommit');
     row = editSnapshot.current?.row ?? row;
     const edit = resolveEdit(col, row);
     if (!edit || savingRef.current) return false;
@@ -385,7 +388,7 @@ export function EditableDataTable<T>({
     } else if (edit.type === 'datetime') {
       const iso = fromDatetimeLocal(draft);
       if (!iso) {
-        toast.showError('Enter a valid date and time.');
+        toast.error('Enter a valid date and time.', { id: toastAttempt });
         setSaveError('Enter a valid date and time.');
         return false;
       }
@@ -405,10 +408,11 @@ export function EditableDataTable<T>({
     }
     if (!mounted.current) return false;
     if (error) {
-      toast.showError(`Update failed: ${error}`);
+      toast.error(`Update failed: ${error}`, { id: toastAttempt });
       if (bounded) setSaveError(error); else cancelEdit();
       return false;
     }
+    if (String(value) !== String(edit.getValue(row))) toast.success('Changes saved.', { id: toastAttempt });
     cancelEdit();
     return true;
   }

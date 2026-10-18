@@ -2,53 +2,65 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { logAdminLogin } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast, setNotificationSession } from '@/lib/notify';
 
 // Shared sign-in for both platforms — same Supabase auth the resident mobile app uses.
 // Post-login destination branches on profiles.role: admins land on /dashboard (gated by
 // (admin)/layout.tsx), residents land on /resident (gated by (resident)/layout.tsx).
 export function AdminLoginForm({ profilePasswordNotice }: { profilePasswordNotice?: 'changed' | 'cleanup_pending' | 'review_required' }) {
   const router = useRouter();
-  const toast = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const busy = useRef(false);
 
   async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('handleSubmit');
     event.preventDefault();
+    if (busy.current) return;
+    busy.current = true;
     setError(null);
     setLoading(true);
 
-    const supabase = createSupabaseBrowserClient();
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (signInError) {
-      setLoading(false);
-      setError(signInError.message);
-      toast.showError(`Login failed: ${signInError.message}`);
-      return;
+      if (signInError) {
+        setLoading(false);
+        busy.current = false;
+        setError(signInError.message);
+        toast.error(`Login failed: ${signInError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', signInData.user.id)
+        .single();
+
+      if (profile?.role === 'admin') {
+        setNotificationSession(signInData.user.id);
+        toast.success('Welcome back', { id: beginAttempt('admin-login') });
+        // Fire-and-forget — don't block redirect if audit write fails.
+        logAdminLogin().catch(() => {});
+        router.replace('/dashboard');
+      } else {
+        router.replace('/resident');
+      }
+      router.refresh();
+    } catch {
+      busy.current = false; setLoading(false);
+      setError('Could not finish signing in. Check your connection and try again.');
+      toast.error('Could not finish signing in. Check your connection and try again.', { id: toastAttempt });
     }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', signInData.user.id)
-      .single();
-
-    if (profile?.role === 'admin') {
-      // Fire-and-forget — don't block redirect if audit write fails.
-      logAdminLogin().catch(() => {});
-      router.replace('/dashboard');
-    } else {
-      router.replace('/resident');
-    }
-    router.refresh();
   }
 
   return (

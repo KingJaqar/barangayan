@@ -282,6 +282,21 @@
   transition: background 180ms, color 180ms;
 }
 
+.accountNav {
+  display: none;
+  align-items: center;
+  gap: 3px;
+}
+
+@media (min-width: 640px) {
+  .accountNav {
+    display: flex;
+  }
+  .compactNavLink {
+    display: none;
+  }
+}
+
 .navLink:hover {
   background: var(--secondary);
 }

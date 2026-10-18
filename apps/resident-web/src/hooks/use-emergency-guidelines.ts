@@ -26,7 +26,8 @@ export function useEmergencyGuidelines(barangayId: string | null): {
   isRefreshing: boolean;
   isReady: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
   const read = useScopedRead<EmergencyGuideline[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
@@ -69,6 +70,7 @@ export function useEmergencyGuidelines(barangayId: string | null): {
     isRefreshing: read.isRefreshing,
     isReady: read.isReady,
     error: read.error,
+    errorAnnounced: read.errorAnnounced,
     refetch,
   };
 }

@@ -1,0 +1,45 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Services
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - tablist "Services":
+    - tab "Documents"
+    - tab "Requests" [selected]: Requests
+    - tab "Logs"
+  - region "My requests":
+    - group "Filter requests":
+      - button "All"
+      - button "Active" [pressed]
+      - button "Pickup"
+      - button "History"
+      - button "Scroll requests left":
+      - button "Scroll requests right":
+    - tablist "Active request status":
+      - tab "All"
+      - tab "Pending Payment"
+      - tab "Paid" [active] [selected]: Paid
+      - tab "Processing"
+    - paragraph: No paid requests right now.
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports
+- button "New request":
+  - text: New request

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
+import { beginAttempt, notify } from '@/lib/notify';
 
 export type AnnouncementRow = Tables<'announcements'>;
 
@@ -32,17 +33,19 @@ export function useAnnouncements(options: { barangayId: string | null; category?
   isRefreshing: boolean;
   isReady: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
   const { barangayId, category } = options;
   const identity = `${barangayId ?? '*'}|${category ?? '*'}`;
   const [result, setResult] = useState<{ identity: string; rows: AnnouncementRow[] } | null>(null);
-  const [failure, setFailure] = useState<{ identity: string; message: string } | null>(null);
+  const [failure, setFailure] = useState<{ identity: string; message: string; announced: boolean } | null>(null);
   const [fetching, setFetching] = useState<string | null>(null);
   const activeRef = useRef(false);
   const generationRef = useRef(0);
 
-  const doFetch = useCallback(() => {
+  const doFetch = useCallback((contentName?: string) => {
+    const attempt = contentName ? beginAttempt('announcements-retry') : null;
     // Only the newest request may settle state; older responses are dropped.
     const generation = ++generationRef.current;
     const isCurrent = () => activeRef.current && generation === generationRef.current;
@@ -59,7 +62,8 @@ export function useAnnouncements(options: { barangayId: string | null; category?
       ({ data, error: qErr }) => {
         if (!isCurrent()) return;
         if (qErr) {
-          setFailure({ identity, message: qErr.message });
+          setFailure({ identity, message: qErr.message, announced: attempt !== null });
+          if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
         } else {
           setResult({ identity, rows: (data ?? []) as AnnouncementRow[] });
         }
@@ -67,13 +71,15 @@ export function useAnnouncements(options: { barangayId: string | null; category?
       },
       (thrown: unknown) => {
         if (!isCurrent()) return;
-        setFailure({ identity, message: thrown instanceof Error ? thrown.message : 'Request failed' });
+        setFailure({ identity, message: thrown instanceof Error ? thrown.message : 'Request failed', announced: attempt !== null });
+        if (attempt) notify.error(`Couldn't refresh ${contentName}. Please try again.`, { id: attempt });
         setFetching(null);
       },
     );
   }, [identity, barangayId, category]);
 
   useEffect(() => {
+    const requests = generationRef;
     activeRef.current = true;
     // Microtask-wrapped — see use-unread-counts.tsx's doc comment on
     // react-hooks/set-state-in-effect.
@@ -91,6 +97,7 @@ export function useAnnouncements(options: { barangayId: string | null; category?
 
     return () => {
       activeRef.current = false;
+      ++requests.current;
       supabase.removeChannel(channel);
     };
   }, [doFetch, barangayId, category]);
@@ -109,6 +116,7 @@ export function useAnnouncements(options: { barangayId: string | null; category?
     isRefreshing,
     isReady,
     error,
+    errorAnnounced: failure?.identity === identity && failure.announced,
     refetch: doFetch,
   };
 }

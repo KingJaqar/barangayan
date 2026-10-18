@@ -98,7 +98,7 @@ export function RouteStatusCard({
   const graphVersion = state.result?.provenance.graphVersion ?? null;
 
   return (
-    <div role="status" aria-live="polite" className={styles.locationCard}>
+    <div role={state.outcomeAnnounced ? undefined : 'status'} aria-live={state.outcomeAnnounced ? undefined : 'polite'} className={styles.locationCard}>
       {lines.map((line) => (
         <div key={line.text} className="flex items-start gap-2.5">
           {line.busy ? (

@@ -1,5 +1,7 @@
 'use client';
 
+import { notify } from '@/lib/notify';
+
 import { Check, ChevronDown, ChevronLeft, Copy, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 
@@ -192,10 +194,11 @@ function CopyableId({ label, value }: { label: string; value: string }) {
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(value);
+      notify.success('Copied to clipboard.');
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      // Clipboard API unavailable or permission denied — nothing to recover from.
+      notify.error('Could not copy to the clipboard. Select and copy the text manually.');
     }
   }
 

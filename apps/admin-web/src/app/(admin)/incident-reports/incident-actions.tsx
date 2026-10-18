@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { CircleCheck, Clock, RotateCcw, TriangleAlert } from 'lucide-react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Spinner } from '@/components/loading/spinner';
 import { useRowAction } from '@/hooks/use-row-action';
@@ -38,7 +38,7 @@ const CAN_MARK_UNRESOLVED = new Set(['open', 'in_progress']);
 /** Admin-side status transition buttons for a single incident row/page. */
 export function IncidentActions({ incidentId, status, incidentTitle, incidentDescription, variant = 'full', onBeforeAction, onChanged, showRemove = true }: IncidentActionsProps) {
   const router = useRouter();
-  const toast  = useToast();
+
   const { busy, runAction } = useRowAction();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -51,10 +51,11 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
 
   async function setStatus(next: string, successLabel: string) {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.rpc('update_incident_status', { p_incident_id: incidentId, p_status: next });
     if (error) {
-      toast.showError(`Failed: ${error.message}`);
+      toast.error(`Failed: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -66,7 +67,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       .eq('id', incidentId)
       .maybeSingle();
     if (readError || !updated || updated.status !== next) {
-      toast.showError(`Failed: ${readError?.message ?? 'The incident status was not updated.'}`);
+      toast.error(`Failed: ${readError?.message ?? 'The incident status was not updated.'}`, { id: toastAttempt });
       return;
     }
 
@@ -78,13 +79,14 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       changes: { before: { status }, after: { status: next } },
     }).catch(() => {});
 
-    toast.showSuccess(successLabel);
+    toast.success(successLabel, { id: toastAttempt });
     if (onChanged) onChanged(); else router.refresh();
     }, onBeforeAction);
   }
 
   async function softDelete() {
     return runAction(async () => {
+    const toastAttempt = beginAttempt('admin-action');
     const supabase = createSupabaseBrowserClient();
     const { data: updated, error } = await supabase
       .from('incidents')
@@ -94,11 +96,11 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       .maybeSingle();
     setShowDeleteConfirm(false);
     if (error) {
-      toast.showError(`Failed: ${error.message}`);
+      toast.error(`Failed: ${error.message}`, { id: toastAttempt });
       return;
     }
     if (!updated?.deleted_at) {
-      toast.showError('Failed: no incident was removed. Check that you still have access to this barangay.');
+      toast.error('Failed: no incident was removed. Check that you still have access to this barangay.', { id: toastAttempt });
       return;
     }
 
@@ -110,7 +112,7 @@ export function IncidentActions({ incidentId, status, incidentTitle, incidentDes
       metadata: { title: incidentTitle, description: incidentDescription ?? null, status },
     }).catch(() => {});
 
-    toast.showSuccess('Incident removed.');
+    toast.success('Incident removed.', { id: toastAttempt });
     if (onChanged) onChanged(); else router.refresh();
     }, onBeforeAction);
   }

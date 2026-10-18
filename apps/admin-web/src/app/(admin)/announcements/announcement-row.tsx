@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -29,7 +29,7 @@ function formatPublishedAt(iso: string): string {
 
 export function AnnouncementRow({ announcement }: { announcement: Announcement }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,89 +51,102 @@ export function AnnouncementRow({ announcement }: { announcement: Announcement }
   }
 
   async function handleSave(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSave');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const result = announcementSchema.safeParse({
-      title,
-      body,
-      detailed_description: detailedDescription || undefined,
-      category,
-      image_url: imageUrl || undefined,
-    });
+      const result = announcementSchema.safeParse({
+        title,
+        body,
+        detailed_description: detailedDescription || undefined,
+        category,
+        image_url: imageUrl || undefined,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('announcements')
-      .update({
-        title: result.data.title,
-        body: result.data.body,
-        detailed_description: result.data.detailed_description || null,
-        category: result.data.category,
-        image_url: result.data.image_url || null,
-      })
-      .eq('id', announcement.id);
-    setSubmitting(false);
-
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Failed to save: ${updateError.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'announcement',
-      entityId: announcement.id,
-      entityLabel: result.data.title,
-      changes: {
-        before: {
-          title: announcement.title,
-          body: announcement.body,
-          detailed_description: announcement.detailed_description,
-          category: announcement.category,
-        },
-        after: {
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from('announcements')
+        .update({
           title: result.data.title,
           body: result.data.body,
           detailed_description: result.data.detailed_description || null,
           category: result.data.category,
-        },
-      },
-    }).catch(() => {});
+          image_url: result.data.image_url || null,
+        })
+        .eq('id', announcement.id);
+      setSubmitting(false);
 
-    toast.showSuccess('Announcement updated.');
-    setIsEditing(false);
-    router.refresh();
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'announcement',
+        entityId: announcement.id,
+        entityLabel: result.data.title,
+        changes: {
+          before: {
+            title: announcement.title,
+            body: announcement.body,
+            detailed_description: announcement.detailed_description,
+            category: announcement.category,
+          },
+          after: {
+            title: result.data.title,
+            body: result.data.body,
+            detailed_description: result.data.detailed_description || null,
+            category: result.data.category,
+          },
+        },
+      }).catch(() => {});
+
+      toast.success('Announcement updated.', { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('announcements')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', announcement.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('announcements')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', announcement.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'announcement',
+        entityId: announcement.id,
+        entityLabel: announcement.title,
+        metadata: { title: announcement.title, body: announcement.body, category: announcement.category },
+      }).catch(() => {});
+
+      toast.success(`Announcement archived.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'announcement',
-      entityId: announcement.id,
-      entityLabel: announcement.title,
-      metadata: { title: announcement.title, body: announcement.body, category: announcement.category },
-    }).catch(() => {});
-
-    toast.showSuccess(`Announcement archived.`);
-    router.refresh();
   }
 
   const meta = ANNOUNCEMENT_CATEGORY_META[announcement.category as keyof typeof ANNOUNCEMENT_CATEGORY_META];

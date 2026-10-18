@@ -1,10 +1,8 @@
-import { notFound } from 'next/navigation';
-import { loadRequestReview } from '@/actions/request-review-actions';
-import { RequestReview } from '@/components/admin/request-review';
+import { redirect } from 'next/navigation';
+import { requestRecordHref } from '@/lib/request-record-link';
 
-export default async function RequestDetailPage({ params }: { params: Promise<{ requestId: string }> }) {
+// Compatibility for saved links; request details now live only in the side sheet.
+export default async function LegacyRequestRedirect({ params }: { params: Promise<{ requestId: string }> }) {
   const { requestId } = await params;
-  const data = await loadRequestReview(requestId);
-  if (!data) notFound();
-  return <RequestReview data={data} />;
+  redirect(requestRecordHref(requestId));
 }

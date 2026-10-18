@@ -1,0 +1,129 @@
+{
+  "name": "12-center-row-to-map",
+  "source": "Brave screenshot API, sampled viewport JPEG sequence; not continuous video",
+  "startedAt": "2026-10-18T13:57:32.473Z",
+  "actionStartMs": 62,
+  "elapsedMs": 2023,
+  "frames": [
+    {
+      "file": "frame-000.jpg",
+      "requestMs": 3,
+      "responseMs": 59
+    },
+    {
+      "file": "frame-001.jpg",
+      "requestMs": 62,
+      "responseMs": 145
+    },
+    {
+      "file": "frame-002.jpg",
+      "requestMs": 149,
+      "responseMs": 228
+    },
+    {
+      "file": "frame-003.jpg",
+      "requestMs": 231,
+      "responseMs": 315
+    },
+    {
+      "file": "frame-004.jpg",
+      "requestMs": 319,
+      "responseMs": 409
+    },
+    {
+      "file": "frame-005.jpg",
+      "requestMs": 411,
+      "responseMs": 500
+    },
+    {
+      "file": "frame-006.jpg",
+      "requestMs": 502,
+      "responseMs": 578
+    },
+    {
+      "file": "frame-007.jpg",
+      "requestMs": 580,
+      "responseMs": 662
+    },
+    {
+      "file": "frame-008.jpg",
+      "requestMs": 664,
+      "responseMs": 751
+    },
+    {
+      "file": "frame-009.jpg",
+      "requestMs": 756,
+      "responseMs": 834
+    },
+    {
+      "file": "frame-010.jpg",
+      "requestMs": 836,
+      "responseMs": 908
+    },
+    {
+      "file": "frame-011.jpg",
+      "requestMs": 910,
+      "responseMs": 981
+    },
+    {
+      "file": "frame-012.jpg",
+      "requestMs": 983,
+      "responseMs": 1051
+    },
+    {
+      "file": "frame-013.jpg",
+      "requestMs": 1053,
+      "responseMs": 1126
+    },
+    {
+      "file": "frame-014.jpg",
+      "requestMs": 1129,
+      "responseMs": 1205
+    },
+    {
+      "file": "frame-015.jpg",
+      "requestMs": 1208,
+      "responseMs": 1285
+    },
+    {
+      "file": "frame-016.jpg",
+      "requestMs": 1287,
+      "responseMs": 1366
+    },
+    {
+      "file": "frame-017.jpg",
+      "requestMs": 1369,
+      "responseMs": 1448
+    },
+    {
+      "file": "frame-018.jpg",
+      "requestMs": 1452,
+      "responseMs": 1527
+    },
+    {
+      "file": "frame-019.jpg",
+      "requestMs": 1529,
+      "responseMs": 1606
+    },
+    {
+      "file": "frame-020.jpg",
+      "requestMs": 1608,
+      "responseMs": 1680
+    },
+    {
+      "file": "frame-021.jpg",
+      "requestMs": 1684,
+      "responseMs": 1762
+    },
+    {
+      "file": "frame-022.jpg",
+      "requestMs": 1764,
+      "responseMs": 1832
+    },
+    {
+      "file": "frame-023.jpg",
+      "requestMs": 1833,
+      "responseMs": 1900
+    }
+  ]
+}

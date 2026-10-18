@@ -1,0 +1,63 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Health
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - tablist "Health":
+    - tab "Active Medical Drives"
+    - tab "My Registrations" [selected]: My Registrations
+  - group "Filter registrations":
+    - button "All" [pressed]
+    - button "Pending": Pending
+    - button "Confirmed": Confirmed
+    - button "Attended": Attended
+    - button "Cancelled": Cancelled
+    - button "Scroll registrations left":
+    - button "Scroll registrations right":
+  - region "My applications":
+    - heading "My applications" [level=2]
+    - list:
+      - 'button "Free Eye Check-up & Reading Glasses Distribution Optical Care Aug 17 · 9:00 AM–2:00 PM · Barangay Health Center Applicant # OPT-20260821-0001 Pending"':
+        - heading "Free Eye Check-up & Reading Glasses Distribution" [level=3]
+        - generic: Optical Care
+        - paragraph: Aug 17 · 9:00 AM–2:00 PM · Barangay Health Center
+        - paragraph: "Applicant # OPT-20260821-0001"
+        - generic: Pending
+      - 'button "Minor Surgical Procedures Mission (Circumcision & Cyst Removal) Minor Surgical Drive Aug 18 · 8:00 AM–4:00 PM · Rural Health Unit Applicant # MSD-20260816-0003 Confirmed"':
+        - heading "Minor Surgical Procedures Mission (Circumcision & Cyst Removal)" [level=3]
+        - generic: Minor Surgical Drive
+        - paragraph: Aug 18 · 8:00 AM–4:00 PM · Rural Health Unit
+        - paragraph: "Applicant # MSD-20260816-0003"
+        - generic: Confirmed
+      - 'button "Routine Immunization for Infants Vaccination Aug 10 · 8:00 AM–12:00 PM · Barangay Health Center Applicant # VAC-20260805-0012 Attended"':
+        - heading "Routine Immunization for Infants" [level=3]
+        - generic: Vaccination
+        - paragraph: Aug 10 · 8:00 AM–12:00 PM · Barangay Health Center
+        - paragraph: "Applicant # VAC-20260805-0012"
+        - generic: Attended
+      - 'button "Red Cross Blood Letting Activity Blood Donation Aug 13 · 8:00 AM–3:00 PM · Barangay Covered Court Applicant # BLD-20260809-0007 Cancelled"':
+        - heading "Red Cross Blood Letting Activity" [level=3]
+        - generic: Blood Donation
+        - paragraph: Aug 13 · 8:00 AM–3:00 PM · Barangay Covered Court
+        - paragraph: "Applicant # BLD-20260809-0007"
+        - generic: Cancelled
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports

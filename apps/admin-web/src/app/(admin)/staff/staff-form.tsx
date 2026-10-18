@@ -6,12 +6,12 @@ import { OFFICIAL_ROLES, OFFICIAL_ROLE_LABELS, staffInviteSchema } from '@barang
 import type { OfficialRole } from '@barangayan/shared';
 import { useState } from 'react';
 
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import { formContainerClass, inputClass, submitButtonClass, cancelButtonClass } from '@/components/admin/form-styles';
 
 export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: string; onClose: () => void; onChanged: () => void }) {
-  const toast = useToast();
+
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [officialRole, setOfficialRole] = useState<OfficialRole>('staff');
@@ -21,6 +21,7 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('handleSubmit');
     event.preventDefault();
     setError(null);
 
@@ -33,6 +34,7 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
     });
 
     if (!result.success) {
+      toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
       setError(result.error.issues[0]?.message ?? 'Invalid input');
       return;
     }
@@ -57,13 +59,13 @@ export function StaffForm({ barangayId, onClose, onChanged }: { barangayId: stri
       setOfficialRole('staff');
       setMobileNumber('');
       setHomeAddress('');
-      toast.showSuccess('Staff account invited successfully.');
+      toast.success('Staff account invited successfully.', { id: toastAttempt });
       onClose();
       onChanged();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to invite staff.';
       setError(message);
-      toast.showError(message);
+      toast.error(message, { id: toastAttempt });
     } finally {
       setSubmitting(false);
     }

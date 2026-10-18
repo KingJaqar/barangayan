@@ -1,16 +1,14 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import type { LatLng } from '@barangayan/shared';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { router } from 'expo-router';
 import type { MultiPolygon, Polygon } from 'geojson';
 import { useEffect, useRef, useState } from 'react';
 import {
-  AccessibilityInfo,
   ActivityIndicator,
   Alert,
   Animated,
   AppState,
-  PanResponder,
   Platform,
   ScrollView,
   StyleSheet,
@@ -19,11 +17,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
 import { useIncidentCategories } from '@/hooks/use-incident-categories';
 import { useIncidents } from '@/hooks/use-incidents';
@@ -32,41 +29,9 @@ import { useTheme } from '@/hooks/use-theme';
 
 type MapTab = 'incidents' | 'evacuation';
 
-const DRRM_CARDS = [
-  {
-    id: 'preparedness',
-    title: 'Preparedness Guide &\nHotline Directory',
-    icon: 'book-outline' as const,
-    iconColor: '#0F6E5B',
-    iconBg: '#E6F2EF',
-    offline: true,
-  },
-  {
-    id: 'centers',
-    title: 'Evacuation\nCenters',
-    icon: 'camera-reverse-outline' as const,
-    iconColor: '#F59E0B',
-    iconBg: '#FEF3C7',
-    offline: false,
-  },
-  {
-    id: 'family',
-    title: 'Family\nStatus',
-    icon: 'home-outline' as const,
-    iconColor: '#0F6E5B',
-    iconBg: '#E6F2EF',
-    offline: false,
-  },
-] as const;
-
-const cardRows = [[DRRM_CARDS[0], DRRM_CARDS[1], DRRM_CARDS[2]]];
-
-/** Vertical distance (px) the user must drag before release snaps to opposite state. */
-const COLLAPSE_THRESHOLD = 60;
-
 export default function MapsScreen() {
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
+  const bottomTabInset = useFloatingTabInset();
   const { profile } = useProfile();
   const barangayId = profile?.barangay_id ?? null;
   // The resident's barangay boundary (GeoJSON Polygon/MultiPolygon), drawn as the map's
@@ -238,90 +203,12 @@ export default function MapsScreen() {
   const activeError = activeTab === 'incidents' ? incidentsError : evacuationError;
   const activeRefetch = activeTab === 'incidents' ? refetchIncidents : refetchEvacuation;
 
-  // ── Panel animation state ───────────────────────────────────────────────
-  // panelY drives translateY: 0 = fully expanded, contentHeight = fully collapsed
-  const panelY = useRef(new Animated.Value(0)).current;
-
-  // useRef (not useState) so gesture callbacks always see the current value
-  // without stale-closure issues.
-  const isCollapsed = useRef(false);
-
-  // Measured at runtime so the panel works across screen sizes.
-  const [contentHeight, setContentHeight] = useState(0);
-
   // ── Helpers ─────────────────────────────────────────────────────────────
   const toggleFilter = (id: string) => {
     setActiveFilters((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
     );
   };
-
-  /**
-   * Spring the panel to `toValue`, respecting prefers-reduce-motion:
-   * if the user has enabled reduced motion we jump instantly (duration 0).
-   */
-  const springTo = (toValue: number, cb?: () => void) => {
-    AccessibilityInfo.isReduceMotionEnabled().then((reduced) => {
-      if (reduced) {
-        panelY.setValue(toValue);
-        cb?.();
-      } else {
-        Animated.spring(panelY, {
-          toValue,
-          bounciness: 4,
-          speed: 14,
-          useNativeDriver: true,
-        }).start(cb);
-      }
-    });
-  };
-
-  /** Tap the handle row to toggle between expanded and collapsed. */
-  const togglePanel = () => {
-    if (contentHeight === 0) return;
-    isCollapsed.current = !isCollapsed.current;
-    springTo(isCollapsed.current ? contentHeight : 0);
-  };
-
-  // ── PanResponder (attached to the handle row) ───────────────────────────
-  const panResponder = useRef(
-    PanResponder.create({
-      // Don't claim on touch start — that would swallow simple taps before
-      // TouchableOpacity's onPress can fire. Only claim once a vertical
-      // drag is confirmed.
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 5,
-
-      onPanResponderMove: (_, g) => {
-        // Offset from the panel's resting position (0 if expanded, contentHeight if collapsed).
-        const base = isCollapsed.current ? contentHeight : 0;
-        const next = Math.max(0, Math.min(contentHeight, base + g.dy));
-        panelY.setValue(next);
-      },
-
-      onPanResponderRelease: (_, g) => {
-        // Determine snap target based on drag distance and velocity.
-        const shouldCollapse = isCollapsed.current
-          ? g.dy > -COLLAPSE_THRESHOLD       // wasn't pulled up far enough to re-expand
-          : g.dy > COLLAPSE_THRESHOLD || g.vy > 0.5; // dragged/flicked down
-
-        isCollapsed.current = shouldCollapse;
-        springTo(shouldCollapse ? contentHeight : 0);
-      },
-
-      // If the gesture is cancelled (e.g. a system gesture intervenes), snap back.
-      onPanResponderTerminate: () => {
-        springTo(isCollapsed.current ? contentHeight : 0);
-      },
-    }),
-  ).current;
-
-  // Chevron rotates as the panel moves: points up when expanded, down when collapsed.
-  const chevronRotation = panelY.interpolate({
-    inputRange: [0, Math.max(contentHeight, 1)], // avoid 0-range when not yet measured
-    outputRange: ['0deg', '180deg'],
-    extrapolate: 'clamp',
-  });
 
   // ── Location FAB ─────────────────────────────────────────────────────────
   const handleLocateMe = async () => {
@@ -356,39 +243,9 @@ export default function MapsScreen() {
     setFocusCenter({ ...AMPID_I_SAN_MATEO_CENTER });
   };
 
-  // ── DRRM card actions ────────────────────────────────────────────────────
-  const handleCardPress = (cardId: string) => {
-    switch (cardId) {
-      case 'preparedness':
-        router.push('/home/emergency-info?tab=hub');
-        return;
-      case 'centers':
-        router.push('/home/emergency-info?tab=centers');
-        return;
-      case 'family':
-        router.push('/home/emergency-info?tab=family');
-        return;
-    }
-  };
-
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
-      {/* ① Header */}
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two },
-        ]}
-      >
-        {/* height:40 matches AppHeader's logo size so all green banners are the same height */}
-        <View style={styles.headerContent}>
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Maps & DRRM Info Hub
-          </ThemedText>
-        </View>
-      </View>
-
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       {/* ② Map area — fills everything below the header; search bar, segment toggle,
            and filter pills all float on top of the map as overlays. */}
       <View style={styles.mapArea}>
@@ -586,7 +443,7 @@ export default function MapsScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.fab}
+          style={[styles.fab, { bottom: bottomTabInset + 16 }]}
           accessibilityLabel="Center map on my location"
           onPress={handleLocateMe}
           disabled={locatingMe}
@@ -598,69 +455,6 @@ export default function MapsScreen() {
           )}
         </TouchableOpacity>
       </View>
-
-      {/* ⑥ DRRM Info Hub — absolutely positioned, animated bottom panel */}
-      <Animated.View
-        style={[
-          styles.bottomPanel,
-          { backgroundColor: theme.background, paddingBottom: insets.bottom + 16 },
-          { transform: [{ translateY: panelY }] },
-        ]}
-        accessibilityViewIsModal={false}
-      >
-        {/* Handle zone: tap to toggle, drag to animate */}
-        <TouchableOpacity
-          style={styles.handleRow}
-          onPress={togglePanel}
-          accessibilityRole="button"
-          accessibilityLabel={isCollapsed.current ? 'Expand DRRM Info Hub' : 'Collapse DRRM Info Hub'}
-          activeOpacity={0.7}
-          {...panResponder.panHandlers}
-        >
-          <View style={styles.handle} />
-          <Animated.View style={{ transform: [{ rotate: chevronRotation }] }}>
-            <Ionicons name="chevron-up" size={18} color={theme.textSecondary} />
-          </Animated.View>
-        </TouchableOpacity>
-
-        <ThemedText style={styles.panelTitle}>DRRM Info Hub</ThemedText>
-
-        {/* Card grid — height measured here to derive contentHeight */}
-        <View
-          onLayout={(e) => {
-            const h = e.nativeEvent.layout.height;
-            if (h > 0) setContentHeight(h);
-          }}
-        >
-          <View style={styles.cardGrid}>
-            {cardRows.map((row, rowIndex) => (
-              <View key={rowIndex} style={styles.cardRow}>
-                {row.map((card) => (
-                  <TouchableOpacity
-                    key={card.id}
-                    style={[styles.card, { backgroundColor: theme.backgroundElement }]}
-                    accessibilityLabel={card.title.replace('\n', ' ')}
-                    activeOpacity={0.75}
-                    onPress={() => handleCardPress(card.id)}
-                  >
-                    {card.offline && (
-                      <View style={[styles.offlineBadge, { borderColor: theme.primary }]}>
-                        <ThemedText style={[styles.offlineText, { color: theme.primary }]}>
-                          Offline
-                        </ThemedText>
-                      </View>
-                    )}
-                    <View style={[styles.iconCircle, { backgroundColor: card.iconBg }]}>
-                      <Ionicons name={card.icon} size={24} color={card.iconColor} />
-                    </View>
-                    <ThemedText style={styles.cardTitle}>{card.title}</ThemedText>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            ))}
-          </View>
-        </View>
-      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -668,22 +462,6 @@ export default function MapsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-
-  // ── Header ──────────────────────────────────────────────────────────────
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-  },
-  // height:40 matches AppHeader's logo size — keeps all green banners the same
-  // total height (insets.top + Spacing.two + 40 + Spacing.three = same as AppHeader).
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
 
   // ── Search bar ──────────────────────────────────────────────────────────
@@ -991,98 +769,5 @@ const styles = StyleSheet.create({
   mapsResetFabText: {
     fontSize: 13,
     fontWeight: '600',
-  },
-
-  // ── Bottom panel (absolutely positioned, floats over the map) ───────────
-  bottomPanel: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 20,
-    // paddingBottom is set inline (insets.bottom + 16)
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-      },
-      android: { elevation: 8 },
-    }),
-  },
-
-  // Handle row: full-width tap + drag target
-  handleRow: {
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 14,
-    gap: 6,
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#D1D5DB',
-  },
-
-  // ── DRRM panel content ──────────────────────────────────────────────────
-  panelTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 14,
-  },
-  cardGrid: {
-    gap: 12,
-    paddingBottom: 4,
-  },
-  cardRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  card: {
-    flex: 1,
-    borderRadius: 16,
-    padding: 14,
-    minHeight: 118,
-    position: 'relative',
-    justifyContent: 'flex-end',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.06,
-        shadowRadius: 4,
-      },
-      android: { elevation: 1 },
-    }),
-  },
-  offlineBadge: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-  },
-  offlineText: {
-    fontSize: 10,
-    fontWeight: '600',
-  },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  cardTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 20,
   },
 });

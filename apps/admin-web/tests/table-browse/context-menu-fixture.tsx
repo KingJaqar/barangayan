@@ -1,7 +1,8 @@
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { EditableDataTable } from '../../src/components/admin/editable-data-table';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 
 function Fixture() {
   const [visible, setVisible] = useState(true);
@@ -15,7 +16,7 @@ function Fixture() {
       <a href="#linked">Open link</a>
     </div> },
   ];
-  return <ToastProvider><main>
+  return <ThemeControllerProvider><Toaster /><main>
     <button id="unmount" onClick={() => setVisible(false)}>Unmount tables</button>
     <output id="count">{count}</output>
     {visible && <>
@@ -23,6 +24,6 @@ function Fixture() {
       <EditableDataTable contextMenuColumnId="actions" columns={columns} rows={[{ id: 'other-table' }]} rowKey={row => row.id} />
       <EditableDataTable columns={columns} rows={[{ id: 'unsupported' }]} rowKey={row => row.id} />
     </>}
-  </main></ToastProvider>;
+  </main></ThemeControllerProvider>;
 }
 createRoot(document.getElementById('root')!).render(<StrictMode><Fixture /></StrictMode>);

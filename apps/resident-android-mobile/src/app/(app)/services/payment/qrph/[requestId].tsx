@@ -19,7 +19,7 @@ import { QrGeneratingIndicator } from '@/components/services/qr-generating-indic
 import { SkeletonBlock } from '@/components/services/skeleton';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { usePaymongoSource } from '@/hooks/use-paymongo-source';
 import { useTheme } from '@/hooks/use-theme';
 import { supabase } from '@/lib/supabase';
@@ -61,8 +61,8 @@ function QrphSkeleton() {
   const theme = useTheme();
   return (
     <View style={[styles.skeletonContainer, { backgroundColor: theme.background }]}>
-      <SkeletonBlock width="100%" height={140} borderRadius={Spacing.three} />
-      <SkeletonBlock width="100%" height={340} borderRadius={Spacing.three} style={styles.skeletonGap} />
+      <SkeletonBlock width="100%" height={180} borderRadius={Spacing.three} />
+      <SkeletonBlock width="100%" height={308} borderRadius={Spacing.three} style={styles.skeletonGap} />
       <SkeletonBlock width="100%" height={160} borderRadius={Spacing.three} style={styles.skeletonGap} />
     </View>
   );
@@ -217,7 +217,7 @@ export default function QrPhPaymentScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
@@ -226,7 +226,7 @@ export default function QrPhPaymentScreen() {
             accessibilityRole="button"
             accessibilityLabel="Go back"
             hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
@@ -236,23 +236,23 @@ export default function QrPhPaymentScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
-          <ThemedView type="backgroundElement" style={[styles.summaryCard, styles.shadowSm, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.summaryCard, styles.hairline, { borderColor: theme.backgroundSelected }]}>
             <ThemedText type="small">Payment for</ThemedText>
             <ThemedText type="smallBold">{request.document_types?.name ?? 'Document Request'}</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
               Ref #{request.reference_number}
             </ThemedText>
 
-            <View style={styles.breakdown}>
-              <View style={styles.breakdownRow}>
+            <View style={styles.feeSummary}>
+              <View style={styles.breakdown}>
                 <ThemedText type="small" themeColor="textSecondary">Document Fee</ThemedText>
                 <ThemedText type="small">{source?.documentFeeCentavos != null ? formatCentavosAsPHP(source.documentFeeCentavos) : documentFee === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(documentFee)}</ThemedText>
               </View>
-            </View>
 
-            <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
-              {totalDue === 0 ? 'Free' : totalDue === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(totalDue)}
-            </ThemedText>
+              <ThemedText type="title" style={[styles.amount, { color: theme.primary }]}>
+                {totalDue === 0 ? 'Free' : totalDue === null ? requestFeeLabel(request, null) : formatCentavosAsPHP(totalDue)}
+              </ThemedText>
+            </View>
             {source ? (
               <>
                 <CountdownTimer expiresAt={source.expiresAt} />
@@ -263,7 +263,7 @@ export default function QrPhPaymentScreen() {
             ) : null}
           </ThemedView>
 
-          <ThemedView type="backgroundElement" style={[styles.qrCard, styles.shadowMd, styles.hairline]}>
+          <ThemedView type="backgroundElement" style={[styles.qrCard, styles.hairline, { borderColor: theme.backgroundSelected }]}>
             <AnimatedAppear key={status} style={styles.qrCardBranch}>
               {status === 'loading' || (!source && status !== 'error') ? (
                 <QrGeneratingIndicator />
@@ -288,16 +288,16 @@ export default function QrPhPaymentScreen() {
                 </ThemedText>
               ) : source ? (
                 <>
-                  <View ref={qrFrameRef} collapsable={false} style={styles.qrFrame}>
+                  <View ref={qrFrameRef} collapsable={false} style={[styles.qrFrame, { backgroundColor: theme.onPrimary }]}>
                     <Image
                       source={{ uri: toRenderableImageUri(source.qrImageUrl) }}
                       style={styles.qrImage}
                       contentFit="contain"
                     />
                   </View>
-                  <Pressable onPress={handleSaveQr} disabled={savingQr} style={styles.saveQrRow} hitSlop={Spacing.two}>
+                  <Pressable onPress={handleSaveQr} disabled={savingQr} style={styles.saveQrRow} accessibilityRole="button">
                     <Ionicons name={savingQr ? 'reload' : 'download-outline'} size={16} color={theme.primary} />
-                    <ThemedText type="small" style={{ color: theme.primary }}>
+                    <ThemedText type="small" style={[styles.saveQrText, { color: theme.primary }]}>
                       {savingQr ? 'Saving…' : `Save QR (Ref #${request.reference_number})`}
                     </ThemedText>
                   </Pressable>
@@ -308,7 +308,7 @@ export default function QrPhPaymentScreen() {
 
           {status === 'pending' || status === 'paid' ? (
             <AnimatedAppear>
-              <ThemedView type="backgroundElement" style={[styles.instructionsCard, styles.shadowSm, styles.hairline]}>
+              <ThemedView type="backgroundElement" style={[styles.instructionsCard, styles.hairline, { borderColor: theme.backgroundSelected }]}>
                 <ThemedText type="small" style={styles.sectionLabel} themeColor="textSecondary">
                   How to Pay
                 </ThemedText>
@@ -330,7 +330,7 @@ export default function QrPhPaymentScreen() {
 
           <View style={styles.brandRow}>
             <Image source={BARANGAYAN_LOGO} style={styles.brandLogo} contentFit="contain" />
-            <ThemedText style={[styles.brandText, { color: theme.text, fontFamily: Fonts.gideonRoman }]}>
+            <ThemedText style={styles.brandText}>
               barangayan
             </ThemedText>
           </View>
@@ -339,7 +339,7 @@ export default function QrPhPaymentScreen() {
             <AnimatedAppear>
               <View style={styles.waitingRow}>
                 <Animated.View style={[styles.dot, { backgroundColor: theme.primary, opacity: pulseRef.current }]} />
-                <View>
+                <View style={styles.waitingText}>
                   <ThemedText type="smallBold" style={{ color: theme.primary }}>
                     Waiting for payment...
                   </ThemedText>
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   headerContent: {
-    height: 25,
+    minHeight: 25,
     justifyContent: 'center',
   },
   backBtn: {
@@ -396,30 +396,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+  headerTitle: { fontSize: 20 },
   content: {
-    padding: Spacing.four,
-    gap: Spacing.three,
+    padding: Spacing.three,
+    gap: Spacing.two,
   },
 
-  /* Design-system recipes (shared literally across the Services screens) */
-  shadowSm: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  shadowMd: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 5,
-  },
   hairline: {
     borderWidth: 1,
-    borderColor: 'rgba(128,128,128,0.25)',
   },
   sectionLabel: {
     textTransform: 'uppercase',
@@ -428,71 +412,82 @@ const styles = StyleSheet.create({
   },
 
   summaryCard: {
-    padding: Spacing.four,
+    padding: Spacing.three,
     borderRadius: Spacing.three,
-    alignItems: 'center',
     gap: Spacing.one,
   },
+  feeSummary: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    columnGap: Spacing.three,
+    rowGap: Spacing.one,
+    marginTop: Spacing.one,
+  },
   breakdown: {
-    width: '100%',
-    marginTop: Spacing.two,
+    flexShrink: 1,
     gap: Spacing.half,
   },
-  breakdownRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
   amount: {
-    fontSize: 32,
-    marginVertical: Spacing.one,
+    fontSize: 28,
+    lineHeight: 36,
+    flexShrink: 1,
   },
   qrCard: {
-    padding: Spacing.four,
+    padding: Spacing.two,
     borderRadius: Spacing.three,
     alignItems: 'center',
     gap: Spacing.two,
-    minHeight: 340,
     justifyContent: 'center',
   },
   qrCardBranch: {
+    width: '100%',
     alignItems: 'center',
-    gap: Spacing.two,
+    gap: Spacing.one,
   },
   qrFrame: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    width: '100%',
+    maxWidth: 256,
     padding: Spacing.two,
     borderRadius: Spacing.two,
   },
   qrImage: {
-    width: 280,
-    height: 280,
+    width: '100%',
+    aspectRatio: 1,
   },
   saveQrRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,
-    marginTop: Spacing.one,
+    minHeight: 44,
+    paddingHorizontal: Spacing.two,
+    maxWidth: '100%',
+  },
+  saveQrText: {
+    flexShrink: 1,
   },
   qrCaption: {
     textAlign: 'center',
   },
   instructionsCard: {
-    padding: Spacing.four,
+    padding: Spacing.three,
     borderRadius: Spacing.three,
-    gap: Spacing.two,
+    gap: Spacing.one,
   },
   instructionRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: Spacing.two,
   },
   stepBadge: {
-    width: 22,
-    height: 22,
+    minWidth: 22,
+    minHeight: 22,
+    paddingHorizontal: Spacing.one,
     borderRadius: 11,
+    flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -506,17 +501,20 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   brandLogo: {
-    width: 28,
-    height: 28,
+    width: 22,
+    height: 22,
   },
   brandText: {
-    fontSize: 20,
+    fontSize: 16,
   },
   waitingRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: Spacing.two,
     justifyContent: 'center',
+  },
+  waitingText: {
+    flex: 1,
   },
   dot: {
     width: 10,
@@ -528,9 +526,9 @@ const styles = StyleSheet.create({
   /* Loading skeleton */
   skeletonContainer: {
     flex: 1,
-    padding: Spacing.four,
+    padding: Spacing.three,
   },
   skeletonGap: {
-    marginTop: Spacing.three,
+    marginTop: Spacing.two,
   },
 });

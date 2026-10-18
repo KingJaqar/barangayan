@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { ResidentServiceForm } from '../resident-service-form';
 import type { DocumentType } from './types';
+import { ArrowLeft } from 'lucide-react';
+import styles from './document-request-modal.module.css';
 export function RequestFormStep({
   doc,
   onBack,
@@ -14,10 +16,11 @@ export function RequestFormStep({
 }) {
   const [client] = useState(createSupabaseBrowserClient);
   return (
-    <div className="space-y-4">
-      <button type="button" onClick={onBack} className="min-h-12 underline">
-        Back to Details
+    <div className={styles.requestForm}>
+      <button type="button" onClick={onBack} className={styles.back}>
+        <ArrowLeft size={16} aria-hidden /> Back to Details
       </button>
+      <p className={styles.eyebrow}>Your request details</p>
       <ResidentServiceForm key={doc.id} doc={doc} client={client} onSubmitted={onSubmitted} />
     </div>
   );

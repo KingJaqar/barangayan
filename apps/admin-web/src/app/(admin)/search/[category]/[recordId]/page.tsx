@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SEARCH_CATEGORIES, normalizeQuery, searchFilter, searchPage, searchUrl } from '@/lib/search/model';
 import { authorizeSearch, readSearchRecord, SearchAccessError } from '@/lib/search/server';
 import { CategoryIcon } from '@/components/admin/search/search-hit';
+import { requestRecordHref } from '@/lib/request-record-link';
 import styles from '@/components/admin/search/search.module.css';
 
 const LABELS: Record<string, string> = { 'profiles.full_name': 'Resident', 'profile.email': 'Email', 'profile.mobile_number': 'Mobile number',
@@ -26,7 +27,7 @@ export default async function SearchRecordPage({ params, searchParams }: {
   const route = await params;
   const category = searchFilter(route.category);
   if (category === 'all' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(route.recordId)) notFound();
-  if (category === 'requests') redirect(`/requests/${route.recordId}`);
+  if (category === 'requests') redirect(requestRecordHref(route.recordId));
   const db = await createSupabaseServerClient();
   let record;
   try { record = await readSearchRecord(db, await authorizeSearch(db), category, route.recordId); }

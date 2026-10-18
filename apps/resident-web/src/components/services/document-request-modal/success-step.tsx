@@ -3,7 +3,7 @@
 /** Confirmed QR PH receipt for the request associated with this payment. */
 
 import { formatCentavosAsPHP, formatDateTime, type Tables } from '@barangayan/shared';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { DownloadReceiptButton } from '../download-receipt-button';
 import { CheckCircle2 } from 'lucide-react';
@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { LoadingStatus } from '@/components/shared/loading-status';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/loading';
-import { eventId, notify } from '@/lib/notify';
+import { beginAttempt, eventId, notify, type OperationId } from '@/lib/notify';
 
 /**
  * Settled receipt read for this request: `missing` means the read succeeded but there is
@@ -33,8 +33,10 @@ export function SuccessStep({
 }) {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [retry, setRetry] = useState(0);
+  const feedback = useRef<{ requestId: string; id: OperationId } | null>(null);
   useEffect(() => {
     let active = true;
+    const retryNotification = feedback.current?.requestId === requestId ? feedback.current.id : null;
     const notification = announcePaymentId ? eventId('payment', announcePaymentId, 'paid-receipt') : null;
     // Microtask-wrapped state reset (react-hooks/set-state-in-effect).
     void Promise.resolve().then(() => {
@@ -51,7 +53,10 @@ export function SuccessStep({
       .then(
         ({ data, error: queryError }) => {
           if (!active) return;
-          if (queryError) setReceipt({ status: 'error' });
+          if (queryError) {
+            setReceipt({ status: 'error' });
+            if (retryNotification) notify.error("Couldn't refresh your payment receipt. Please try again.", { id: retryNotification });
+          }
           else if (!data || data.service_request_id !== requestId || data.status !== 'paid' || (announcePaymentId && data.id !== announcePaymentId)) setReceipt({ status: 'missing' });
           else {
             setReceipt({ status: 'ready', payment: data });
@@ -61,7 +66,10 @@ export function SuccessStep({
           }
         },
         () => {
-          if (active) setReceipt({ status: 'error' });
+          if (active) {
+            setReceipt({ status: 'error' });
+            if (retryNotification) notify.error("Couldn't refresh your payment receipt. Please try again.", { id: retryNotification });
+          }
         },
       );
     return () => {
@@ -78,7 +86,7 @@ export function SuccessStep({
             <Skeleton className="h-40 w-full rounded-2xl" />
           </div>
         ) : (
-          <div role="alert" data-slot="receipt-guidance" className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-sm">
+          <div role={retry && receipt.status === 'error' ? undefined : 'alert'} data-slot="receipt-guidance" className="flex flex-col items-start gap-2 rounded-2xl border border-border bg-card p-4 text-sm">
             <p>
               {receipt.status === 'error'
                 ? "We couldn't load your payment receipt. Check your connection, then try again."
@@ -88,7 +96,7 @@ export function SuccessStep({
               If you already paid, don&apos;t pay again — your request keeps the confirmed payment record.
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button type="button" size="sm" onClick={() => setRetry((value) => value + 1)}>
+              <Button type="button" size="sm" onClick={() => { feedback.current = { requestId, id: beginAttempt('receipt-retry') }; setRetry((value) => value + 1); }}>
                 Retry receipt
               </Button>
               <Button asChild size="sm" variant="outline">
@@ -104,15 +112,16 @@ export function SuccessStep({
   const paidAt = payment.paid_at ?? payment.created_at;
 
   return (
-    <div className="flex flex-col items-center gap-4 text-center">
-      <div className="mt-2 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 text-primary">
+    <div data-document-step="success" className="flex flex-col items-center gap-4 text-center">
+      <div data-document-part="success-icon" className="mt-2 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 text-primary">
         <CheckCircle2 size={44} strokeWidth={1.75} />
       </div>
 
       <h2 className="text-2xl font-bold">Payment Successful</h2>
+      <p className="text-sm text-muted-foreground">Your payment is confirmed. Keep your receipt for reference.</p>
       <p className="text-2xl font-bold text-primary">{formatCentavosAsPHP(payment.amount_centavos)}</p>
 
-      <div className="w-full rounded-2xl border border-border bg-card text-left">
+      <div data-document-part="receipt" className="w-full rounded-2xl border border-border bg-card text-left">
         <p className="border-b border-border p-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Transaction Details
         </p>
@@ -141,9 +150,9 @@ export function SuccessStep({
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-border p-4 text-sm last:border-b-0">
+    <div className="flex items-start justify-between gap-4 border-b border-border p-4 text-sm last:border-b-0">
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-semibold">{value}</span>
+      <span className="min-w-0 break-words text-right font-semibold [overflow-wrap:anywhere]">{value}</span>
     </div>
   );
 }

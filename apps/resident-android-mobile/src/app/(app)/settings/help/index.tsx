@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Modal,
   Pressable,
@@ -9,6 +9,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -19,10 +20,9 @@ import { useRouter } from 'expo-router';
 
 import { PrimaryButton } from '@/components/primary-button';
 import { Shimmer } from '@/components/reports/shimmer';
-import { SegmentedControl } from '@/components/segmented-control';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
 import { useFaqArticles, type FaqArticle } from '@/hooks/use-faq-articles';
@@ -51,6 +51,113 @@ const CATEGORY_ICONS: Record<FaqCategory, keyof typeof Ionicons.glyphMap> = {
   account: 'person-circle-outline',
 };
 
+// Match the resident web navbar: outline glyphs, a spring-driven active pill,
+// and a label that expands/fades only for the selected destination.
+function CategoryTab({
+  tab, active, onPress, onLayout,
+}: {
+  tab: (typeof CATEGORY_TABS)[number];
+  active: boolean;
+  onPress: () => void;
+  onLayout: (x: number, width: number) => void;
+}) {
+  const theme = useTheme();
+  const [labelWidth, setLabelWidth] = useState(0);
+  const progress = useSharedValue(active ? 1 : 0);
+
+  useEffect(() => {
+    progress.value = withTiming(active ? 1 : 0, {
+      duration: 240,
+      easing: Easing.bezier(0.22, 1, 0.36, 1),
+    });
+  }, [active, progress]);
+
+  const labelStyle = useAnimatedStyle(() => ({
+    width: (labelWidth + Spacing.two) * progress.value,
+    opacity: progress.value,
+  }));
+
+  return (
+    <Pressable
+      accessibilityRole="tab"
+      accessibilityLabel={tab.label}
+      accessibilityState={{ selected: active }}
+      onPress={onPress}
+      onLayout={({ nativeEvent }) => onLayout(nativeEvent.layout.x, nativeEvent.layout.width)}
+      style={({ pressed }) => [styles.filterTab, pressed && { backgroundColor: theme.backgroundSelected }]}>
+      <Ionicons
+        name={tab.key === 'all' ? 'grid-outline' : CATEGORY_ICONS[tab.key]}
+        size={24}
+        color={active ? theme.primary : theme.textSecondary}
+        accessible={false}
+      />
+      <Animated.View style={[styles.filterLabelClip, labelStyle]} accessible={false} importantForAccessibility="no-hide-descendants">
+        <ThemedText type="smallBold" numberOfLines={1} style={[styles.filterLabel, { color: theme.primary, width: labelWidth + Spacing.two }]}>
+          {tab.label}
+        </ThemedText>
+      </Animated.View>
+      <View pointerEvents="none" accessible={false} importantForAccessibility="no-hide-descendants" style={styles.labelMeasure}>
+        <ThemedText type="smallBold" numberOfLines={1} style={{ alignSelf: 'flex-start' }} onLayout={({ nativeEvent }) => setLabelWidth(Math.ceil(nativeEvent.layout.width) + 1)}>
+          {tab.label}
+        </ThemedText>
+      </View>
+    </Pressable>
+  );
+}
+
+function CategoryFilters({ category, onChange }: { category: CategoryFilter; onChange: (key: CategoryFilter) => void }) {
+  const theme = useTheme();
+  const scrollRef = useRef<ScrollView>(null);
+  const [layouts, setLayouts] = useState<Partial<Record<CategoryFilter, { x: number; width: number }>>>({});
+  const pillX = useSharedValue(0);
+  const pillWidth = useSharedValue(0);
+  const selected = layouts[category];
+
+  useEffect(() => {
+    if (!selected) return;
+    const spring = { duration: 350, dampingRatio: 0.75 };
+    pillX.value = withSpring(selected.x, spring);
+    pillWidth.value = withSpring(selected.width, spring);
+  }, [selected, pillX, pillWidth]);
+
+  // Selection can change item widths. Keep its full icon/label visible after
+  // expansion, including on small screens and with larger accessibility fonts.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (selected) scrollRef.current?.scrollTo({ x: Math.max(0, selected.x - Spacing.one), animated: true });
+    }, 260);
+    return () => clearTimeout(timer);
+  }, [category, selected]);
+
+  const pillStyle = useAnimatedStyle(() => ({
+    width: pillWidth.value,
+    transform: [{ translateX: pillX.value }],
+  }));
+
+  return (
+    <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false}>
+      <View style={styles.filterTrack} accessibilityRole="tablist">
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.filterPill, { backgroundColor: theme.primary + '12', borderColor: theme.primary + '14' }, pillStyle]}
+        />
+        {CATEGORY_TABS.map((tab) => (
+          <CategoryTab
+            key={tab.key}
+            tab={tab}
+            active={category === tab.key}
+            onPress={() => onChange(tab.key)}
+            onLayout={(x, width) => setLayouts((previous) => {
+              const current = previous[tab.key];
+              return current?.x === x && current.width === width ? previous : { ...previous, [tab.key]: { x, width } };
+            })}
+          />
+        ))}
+      </View>
+    </ScrollView>
+  );
+}
+
 // ─── Article card ────────────────────────────────────────────────────────────
 
 function FaqCard({ article, onPress }: { article: FaqArticle; onPress: () => void }) {
@@ -66,11 +173,11 @@ function FaqCard({ article, onPress }: { article: FaqArticle; onPress: () => voi
       accessibilityLabel={`Read article: ${article.question}`}
       style={({ pressed }) => [pressed && styles.cardPressed]}>
       <ThemedView type="backgroundElement" style={[styles.articleCard, { borderColor: theme.backgroundSelected }]}>
-        <View style={[styles.iconWrap, { backgroundColor: `${meta?.color}1A` }]}>
-          <Ionicons name={icon} size={19} color={meta?.color} />
+        <View style={[styles.iconWrap, { backgroundColor: theme.primary + '1A' }]}>
+          <Ionicons name={icon} size={19} color={theme.primary} />
         </View>
         <View style={styles.cardContent}>
-          <ThemedText style={[styles.categoryLabel, { color: meta?.color }]}>{meta?.label}</ThemedText>
+          <ThemedText style={[styles.categoryLabel, { color: theme.primary }]}>{meta?.label}</ThemedText>
           <ThemedText type="smallBold" numberOfLines={1} style={styles.questionText}>
             {article.question}
           </ThemedText>
@@ -78,7 +185,7 @@ function FaqCard({ article, onPress }: { article: FaqArticle; onPress: () => voi
             {article.answer}
           </ThemedText>
         </View>
-        <Ionicons name="chevron-forward" size={16} color={theme.backgroundSelected} style={styles.chevron} />
+        <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} style={styles.chevron} />
       </ThemedView>
     </Pressable>
   );
@@ -173,8 +280,8 @@ function RetryToast({
 
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
-      <View style={styles.toastBackdrop}>
-        <Animated.View style={[styles.toastCard, { backgroundColor: theme.backgroundElement }, cardAnimatedStyle]}>
+      <View style={[styles.toastBackdrop, { backgroundColor: theme.text + '73' }]}>
+        <Animated.View style={[styles.toastCard, { backgroundColor: theme.backgroundElement, shadowColor: theme.text }, cardAnimatedStyle]}>
           <View style={[styles.toastIconOuter, { backgroundColor: `${tint}26` }]}>
             <View style={[styles.toastIconInner, { backgroundColor: tint }]}>
               <Ionicons name={isSuccess ? 'checkmark' : 'close'} size={20} color={theme.onPrimary} />
@@ -244,7 +351,7 @@ export default function HelpCenterScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
@@ -265,12 +372,7 @@ export default function HelpCenterScreen() {
         {/* Section 1: filter — pinned outside the ScrollView so it stays fixed in place
             while section 2 (the article list) scrolls underneath it. */}
         <View style={[styles.filterSection, { borderBottomColor: theme.backgroundSelected }]}>
-          <SegmentedControl
-            segments={CATEGORY_TABS}
-            activeKey={category}
-            onChange={(key) => setCategory(key)}
-            activeColor="primary"
-          />
+          <CategoryFilters category={category} onChange={setCategory} />
         </View>
 
         {/* Section 2: articles */}
@@ -325,7 +427,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
   backBtn: {
     position: 'absolute',
@@ -343,10 +444,35 @@ const styles = StyleSheet.create({
   },
   filterSection: {
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-    paddingBottom: Spacing.two + 4,
+    paddingVertical: Spacing.two,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+  filterTrack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  filterTab: {
+    minWidth: 44,
+    minHeight: 44,
+    paddingHorizontal: 10,
+    paddingVertical: Spacing.two,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: Spacing.two,
+  },
+  filterPill: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: Spacing.two,
+    borderWidth: 1,
+  },
+  filterLabelClip: { overflow: 'hidden' },
+  filterLabel: { paddingLeft: Spacing.two },
+  labelMeasure: { position: 'absolute', width: 1000, opacity: 0 },
   content: {
     padding: Spacing.three,
   },
@@ -360,9 +486,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.two + 4,
-    gap: Spacing.two + 2,
-    shadowColor: '#000',
+    padding: Spacing.two + Spacing.one,
+    gap: Spacing.two,
     shadowOpacity: 0.03,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 1 },
@@ -373,9 +498,9 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.99 }],
   },
   iconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: Spacing.two,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -455,7 +580,6 @@ const styles = StyleSheet.create({
   // Centered retry feedback pop-up
   toastBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(15,23,42,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: Spacing.four,
@@ -468,7 +592,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.four,
     alignItems: 'center',
     gap: Spacing.two,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.18,
     shadowRadius: 24,

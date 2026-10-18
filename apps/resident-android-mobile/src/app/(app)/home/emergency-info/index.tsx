@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -18,10 +18,10 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { useProfile } from '@/hooks/use-profile';
 import { useAuth } from '@/hooks/use-auth';
@@ -38,6 +38,7 @@ import { ShimmerSkeleton } from '@/components/shimmer-skeleton';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { SegmentedControl } from '@/components/segmented-control';
 import { QrGuideContent } from '@/components/qr-guide-content';
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import type { AccordionItem } from '@/components/emergency-accordion';
 import type { LatLng } from '@barangayan/shared';
 
@@ -56,10 +57,9 @@ function isEmergencyInfoTab(value: unknown): value is EmergencyInfoTab {
 }
 
 export default function EmergencyInfoScreen() {
-  const router = useRouter();
+  const bottomTabInset = useFloatingTabInset();
   const { tab: tabParam } = useLocalSearchParams<{ tab?: string }>();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
   const { profile } = useProfile();
   const { session } = useAuth();
   const isGuest = !session;
@@ -122,25 +122,8 @@ export default function EmergencyInfoScreen() {
   const isAlerts = tab === 'alerts';
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+      <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
         <View style={[styles.root, { backgroundColor: theme.background }]}>
-          <View style={[styles.topHeader, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Go back to Home"
-          hitSlop={Spacing.two}
-          onPress={() => router.back()}
-          style={styles.backButton}>
-          <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
-        </Pressable>
-        <View style={styles.headerContent}>
-          <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-            Emergency & DRRM Info
-          </ThemedText>
-        </View>
-      </View>
-
       <View style={styles.tabBar} onLayout={(e) => setTabBarWidth(e.nativeEvent.layout.width)}>
         {tabWidth > 0 && (
           <Animated.View
@@ -176,7 +159,7 @@ export default function EmergencyInfoScreen() {
       {isCenters ? (
         <Animated.View
           entering={FadeIn.duration(200)}
-          style={styles.mapScreen}>
+          style={[styles.mapScreen, { paddingBottom: bottomTabInset + Spacing.three }]}>
           <CentersContent
             theme={theme}
             centers={centers}
@@ -198,7 +181,11 @@ export default function EmergencyInfoScreen() {
           style={styles.contentContainer}>
           <ScrollView
             style={styles.scrollView}
-            contentContainerStyle={[styles.scrollContent, { paddingBottom: Spacing.six }]}
+            contentContainerStyle={[
+              styles.scrollContent,
+              { paddingBottom: bottomTabInset + Spacing.six },
+              isScan && { paddingHorizontal: 16, paddingTop: 12, paddingBottom: bottomTabInset + 16 },
+            ]}
             showsVerticalScrollIndicator={false}>
             {isScan && (isGuest ? (
               <GuestLoginRequired
@@ -237,7 +224,6 @@ export default function EmergencyInfoScreen() {
       )}
     </View>
     </SafeAreaView>
-    </SafeAreaProvider>
   );
 }
 
@@ -778,28 +764,6 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-  },
-  topHeader: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
-  },
-  backButton: {
-    position: 'absolute',
-    left: Spacing.two,
-    bottom: Spacing.two,
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   tabBar: {
     flexDirection: 'row',

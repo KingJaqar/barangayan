@@ -44,11 +44,11 @@ function EmptyState({ label }: { label: string }) {
 // Plain copy instead of the raw service message; the hook still exposes the original.
 const LOAD_ERROR = "We couldn't load announcements. Check your connection, then try again.";
 
-function ErrorState({ onRetry }: { onRetry: () => void }) {
+function ErrorState({ onRetry, announce }: { onRetry: () => void; announce: boolean }) {
   return (
     <div className="flex flex-col items-center gap-3 py-16 text-center">
       <TriangleAlert aria-hidden size={32} className="text-status-error" />
-      <p role="alert" className="text-sm text-muted-foreground">
+      <p role={announce ? 'alert' : undefined} className="text-sm text-muted-foreground">
         {LOAD_ERROR}
       </p>
       <button type="button" onClick={onRetry} className="text-sm font-semibold text-[var(--accent)] hover:underline">
@@ -59,9 +59,9 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 }
 
 /** A failed refresh keeps the last loaded list and says it may be out of date. */
-function RefreshWarning({ onRetry }: { onRetry: () => void }) {
+function RefreshWarning({ onRetry, announce }: { onRetry: () => void; announce: boolean }) {
   return (
-    <div role="status" className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-status-warning/40 bg-status-warning/10 px-3.5 py-2.5 text-sm">
+    <div role={announce ? 'status' : undefined} className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-status-warning/40 bg-status-warning/10 px-3.5 py-2.5 text-sm">
       <TriangleAlert aria-hidden size={16} className="shrink-0 text-status-warning" />
       <span className="flex-1">Couldn&apos;t update announcements. Showing the last loaded list, which may be out of date.</span>
       <button type="button" onClick={onRetry} className="inline-flex items-center gap-1 font-semibold text-[var(--accent)] hover:underline">
@@ -81,7 +81,7 @@ export function AnnouncementsFeed({ barangayId }: { barangayId: string | null })
   const [markingAllRead, setMarkingAllRead] = useState(false);
   const marking = useRef(false);
 
-  const { announcements, isInitialLoading, isRefreshing, isReady, error, refetch } = useAnnouncements({
+  const { announcements, isInitialLoading, isRefreshing, isReady, error, errorAnnounced, refetch } = useAnnouncements({
     barangayId,
     category: activeFilter === 'all' ? undefined : activeFilter,
   });
@@ -178,7 +178,7 @@ export function AnnouncementsFeed({ barangayId }: { barangayId: string | null })
           deferred and real content never shifts when it disappears. Only a first load for
           the current filter replaces content; a refresh keeps the loaded list (including an
           empty one) and shows the small "Updating" hint in the header. */}
-      {isReady && error ? <RefreshWarning onRetry={refetch} /> : null}
+      {isReady && error ? <RefreshWarning announce={!errorAnnounced} onRetry={() => refetch('announcements')} /> : null}
       <div
         ref={resultsRef}
         className={styles.results}
@@ -191,7 +191,7 @@ export function AnnouncementsFeed({ barangayId }: { barangayId: string | null })
             <SkeletonCard />
           </div>
         ) : !isReady ? (
-          <ErrorState onRetry={refetch} />
+          <ErrorState announce={!errorAnnounced} onRetry={() => refetch('announcements')} />
         ) : announcements.length === 0 ? (
           <EmptyState label={activeFilter === 'all' ? 'No announcements yet.' : `No ${ANNOUNCEMENT_CATEGORY_META[activeFilter as AnnouncementCategory]?.label ?? activeFilter} announcements.`} />
         ) : (

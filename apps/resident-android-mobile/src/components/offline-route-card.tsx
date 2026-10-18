@@ -91,6 +91,7 @@ export function OfflineRouteCard({
   now,
   onChooseSegment,
   compact = false,
+  dense = false,
   style,
 }: {
   routing: OfflineRoutingState;
@@ -102,6 +103,8 @@ export function OfflineRouteCard({
   onChooseSegment: (candidate: AttachmentCandidate) => void;
   /** Over the map: one summary line that expands on tap, so the card does not hide the route. */
   compact?: boolean;
+  /** List layout: keep all details visible with tighter spacing and typography. */
+  dense?: boolean;
   style?: ViewStyle;
 }) {
   const theme = useTheme();
@@ -109,10 +112,10 @@ export function OfflineRouteCard({
 
   if (routing.phase === 'loading') {
     return (
-      <View style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+      <View style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
         <View style={styles.row}>
           <ActivityIndicator size="small" color={theme.primary} />
-          <ThemedText type="small">Loading the offline map…</ThemedText>
+          <ThemedText type="small" style={dense && styles.denseText}>Loading the offline map…</ThemedText>
         </View>
       </View>
     );
@@ -203,23 +206,23 @@ export function OfflineRouteCard({
   return (
     <View
       accessibilityLiveRegion="polite"
-      style={[styles.card, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
+      style={[styles.card, dense && styles.denseCard, { backgroundColor: theme.background, borderColor: theme.backgroundSelected }, style]}>
       {lines.map(line => (
-        <View key={line.text} style={styles.row}>
+        <View key={line.text} style={[styles.row, dense && styles.denseRow]}>
           <Ionicons name={line.tone === 'info' ? 'cloud-done-outline' : 'cloud-offline-outline'} size={16} color={line.tone === 'info' ? theme.primary : theme.accentRed} />
-          <ThemedText type="small" style={styles.text}>
+          <ThemedText type="small" style={[styles.text, dense && styles.denseText]}>
             {line.text}
           </ThemedText>
         </View>
       ))}
       {message ? (
-        <View style={styles.row}>
+        <View style={[styles.row, dense && styles.denseRow]}>
           {message.busy ? (
             <ActivityIndicator size="small" color={theme.primary} />
           ) : (
             <Ionicons name={message.tone === 'info' ? 'walk-outline' : 'alert-circle-outline'} size={16} color={message.tone === 'info' ? theme.primary : theme.accentRed} />
           )}
-          <ThemedText type="smallBold" style={styles.text}>
+          <ThemedText type="smallBold" style={[styles.text, dense && styles.denseText, dense && styles.denseMessage]}>
             {message.text}
           </ThemedText>
         </View>
@@ -240,7 +243,7 @@ export function OfflineRouteCard({
         </View>
       ) : null}
       {routing.pack ? (
-        <ThemedText type="small" themeColor="textSecondary" style={styles.attribution}>
+        <ThemedText type="small" themeColor="textSecondary" style={[styles.attribution, dense && styles.denseAttribution]}>
           Offline map{osmDate ? ` (${osmDate})` : ''} · {routing.pack.manifest.attribution}
         </ThemedText>
       ) : null}
@@ -262,6 +265,27 @@ export function OfflineRouteCard({
 }
 
 const styles = StyleSheet.create({
+  denseCard: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 6,
+  },
+  denseRow: {
+    alignItems: 'flex-start',
+    gap: 6,
+  },
+  denseText: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
+  denseMessage: {
+    fontWeight: '600',
+  },
+  denseAttribution: {
+    lineHeight: 15,
+    fontWeight: '400',
+  },
   card: {
     borderRadius: 14,
     borderWidth: 1,

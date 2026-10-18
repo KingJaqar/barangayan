@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -37,11 +37,13 @@ import { useNetInfo } from '@react-native-community/netinfo';
 function AnimatedCenterCard({
   center,
   index,
-  isLast,
+  minHeight,
+  onMeasure,
 }: {
   center: ReturnType<typeof useEvacuationCenters>['centers'][number];
   index: number;
-  isLast: boolean;
+  minHeight: number;
+  onMeasure: (id: string, height: number) => void;
 }) {
   const scale = useSharedValue(1);
 
@@ -61,8 +63,7 @@ function AnimatedCenterCard({
     <Animated.View
       entering={FadeInUp.duration(300).delay(index * 50)}
       exiting={FadeOut.duration(150)}
-      layout={LinearTransition.duration(200)}
-      style={!isLast && styles.centerCardSeparator}>
+      layout={LinearTransition.duration(200)}>
       <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
         <Animated.View style={animatedStyle}>
           <EvacuationCenterCard
@@ -74,6 +75,8 @@ function AnimatedCenterCard({
             capacity={center.capacity}
             facilities={center.facilities}
             verified={center.verified}
+            minHeight={minHeight}
+            onContentLayout={({ nativeEvent }) => onMeasure(center.id, nativeEvent.layout.height)}
           />
         </Animated.View>
       </Pressable>
@@ -110,6 +113,12 @@ export function CentersContent({
 }) {
   const boundary = useAmpid1Boundary();
   const [searchQuery, setSearchQuery] = useState('');
+  const [cardHeights, setCardHeights] = useState<Record<string, number>>({});
+  const measureCard = useCallback((id: string, height: number) => {
+    // Include the outer card's two border pixels; round up to avoid clipping.
+    const measured = Math.ceil(height) + 2;
+    setCardHeights(previous => previous[id] === measured ? previous : { ...previous, [id]: measured });
+  }, []);
   const locating = location.state.activeRequestId !== null;
   const origin = location.state.origin;
   const originRevision = origin?.revision;
@@ -190,6 +199,7 @@ export function CentersContent({
   const filteredCenters = searchQuery.trim().length > 0
     ? displayCenters.filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : displayCenters;
+  const centerCardHeight = Math.max(0, ...filteredCenters.map(center => cardHeights[center.id] ?? 0));
 
   const pickerItems: CenterPickerItem[] = filteredCenters.map((c) => ({
     id: c.id,
@@ -607,6 +617,7 @@ export function CentersContent({
             </ThemedText>
             <LocationStatusCard state={location.state} onAction={handleLocationAction} />
             <OfflineRouteCard
+              dense
               routing={routing.state}
               route={route}
               mode={mode}
@@ -641,7 +652,8 @@ export function CentersContent({
                     key={center.id}
                     center={center}
                     index={index}
-                    isLast={index >= filteredCenters.length - 1}
+                    minHeight={centerCardHeight}
+                    onMeasure={measureCard}
                   />
                 ))
               )}
@@ -681,7 +693,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   centersListScroll: {
-    gap: Spacing.three,
+    gap: Spacing.two,
     paddingBottom: Spacing.six,
   },
   // Bleeds past mapScreen's side/bottom padding so the map runs edge to edge,
@@ -693,7 +705,7 @@ const styles = StyleSheet.create({
     marginBottom: -Spacing.three,
   },
   sectionList: {
-    gap: Spacing.three,
+    gap: Spacing.two,
   },
   skeletonList: {
     gap: Spacing.three,
@@ -869,8 +881,5 @@ const styles = StyleSheet.create({
   nearestText: {
     fontSize: 13,
     lineHeight: 18,
-  },
-  centerCardSeparator: {
-    marginBottom: Spacing.three,
   },
 });

@@ -6,7 +6,7 @@ import { AdminSelect } from '@/components/admin/dropdown/admin-select';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { emergencyQrContentSchema } from '@barangayan/shared';
 import type { EmergencyQrContent, Json, QrStepItem, Tables } from '@barangayan/shared';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
@@ -70,7 +70,6 @@ export function QrInstructionsModal({
   onClose: () => void;
   onSaved: (record: QrInstructionRow) => void;
 }) {
-  const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -105,48 +104,54 @@ export function QrInstructionsModal({
   }, [onClose]);
 
   async function handleSubmit(data: EmergencyQrContent) {
-    setSubmitting(true);
-    setServerError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      setSubmitting(true);
+      setServerError(null);
 
-    const payload = {
-      ...data,
-      // Renumber the steps so they always match their final on-screen order.
-      content: data.content.map((step: QrStepItem, idx) => ({ ...step, step: idx + 1 })) as unknown as Json,
-    };
+      const payload = {
+        ...data,
+        // Renumber the steps so they always match their final on-screen order.
+        content: data.content.map((step: QrStepItem, idx) => ({ ...step, step: idx + 1 })) as unknown as Json,
+      };
 
-    const supabase = createSupabaseBrowserClient();
-    const { data: result, error } = await supabase
-      .from('emergency_qr_content')
-      .upsert(payload, { onConflict: 'barangay_id,section' })
-      .select('*')
-      .single();
+      const supabase = createSupabaseBrowserClient();
+      const { data: result, error } = await supabase
+        .from('emergency_qr_content')
+        .upsert(payload, { onConflict: 'barangay_id,section' })
+        .select('*')
+        .single();
 
-    setSubmitting(false);
+      setSubmitting(false);
 
-    if (error) {
-      setServerError(error.message);
-      toast.showError(`Failed to save: ${error.message}`);
-      return;
-    }
+      if (error) {
+        setServerError(error.message);
+        toast.error(`Failed to save: ${error.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: existing ? 'update' : 'create',
-      entityType: 'emergency_qr',
-      entityId: result.id,
-      entityLabel: data.title || (section === 'why_scan' ? 'Why Scan' : 'How It Works'),
-      changes: existing
-        ? {
-            before: { title: existing.title, body: existing.body, content: existing.content, is_active: existing.is_active },
-            after: { title: data.title, body: data.body, content: payload.content, is_active: data.is_active },
-          }
-        : undefined,
-      metadata: !existing
-        ? { title: data.title, body: data.body, content: payload.content, is_active: data.is_active }
-        : undefined,
-    }).catch(() => {});
+      logAdminAction({
+        action: existing ? 'update' : 'create',
+        entityType: 'emergency_qr',
+        entityId: result.id,
+        entityLabel: data.title || (section === 'why_scan' ? 'Why Scan' : 'How It Works'),
+        changes: existing
+          ? {
+              before: { title: existing.title, body: existing.body, content: existing.content, is_active: existing.is_active },
+              after: { title: data.title, body: data.body, content: payload.content, is_active: data.is_active },
+            }
+          : undefined,
+        metadata: !existing
+          ? { title: data.title, body: data.body, content: payload.content, is_active: data.is_active }
+          : undefined,
+      }).catch(() => {});
 
-    toast.showSuccess(existing ? 'Content updated.' : 'Content created.');
-    onSaved(result as QrInstructionRow);
+      toast.success(existing ? 'Content updated.' : 'Content created.', { id: toastAttempt });
+      onSaved(result as QrInstructionRow);
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   const errors = form.formState.errors;

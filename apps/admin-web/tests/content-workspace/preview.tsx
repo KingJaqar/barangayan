@@ -4,7 +4,8 @@ import type { Tables } from '@barangayan/shared';
 import { ContentCreatePanel } from '../../src/components/admin/content-create-panel';
 import { ContentSection } from '../../src/components/admin/content-workspace';
 import styles from '../../src/components/admin/content-workspace.module.css';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 import { DocumentTypeCatalog } from '../../src/app/(admin)/services/document-type-catalog';
 import { DocumentTypeForm } from '../../src/app/(admin)/services/document-type-form';
 import { AnnouncementCatalog } from '../../src/app/(admin)/announcements/announcement-catalog';
@@ -77,7 +78,7 @@ function App() {
     'Evacuation Centers': { title: 'Evacuation Centers', description: 'Create and manage barangay evacuation centers visible to residents.', forms: [{ label: 'Create new center', title: 'New evacuation center', description: 'Add the center’s location, capacity, facilities, and contact details.', content: <EvacuationCenterForm barangayId="preview" /> }], content: <EvacuationCenterCatalog centers={empty ? [] : centers} /> },
   };
   const page = pages[screen];
-  return <ToastProvider><div className={dark ? 'dark' : ''} style={{ minHeight: '100vh' }}>
+  return <ThemeControllerProvider><Toaster /><div className={dark ? 'dark' : ''} style={{ minHeight: '100vh' }}>
     <nav aria-label="Preview controls" style={{ display: 'flex', flexWrap: 'wrap', gap: 16, padding: 16, background: '#f4f4f5', color: '#27272a', borderBottom: '1px solid #e4e4e7' }}>
       <label>Screen preview <select value={screen} onChange={e => setScreen(e.target.value as Screen)}>{screens.map(s => <option key={s}>{s}</option>)}</select></label>
       <label><input type="checkbox" checked={dark} onChange={e => setDark(e.target.checked)} /> Dark preview</label>
@@ -90,6 +91,6 @@ function App() {
         {page.content}
       </div>
     </main>
-  </div></ToastProvider>;
+  </div></ThemeControllerProvider>;
 }
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);

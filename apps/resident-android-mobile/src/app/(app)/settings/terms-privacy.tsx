@@ -8,10 +8,12 @@ import { useEffect, useState } from 'react';
 
 import { Card } from '@/components/card';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useProfile } from '@/hooks/use-profile';
 import { useSiteContent } from '@/hooks/use-site-content';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
 
 function ShimmerSkeleton({
   theme,
@@ -102,17 +104,21 @@ export default function TermsPrivacyScreen() {
     });
   };
 
+  const { fontId } = useFontPreference();
+  const fontFamily = getMobileFontFamily(fontId);
   const markdownStyle = {
-    body: { color: theme.text, fontSize: 14, lineHeight: 22, fontWeight: 500 },
-    heading1: { color: theme.text, fontFamily: Fonts.gideonRoman, fontSize: 20, fontWeight: 700, marginTop: Spacing.three, marginBottom: Spacing.two },
-    heading2: { color: theme.text, fontFamily: Fonts.gideonRoman, fontSize: 18, fontWeight: 600, marginTop: Spacing.two, marginBottom: Spacing.two },
+    body: { color: theme.text, fontFamily, fontSize: 14, lineHeight: 21, fontWeight: 500 },
+    heading1: { color: theme.text, fontFamily, fontSize: 20, fontWeight: 700, marginTop: Spacing.two + Spacing.one, marginBottom: Spacing.one },
+    heading2: { color: theme.text, fontFamily, fontSize: 18, fontWeight: 600, marginTop: Spacing.two, marginBottom: Spacing.one },
+    paragraph: { marginTop: Spacing.one, marginBottom: Spacing.one },
+    link: { color: theme.primary },
     strong: { fontWeight: 700 },
     bullet_list: { marginBottom: Spacing.two },
     list_item: { marginBottom: 4 },
   } as const;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.primary }}>
+    <SafeAreaView edges={['left', 'right']} style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{ flex: 1, backgroundColor: theme.background }}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
@@ -121,7 +127,7 @@ export default function TermsPrivacyScreen() {
             accessibilityRole="button"
             accessibilityLabel="Go back"
             hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
@@ -172,7 +178,7 @@ export default function TermsPrivacyScreen() {
                     <Animated.View layout={LinearTransition.duration(250)}>
                       {expandedTerms && (
                         <View style={[styles.sectionContent, { borderTopColor: theme.backgroundSelected }]}>
-                          <Markdown style={markdownStyle}>{`# ${terms.title}\n\n${terms.body}`}</Markdown>
+                          <Markdown style={markdownStyle}>{terms.body}</Markdown>
                         </View>
                       )}
                     </Animated.View>
@@ -202,7 +208,7 @@ export default function TermsPrivacyScreen() {
                     <Animated.View layout={LinearTransition.duration(250)}>
                       {expandedPrivacy && (
                         <View style={[styles.sectionContent, { borderTopColor: theme.backgroundSelected }]}>
-                          <Markdown style={markdownStyle}>{`# ${privacy.title}\n\n${privacy.body}`}</Markdown>
+                          <Markdown style={markdownStyle}>{privacy.body}</Markdown>
                         </View>
                       )}
                     </Animated.View>
@@ -238,19 +244,17 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
   content: {
     padding: Spacing.three,
   },
   sections: {
-    gap: Spacing.three,
+    gap: Spacing.two + Spacing.one,
   },
   sectionCard: {
     borderRadius: Spacing.three,
     overflow: 'hidden',
     borderWidth: 1,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -260,7 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
     gap: Spacing.two,
   },
   sectionHeaderLeft: {
@@ -270,29 +274,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconBadge: {
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sectionTitle: {
+    flexShrink: 1,
     fontSize: 16,
-    fontFamily: Fonts.gideonRoman,
     fontWeight: '600',
   },
   sectionContent: {
-    paddingHorizontal: Spacing.three,
-    paddingBottom: Spacing.three,
-    paddingTop: Spacing.two,
+    paddingHorizontal: Spacing.two + Spacing.one,
+    paddingBottom: Spacing.two + Spacing.one,
+    paddingTop: Spacing.one,
     borderTopWidth: 1,
   },
   skeletonContainer: {
-    gap: Spacing.three,
+    gap: Spacing.two + Spacing.one,
   },
   skeletonCard: {
     gap: Spacing.two,
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
     borderRadius: Spacing.three,
     borderWidth: 1,
   },
@@ -303,8 +307,8 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   skeletonIcon: {
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
     borderRadius: 10,
   },
   skeletonTitle: {
@@ -330,7 +334,6 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontFamily: Fonts.gideonRoman,
     fontWeight: '600',
   },
 });

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -20,7 +20,7 @@ const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
 
 export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [lat, setLat] = useState('');
@@ -41,83 +41,90 @@ export function EvacuationCenterForm({ barangayId }: { barangayId: string }) {
   }
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const parsedLat = lat === '' ? NaN : parseFloat(lat);
-    const parsedLng = lng === '' ? NaN : parseFloat(lng);
+      const parsedLat = lat === '' ? NaN : parseFloat(lat);
+      const parsedLng = lng === '' ? NaN : parseFloat(lng);
 
-    const result = evacuationCenterSchema.safeParse({
-      name,
-      address: address || undefined,
-      lat: parsedLat,
-      lng: parsedLng,
-      capacity: capacity === '' ? null : parseInt(capacity, 10),
-      current_occupancy: currentOccupancy === '' ? 0 : parseInt(currentOccupancy, 10),
-      is_active: isActive,
-      contact_number: contactNumber || undefined,
-      facilities,
-      verified,
-    });
+      const result = evacuationCenterSchema.safeParse({
+        name,
+        address: address || undefined,
+        lat: parsedLat,
+        lng: parsedLng,
+        capacity: capacity === '' ? null : parseInt(capacity, 10),
+        current_occupancy: currentOccupancy === '' ? 0 : parseInt(currentOccupancy, 10),
+        is_active: isActive,
+        contact_number: contactNumber || undefined,
+        facilities,
+        verified,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data: insertedCenter, error: insertError } = await supabase
-      .from('evacuation_centers')
-      .insert({
-        barangay_id: barangayId,
-        name: result.data.name,
-        address: result.data.address || null,
-        position: { lat: result.data.lat, lng: result.data.lng },
-        capacity: result.data.capacity,
-        current_occupancy: result.data.current_occupancy,
-        is_active: result.data.is_active,
-        contact_number: result.data.contact_number || null,
-        facilities: result.data.facilities,
-        verified: result.data.verified,
-      })
-      .select('id')
-      .single();
-    setSubmitting(false);
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data: insertedCenter, error: insertError } = await supabase
+        .from('evacuation_centers')
+        .insert({
+          barangay_id: barangayId,
+          name: result.data.name,
+          address: result.data.address || null,
+          position: { lat: result.data.lat, lng: result.data.lng },
+          capacity: result.data.capacity,
+          current_occupancy: result.data.current_occupancy,
+          is_active: result.data.is_active,
+          contact_number: result.data.contact_number || null,
+          facilities: result.data.facilities,
+          verified: result.data.verified,
+        })
+        .select('id')
+        .single();
+      setSubmitting(false);
 
-    if (insertError) {
-      setError(insertError.message);
-      toast.showError(`Failed to create center: ${insertError.message}`);
-      return;
-    }
+      if (insertError) {
+        setError(insertError.message);
+        toast.error(`Failed to create center: ${insertError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'create',
-      entityType: 'evacuation_center',
-      entityId: insertedCenter?.id,
-      entityLabel: result.data.name,
-      metadata: {
-        name: result.data.name,
-        address: result.data.address || null,
-        position: { lat: result.data.lat, lng: result.data.lng },
-        capacity: result.data.capacity,
-        contact_number: result.data.contact_number || null,
-        facilities: result.data.facilities,
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'create',
+        entityType: 'evacuation_center',
+        entityId: insertedCenter?.id,
+        entityLabel: result.data.name,
+        metadata: {
+          name: result.data.name,
+          address: result.data.address || null,
+          position: { lat: result.data.lat, lng: result.data.lng },
+          capacity: result.data.capacity,
+          contact_number: result.data.contact_number || null,
+          facilities: result.data.facilities,
+        },
+      }).catch(() => {});
 
-    setName('');
-    setAddress('');
-    setLat('');
-    setLng('');
-    setCapacity('');
-    setCurrentOccupancy('');
-    setIsActive(true);
-    setContactNumber('');
-    setFacilities([]);
-    setVerified(false);
-    toast.showSuccess(`Evacuation center created.`);
-    router.refresh();
+      setName('');
+      setAddress('');
+      setLat('');
+      setLng('');
+      setCapacity('');
+      setCurrentOccupancy('');
+      setIsActive(true);
+      setContactNumber('');
+      setFacilities([]);
+      setVerified(false);
+      toast.success(`Evacuation center created.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

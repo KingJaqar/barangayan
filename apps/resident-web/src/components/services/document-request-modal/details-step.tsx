@@ -1,103 +1,76 @@
 'use client';
-import { ServiceCharter } from '../resident-service-form';
 import { servicePriceLabel, serviceProcessingLabel } from '@barangayan/shared';
-
-
-/**
- * Step 1 — the modal's default view for any selected document. Content ported verbatim
- * from the standalone /services/[documentId] page (kept for deep links/guest SEO); the
- * CTA branch is the only behavioral change — it advances the in-modal step instead of
- * navigating to /services/requests/new/[documentId].
- */
-
-import { CheckCircle2, Clock, FileText } from 'lucide-react';
+import { ArrowRight, Check, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { ServiceCharter } from '../resident-service-form';
 import type { DocumentType } from './types';
+import styles from './document-request-modal.module.css';
 
 export function DetailsStep({
   doc,
   isAuthenticated,
-  requesting = false,
-  requestError = null,
   onRequest,
 }: {
   doc: DocumentType;
   isAuthenticated: boolean;
-  /** True while the account/profile check behind "Request This Document" is running. */
-  requesting?: boolean;
-  requestError?: string | null;
   onRequest: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold">{doc.name}</h2>
-          {doc.description ? <p className="mt-1 text-sm text-muted-foreground">{doc.description}</p> : null}
-        </div>
-        <span className="shrink-0 rounded-full bg-primary/15 px-3 py-1 text-sm font-semibold text-primary">
-          {servicePriceLabel(doc)}
-        </span>
+    <div className={styles.details}>
+      <div className={styles.hero}>
+        <p className={styles.eyebrow}>Before you begin</p>
+        <h2>{doc.name}</h2>
+        {doc.description ? <p className={styles.description}>{doc.description}</p> : null}
       </div>
 
+      <dl className={styles.overview}>
+        <div><dt>Document fee</dt><dd>{servicePriceLabel(doc)}</dd></div>
+        <div><dt>Processing &amp; pickup</dt><dd>{serviceProcessingLabel(doc)}</dd></div>
+      </dl>
+
       {doc.requirements.length > 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            <CheckCircle2 size={16} /> Requirements
-          </div>
-          <ul className="flex flex-col gap-2 text-sm">
+        <section>
+          <h3 className={styles.sectionHeading}><span aria-hidden>01</span> What you&apos;ll need</h3>
+          <ul className={styles.requirements}>
             {doc.requirements.map((req) => (
-              <li key={req} className="flex items-start gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
-                {req}
+              <li key={req}>
+                <span className={styles.check}><Check size={13} aria-hidden /></span>
+                <span>{req}</span>
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       ) : null}
 
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <Clock size={16} /> Processing & Pickup
-        </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Estimated Time</span>
-          <span className="font-semibold">{serviceProcessingLabel(doc)}</span>
+      <div className={styles.note}>
+        <FileText size={19} aria-hidden className="shrink-0 text-primary" />
+        <div>
+          <p className="mb-1 font-semibold text-foreground">Bring your original documents</p>
+          <p>Please ensure all requirements are complete before proceeding. Bring the original documents for verification at the Barangay Hall.
+          Processing times are estimates and may vary during peak periods.</p>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
-        <div className="mb-1 flex items-center gap-2 font-medium text-foreground">
-          <FileText size={16} /> Additional Notes
-        </div>
-        Please ensure all requirements are complete before proceeding. Bring the original documents for verification at the Barangay Hall.
-        Processing times are estimates and may vary during peak periods.
-      </div>
-
-      <ServiceCharter doc={doc}/>
-      {isAuthenticated ? (
-        <>
-          {requestError ? (
-            <p data-slot="request-check-error" className="text-sm text-status-error">
-              {requestError}
-            </p>
-          ) : null}
-          <Button
-            size="lg"
-            className="w-full sm:w-auto sm:self-start"
-            loading={requesting}
-            loadingLabel="Checking your account…"
-            onClick={onRequest}>
-            Request This Document
+      <section className={styles.charter}>
+        <h3 className={styles.sectionHeading}><span aria-hidden>{doc.requirements.length > 0 ? '02' : '01'}</span> Service guidelines</h3>
+        <ServiceCharter doc={doc} />
+      </section>
+      <div className={styles.actions}>
+        {isAuthenticated ? (
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={onRequest}>
+              Request This Document <ArrowRight size={18} aria-hidden />
+            </Button>
+        ) : (
+          <Button asChild size="lg" className="w-full">
+            <Link href="/login">Log In to Request</Link>
           </Button>
-        </>
-      ) : (
-        <Button asChild size="lg" className="w-full sm:w-auto sm:self-start">
-          <Link href="/login">Log In to Request</Link>
-        </Button>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
--- Run after 0129; all fixtures and writes are rolled back.
+-- Run after 0132; all fixtures and writes are rolled back.
 begin;
 set local search_path=public,extensions,pg_catalog;
 create extension if not exists pgtap with schema extensions;
@@ -92,5 +92,20 @@ select lives_ok($$select public.admin_mutate_record('residents','b1150000-0000-0
  '{"occupation":"Nurse"}',pg_temp.record_version('residents','b1150000-0000-0000-0000-000000000002'))$$,'Resident partial edit saves');
 select ok(first_name='Lifecycle' and last_name='Resident','Unchanged resident names survive partial edit') from public.profiles where id='b1150000-0000-0000-0000-000000000002';
 select lives_ok(format('select public.admin_mutate_record(%L,%L,''save'',%L,%L)',screen,id,patch,pg_temp.record_version(screen,id)),screen||': existing edit still saves') from lifecycle_fixture where screen in ('health','applicants','staff');
+select lives_ok($$select public.admin_mutate_record('requests','d1150000-0000-0000-0000-000000000001','save',
+ '{"resident_id":"b1150000-0000-0000-0000-000000000003"}',pg_temp.record_version('requests','d1150000-0000-0000-0000-000000000001'))$$,'Legacy request can select a same-tenant admin resident');
+select is(resident_id,'b1150000-0000-0000-0000-000000000003'::uuid,'Admin resident selection persisted') from public.service_requests where id='d1150000-0000-0000-0000-000000000001';
+select lives_ok($$select public.admin_mutate_record('transactions','e1150000-0000-0000-0000-000000000001','save',
+ '{"linked_resident_id":"b1150000-0000-0000-0000-000000000001"}',pg_temp.record_version('transactions','e1150000-0000-0000-0000-000000000001'))$$,'Linked request editor accepts a same-tenant admin resident too');
+select is(resident_id,'b1150000-0000-0000-0000-000000000001'::uuid,'Linked admin resident selection persisted') from public.service_requests where id='d1150000-0000-0000-0000-000000000001';
+select throws_ok($$select public.admin_mutate_record('requests','d1150000-0000-0000-0000-000000000001','save',
+ '{"resident_id":"b1150000-0000-0000-0000-000000000004"}',pg_temp.record_version('requests','d1150000-0000-0000-0000-000000000001'))$$,'42501',null,'Cross-tenant admin resident rejected');
+select throws_ok($$select public.admin_mutate_record('transactions','e1150000-0000-0000-0000-000000000001','save',
+ '{"linked_resident_id":"b1150000-0000-0000-0000-000000000004"}',pg_temp.record_version('transactions','e1150000-0000-0000-0000-000000000001'))$$,'42501',null,'Cross-tenant linked admin resident rejected');
+reset role;
+update public.profiles set deleted_at=now() where id='b1150000-0000-0000-0000-000000000003';
+set local role authenticated;
+select throws_ok($$select public.admin_mutate_record('requests','d1150000-0000-0000-0000-000000000001','save',
+ '{"resident_id":"b1150000-0000-0000-0000-000000000003"}',pg_temp.record_version('requests','d1150000-0000-0000-0000-000000000001'))$$,'42501',null,'Deleted admin resident rejected');
 select * from finish();
 rollback;

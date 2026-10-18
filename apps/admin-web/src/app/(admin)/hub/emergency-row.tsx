@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { EmergencyForm } from './emergency-form';
 
@@ -44,7 +44,7 @@ function formatContentPreview(item: EmergencyInformation): string {
 
 export function EmergencyRow({ item }: { item: EmergencyInformation }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [isEditing, setIsEditing] = useState(false);
   const [channelName] = useState(() => `admin-emergency-info-${Math.random().toString(36).slice(2)}`);
 
@@ -63,26 +63,32 @@ export function EmergencyRow({ item }: { item: EmergencyInformation }) {
   }, [router, channelName]);
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('emergency_information')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', item.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('emergency_information')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', item.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'emergency_information',
+        entityId: item.id,
+        entityLabel: item.title,
+        metadata: { title: item.title, body: item.body, category: item.category },
+      }).catch(() => {});
+
+      toast.success('Emergency information archived.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'emergency_information',
-      entityId: item.id,
-      entityLabel: item.title,
-      metadata: { title: item.title, body: item.body, category: item.category },
-    }).catch(() => {});
-
-    toast.showSuccess('Emergency information archived.');
-    router.refresh();
   }
 
   if (isEditing) {

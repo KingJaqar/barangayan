@@ -26,7 +26,7 @@ export default async function NewRequestPage({ params }: { params: Promise<{ doc
     if (isMissingRow(docError)) notFound();
     return (
       <div className="mx-auto max-w-2xl">
-        <ReadFailure message="We couldn't load this service." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="this service" message="We couldn't load this service." />
       </div>
     );
   }

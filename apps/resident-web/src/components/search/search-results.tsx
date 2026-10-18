@@ -19,7 +19,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 export function SearchResults({ query, category, page, isAuthenticated }: { query: string; category: SearchFilter; page: number; isAuthenticated: boolean }) {
-  const { data, loading, refreshing, error, retry } = useResidentSearch(query, { category, page });
+  const { data, loading, refreshing, error, errorAnnounced, retry } = useResidentSearch(query, { category, page });
   const categories = SEARCH_CATEGORIES.filter(({ key }) => isAuthenticated || (key !== 'requests' && key !== 'reports'));
   const total = data?.groups.reduce((sum, group) => sum + group.count, 0) ?? 0;
   const failed = data?.groups.filter(group => group.failed) ?? [];
@@ -39,7 +39,7 @@ export function SearchResults({ query, category, page, isAuthenticated }: { quer
           <LoadingStatus active={loading} label={refreshing ? 'Updating results…' : `Searching for “${query}”…`} className={styles.resultStatus} />
           <p role="status" className={styles.resultStatus}>{!loading && data && query && !failed.length ? `${total} ${total === 1 ? 'result' : 'results'} for “${query}”` : data && failed.length && total > 0 ? `Showing available results for “${query}”` : ''}</p>
           {!query ? <div className={styles.empty}><Search aria-hidden size={32} /><h2>What are you looking for?</h2><p>Enter a service, topic, or request reference above to get started.</p><div className={styles.shortcuts}>{SEARCH_SHORTCUTS.map(({ href, label, Icon }) => <Link key={href} href={href}><Icon aria-hidden size={18} strokeWidth={1.75} />{label}<ArrowRight aria-hidden size={15} /></Link>)}</div></div> : null}
-          {error || failed.length ? <div className={styles.error}><TriangleAlert aria-hidden size={20} /><div><p role="alert">{error ?? `We couldn't load ${failed.map(group => SEARCH_CATEGORIES.find(c => c.key === group.category)!.label.toLowerCase()).join(', ')}.${total ? ' Other results are shown below.' : ' Please try again.'}`}</p>{error && data ? <p>Showing the last loaded results, which may be out of date.</p> : null}<button type="button" onClick={retry} className={styles.textLink}>Try again</button></div></div> : null}
+          {error || failed.length ? <div className={styles.error}><TriangleAlert aria-hidden size={20} /><div><p role={errorAnnounced ? undefined : 'alert'}>{error ?? `We couldn't load ${failed.map(group => SEARCH_CATEGORIES.find(c => c.key === group.category)!.label.toLowerCase()).join(', ')}.${total ? ' Other results are shown below.' : ' Please try again.'}`}</p>{error && data ? <p>Showing the last loaded results, which may be out of date.</p> : null}<button type="button" onClick={retry} className={styles.textLink}>Try again</button></div></div> : null}
           {loading && !data ? <div aria-label="Loading search results" aria-busy="true"><ResultSkeleton /></div> : null}
           {data && total === 0 && !failed.length && query ? <div className={styles.empty}><Search aria-hidden size={32} /><h2>No results found</h2><p>Try a shorter phrase, check the spelling, or choose another category.</p>{category !== 'all' ? <Link className={styles.textLink} href={searchHref(query)}>Search all categories <ArrowRight aria-hidden size={14} /></Link> : null}</div> : null}
           {data?.groups.filter(group => !group.failed && group.count > 0).map(group => {

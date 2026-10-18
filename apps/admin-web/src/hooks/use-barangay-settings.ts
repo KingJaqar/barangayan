@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import {
@@ -62,7 +62,6 @@ const DEFAULT_SETTINGS: BarangaySettings = {
 };
 
 export function useBarangaySettings(barangayId: string | null) {
-  const toast = useToast();
   const [state, setState] = useState<BarangaySettingsState>({
     barangayId: null,
     settings: null,
@@ -126,44 +125,51 @@ export function useBarangaySettings(barangayId: string | null) {
   }, [fetchSettings]);
 
   async function updateSettings(next: Partial<BarangaySettings>) {
-    if (!barangayId || !state.settings) return;
-    const previousSettings = state.settings;
-    setState((s) => ({ ...s, saving: true, error: null }));
-    const supabase = createSupabaseBrowserClient();
-    const merged = { ...previousSettings, ...next };
-    const validation = barangaySettingsSchema.safeParse(merged);
-    if (!validation.success) {
-      const message = validation.error.issues[0]?.message ?? 'Invalid settings';
-      setState((s) => ({ ...s, saving: false, error: message }));
-      toast.showError(message);
-      return;
+    const toastAttempt = beginAttempt('updateSettings');
+    try {
+      if (!barangayId || !state.settings) return;
+      const previousSettings = state.settings;
+      setState((s) => ({ ...s, saving: true, error: null }));
+      const supabase = createSupabaseBrowserClient();
+      const merged = { ...previousSettings, ...next };
+      const validation = barangaySettingsSchema.safeParse(merged);
+      if (!validation.success) {
+        const message = validation.error.issues[0]?.message ?? 'Invalid settings';
+        setState((s) => ({ ...s, saving: false, error: message }));
+        toast.error(message, { id: toastAttempt });
+        return;
+      }
+
+      const { error } = await supabase
+        .from('barangays')
+        .update({ config: validation.data })
+        .eq('id', barangayId);
+
+      setState((s) => ({ ...s, saving: false }));
+
+      if (error) {
+        setState((s) => ({ ...s, error: error.message }));
+        toast.error(`Failed to save settings: ${error.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'settings',
+        entityLabel: buildSettingsChangeLabel(previousSettings, validation.data),
+        changes: {
+          before: previousSettings as unknown as Record<string, unknown>,
+          after: validation.data as unknown as Record<string, unknown>,
+        },
+      }).catch(() => {});
+
+      setState((s) => ({ ...s, settings: validation.data }));
+      toast.success('Settings saved.', { id: toastAttempt });
+
+    } catch (cause) {
+      toast.warning('The change could not be confirmed. Refresh before trying again.', { id: toastAttempt });
+      setState(s => ({ ...s, saving: false, error: 'Settings save could not be confirmed. Refresh before retrying.' }));
     }
-
-    const { error } = await supabase
-      .from('barangays')
-      .update({ config: validation.data })
-      .eq('id', barangayId);
-
-    setState((s) => ({ ...s, saving: false }));
-
-    if (error) {
-      setState((s) => ({ ...s, error: error.message }));
-      toast.showError(`Failed to save settings: ${error.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'settings',
-      entityLabel: buildSettingsChangeLabel(previousSettings, validation.data),
-      changes: {
-        before: previousSettings as unknown as Record<string, unknown>,
-        after: validation.data as unknown as Record<string, unknown>,
-      },
-    }).catch(() => {});
-
-    setState((s) => ({ ...s, settings: validation.data }));
-    toast.showSuccess('Settings saved.');
   }
 
   return {

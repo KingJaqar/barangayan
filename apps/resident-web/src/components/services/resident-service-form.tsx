@@ -27,6 +27,7 @@ import { LoadingStatus } from '../shared/loading-status';
 import { Button } from '../ui/button';
 import { beginAttempt, eventId, notify } from '../../lib/notify';
 import { serviceSubmissionFailure } from '../../lib/service-feedback';
+import { ResidentVerificationNotice } from '../auth/resident-action-notices';
 
 type Client = SupabaseClient<Database>;
 type Requirement = ServiceSubmissionInput['attachments'][number]['requirementCode'];
@@ -146,6 +147,40 @@ export function useResidentEvidence(client: Client) {
   return { profile, evidence, images, loading, error, refresh };
 }
 
+function VerifiedIdNotice({ userId }: { userId: string }) {
+  const storageKey = `barangayan:verified-id-notice-dismissed:${userId}`;
+  const [dismissed, setDismissed] = useState(() => {
+    try {
+      return window.localStorage.getItem(storageKey) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  if (dismissed) return null;
+
+  return (
+    <aside className="my-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4">
+      <p className="font-semibold">Valid ID Verified</p>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => {
+          try {
+            window.localStorage.setItem(storageKey, 'true');
+          } catch {
+            // Still dismiss for this visit when browser storage is unavailable.
+          }
+          setDismissed(true);
+        }}
+      >
+        Don’t show again
+      </Button>
+    </aside>
+  );
+}
+
 export function VerificationNotice({
   client,
   profileHref = '/settings/valid-id',
@@ -162,24 +197,16 @@ export function VerificationNotice({
     );
   if (!profile && !error) return null;
   const state = idVerificationState(profile);
-  if (state === 'verified')
-    return (
-      <p className="my-4 rounded-xl border p-4 font-semibold">
-        Valid ID Verified
-      </p>
-    );
+  if (state === 'verified' && profile)
+    return <VerifiedIdNotice key={profile.id} userId={profile.id} />;
   return (
-    <aside className="my-4 rounded-xl border border-amber-500 bg-amber-50 p-4 text-zinc-900">
-      <p>{error ?? (profileHref === '/settings/valid-id' ? idVerificationMessages : legacyIdVerificationMessages)[state]}</p>
-      <a className="mt-2 inline-block font-semibold underline" href={profileHref}>
-        Verify Now
-      </a>
+    <ResidentVerificationNotice message={error ?? (profileHref === '/settings/valid-id' ? idVerificationMessages : legacyIdVerificationMessages)[state]} href={profileHref}>
       {error ? (
         <button type="button" onClick={() => void refresh(true)} className="ml-4 underline">
           Retry verification check
         </button>
       ) : null}
-    </aside>
+    </ResidentVerificationNotice>
   );
 }
 

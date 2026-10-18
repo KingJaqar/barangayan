@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { QrCodeDisplay } from './qr-code-display';
 import type { Json, Tables } from '@barangayan/shared';
 
@@ -18,7 +18,6 @@ type EvacuationCenter = Tables<'evacuation_centers'>;
 export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCenter[] }) {
   const [selectedCenterId, setSelectedCenterId] = useState<string>(initialCenters[0]?.id ?? '');
   const router = useRouter();
-  const toast = useToast();
 
   const selectedCenter = initialCenters.find((c) => c.id === selectedCenterId);
 
@@ -36,38 +35,44 @@ export function QrCodesTab({ initialCenters }: { initialCenters: EvacuationCente
   }, [selectedCenter]);
 
   async function regenerateAll() {
-    const supabase = createSupabaseBrowserClient();
-    for (const center of initialCenters) {
-      const p = {
-        type: 'EVACUATION_CENTER_CHECKIN',
-        version: '1.0',
-        center_id: center.id,
-        center_name: center.name,
-        barangay_id: center.barangay_id,
-        generated_at: new Date().toISOString(),
-      };
-      const { error } = await supabase
-        .from('evacuation_center_qr_codes')
-        // No barangay_id column here — the row is scoped to a barangay through its
-        // evacuation center (see migration 0050).
-        .upsert({ evacuation_center_id: center.id, qr_payload: p as Json }, {
-          onConflict: 'evacuation_center_id',
-        });
-      if (error) {
-        toast.showError(`Failed to generate QR for ${center.name}: ${error.message}`);
-        return;
+    const toastAttempt = beginAttempt('regenerateAll');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      for (const center of initialCenters) {
+        const p = {
+          type: 'EVACUATION_CENTER_CHECKIN',
+          version: '1.0',
+          center_id: center.id,
+          center_name: center.name,
+          barangay_id: center.barangay_id,
+          generated_at: new Date().toISOString(),
+        };
+        const { error } = await supabase
+          .from('evacuation_center_qr_codes')
+          // No barangay_id column here — the row is scoped to a barangay through its
+          // evacuation center (see migration 0050).
+          .upsert({ evacuation_center_id: center.id, qr_payload: p as Json }, {
+            onConflict: 'evacuation_center_id',
+          });
+        if (error) {
+          toast.error(`Failed to generate QR for ${center.name}: ${error.message}`, { id: toastAttempt });
+          return;
+        }
       }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'emergency_qr',
+        entityLabel: 'All evacuation center QR codes',
+        metadata: { centerCount: initialCenters.length },
+      }).catch(() => {});
+
+      toast.success('QR codes regenerated for all centers.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'emergency_qr',
-      entityLabel: 'All evacuation center QR codes',
-      metadata: { centerCount: initialCenters.length },
-    }).catch(() => {});
-
-    toast.showSuccess('QR codes regenerated for all centers.');
-    router.refresh();
   }
 
   return (

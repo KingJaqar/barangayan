@@ -28,7 +28,7 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
     if (isMissingRow(error)) notFound();
     return (
       <div className="mx-auto max-w-2xl">
-        <ReadFailure message="We couldn't load this service." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="this service" message="We couldn't load this service." />
       </div>
     );
   }

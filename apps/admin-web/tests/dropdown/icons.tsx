@@ -6,7 +6,8 @@ import { FaqForm } from '../../src/app/(admin)/faq/faq-form';
 import { EmergencyForm } from '../../src/app/(admin)/hub/emergency-form';
 import { ScheduleForm } from '../../src/app/(admin)/waste-management/schedule-form';
 import { AdminSelect } from '../../src/components/admin/dropdown/admin-select';
-import { ToastProvider } from '../../src/components/ui/toast';
+import { Toaster } from '../../src/components/ui/sonner';
+import { ThemeControllerProvider } from '../../src/components/ui/theme-controller';
 
 function IconFixture() {
   const form = new URLSearchParams(location.search).get('form');
@@ -24,4 +25,4 @@ function IconFixture() {
 }
 
 const root = document.getElementById('root');
-if (root) createRoot(root).render(<ToastProvider><main style={{ padding: 16, maxWidth: 800 }}><IconFixture /></main></ToastProvider>);
+if (root) createRoot(root).render(<ThemeControllerProvider><Toaster /><main style={{ padding: 16, maxWidth: 800 }}><IconFixture /></main></ThemeControllerProvider>);

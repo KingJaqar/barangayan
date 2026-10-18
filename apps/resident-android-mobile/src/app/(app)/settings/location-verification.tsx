@@ -31,13 +31,16 @@ import { AMPID_I_SAN_MATEO_CENTER, MapView } from '@/components/map-view';
 import { PrimaryButton } from '@/components/primary-button';
 import { TextField } from '@/components/text-field';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 
 export default function LocationVerificationScreen() {
+  const { fontId } = useFontPreference();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -181,7 +184,7 @@ export default function LocationVerificationScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
         <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
           <Pressable
@@ -190,7 +193,7 @@ export default function LocationVerificationScreen() {
             accessibilityRole="button"
             accessibilityLabel="Go back"
             hitSlop={Spacing.two}>
-            <Ionicons name="chevron-back" size={26} color="#fff" />
+            <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
           </Pressable>
           <View style={styles.headerContent}>
             <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
@@ -212,16 +215,16 @@ export default function LocationVerificationScreen() {
                 onPickerRejected={handlePickerRejected}
                 style={StyleSheet.absoluteFill}
               />
-              <View style={styles.hintPill} pointerEvents="none">
-                <Ionicons name="hand-left-outline" size={13} color="#fff" />
-                <ThemedText type="small" style={styles.hintPillText}>
+              <View style={[styles.hintPill, { backgroundColor: theme.text + 'BF' }]} pointerEvents="none">
+                <Ionicons name="hand-left-outline" size={13} color={theme.background} />
+                <ThemedText type="small" style={[styles.hintPillText, { color: theme.background }]}>
                   {locating ? 'Locating you…' : 'Tap or drag the pin'}
                 </ThemedText>
               </View>
               {rejectedNotice && (
-                <View style={styles.rejectedBanner}>
-                  <Ionicons name="warning-outline" size={16} color="#fff" />
-                  <ThemedText type="small" style={styles.rejectedBannerText}>
+                <View style={[styles.rejectedBanner, { backgroundColor: theme.accentRed }]}>
+                  <Ionicons name="warning-outline" size={16} color={theme.onPrimary} />
+                  <ThemedText type="small" style={[styles.rejectedBannerText, { color: theme.onPrimary }]}>
                     Please pin a location inside {profile?.barangays?.name ?? 'the barangay'}&apos;s boundary.
                   </ThemedText>
                 </View>
@@ -230,7 +233,7 @@ export default function LocationVerificationScreen() {
 
             <ScrollView
               style={[styles.sheet, { backgroundColor: theme.backgroundElement, borderTopColor: theme.backgroundSelected }]}
-              contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.three, gap: Spacing.two }}
+              contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.two, gap: Spacing.two }}
               keyboardShouldPersistTaps="handled">
               <ThemedText themeColor="textSecondary" style={styles.sheetHint}>
                 Drag the pin to your exact home location inside the barangay boundary, then save.
@@ -261,6 +264,7 @@ export default function LocationVerificationScreen() {
                 {addressLoading && <ActivityIndicator size="small" color={theme.primary} />}
               </View>
               <TextField
+                style={{ fontFamily: getMobileFontFamily(fontId) }}
                 placeholder={addressLoading ? 'Detecting address…' : 'Type to correct the detected address'}
                 value={address}
                 onChangeText={(v) => {
@@ -278,7 +282,8 @@ export default function LocationVerificationScreen() {
                 </ThemedText>
               )}
               <PrimaryButton
-                label="📍 Detect Your Location"
+                label="Detect Your Location"
+                leadingIcon={<Ionicons name="location-outline" size={18} color={theme.text} />}
                 variant="secondary"
                 onPress={handleDetectLocation}
                 loading={locating}
@@ -321,7 +326,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
   },
   mapArea: { flex: 1 },
   hintPill: {
@@ -331,12 +335,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.one,
-    backgroundColor: 'rgba(15,23,42,0.75)',
     borderRadius: 20,
     paddingHorizontal: 14,
     paddingVertical: 8,
   },
-  hintPillText: { color: '#fff' },
+  hintPillText: {},
   rejectedBanner: {
     position: 'absolute',
     bottom: Spacing.three,
@@ -345,12 +348,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.two,
-    backgroundColor: '#DC2626',
     borderRadius: 14,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.two,
   },
-  rejectedBannerText: { color: '#fff', flex: 1 },
+  rejectedBannerText: { flex: 1 },
   // Capped so the map above (mapArea, flex: 1) always gets the majority of the
   // screen — without a cap this ScrollView sizes to its content and, with the
   // "Previously Saved Location" card showing, was squeezing the map down to a
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
   // ScrollView is there for smaller devices / longer detected addresses.
   sheet: {
     maxHeight: '34%',
-    padding: Spacing.three,
+    padding: Spacing.two + Spacing.one,
     gap: Spacing.one,
     borderTopWidth: StyleSheet.hairlineWidth,
   },

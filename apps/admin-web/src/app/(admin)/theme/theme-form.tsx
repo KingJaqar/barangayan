@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { ACCENT_COLORS, FONT_OPTIONS } from '@barangayan/shared';
 import { Check, Moon, Palette, Pipette, Plus, Sun, Type, X } from 'lucide-react';
@@ -38,6 +39,7 @@ export function ThemeForm({ initialTheme, initialAccentColor, initialCustomColor
   const [customHexError, setCustomHexError] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const didReconcile = useRef(false);
+  const latestSave = useRef(0);
 
   // Reconcile local (localStorage-backed) state with the DB only on a genuinely
   // first-ever visit to this browser — i.e. localStorage never had a value at all.
@@ -78,22 +80,30 @@ export function ThemeForm({ initialTheme, initialAccentColor, initialCustomColor
     fontId?: string;
   }) {
     setSaved(false);
-    const supabase = createSupabaseBrowserClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+    const revision = ++latestSave.current;
+    const attempt = beginAttempt('admin-appearance');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) { if (revision === latestSave.current) notify.warning('Appearance updated locally. Sign in again to save it to your account.', { id: attempt }); return; }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        theme_preference: next.theme ?? theme,
-        accent_color: next.accentColor ?? accent,
-        custom_accent_colors: next.customColors ?? customColors,
-        font_preference: next.fontId ?? fontId,
-      })
-      .eq('id', user.id);
-    if (!error) setSaved(true);
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          theme_preference: next.theme ?? theme,
+          accent_color: next.accentColor ?? accent,
+          custom_accent_colors: next.customColors ?? customColors,
+          font_preference: next.fontId ?? fontId,
+        })
+        .eq('id', user.id);
+      if (revision !== latestSave.current) return;
+      if (error) notify.error('Could not save your appearance preferences. The local preview is still applied.', { id: attempt });
+      else { setSaved(true); notify.success('Appearance preferences saved.', { id: attempt }); }
+    } catch {
+      if (revision === latestSave.current) notify.warning('Appearance updated locally. We could not confirm it was saved to your account.', { id: attempt });
+    }
   }
 
   function handleThemeChange(option: 'light' | 'dark') {
@@ -248,7 +258,7 @@ export function ThemeForm({ initialTheme, initialAccentColor, initialCustomColor
           </div>
         </section>
         <div className={styles.personalNote}><span className={styles.noteIcon}><Palette size={16} /></span><div><h3>Make yourself at home.</h3><p>These settings are personal to your account and apply across your admin dashboard.</p></div></div>
-        <p className={styles.status} role="status" aria-live="polite">{saved ? <><Check size={14} /> Preferences saved</> : 'Changes apply instantly'}</p>
+        <p className={styles.status}>{saved ? <><Check size={14} /> Preferences saved</> : 'Changes apply instantly'}</p>
       </div>
     </div>
   );

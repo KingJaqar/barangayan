@@ -12,7 +12,7 @@ import { PendingHint } from '@/components/ui/loading';
 import { useEmergencyHotlines } from '@/hooks/use-emergency-hotlines';
 
 export function DirectoryContent({ barangayId }: { barangayId: string | null }) {
-  const { hotlines, isInitialLoading, isRefreshing, isReady, error, refetch } = useEmergencyHotlines(barangayId);
+  const { hotlines, isInitialLoading, isRefreshing, isReady, error, errorAnnounced, refetch } = useEmergencyHotlines(barangayId);
   const [query, setQuery] = useState('');
 
   const visibleHotlines = useMemo(() => {
@@ -58,11 +58,11 @@ export function DirectoryContent({ barangayId }: { barangayId: string | null }) 
           </PendingHint>
         </div>
         {isReady && error ? (
-          <InlineReadError
+          <InlineReadError announce={!errorAnnounced}
             tone="warning"
             className="mb-3"
             message="Couldn't update the directory. Showing the last loaded contacts, which may be out of date."
-            onRetry={refetch}
+            onRetry={() => refetch('the emergency directory')}
           />
         ) : null}
         {isInitialLoading ? (
@@ -70,7 +70,7 @@ export function DirectoryContent({ barangayId }: { barangayId: string | null }) 
             <HotlineSkeletonRows />
           </div>
         ) : !isReady ? (
-          <InlineReadError message="We couldn't load the directory. Check your connection, then try again." onRetry={refetch} />
+          <InlineReadError announce={!errorAnnounced} message="We couldn't load the directory. Check your connection, then try again." onRetry={() => refetch('the emergency directory')} />
         ) : visibleHotlines.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
             {hotlines.length === 0 ? 'No contacts available.' : 'No contacts match your search.'}

@@ -1,6 +1,11 @@
-export function useRouter() { return { refresh() { window.dispatchEvent(new Event('record-refresh')); }, push() {}, replace() {} }; }
+export function useRouter() { return { refresh() { window.dispatchEvent(new Event('record-refresh')); }, push() {}, replace(href) { window.history.replaceState(null, '', href); window.dispatchEvent(new Event('record-refresh')); } }; }
 export function usePathname() { return '/fixture'; }
-export function useSearchParams() { return new URLSearchParams({ tab: 'all' }); }
+export function useSearchParams() {
+  const params = new URLSearchParams({ tab: 'all' });
+  const record = new URLSearchParams(location.search).get('record');
+  if (record) params.set('record', record);
+  return params;
+}
 export function createSupabaseBrowserClient() {
   return { channel() { return { on() { return this; }, subscribe() { return this; } }; }, removeChannel() {},
     from(table) {
@@ -48,6 +53,7 @@ export function createSupabaseBrowserClient() {
         fixture.idEvidence.reviewed_at = new Date().toISOString();
         fixture.idEvidence.reviewed_by = 'signed-in-admin';
         row.id_verification_status = input.p_input.decision === 'verified' ? 'verified' : 'verification_failed';
+        if (fixture.idReviewProfilePatch) Object.assign(row, fixture.idReviewProfilePatch);
         return { data: fixture.idEvidence.id, error: null };
       }
       const statuses = { begin_processing_request: 'in_progress', mark_request_ready_for_pickup: 'ready_for_pickup', complete_service_request: 'completed', cancel_service_request: 'cancelled', withdraw_incident: 'withdrawn' };
@@ -79,6 +85,7 @@ export async function logAdminAction() {}
 export async function mutateAdminRecord(name, id, operation, expected, patch) {
   await new Promise(resolve => setTimeout(resolve, 50));
   const fixture = window.recordFixture;
+  if (fixture.enforceExpected && fixture.rows[name]?.updated_at !== expected) return { error: 'Fixture stale profile version.' };
   if (fixture.throwNext) { fixture.throwNext = false; throw new Error('Fixture transport failure.'); }
   if (fixture.failNext) { fixture.failNext = false; return { error: 'Fixture permission or constraint failure. Please retry.' }; }
   fixture.mutations.push({ name, id, operation, expected, patch });
@@ -91,7 +98,8 @@ export async function mutateAdminRecord(name, id, operation, expected, patch) {
       else fixture.rows[name][key] = value;
     }
   } else Object.assign(fixture.rows[name], patch);
-  return { error: null };
+  if (name === 'requests' && operation === 'save' && fixture.enforceExpected) fixture.rows[name].updated_at = new Date().toISOString();
+  return { error: null, row: fixture.rows[name] ? structuredClone(fixture.rows[name]) : undefined };
 }
 
 export async function loadRequestReview() {

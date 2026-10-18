@@ -34,7 +34,7 @@ export default async function DocumentsPage() {
 
       {/* A failed read is not an empty catalog. */}
       {error ? (
-        <ReadFailure message="We couldn't load the document catalog." />
+        <ReadFailure resultId={crypto.randomUUID()} contentName="the document catalog" message="We couldn't load the document catalog." />
       ) : (
         <DocumentsList documentTypes={documentTypes ?? []} isAuthenticated={user !== null} />
       )}

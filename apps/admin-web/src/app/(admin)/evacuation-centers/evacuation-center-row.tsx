@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -37,7 +37,7 @@ function formatPosition(position: unknown): string {
 
 export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -113,72 +113,38 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
   }
 
   async function handleSave(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSave');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const parsedLat = lat === '' ? NaN : parseFloat(lat);
-    const parsedLng = lng === '' ? NaN : parseFloat(lng);
+      const parsedLat = lat === '' ? NaN : parseFloat(lat);
+      const parsedLng = lng === '' ? NaN : parseFloat(lng);
 
-    const result = evacuationCenterSchema.safeParse({
-      name,
-      address: address || undefined,
-      lat: parsedLat,
-      lng: parsedLng,
-      capacity: capacity === '' ? null : parseInt(capacity, 10),
-      current_occupancy: currentOccupancy === '' ? 0 : parseInt(currentOccupancy, 10),
-      is_active: isActive,
-      contact_number: contactNumber || undefined,
-      facilities: facilitiesState,
-      verified,
-    });
+      const result = evacuationCenterSchema.safeParse({
+        name,
+        address: address || undefined,
+        lat: parsedLat,
+        lng: parsedLng,
+        capacity: capacity === '' ? null : parseInt(capacity, 10),
+        current_occupancy: currentOccupancy === '' ? 0 : parseInt(currentOccupancy, 10),
+        is_active: isActive,
+        contact_number: contactNumber || undefined,
+        facilities: facilitiesState,
+        verified,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('evacuation_centers')
-      .update({
-        name: result.data.name,
-        address: result.data.address || null,
-        position: { lat: result.data.lat, lng: result.data.lng },
-        capacity: result.data.capacity,
-        current_occupancy: result.data.current_occupancy,
-        is_active: result.data.is_active,
-        contact_number: result.data.contact_number || null,
-        facilities: result.data.facilities,
-        verified: result.data.verified,
-      })
-      .eq('id', center.id);
-    setSubmitting(false);
-
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Failed to save: ${updateError.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'evacuation_center',
-      entityId: center.id,
-      entityLabel: result.data.name,
-      changes: {
-        before: {
-          name: center.name,
-          address: center.address,
-          position: center.position,
-          capacity: center.capacity,
-          current_occupancy: center.current_occupancy,
-          is_active: center.is_active,
-          contact_number: center.contact_number,
-          facilities: center.facilities,
-          verified: center.verified,
-        },
-        after: {
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from('evacuation_centers')
+        .update({
           name: result.data.name,
           address: result.data.address || null,
           position: { lat: result.data.lat, lng: result.data.lng },
@@ -188,36 +154,83 @@ export function EvacuationCenterRow({ center }: { center: EvacuationCenter }) {
           contact_number: result.data.contact_number || null,
           facilities: result.data.facilities,
           verified: result.data.verified,
-        },
-      },
-    }).catch(() => {});
+        })
+        .eq('id', center.id);
+      setSubmitting(false);
 
-    toast.showSuccess('Center updated.');
-    setIsEditing(false);
-    router.refresh();
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'evacuation_center',
+        entityId: center.id,
+        entityLabel: result.data.name,
+        changes: {
+          before: {
+            name: center.name,
+            address: center.address,
+            position: center.position,
+            capacity: center.capacity,
+            current_occupancy: center.current_occupancy,
+            is_active: center.is_active,
+            contact_number: center.contact_number,
+            facilities: center.facilities,
+            verified: center.verified,
+          },
+          after: {
+            name: result.data.name,
+            address: result.data.address || null,
+            position: { lat: result.data.lat, lng: result.data.lng },
+            capacity: result.data.capacity,
+            current_occupancy: result.data.current_occupancy,
+            is_active: result.data.is_active,
+            contact_number: result.data.contact_number || null,
+            facilities: result.data.facilities,
+            verified: result.data.verified,
+          },
+        },
+      }).catch(() => {});
+
+      toast.success('Center updated.', { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('evacuation_centers')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', center.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('evacuation_centers')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', center.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'evacuation_center',
+        entityId: center.id,
+        entityLabel: center.name,
+        metadata: { name: center.name, address: center.address, capacity: center.capacity },
+      }).catch(() => {});
+
+      toast.success('Center archived.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'evacuation_center',
-      entityId: center.id,
-      entityLabel: center.name,
-      metadata: { name: center.name, address: center.address, capacity: center.capacity },
-    }).catch(() => {});
-
-    toast.showSuccess('Center archived.');
-    router.refresh();
   }
 
   if (isEditing) {

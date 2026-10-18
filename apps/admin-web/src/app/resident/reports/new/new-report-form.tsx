@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 
-import { useToast } from '@/components/ui/toast';
+import { notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { incidentReportSchema, reverseGeocode, type Tables } from '@barangayan/shared';
 
@@ -13,7 +13,6 @@ type ZoneOption = Pick<Tables<'waste_zones'>, 'id' | 'name'>;
 
 export function NewReportForm({ categories, zones }: { categories: CategoryOption[]; zones: ZoneOption[] }) {
   const router = useRouter();
-  const toast = useToast();
   const [title, setTitle] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [zoneId, setZoneId] = useState('');
@@ -103,11 +102,11 @@ export function NewReportForm({ categories, zones }: { categories: CategoryOptio
     setSubmitting(false);
 
     if (insertErr) {
-      toast.showError(`Failed to submit report: ${insertErr.message}`);
+      toast.error(`Failed to submit report: ${insertErr.message}`);
       return;
     }
 
-    toast.showSuccess('Report submitted.');
+    toast.success('Report submitted.');
     router.replace('/resident/reports');
     router.refresh();
   }

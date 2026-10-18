@@ -21,6 +21,7 @@ import { HeartPulse, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { ApplicantForm } from '@/components/health/applicant-form';
+import { ResidentActionGuard } from '@/components/auth/resident-action-guard';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { MedicalDrive } from '@/hooks/use-medical-drives';
 
@@ -50,21 +51,10 @@ function DrawerSkeleton() {
   );
 }
 
-export function RegisterDrawer({
-  driveId,
-  open,
-  onClose,
-  userId,
-}: {
+function RegistrationContent({ driveId, userId, onClose }: {
   driveId: string | null;
-  open: boolean;
-  onClose: () => void;
-  /** Always a real id in practice — guests never reach this drawer (DriveCard renders a
-   * "Log In to Register" link instead of triggering it, see drive-card.tsx). Typed
-   * nullable anyway since active-drives-content.tsx's own userId is `string | null` and
-   * this drawer is always mounted regardless of auth state; the effect below just no-ops
-   * without one. */
   userId: string | null;
+  onClose: () => void;
 }) {
   const [data, setData] = useState<RegisterDrawerData | null>(null);
 
@@ -105,6 +95,18 @@ export function RegisterDrawer({
     };
   }, [driveId, userId]);
 
+  if (!data) return <DrawerSkeleton />;
+  return <ApplicantForm drive={data.drive} residentName={data.residentName}
+    residentBirthDate={data.residentBirthDate} residentAddress={data.residentAddress}
+    householdMembers={data.householdMembers} onDone={onClose} />;
+}
+
+export function RegisterDrawer({ driveId, open, onClose, userId }: {
+  driveId: string | null;
+  open: boolean;
+  onClose: () => void;
+  userId: string | null;
+}) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(v) => { if (!v) onClose(); }} modal={false}>
       <AnimatePresence>
@@ -139,18 +141,9 @@ export function RegisterDrawer({
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-5 py-5">
-                  {!data ? (
-                    <DrawerSkeleton />
-                  ) : (
-                    <ApplicantForm
-                      drive={data.drive}
-                      residentName={data.residentName}
-                      residentBirthDate={data.residentBirthDate}
-                      residentAddress={data.residentAddress}
-                      householdMembers={data.householdMembers}
-                      onDone={onClose}
-                    />
-                  )}
+                  <ResidentActionGuard key={driveId} action="drive" next={`/health/register/${driveId}`} onClose={onClose}>
+                    <RegistrationContent driveId={driveId} userId={userId} onClose={onClose} />
+                  </ResidentActionGuard>
                 </div>
               </motion.div>
             </DialogPrimitive.Content>

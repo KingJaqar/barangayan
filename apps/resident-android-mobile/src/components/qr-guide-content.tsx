@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Camera } from 'expo-camera';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -58,25 +58,46 @@ export function QrGuideContent() {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={false}>
-        <View style={styles.titleRow}>
-          <ThemedText style={[styles.mainTitle, { color: theme.primary }]}>
-            QR Check-In Guide
+      <View style={styles.content}>
+        <View style={styles.intro}>
+          <View style={styles.titleRow}>
+            <ThemedText style={[styles.mainTitle, { color: theme.primary }]}>
+              QR Check-In Guide
+            </ThemedText>
+            {isOffline && (
+              <View style={[styles.offlineBadge, { borderColor: theme.primary }]}>
+                <Ionicons name="wifi-outline" size={10} color={theme.primary} />
+                <ThemedText style={[styles.offlineBadgeText, { color: theme.primary }]}>Offline</ThemedText>
+              </View>
+            )}
+          </View>
+          <ThemedText themeColor="textSecondary" style={styles.subtitle}>
+            Follow these quick steps to register your presence securely.
           </ThemedText>
-          {isOffline && (
-            <View style={[styles.offlineBadge, { borderColor: theme.primary }]}>
-              <Ionicons name="wifi-outline" size={10} color={theme.primary} />
-              <ThemedText style={[styles.offlineBadgeText, { color: theme.primary }]}>Offline</ThemedText>
-            </View>
-          )}
         </View>
-        <ThemedText themeColor="textSecondary" style={styles.subtitle}>
-          Follow these quick steps to register your presence securely.
-        </ThemedText>
+
+        <View style={styles.buttonRow}>
+          <Pressable
+            style={[styles.startButton, { backgroundColor: theme.primary }]}
+            onPress={handleStartScanning}
+            accessibilityRole="button"
+            accessibilityLabel="Scan QR code">
+            <Ionicons name="qr-code-outline" size={20} color={theme.onPrimary} />
+            <ThemedText style={[styles.startButtonText, { color: theme.onPrimary }]}>
+              Scan QR
+            </ThemedText>
+          </Pressable>
+          <Pressable
+            style={[styles.startButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
+            onPress={handleOpenShowQr}
+            accessibilityRole="button"
+            accessibilityLabel="Show QR code">
+            <Ionicons name="checkbox-outline" size={20} color={theme.primary} />
+            <ThemedText style={[styles.startButtonText, { color: theme.primary }]}>
+              Show QR
+            </ThemedText>
+          </Pressable>
+        </View>
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
@@ -90,27 +111,25 @@ export function QrGuideContent() {
           <>
             {whyScan && (
               <View style={[styles.whyCard, { backgroundColor: whyScan.icon_bg || '#FEF9E7' }]}>
-                <View style={[styles.shieldIconContainer, { backgroundColor: whyScan.icon_bg || '#FEF9E7' }]}>
-                  <Ionicons name={whyScan.icon as any} size={28} color={whyScan.icon_color || theme.primary} />
-                </View>
-                <View style={styles.whyTextContainer}>
+                <View style={styles.whyHeader}>
+                  <Ionicons name={whyScan.icon as any} size={20} color={whyScan.icon_color || theme.primary} />
                   {/* whyCard's background is a fixed light pastel from the DB (icon_bg),
                       not theme-linked — its text must stay fixed dark too, or it goes
                       invisible against the light card in dark mode. */}
                   <ThemedText type="smallBold" style={[styles.whyTitle, { color: '#1F2937' }]}>
                     {whyScan.title}
                   </ThemedText>
-                  <ThemedText style={[styles.whyBody, { color: '#4B5563' }]}>
-                    {whyScan.body}
-                  </ThemedText>
                 </View>
+                <ThemedText style={[styles.whyBody, { color: '#4B5563' }]}>
+                  {whyScan.body}
+                </ThemedText>
               </View>
             )}
 
             {howItWorks && (() => {
               const steps = (howItWorks.content as unknown as { step: number; title: string; desc: string }[] | undefined) ?? [];
               return (
-                <View>
+                <View style={[styles.stepsCard, { borderColor: theme.backgroundSelected }]}>
                   <ThemedText type="smallBold" style={[styles.howTitle, { color: theme.text }]}>
                     {howItWorks.title}
                   </ThemedText>
@@ -126,9 +145,6 @@ export function QrGuideContent() {
                               {step.step}
                             </ThemedText>
                           </View>
-                          {idx < steps.length - 1 && (
-                            <View style={styles.stepLine} />
-                          )}
                         </View>
                         <View style={styles.stepContent}>
                           <View style={styles.stepTextColumn}>
@@ -148,31 +164,7 @@ export function QrGuideContent() {
             })()}
           </>
         )}
-
-        <View style={styles.buttonRow}>
-          <Pressable
-            style={[styles.startButton, { backgroundColor: theme.primary }]}
-            onPress={handleStartScanning}
-            accessibilityRole="button"
-            accessibilityLabel="Scan QR code">
-            <Ionicons name="qr-code-outline" size={22} color={theme.onPrimary} />
-            <ThemedText style={[styles.startButtonText, { color: theme.onPrimary }]}>
-              Scan QR
-            </ThemedText>
-          </Pressable>
-
-          <Pressable
-            style={[styles.startButton, styles.secondaryButton, { backgroundColor: theme.background, borderColor: theme.primary, borderWidth: 1 }]}
-            onPress={handleOpenShowQr}
-            accessibilityRole="button"
-            accessibilityLabel="Show QR code">
-            <Ionicons name="checkbox-outline" size={22} color={theme.primary} />
-            <ThemedText style={[styles.startButtonText, { color: theme.primary }]}>
-              Show QR
-            </ThemedText>
-          </Pressable>
-        </View>
-      </ScrollView>
+      </View>
 
       <QrScannerOverlay visible={showScanner} onClose={handleCloseScanner} />
       <QrShowModal visible={showShowQr} onClose={handleCloseShowQr} />
@@ -187,21 +179,18 @@ export function QrGuideContent() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
   },
-  scrollView: {
-    flex: 1,
+  content: {
+    gap: 12,
   },
-  scrollContent: {
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.six,
-    gap: Spacing.five,
+  intro: {
+    gap: 4,
   },
   mainTitle: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: '700',
-    lineHeight: 34,
+    lineHeight: 26,
   },
   titleRow: {
     flexDirection: 'row',
@@ -223,105 +212,91 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: -Spacing.three,
+    fontSize: 13,
+    lineHeight: 18,
   },
   whyCard: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    borderRadius: 16,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: '#F3E8C7',
-    padding: Spacing.four,
-    gap: Spacing.three,
+    padding: 12,
+    gap: 6,
   },
-  shieldIconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  whyHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  whyTextContainer: {
-    flex: 1,
-    gap: Spacing.one,
+    gap: 8,
   },
   whyTitle: {
-    fontSize: 17,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '700',
   },
   whyBody: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  stepsCard: {
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
   },
   howTitle: {
-    fontSize: 18,
+    fontSize: 15,
+    lineHeight: 21,
     fontWeight: '700',
   },
   howBody: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: Spacing.three,
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 2,
+    marginBottom: 12,
   },
   stepsContainer: {
-    gap: Spacing.four,
+    gap: 12,
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    gap: 10,
   },
   stepLeft: {
     alignItems: 'center',
-    width: 32,
+    width: 24,
     flexShrink: 0,
-    position: 'relative',
   },
   stepNumber: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 24,
+    minHeight: 24,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 2,
   },
   stepNumberText: {
-    fontSize: 16,
+    fontSize: 12,
+    lineHeight: 20,
     fontWeight: '700',
-  },
-  stepLine: {
-    position: 'absolute',
-    top: 32,
-    bottom: -20,
-    left: 15,
-    width: 2,
-    backgroundColor: '#0F6E5B',
-    opacity: 0.3,
   },
   stepContent: {
     flex: 1,
-    paddingBottom: Spacing.two,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   stepTextColumn: {
     flex: 1,
-    gap: Spacing.one,
+    gap: 3,
   },
   stepTitle: {
-    fontSize: 16,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '700',
   },
   stepBody: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 19,
   },
   buttonRow: {
     flexDirection: 'row',
-    gap: Spacing.three,
-    marginTop: Spacing.two,
+    gap: 8,
   },
   startButton: {
     flex: 1,
@@ -329,40 +304,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.two,
-    height: 52,
-    borderRadius: 26,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  secondaryButton: {
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    minHeight: 48,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
   },
   startButtonText: {
-    fontSize: 16,
+    flexShrink: 1,
+    fontSize: 14,
+    lineHeight: 20,
     fontWeight: '700',
-    letterSpacing: 0.3,
   },
   loadingContainer: {
-    paddingVertical: Spacing.six,
+    paddingVertical: 24,
     alignItems: 'center',
   },
 });

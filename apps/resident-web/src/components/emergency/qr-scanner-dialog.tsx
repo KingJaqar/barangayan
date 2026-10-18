@@ -136,6 +136,7 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
     }
 
     async function start() {
+      const attempt = beginAttempt('scanner-camera');
       try {
         const { Html5Qrcode } = await import('html5-qrcode');
         if (cancelled) return;
@@ -159,6 +160,7 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
       } catch (thrown) {
         if (cancelled) return;
         setProblem(cameraProblem(thrown));
+        notify.error(cameraProblem(thrown) === 'denied' ? 'Camera access is blocked. Allow access or upload a QR image.' : "Couldn't start the camera. Try again or upload a QR image.", { id: attempt });
         setState('unavailable');
       }
     }
@@ -205,7 +207,7 @@ export function QrScannerDialog({ open, onClose, userId, barangayId, userBaranga
         <div id={elementId} className="h-full w-full [&_video]:h-full [&_video]:w-full [&_video]:object-cover" />
 
         {state === 'unavailable' ? (
-          <div role="alert" className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-card/90 px-8 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-card/90 px-8 text-center">
             <CameraOff aria-hidden size={40} className="text-muted-foreground" />
             <p className="text-sm font-semibold">{guidance.title}</p>
             <p className="max-w-sm text-xs text-muted-foreground">{guidance.body}</p>

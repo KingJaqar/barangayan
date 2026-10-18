@@ -52,6 +52,7 @@ export function ResidentShell({ barangayName, residentName, avatarUrl, isAuthent
           <TopNav />
 
           <div className={styles.account}>
+            <TopNav group="account" />
             {isAuthenticated ? (
               <>
                 <div className={`${styles.residentCopy} text-right`}>

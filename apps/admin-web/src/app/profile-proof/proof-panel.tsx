@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { ArrowRight, Info, LockKeyhole, Mail, X } from 'lucide-react';
 import styles from './proof.module.css';
@@ -55,6 +56,7 @@ export function ProofPanel({ purpose, request, challenge }: { purpose: 'admin' |
     const session = await isolated.auth.getSession();
     if (!session.data.session) throw new Error('Sign-in expired. Start again.');
     proofSent.current = true; setProved(true);
+    notify.success('Account ownership verified. Return to your admin profile to finish.');
     setPassword(''); setCode(''); setMessage('Ownership verified. Return to the admin profile to finish. Keep this window open until verification closes.');
     opener.postMessage({ type: 'profile-proof-ready', request, ...(resident ? {} : { accessToken: session.data.session.access_token }) }, window.location.origin);
   }, [purpose, request, challenge]);
@@ -96,6 +98,7 @@ export function ProofPanel({ purpose, request, challenge }: { purpose: 'admin' |
   async function submit(event: FormEvent) {
     event.preventDefault(); if (submitting.current || !client.current) return;
     submitting.current = true; setBusy(true); setMessage('');
+    const attempt = beginAttempt('account-proof');
     try {
       if (!EMAIL_REGEX.test(email.trim()) || email.trim().length > 254 || (emailProof && !/^\d{6,10}$/.test(code))) throw new Error('Enter your sign-in email and a valid verification code.');
       const result = emailProof
@@ -104,25 +107,27 @@ export function ProofPanel({ purpose, request, challenge }: { purpose: 'admin' |
       setPassword(''); setCode('');
       if (result.error) throw new Error('Sign-in failed. Check your credentials and try again.');
       await sendProof();
-    } catch (failure) { setMessage(failure instanceof Error ? failure.message : 'Verification failed.'); }
+    } catch (failure) { notify.error('Could not verify account ownership. Review the details and try again.', { id: attempt }); setMessage(failure instanceof Error ? failure.message : 'Verification failed.'); }
     finally { submitting.current = false; setBusy(false); }
   }
   async function requestCode() {
     if (!client.current || submitting.current) return;
     submitting.current = true; setBusy(true);
+    const attempt = beginAttempt('proof-email-code');
     try {
       if (!EMAIL_REGEX.test(email.trim()) || email.trim().length > 254) throw new Error('Enter your existing account’s sign-in email.');
       const result = await client.current.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}${window.location.pathname}${window.location.search}` } });
       if (result.error) throw new Error('Email verification could not be requested. Check the existing account’s email sign-in availability and try again later.');
+      notify.success('Verification code requested. Check your sign-in inbox.', { id: attempt });
       setCodeSent(true); setPassword(''); setCode(''); setMessage('Check your sign-in inbox for a code or link. Open the link in this verification window. This operation does not create an account.');
-    } catch (failure) { setMessage(failure instanceof Error ? failure.message : 'Email verification is unavailable.'); }
+    } catch (failure) { notify.error('Could not request verification. Check your email and review the details below.', { id: attempt }); setMessage(failure instanceof Error ? failure.message : 'Email verification is unavailable.'); }
     finally { submitting.current = false; setBusy(false); }
   }
   async function close() {
     if (!client.current) { window.close(); return; }
     let failed = false;
     try { const result = await client.current.auth.signOut({ scope: 'local' }); failed = Boolean(result.error); } catch { failed = true; }
-    if (failed) { setMessage('Temporary sign-in cleanup failed. Try closing verification again.'); return; }
+    if (failed) { notify.warning('Temporary sign-in cleanup could not be confirmed. Keep this window open and retry closing verification.'); setMessage('Temporary sign-in cleanup failed. Try closing verification again.'); return; }
     window.close();
   }
   return (

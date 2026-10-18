@@ -1,0 +1,468 @@
+{
+  "date": "2026-10-17 Asia/Manila",
+  "note": "AST request/query arguments compared against HEAD for Phase 6-7 sources and preserved Centers CSS. Six concurrent service-sheet sources, resident-service-form.tsx and use-paymongo-source.ts are user work and excluded. Includes the approved server result-prop exception; callback bodies excluded, query shapes, filters and geolocation options included.",
+  "files": [
+    {
+      "path": "apps/resident-web/src/app/(auth)/register/register-form.tsx",
+      "sha256": "bb22533efcc5a804286bd3bc35932a741048c3f6d75ae6ad7234f12325ca5278",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 3,
+      "afterCalls": 3
+    },
+    {
+      "path": "apps/resident-web/src/app/(auth)/reset-password/reset-password-form.tsx",
+      "sha256": "1eb110074d3c116b3e81bbb3cf11a4f91cb717c90ab3760e9f38f5fc008c5ced",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/announcements/[announcementId]/page.tsx",
+      "sha256": "49f814dffddfaa2e4e3d4d0f739a84e874c00f335c95688bcdea59ca3a2d8073",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 5,
+      "afterCalls": 5
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/announcements/announcements-feed.tsx",
+      "sha256": "9ea2a48dacec1bb0c466c650f176c451ae3555e04fa163864ecf9ffd08fd9b74",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/health/drives/[driveId]/page.tsx",
+      "sha256": "96f885a01e8f864ed5f09cdcbe6339b97d95e70abc1523ec7ba6e9524162530d",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/home/page.tsx",
+      "sha256": "cc21c99c97cb3f51a34d493b6af2650b12a8821ee9f6d68c17c9fd6595ba88a5",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 25,
+      "afterCalls": 25
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/layout.tsx",
+      "sha256": "2daca7fa33932629cceae045171b5e11c0511230a0852141e715f2d6ae267411",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/reports/my-reports-tabs.tsx",
+      "sha256": "d0936b024b2ba89b7e5f3600e7537dbff99e9ac4751c80989a7a9fc3e596ae4a",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/reports/new/new-report-form.tsx",
+      "sha256": "4f15825ccd6334022af3bebaa53661b007efa258a01beee5844478103eb2ab74",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 8,
+      "afterCalls": 8
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/[documentId]/page.tsx",
+      "sha256": "e3092d72e63f752bdead8fa0fc54e1e212b9ef3e7359ab3cf7d67267395deb49",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 3,
+      "afterCalls": 3
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/documents/page.tsx",
+      "sha256": "57855a155471114146eb7da0fff2d60ee60d5e8eb18e260b5d1a1aa25483c8d6",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/logs/page.tsx",
+      "sha256": "5890b7f7f37458a3643f88cf4de4f5f73b4376e1111cf7ebb41a5af917ce2fef",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/payment/[requestId]/page.tsx",
+      "sha256": "b5288c4746aa133ed9b4c79888aced4bdcac43a7f8f1bf1a4686dcdab2906d8d",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/payment/pickup/[requestId]/page.tsx",
+      "sha256": "1a27bb538eb3b0dbee6631405fe517b6e415962f10a0af50390dc1e5c188af2f",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/payment/qrph/[requestId]/page.tsx",
+      "sha256": "6936414584943d5418e7f6f00154b1825b4924abb4be7949c972ad0661affcef",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/payment/success/page.tsx",
+      "sha256": "cbdbaf59a110a3317e4f922a905f88eeae5f68ec97143116f1a92a775231b362",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 7,
+      "afterCalls": 7
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/requests/[requestId]/page.tsx",
+      "sha256": "526e9519062106333b48a9a2dfa22f28ab2fa8204cdccbcd63a123f9dedda3d0",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/requests/new/[documentId]/page.tsx",
+      "sha256": "77c052db532dc1e0324b41580b75329d2eb478dc7c0c9cf0ff8f18c81cb5c8a5",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/requests/page.tsx",
+      "sha256": "0894ce3fac9d2fa9df0f7ffc7fe356c61c5c473679c78ddf41f7c398ea99cb39",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/services/requests/request-drawer.tsx",
+      "sha256": "6342939d837cc3b7f44d46e622399e6351dffb0ca854dc7282d7bbb93158d2d4",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 3,
+      "afterCalls": 3
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/change-password/forgot-password-dialog.tsx",
+      "sha256": "5e0d07babf4ef938d7a34b21ee7dba2ff9c801016164f6d4f421e4837c25227c",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/help/help-center-client.tsx",
+      "sha256": "7dc5b09793d87b78fdce9804c22789131ecca54b9f045c5a5d28cf9a7a7a4298",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/location-verification/location-verification-form.tsx",
+      "sha256": "af532c009cb52be52cc89900f10366fa444f0e345ced03d737e2afe09be44a37",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/profile/profile-form.tsx",
+      "sha256": "f3eae5a00dedcacd4497bfcdf5577bfe4be328d2e35d0a2b24a9474868be1951",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 9,
+      "afterCalls": 9
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/settings-id-status.tsx",
+      "sha256": "b262d370545d41fff28d8224f7e5b22b7b672c9320db151134211f47b9a8a69c",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 8,
+      "afterCalls": 8
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/valid-id/page.tsx",
+      "sha256": "58495ed5681ea0f6661d4d508af8867afc85bb0e9e1d8da0e9afbce6953eac44",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/valid-id/saved-id.tsx",
+      "sha256": "f46100ba06bc8fd74c2b27123820e0ac6cd47449861de3f1cc9080af662781e1",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 7,
+      "afterCalls": 7
+    },
+    {
+      "path": "apps/resident-web/src/app/(resident)/settings/valid-id/valid-id-flow.tsx",
+      "sha256": "7816d2a058925840cfd2db56900ef8326f50f4afa09cde43d376147240b54591",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 9,
+      "afterCalls": 9
+    },
+    {
+      "path": "apps/resident-web/src/app/layout.tsx",
+      "sha256": "510e81ba2fde755fe11fbc4ab14c14c972503aaab0e26f339b0673ee9952feae",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/auth/profile-setup-notice.tsx",
+      "sha256": "4462c653ff34a9603039d1f6c9e0312fb53226e5ce5cc85164553941b4e338b9",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/auth/registration-map.tsx",
+      "sha256": "766307027b3b851bf38bec344692107f95b25db384c0fc8535ba640f3fd68907",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/alerts-content.tsx",
+      "sha256": "2f830438980d3ee7d2a71aed1a591289a4cf611494a2b6480f28cbdbe78e4a13",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/centers-content.tsx",
+      "sha256": "da6cc243e6d856649903b864aad10b8cf5cfc85c5082bddf8b7a05d32af62705",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/emergency.module.css",
+      "sha256": "3ef96b18c86fe3206f79aa7b43009aeedb98aa860df6290649cb88c2fee0488a",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/family-content.tsx",
+      "sha256": "f362c12df6b7abd5d9b585cac02213b445711ae8998f893064c9c665b50264e7",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/household-qr-dialog.tsx",
+      "sha256": "e2e2ad6713450ad5fdb3a1c8e858dc84e94c5ba3c8faa6cd02db40d4cea1a163",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/hub-content.tsx",
+      "sha256": "3bf0bf278f0e20d826c4fd20f7b534a8cd854ccd521ef9ef5554dd6c4f5d3dd6",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/location-status-card.tsx",
+      "sha256": "b1e8608ab81762a1bc605960cc9c796af6f34e0149a3f50c7f60af770c7312fa",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/qr-scanner-dialog.tsx",
+      "sha256": "1060514b2ba4092ed6c9234f5a362d7fbb7ea34537dce830d74108cc7a242d4c",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/route-status-card.tsx",
+      "sha256": "ef424a72080d0f9932ae15360ddadfca3fb20f26e3d6bc841438e63bfd862bdc",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/emergency/scan-content.tsx",
+      "sha256": "ddb77bc2e3b8df29b9901a54e328358586cee801699a6e763f7d2cc0eb99c17a",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/maps/directory-content.tsx",
+      "sha256": "8056bd6c2b10995a692cc30ff93e7d85690bbbc9be06dd80df2faae24d4a65fc",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/maps/locate-button.tsx",
+      "sha256": "91d220b9928cbf560fc611169b2e8d0fd99fe72e54440ad4ef956823fd1c5fa3",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/components/reports/new-report-drawer.tsx",
+      "sha256": "4b519685611a8e5f30b0d286bfa1ca13e8ed0ceef57d34212973ecfd7674c38a",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 13,
+      "afterCalls": 13
+    },
+    {
+      "path": "apps/resident-web/src/components/search/search-input.tsx",
+      "sha256": "67d4d868bf781b3ecbec8e48563664b99471c3973222c474668079a8bd8550f2",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/search/search-results.tsx",
+      "sha256": "06efb98790ab75200762c918917d6325adf146bb01c166eb34da824b15f37049",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/services/agency-sla-status.tsx",
+      "sha256": "bb6ffcf459d9fb0a06feaf1673ff40af395ea14dd721281ce259edc1836d794c",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 4,
+      "afterCalls": 4
+    },
+    {
+      "path": "apps/resident-web/src/components/services/document-request-modal/success-step.tsx",
+      "sha256": "794fd753e6ed841bc169c6f45b78c9d41a4f4af355535d5641272f9901c39059",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/components/services/request-payment-journey.tsx",
+      "sha256": "c0626af960d9f0dad05db70439f7a2e3011dea7810c5caa3d11401ee1dda31be",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 3,
+      "afterCalls": 3
+    },
+    {
+      "path": "apps/resident-web/src/components/shared/inline-read-error.tsx",
+      "sha256": "00b759353d5ec1756563118dac5c569fe0615dd9ed2cf306c4d3af9d7fcd7747",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/shared/read-failure.tsx",
+      "sha256": "1e8b93dce514703ae1d6aec315f97857edd34fb619ad912459ca2a707429fa18",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/shared/route-error.tsx",
+      "sha256": "d335a58132f2efef83472ecd6e135e99287cad410f96c5e9d8caa4f6a5e38d77",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/components/theme/color-picker-popover.tsx",
+      "sha256": "ce7d519b8ec258bfb09dd93810a101bfb92559fc37106342c852ce6a15d84c52",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-announcements.ts",
+      "sha256": "5e1da2b1ba8b891551ab1eadaf1b202509afac2195c184b585e97c8a3f9b7ba4",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-connected-route.ts",
+      "sha256": "6388a733f06eef1e76230a249cc5506a1b0690b59a2f3d3255de2c9ccb4da0d3",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 2,
+      "afterCalls": 2
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-device-location.ts",
+      "sha256": "5d34e8b7c3b7067eb9d4333383044f5ec010a797820f0f5d9a5aa1a630e7c7e3",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 1,
+      "afterCalls": 1
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-emergency-guidelines.ts",
+      "sha256": "f195af6e5d9212317ac0de1650e3830aced8ea009da0b850af1e41c4551fa4b7",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 7,
+      "afterCalls": 7
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-emergency-hotlines.ts",
+      "sha256": "7c29d6bd8c2f15d2687cf6b54a173d2dffe3f49c42b6c0d9a8212c33abaf54bb",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 7,
+      "afterCalls": 7
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-emergency-qr-content.ts",
+      "sha256": "754f053c17b01d41e686f6239179182f9035563df39602c66c33576dd05d32c1",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-evacuation-centers.ts",
+      "sha256": "d3a5308c6911e014442297fdab2702546f888645c76351a0d827b2b00d9b6eb8",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-family-members.ts",
+      "sha256": "fe56a894c4d979edf44e609e1b14a7eb9520388012ba6f24d7138f22a53dc25d",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-faq-articles.ts",
+      "sha256": "0893046bcbb7de69b658d93453c0d24c4f145765ba1317d162c9f67d84b573c0",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-fullscreen.ts",
+      "sha256": "e98a4deb350324caf683af637d1dba1ac010a108fdd8235d1af73c5e5bb06342",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-my-incidents.ts",
+      "sha256": "fb7000caadbe29f8eae3820a7f784ad3ef3e7127391a72a8d8a5cbd78951f1de",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 6,
+      "afterCalls": 6
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-resident-search.ts",
+      "sha256": "fb383469d962dda770df7f4fcaa0a9429a02fe3223046c4db5be987e4e71bd5d",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 2,
+      "afterCalls": 2
+    },
+    {
+      "path": "apps/resident-web/src/hooks/use-scoped-read.ts",
+      "sha256": "dedb0dab5b41fdaf70ba08286b204b01c09ca952db3bb21d0c9f51841cc5d65c",
+      "requestArgumentsUnchanged": true,
+      "beforeCalls": 0,
+      "afterCalls": 0
+    }
+  ]
+}

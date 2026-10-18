@@ -85,7 +85,7 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
       {requestsError ? (
         // A failed read is not an empty list; the drawer for ?open= still works on its own.
         <>
-          <ReadFailure message="We couldn't load your requests." className="mb-4" />
+          <ReadFailure resultId={crypto.randomUUID()} contentName="your requests" message="We couldn't load your requests." className="mb-4" />
           <RequestsList requests={[]} emptyMessage="" initialSelectedId={openParam ?? null} hideEmpty />
         </>
       ) : (

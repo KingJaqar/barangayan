@@ -8,7 +8,7 @@ import rehypeSanitize from 'rehype-sanitize';
 import { ArrowUpRight, Check, Eye, PencilLine } from 'lucide-react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 import styles from './terms-privacy.module.css';
@@ -26,7 +26,6 @@ export function ContentForm({
   initial: SiteContentRow | null;
 }) {
   const router = useRouter();
-  const toast = useToast();
   const [title, setTitle] = useState(initial?.title ?? SITE_CONTENT_SECTION_META[section].label);
   const [body, setBody] = useState(initial?.body ?? '');
   const [isActive, setIsActive] = useState(initial?.is_active ?? true);
@@ -35,6 +34,7 @@ export function ContentForm({
   const [showPreview, setShowPreview] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
+    const toastAttempt = beginAttempt('handleSubmit');
     event.preventDefault();
     setError(null);
 
@@ -47,6 +47,7 @@ export function ContentForm({
     });
 
     if (!parsed.success) {
+      toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
       setError(parsed.error.issues[0]?.message ?? 'Invalid input');
       return;
     }
@@ -78,9 +79,9 @@ export function ContentForm({
 
       if (upsertError) {
         if (upsertError.code === '42501') {
-          toast.showError('Permission denied. You must be an admin.');
+          toast.error('Permission denied. You must be an admin.', { id: toastAttempt });
         } else {
-          toast.showError(`Save failed: ${upsertError.message}`);
+          toast.error(`Save failed: ${upsertError.message}`, { id: toastAttempt });
         }
         setError(upsertError.message);
         return;
@@ -99,11 +100,11 @@ export function ContentForm({
         },
       });
 
-      toast.showSuccess('Saved successfully.');
+      toast.success('Saved successfully.', { id: toastAttempt });
       router.refresh();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
-      toast.showError(message);
+      toast.error(message, { id: toastAttempt });
     } finally {
       setSubmitting(false);
     }

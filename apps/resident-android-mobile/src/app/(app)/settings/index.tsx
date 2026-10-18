@@ -1,10 +1,11 @@
+import { useFloatingTabInset } from '@/hooks/use-floating-tab-inset';
 import { Ionicons } from '@expo/vector-icons';
 import { idVerificationState } from '@barangayan/shared';
 import Constants from 'expo-constants';
 import { Href, Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
 import { Alert, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Sharing from 'expo-sharing';
 
 import { Avatar } from '@/components/avatar';
@@ -19,7 +20,7 @@ import { ScrollableChevronRow } from '@/components/scrollable-chevron-row';
 import { SegmentedControl } from '@/components/segmented-control';
 import { SettingsIcon } from '@/components/settings-icon';
 import { ThemedText } from '@/components/themed-text';
-import { ACCENT_COLORS, Fonts, Spacing } from '@/constants/theme';
+import { ACCENT_COLORS, Spacing } from '@/constants/theme';
 import { getMobileFontFamily, MOBILE_FONT_OPTIONS } from '@/constants/fonts';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 
@@ -60,7 +61,7 @@ export default function SettingsScreen() {
   const rows = accountSettingsRows(setup);
   const router = useRouter();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
+  const bottomTabInset = useFloatingTabInset();
   const { scheme, accentColor, setThemePreference, setAccentColor, customColors, addCustomColor, removeCustomColor } =
     useThemePreference();
   const [isCustomColorModalVisible, setIsCustomColorModalVisible] = useState(false);
@@ -284,17 +285,9 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
-        <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
-          <View style={styles.headerContent}>
-            <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
-              Settings
-            </ThemedText>
-          </View>
-        </View>
-
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: bottomTabInset + Spacing.three }]}>
         {session ? (
           <Section title="Account">
             <Card>
@@ -306,6 +299,7 @@ export default function SettingsScreen() {
                   <Avatar
                     fullName={profile?.full_name ?? 'Resident'}
                     imageUrl={(profile as any)?.avatar_url ?? null}
+                    size={40}
                   />
                   <View style={styles.rowText}>
                     <ThemedText type="smallBold">{profile?.full_name ?? '—'}</ThemedText>
@@ -446,7 +440,7 @@ export default function SettingsScreen() {
                 {ACCENT_COLORS.map((color) => (
                   <Pressable key={color} onPress={() => setAccentColor(color)}>
                     <View style={[styles.swatch, { backgroundColor: color }]}>
-                      {accentColor === color ? <Ionicons name="checkmark" size={18} color="#ffffff" /> : null}
+                      {accentColor === color ? <Ionicons name="checkmark" size={18} color={theme.onPrimary} /> : null}
                     </View>
                   </Pressable>
                 ))}
@@ -464,7 +458,7 @@ export default function SettingsScreen() {
                       ])
                     }>
                     <View style={[styles.swatch, { backgroundColor: color }]}>
-                      {accentColor === color ? <Ionicons name="checkmark" size={18} color="#ffffff" /> : null}
+                      {accentColor === color ? <Ionicons name="checkmark" size={18} color={theme.onPrimary} /> : null}
                     </View>
                   </Pressable>
                 ))}
@@ -507,7 +501,7 @@ export default function SettingsScreen() {
                         <ThemedText
                           style={[
                             styles.fontChipLabel,
-                            { color: isActive ? '#ffffff' : theme.text, fontFamily: getMobileFontFamily(font.id) },
+                            { color: isActive ? theme.onPrimary : theme.text, fontFamily: getMobileFontFamily(font.id) },
                           ]}>
                           {font.label}
                         </ThemedText>
@@ -595,7 +589,7 @@ export default function SettingsScreen() {
       />
 
       <Modal visible={isGoogleDeleteReady && isFocused && !!session} transparent animationType="fade" onRequestClose={cancelGoogleDeletion}>
-        <View style={styles.confirmOverlay}>
+        <View style={[styles.confirmOverlay, { backgroundColor: theme.text + '66' }]}>
           <View style={[styles.confirmSheet, { backgroundColor: theme.background }]} accessibilityViewIsModal>
             <ThemedText type="smallBold" accessibilityRole="header" style={styles.confirmTitle}>
               Permanently Delete Account?
@@ -695,33 +689,25 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  header: {
-    paddingBottom: Spacing.three,
-    alignItems: 'center',
-  },
-  headerContent: {
-    height: 25,
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.gideonRoman,
-  },
+
   content: {
     padding: Spacing.three,
   },
   section: {
-    marginBottom: Spacing.four,
+    marginBottom: Spacing.three,
   },
   sectionTitle: {
     marginBottom: Spacing.two,
+    fontSize: 12,
+    lineHeight: 16,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.three,
+    gap: Spacing.two,
+    minHeight: 52,
+    paddingHorizontal: Spacing.two + Spacing.one,
+    paddingVertical: Spacing.two,
   },
   rowText: {
     flex: 1,
@@ -746,7 +732,6 @@ const styles = StyleSheet.create({
   },
   confirmOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     padding: Spacing.four,
   },
@@ -763,17 +748,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   themeSection: {
-    padding: Spacing.three,
-    gap: Spacing.three,
+    padding: Spacing.two + Spacing.one,
+    gap: Spacing.two + Spacing.one,
   },
   themeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.three,
+    gap: Spacing.two,
   },
   swatchRow: {
     flexDirection: 'row',
-    gap: Spacing.three,
+    gap: Spacing.two + Spacing.one,
     paddingHorizontal: Spacing.two,
   },
   swatch: {

@@ -6,7 +6,7 @@ import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_WITH_OCCUPATION, SEXES, type E
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { useToast } from '@/components/ui/toast';
+import { notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { Tables } from '@barangayan/shared';
 
@@ -46,7 +46,7 @@ const inputCls =
 
 export function ProfileForm({ profile }: { profile: ProfileFields }) {
   const router = useRouter();
-  const toast = useToast();
+
 
   // Full Name split into structured parts (Register/Profile field-split) — full_name
   // is derived by the DB from these on save (migration 0081's
@@ -103,10 +103,10 @@ export function ProfileForm({ profile }: { profile: ProfileFields }) {
       .eq('id', profile.id);
     setSaving(false);
     if (error) {
-      toast.showError(`Failed to save: ${error.message}`);
+      toast.error(`Failed to save: ${error.message}`);
       return;
     }
-    toast.showSuccess('Profile updated.');
+    toast.success('Profile updated.');
     router.refresh();
   }
 

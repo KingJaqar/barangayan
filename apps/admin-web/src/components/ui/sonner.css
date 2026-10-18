@@ -1,0 +1,73 @@
+/* ─── Toasts (admin-web feedback plan admin-only visual parity; host: components/ui/sonner.tsx) ───
+ * Sonner keeps its own enter/exit motion and reduced-motion handling. These rules add
+ * semantic icon colors that stay readable with any accent, a 28 px dismiss control
+ * with a 44 px hit area inside the toast, wrapping for long text, and pointer access
+ * while a Radix modal sets `pointer-events: none` on <body>. Selectors are raised
+ * above Sonner's injected theme rules on purpose. */
+.admin-toaster {
+  --toast-success: #166534;
+  --toast-warning: #c2410c;
+  --toast-error: #93000a;
+  --toast-info: #1d4ed8;
+}
+.dark .admin-toaster {
+  --toast-success: #4ade80;
+  --toast-warning: #fb923c;
+  --toast-error: #f87171;
+  --toast-info: #60a5fa;
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast][data-visible='true'] {
+  pointer-events: auto;
+}
+[data-sonner-toaster].admin-toaster[data-theme] [data-sonner-toast][data-styled='true'] {
+  padding-right: 52px;
+  align-items: flex-start;
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast] [data-title],
+[data-sonner-toaster].admin-toaster [data-sonner-toast] [data-description] {
+  overflow-wrap: anywhere;
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast] [data-description] {
+  color: color-mix(in srgb, var(--foreground) 72%, var(--background));
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast][data-type='success'] [data-icon] { color: var(--toast-success); }
+[data-sonner-toaster].admin-toaster [data-sonner-toast][data-type='warning'] [data-icon] { color: var(--toast-warning); }
+[data-sonner-toaster].admin-toaster [data-sonner-toast][data-type='error'] [data-icon] { color: var(--toast-error); }
+[data-sonner-toaster].admin-toaster [data-sonner-toast][data-type='info'] [data-icon] { color: var(--toast-info); }
+[data-sonner-toaster].admin-toaster[data-theme] [data-sonner-toast][data-styled] [data-close-button] {
+  left: auto;
+  right: 12px;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--foreground) 45%, var(--background));
+}
+[data-sonner-toaster].admin-toaster[data-theme] [data-sonner-toast][data-styled] [data-close-button]:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+}
+[data-sonner-toaster].admin-toaster[data-theme] [data-sonner-toast][data-styled] [data-close-button]:focus-visible {
+  outline: 2px solid var(--ring, var(--accent));
+  outline-offset: 1px;
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast] [data-close-button] svg {
+  width: 14px;
+  height: 14px;
+}
+[data-sonner-toaster].admin-toaster [data-sonner-toast] [data-close-button]::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+/* Matches resident-web's card tokens without changing the admin theme. */
+[data-sonner-toaster].admin-toaster [data-sonner-toast].admin-toast-card {
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, var(--background));
+  background: var(--background);
+  color: var(--foreground);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}

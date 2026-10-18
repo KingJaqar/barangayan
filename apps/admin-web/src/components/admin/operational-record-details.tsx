@@ -21,7 +21,7 @@ const layouts: Record<OperationalRecordName, { label: string; icon: LucideIcon; 
     { title: 'Stock & registrations', keys: ['stock_label', 'stock_unit', 'stock_total', 'stock_remaining', 'registration_count'] },
   ] },
   applicants: { label: 'Medical applicant record', icon: ClipboardList, sections: [
-    { title: 'Registration', keys: ['applicant_number', 'resident_name', 'status', 'priority_score'] },
+    { title: 'Registration', keys: ['applicant_number', 'resident_name', 'email', 'status', 'priority_score'] },
     { title: 'Medical information', keys: ['age', 'is_pwd', 'comorbidities', 'prior_dose_date'] },
     { title: 'Medical drive', keys: ['drive_title', 'drive_date', 'drive_location'] },
   ] },

@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -23,7 +23,7 @@ const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
 
 export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: WasteSchedule[] }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,97 +39,116 @@ export function ZoneRow({ zone, schedules }: { zone: WasteZone; schedules: Waste
   }
 
   async function toggleActive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: toggleError } = await supabase
-      .from('waste_zones')
-      .update({ is_active: !zone.is_active })
-      .eq('id', zone.id);
-    if (toggleError) {
-      toast.showError(`Failed to ${zone.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`);
-      return;
+    const toastAttempt = beginAttempt('toggleActive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: toggleError } = await supabase
+        .from('waste_zones')
+        .update({ is_active: !zone.is_active })
+        .eq('id', zone.id);
+      if (toggleError) {
+        toast.error(`Failed to ${zone.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'status_change',
+        entityType: 'waste_zone',
+        entityId: zone.id,
+        entityLabel: zone.name,
+        changes: { before: { is_active: zone.is_active }, after: { is_active: !zone.is_active } },
+      }).catch(() => {});
+
+      toast.success(`Zone ${zone.is_active ? 'deactivated' : 'activated'}.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'waste_zone',
-      entityId: zone.id,
-      entityLabel: zone.name,
-      changes: { before: { is_active: zone.is_active }, after: { is_active: !zone.is_active } },
-    }).catch(() => {});
-
-    toast.showSuccess(`Zone ${zone.is_active ? 'deactivated' : 'activated'}.`);
-    router.refresh();
   }
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('waste_zones')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', zone.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('waste_zones')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', zone.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'waste_zone',
+        entityId: zone.id,
+        entityLabel: zone.name,
+        metadata: { name: zone.name, description: zone.description },
+      }).catch(() => {});
+
+      toast.success(`"${zone.name}" archived.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'waste_zone',
-      entityId: zone.id,
-      entityLabel: zone.name,
-      metadata: { name: zone.name, description: zone.description },
-    }).catch(() => {});
-
-    toast.showSuccess(`"${zone.name}" archived.`);
-    router.refresh();
   }
 
   async function handleSave(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSave');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const result = wasteZoneSchema.safeParse({
-      name,
-      description: description || undefined,
-      isActive: zone.is_active,
-    });
+      const result = wasteZoneSchema.safeParse({
+        name,
+        description: description || undefined,
+        isActive: zone.is_active,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('waste_zones')
-      .update({
-        name: result.data.name,
-        description: result.data.description,
-      })
-      .eq('id', zone.id);
-    setSubmitting(false);
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from('waste_zones')
+        .update({
+          name: result.data.name,
+          description: result.data.description,
+        })
+        .eq('id', zone.id);
+      setSubmitting(false);
 
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Failed to save changes: ${updateError.message}`);
-      return;
-    }
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save changes: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    logAdminAction({
-      action: 'update',
-      entityType: 'waste_zone',
-      entityId: zone.id,
-      entityLabel: result.data.name,
-      changes: {
-        before: { name: zone.name, description: zone.description },
-        after: { name: result.data.name, description: result.data.description },
-      },
-    }).catch(() => {});
+      logAdminAction({
+        action: 'update',
+        entityType: 'waste_zone',
+        entityId: zone.id,
+        entityLabel: result.data.name,
+        changes: {
+          before: { name: zone.name, description: zone.description },
+          after: { name: result.data.name, description: result.data.description },
+        },
+      }).catch(() => {});
 
-    toast.showSuccess(`"${result.data.name}" updated.`);
-    setIsEditing(false);
-    router.refresh();
+      toast.success(`"${result.data.name}" updated.`, { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   if (isEditing) {

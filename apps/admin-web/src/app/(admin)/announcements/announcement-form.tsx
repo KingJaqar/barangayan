@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -20,7 +20,7 @@ const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
 
 export function AnnouncementForm({ barangayId }: { barangayId: string }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [detailedDescription, setDetailedDescription] = useState('');
@@ -31,63 +31,70 @@ export function AnnouncementForm({ barangayId }: { barangayId: string }) {
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const result = announcementSchema.safeParse({
-      title,
-      body,
-      detailed_description: detailedDescription || undefined,
-      category,
-      image_url: imageUrl || undefined,
-      published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
-    });
+      const result = announcementSchema.safeParse({
+        title,
+        body,
+        detailed_description: detailedDescription || undefined,
+        category,
+        image_url: imageUrl || undefined,
+        published_at: publishedAt ? new Date(publishedAt).toISOString() : undefined,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: insertError } = await supabase.from('announcements').insert({
-      barangay_id: barangayId,
-      title: result.data.title,
-      body: result.data.body,
-      detailed_description: result.data.detailed_description || null,
-      category: result.data.category,
-      image_url: result.data.image_url || null,
-      published_at: result.data.published_at ?? new Date().toISOString(),
-    });
-    setSubmitting(false);
-
-    if (insertError) {
-      setError(insertError.message);
-      toast.showError(`Failed to create announcement: ${insertError.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'create',
-      entityType: 'announcement',
-      entityLabel: result.data.title,
-      metadata: {
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: insertError } = await supabase.from('announcements').insert({
+        barangay_id: barangayId,
         title: result.data.title,
         body: result.data.body,
-        detailed_description: result.data.detailed_description ?? null,
+        detailed_description: result.data.detailed_description || null,
         category: result.data.category,
-        published_at: result.data.published_at ?? null,
-      },
-    }).catch(() => {});
+        image_url: result.data.image_url || null,
+        published_at: result.data.published_at ?? new Date().toISOString(),
+      });
+      setSubmitting(false);
 
-    setTitle('');
-    setBody('');
-    setDetailedDescription('');
-    setCategory('general');
-    setImageUrl('');
-    setPublishedAt('');
-    toast.showSuccess(`Announcement published.`);
-    router.refresh();
+      if (insertError) {
+        setError(insertError.message);
+        toast.error(`Failed to create announcement: ${insertError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'create',
+        entityType: 'announcement',
+        entityLabel: result.data.title,
+        metadata: {
+          title: result.data.title,
+          body: result.data.body,
+          detailed_description: result.data.detailed_description ?? null,
+          category: result.data.category,
+          published_at: result.data.published_at ?? null,
+        },
+      }).catch(() => {});
+
+      setTitle('');
+      setBody('');
+      setDetailedDescription('');
+      setCategory('general');
+      setImageUrl('');
+      setPublishedAt('');
+      toast.success(`Announcement published.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

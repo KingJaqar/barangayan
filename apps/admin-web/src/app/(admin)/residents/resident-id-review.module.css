@@ -1,0 +1,88 @@
+/* Scoped to the directory's ID dialog; the resident record keeps its layout. */
+.dialog {
+  --resident-muted: color-mix(in srgb, var(--foreground) 68%, var(--background));
+  --resident-line: color-mix(in srgb, var(--foreground) 14%, var(--background));
+  --resident-soft: color-mix(in srgb, var(--foreground) 3%, var(--background));
+  --resident-accent: color-mix(in srgb, var(--accent) 8%, var(--background));
+  display: flex;
+  flex-direction: column;
+  max-height: min(85dvh, 960px);
+  overflow: hidden;
+  border: 1px solid var(--resident-line);
+  border-radius: 20px;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-app);
+  font-size: 14px;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.header { display: flex; flex-shrink: 0; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 26px 28px 22px; border-bottom: 1px solid var(--resident-line); }
+.header > div { min-width: 0; }
+.eyebrow { margin-bottom: 10px; color: var(--resident-muted); font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.header h2 { font-size: 30px; font-weight: 550; line-height: 1.15; letter-spacing: -.045em; }
+.residentName { margin-top: 8px; font-size: 14px; color: var(--resident-muted); }
+.header button { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1px solid var(--resident-line); border-radius: 50%; color: var(--foreground); background: var(--resident-soft); }
+.body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--resident-line) transparent; padding: 0 28px; scroll-padding-block: 24px; }
+.dialog .verification { padding: 24px 0; border: 0; }
+.dialog .statusRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px; }
+.dialog .statusRow h3 { width: auto; }
+.dialog h3 { display: flex; width: 100%; margin: 0; gap: 8px; font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
+.dialog h3 > svg { color: var(--resident-muted); }
+.dialog h3 > span { border-radius: 5px; font-size: 10px; padding: 3px 7px; }
+.dialog .currentStatus { margin: 0; }
+.dialog .currentStatus > span { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border-color: color-mix(in srgb, var(--accent) 28%, var(--resident-line)); background: var(--resident-accent); font-size: 13px; font-weight: 600; }
+.dialog .metadata { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; padding-bottom: 22px; border-bottom: 1px solid var(--resident-line); }
+.metadata dt, .dialog .details dt { display: block; margin-bottom: 5px; font-size: 11px; font-weight: 400; color: var(--resident-muted); }
+.metadata dd { font-size: 13px; line-height: 1.65; }
+.reviewer { grid-column: 1 / -1; }
+.reviewer dd { color: var(--resident-muted); font-size: 11px; }
+.detailHeading { margin: 22px 0 16px; font-size: 13px; font-weight: 600; }
+.dialog .details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; margin: 0 0 24px; }
+.dialog .details > div { margin: 0; min-width: 0; }
+.dialog .details dt { font-size: 12px; }
+.dialog .details dd { display: block; font-size: 13px; font-weight: 500; line-height: 1.65; }
+.dialog .reviewForm { gap: 12px; margin-bottom: 24px; padding: 20px; border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--resident-line)); border-radius: 12px; background: var(--resident-accent); }
+.dialog .formLabel { margin: 0; font-size: 14px; font-weight: 600; }
+.formHint, .documentHint { color: var(--resident-muted); font-size: 12px; line-height: 1.7; }
+.formHint { margin-top: -6px; }
+.dialog .reasonLabel { margin: 2px 0; font-size: 12px; font-weight: 500; }
+.dialog .reasonLabel textarea { display: block; width: 100%; min-height: 100px; margin-top: 8px; padding: 12px; border: 1px solid var(--resident-line); border-radius: 8px; resize: vertical; background: var(--background); color: var(--foreground); font: inherit; font-weight: 400; line-height: 1.6; }
+.dialog .saveButton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; margin-top: 2px; padding: 11px 16px; border: 1px solid var(--foreground); border-radius: 8px; background: color-mix(in srgb, var(--foreground) 94%, var(--accent)); color: var(--background); font-size: 13px; font-weight: 600; }
+.dialog button:disabled { cursor: not-allowed; }
+.dialog .saveButton:disabled { border-color: var(--resident-line); background: color-mix(in srgb, var(--foreground) 9%, var(--background)); color: var(--resident-muted); }
+.dialog .documentSection { border-top: 1px solid var(--resident-line); border-bottom: 0; padding: 24px 0 28px; }
+.dialog .documentHint { margin: 8px 0 18px; }
+.dialog .documentSection a { display: block; border-radius: 10px; }
+.dialog .documentSection img { padding: 14px; }
+.dialog .documentGrid:has(> a:only-child) { grid-template-columns: minmax(0, 1fr); }
+.dialog .documentGrid > a:only-child img { max-height: 280px; }
+.dialog .documentSection a > span { padding: 12px 14px; font-size: 11px; font-weight: 500; }
+.dialog .documentSection a > span > span { color: var(--foreground); }
+.dialog .error, .dialog .decisionReason { padding: 16px; margin-bottom: 18px; border: 1px solid var(--resident-line); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--resident-soft); line-height: 1.7; }
+.dialog .error button, .dialog .documentSection button { min-height: 38px; margin-top: 10px; padding: 7px 12px; border: 1px solid var(--resident-line); border-radius: 6px; background: var(--background); color: var(--foreground); font-weight: 500; }
+.dialog :is(button, a, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.header button:hover:not(:disabled) { background: var(--resident-accent); }
+.dialog .saveButton:hover:not(:disabled) { background: var(--foreground); }
+
+@media (max-width: 479px) {
+  .dialog { max-height: calc(100dvh - 64px); border-radius: 16px; }
+  .header { padding: 20px; }
+  .header h2 { font-size: 26px; }
+  .body { padding-inline: 20px; }
+  .dialog .reviewForm { padding: 16px; }
+  .dialog .saveButton { width: 100%; justify-self: stretch; }
+  .dialog .metadata, .dialog .details { gap: 16px; }
+}
+@media (max-width: 359px) {
+  .dialog .metadata, .dialog .details { grid-template-columns: minmax(0, 1fr); }
+  .eyebrow { letter-spacing: .06em; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dialog { animation: appear 180ms ease-out; }
+  .dialog :is(button, a) { transition: background-color 150ms ease, border-color 150ms ease; }
+  @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+}

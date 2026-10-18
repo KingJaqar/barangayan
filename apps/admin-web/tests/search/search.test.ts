@@ -149,7 +149,7 @@ describe('admin search contracts', () => {
   it('builds safe record links and readable text previews', () => {
     const hit = makeHit('announcements', { id: 'record-id', title: 'Community update', body: '<p>Useful **news**</p>' }, 'news');
     expect(hit.preview).toBe('Useful news'); expect(hit.href).toBe('/search/announcements/record-id?q=news');
-    expect(makeHit('requests', { id: 'abc', reference_number: 'REQ-10' }).href).toBe('/requests/abc');
+    expect(makeHit('requests', { id: 'abc', reference_number: 'REQ-10' }).href).toBe('/requests?record=abc');
     expect(makeHit('residents', { id: 'abc', full_name: 'Alice', email_verification_status: 'unavailable' }).meta).toBe('Email unavailable');
     expect(makeHit('services', { id: 'abc', name: 'Document', is_active: false }).meta).toBe('Inactive');
     expect(valueAt({ content: [{ label: 'Hotline', number: '123', hidden: 'private-value' }] }, 'content')).toBe('Hotline — 123');

@@ -23,7 +23,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { TableDetailDialog } from '@/components/admin/table-detail-dialog';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { loadPackGraph, nearestNode, type PackNode } from '@/lib/routing-packs';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
@@ -73,7 +73,6 @@ function formatTime(iso: string): string {
 
 export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersions, bundledPack, events }: RoutingConditionsEditorProps) {
   const router = useRouter();
-  const toast = useToast();
 
   const [graph, setGraph] = useState<RoutingPackEditorGraph | null>(null);
   const [graphError, setGraphError] = useState<string | null>(null);
@@ -113,16 +112,22 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
   const entranceCenter = snapshot.centers.find((center) => center.id === entranceCenterId) ?? null;
 
   async function runRpc(actionKey: string, run: () => Promise<{ error: { message: string } | null }>, success: string) {
+    const toastAttempt = beginAttempt('runRpc');
     setBusyAction(actionKey);
-    const { error } = await run();
-    setBusyAction(null);
-    if (error) {
-      toast.showError(error.message);
+    try {
+      const { error } = await run();
+      setBusyAction(null);
+      if (error) {
+        toast.error(error.message, { id: toastAttempt });
+        return false;
+      }
+      toast.success(success, { id: toastAttempt });
+      router.refresh();
+      return true;
+    } catch {
+      toast.warning('The route update could not be confirmed. Refresh before trying again.', { id: toastAttempt });
       return false;
-    }
-    toast.showSuccess(success);
-    router.refresh();
-    return true;
+    } finally { setBusyAction(null); }
   }
 
   async function registerBundledGraph() {
@@ -147,7 +152,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
 
   function toggleEdge(edgeId: string) {
     if (closedEdgeIds.has(edgeId)) {
-      toast.showError('That road segment is already closed. Reopen its closure from the list instead.');
+      toast.error('That road segment is already closed. Reopen its closure from the list instead.');
       return;
     }
     setSelectedEdgeIds((previous) => (previous.includes(edgeId) ? previous.filter((id) => id !== edgeId) : [...previous, edgeId]));
@@ -158,7 +163,7 @@ export function RoutingConditionsEditor({ area, snapshot, registeredGraphVersion
     if (!entranceCenter || !graph) return;
     const nearest = nearestNode(graph.nodes, point, ENTRANCE_PICK_RADIUS_METERS);
     if (!nearest) {
-      toast.showError(
+      toast.error(
         source === 'click'
           ? `Click within ${ENTRANCE_PICK_RADIUS_METERS} m of a walkable road to pick the entrance.`
           : `No walkable road is within ${ENTRANCE_PICK_RADIUS_METERS} m of those coordinates.`,
@@ -567,7 +572,6 @@ function ClosureForm({
   onClearSelection: () => void;
   onPublished: () => void;
 }) {
-  const toast = useToast();
   const [label, setLabel] = useState('');
   const [reason, setReason] = useState('');
   const [observedAt, setObservedAt] = useState('');
@@ -577,50 +581,58 @@ function ClosureForm({
   const suggestedLabel = [...new Set(selectedEdges.map((edge) => edge.name).filter((name): name is string => name !== null))].join(', ');
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    if (!graphVersion) return;
-    // A blank observation time means the closure is being reported as observed now.
-    const result = roadClosureFormSchema.safeParse({
-      label: label.trim() || suggestedLabel,
-      reason,
-      observedAt: observedAt ? new Date(observedAt) : new Date(),
-      segmentCount: selectedEdges.length,
-    });
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid closure');
-      return;
-    }
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
+      if (!graphVersion) return;
+      // A blank observation time means the closure is being reported as observed now.
+      const result = roadClosureFormSchema.safeParse({
+        label: label.trim() || suggestedLabel,
+        reason,
+        observedAt: observedAt ? new Date(observedAt) : new Date(),
+        segmentCount: selectedEdges.length,
+      });
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid closure');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data, error: rpcError } = await supabase.rpc('publish_road_closure', {
-      p_area_id: areaId,
-      p_graph_version: graphVersion,
-      p_edge_ids: selectedEdges.map((edge) => edge.id),
-      p_source_refs: selectedEdges.map((edge) => edge.sourceRef),
-      p_geometry: { type: 'MultiLineString', coordinates: selectedEdges.map((edge) => edge.geometry) },
-      p_label: result.data.label,
-      p_reason: result.data.reason,
-      p_observed_at: result.data.observedAt.toISOString(),
-    });
-    setSubmitting(false);
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data, error: rpcError } = await supabase.rpc('publish_road_closure', {
+        p_area_id: areaId,
+        p_graph_version: graphVersion,
+        p_edge_ids: selectedEdges.map((edge) => edge.id),
+        p_source_refs: selectedEdges.map((edge) => edge.sourceRef),
+        p_geometry: { type: 'MultiLineString', coordinates: selectedEdges.map((edge) => edge.geometry) },
+        p_label: result.data.label,
+        p_reason: result.data.reason,
+        p_observed_at: result.data.observedAt.toISOString(),
+      });
+      setSubmitting(false);
 
-    if (rpcError) {
-      setError(rpcError.message);
-      toast.showError(`Closure not published: ${rpcError.message}`);
-      return;
-    }
-    const published = routingMutationResultSchema.safeParse(data);
-    if (!published.success) {
-      setError('Unexpected response while publishing the closure. Refresh before trying again.');
-      return;
-    }
-    toast.showSuccess(`Closure published (revision ${published.data.revision}).`);
-    setLabel('');
-    setReason('');
-    setObservedAt('');
-    onPublished();
+      if (rpcError) {
+        setError(rpcError.message);
+        toast.error(`Closure not published: ${rpcError.message}`, { id: toastAttempt });
+        return;
+      }
+      const published = routingMutationResultSchema.safeParse(data);
+      if (!published.success) {
+        setError('Unexpected response while publishing the closure. Refresh before trying again.');
+        toast.warning('The closure could not be confirmed. Refresh before trying again.', { id: toastAttempt });
+        return;
+      }
+      toast.success(`Closure published (revision ${published.data.revision}).`, { id: toastAttempt });
+      setLabel('');
+      setReason('');
+      setObservedAt('');
+      onPublished();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (
@@ -701,35 +713,41 @@ function ClosureForm({
 }
 
 function ClosureRow({ closure, onReopened }: { closure: SnapshotClosure; onReopened: () => void }) {
-  const toast = useToast();
   const [reopening, setReopening] = useState(false);
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function reopen() {
-    setError(null);
-    const parsed = roadClosureReopenSchema.safeParse({ reason });
-    if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Enter a reason');
-      return;
-    }
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data, error: rpcError } = await supabase.rpc('reopen_road_closure', {
-      p_closure_id: closure.id,
-      p_reason: parsed.data.reason,
-    });
-    setSubmitting(false);
-    if (rpcError) {
-      setError(rpcError.message);
-      toast.showError(`Closure not reopened: ${rpcError.message}`);
-      return;
-    }
-    const result = routingMutationResultSchema.safeParse(data);
-    toast.showSuccess(result.success ? `Road reopened (revision ${result.data.revision}).` : 'Road reopened.');
-    setReopening(false);
-    onReopened();
+    const toastAttempt = beginAttempt('reopen');
+    try {
+      setError(null);
+      const parsed = roadClosureReopenSchema.safeParse({ reason });
+      if (!parsed.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(parsed.error.issues[0]?.message ?? 'Enter a reason');
+        return;
+      }
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data, error: rpcError } = await supabase.rpc('reopen_road_closure', {
+        p_closure_id: closure.id,
+        p_reason: parsed.data.reason,
+      });
+      setSubmitting(false);
+      if (rpcError) {
+        setError(rpcError.message);
+        toast.error(`Closure not reopened: ${rpcError.message}`, { id: toastAttempt });
+        return;
+      }
+      const result = routingMutationResultSchema.safeParse(data);
+      toast.success(result.success ? `Road reopened (revision ${result.data.revision}).` : 'Road reopened.', { id: toastAttempt });
+      setReopening(false);
+      onReopened();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

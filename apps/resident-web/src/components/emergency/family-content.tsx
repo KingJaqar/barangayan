@@ -27,7 +27,7 @@ function getInitials(name: string): string {
  * useFamilyMembers (jsonb-backed, see that hook's doc comment for why). Guests see
  * EmergencyAuthGate instead — see emergency/family/page.tsx's doc comment. */
 export function FamilyContent({ profileId, residentName }: { profileId: string | null; residentName: string | null }) {
-  const { members, isInitialLoading, isRefreshing, isReady, error, refetch, addMember, updateMember, removeMember, lastWriteFailure } =
+  const { members, isInitialLoading, isRefreshing, isReady, error, errorAnnounced, refetch, addMember, updateMember, removeMember, lastWriteFailure } =
     useFamilyMembers(profileId);
   const [showQr, setShowQr] = useState(false);
   const [showMemberDialog, setShowMemberDialog] = useState(false);
@@ -105,10 +105,10 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
       </div>
 
       {isReady && error ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           tone="warning"
           message="Couldn't update your household list. Showing the last loaded list, which may be out of date."
-          onRetry={refetch}
+          onRetry={() => refetch('household members')}
           retrying={isRefreshing}
         />
       ) : null}
@@ -120,7 +120,7 @@ export function FamilyContent({ profileId, residentName }: { profileId: string |
           ))}
         </div>
       ) : !isReady ? (
-        <InlineReadError message="We couldn't load your household members. Check your connection, then try again." onRetry={refetch} />
+        <InlineReadError announce={!errorAnnounced} message="We couldn't load your household members. Check your connection, then try again." onRetry={() => refetch('household members')} />
       ) : members.length === 0 ? (
         <div className={styles.empty}>
           <span className={styles.emptyIcon}><Users size={28} strokeWidth={1.5} /></span>

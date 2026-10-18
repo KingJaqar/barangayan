@@ -5,8 +5,8 @@ import { randomUUID } from 'expo-crypto';
 import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, BackHandler, Keyboard, Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AuthHeader } from '@/components/auth-header';
 import { BirthdayWheelModal } from '@/components/birthday-wheel-modal';
@@ -63,6 +63,7 @@ function ValidIdScreenContent() {
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
   const [submitted, setSubmitted] = useState(false);
+  const [replacing, setReplacing] = useState(false);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const [capturing, setCapturing] = useState(false);
@@ -75,7 +76,10 @@ function ValidIdScreenContent() {
   useEffect(() => { active.current = true; return () => { active.current = false; }; }, []);
   const current = (userId: string) => active.current && owner.current === userId;
   const selectedType = idType === 'Other' ? `${OTHER_ID_TYPE_PREFIX}${otherIdType.trim()}` : idType;
-  const verified = !isLoading && !profileError && idVerificationState(profile) === 'verified';
+  const verification = idVerificationState(profile);
+  const verified = !isLoading && !profileError && verification === 'verified';
+  const pending = !isLoading && !profileError && verification === 'pending';
+  const showConfirmation = !replacing && (submitted || verified || pending);
 
   function goBack() {
     if (busyRef.current || capturing) return;
@@ -84,7 +88,7 @@ function ValidIdScreenContent() {
     if (cameraOpen) { setCameraOpen(false); return; }
     Keyboard.dismiss();
     setError(null);
-    if (submitted || step === 1) router.back();
+    if (showConfirmation || step === 1) router.back();
     else setStep(previous => previous - 1);
   }
   useFocusEffect(useCallback(() => {
@@ -95,7 +99,7 @@ function ValidIdScreenContent() {
     return () => { back.remove(); };
     // Back handling follows the current step and camera state.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, cameraOpen, typePickerOpen, birthdayOpen, capturing, submitted]));
+  }, [step, cameraOpen, typePickerOpen, birthdayOpen, capturing, showConfirmation]));
 
   async function readDetails(path: string, userId: string) {
     setReadingError(null);
@@ -193,20 +197,51 @@ function ValidIdScreenContent() {
       const signature = JSON.stringify([selectedType, photo.path, confirmedDetails]);
       if (publication.current?.signature !== signature) publication.current = { signature, id: randomUUID() };
       await publishIdEvidence(supabase, { submissionId: publication.current.id, idType: selectedType, frontPath: photo.path, confirmedDetails });
-      if (current(userId)) { setSubmitted(true); refetch(); }
+      if (current(userId)) { setSubmitted(true); setReplacing(false); refetch(); }
     } catch (cause) {
       if (current(userId)) setError(cause instanceof Error ? cause.message : 'Could not submit your ID. Please try again.');
     } finally { busyRef.current = false; if (current(userId)) setBusy(false); }
   }
 
   if (!session) return <GuestPrompt label="Log in to submit your valid ID." />;
+  if (showConfirmation || (!replacing && (isLoading || profileError))) {
+    const statusColor = verified ? theme.accentGreen : theme.accentOrange;
+    return <View style={[styles.root, { backgroundColor: theme.background }]}>
+      <AuthHeader title="Valid ID" onBack={goBack} />
+      <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+        <ScrollView contentContainerStyle={styles.statusContent}>
+          <View style={styles.statusBody}>
+            <ThemedText accessibilityRole="header" style={styles.statusTitle}>{showConfirmation && !verified ? 'ID submitted' : 'Valid ID'}</ThemedText>
+            {showConfirmation ? <View style={[styles.confirmation, { borderColor: `${statusColor}66`, backgroundColor: `${statusColor}1A` }]} accessibilityLiveRegion="polite">
+              {!verified ? <Ionicons name="time-outline" size={20} color={statusColor} /> : null}
+              <View style={styles.statusText}>
+                <ThemedText style={styles.confirmationTitle}>{verified ? 'Your valid ID has been verified' : 'Valid ID is pending verification'}</ThemedText>
+                <ThemedText type="small" themeColor="textSecondary">{verified ? 'You can use this ID for service requests.' : 'Your ID has been submitted for staff review. You can use it for service requests once it has been verified.'}</ThemedText>
+              </View>
+            </View> : null}
+            {isLoading ? <View style={styles.status} accessibilityLiveRegion="polite"><ActivityIndicator color={theme.primary} /><ThemedText themeColor="textSecondary">Checking verification status…</ThemedText></View> : profileError ? <>
+              <RecoveryError message={submitted ? 'Your ID was submitted. Verification status is temporarily unavailable.' : profileError} />
+              <RecoveryButton label="Try again" onPress={refetch} />
+            </> : showConfirmation ? <>
+              <ThemedText type="small" themeColor="textSecondary">{verified ? 'If you need to replace this ID, your new submission will require staff verification before it can be used for service requests.' : 'If you need to correct this submission, you can submit a replacement ID for staff review.'}</ThemedText>
+              <PhotoAction label="Submit a replacement ID" icon="card-outline" onPress={() => {
+                setStep(1); setIdType(''); setOtherIdType(''); setPhoto(null); setDetails(EMPTY_DETAILS);
+                setDetailsReady(false); setFieldErrors({}); setError(null); setReadingError(null);
+                publication.current = null; setSubmitted(false); setReplacing(true);
+              }} />
+            </> : null}
+            <RecoveryButton label="Back to Settings" onPress={() => router.dismissTo('/settings')} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>;
+  }
   const intro = STEPS[step - 1]!;
   return (
     <View style={[styles.root, { backgroundColor: theme.background }]}>
       <AuthHeader title="Valid ID" onBack={goBack} />
-      <StepFlowScreen step={step} totalSteps={4} flowLabel="Valid ID submission" title={submitted ? 'ID submitted' : intro.title} description={submitted ? 'Your ID is pending barangay verification. You can check its status in Settings.' : intro.description}>
+      <StepFlowScreen step={step} totalSteps={4} flowLabel="Valid ID submission" title={intro.title} description={intro.description}>
         <View style={recoveryStyles.form}>
-          {submitted ? <><Ionicons name="checkmark-circle-outline" size={56} color={theme.accentGreen} /><RecoveryButton label="Back to Settings" onPress={() => router.dismissTo('/settings')} /></> : <>
             {step === 1 ? <>
               {profile?.id_verification_status ? <View style={styles.status}>
                 <Ionicons name={verified ? 'checkmark-circle' : 'warning'} size={20} color={verified ? theme.accentGreen : theme.accentRed} />
@@ -258,7 +293,6 @@ function ValidIdScreenContent() {
             <RecoveryError message={error} />
             <RecoveryButton label={step === 4 ? 'Submit' : 'Continue'} loading={busy} disabled={step === 1 ? !idType || (idType === 'Other' && !otherIdType.trim()) : step === 2 ? !photo || !detailsReady : false} onPress={step === 4 ? () => { void submit(); } : continueFlow} />
             <Pressable accessibilityRole="button" accessibilityLabel={step === 1 ? 'Back to Settings' : 'Previous step'} disabled={busy} onPress={goBack} style={recoveryStyles.textLink}><ThemedText style={recoveryStyles.textLinkLabel}>{step === 1 ? 'Back to Settings' : 'Previous step'}</ThemedText></Pressable>
-          </>}
         </View>
       </StepFlowScreen>
       <BirthdayWheelModal visible={birthdayOpen} value={details.birthDate} onClose={() => setBirthdayOpen(false)} onConfirm={value => {
@@ -299,6 +333,11 @@ function PhotoAction({ label, icon, onPress, disabled = false }: { label: string
 }
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  statusContent: { flexGrow: 1, padding: Spacing.four, paddingTop: Spacing.five },
+  statusBody: { width: '100%', maxWidth: 480, alignSelf: 'center', gap: Spacing.four },
+  statusTitle: { fontSize: 26, lineHeight: 34, fontWeight: '700' },
+  confirmation: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two, padding: Spacing.three, borderWidth: 1, borderRadius: 12 },
+  confirmationTitle: { fontWeight: '600', marginBottom: Spacing.one },
   status: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two },
   statusText: { flex: 1 },
   options: { gap: Spacing.two },

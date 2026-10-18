@@ -75,13 +75,14 @@ export function PickupStep({
   const saving = state.status === 'saving';
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div data-document-step="pickup" className="flex flex-col gap-4">
+      <div data-document-part="heading">
+        <p data-document-part="eyebrow">Pay at Pickup</p>
         <h2 className="text-xl font-bold">{documentName}</h2>
         <p className="text-sm text-muted-foreground">Ref #{referenceNumber}</p>
       </div>
 
-      <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-8 text-center">
+      <div data-document-part="pickup-summary" className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-8 text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 text-primary">
           <Banknote size={32} strokeWidth={1.75} />
         </div>
@@ -103,8 +104,8 @@ export function PickupStep({
             </Button>
           </div>
         ) : state.status === 'saved' ? (
-          <p className="text-sm font-medium">
-            Pickup payment recorded.
+          <p data-document-part="pickup-recorded" className="text-sm font-medium">
+            Pickup payment recorded. Payment is due at collection.
           </p>
         ) : null}
         <LoadingStatus active={saving} label="Recording your pickup payment…" />

@@ -1,0 +1,48 @@
+Browser tab: 1814337898, Title: "Internal Preview", URL: "https://df178e1c-7b6e-4d98-8334-06f3a00f28c3-render.magicpatterns.app/".
+0 AXWebArea Internal Preview, URL: df178e1c-7b6e-4d98-8334-06f3a00f28c3-render.magicpatterns.app/
+	1 container
+		2 image Barangayan
+		3 text Services
+		4 button Search
+		5 button Announcements, 2 unread
+		6 button Open settings
+		7 tab group Services
+			8 tab (selected, settable, boolean) Documents, Value: 1
+			9 tab (selectable, settable, boolean) Requests, Value: 0
+			10 tab (selectable, settable, boolean) Logs, Value: 0
+		11 container Available documents
+			12 heading Available documents, Value: 2, ID: documents-heading
+				13 text Available documents
+			14 text 4 services from your barangay
+			15 text Valid ID Verified
+			16 content list
+				17 button Certificate of Indigency 15 minutes of agency processing ₱100.00
+					18 heading Certificate of Indigency, Value: 3
+						19 text Certificate of Indigency
+					20 text 15 minutes of agency processing
+					21 text ₱100.00
+				22 button First Time Job Seeker 15 minutes of agency processing ₱100.00
+					23 heading First Time Job Seeker, Value: 3
+						24 text First Time Job Seeker
+					25 text 15 minutes of agency processing
+					26 text ₱100.00
+				27 button Issuance of Barangay Clearance for Business Establishments 15 minutes of agency processing See Attached Tax Code (depends on the kind of transaction)
+					28 heading Issuance of Barangay Clearance for Business Establishments, Value: 3
+						29 text Issuance of Barangay Clearance for Business Establishments
+					30 text 15 minutes of agency processing
+					31 text See Attached Tax Code (depends on the kind of transaction)
+				32 button Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy) 15 minutes of agency processing ₱10.00 per page
+					33 heading Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy), Value: 3
+						34 text Reproduction or Photocopy of Barangay Records, Data, and Similar Documents (Certified True Copy)
+					35 text 15 minutes of agency processing
+					36 text ₱10.00 per page
+		37 container Primary
+			38 content list
+				39 button Home
+				40 button Services
+				41 button DRRM
+				42 button Maps
+				43 button Health
+				44 button Reports, 1 active, 1 new updates
+
+The focused UI element is 0 AXWebArea Internal Preview, URL: df178e1c-7b6e-4d98-8334-06f3a00f28c3-render.magicpatterns.app/

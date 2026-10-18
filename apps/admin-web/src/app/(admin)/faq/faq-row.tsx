@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -21,7 +21,6 @@ const inputClass =
 
 export function FaqRow({ article }: { article: FaqArticle }) {
   const router = useRouter();
-  const toast = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,137 +44,162 @@ export function FaqRow({ article }: { article: FaqArticle }) {
   }
 
   async function handleSave(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSave');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const parsed = faqArticleSchema.safeParse({
-      question,
-      answer,
-      category,
-      sort_order: sortOrder ? parseInt(sortOrder, 10) : 0,
-      is_active: isActive,
-    });
+      const parsed = faqArticleSchema.safeParse({
+        question,
+        answer,
+        category,
+        sort_order: sortOrder ? parseInt(sortOrder, 10) : 0,
+        is_active: isActive,
+      });
 
-    if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!parsed.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(parsed.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('faq_articles')
-      .update({
-        question: parsed.data.question,
-        answer: parsed.data.answer,
-        category: parsed.data.category,
-        sort_order: parsed.data.sort_order,
-        is_active: parsed.data.is_active,
-      })
-      .eq('id', article.id);
-    setSubmitting(false);
-
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Failed to save: ${updateError.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'faq_article',
-      entityId: article.id,
-      entityLabel: parsed.data.question,
-      changes: {
-        before: {
-          question: article.question,
-          answer: article.answer,
-          category: article.category,
-          sort_order: article.sort_order,
-          is_active: article.is_active,
-        },
-        after: {
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from('faq_articles')
+        .update({
           question: parsed.data.question,
           answer: parsed.data.answer,
           category: parsed.data.category,
           sort_order: parsed.data.sort_order,
           is_active: parsed.data.is_active,
-        },
-      },
-    }).catch(() => {});
+        })
+        .eq('id', article.id);
+      setSubmitting(false);
 
-    toast.showSuccess('Article updated.');
-    setIsEditing(false);
-    router.refresh();
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'faq_article',
+        entityId: article.id,
+        entityLabel: parsed.data.question,
+        changes: {
+          before: {
+            question: article.question,
+            answer: article.answer,
+            category: article.category,
+            sort_order: article.sort_order,
+            is_active: article.is_active,
+          },
+          after: {
+            question: parsed.data.question,
+            answer: parsed.data.answer,
+            category: parsed.data.category,
+            sort_order: parsed.data.sort_order,
+            is_active: parsed.data.is_active,
+          },
+        },
+      }).catch(() => {});
+
+      toast.success('Article updated.', { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('faq_articles')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', article.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('faq_articles')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', article.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'faq_article',
+        entityId: article.id,
+        entityLabel: article.question,
+        metadata: { question: article.question, answer: article.answer, category: article.category },
+      }).catch(() => {});
+
+      toast.success('Article archived.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'faq_article',
-      entityId: article.id,
-      entityLabel: article.question,
-      metadata: { question: article.question, answer: article.answer, category: article.category },
-    }).catch(() => {});
-
-    toast.showSuccess('Article archived.');
-    router.refresh();
   }
 
   async function unarchive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: unarchiveError } = await supabase
-      .from('faq_articles')
-      .update({ deleted_at: null })
-      .eq('id', article.id);
-    if (unarchiveError) {
-      toast.showError(`Failed to restore: ${unarchiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('unarchive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: unarchiveError } = await supabase
+        .from('faq_articles')
+        .update({ deleted_at: null })
+        .eq('id', article.id);
+      if (unarchiveError) {
+        toast.error(`Failed to restore: ${unarchiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'faq_article',
+        entityId: article.id,
+        entityLabel: article.question,
+        metadata: { restored: true },
+      }).catch(() => {});
+
+      toast.success('Article restored.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'faq_article',
-      entityId: article.id,
-      entityLabel: article.question,
-      metadata: { restored: true },
-    }).catch(() => {});
-
-    toast.showSuccess('Article restored.');
-    router.refresh();
   }
 
   async function handleDelete() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: deleteError } = await supabase
-      .from('faq_articles')
-      .delete()
-      .eq('id', article.id);
-    if (deleteError) {
-      toast.showError(`Failed to delete: ${deleteError.message}`);
-      return;
+    const toastAttempt = beginAttempt('handleDelete');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: deleteError } = await supabase
+        .from('faq_articles')
+        .delete()
+        .eq('id', article.id);
+      if (deleteError) {
+        toast.error(`Failed to delete: ${deleteError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'faq_article',
+        entityId: article.id,
+        entityLabel: article.question,
+        metadata: { hard: true, question: article.question, answer: article.answer, category: article.category },
+      }).catch(() => {});
+
+      toast.success('Article permanently deleted.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'faq_article',
-      entityId: article.id,
-      entityLabel: article.question,
-      metadata: { hard: true, question: article.question, answer: article.answer, category: article.category },
-    }).catch(() => {});
-
-    toast.showSuccess('Article permanently deleted.');
-    router.refresh();
   }
 
   const meta = FAQ_CATEGORY_META[article.category as keyof typeof FAQ_CATEGORY_META];

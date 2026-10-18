@@ -1,0 +1,31 @@
+
+> @barangayan/resident-web@0.1.0 lint
+> eslint
+
+
+C:\Users\User\barangayan\apps\resident-web\src\app\(resident)\settings\location-verification\location-verification-map.tsx
+  102:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+C:\Users\User\barangayan\apps\resident-web\tests\document-request-sheet-fixture.jsx
+  34:3  error  Error: This value cannot be modified
+
+Modifying a variable defined outside a component or hook is not allowed. Consider using an effect.
+
+  32 |   const [key, setKey] = useState(0);
+  33 |   const [open, setOpen] = useState(true);
+> 34 |   fixture.reset = (mode = 'default') => {
+     |   ^^^^^^^ value cannot be modified
+  35 |     fixture.status = 'pending'; fixture.calls = []; fixture.error = null; fixture.authenticated = mode !== 'guest';
+  36 |     fixture.request.payment_status = 'pending'; fixture.request.assessed_amount_centavos = mode === 'business' ? null : 10000;
+  37 |     fixture.request.fee_assessment_state = mode === 'business' ? 'pickup_due' : 'assessed';  react-hooks/immutability
+
+✖ 2 problems (1 error, 1 warning)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path C:\Users\User\barangayan\apps\resident-web
+npm error workspace @barangayan/resident-web@0.1.0
+npm error location C:\Users\User\barangayan\apps\resident-web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint

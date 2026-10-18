@@ -3,9 +3,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Json } from '@barangayan/shared';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { RECORD_CONFIG, fieldValue, recordLabel, validateRecordPatch, type RecordData } from '@/lib/admin-tables/record-config';
+import { RECORD_CONFIG, editableFields, fieldValue, recordLabel, validateRecordPatch, type RecordData } from '@/lib/admin-tables/record-config';
 import type { AdminRecordDatabase } from '@/lib/admin-tables/record-schema';
 import type { TableName } from '@/lib/admin-tables/table-configs';
+import { pilotOptions } from '@/lib/admin-tables/queries/pilot-options';
 import { logAdminAction } from './admin-audit-actions';
 
 export async function loadAdminRecordOptions(name: TableName, id: string) {
@@ -22,9 +23,15 @@ export async function loadAdminRecordOptions(name: TableName, id: string) {
     const entries = await Promise.all(lookups.map(async lookup => {
       const result = lookup === 'documents' ? await session.from('document_types').select('id,name').eq('barangay_id', tenant).is('deleted_at', null).order('name')
         : lookup === 'categories' ? await session.from('incident_categories').select('id,name').eq('barangay_id', tenant).order('name')
-        : await session.from('profiles').select('id,full_name').eq('barangay_id', tenant).eq('role', lookup === 'admins' ? 'admin' : 'resident').is('deleted_at', null).order('full_name');
+        : null;
+      if (!result) {
+        const profiles = await pilotOptions(session, 'profiles', tenant, lookup === 'admins' ? 'admin'
+          : name === 'requests' || name === 'transactions' ? 'requester' : 'resident');
+        if (profiles.status === 'error') throw new Error(profiles.message);
+        return [lookup, profiles.value.map(item => ({ value: item.id, label: item.full_name }))] as const;
+      }
       if (result.error) throw new Error('Could not load edit options. Please retry.');
-      return [lookup, result.data.map(item => ({ value: item.id, label: 'name' in item ? item.name : item.full_name }))] as const;
+      return [lookup, result.data.map(item => ({ value: item.id, label: item.name }))] as const;
     }));
     return { options: Object.fromEntries(entries), error: null };
   } catch (cause) { return { options: null, error: cause instanceof Error ? cause.message : 'Could not load edit options.' }; }
@@ -54,10 +61,12 @@ export async function mutateAdminRecord(name: TableName, id: string, operation: 
       throw new Error(result.error.message);
     }
     if (!result.data) throw new Error('No record was changed. Reload the details and check your access.');
-    await logAdminAction({ action: operation === 'delete' ? 'delete' : 'update',
+    const paymentAudited = typeof result.data === 'object' && !Array.isArray(result.data) && (result.data.payment_audited === true || result.data.record_audited === true);
+    if (!paymentAudited) await logAdminAction({ action: operation === 'delete' ? 'delete' : 'update',
       entityType: RECORD_CONFIG[name].entity, entityId: id, entityLabel: recordLabel(row),
       ...(operation === 'save' ? { changes: { before: Object.fromEntries(Object.keys(patch).map(key => [key,
-        fieldValue(row, RECORD_CONFIG[name].fields.find(field => field.key === key)!)])), after: patch } } : {}), metadata: { operation } }).catch(() => {});
-    return { error: null };
+        fieldValue(row, editableFields(name, row).find(field => field.key === key)!)])), after: patch } } : {}), metadata: { operation } }).catch(() => {});
+    const updated = typeof result.data === 'object' && !Array.isArray(result.data) ? result.data.row : null;
+    return { error: null, ...(updated && typeof updated === 'object' && !Array.isArray(updated) && updated.id === id ? { row: updated as unknown as RecordData } : {}) };
   } catch (cause) { return { error: cause instanceof Error ? cause.message : 'The action failed. Please retry.' }; }
 }

@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { useColorScheme as useSystemColorScheme } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
@@ -7,6 +7,16 @@ import { supabase } from '@/lib/supabase';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
 export const DEFAULT_ACCENT_COLOR = '#0F6E5B';
+const THEME_STORAGE_KEY = 'resident-android-theme-v1';
+
+// Legacy "system" preferences use light; dark mode requires an explicit choice.
+function explicitTheme(value: unknown): 'light' | 'dark' {
+  return value === 'dark' ? 'dark' : 'light';
+}
+
+function saveDeviceTheme(value: 'light' | 'dark') {
+  void AsyncStorage.setItem(THEME_STORAGE_KEY, value).catch(() => {});
+}
 
 /** How many custom (non-swatch) colors a resident can save at once. Matches the
  * `custom_accent_colors` column's array-length check in the 0075 migration and the web
@@ -34,7 +44,7 @@ function normalizeCustomList(colors: string[]): string[] {
 
 interface ThemePreferenceContextValue {
   themePreference: ThemePreference;
-  /** Resolved to an actual scheme — 'system' falls through to the OS setting. */
+  /** Only an explicit dark preference enables dark mode. */
   scheme: 'light' | 'dark';
   accentColor: string;
   setThemePreference: (value: ThemePreference) => void;
@@ -48,7 +58,7 @@ interface ThemePreferenceContextValue {
 }
 
 const ThemePreferenceContext = createContext<ThemePreferenceContextValue>({
-  themePreference: 'system',
+  themePreference: 'light',
   scheme: 'light',
   accentColor: DEFAULT_ACCENT_COLOR,
   setThemePreference: () => {},
@@ -61,30 +71,39 @@ const ThemePreferenceContext = createContext<ThemePreferenceContextValue>({
 /**
  * Real, persisted App Theme (Light/Dark + accent color) for logged-in users — settings
  * live on their profiles row and apply app-wide (every useTheme() call), not just within
- * the Settings screen. Guests get local-only state for the session (no profile to persist
- * to; resets on app restart) — matches the Settings-rebuild plan's scope boundary.
+ * the Settings screen. The last explicit theme is also stored on this device so it
+ * survives logout and restart. Account accent colors still reset on logout.
  */
 export function ThemePreferenceProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const { profile } = useProfile();
-  const systemScheme = useSystemColorScheme();
-
-  const [themePreference, setThemePreferenceState] = useState<ThemePreference>('system');
+  const [themePreference, setThemePreferenceState] = useState<ThemePreference>('light');
+  const themeOverridden = useRef(false);
   const [accentColor, setAccentColorState] = useState(DEFAULT_ACCENT_COLOR);
   const [customColors, setCustomColorsState] = useState<string[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    void AsyncStorage.getItem(THEME_STORAGE_KEY).then((saved) => {
+      // A slow storage read must not replace a loaded profile or a new choice.
+      if (active && !themeOverridden.current) setThemePreferenceState(explicitTheme(saved));
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   // Load from the profile once it's available — only overwrites local state on the
   // initial load per session, so a change made seconds ago isn't clobbered by a
   // background refetch of stale data.
   useEffect(() => {
     if (profile) {
-      setThemePreferenceState((profile.theme_preference as ThemePreference) ?? 'system');
+      const preference = explicitTheme(profile.theme_preference);
+      themeOverridden.current = true;
+      setThemePreferenceState(preference);
+      saveDeviceTheme(preference);
       setAccentColorState(profile.accent_color ?? DEFAULT_ACCENT_COLOR);
       setCustomColorsState(normalizeCustomList(profile.custom_accent_colors ?? []));
     } else if (!session) {
-      // Signed out / logged out — back to defaults rather than keeping a stale account's
-      // theme applied to the next guest session.
-      setThemePreferenceState('system');
+      // Keep the resident's last theme on the welcome screen after logout.
       setAccentColorState(DEFAULT_ACCENT_COLOR);
       setCustomColorsState([]);
     }
@@ -92,7 +111,10 @@ export function ThemePreferenceProvider({ children }: { children: ReactNode }) {
   }, [profile?.id]);
 
   function setThemePreference(value: ThemePreference) {
-    setThemePreferenceState(value);
+    const preference = explicitTheme(value);
+    themeOverridden.current = true;
+    setThemePreferenceState(preference);
+    saveDeviceTheme(preference);
     if (session) {
       // Supabase's query builder is a lazy thenable — the fetch is only actually
       // constructed and sent once .then()/await runs (see PostgrestBuilder.then()).
@@ -101,7 +123,7 @@ export function ThemePreferenceProvider({ children }: { children: ReactNode }) {
       // by type-checking or a curl-simulated equivalent.
       supabase
         .from('profiles')
-        .update({ theme_preference: value })
+        .update({ theme_preference: preference })
         .eq('id', session.user.id)
         .then(({ error }) => {
           if (error) console.warn('Failed to persist theme_preference:', error.message);
@@ -148,8 +170,7 @@ export function ThemePreferenceProvider({ children }: { children: ReactNode }) {
     persistCustomColors(customColors.filter((c) => c.toLowerCase() !== color.toLowerCase()));
   }
 
-  const resolvedSystemScheme = systemScheme === 'dark' ? 'dark' : 'light';
-  const scheme = themePreference === 'system' ? resolvedSystemScheme : themePreference;
+  const scheme = explicitTheme(themePreference);
 
   return (
     <ThemePreferenceContext.Provider

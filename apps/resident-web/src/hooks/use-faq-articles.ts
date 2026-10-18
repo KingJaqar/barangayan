@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useScopedRead } from '@/hooks/use-scoped-read';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { uniqueChannelName } from '@/lib/realtime-channel';
@@ -21,35 +22,21 @@ export function useFaqArticles(barangayId: string | null): {
   articles: FaqArticle[];
   isLoading: boolean;
   error: string | null;
-  refetch: () => void;
+  errorAnnounced: boolean;
+  refetch: (contentName?: string) => void;
 } {
-  const [articles, setArticles] = useState<FaqArticle[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const doFetch = useCallback(() => {
-    setIsLoading(true);
-    setError(null);
-
+  const read = useScopedRead<FaqArticle[]>(barangayId ?? '*', () => {
     const supabase = createSupabaseBrowserClient();
     let query = supabase.from('faq_articles').select('*').eq('is_active', true).is('deleted_at', null);
     if (barangayId) query = query.eq('barangay_id', barangayId);
 
-    query
+    return query
       .order('sort_order', { ascending: true })
-      .then(({ data, error: qErr }) => {
-        if (qErr) {
-          setError(qErr.message);
-        } else {
-          setArticles((data ?? []) as FaqArticle[]);
-        }
-        setIsLoading(false);
-      });
-  }, [barangayId]);
+      .then(({ data, error }) => ({ data: (data ?? []) as FaqArticle[], error }));
+  });
+  const { refetch } = read;
 
   useEffect(() => {
-    Promise.resolve().then(() => doFetch());
-
     if (!barangayId) return;
 
     const supabase = createSupabaseBrowserClient();
@@ -58,14 +45,14 @@ export function useFaqArticles(barangayId: string | null): {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'faq_articles', filter: `barangay_id=eq.${barangayId}` },
-        doFetch,
+        () => refetch(),
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [doFetch, barangayId]);
+  }, [refetch, barangayId]);
 
-  return { articles, isLoading, error, refetch: doFetch };
+  return { articles: read.data ?? [], isLoading: read.isLoading, error: read.error, errorAnnounced: read.errorAnnounced, refetch };
 }

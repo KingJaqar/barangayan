@@ -11,12 +11,12 @@ export const metadata = { title: 'Announcement' };
 export default async function AnnouncementDetailPage({ params }: { params: Promise<{ announcementId: string }> }) {
   const { announcementId } = await params;
   const { user, profile } = await getOptionalUser();
-  if (user && !profile) return <ReadFailure message="We couldn't load your barangay information." />;
+  if (user && !profile) return <ReadFailure resultId={crypto.randomUUID()} contentName="your barangay information" message="We couldn't load your barangay information." />;
   const supabase = await createSupabaseServerClient();
   let query = supabase.from('announcements').select('id,title,body,detailed_description,category,published_at').eq('id', announcementId).is('deleted_at', null);
   if (profile) query = query.eq('barangay_id', profile.barangay_id);
   const { data: announcement, error } = await query.maybeSingle();
-  if (error) return <ReadFailure message="We couldn't load this announcement." />;
+  if (error) return <ReadFailure resultId={crypto.randomUUID()} contentName="this announcement" message="We couldn't load this announcement." />;
   if (!announcement) notFound();
   const category = ANNOUNCEMENT_CATEGORY_META[announcement.category as AnnouncementCategory]?.label ?? 'Announcement';
   return (

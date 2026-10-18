@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { TableDetailDialog, TableDetailState } from '@/components/admin/table-detail-dialog';
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import { formatDriveDate } from '../drive-table';
@@ -23,7 +23,7 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
   row: ApplicantRow; onClose: () => void; onChanged: () => void; onEditingChange: (editing: boolean) => void;
   detailStatus: 'loading' | 'ready' | 'error' | 'unavailable'; onRetry: () => void;
 }) {
-  const toast = useToast();
+
   const [editing, setEditing] = useState(false);
   const [age, setAge] = useState(row.age);
   const [isPwd, setIsPwd] = useState(String(row.is_pwd));
@@ -39,9 +39,10 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
   }, [editing, onEditingChange]);
 
   async function saveDetails() {
+    const toastAttempt = beginAttempt('saveDetails');
     if (savingRef.current) return;
     if (!Number.isFinite(age) || age < 0 || age > 130) {
-      toast.showError('Enter an age between 0 and 130.');
+      toast.error('Enter an age between 0 and 130.', { id: toastAttempt });
       return;
     }
     savingRef.current = true;
@@ -69,18 +70,18 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
     } catch (cause) {
       savingRef.current = false;
       setSaving(false);
-      toast.showError(`Failed to save: ${cause instanceof Error ? cause.message : 'the update could not be completed.'}`);
+      toast.error(`Failed to save: ${cause instanceof Error ? cause.message : 'the update could not be completed.'}`, { id: toastAttempt });
       return;
     }
     savingRef.current = false;
     setSaving(false);
     const { data: updated, error } = result;
     if (error) {
-      toast.showError(`Failed to save: ${error.message}`);
+      toast.error(`Failed to save: ${error.message}`, { id: toastAttempt });
       return;
     }
     if (!updated) {
-      toast.showError('Failed to save: no registration was updated. Check that you still have access to this barangay.');
+      toast.error('Failed to save: no registration was updated. Check that you still have access to this barangay.', { id: toastAttempt });
       return;
     }
 
@@ -108,7 +109,7 @@ export function ApplicantDetailModal({ row, onClose, onChanged, onEditingChange,
       },
     }).catch(() => {});
 
-    toast.showSuccess('Registration updated.');
+    toast.success('Registration updated.', { id: toastAttempt });
     setEditing(false);
     onChanged();
   }

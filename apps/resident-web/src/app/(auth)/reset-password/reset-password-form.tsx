@@ -93,7 +93,7 @@ export default function ResetPasswordForm({ settings }: { settings?: { owner: Se
         errors[String(issue.path[0])] = issue.message;
       }
       setFieldErrors(errors);
-      // Inline messages only (no toast); move focus to the first field that needs work.
+      notify.error('Check the password requirements and confirmation.', { id: beginAttempt('password-validation') });
       document.getElementById(errors.password ? 'password' : 'confirmPassword')?.focus();
       return;
     }

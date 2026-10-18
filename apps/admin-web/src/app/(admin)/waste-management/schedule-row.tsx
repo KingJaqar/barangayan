@@ -10,7 +10,7 @@ import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -22,7 +22,6 @@ const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
 
 export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; zoneName: string }) {
   const router = useRouter();
-  const toast = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,122 +43,141 @@ export function ScheduleRow({ schedule, zoneName }: { schedule: WasteSchedule; z
   }
 
   async function toggleActive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: toggleError } = await supabase
-      .from('waste_collection_schedules')
-      .update({ is_active: !schedule.is_active })
-      .eq('id', schedule.id);
-    if (toggleError) {
-      toast.showError(`Failed to ${schedule.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`);
-      return;
+    const toastAttempt = beginAttempt('toggleActive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: toggleError } = await supabase
+        .from('waste_collection_schedules')
+        .update({ is_active: !schedule.is_active })
+        .eq('id', schedule.id);
+      if (toggleError) {
+        toast.error(`Failed to ${schedule.is_active ? 'deactivate' : 'activate'}: ${toggleError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'status_change',
+        entityType: 'waste_schedule',
+        entityId: schedule.id,
+        entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
+        changes: { before: { is_active: schedule.is_active }, after: { is_active: !schedule.is_active } },
+      }).catch(() => {});
+
+      toast.success(`Schedule ${schedule.is_active ? 'deactivated' : 'activated'}.`, { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'status_change',
-      entityType: 'waste_schedule',
-      entityId: schedule.id,
-      entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
-      changes: { before: { is_active: schedule.is_active }, after: { is_active: !schedule.is_active } },
-    }).catch(() => {});
-
-    toast.showSuccess(`Schedule ${schedule.is_active ? 'deactivated' : 'activated'}.`);
-    router.refresh();
   }
 
   async function archive() {
-    const supabase = createSupabaseBrowserClient();
-    const { error: archiveError } = await supabase
-      .from('waste_collection_schedules')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', schedule.id);
-    if (archiveError) {
-      toast.showError(`Failed to archive: ${archiveError.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error: archiveError } = await supabase
+        .from('waste_collection_schedules')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', schedule.id);
+      if (archiveError) {
+        toast.error(`Failed to archive: ${archiveError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'waste_schedule',
+        entityId: schedule.id,
+        entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
+        metadata: {
+          zone: zoneName,
+          waste_type: schedule.waste_type,
+          day_of_week: DAY_NAMES[schedule.day_of_week] ?? schedule.day_of_week,
+          start_time: schedule.start_time,
+          end_time: schedule.end_time,
+        },
+      }).catch(() => {});
+
+      toast.success('Schedule archived.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'waste_schedule',
-      entityId: schedule.id,
-      entityLabel: `${zoneName} — ${DAY_NAMES[schedule.day_of_week] ?? 'Unknown'}`,
-      metadata: {
-        zone: zoneName,
-        waste_type: schedule.waste_type,
-        day_of_week: DAY_NAMES[schedule.day_of_week] ?? schedule.day_of_week,
-        start_time: schedule.start_time,
-        end_time: schedule.end_time,
-      },
-    }).catch(() => {});
-
-    toast.showSuccess('Schedule archived.');
-    router.refresh();
   }
 
   async function handleSave(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSave');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const result = wasteScheduleSchema.safeParse({
-      zoneId: schedule.zone_id,
-      wasteType: wasteType as WasteType,
-      dayOfWeek: Number(dayOfWeek),
-      startTime,
-      endTime,
-      notes: notes || undefined,
-      isActive: schedule.is_active,
-    });
+      const result = wasteScheduleSchema.safeParse({
+        zoneId: schedule.zone_id,
+        wasteType: wasteType as WasteType,
+        dayOfWeek: Number(dayOfWeek),
+        startTime,
+        endTime,
+        notes: notes || undefined,
+        isActive: schedule.is_active,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { error: updateError } = await supabase
-      .from('waste_collection_schedules')
-      .update({
-        waste_type: result.data.wasteType,
-        day_of_week: result.data.dayOfWeek,
-        start_time: result.data.startTime,
-        end_time: result.data.endTime,
-        notes: result.data.notes,
-      })
-      .eq('id', schedule.id);
-    setSubmitting(false);
-
-    if (updateError) {
-      setError(updateError.message);
-      toast.showError(`Failed to save changes: ${updateError.message}`);
-      return;
-    }
-
-    logAdminAction({
-      action: 'update',
-      entityType: 'waste_schedule',
-      entityId: schedule.id,
-      entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
-      changes: {
-        before: {
-          waste_type: schedule.waste_type,
-          day_of_week: schedule.day_of_week,
-          start_time: schedule.start_time,
-          end_time: schedule.end_time,
-          notes: schedule.notes,
-        },
-        after: {
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { error: updateError } = await supabase
+        .from('waste_collection_schedules')
+        .update({
           waste_type: result.data.wasteType,
           day_of_week: result.data.dayOfWeek,
           start_time: result.data.startTime,
           end_time: result.data.endTime,
           notes: result.data.notes,
-        },
-      },
-    }).catch(() => {});
+        })
+        .eq('id', schedule.id);
+      setSubmitting(false);
 
-    toast.showSuccess('Schedule updated.');
-    setIsEditing(false);
-    router.refresh();
+      if (updateError) {
+        setError(updateError.message);
+        toast.error(`Failed to save changes: ${updateError.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'update',
+        entityType: 'waste_schedule',
+        entityId: schedule.id,
+        entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
+        changes: {
+          before: {
+            waste_type: schedule.waste_type,
+            day_of_week: schedule.day_of_week,
+            start_time: schedule.start_time,
+            end_time: schedule.end_time,
+            notes: schedule.notes,
+          },
+          after: {
+            waste_type: result.data.wasteType,
+            day_of_week: result.data.dayOfWeek,
+            start_time: result.data.startTime,
+            end_time: result.data.endTime,
+            notes: result.data.notes,
+          },
+        },
+      }).catch(() => {});
+
+      toast.success('Schedule updated.', { id: toastAttempt });
+      setIsEditing(false);
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   const typeConfig = WASTE_TYPE_CONFIG[schedule.waste_type as keyof typeof WASTE_TYPE_CONFIG];

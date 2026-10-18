@@ -11,12 +11,12 @@ export const metadata = { title: 'Medical drive' };
 export default async function MedicalDriveDetailPage({ params }: { params: Promise<{ driveId: string }> }) {
   const { driveId } = await params;
   const { user, profile } = await getOptionalUser();
-  if (user && !profile) return <ReadFailure message="We couldn't load your barangay information." />;
+  if (user && !profile) return <ReadFailure resultId={crypto.randomUUID()} contentName="your barangay information" message="We couldn't load your barangay information." />;
   const supabase = await createSupabaseServerClient();
   let query = supabase.from('medical_drives').select('id,title,drive_date,time_start,time_end,location,eligible_criteria,stock_remaining,stock_unit').eq('id', driveId).eq('is_active', true).is('deleted_at', null);
   if (profile) query = query.eq('barangay_id', profile.barangay_id);
   const { data: drive, error } = await query.maybeSingle();
-  if (error) return <ReadFailure message="We couldn't load this medical drive." />;
+  if (error) return <ReadFailure resultId={crypto.randomUUID()} contentName="this medical drive" message="We couldn't load this medical drive." />;
   if (!drive) notFound();
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
   const canRegister = drive.stock_remaining > 0 && drive.drive_date >= today;

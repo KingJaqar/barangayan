@@ -40,7 +40,9 @@
     ".next-charter-checks/types/**/*.ts",
     ".next-charter-checks/dev/types/**/*.ts",
     ".next-phase6/types/**/*.ts",
-    ".next-phase6/dev/types/**/*.ts"
+    ".next-phase6/dev/types/**/*.ts",
+    "../../tmp/document-request-sheet/build-webpack/types/**/*.ts",
+    "../../tmp/document-request-sheet/build-webpack/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

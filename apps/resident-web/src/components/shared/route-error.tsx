@@ -2,7 +2,7 @@
 
 import { TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
-import { useTransition } from 'react';
+import { useServerReadRetry } from '@/components/shared/read-failure';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -34,14 +34,14 @@ export function RouteError({
   returnLabel: string;
   className?: string;
 }) {
-  const [retrying, startRetry] = useTransition();
+  const { pending: retrying, errorAnnounced, retry: retryRead } = useServerReadRetry(error, 'this page', true);
 
   return (
     <div className={cn('mx-auto flex w-full max-w-md flex-col items-center gap-4 py-16 text-center', className)}>
       <div className="flex size-14 items-center justify-center rounded-full bg-status-error/10">
         <TriangleAlert aria-hidden size={26} className="text-status-error" />
       </div>
-      <div role="alert" className="flex flex-col gap-1.5">
+      <div role={errorAnnounced ? undefined : 'alert'} className="flex flex-col gap-1.5">
         <h1 className="text-lg font-bold">This page couldn&apos;t load</h1>
         <p className="text-sm text-muted-foreground">
           Something went wrong while showing this page. Check your connection, then try again. Anything you already
@@ -55,7 +55,7 @@ export function RouteError({
           loadingLabel="Trying again…"
           onClick={() => {
             if (retrying) return;
-            startRetry(() => retry());
+            retryRead(retry);
           }}>
           Try again
         </Button>

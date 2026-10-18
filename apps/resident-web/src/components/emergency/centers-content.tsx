@@ -17,6 +17,7 @@ import { PendingHint, Skeleton } from '@/components/ui/loading';
 import { useConnectedRoute, type SegmentChoice } from '@/hooks/use-connected-route';
 import { useDeviceLocation } from '@/hooks/use-device-location';
 import { useEvacuationCenters } from '@/hooks/use-evacuation-centers';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 import styles from './emergency.module.css';
 import stickyStyles from '@/components/shared/sticky-tabs.module.css';
 
@@ -33,12 +34,13 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
   const location = useDeviceLocation();
   const origin = location.state.origin;
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
+  const [selectionNotificationId, setSelectionNotificationId] = useState<OperationId | null>(null);
   // A street picked from the attachment chooser belongs to one origin revision.
   const [choice, setChoice] = useState<(SegmentChoice & { revision: number }) | null>(null);
   const segment = choice !== null && origin !== null && choice.revision === origin.revision ? choice : null;
-  const connected = useConnectedRoute({ origin, centerId: selectedCenterId, segment });
+  const connected = useConnectedRoute({ origin, centerId: selectedCenterId, segment, explicitOriginRevision: location.explicitOriginRevision, originNotificationId: location.originNotificationId, selectionNotificationId });
 
-  const { centers: fetchedCenters, isInitialLoading, isRefreshing, isReady, error, refetch } = useEvacuationCenters({ barangayId });
+  const { centers: fetchedCenters, isInitialLoading, isRefreshing, isReady, error, errorAnnounced, refetch } = useEvacuationCenters({ barangayId });
 
   // Walking distance and order come from the route service; without them no distance is shown
   // rather than a straight-line estimate.
@@ -89,10 +91,13 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
 
   function handleChooseSegment(candidate: AttachmentCandidate, graphVersion: string) {
     if (origin === null) return;
+    notify.info('Street selected. Updating your route.', { id: beginAttempt('routing-street') });
+    setSelectionNotificationId(beginAttempt('walking-route'));
     setChoice({ revision: origin.revision, graphVersion, edgeId: candidate.edgeId });
   }
 
   function selectCenter(id: string) {
+    if (id !== selectedCenterId) setSelectionNotificationId(beginAttempt('walking-route'));
     setSelectedCenterId(id);
   }
 
@@ -119,40 +124,38 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
   }
 
   return (
-    <div className={styles.content}>
+    <div className={`${styles.content} ${styles.centersContent}`}>
       <EmergencyPageHeader title="Evacuation Centers" />
-      <div className={`${styles.toolbar} ${stickyStyles.secondary}`}>
-        <div className={styles.toolbarTitle}>
-          <h2>Center directory</h2>
-          {isReady ? <span className={styles.count}>{centers.length} centers</span> : null}
-          <PendingHint pending={isRefreshing}>Updating</PendingHint>
-        </div>
-        <div className={styles.viewToggle} role="group" aria-label="Center view">
-          <button
-            type="button"
-            aria-pressed={view === 'list'}
-            onClick={() => setView('list')}
-            className={styles.viewButton}>
-            <List size={14} /> List
-          </button>
-          <button
-            type="button"
-            aria-pressed={view === 'map'}
-            onClick={() => setView('map')}
-            className={styles.viewButton}>
-            <MapIcon size={14} /> Map
-          </button>
-        </div>
+      <div className={`${styles.toolbarTitle} ${styles.centersTitle}`}>
+        <h2>Center directory</h2>
+        {isReady ? <span className={styles.count}>{centers.length} centers</span> : null}
+        <PendingHint pending={isRefreshing}>Updating</PendingHint>
+      </div>
+      <div className={`${styles.viewToggle} ${styles.centersViewToggle} ${stickyStyles.secondary}`} role="group" aria-label="Center view">
+        <button
+          type="button"
+          aria-pressed={view === 'list'}
+          onClick={() => setView('list')}
+          className={styles.viewButton}>
+          <List size={14} /> List
+        </button>
+        <button
+          type="button"
+          aria-pressed={view === 'map'}
+          onClick={() => setView('map')}
+          className={styles.viewButton}>
+          <MapIcon size={14} /> Map
+        </button>
       </div>
 
-      <LocationStatusCard state={location.state} onAction={handleLocationAction} />
+      <LocationStatusCard state={location.state} onAction={handleLocationAction} outcomeAnnounced={location.outcomeAnnounced} />
       <RouteStatusCard state={connected} now={now} onChooseSegment={handleChooseSegment} onRetry={connected.retry} />
 
       {error && !readFailedWithNothing ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           tone="warning"
           message="We couldn't refresh evacuation centers. Showing the last loaded list."
-          onRetry={refetch}
+          onRetry={() => refetch('evacuation centers')}
           retrying={isRefreshing}
         />
       ) : null}
@@ -165,9 +168,9 @@ export function CentersContent({ barangayId, boundary }: { barangayId: string | 
           ))}
         </div>
       ) : readFailedWithNothing ? (
-        <InlineReadError
+        <InlineReadError announce={!errorAnnounced}
           message="We couldn't load evacuation centers. Check your connection, then try again."
-          onRetry={refetch}
+          onRetry={() => refetch('evacuation centers')}
           retrying={isRefreshing}
         />
       ) : isReady && centers.length === 0 ? (

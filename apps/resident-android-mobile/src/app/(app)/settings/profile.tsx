@@ -1,40 +1,7 @@
 /**
- * Resident Profile screen — pixel-accurate rebuild of the design file.
- *
- * Sections
- *  ① Header            — green bar, back chevron, "Profile" title
- *  ② Avatar            — real photo (expo-image) when avatar_url set; initials fallback
- *                        Tap anywhere on the circle or the pencil badge to re-upload.
- *                        Saved immediately (independent of the Save Changes button).
- *  ③ Verified badge    — shows when email_verification_status = 'verified'
- *  ④ Personal Info     — First/Middle/Last/Suffix, Email, House No./Street/City, Mobile
- *                        Number, and Occupation are edited directly in the display form
- *                        (plain TextInput, no modal); Sex/Employment Status/Birthday use
- *                        their pickers (Sex/Employment Status share the Reanimated-driven
- *                        SlideSheetModal bottom sheet, used by the choice pickers).
- *  ⑤ Household         — JSONB member list; Add / edit / remove via bottom modal
- *  ⑦ Save Changes CTA  — fixed green pill at bottom
- *
- * DB columns added in migration 0039:
- *   email, household_members (jsonb), id_photo_urls (text[]), id_type (text)
- * DB column added in migration 0040:
- *   avatar_url (text) — full public URL of the profile-photos bucket object
- *
- * Design tokens (sampled from reference screenshot):
- *   Primary green      #0F6E5B  (Colors.light.primary)
- *   Background         #F6F6F6  (outer page)
- *   Card bg            #FFFFFF
- *   Card border        1 px  rgba(0,0,0,0.08)
- *   Card radius        16 px
- *   Text primary       #111111
- *   Text secondary     #60646C
- *   Divider            1 px  #E8E8EC
- *   Badge bg           rgba(15,110,91,0.12)
- *   Avatar size        96 px
- *   Section title      14 px semibold
- *   Field label        12 px  textSecondary
- *   Field value        16 px  text
- *   Edit pencil icon   "create-outline"  18 px  primary
+ * Resident profile: compact photo summary and responsive editable details.
+ * Narrow screens and larger text use stacked labels; wider screens use rows.
+ * Photo uploads save immediately; profile and household edits use Save Changes.
  */
 
 import {
@@ -59,6 +26,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import Animated, {
@@ -75,10 +43,12 @@ import { BirthdayCalendarModal, dateToIso, isoToLocalDate } from '@/components/b
 import { GuestPrompt } from '@/components/guest-prompt';
 import { PlaceholderPanel } from '@/components/placeholder-panel';
 import { ThemedText } from '@/components/themed-text';
-import { Colors, Fonts, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { useProfile } from '@/hooks/use-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { useFontPreference } from '@/hooks/use-font-preference';
+import { getMobileFontFamily } from '@/constants/fonts';
 import {
   imageExtension,
   pickImageAsset,
@@ -87,8 +57,6 @@ import {
 import { supabase } from '@/lib/supabase';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-
-const PRIMARY_GREEN = Colors.light.primary; // #0F6E5B — always brand green
 
 const RELATIONS = ['Spouse', 'Child', 'Parent', 'Sibling', 'Grandparent', 'Grandchild', 'Other'] as const;
 
@@ -177,12 +145,19 @@ function fmtDate(iso: string | null): string {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
+// Keep long labels and larger accessibility text stacked on smaller displays.
+function useCompactFields() {
+  const { width, fontScale } = useWindowDimensions();
+  return width >= 360 && fontScale <= 1.2;
+}
+
 /** Verified Resident pill badge */
 function VerifiedBadge() {
+  const theme = useTheme();
   return (
-    <View style={badgeStyles.pill}>
-      <Ionicons name="checkmark-circle" size={14} color={PRIMARY_GREEN} />
-      <ThemedText style={badgeStyles.text}>Verified Resident</ThemedText>
+    <View style={[badgeStyles.pill, { backgroundColor: theme.primary + '1E' }]}>
+      <Ionicons name="checkmark-circle" size={14} color={theme.primary} />
+      <ThemedText style={[badgeStyles.text, { color: theme.primary }]}>Verified Resident</ThemedText>
     </View>
   );
 }
@@ -192,16 +167,15 @@ const badgeStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: PRIMARY_GREEN + '1E',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,
     alignSelf: 'center',
   },
   text: {
-    color: PRIMARY_GREEN,
     fontSize: 12,
     fontWeight: '600',
+    flexShrink: 1,
   },
 });
 
@@ -224,11 +198,11 @@ function FieldStatusRow({ error, success }: { error?: string; success?: string }
     return (
       <View style={fieldStyles.statusRow}>
         <Ionicons name="alert-circle-outline" size={13} color={theme.accentRed} />
-        <ThemedText type="small" themeColor="accentRed">{error}</ThemedText>
+        <ThemedText type="small" themeColor="accentRed" style={fieldStyles.statusText}>{error}</ThemedText>
       </View>
     );
   }
-  if (success) {
+  if (success?.trim()) {
     return (
       <View style={fieldStyles.statusRow}>
         <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} />
@@ -259,19 +233,23 @@ function FieldRow({
   onEdit: () => void;
 }) {
   const theme = useTheme();
+  const compact = useCompactFields();
   return (
     <View style={fieldStyles.fieldWrapper}>
       <Pressable style={fieldStyles.row} onPress={onEdit} accessibilityRole="button" accessibilityLabel={`Edit ${label}`}>
-        <View style={fieldStyles.body}>
-          <ThemedText themeColor="textSecondary" style={fieldStyles.label}>
+        <View style={[fieldStyles.body, compact && fieldStyles.compactBody]}>
+          <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compact && fieldStyles.compactLabel]}>
             {label}
             {required ? <RequiredMark /> : null}
+            {success && !success.trim() && !error ? (
+              <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} accessible={false} /></>
+            ) : null}
           </ThemedText>
-          <ThemedText style={[fieldStyles.value, !value && { color: theme.textSecondary }]}>
+          <ThemedText style={[fieldStyles.value, compact && fieldStyles.compactValue, !value && { color: theme.textSecondary }]}>
             {value || placeholder}
           </ThemedText>
         </View>
-        <Ionicons name="create-outline" size={18} color={PRIMARY_GREEN} />
+        <Ionicons name="create-outline" size={18} color={theme.primary} />
       </Pressable>
       <FieldStatusRow error={error} success={success} />
     </View>
@@ -282,16 +260,22 @@ const fieldStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.three,
-    gap: Spacing.three,
+    minHeight: 48,
+    paddingVertical: Spacing.one,
+    gap: Spacing.two,
   },
-  body: { flex: 1, gap: 2 },
-  label: { fontSize: 12, fontWeight: '500' },
+  body: { flex: 1, minWidth: 0, gap: 2 },
+  compactBody: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
+  compactLabel: { width: 108, flexShrink: 0 },
+  compactValue: { flex: 1, minWidth: 0 },
+  label: { fontSize: 12, lineHeight: 18, fontWeight: '500' },
   value: { fontSize: 16 },
   fieldWrapper: { gap: 2 },
-  inlineRow: { paddingVertical: Spacing.two, gap: 4 },
+  inlineRow: { paddingVertical: Spacing.one, gap: 2 },
+  inputBody: { gap: 2 },
   inlineInput: {
     fontSize: 16,
+    minHeight: 44,
     paddingVertical: 4,
   },
   statusRow: {
@@ -299,6 +283,7 @@ const fieldStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
+  statusText: { flex: 1 },
 });
 
 /**
@@ -330,23 +315,31 @@ function InlineFieldInput({
   maxLength?: number;
 }) {
   const theme = useTheme();
+  const { fontId } = useFontPreference();
+  const compact = useCompactFields();
   return (
     <View style={fieldStyles.inlineRow}>
-      <ThemedText themeColor="textSecondary" style={fieldStyles.label}>
-        {label}
-        {required ? <RequiredMark /> : null}
-      </ThemedText>
-      <TextInput
-        style={[fieldStyles.inlineInput, { color: theme.text }]}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={theme.textSecondary}
-        keyboardType={keyboardType ?? 'default'}
-        autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
-        maxLength={maxLength}
-        returnKeyType="done"
-      />
+      <View style={[fieldStyles.inputBody, compact && fieldStyles.compactBody]}>
+        <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compact && fieldStyles.compactLabel]}>
+          {label}
+          {required ? <RequiredMark /> : null}
+          {success && !success.trim() && !error ? (
+            <>  <Ionicons name="checkmark-circle-outline" size={13} color={theme.accentGreen} accessible={false} /></>
+          ) : null}
+        </ThemedText>
+        <TextInput
+          style={[fieldStyles.inlineInput, compact && fieldStyles.compactValue, { color: theme.text, fontFamily: getMobileFontFamily(fontId) }]}
+          accessibilityLabel={label}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor={theme.textSecondary}
+          keyboardType={keyboardType ?? 'default'}
+          autoCapitalize={keyboardType === 'email-address' ? 'none' : 'words'}
+          maxLength={maxLength}
+          returnKeyType="done"
+        />
+      </View>
       <FieldStatusRow error={error} success={success} />
     </View>
   );
@@ -408,15 +401,16 @@ function SectionCard({ children }: { children: React.ReactNode }) {
 type ToastType = 'success' | 'error';
 
 function Toast({ message, type }: { message: string; type: ToastType }) {
+  const theme = useTheme();
   return (
     <View style={toastStyles.overlay} pointerEvents="none">
-      <View style={[toastStyles.pill, type === 'error' ? toastStyles.errorPill : toastStyles.successPill]}>
+      <View style={[toastStyles.pill, { backgroundColor: type === 'error' ? theme.accentRed : theme.primary, shadowColor: theme.text }]}>
         <Ionicons
           name={type === 'success' ? 'checkmark-circle' : 'alert-circle-outline'}
           size={16}
-          color="#fff"
+          color={theme.onPrimary}
         />
-        <ThemedText style={toastStyles.text}>{message}</ThemedText>
+        <ThemedText style={[toastStyles.text, { color: theme.onPrimary }]}>{message}</ThemedText>
       </View>
     </View>
   );
@@ -436,15 +430,12 @@ const toastStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 13,
     borderRadius: 32,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.18,
     shadowRadius: 14,
     elevation: 10,
   },
-  successPill: { backgroundColor: '#0F6E5B' },
-  errorPill:   { backgroundColor: '#93000A' },
-  text: { fontSize: 14, fontWeight: '600', color: '#fff' },
+  text: { fontSize: 14, fontWeight: '600' },
 });
 
 const cardStyles = StyleSheet.create({
@@ -523,7 +514,7 @@ function SlideSheetModal({
 
   return (
     <Modal visible transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
-      <AnimatedPressable style={[idModalStyles.backdrop, backdropStyle]} onPress={onClose} />
+      <AnimatedPressable style={[idModalStyles.backdrop, { backgroundColor: theme.text + '73' }, backdropStyle]} onPress={onClose} />
       <Animated.View
         style={[idModalStyles.sheet, { backgroundColor: theme.backgroundElement, maxHeight }, sheetStyle]}>
         <View style={[idModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
@@ -549,6 +540,7 @@ function MemberModal({
   onDelete?: (id: string) => void;
 }) {
   const theme = useTheme();
+  const { fontId } = useFontPreference();
   const [name, setName]         = useState('');
   const [relation, setRelation] = useState<string>(RELATIONS[0]);
   const [role, setRole]         = useState<string>(ROLES[0]);
@@ -565,14 +557,14 @@ function MemberModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={mModalStyles.backdrop} onPress={onClose} />
+      <Pressable style={[mModalStyles.backdrop, { backgroundColor: theme.text + '73' }]} onPress={onClose} />
       <View style={[mModalStyles.sheet, { backgroundColor: theme.backgroundElement }]}>
         <View style={[mModalStyles.handle, { backgroundColor: theme.backgroundSelected }]} />
         <ThemedText style={mModalStyles.title}>{isEdit ? 'Edit Member' : 'Add Household Member'}</ThemedText>
 
         <ThemedText themeColor="textSecondary" style={mModalStyles.label}>Full Name</ThemedText>
         <TextInput
-          style={[mModalStyles.input, { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text }]}
+          style={[mModalStyles.input, { borderColor: theme.backgroundSelected, backgroundColor: theme.background, color: theme.text, fontFamily: getMobileFontFamily(fontId) }]}
           value={name}
           onChangeText={setName}
           placeholder="e.g. Juan Santos"
@@ -588,18 +580,18 @@ function MemberModal({
 
         <View style={mModalStyles.actions}>
           {isEdit && onDelete && (
-            <Pressable style={mModalStyles.deleteBtn} onPress={() => { onDelete(initial!.id); onClose(); }}>
-              <ThemedText style={{ fontWeight: '700', color: '#93000A' }}>Remove</ThemedText>
+            <Pressable style={[mModalStyles.deleteBtn, { borderColor: theme.accentRed }]} onPress={() => { onDelete(initial!.id); onClose(); }}>
+              <ThemedText style={{ fontWeight: '700', color: theme.accentRed }}>Remove</ThemedText>
             </Pressable>
           )}
           <Pressable
-            style={[mModalStyles.saveBtn, !name.trim() && { opacity: 0.5 }]}
+            style={[mModalStyles.saveBtn, { backgroundColor: theme.primary }, !name.trim() && { opacity: 0.5 }]}
             disabled={!name.trim()}
             onPress={() => {
               onSave({ id: initial?.id ?? genId(), name: name.trim(), relation, role });
               onClose();
             }}>
-            <ThemedText style={{ fontWeight: '700', color: '#fff' }}>{isEdit ? 'Update' : 'Add Member'}</ThemedText>
+            <ThemedText style={{ fontWeight: '700', color: theme.onPrimary }}>{isEdit ? 'Update' : 'Add Member'}</ThemedText>
           </Pressable>
         </View>
       </View>
@@ -608,7 +600,7 @@ function MemberModal({
 }
 
 const mModalStyles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.45)' },
+  backdrop: { ...StyleSheet.absoluteFill },
   sheet: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
@@ -647,14 +639,12 @@ const mModalStyles = StyleSheet.create({
     paddingVertical: 13,
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#93000A',
   },
   saveBtn: {
     flex: 2,
     borderRadius: 24,
     paddingVertical: 13,
     alignItems: 'center',
-    backgroundColor: PRIMARY_GREEN,
   },
 });
 
@@ -669,9 +659,9 @@ function OptionRow({ options, value, onChange }: { options: readonly string[]; v
           style={[
             mModalStyles.chip,
             { backgroundColor: theme.backgroundSelected, borderColor: theme.backgroundSelected },
-            value === opt && { backgroundColor: PRIMARY_GREEN, borderColor: PRIMARY_GREEN },
+            value === opt && { backgroundColor: theme.primary, borderColor: theme.primary },
           ]}>
-          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: '#fff' }]}>{opt}</ThemedText>
+          <ThemedText style={[mModalStyles.chipText, { color: theme.textSecondary }, value === opt && { color: theme.onPrimary }]}>{opt}</ThemedText>
         </Pressable>
       ))}
     </ScrollView>
@@ -679,7 +669,7 @@ function OptionRow({ options, value, onChange }: { options: readonly string[]; v
 }
 
 const idModalStyles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.45)' },
+  backdrop: { ...StyleSheet.absoluteFill },
   sheet: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
@@ -739,10 +729,10 @@ function ChoiceListModal<T extends string>({
             key={opt}
             onPress={() => { onSelect(opt); onClose(); }}
             style={[idModalStyles.optionRow, { borderBottomColor: theme.backgroundSelected }]}>
-            <ThemedText style={[idModalStyles.optionText, current === opt && { color: PRIMARY_GREEN, fontWeight: '700' }]}>
+            <ThemedText style={[idModalStyles.optionText, current === opt && { color: theme.primary, fontWeight: '700' }]}>
               {labels[opt]}
             </ThemedText>
-            {current === opt && <Ionicons name="checkmark" size={18} color={PRIMARY_GREEN} />}
+            {current === opt && <Ionicons name="checkmark" size={18} color={theme.primary} />}
           </Pressable>
         ))}
       </ScrollView>
@@ -766,11 +756,7 @@ function ProfileScreenContent() {
   const { profile, isLoading, refetch } = useProfile();
   const insets   = useSafeAreaInsets();
   const theme    = useTheme();
-  // Shadows the module-level PRIMARY_GREEN fallback with the resident's live accent color
-  // (Settings > App Theme) for this render — theme.primary already resolves to it. Needed
-  // specifically for the avatar circle + camera badge below, which otherwise read the
-  // static module constant and never re-render on an accent change.
-  const PRIMARY_GREEN = theme.primary;
+  const compactFields = useCompactFields();
 
   // ── Personal info fields ──────────────────────────────────────────────────
   // Full Name split into structured parts (Register/Profile field-split) — the
@@ -1049,7 +1035,7 @@ function ProfileScreenContent() {
   const isVerified  = emailVerificationStatus === 'verified';
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.primary }]}>
+    <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: theme.primary }]}>
       <View style={[styles.root, { backgroundColor: theme.background }]}>
 
       {/* ── ① Header ──────────────────────────────────────────────────────── */}
@@ -1060,7 +1046,7 @@ function ProfileScreenContent() {
           accessibilityRole="button"
           accessibilityLabel="Go back"
           hitSlop={Spacing.two}>
-          <Ionicons name="chevron-back" size={26} color="#fff" />
+          <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
         </Pressable>
         <View style={styles.headerContent}>
           <ThemedText style={[styles.headerTitle, { color: theme.onPrimary }]}>
@@ -1076,18 +1062,7 @@ function ProfileScreenContent() {
 
         {/* ── ② Avatar ────────────────────────────────────────────────────── */}
         <View style={styles.avatarSection}>
-          {/*
-           * Layout fix — camera badge overlap:
-           *   avatarOuter (110 × 110, relative) contains:
-           *     avatarCircle (96 × 96, absolute at top:0 left:7, overflow:hidden)
-           *     cameraBadge  (30 × 30, absolute at bottom:0 right:0)
-           *
-           *   The badge corner sits at (110-30, 110-30) = (80, 80), which is
-           *   inside the 96 × 96 circle area — giving the classic overlapping
-           *   edit-photo badge look — but since the badge is a SIBLING of the
-           *   circle (not a child), overflow:hidden on the circle does not clip
-           *   it. Rendered after the circle, it always paints on top.
-           */}
+          {/* Keep the camera badge outside the photo's clipping boundary. */}
           <Pressable
             onPress={handleAvatarUpload}
             disabled={avatarUploading}
@@ -1097,7 +1072,7 @@ function ProfileScreenContent() {
 
             <View style={styles.avatarOuter}>
               {/* Circle — photo or initials + upload spinner */}
-              <View style={[styles.avatarCircle, { backgroundColor: PRIMARY_GREEN }]}>
+              <View style={[styles.avatarCircle, { backgroundColor: theme.primary, borderColor: theme.backgroundElement, shadowColor: theme.text }]}>
                 {avatarUrl ? (
                   <Image
                     source={{ uri: avatarUrl }}
@@ -1106,30 +1081,32 @@ function ProfileScreenContent() {
                     cachePolicy="memory-disk"
                   />
                 ) : (
-                  <ThemedText style={styles.avatarInitials}>
+                  <ThemedText style={[styles.avatarInitials, { color: theme.onPrimary }]}>
                     {getInitials((liveFullName || session.user.email?.split('@')[0]) ?? '?')}
                   </ThemedText>
                 )}
 
                 {avatarUploading && (
-                  <View style={styles.avatarSpinnerOverlay}>
-                    <ActivityIndicator size="large" color="#fff" />
+                  <View style={[styles.avatarSpinnerOverlay, { backgroundColor: theme.text + '73' }]}>
+                    <ActivityIndicator size="large" color={theme.onPrimary} />
                   </View>
                 )}
               </View>
 
               {/* Camera badge — sibling of circle, paints on top */}
-              <View style={[styles.cameraBadge, { backgroundColor: PRIMARY_GREEN }]}>
+              <View style={[styles.cameraBadge, { backgroundColor: theme.primary, borderColor: theme.backgroundElement }]}>
                 {avatarUploading
-                  ? <ActivityIndicator size="small" color="#fff" />
-                  : <Ionicons name="camera" size={13} color="#fff" />}
+                  ? <ActivityIndicator size="small" color={theme.onPrimary} />
+                  : <Ionicons name="camera" size={13} color={theme.onPrimary} />}
               </View>
             </View>
           </Pressable>
 
           {/* ③ Name + badge */}
-          <ThemedText style={styles.nameText}>{liveFullName || '—'}</ThemedText>
-          {isVerified && <VerifiedBadge />}
+          <View style={styles.identityText}>
+            <ThemedText style={styles.nameText}>{liveFullName || '—'}</ThemedText>
+            {isVerified && <View style={styles.identityBadge}><VerifiedBadge /></View>}
+          </View>
         </View>
 
         {/* ── ④ Personal Information ────────────────────────────────────── */}
@@ -1209,20 +1186,20 @@ function ProfileScreenContent() {
           />
           <Divider />
           {profile?.barangays?.barangay_localities ? <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`City, ${profile?.city ?? 'Not configured'}, read only`}>
-            <View style={fieldStyles.body}><ThemedText style={fieldStyles.label}>City</ThemedText><ThemedText style={fieldStyles.value}>{profile?.city ?? 'Not configured'}</ThemedText></View>
+            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>City</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.city ?? 'Not configured'}</ThemedText></View>
           </View> : <InlineFieldInput label="City" required value={city} placeholder="Enter city/municipality" onChangeText={setCity} {...fieldStatus(city, fieldErrors.city)} />}
           <Divider />
           {/* Read-only — this is profiles.barangay_id, assigned automatically at
               registration (AGENTS.md §0), not a free-text address component. */}
           <View style={fieldStyles.row}>
-            <View style={fieldStyles.body}>
-              <ThemedText style={fieldStyles.label}>Barangay</ThemedText>
-              <ThemedText style={fieldStyles.value}>{profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? '—'}</ThemedText>
+            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}>
+              <ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Barangay</ThemedText>
+              <ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.barangays?.barangay_localities?.display_name ?? profile?.barangays?.name ?? '—'}</ThemedText>
             </View>
           </View>
           <Divider />
           <View style={[fieldStyles.row, { opacity: 0.75 }]} accessible accessibilityLabel={`Province, ${profile?.province ?? 'Not configured'}, read only`}>
-            <View style={fieldStyles.body}><ThemedText style={fieldStyles.label}>Province</ThemedText><ThemedText style={fieldStyles.value}>{profile?.province ?? 'Not configured'}</ThemedText></View>
+            <View style={[fieldStyles.body, compactFields && fieldStyles.compactBody]}><ThemedText themeColor="textSecondary" style={[fieldStyles.label, compactFields && fieldStyles.compactLabel]}>Province</ThemedText><ThemedText style={[fieldStyles.value, compactFields && fieldStyles.compactValue]}>{profile?.province ?? 'Not configured'}</ThemedText></View>
           </View>
           <Divider />
           <InlineFieldInput
@@ -1270,8 +1247,9 @@ function ProfileScreenContent() {
             <Pressable
               onPress={() => setMemberModal({ member: null })}
               accessibilityRole="button"
-              accessibilityLabel="Add household member">
-              <ThemedText style={styles.addLink}>Add Member</ThemedText>
+              accessibilityLabel="Add household member"
+              style={styles.addMemberBtn}>
+              <ThemedText style={[styles.addLink, { color: theme.primary }]}>Add Member</ThemedText>
             </Pressable>
           </View>
 
@@ -1290,16 +1268,16 @@ function ProfileScreenContent() {
       </ScrollView>
 
       {/* ── ⑦ Fixed Save button ──────────────────────────────────────────── */}
-      <View style={[styles.saveBar, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected, paddingBottom: insets.bottom + Spacing.three }]}>
+      <View style={[styles.saveBar, { backgroundColor: theme.background, borderTopColor: theme.backgroundSelected, paddingBottom: insets.bottom + Spacing.two }]}>
         <Pressable
           onPress={handleSave}
           disabled={!isDirty || saving}
           accessibilityRole="button"
           accessibilityLabel="Save changes"
-          style={[styles.saveBtn, (!isDirty || saving) && { backgroundColor: theme.backgroundSelected }]}>
+          style={[styles.saveBtn, { backgroundColor: !isDirty || saving ? theme.backgroundSelected : theme.primary }]}>
           {saving
-            ? <ActivityIndicator size="small" color="#fff" />
-            : <ThemedText style={styles.saveBtnText}>Save Changes</ThemedText>}
+            ? <ActivityIndicator size="small" color={theme.onPrimary} />
+            : <ThemedText style={[styles.saveBtnText, { color: !isDirty || saving ? theme.textSecondary : theme.onPrimary }]}>Save Changes</ThemedText>}
         </Pressable>
       </View>
 
@@ -1389,45 +1367,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: { fontSize: 20, fontFamily: Fonts.gideonRoman },
+  headerTitle: { fontSize: 20 },
 
   /* Avatar */
   avatarSection: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: Spacing.four,
-    paddingBottom: Spacing.three,
-    gap: Spacing.two,
+    paddingTop: Spacing.two,
+    paddingBottom: Spacing.two,
+    gap: Spacing.three,
   },
-  // Outer container — explicit 110 × 110 so the badge can sit at its corner
-  // without being clipped by the 96 × 96 circle's overflow:hidden.
+  identityText: { flex: 1, minWidth: 0, gap: Spacing.one },
+  identityBadge: { alignSelf: 'flex-start', maxWidth: '100%' },
+  // The badge is a sibling so the photo's overflow never clips it.
   avatarOuter: {
-    width: 110,
-    height: 110,
+    width: 72,
+    height: 76,
     position: 'relative',
   },
   avatarCircle: {
     position: 'absolute',
     top: 0,
-    left: 7,              // centre the 96 px circle inside the 110 px outer: (110-96)/2 = 7
-    width: 96, height: 96,
-    borderRadius: 48,
+    left: 0,
+    width: 68, height: 68,
+    borderRadius: 34,
     // backgroundColor applied inline in ProfileScreen with the live accent color.
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',   // clips photo + spinner to the circle shape
     borderWidth: 3,
-    borderColor: '#fff',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 8,
     elevation: 5,
   },
-  avatarInitials: { fontSize: 32, fontWeight: '700', color: '#fff', lineHeight: 40 },
-  avatarImage: { width: 96, height: 96 },
+  avatarInitials: { fontSize: 26, fontWeight: '700', lineHeight: 34 },
+  avatarImage: { width: '100%', height: '100%' },
   avatarSpinnerOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1443,25 +1420,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2.5,
-    borderColor: '#fff',
   },
-  nameText: { fontSize: 22, fontWeight: '700', textAlign: 'center' },
+  nameText: { fontSize: 20, lineHeight: 26, fontWeight: '700' },
 
   /* Content */
-  content: { paddingHorizontal: Spacing.three, gap: Spacing.three },
+  content: { paddingHorizontal: Spacing.three, gap: Spacing.two },
 
   /* Section headers */
   sectionTitle: { fontSize: 14, fontWeight: '700', marginBottom: Spacing.one },
   sectionHeaderRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: Spacing.one,
   },
-  addLink: { fontSize: 13, fontWeight: '600', color: PRIMARY_GREEN },
+  addLink: { fontSize: 13, fontWeight: '600' },
+  addMemberBtn: { minHeight: 44, justifyContent: 'center' },
 
   /* Household empty */
-  emptyHousehold: { fontSize: 14, paddingVertical: Spacing.three, textAlign: 'center' },
+  emptyHousehold: { fontSize: 14, paddingVertical: Spacing.two, textAlign: 'center' },
 
   /* Fixed save bar */
   saveBar: {
@@ -1469,14 +1447,14 @@ const styles = StyleSheet.create({
     bottom: 0, left: 0, right: 0,
     borderTopWidth: 1,
     paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
+    paddingTop: Spacing.two,
   },
   saveBtn: {
     borderRadius: 28,
-    paddingVertical: 16,
+    paddingVertical: 12,
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: PRIMARY_GREEN,
   },
-  saveBtnText: { fontSize: 16, fontWeight: '700', color: '#fff' },
+  saveBtnText: { fontSize: 16, fontWeight: '700' },
 });

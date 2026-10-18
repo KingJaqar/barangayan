@@ -106,6 +106,22 @@
   }
 }
 
+.banner.embedded {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  width: 100%;
+  margin: 16px 0;
+}
+
+.embedded .icon {
+  align-self: start;
+}
+
+.embedded .action {
+  grid-column: 2;
+  justify-self: start;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .action {
     transition: none;

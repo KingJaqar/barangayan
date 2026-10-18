@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify, setNotificationSession } from '@/lib/notify';
 import Link from 'next/link';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ProfileDialog } from '@/components/admin/profile-dialog';
@@ -23,6 +24,7 @@ export function ProfileSecurity({ security, enabled, disabled, onBusy }: {
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!mode || submitting.current || needsReview) return;
     submitting.current = true; setBusy(true); onBusy(true); setMessage(null);
+    const attempt = beginAttempt('admin-credentials');
     let proof: AccountProof | null = null;
     let sessionsRevoked = false;
     try {
@@ -30,14 +32,16 @@ export function ProfileSecurity({ security, enabled, disabled, onBusy }: {
       const verified = proof?.accessToken ? { accessToken: proof.accessToken } : { currentPassword };
       const result = mode === 'email' ? await changeAdminEmail({ email, ...verified }) : await changeAdminPassword({ ...verified, newPassword, confirmPassword: confirmation, ...(nonce ? { nonce } : {}) });
       setCurrentPassword(''); setNewPassword(''); setConfirmation(''); setNonce('');
-      if (!result.ok) { sessionsRevoked = result.sessionsRevoked ?? false; setMessage(result.message); setNeedsReview(result.code === 'unavailable'); }
+      if (!result.ok) { notify[result.code === 'unavailable' ? 'warning' : 'error']('Could not confirm the account change. Review the details before trying again.', { id: attempt }); sessionsRevoked = result.sessionsRevoked ?? false; setMessage(result.message); setNeedsReview(result.code === 'unavailable'); }
       else {
         sessionsRevoked = result.value.sessionsRevoked;
+        if (result.value.signInRequired) setNotificationSession(null);
+        notify[result.warning ? 'warning' : 'success'](result.warning ?? (mode === 'email' ? 'Email change requested. Check your confirmation emails.' : 'Password changed. Sign in again with your new password.'), { id: result.value.signInRequired ? beginAttempt('admin-security-signed-out') : attempt, keepOnSessionChange: result.value.signInRequired });
         setMode(null); setShowPasswords(false); setSignIn(result.value.signInRequired);
         if (!result.value.signInRequired) { const fresh = await readAdminSecurity(); if (fresh.ok) setCurrentSecurity(fresh.value); }
         setMessage(result.warning ?? (mode === 'email' ? 'Email change requested. Follow the confirmation messages in your inboxes. Reload this page after confirmation to check the sign-in address. Contact email and resident credentials are unchanged.' : 'Password changed. Admin sessions were signed out. Sign in again with your new password.'));
       }
-    } catch { setNeedsReview(true); setMessage('The credential outcome could not be confirmed. Check your current sign-in state before retrying.'); setCurrentPassword(''); setNewPassword(''); setConfirmation(''); }
+    } catch { notify.warning('The account change could not be confirmed. Check your sign-in state before retrying.', { id: attempt }); setNeedsReview(true); setMessage('The credential outcome could not be confirmed. Check your current sign-in state before retrying.'); setCurrentPassword(''); setNewPassword(''); setConfirmation(''); }
     finally { proof?.retire(sessionsRevoked); submitting.current = false; setBusy(false); onBusy(false); }
   }
   async function reviewEmail() {
@@ -45,18 +49,19 @@ export function ProfileSecurity({ security, enabled, disabled, onBusy }: {
     submitting.current = true; setBusy(true); onBusy(true);
     try {
       const current = await readAdminSecurity();
-      if (!current.ok) { setMessage(current.message); return; }
+      if (!current.ok) { setMessage(current.message); notify.error('Could not check your sign-in email. Please try again.'); return; }
       setCurrentSecurity(current.value);
+      notify.info(current.value.newEmail ? 'Email confirmation is still pending. Check your inboxes.' : 'Current sign-in email checked. Review the details below.');
       if (current.value.email === email.trim() || current.value.newEmail === email.trim()) { setCurrentPassword(''); setNewPassword(''); setConfirmation(''); setNonce(''); setMode(null); setNeedsReview(false); setMessage(current.value.newEmail ? 'Email confirmation is pending. Follow the inbox instructions; do not repeat the request.' : 'Your sign-in email change is confirmed. Contact email remains independent.'); }
       else { setNeedsReview(false); setMessage('Current sign-in state checked. Review your address before retrying.'); }
-    } catch { setMessage('Current sign-in state could not be checked. Keep this request paused and try status checking again.'); }
+    } catch { notify.error('Could not check your sign-in email. Please try again.'); setMessage('Current sign-in state could not be checked. Keep this request paused and try status checking again.'); }
     finally { submitting.current = false; setBusy(false); onBusy(false); }
   }
   async function code() {
     if (submitting.current) return;
     submitting.current = true; setBusy(true); onBusy(true);
-    try { const result = await requestAdminSecurityCode(); setMessage(result.ok ? 'Verification code requested. Check your admin sign-in inbox.' : result.message); }
-    catch { setMessage('Verification code could not be requested. Try again later.'); }
+    try { const result = await requestAdminSecurityCode(); notify[result.ok ? 'success' : 'error'](result.ok ? 'Verification code requested. Check your admin inbox.' : 'Could not request a verification code. Review the details below.'); setMessage(result.ok ? 'Verification code requested. Check your admin sign-in inbox.' : result.message); }
+    catch { notify.warning('We could not confirm the code request. Check your inbox before trying again.'); setMessage('Verification code could not be requested. Try again later.'); }
     finally { submitting.current = false; setBusy(false); onBusy(false); }
   }
   return <section className={styles.section}><h2>Admin account security</h2><p className={styles.subtitle}>These controls affect your admin sign-in only. Contact email and resident credentials stay separate.</p><dl className={styles.details}><div><dt>Sign-in email</dt><dd>{currentSecurity.email ?? 'Not provided'}</dd></div><div><dt>Auth email confirmation</dt><dd>{currentSecurity.confirmed ? 'Confirmed' : 'Not confirmed'}</dd></div><div><dt>Login providers</dt><dd>{currentSecurity.providers.join(', ') || 'Not provided'}</dd></div>{currentSecurity.newEmail && <div><dt>Awaiting email confirmation</dt><dd>{currentSecurity.newEmail}</dd></div>}</dl>

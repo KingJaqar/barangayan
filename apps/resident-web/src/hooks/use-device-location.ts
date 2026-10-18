@@ -6,7 +6,8 @@ import {
   type LocationAdapter,
   type LocationPermission,
 } from '@barangayan/shared';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { beginAttempt, notify, type OperationId } from '@/lib/notify';
 
 const PROMPT: LocationPermission = { state: 'prompt', canAskAgain: true, approximate: false };
 
@@ -62,12 +63,33 @@ const browserLocationAdapter: LocationAdapter = {
 export function useDeviceLocation() {
   const [controller] = useState(() => new DeviceLocationController(browserLocationAdapter));
   const state = useSyncExternalStore(controller.subscribe, controller.getState, controller.getState);
+  const attempt = useRef<OperationId | null>(null);
+  const [explicitOriginRevision, setExplicitOriginRevision] = useState<number | null>(null);
+  const [originNotificationId, setOriginNotificationId] = useState<OperationId | null>(null);
+  const routeAttempt = useRef<OperationId | null>(null);
+  const [outcomeAnnounced, setOutcomeAnnounced] = useState(false);
+
+  useEffect(() => controller.subscribe(() => {
+    const id = attempt.current;
+    if (!id) { setOutcomeAnnounced(false); return; }
+    const next = controller.getState();
+    if (next.status === 'ready' || next.pending) {
+      attempt.current = null;
+      setOutcomeAnnounced(true);
+      if (next.status === 'ready') { setExplicitOriginRevision(next.origin?.revision ?? null); setOriginNotificationId(routeAttempt.current); }
+      notify.success('Location found. Review it before continuing.', { id });
+    } else if (['denied', 'services-disabled', 'unavailable', 'timed-out'].includes(next.status)) {
+      attempt.current = null;
+      setOutcomeAnnounced(true);
+      notify.error("Couldn't find your location. Check location access and try again.", { id });
+    }
+  }), [controller]);
 
   useEffect(() => {
     void controller.start('auto');
 
     function handleVisibility() {
-      if (document.visibilityState === 'hidden') controller.pause();
+      if (document.visibilityState === 'hidden') { attempt.current = null; controller.pause(); }
       else void controller.resume();
     }
     document.addEventListener('visibilitychange', handleVisibility);
@@ -75,6 +97,8 @@ export function useDeviceLocation() {
     let permissionStatus: PermissionStatus | null = null;
     let disposed = false;
     const handlePermissionChange = () => {
+      // A granted browser prompt can restart acquisition. Its result still belongs
+      // to the explicit locate that opened the prompt; later idle changes stay quiet.
       void controller.resume();
     };
     void queryPermission().then((status) => {
@@ -85,6 +109,7 @@ export function useDeviceLocation() {
 
     return () => {
       disposed = true;
+      attempt.current = null;
       document.removeEventListener('visibilitychange', handleVisibility);
       permissionStatus?.removeEventListener('change', handlePermissionChange);
       controller.cancel();
@@ -93,11 +118,32 @@ export function useDeviceLocation() {
 
   return {
     state,
+    outcomeAnnounced,
+    explicitOriginRevision,
+    originNotificationId,
     locate: () => {
+      if (controller.getState().activeRequestId !== null) return;
+      attempt.current = beginAttempt('centers-location');
+      setOutcomeAnnounced(false);
+      routeAttempt.current = beginAttempt('walking-route');
       void controller.start('explicit');
     },
-    cancel: () => controller.cancel(),
-    confirm: () => controller.confirmPending(),
-    reject: () => controller.rejectPending(),
+    cancel: () => { attempt.current = null; controller.cancel(); },
+    confirm: () => {
+      if (!controller.getState().pending) return;
+      attempt.current = null;
+      controller.confirmPending();
+      setOutcomeAnnounced(true);
+      setExplicitOriginRevision(controller.getState().origin?.revision ?? null);
+      setOriginNotificationId(beginAttempt('walking-route'));
+      notify.success('Location selected for route planning.', { id: beginAttempt('centers-confirm-location') });
+    },
+    reject: () => {
+      if (!controller.getState().pending) return;
+      attempt.current = null;
+      controller.rejectPending();
+      setOutcomeAnnounced(true);
+      notify.info('Location discarded.', { id: beginAttempt('centers-discard-location') });
+    },
   };
 }

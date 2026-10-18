@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { ConfirmButton } from '@/components/admin/confirm-button';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { formatDateTime, type Tables } from '@barangayan/shared';
 
@@ -44,10 +44,11 @@ export function TrashIncidentTable({
   highPriorityThreshold: number;
 }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [updating, setUpdating] = useState<string | null>(null);
 
   async function updateStatus(id: string, previousStatus: string, status: string, title: string) {
+    const toastAttempt = beginAttempt('updateStatus');
     setUpdating(id);
     const supabase = createSupabaseBrowserClient();
     // Route through the guarded FSM RPC (same one incident-actions.tsx uses)
@@ -60,7 +61,7 @@ export function TrashIncidentTable({
     });
     setUpdating(null);
     if (error) {
-      toast.showError(`Failed to update: ${error.message}`);
+      toast.error(`Failed to update: ${error.message}`, { id: toastAttempt });
       return;
     }
 
@@ -73,31 +74,37 @@ export function TrashIncidentTable({
       metadata: { source: 'waste_management' },
     }).catch(() => {});
 
-    toast.showSuccess('Status updated.');
+    toast.success('Status updated.', { id: toastAttempt });
     router.refresh();
   }
 
   async function archive(id: string, title: string, description: string | null) {
-    const supabase = createSupabaseBrowserClient();
-    const { error } = await supabase
-      .from('incidents')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', id);
-    if (error) {
-      toast.showError(`Failed to archive: ${error.message}`);
-      return;
+    const toastAttempt = beginAttempt('archive');
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase
+        .from('incidents')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', id);
+      if (error) {
+        toast.error(`Failed to archive: ${error.message}`, { id: toastAttempt });
+        return;
+      }
+
+      logAdminAction({
+        action: 'delete',
+        entityType: 'incident',
+        entityId: id,
+        entityLabel: title,
+        metadata: { source: 'waste_management', title, description },
+      }).catch(() => {});
+
+      toast.success('Report archived.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
     }
-
-    logAdminAction({
-      action: 'delete',
-      entityType: 'incident',
-      entityId: id,
-      entityLabel: title,
-      metadata: { source: 'waste_management', title, description },
-    }).catch(() => {});
-
-    toast.showSuccess('Report archived.');
-    router.refresh();
   }
 
   if (rows.length === 0) {

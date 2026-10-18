@@ -53,22 +53,27 @@ function matchesFilter(status: string, filter: Filter): boolean {
   return status === 'completed' || status === 'cancelled';
 }
 
-/** Horizontally scrolling filter chips — a label never gets clipped or squeezed. */
+/** Scrollable filters with compact underline tabs for the active status row. */
 function FilterChips<Key extends string>({
   options,
   activeKey,
   onChange,
+  compact = false,
 }: {
   options: { key: Key; label: string }[];
   activeKey: Key;
   onChange: (key: Key) => void;
+  compact?: boolean;
 }) {
   const theme = useTheme();
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.chipRow}>
+      style={compact && styles.statusTabs}
+      contentContainerStyle={compact
+        ? [styles.statusTabRow, { borderBottomColor: theme.backgroundSelected }]
+        : styles.chipRow}>
       {options.map((option) => {
         const isActive = option.key === activeKey;
         return (
@@ -79,17 +84,28 @@ function FilterChips<Key extends string>({
             accessibilityLabel={option.label}
             accessibilityState={{ selected: isActive }}
             style={({ pressed }) => [
-              styles.chip,
-              isActive
+              compact ? styles.statusTab : styles.chip,
+              !compact && (isActive
                 ? { backgroundColor: theme.primary, borderColor: theme.primary }
-                : { backgroundColor: theme.background, borderColor: theme.backgroundSelected },
+                : { backgroundColor: theme.background, borderColor: theme.backgroundSelected }),
               pressed && styles.pressed,
             ]}>
             <ThemedText
               type="smallBold"
-              style={{ color: isActive ? theme.onPrimary : theme.text }}>
+              style={[
+                compact && styles.statusTabLabel,
+                { color: compact
+                  ? (isActive ? theme.text : theme.textSecondary)
+                  : (isActive ? theme.onPrimary : theme.text) },
+              ]}>
               {option.label}
             </ThemedText>
+            {compact ? (
+              <View style={[
+                styles.statusTabIndicator,
+                { backgroundColor: isActive ? theme.primary : 'transparent' },
+              ]} />
+            ) : null}
           </Pressable>
         );
       })}
@@ -224,6 +240,7 @@ export function RequestsList({
 
         {filter === 'active' ? (
           <FilterChips
+            compact
             options={[
               { key: 'all', label: 'All' },
               { key: 'pending_payment', label: 'Pending Payment' },
@@ -369,6 +386,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  statusTabs: {
+    marginHorizontal: 20,
+  },
+  statusTabRow: {
+    flexGrow: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  statusTab: {
+    flexGrow: 1,
+    minHeight: 32,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  statusTabLabel: {
+    fontSize: 12,
+    lineHeight: 16,
+    paddingHorizontal: 8,
+    paddingBottom: 6,
+  },
+  statusTabIndicator: {
+    height: 3,
+    alignSelf: 'stretch',
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
   },
   list: {
     paddingHorizontal: 20,

@@ -1,4 +1,5 @@
 'use client';
+import { notify as toast } from '@/lib/notify';
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -114,6 +115,7 @@ export function SettingsForm({ barangayId }: { barangayId: string }) {
 
     const validation = barangaySettingsSchema.safeParse(payload);
     if (!validation.success) {
+      toast.error('Review the highlighted fields before continuing.');
       const message = validation.error.issues[0]?.message ?? 'Invalid input';
       setFormError(message);
       return;

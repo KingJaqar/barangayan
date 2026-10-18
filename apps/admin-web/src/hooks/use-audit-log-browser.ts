@@ -1,4 +1,5 @@
 'use client';
+import { beginAttempt, notify } from '@/lib/notify';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -248,8 +249,12 @@ export function useAuditLogBrowser(barangayId: string | null, enabled: boolean, 
 
   const markAsRead = useCallback(
     async (id: string) => {
-      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
-      await supabase.from('admin_audit_log').update({ is_read: true }).eq('id', id);
+      const attempt = beginAttempt('notification-read');
+      try {
+        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+        const { error } = await supabase.from('admin_audit_log').update({ is_read: true }).eq('id', id);
+        if (error) notify.error('Could not mark the notification as read. Refresh to check its status.', { id: attempt });
+      } catch { notify.warning('Notification read status could not be confirmed. Refresh before trying again.', { id: attempt }); }
       onSynced?.();
     },
     [supabase, onSynced],
@@ -261,8 +266,13 @@ export function useAuditLogBrowser(barangayId: string | null, enabled: boolean, 
    * unscoped "Mark all as read", which is left as-is. */
   const markAllAsRead = useCallback(async () => {
     if (!barangayId) return;
-    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
-    await buildMarkAllAsReadQuery(supabase, barangayId, filters);
+    const attempt = beginAttempt('filtered-notifications-read');
+    try {
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+      const { error } = await buildMarkAllAsReadQuery(supabase, barangayId, filters);
+      if (error) notify.error('Could not mark the selected notifications as read. Refresh to check their status.', { id: attempt });
+      else notify.success('Matching notifications marked as read.', { id: attempt });
+    } catch { notify.warning('Notification read status could not be confirmed. Refresh before trying again.', { id: attempt }); }
     onSynced?.();
   }, [barangayId, filters, supabase, onSynced]);
 

@@ -125,7 +125,7 @@ export function HelpCenterClient({ barangayId }: { barangayId: string | null }) 
             <p className="text-xs text-zinc-500 dark:text-zinc-400">Check your connection and try again.</p>
             <button
               type="button"
-              onClick={refetch}
+              onClick={() => refetch('help articles')}
               className="mt-1 flex items-center gap-1.5 rounded-full bg-[var(--accent)] px-4 py-2 text-xs font-semibold text-white hover:opacity-90">
               <RotateCw size={13} /> Retry
             </button>

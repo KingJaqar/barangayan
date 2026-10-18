@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-import { ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeControllerProvider, THEME_INIT_SCRIPT } from "@/components/ui/theme-controller";
 import { AccentControllerProvider, ACCENT_INIT_SCRIPT } from "@/components/ui/accent-controller";
 import { FontControllerProvider, FONT_INIT_SCRIPT } from "@/components/ui/font-controller";
@@ -50,7 +50,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <AccentControllerProvider>
             <FontControllerProvider>
               <IconControllerProvider>
-                <ToastProvider>{children}</ToastProvider>
+                {children}
+                <Toaster />
               </IconControllerProvider>
             </FontControllerProvider>
           </AccentControllerProvider>

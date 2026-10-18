@@ -33,6 +33,32 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 const PAYMONGO_BASE = 'https://api.paymongo.com/v1';
 
+// One response contract for newly generated, resumed, and concurrently created QR codes.
+function qrPaymentResponse(row: {
+  id: string;
+  paymongo_payment_intent_id: string | null;
+  qr_image_url: string | null;
+  expires_at: string | null;
+  document_fee_centavos: number;
+  amount_centavos: number;
+}) {
+  return new Response(JSON.stringify({
+    paymentId: row.id,
+    paymentIntentId: row.paymongo_payment_intent_id,
+    qrImageUrl: row.qr_image_url,
+    expiresAt: new Date(row.expires_at!).getTime(),
+    documentFeeCentavos: row.document_fee_centavos,
+    amountCentavos: row.amount_centavos,
+  }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+}
+
+function preparingResponse() {
+  return new Response(JSON.stringify({ status: 'preparing' }), {
+    status: 202,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
 function authHeaders() {
   return {
     Authorization: `Basic ${btoa(`${PAYMONGO_SECRET_KEY}:`)}`,
@@ -200,17 +226,7 @@ Deno.serve(async (req: Request) => {
   );
 
   if (resumable?.qr_image_url && resumable.expires_at) {
-    return new Response(
-      JSON.stringify({
-        paymentId: resumable.id,
-        paymentIntentId: resumable.paymongo_payment_intent_id,
-        qrImageUrl: resumable.qr_image_url,
-        expiresAt: new Date(resumable.expires_at).getTime(),
-        documentFeeCentavos: resumable.document_fee_centavos,
-        amountCentavos: resumable.amount_centavos,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-    );
+    return qrPaymentResponse(resumable);
   }
 
   // A reservation with no finished QR means another invocation is preparing one.
@@ -220,10 +236,7 @@ Deno.serve(async (req: Request) => {
   if (creating) {
     const reservationAgeMs = now - new Date(creating.created_at).getTime();
     if (reservationAgeMs < 2 * 60 * 1000) {
-      return new Response(JSON.stringify({ error: 'A QR Ph payment is being prepared. Please wait a moment and try again.' }), {
-        status: 409,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return preparingResponse();
     }
 
     if (creating.paymongo_payment_intent_id) {
@@ -337,30 +350,34 @@ Deno.serve(async (req: Request) => {
 
   if (reservationError || !reservation) {
     if (reservationError?.code === '23505') {
-      const { data: concurrentRows } = await supabaseAdmin
+      const { data: concurrentRows, error: concurrentError } = await supabaseAdmin
         .from('payments')
-        .select('id, paymongo_payment_intent_id, qr_image_url, expires_at, document_fee_centavos, amount_centavos')
+        .select('id, method, status, qrph_creation_key, paymongo_payment_intent_id, qr_image_url, expires_at, document_fee_centavos, amount_centavos')
         .eq('service_request_id', requestId)
-        .eq('method', 'qrph')
-        .eq('status', 'pending')
+        .in('status', ['pending', 'paid'])
         .order('created_at', { ascending: false });
+      if (concurrentError) {
+        console.error('concurrent payment lookup failed', concurrentError);
+        return new Response(JSON.stringify({ error: 'Could not check the existing payment. Reopen this request before trying again.' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (concurrentRows?.some((row) => row.status === 'paid')) {
+        return new Response(JSON.stringify({ status: 'paid' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       const concurrentQr = concurrentRows?.find(
-        (row) => row.qr_image_url && row.expires_at && new Date(row.expires_at).getTime() > Date.now(),
+        (row) => row.method === 'qrph' && row.qr_image_url && row.expires_at && new Date(row.expires_at).getTime() > Date.now(),
       );
       if (concurrentQr?.qr_image_url && concurrentQr.expires_at) {
-        return new Response(
-          JSON.stringify({
-            paymentId: concurrentQr.id,
-            paymentIntentId: concurrentQr.paymongo_payment_intent_id,
-            qrImageUrl: concurrentQr.qr_image_url,
-            expiresAt: new Date(concurrentQr.expires_at).getTime(),
-            documentFeeCentavos: concurrentQr.document_fee_centavos,
-            amountCentavos: concurrentQr.amount_centavos,
-          }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-        );
+        return qrPaymentResponse(concurrentQr);
       }
-      return new Response(JSON.stringify({ error: 'A QR Ph payment is already being prepared. Please wait and try again.' }), {
+      if (concurrentRows?.some((row) => row.method === 'qrph' && row.qrph_creation_key)) {
+        return preparingResponse();
+      }
+      return new Response(JSON.stringify({ error: 'An active payment already exists. Open this request to check its payment method.' }), {
         status: 409,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -593,17 +610,8 @@ Deno.serve(async (req: Request) => {
     }
 
     if (currentPayment?.qr_image_url && currentPayment.expires_at) {
-      return new Response(
-        JSON.stringify({
-          paymentId: reservation.id,
-          paymentIntentId: intentId,
-          qrImageUrl: currentPayment.qr_image_url,
-          expiresAt: new Date(currentPayment.expires_at).getTime(),
-          documentFeeCentavos,
-          amountCentavos,
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
+      return qrPaymentResponse({ ...currentPayment, id: reservation.id, paymongo_payment_intent_id: intentId,
+        document_fee_centavos: documentFeeCentavos, amount_centavos: amountCentavos });
     }
 
     const cancelled = await cancelPaymongoIntent(intentId);
@@ -617,15 +625,7 @@ Deno.serve(async (req: Request) => {
 
   // paymentId (the payments row's own uuid) is what check-payment-status expects — it's
   // what the client polls with, never the raw PayMongo intent id (see S0-3).
-  return new Response(
-    JSON.stringify({
-      paymentId: paymentRow.id,
-      paymentIntentId: intentId,
-      qrImageUrl,
-      expiresAt: new Date(expiresAtIso).getTime(),
-      documentFeeCentavos,
-      amountCentavos,
-    }),
-    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-  );
+  return qrPaymentResponse({ id: paymentRow.id, paymongo_payment_intent_id: intentId,
+    qr_image_url: qrImageUrl, expires_at: expiresAtIso,
+    document_fee_centavos: documentFeeCentavos, amount_centavos: amountCentavos });
 });

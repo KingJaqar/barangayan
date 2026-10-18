@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { beginAttempt, notify, setNotificationSession } from '@/lib/notify';
 
 import { logAdminLogout } from '@/actions/admin-audit-actions';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
@@ -28,14 +29,34 @@ function GuardedAdminShell({ barangayName, adminName, adminAvatarUrl, barangayId
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const { requestLeave } = useProfileNavigation();
+  const loggingOut = useRef(false);
+
+  useEffect(() => {
+    const { data } = createSupabaseBrowserClient().auth.onAuthStateChange((_event, session) => {
+      setNotificationSession(session?.user.id ?? null);
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
 
   async function handleLogout() {
-    // Log the logout event before the session is destroyed.
-    await logAdminLogout();
-    const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signOut({ scope: 'local' });
-    router.replace('/login');
-    router.refresh();
+    if (loggingOut.current) return;
+    loggingOut.current = true;
+    try {
+      // Log the logout event before the session is destroyed.
+      await logAdminLogout();
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      if (error) {
+        notify.warning("We couldn't confirm logout. Check your sign-in state before trying again.");
+        return;
+      }
+      setNotificationSession(null);
+      notify.success('Logged out', { id: beginAttempt('admin-logout'), keepOnSessionChange: true });
+      router.replace('/login');
+      router.refresh();
+    } catch {
+      notify.warning("We couldn't confirm logout. Check your sign-in state before trying again.");
+    } finally { loggingOut.current = false; }
   }
 
   return (

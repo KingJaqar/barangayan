@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { logAdminAction } from '@/actions/admin-audit-actions';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { LoadingButtonContent } from '@/components/loading/loading-button-content';
 
@@ -22,7 +22,7 @@ const labelClass = 'mb-1 block text-xs font-medium text-zinc-500';
 
 export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones: WasteZone[] }) {
   const router = useRouter();
-  const toast = useToast();
+
   const [zoneId, setZoneId] = useState('');
   const [wasteType, setWasteType] = useState<string>(WASTE_TYPES[0]);
   const [dayOfWeek, setDayOfWeek] = useState('1');
@@ -33,72 +33,79 @@ export function ScheduleForm({ barangayId, zones }: { barangayId: string; zones:
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      event.preventDefault();
+      setError(null);
 
-    const result = wasteScheduleSchema.safeParse({
-      zoneId,
-      wasteType: wasteType as WasteType,
-      dayOfWeek: Number(dayOfWeek),
-      startTime,
-      endTime,
-      notes: notes || undefined,
-      isActive: true,
-    });
+      const result = wasteScheduleSchema.safeParse({
+        zoneId,
+        wasteType: wasteType as WasteType,
+        dayOfWeek: Number(dayOfWeek),
+        startTime,
+        endTime,
+        notes: notes || undefined,
+        isActive: true,
+      });
 
-    if (!result.success) {
-      setError(result.error.issues[0]?.message ?? 'Invalid input');
-      return;
-    }
+      if (!result.success) {
+        toast.error('Review the highlighted fields before continuing.', { id: toastAttempt });
+        setError(result.error.issues[0]?.message ?? 'Invalid input');
+        return;
+      }
 
-    setSubmitting(true);
-    const supabase = createSupabaseBrowserClient();
-    const { data, error: insertError } = await supabase
-      .from('waste_collection_schedules')
-      .insert({
-        barangay_id: barangayId,
-        zone_id: result.data.zoneId,
-        waste_type: result.data.wasteType,
-        day_of_week: result.data.dayOfWeek,
-        start_time: result.data.startTime,
-        end_time: result.data.endTime,
-        notes: result.data.notes,
-        is_active: true,
-      })
-      .select('id')
-      .single();
-    setSubmitting(false);
+      setSubmitting(true);
+      const supabase = createSupabaseBrowserClient();
+      const { data, error: insertError } = await supabase
+        .from('waste_collection_schedules')
+        .insert({
+          barangay_id: barangayId,
+          zone_id: result.data.zoneId,
+          waste_type: result.data.wasteType,
+          day_of_week: result.data.dayOfWeek,
+          start_time: result.data.startTime,
+          end_time: result.data.endTime,
+          notes: result.data.notes,
+          is_active: true,
+        })
+        .select('id')
+        .single();
+      setSubmitting(false);
 
-    if (insertError) {
-      setError(insertError.message);
-      toast.showError(`Failed to add schedule: ${insertError.message}`);
-      return;
-    }
+      if (insertError) {
+        setError(insertError.message);
+        toast.error(`Failed to add schedule: ${insertError.message}`, { id: toastAttempt });
+        return;
+      }
 
-    const zoneName = zones.find((z) => z.id === result.data.zoneId)?.name ?? 'Unknown zone';
-    logAdminAction({
-      action: 'create',
-      entityType: 'waste_schedule',
-      entityId: data?.id,
-      entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
-      metadata: {
-        zone: zoneName,
-        waste_type: result.data.wasteType,
-        day_of_week: DAY_NAMES[result.data.dayOfWeek] ?? result.data.dayOfWeek,
-        start_time: result.data.startTime,
-        end_time: result.data.endTime,
-        notes: result.data.notes ?? null,
-      },
-    }).catch(() => {});
+      const zoneName = zones.find((z) => z.id === result.data.zoneId)?.name ?? 'Unknown zone';
+      logAdminAction({
+        action: 'create',
+        entityType: 'waste_schedule',
+        entityId: data?.id,
+        entityLabel: `${zoneName} — ${DAY_NAMES[result.data.dayOfWeek] ?? 'Unknown'}`,
+        metadata: {
+          zone: zoneName,
+          waste_type: result.data.wasteType,
+          day_of_week: DAY_NAMES[result.data.dayOfWeek] ?? result.data.dayOfWeek,
+          start_time: result.data.startTime,
+          end_time: result.data.endTime,
+          notes: result.data.notes ?? null,
+        },
+      }).catch(() => {});
 
-    setZoneId('');
-    setWasteType(WASTE_TYPES[0]);
-    setDayOfWeek('1');
-    setStartTime('08:00');
-    setEndTime('12:00');
-    setNotes('');
-    toast.showSuccess('Schedule added.');
-    router.refresh();
+      setZoneId('');
+      setWasteType(WASTE_TYPES[0]);
+      setDayOfWeek('1');
+      setStartTime('08:00');
+      setEndTime('12:00');
+      setNotes('');
+      toast.success('Schedule added.', { id: toastAttempt });
+      router.refresh();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

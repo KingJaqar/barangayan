@@ -28,7 +28,7 @@ import type { QueryOutcome, Summary } from '@/lib/admin-tables/queries/browse';
 import { logAdminAction } from '@/actions/admin-audit-actions';
 import { EditableDataTable, type EditableDataTableColumn } from '@/components/admin/editable-data-table';
 import { StatusPill } from '@/components/admin/status-pill';
-import { useToast } from '@/components/ui/toast';
+import { beginAttempt, notify as toast } from '@/lib/notify';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import type { ResidentRow } from './types';
@@ -71,7 +71,7 @@ function verificationColor(status: string) {
 // ─── Add Resident Form ─────────────────────────────────────────────────────────
 
 function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClose: () => void }) {
-  const toast = useToast();
+
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [mobileNumber, setMobile] = useState('');
@@ -79,29 +79,35 @@ function AddResidentForm({ onCreated, onClose }: { onCreated: () => void; onClos
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email.trim() || !fullName.trim()) return;
-    setSubmitting(true);
-    const res = await fetch('/api/admin/residents', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email.trim(), fullName: fullName.trim(), mobileNumber, homeAddress }),
-    });
-    const body = await res.json().catch(() => ({}));
-    setSubmitting(false);
+    const toastAttempt = beginAttempt('handleSubmit');
+    try {
+      e.preventDefault();
+      if (!email.trim() || !fullName.trim()) return;
+      setSubmitting(true);
+      const res = await fetch('/api/admin/residents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), fullName: fullName.trim(), mobileNumber, homeAddress }),
+      });
+      const body = await res.json().catch(() => ({}));
+      setSubmitting(false);
 
-    if (!res.ok) {
-      toast.showError(`Failed to add resident: ${body.error ?? 'Unknown error'}`);
-      return;
-    }
+      if (!res.ok) {
+        toast.error(`Failed to add resident: ${body.error ?? 'Unknown error'}`, { id: toastAttempt });
+        return;
+      }
 
-    toast.showSuccess(`Invite sent to ${email.trim()}.`);
-    setEmail('');
-    setFullName('');
-    setMobile('');
-    setHomeAddress('');
-    onClose();
-    onCreated();
+      toast.success(`Invite sent to ${email.trim()}.`, { id: toastAttempt });
+      setEmail('');
+      setFullName('');
+      setMobile('');
+      setHomeAddress('');
+      onClose();
+      onCreated();
+
+    } catch {
+      toast.warning('The action could not be confirmed. Refresh the record before trying again.', { id: toastAttempt });
+    } finally { setSubmitting(false); }
   }
 
   return (

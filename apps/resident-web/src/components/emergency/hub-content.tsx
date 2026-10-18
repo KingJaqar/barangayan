@@ -63,7 +63,7 @@ export function HubContent({ barangayId }: { barangayId: string | null }) {
               tone="warning"
               className="mb-3"
               message="Couldn't update the guidelines. Showing the last loaded list, which may be out of date."
-              onRetry={guidelinesRead.refetch}
+              announce={!guidelinesRead.errorAnnounced} onRetry={() => guidelinesRead.refetch('preparedness guidelines')}
             />
           ) : null}
           {guidelinesRead.isInitialLoading ? (
@@ -73,7 +73,7 @@ export function HubContent({ barangayId }: { barangayId: string | null }) {
           ) : !guidelinesRead.isReady ? (
             <InlineReadError
               message="We couldn't load the preparedness guidelines. Check your connection, then try again."
-              onRetry={guidelinesRead.refetch}
+              announce={!guidelinesRead.errorAnnounced} onRetry={() => guidelinesRead.refetch('preparedness guidelines')}
             />
           ) : accordionItems.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">No guidelines available.</p>
@@ -96,7 +96,7 @@ export function HubContent({ barangayId }: { barangayId: string | null }) {
               tone="warning"
               className="mb-3"
               message="Couldn't update the hotlines. Showing the last loaded numbers, which may be out of date."
-              onRetry={hotlinesRead.refetch}
+              announce={!hotlinesRead.errorAnnounced} onRetry={() => hotlinesRead.refetch('emergency hotlines')}
             />
           ) : null}
           {hotlinesRead.isInitialLoading ? (
@@ -104,7 +104,7 @@ export function HubContent({ barangayId }: { barangayId: string | null }) {
               <HotlineSkeletonRows />
             </div>
           ) : !hotlinesRead.isReady ? (
-            <InlineReadError message="We couldn't load the emergency hotlines. Check your connection, then try again." onRetry={hotlinesRead.refetch} />
+            <InlineReadError message="We couldn't load the emergency hotlines. Check your connection, then try again." announce={!hotlinesRead.errorAnnounced} onRetry={() => hotlinesRead.refetch('emergency hotlines')} />
           ) : hotlines.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">No hotlines available.</p>
           ) : (

@@ -24,7 +24,7 @@ function IncidentList({ status, sort, emptyLabel, selectedId, onSelect, onNewRep
   onSelect: (id: string) => void;
   onNewReport: () => void;
 }) {
-  const { incidents, isLoading, error, refetch } = useMyIncidents({ status });
+  const { incidents, isLoading, error, errorAnnounced, refetch } = useMyIncidents({ status });
   // Sort a copy of the current filtered results, including realtime updates.
   const sortedIncidents = [...incidents].sort((a, b) => {
     const newestFirst = Date.parse(b.created_at) - Date.parse(a.created_at);
@@ -42,10 +42,10 @@ function IncidentList({ status, sort, emptyLabel, selectedId, onSelect, onNewRep
     </div>
   );
   if (error) return (
-    <div className={styles.empty} role="alert">
+    <div className={styles.empty} role={errorAnnounced ? undefined : 'alert'}>
       <span className={`${styles.emptyIcon} ${styles.errorIcon}`}><TriangleAlert size={24} /></span>
       <h2>Reports couldn&apos;t load</h2><p>{error}</p>
-      <button type="button" onClick={refetch} className={styles.secondaryAction}>Try again</button>
+      <button type="button" onClick={() => refetch('your reports')} className={styles.secondaryAction}>Try again</button>
     </div>
   );
   if (incidents.length === 0) return (
