@@ -10,6 +10,8 @@ import { NotificationBell } from '@/components/notification-bell';
 import { ThemedText } from '@/components/themed-text';
 import { useSearchDraft } from '@/hooks/use-resident-search';
 import { useTheme } from '@/hooks/use-theme';
+import { getMobileFontFamily } from '@/constants/fonts';
+import { useFontPreference } from '@/hooks/use-font-preference';
 
 const TITLES: Record<string, string> = {
   '/home': 'Home',
@@ -29,6 +31,7 @@ export function ResidentHeader() {
   const searching = pathname === '/search';
   const title = TITLES[pathname];
   const theme = useTheme();
+  const { fontId } = useFontPreference();
   const insets = useSafeAreaInsets();
   const { query, setQuery, rememberSearch } = useSearchDraft();
   const input = useRef<TextInput>(null);
@@ -70,21 +73,21 @@ export function ResidentHeader() {
         importantForAccessibility={searching ? 'no-hide-descendants' : 'auto'}>
         <Image source={require('@/assets/logo/barangayan-logo-1024.png')}
           style={styles.logo} contentFit="contain" accessibilityLabel="Barangayan" />
-        <ThemedText accessibilityRole="header"
-          style={[styles.title, { color: theme.onPrimary }]}>{title}</ThemedText>
+        <ThemedText type="residentHeader" accessibilityRole="header"
+          style={[styles.title, { color: theme.resident.onAccent }]}>{title}</ThemedText>
         <View onLayout={event => setSearchX(event.nativeEvent.layout.x)}>
           <Pressable accessibilityRole="button" accessibilityLabel="Search"
             onPress={() => router.navigate('/search')} style={styles.button}>
-            <Ionicons name="search" size={24} color={theme.onPrimary} />
+            <Ionicons name="search" size={24} color={theme.resident.onAccent} />
           </Pressable>
         </View>
         <Pressable accessibilityRole="button" accessibilityLabel="View announcements"
           onPress={() => router.navigate('/announcements')} style={styles.button}>
-          <NotificationBell color={theme.onPrimary} />
+          <NotificationBell color={theme.resident.onAccent} />
         </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Open settings"
           onPress={() => router.navigate('/settings')} style={styles.button}>
-          <Ionicons name="menu" size={26} color={theme.onPrimary} />
+          <Ionicons name="menu" size={26} color={theme.resident.onAccent} />
         </Pressable>
       </Animated.View>
       <View style={styles.searchLayer} pointerEvents={searching ? 'box-none' : 'none'}
@@ -93,7 +96,7 @@ export function ResidentHeader() {
         {searching ? (
           <Pressable accessibilityRole="button" accessibilityLabel="Back from search"
             onPress={closeSearch} style={styles.button}>
-            <Ionicons name="arrow-back" size={24} color={theme.onPrimary} />
+            <Ionicons name="arrow-back" size={24} color={theme.resident.onAccent} />
           </Pressable>
         ) : null}
         <Animated.View style={[styles.field, { backgroundColor: theme.backgroundElement }, fieldStyle]}>
@@ -103,7 +106,7 @@ export function ResidentHeader() {
             accessibilityLabel="Search services, announcements and your records"
             placeholder="Search Barangayan" placeholderTextColor={theme.textSecondary}
             returnKeyType="search" autoCorrect={false}
-            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.text }]} />
+            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.text, fontFamily: getMobileFontFamily(fontId) }]} />
           {query ? (
             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
               onPress={() => { setQuery(''); input.current?.focus(); }} style={styles.clear}>

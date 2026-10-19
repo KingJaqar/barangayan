@@ -1,0 +1,1065 @@
+diff --git a/apps/resident-android-mobile/src/components/card.tsx b/apps/resident-android-mobile/src/components/card.tsx
+index d99ac021..b9aa6974 100644
+--- a/apps/resident-android-mobile/src/components/card.tsx
++++ b/apps/resident-android-mobile/src/components/card.tsx
+@@ -1,13 +1,21 @@
+ import type { ReactNode } from 'react';
+-import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
++import { StyleSheet, type ViewProps } from 'react-native';
+ 
+ import { ThemedView } from '@/components/themed-view';
+ import { Spacing } from '@/constants/theme';
++import { ResidentLayout } from '@/constants/resident-theme';
++import { useTheme } from '@/hooks/use-theme';
+ 
+ /** Rounded, clipped backgroundElement container for grouped rows — pair with <Divider /> between rows. */
+-export function Card({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
++export function Card({ children, style, variant = 'default', ...props }: ViewProps & { children: ReactNode; variant?: 'default' | 'resident' | 'residentRow' }) {
++  const { resident } = useTheme();
+   return (
+-    <ThemedView type="backgroundElement" style={[styles.card, style]}>
++    <ThemedView type="backgroundElement" {...props} style={[
++      styles.card,
++      variant === 'resident' && { backgroundColor: resident.card, borderColor: resident.border, borderWidth: 1, borderRadius: ResidentLayout.panelRadius },
++      variant === 'residentRow' && { backgroundColor: resident.card, borderRadius: 0, padding: ResidentLayout.rowPadding },
++      style,
++    ]}>
+       {children}
+     </ThemedView>
+   );
+diff --git a/apps/resident-android-mobile/src/components/delete-account-modal.tsx b/apps/resident-android-mobile/src/components/delete-account-modal.tsx
+index 675a958e..d0f9a38a 100644
+--- a/apps/resident-android-mobile/src/components/delete-account-modal.tsx
++++ b/apps/resident-android-mobile/src/components/delete-account-modal.tsx
+@@ -1,13 +1,15 @@
+-import { useEffect, useState } from 'react';
+-import { Modal, Pressable, StyleSheet, View } from 'react-native';
++import { useEffect, useRef, useState } from 'react';
++import { Animated, Easing, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+ 
+ import { PrimaryButton } from '@/components/primary-button';
+ import { TextField } from '@/components/text-field';
+ import { ThemedText } from '@/components/themed-text';
+ import { Spacing } from '@/constants/theme';
+ import { useTheme } from '@/hooks/use-theme';
++import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ 
+ interface DeleteAccountModalProps {
++  presentation?: 'default' | 'resident';
+   visible: boolean;
+   onClose: () => void;
+   /** Re-authenticates with the given password, then performs the deletion. Throws on failure. */
+@@ -24,13 +26,25 @@ interface DeleteAccountModalProps {
+  * re-authenticate-before-mutating pattern as settings/change-password.tsx)
+  * makes this last, irreversible step deliberate.
+  */
+-export function DeleteAccountModal({ visible, onClose, onConfirm }: DeleteAccountModalProps) {
++export function DeleteAccountModal({ visible, onClose, onConfirm, presentation = 'default' }: DeleteAccountModalProps) {
+   const theme = useTheme();
++  const resident = presentation === 'resident';
++  const reducedMotion = useResidentReducedMotion(resident);
++  const [mounted, setMounted] = useState(visible);
++  const progress = useRef(new Animated.Value(0)).current;
+   const [password, setPassword] = useState('');
+   const [showPassword, setShowPassword] = useState(false);
+   const [error, setError] = useState<string | null>(null);
+   const [loading, setLoading] = useState(false);
+ 
++  useEffect(() => {
++    if (!resident) return;
++    if (visible) setMounted(true);
++    const animation = Animated.timing(progress, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true });
++    animation.start(({ finished }) => { if (finished && !visible) setMounted(false); });
++    return () => animation.stop();
++  }, [visible, resident, reducedMotion, progress]);
++
+   useEffect(() => {
+     if (visible) {
+       setPassword('');
+@@ -61,47 +75,60 @@ export function DeleteAccountModal({ visible, onClose, onConfirm }: DeleteAccoun
+     }
+   }
+ 
+-  return (
+-    <Modal visible={visible} transparent animationType="fade" onRequestClose={handleClose}>
+-      <Pressable style={styles.overlay} onPress={handleClose}>
+-        <Pressable style={[styles.sheet, { backgroundColor: theme.background }]} onPress={(e) => e.stopPropagation()}>
+-          <View style={styles.handle} />
+-          <ThemedText type="smallBold" style={styles.title}>
++  const passwordField = (
++    <TextField
++      presentation={presentation}
++      label="Password"
++      value={password}
++      onChangeText={(v) => { setPassword(v); setError(null); }}
++      autoCapitalize="none"
++      autoComplete="current-password"
++      editable={!loading}
++      passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((v) => !v) }}
++    />
++  );
++
++  const sheet = (
++        <Pressable accessible={resident ? false : undefined} accessibilityViewIsModal={resident || undefined} style={[styles.sheet, { backgroundColor: theme.background }, resident && { backgroundColor: theme.resident.card, borderRadius: 24, paddingHorizontal: 24, paddingTop: 24, paddingBottom: 24, gap: 0 }]} onPress={(e) => e.stopPropagation()}>
++          {!resident ? <View style={styles.handle} /> : null}
++          <ThemedText type="smallBold" style={[styles.title, resident && styles.residentTitle]}>
+             Confirm Your Password
+           </ThemedText>
+-          <ThemedText type="small" themeColor="textSecondary" style={styles.subtitle}>
++          <ThemedText type="small" themeColor="textSecondary" style={[styles.subtitle, resident && { color: theme.resident.muted }, resident && styles.residentSubtitle]}>
+             For your security, enter your password to permanently delete your account. This cannot be undone.
+           </ThemedText>
+ 
+-          <TextField
+-            label="Password"
+-            value={password}
+-            onChangeText={(v) => { setPassword(v); setError(null); }}
+-            autoCapitalize="none"
+-            autoComplete="current-password"
+-            editable={!loading}
+-            passwordVisibility={{ visible: showPassword, onToggle: () => setShowPassword((v) => !v) }}
+-          />
++          {resident ? <View style={styles.residentPassword}>{passwordField}</View> : passwordField}
+ 
+           {error ? (
+-            <ThemedText type="small" style={[styles.error, { color: theme.accentRed }]}>
++            <ThemedText type="small" accessibilityRole={resident ? 'alert' : undefined} style={[styles.error, resident && styles.residentError, { color: resident ? theme.resident.danger : theme.accentRed }]}>
+               {error}
+             </ThemedText>
+           ) : null}
+ 
+-          <View style={styles.actionsRow}>
+-            <Pressable
++          <View style={[styles.actionsRow, resident && styles.residentActions]}>
++            {resident ? <View style={styles.confirmButton}><PrimaryButton presentation="resident" label="Cancel" variant="secondary" disabled={loading} onPress={handleClose} /></View> : <Pressable
+               style={[styles.actionButton, { backgroundColor: theme.backgroundElement }]}
+               onPress={handleClose}
+               disabled={loading}>
+               <ThemedText style={styles.actionText}>Cancel</ThemedText>
+-            </Pressable>
++            </Pressable>}
+             <View style={styles.confirmButton}>
+-              <PrimaryButton label="Delete Account" loading={loading} onPress={handleConfirm} variant="destructive" />
++              {resident ? <PrimaryButton presentation="resident" label="Delete" loading={loading} onPress={handleConfirm} variant="destructiveFilled" /> : <PrimaryButton label="Delete Account" loading={loading} onPress={handleConfirm} variant="destructive" />}
+             </View>
+           </View>
+         </Pressable>
+-      </Pressable>
++  );
++  return (
++    <Modal visible={resident ? mounted : visible} transparent animationType={resident ? 'none' : 'fade'} onRequestClose={handleClose}>
++      {resident ? <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
++        <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: theme.resident.scrim, opacity: progress }]}><Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Cancel account deletion" onPress={handleClose} /></Animated.View>
++        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
++          <Pressable accessible={false} onPress={handleClose} style={{ flex: 1, justifyContent: 'center', padding: 32 }}>
++            <Animated.View style={{ opacity: progress, transform: [{ scale: reducedMotion ? 1 : progress.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }] }}>{sheet}</Animated.View>
++          </Pressable>
++        </ScrollView>
++      </KeyboardAvoidingView> : <Pressable style={styles.overlay} onPress={handleClose}>{sheet}</Pressable>}
+     </Modal>
+   );
+ }
+@@ -136,6 +163,29 @@ const styles = StyleSheet.create({
+   subtitle: {
+     textAlign: 'center',
+   },
++  residentTitle: {
++    fontSize: 19,
++    lineHeight: 28.5,
++    fontWeight: '800',
++    textAlign: 'left',
++  },
++  residentSubtitle: {
++    fontSize: 14.5,
++    lineHeight: 20,
++    textAlign: 'left',
++    marginTop: 6,
++  },
++  residentPassword: {
++    marginTop: 16,
++  },
++  residentError: {
++    textAlign: 'left',
++    marginTop: 8,
++  },
++  residentActions: {
++    gap: 12,
++    marginTop: 24,
++  },
+   error: {
+     textAlign: 'center',
+   },
+diff --git a/apps/resident-android-mobile/src/components/divider.tsx b/apps/resident-android-mobile/src/components/divider.tsx
+index 1cf457af..6af78a34 100644
+--- a/apps/resident-android-mobile/src/components/divider.tsx
++++ b/apps/resident-android-mobile/src/components/divider.tsx
+@@ -2,10 +2,12 @@ import { StyleSheet } from 'react-native';
+ 
+ import { ThemedView } from '@/components/themed-view';
+ import { Spacing } from '@/constants/theme';
++import { useTheme } from '@/hooks/use-theme';
+ 
+ /** Hairline separator between rows inside a <Card>. */
+-export function Divider() {
+-  return <ThemedView type="backgroundSelected" style={styles.divider} />;
++export function Divider({ variant = 'default' }: { variant?: 'default' | 'resident' }) {
++  const { resident } = useTheme();
++  return <ThemedView type="backgroundSelected" style={[styles.divider, variant === 'resident' && { height: 1, marginHorizontal: 0, backgroundColor: resident.border }]} />;
+ }
+ 
+ const styles = StyleSheet.create({
+diff --git a/apps/resident-android-mobile/src/components/primary-button.tsx b/apps/resident-android-mobile/src/components/primary-button.tsx
+index 80f97b56..4577fa69 100644
+--- a/apps/resident-android-mobile/src/components/primary-button.tsx
++++ b/apps/resident-android-mobile/src/components/primary-button.tsx
+@@ -1,21 +1,34 @@
+-import type { ReactNode } from 'react';
++import { useEffect, type ReactNode } from 'react';
+ import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from 'react-native';
++import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+ 
+ import { ThemedText } from '@/components/themed-text';
+ import { Spacing } from '@/constants/theme';
++import { ResidentLayout } from '@/constants/resident-theme';
++import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ import { useTheme } from '@/hooks/use-theme';
+ 
+-export interface PrimaryButtonProps extends Omit<PressableProps, 'style'> {
++interface ButtonContentProps extends Omit<PressableProps, 'style'> {
+   label: string;
+   leadingIcon?: ReactNode;
+   loading?: boolean;
+-  variant?: 'primary' | 'secondary' | 'destructive';
+ }
+ 
++type ButtonVariant = 'primary' | 'secondary' | 'destructive';
++export type PrimaryButtonProps = ButtonContentProps & (
++  | { presentation?: 'default'; variant?: ButtonVariant }
++  | { presentation: 'resident'; variant?: ButtonVariant | 'destructiveFilled' }
++);
++
+ /** The green pill button used throughout the design file (Login, Register, Verify, etc.).
+  * 'destructive' is the red-outlined variant for cancel/undo-style actions (e.g. cancelling
+- * a pending payment) — same shape as 'secondary' but in theme.accentRed. */
+-export function PrimaryButton({ label, leadingIcon, loading, variant = 'primary', disabled, ...props }: PrimaryButtonProps) {
++ * a pending payment) — same shape as 'secondary' but in theme.accentRed.
++ * Resident confirmation dialogs use 'destructiveFilled' for the reference's filled action. */
++export function PrimaryButton({ presentation = 'default', ...props }: PrimaryButtonProps) {
++  return presentation === 'resident' ? <ResidentButton {...props} /> : <DefaultButton {...props} />;
++}
++
++function DefaultButton({ label, leadingIcon, loading, variant = 'primary', disabled, ...props }: Omit<PrimaryButtonProps, 'presentation'>) {
+   const theme = useTheme();
+   const isDisabled = disabled || loading;
+ 
+@@ -51,7 +64,53 @@ export function PrimaryButton({ label, leadingIcon, loading, variant = 'primary'
+   );
+ }
+ 
++function ResidentButton({ label, leadingIcon, loading, variant = 'primary', disabled, onPressIn, onPressOut, accessibilityState, ...props }: Omit<PrimaryButtonProps, 'presentation'>) {
++  const { resident } = useTheme();
++  const reducedMotion = useResidentReducedMotion(true);
++  const scale = useSharedValue(1);
++  const isDisabled = Boolean(disabled || loading);
++  const animationStyle = useAnimatedStyle(() => ({ transform: [{ scale: reducedMotion ? 1 : scale.value }] }));
++  useEffect(() => {
++    if (isDisabled || reducedMotion) { cancelAnimation(scale); scale.value = 1; }
++    return () => cancelAnimation(scale);
++  }, [isDisabled, reducedMotion, scale]);
++  const filledDanger = variant === 'destructiveFilled';
++  const color = isDisabled ? resident.muted : filledDanger ? resident.onDangerFill : variant === 'primary' ? resident.onAccent : variant === 'destructive' ? resident.danger : resident.text;
++  return (
++    <Animated.View style={animationStyle}>
++      <Pressable
++        {...props}
++        accessibilityRole="button"
++        accessibilityLabel={props.accessibilityLabel ?? label}
++        accessibilityState={{ ...accessibilityState, disabled: isDisabled, busy: Boolean(loading) }}
++        disabled={isDisabled}
++        onPressIn={(event) => {
++          scale.value = reducedMotion ? 1 : withTiming(0.98, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
++          onPressIn?.(event);
++        }}
++        onPressOut={(event) => {
++          scale.value = reducedMotion ? 1 : withTiming(1, { duration: 150, easing: Easing.bezier(0.23, 1, 0.32, 1) });
++          onPressOut?.(event);
++        }}
++        style={({ pressed }) => [styles.residentButton, {
++          backgroundColor: isDisabled ? resident.surface : filledDanger ? (pressed ? resident.dangerFillPressed : resident.dangerFill) : variant === 'primary' ? (pressed ? resident.accentPressed : resident.accent) : pressed ? (variant === 'destructive' ? resident.dangerSoft : resident.pressed) : resident.card,
++          borderColor: variant === 'destructive' ? resident.danger : resident.controlBorder,
++          borderWidth: isDisabled ? 1 : filledDanger ? (resident.dangerFillNeedsOutline ? 1 : 0) : variant === 'destructive' ? 2 : variant === 'primary' && !resident.accentNeedsOutline ? 0 : 1,
++        }]}>
++        {({ pressed }) => {
++          const foreground = !isDisabled && variant === 'primary' && pressed ? resident.onAccentPressed : color;
++          return <>
++            {loading ? <ActivityIndicator color={foreground} accessible={false} /> : leadingIcon ? <View accessible={false} importantForAccessibility="no-hide-descendants">{leadingIcon}</View> : null}
++            <ThemedText type="smallBold" style={{ color: foreground, fontSize: 15, lineHeight: 22.5, flexShrink: 1, textAlign: 'center' }}>{label}</ThemedText>
++          </>;
++        }}
++      </Pressable>
++    </Animated.View>
++  );
++}
++
+ const styles = StyleSheet.create({
++  residentButton: { minHeight: ResidentLayout.controlHeight, borderRadius: ResidentLayout.controlRadius, paddingHorizontal: 20, paddingVertical: 14, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
+   withIcon: {
+     flexDirection: 'row',
+     gap: Spacing.two,
+diff --git a/apps/resident-android-mobile/src/components/progress-bar.tsx b/apps/resident-android-mobile/src/components/progress-bar.tsx
+index 70a6a00c..21b5936f 100644
+--- a/apps/resident-android-mobile/src/components/progress-bar.tsx
++++ b/apps/resident-android-mobile/src/components/progress-bar.tsx
+@@ -4,11 +4,13 @@ import { useTheme } from '@/hooks/use-theme';
+ 
+ /** Fill-fraction bar shared by RequestsList and the Request Tracking screen — feed it a
+  * 0-1 fraction from packages/shared's progressFraction(). */
+-export function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
++export function ProgressBar({ fraction, color, presentation = 'default' }: { fraction: number; color: string; presentation?: 'default' | 'resident' }) {
+   const theme = useTheme();
++  const resident = presentation === 'resident';
++  const value = resident ? (Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0) : fraction;
+   return (
+-    <View style={[styles.track, { backgroundColor: theme.backgroundSelected }]}>
+-      <View style={[styles.fill, { backgroundColor: color, width: `${fraction * 100}%` }]} />
++    <View accessibilityRole={resident ? 'progressbar' : undefined} accessibilityValue={resident ? { min: 0, max: 100, now: Math.round(value * 100) } : undefined} style={[styles.track, { backgroundColor: resident ? theme.resident.border : theme.backgroundSelected }]}>
++      <View style={[styles.fill, { backgroundColor: color, width: `${value * 100}%` }]} />
+     </View>
+   );
+ }
+diff --git a/apps/resident-android-mobile/src/components/resident-header.tsx b/apps/resident-android-mobile/src/components/resident-header.tsx
+index c55361f8..c3652c11 100644
+--- a/apps/resident-android-mobile/src/components/resident-header.tsx
++++ b/apps/resident-android-mobile/src/components/resident-header.tsx
+@@ -10,6 +10,8 @@ import { NotificationBell } from '@/components/notification-bell';
+ import { ThemedText } from '@/components/themed-text';
+ import { useSearchDraft } from '@/hooks/use-resident-search';
+ import { useTheme } from '@/hooks/use-theme';
++import { getMobileFontFamily } from '@/constants/fonts';
++import { useFontPreference } from '@/hooks/use-font-preference';
+ 
+ const TITLES: Record<string, string> = {
+   '/home': 'Home',
+@@ -29,6 +31,7 @@ export function ResidentHeader() {
+   const searching = pathname === '/search';
+   const title = TITLES[pathname];
+   const theme = useTheme();
++  const { fontId } = useFontPreference();
+   const insets = useSafeAreaInsets();
+   const { query, setQuery, rememberSearch } = useSearchDraft();
+   const input = useRef<TextInput>(null);
+@@ -70,21 +73,21 @@ export function ResidentHeader() {
+         importantForAccessibility={searching ? 'no-hide-descendants' : 'auto'}>
+         <Image source={require('@/assets/logo/barangayan-logo-1024.png')}
+           style={styles.logo} contentFit="contain" accessibilityLabel="Barangayan" />
+-        <ThemedText accessibilityRole="header"
+-          style={[styles.title, { color: theme.onPrimary }]}>{title}</ThemedText>
++        <ThemedText type="residentHeader" accessibilityRole="header"
++          style={[styles.title, { color: theme.resident.onAccent }]}>{title}</ThemedText>
+         <View onLayout={event => setSearchX(event.nativeEvent.layout.x)}>
+           <Pressable accessibilityRole="button" accessibilityLabel="Search"
+             onPress={() => router.navigate('/search')} style={styles.button}>
+-            <Ionicons name="search" size={24} color={theme.onPrimary} />
++            <Ionicons name="search" size={24} color={theme.resident.onAccent} />
+           </Pressable>
+         </View>
+         <Pressable accessibilityRole="button" accessibilityLabel="View announcements"
+           onPress={() => router.navigate('/announcements')} style={styles.button}>
+-          <NotificationBell color={theme.onPrimary} />
++          <NotificationBell color={theme.resident.onAccent} />
+         </Pressable>
+         <Pressable accessibilityRole="button" accessibilityLabel="Open settings"
+           onPress={() => router.navigate('/settings')} style={styles.button}>
+-          <Ionicons name="menu" size={26} color={theme.onPrimary} />
++          <Ionicons name="menu" size={26} color={theme.resident.onAccent} />
+         </Pressable>
+       </Animated.View>
+       <View style={styles.searchLayer} pointerEvents={searching ? 'box-none' : 'none'}
+@@ -93,7 +96,7 @@ export function ResidentHeader() {
+         {searching ? (
+           <Pressable accessibilityRole="button" accessibilityLabel="Back from search"
+             onPress={closeSearch} style={styles.button}>
+-            <Ionicons name="arrow-back" size={24} color={theme.onPrimary} />
++            <Ionicons name="arrow-back" size={24} color={theme.resident.onAccent} />
+           </Pressable>
+         ) : null}
+         <Animated.View style={[styles.field, { backgroundColor: theme.backgroundElement }, fieldStyle]}>
+@@ -103,7 +106,7 @@ export function ResidentHeader() {
+             accessibilityLabel="Search services, announcements and your records"
+             placeholder="Search Barangayan" placeholderTextColor={theme.textSecondary}
+             returnKeyType="search" autoCorrect={false}
+-            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.text }]} />
++            onSubmitEditing={() => { rememberSearch(query); Keyboard.dismiss(); }} style={[styles.input, { color: theme.text, fontFamily: getMobileFontFamily(fontId) }]} />
+           {query ? (
+             <Pressable accessibilityRole="button" accessibilityLabel="Clear search"
+               onPress={() => { setQuery(''); input.current?.focus(); }} style={styles.clear}>
+diff --git a/apps/resident-android-mobile/src/components/segmented-control.tsx b/apps/resident-android-mobile/src/components/segmented-control.tsx
+index ab6b9cb6..6235169c 100644
+--- a/apps/resident-android-mobile/src/components/segmented-control.tsx
++++ b/apps/resident-android-mobile/src/components/segmented-control.tsx
+@@ -5,12 +5,16 @@ import Animated, {
+   useSharedValue,
+   useAnimatedStyle,
+   withSpring,
++  withTiming,
++  Easing,
++  cancelAnimation,
+ } from 'react-native-reanimated';
+ 
+ import { ThemedText } from '@/components/themed-text';
+ import { ThemedView } from '@/components/themed-view';
+ import { Colors, Spacing } from '@/constants/theme';
+ import { useTheme } from '@/hooks/use-theme';
++import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+ 
+ export interface SegmentOption<Key extends string> {
+   key: Key;
+@@ -24,6 +28,7 @@ export interface SegmentedControlProps<Key extends string> {
+   onChange: (key: Key) => void;
+   activeColor?: 'primary' | 'accentRed';
+   variant?: 'filled' | 'outline';
++  presentation?: 'default' | 'resident';
+ }
+ 
+ export function SegmentedControl<Key extends string>({
+@@ -32,10 +37,16 @@ export function SegmentedControl<Key extends string>({
+   onChange,
+   activeColor = 'primary',
+   variant = 'filled',
++  presentation = 'default',
+ }: SegmentedControlProps<Key>) {
+   const theme = useTheme();
++  const resident = presentation === 'resident';
++  const reducedMotion = useResidentReducedMotion(resident);
+   const accent = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
+-  const pillColor = variant === 'filled' ? accent : theme.background;
++  const residentAccent = resident ? (activeColor === 'accentRed' ? theme.resident.danger : theme.resident.accent) : accent;
++  const residentOnAccent = resident ? (activeColor === 'accentRed' ? theme.resident.onDanger : theme.resident.onAccent) : theme.onPrimary;
++  const residentAccentText = resident ? (activeColor === 'accentRed' ? theme.resident.danger : theme.resident.accentText) : accent;
++  const pillColor = resident ? (variant === 'filled' ? residentAccent : theme.resident.card) : variant === 'filled' ? accent : theme.background;
+ 
+   const translateX = useSharedValue(0);
+   const [containerWidth, setContainerWidth] = useState(0);
+@@ -46,17 +57,22 @@ export function SegmentedControl<Key extends string>({
+   );
+ 
+   const segmentWidth = useMemo(() => {
+-    if (containerWidth <= 2 * Spacing.half) return 0;
++    if (containerWidth <= 2 * Spacing.half || segments.length === 0) return 0;
+     return (
+       (containerWidth - 2 * Spacing.half - (segments.length - 1) * Spacing.half) /
+       segments.length
+     );
+   }, [containerWidth, segments.length]);
+ 
+-  const activeTextStyle = variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
++  const activeTextStyle = resident ? { color: variant === 'filled' ? residentOnAccent : residentAccentText } : variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
+ 
+   useEffect(() => {
+-    if (segmentWidth > 0) {
++    if (segmentWidth > 0 && (!resident || activeIndex >= 0)) {
++      const target = activeIndex * (segmentWidth + Spacing.half);
++      if (resident) {
++        translateX.value = reducedMotion ? target : withTiming(target, { duration: 220, easing: Easing.bezier(0.23, 1, 0.32, 1) });
++        return () => cancelAnimation(translateX);
++      }
+       // Critically damped — settles on the target segment with zero overshoot/bounce.
+       translateX.value = withSpring(activeIndex * (segmentWidth + Spacing.half), {
+         damping: 26,
+@@ -65,8 +81,7 @@ export function SegmentedControl<Key extends string>({
+         overshootClamping: true,
+       });
+     }
+-  // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [activeIndex, segmentWidth]);
++  }, [activeIndex, segmentWidth, resident, reducedMotion, translateX]);
+ 
+   const pillAnimatedStyle = useAnimatedStyle(() => ({
+     transform: [{ translateX: translateX.value }],
+@@ -75,9 +90,9 @@ export function SegmentedControl<Key extends string>({
+   return (
+     <ThemedView
+       type="backgroundElement"
+-      style={styles.container}
+-      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
+-      {segmentWidth > 0 && (
++      style={[styles.container, resident && { backgroundColor: theme.resident.surface }]}
++      onLayout={(e) => { const next = e.nativeEvent.layout.width; setContainerWidth((current) => current === next ? current : next); }}>
++      {segmentWidth > 0 && (!resident || activeIndex >= 0) && (
+         <Animated.View
+           style={[
+             styles.pill,
+@@ -106,17 +121,17 @@ export function SegmentedControl<Key extends string>({
+                 <Ionicons
+                   name={segment.icon}
+                   size={22}
+-                  color={isActive ? activeTextStyle.color : theme.textSecondary}
++                  color={isActive ? activeTextStyle.color : resident ? theme.resident.muted : theme.textSecondary}
+                   accessible={false}
+                 />
+               ) : (
+                 <ThemedText
+                   type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
+                   themeColor={isActive ? undefined : 'textSecondary'}
+-                  numberOfLines={1}
+-                  adjustsFontSizeToFit
++                  numberOfLines={resident ? undefined : 1}
++                  adjustsFontSizeToFit={!resident}
+                   minimumFontScale={0.65}
+-                  style={[styles.label, isActive ? activeTextStyle : undefined]}>
++                  style={[styles.label, resident && { color: theme.resident.muted }, isActive ? activeTextStyle : undefined]}>
+                   {segment.label}
+                 </ThemedText>
+               )}
+diff --git a/apps/resident-android-mobile/src/components/services/charter-request-form.tsx b/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
+index 1774749c..cb960357 100644
+--- a/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
++++ b/apps/resident-android-mobile/src/components/services/charter-request-form.tsx
+@@ -29,6 +29,7 @@ import {
+ } from 'react-native';
+ import { SafeAreaView } from 'react-native-safe-area-context';
+ import { PrimaryButton } from '@/components/primary-button';
++import { Card } from '@/components/card';
+ import { PurposeSheet } from '@/components/services/purpose-sheet';
+ import { ServiceScreenHeader } from '@/components/services/service-screen-header';
+ import { ServiceErrorToast } from '@/components/services/service-error-toast';
+@@ -69,6 +70,7 @@ function Field({
+     <View style={styles.field} onLayout={onLayout}>
+       <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
+       <TextField
++        presentation="resident"
+         accessibilityLabel={label}
+         value={value}
+         onChangeText={onChange}
+@@ -77,7 +79,7 @@ function Field({
+         multiline={!numeric}
+         editable={!disabled}
+         error={error}
+-        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.accentRed, borderWidth: 1.5 } : undefined]}
++        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.resident.danger, borderWidth: 1.5 } : undefined]}
+       />
+     </View>
+   );
+@@ -108,7 +110,7 @@ function Toggle({
+         accessibilityLabel={label}
+         value={value}
+         onValueChange={onChange}
+-        trackColor={{ true: theme.primary }}
++        trackColor={{ true: theme.resident.accentText }}
+         disabled={disabled}
+       />
+     </View>
+@@ -272,7 +274,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+   const upload = (code: Requirement, label: string, required: boolean) => (
+     <View onLayout={(event) => locate(code as ServiceRequestField, event)} style={[styles.card, { borderColor: fieldErrors[code as ServiceRequestField] ? theme.accentRed : theme.backgroundSelected }]} key={code}>
+       <View style={styles.cardTitleRow}>
+-        <Ionicons name="cloud-upload-outline" size={22} color={theme.primary} />
++        <Ionicons name="cloud-upload-outline" size={22} color={theme.resident.accentText} />
+         <View style={{ flex: 1 }}>
+           <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
+           <ThemedText type="small" themeColor="textSecondary">
+@@ -285,7 +287,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+           <ThemedText type="small" numberOfLines={1}>
+             {files[code]!.name}
+           </ThemedText>
+-          <PrimaryButton
++          <PrimaryButton presentation="resident"
+             label={`Remove ${label}`}
+             variant="secondary"
+             disabled={submitting}
+@@ -299,7 +301,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+           />
+         </>
+       ) : null}
+-      <PrimaryButton
++      <PrimaryButton presentation="resident"
+         label={`Choose ${label}`}
+         variant="secondary"
+         disabled={submitting}
+@@ -310,7 +312,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+   );
+   return (
+     <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.primary }}>
+-      <ServiceScreenHeader title="Request Document" backLabel="Back to document" compact />
++      <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
+       <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+           <View style={styles.hero}>
+@@ -318,31 +320,31 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+               {doc.name}
+             </ThemedText>
+             <View style={[styles.priceChip, { backgroundColor: theme.backgroundElement }]}>
+-              <Ionicons name="cash-outline" size={15} color={theme.primary} />
++              <Ionicons name="cash-outline" size={15} color={theme.resident.accentText} />
+               <ThemedText type="smallBold" style={{ flexShrink: 1 }}>
+                 {servicePriceLabel(doc)}
+               </ThemedText>
+             </View>
+           </View>
+           <ThemedText type="small" themeColor="textSecondary">Fields marked * are required.</ThemedText>
+-          <View style={[styles.card, { borderColor: theme.backgroundSelected }]}>
++          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
+             <View style={styles.cardTitleRow}>
+-              <Ionicons name="person-circle-outline" size={24} color={theme.primary} />
++              <Ionicons name="person-circle-outline" size={24} color={theme.resident.accentText} />
+               <ThemedText type="heading" style={styles.cardTitle}>
+                 Resident Details
+               </ThemedText>
+               <View style={styles.inlineAction}>
+-                <PrimaryButton label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
++                <PrimaryButton presentation="resident" label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
+               </View>
+             </View>
+             <ThemedText type="small">
+               {profile?.full_name ?? 'Loading resident details…'} ·{' '}
+               {profile?.mobile_number ?? 'No mobile number on file'}
+             </ThemedText>
+-          </View>
+-          <View style={[styles.card, { borderColor: theme.backgroundSelected }]}>
++          </Card>
++          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
+             <View style={styles.cardTitleRow}>
+-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.primary} />
++              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
+               <ThemedText type="heading" style={styles.cardTitle}>
+                 Approved profile ID
+               </ThemedText>
+@@ -371,16 +373,16 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+                 </View>
+               </>
+             ) : (
+-              <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
++              <PrimaryButton presentation="resident" label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
+             )}
+-            <PrimaryButton label="Refresh verification" variant="secondary" onPress={refetch} />
+-          </View>
++            <PrimaryButton presentation="resident" label="Refresh verification" variant="secondary" onPress={refetch} />
++          </Card>
+           <View onLayout={(event) => locate('purposeCode', event)} style={styles.field}>
+           <ThemedText type="heading" style={styles.cardTitle}>
+             Purpose of request<ThemedText themeColor="accentRed"> *</ThemedText>
+           </ThemedText>
+           <View style={fieldErrors.purposeCode ? [styles.invalid, { borderColor: theme.accentRed }] : undefined}>
+-          <PrimaryButton
++          <PrimaryButton presentation="resident"
+             label={option?.label ?? 'Choose a purpose'}
+             variant="secondary"
+             onPress={() => setPurposeOpen(true)}
+@@ -462,7 +464,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+             </ThemedText>
+           </View>
+           <View style={styles.footerAction}>
+-            <PrimaryButton
++            <PrimaryButton presentation="resident"
+               label="Submit request"
+               loading={submitting}
+               disabled={!approvedId || approved?.id !== approvedId || submitting}
+@@ -472,6 +474,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
+         </View>
+       </KeyboardAvoidingView>
+       <PurposeSheet
++        presentation="resident"
+         visible={purposeOpen}
+         title="Purpose of request"
+         options={catalog.purposes}
+diff --git a/apps/resident-android-mobile/src/components/services/purpose-sheet.tsx b/apps/resident-android-mobile/src/components/services/purpose-sheet.tsx
+index 556a98aa..855b046b 100644
+--- a/apps/resident-android-mobile/src/components/services/purpose-sheet.tsx
++++ b/apps/resident-android-mobile/src/components/services/purpose-sheet.tsx
+@@ -15,6 +15,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ 
+ import { ThemedText } from '@/components/themed-text';
+ import { useTheme } from '@/hooks/use-theme';
++import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
++import { ResidentLayout } from '@/constants/resident-theme';
+ 
+ type Option = { code: string; label: string };
+ 
+@@ -31,6 +33,7 @@ export function PurposeSheet({
+   selected,
+   onSelect,
+   onClose,
++  presentation = 'default',
+ }: {
+   visible: boolean;
+   title: string;
+@@ -38,17 +41,32 @@ export function PurposeSheet({
+   selected?: string;
+   onSelect: (code: string) => void;
+   onClose: () => void;
++  presentation?: 'default' | 'resident';
+ }) {
+   const theme = useTheme();
++  const resident = presentation === 'resident';
++  const reducedMotion = useResidentReducedMotion(resident);
+   const insets = useSafeAreaInsets();
+   const [mounted, setMounted] = useState(visible);
+   const progress = useRef(new Animated.Value(0)).current; // 0 = hidden, 1 = shown
+   const dragY = useRef(new Animated.Value(0)).current;
++  const scrim = useRef(new Animated.Value(0)).current;
+   const height = Dimensions.get('window').height;
+   const onCloseRef = useRef(onClose);
+   onCloseRef.current = onClose;
+ 
+   useEffect(() => {
++    if (resident) {
++      progress.stopAnimation();
++      scrim.stopAnimation();
++      if (visible) { dragY.setValue(0); setMounted(true); }
++      const animation = Animated.parallel([
++        Animated.timing(progress, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
++        Animated.timing(scrim, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
++      ]);
++      animation.start(({ finished }) => { if (finished && !visible) setMounted(false); });
++      return () => { animation.stop(); dragY.stopAnimation(); };
++    }
+     if (visible) {
+       dragY.setValue(0);
+       setMounted(true);
+@@ -68,7 +86,7 @@ export function PurposeSheet({
+         if (finished) setMounted(false);
+       });
+     }
+-  }, [visible, progress, dragY]);
++  }, [visible, progress, dragY, scrim, resident, reducedMotion]);
+ 
+   const pan = useMemo(
+     () =>
+@@ -80,14 +98,16 @@ export function PurposeSheet({
+           if (g.dy > 90 || g.vy > 0.8) {
+             onCloseRef.current();
+           } else {
+-            Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
++            if (resident && reducedMotion) dragY.setValue(0);
++            else Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+           }
+         },
+         onPanResponderTerminate: () => {
+-          Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
++          if (resident && reducedMotion) dragY.setValue(0);
++          else Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+         },
+       }),
+-    [dragY],
++    [dragY, resident, reducedMotion],
+   );
+ 
+   const translateY = Animated.add(
+@@ -103,7 +123,7 @@ export function PurposeSheet({
+       statusBarTranslucent
+       onRequestClose={onClose}>
+       <View style={styles.root}>
+-        <Animated.View style={[styles.backdrop, { opacity: progress }]}>
++        <Animated.View style={[styles.backdrop, { opacity: resident ? scrim : progress }, resident && { backgroundColor: theme.resident.scrim }]}>
+           <Pressable
+             style={StyleSheet.absoluteFill}
+             accessibilityRole="button"
+@@ -113,12 +133,15 @@ export function PurposeSheet({
+         </Animated.View>
+ 
+         <Animated.View
++          accessibilityViewIsModal={resident || undefined}
+           style={[
+             styles.sheet,
++            resident && { maxHeight: '92%', borderTopLeftRadius: ResidentLayout.overlayRadius, borderTopRightRadius: ResidentLayout.overlayRadius, paddingHorizontal: ResidentLayout.screenPadding },
+             {
+-              backgroundColor: theme.background,
++              backgroundColor: resident ? theme.resident.card : theme.background,
+               paddingBottom: Math.max(insets.bottom, 16) + 8,
+-              transform: [{ translateY }],
++              opacity: resident && reducedMotion ? progress : 1,
++              transform: [{ translateY: resident && reducedMotion ? 0 : translateY }],
+             },
+           ]}>
+           <View {...pan.panHandlers} style={styles.dragZone}>
+@@ -159,15 +182,15 @@ export function PurposeSheet({
+                     styles.row,
+                     index > 0 && {
+                       borderTopWidth: StyleSheet.hairlineWidth,
+-                      borderTopColor: theme.backgroundSelected,
++                      borderTopColor: resident ? theme.resident.border : theme.backgroundSelected,
+                     },
+-                    pressed && { backgroundColor: theme.backgroundElement },
++                    pressed && { backgroundColor: resident ? theme.resident.pressed : theme.backgroundElement },
+                   ]}>
+                   <ThemedText style={[styles.rowLabel, active && { fontWeight: '700' }]}>
+                     {item.label}
+                   </ThemedText>
+                   {active ? (
+-                    <Ionicons name="checkmark-circle" size={22} color={theme.primary} />
++                    <Ionicons name="checkmark-circle" size={22} color={resident ? theme.resident.accentText : theme.primary} />
+                   ) : (
+                     <View style={[styles.radio, { borderColor: theme.backgroundSelected }]} />
+                   )}
+diff --git a/apps/resident-android-mobile/src/components/services/service-screen-header.tsx b/apps/resident-android-mobile/src/components/services/service-screen-header.tsx
+index 15e00184..060c2e73 100644
+--- a/apps/resident-android-mobile/src/components/services/service-screen-header.tsx
++++ b/apps/resident-android-mobile/src/components/services/service-screen-header.tsx
+@@ -12,28 +12,30 @@ export function ServiceScreenHeader({
+   backLabel = 'Go back',
+   onBack,
+   compact = false,
++  presentation = 'default',
+ }: {
+   title: string;
+   backLabel?: string;
+   onBack?: () => void;
+   compact?: boolean;
++  presentation?: 'default' | 'resident';
+ }) {
+   const router = useRouter();
+   const theme = useTheme();
+   const insets = useSafeAreaInsets();
+ 
+   return (
+-    <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
++    <View style={[styles.header, { backgroundColor: presentation === 'resident' ? theme.resident.accent : theme.primary, paddingTop: insets.top + Spacing.two }]}>
+       <Pressable
+         onPress={onBack ?? (() => router.back())}
+         style={styles.backBtn}
+         accessibilityRole="button"
+         accessibilityLabel={backLabel}
+         hitSlop={Spacing.two}>
+-        <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
++        <Ionicons name="chevron-back" size={26} color={presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary} />
+       </Pressable>
+       <View style={[styles.headerContent, compact && styles.compactContent]}>
+-        <ThemedText style={[compact ? styles.compactTitle : styles.headerTitle, { color: theme.onPrimary }]}>
++        <ThemedText type={presentation === 'resident' ? 'residentHeader' : 'default'} style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
+           {title}
+         </ThemedText>
+       </View>
+diff --git a/apps/resident-android-mobile/src/components/status-badge.tsx b/apps/resident-android-mobile/src/components/status-badge.tsx
+index 5610f095..278fe8e3 100644
+--- a/apps/resident-android-mobile/src/components/status-badge.tsx
++++ b/apps/resident-android-mobile/src/components/status-badge.tsx
+@@ -20,27 +20,30 @@ interface StatusConfig {
+ }
+ 
+ /** service_requests.status -> {label, icon, color} the whole app should agree on. */
+-function useStatusConfig(status: string): StatusConfig {
++function useStatusConfig(status: string, resident: boolean): StatusConfig {
+   const theme = useTheme();
+   const config: Record<string, StatusConfig> = {
+     submitted: { label: 'Submitted', icon: 'time-outline', color: theme.textSecondary },
+-    in_progress: { label: 'Processing', icon: 'sync-outline', color: STATUS_BLUE },
+-    ready_for_pickup: { label: 'Ready for Pickup', icon: 'storefront-outline', color: STATUS_GREEN },
+-    completed: { label: 'Completed', icon: 'checkmark-circle-outline', color: STATUS_GREEN },
+-    cancelled: { label: 'Cancelled', icon: 'close-circle-outline', color: theme.accentRed },
++    in_progress: { label: 'Processing', icon: 'sync-outline', color: resident ? theme.resident.info : STATUS_BLUE },
++    ready_for_pickup: { label: 'Ready for Pickup', icon: 'storefront-outline', color: resident ? theme.resident.success : STATUS_GREEN },
++    completed: { label: 'Completed', icon: 'checkmark-circle-outline', color: resident ? theme.resident.success : STATUS_GREEN },
++    cancelled: { label: 'Cancelled', icon: 'close-circle-outline', color: resident ? theme.resident.danger : theme.accentRed },
+   };
+   return config[status] ?? { label: status, icon: 'help-circle-outline', color: theme.textSecondary };
+ }
+ 
+ /** Colored pill for a service_requests.status value — icon + label, ~15% alpha-tinted
+  * background (the same `${color}26` convention SettingsIcon already uses). */
+-export function StatusBadge({ status }: { status: string }) {
+-  const { label, icon, color } = useStatusConfig(status);
++export function StatusBadge({ status, presentation = 'default' }: { status: string; presentation?: 'default' | 'resident' }) {
++  const resident = presentation === 'resident';
++  const { label, icon, color } = useStatusConfig(status, resident);
++  const theme = useTheme();
++  const background = !resident ? `${color}26` : status === 'in_progress' ? theme.resident.infoSoft : status === 'cancelled' ? theme.resident.dangerSoft : status === 'completed' || status === 'ready_for_pickup' ? theme.resident.successSoft : theme.resident.surface;
+ 
+   return (
+-    <View style={[styles.pill, { backgroundColor: `${color}26` }]}>
++    <View style={[styles.pill, { backgroundColor: background }, resident && { maxWidth: '100%' }]}>
+       <Ionicons name={icon} size={12} color={color} />
+-      <ThemedText type="small" style={{ color }}>
++      <ThemedText type="small" style={[{ color }, resident && { fontSize: 12, lineHeight: 18, fontWeight: '700', flexShrink: 1 }]}>
+         {label}
+       </ThemedText>
+     </View>
+diff --git a/apps/resident-android-mobile/src/components/text-field.tsx b/apps/resident-android-mobile/src/components/text-field.tsx
+index 9b8469e3..337a631b 100644
+--- a/apps/resident-android-mobile/src/components/text-field.tsx
++++ b/apps/resident-android-mobile/src/components/text-field.tsx
+@@ -1,12 +1,16 @@
+ import { Ionicons } from '@expo/vector-icons';
+-import { useRef } from 'react';
++import { useEffect, useRef, useState } from 'react';
+ import { Pressable, StyleSheet, TextInput, type TextInputProps, View } from 'react-native';
+ 
+ import { ThemedText } from '@/components/themed-text';
+ import { Spacing } from '@/constants/theme';
++import { ResidentLayout } from '@/constants/resident-theme';
++import { getMobileFontFamily } from '@/constants/fonts';
++import { useFontPreference } from '@/hooks/use-font-preference';
+ import { useTheme } from '@/hooks/use-theme';
+ 
+ export interface TextFieldProps extends TextInputProps {
++  presentation?: 'default' | 'resident';
+   label?: string;
+   error?: string;
+   /** Shown (green check + message) below the field once its value passes
+@@ -31,17 +35,63 @@ export function TextField({
+   style,
+   passwordVisibility,
+   secureTextEntry,
++  presentation = 'default',
++  onFocus,
++  onBlur,
+   ...inputProps
+ }: TextFieldProps) {
+   const theme = useTheme();
+   const inputRef = useRef<TextInput>(null);
++  const { fontId } = useFontPreference();
++  const resident = presentation === 'resident';
++  const [focused, setFocused] = useState(false);
++  const focusFrame = useRef<number | null>(null);
++  useEffect(() => () => {
++    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current);
++  }, []);
+ 
+   function handlePasswordVisibilityToggle() {
+     passwordVisibility?.onToggle();
+     // Tapping the affordance should not interrupt typing or dismiss the keyboard.
+-    requestAnimationFrame(() => inputRef.current?.focus());
++    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current);
++    focusFrame.current = requestAnimationFrame(() => { focusFrame.current = null; inputRef.current?.focus(); });
+   }
+ 
++  const input = <TextInput
++    ref={inputRef}
++    placeholderTextColor={resident ? theme.resident.muted : theme.textSecondary}
++    accessibilityLabel={resident ? label : undefined}
++    style={[
++      styles.input,
++      passwordVisibility && styles.inputWithPasswordToggle,
++      { color: theme.text, backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
++      resident && {
++        fontFamily: getMobileFontFamily(fontId),
++        color: theme.resident.text,
++        backgroundColor: theme.resident.surface,
++        borderRadius: ResidentLayout.controlRadius,
++        minHeight: ResidentLayout.controlHeight,
++        borderColor: error ? theme.resident.danger : focused ? theme.resident.accentText : theme.resident.controlBorder,
++      },
++      style,
++    ]}
++    selectionColor={resident ? theme.resident.accentText : undefined}
++    secureTextEntry={passwordVisibility ? !passwordVisibility.visible : secureTextEntry}
++    onFocus={(event) => { if (resident) setFocused(true); onFocus?.(event); }}
++    onBlur={(event) => { if (resident) setFocused(false); onBlur?.(event); }}
++    {...inputProps}
++  />;
++  const toggle = passwordVisibility ? <Pressable
++    accessibilityRole="button"
++    accessibilityLabel={passwordVisibility.visible ? 'Hide password' : 'Show password'}
++    accessibilityHint="Toggles password visibility"
++    hitSlop={Spacing.one}
++    disabled={resident && inputProps.editable === false}
++    onPress={handlePasswordVisibilityToggle}
++    style={({ pressed }) => [styles.passwordToggle, resident && { top: 0, bottom: 0, height: 'auto' }, pressed && styles.passwordTogglePressed]}>
++    <Ionicons name={passwordVisibility.visible ? 'eye-outline' : 'eye-off-outline'} size={20} color={resident ? theme.resident.muted : theme.textSecondary} />
++  </Pressable> : null;
++
+   return (
+     <View style={styles.container}>
+       {label ? (
+@@ -55,44 +105,18 @@ export function TextField({
+           ) : null}
+         </View>
+       ) : null}
+-      <TextInput
+-        ref={inputRef}
+-        placeholderTextColor={theme.textSecondary}
+-        style={[
+-          styles.input,
+-          passwordVisibility && styles.inputWithPasswordToggle,
+-          { color: theme.text, backgroundColor: theme.backgroundElement, borderColor: theme.backgroundSelected },
+-          style,
+-        ]}
+-        secureTextEntry={passwordVisibility ? !passwordVisibility.visible : secureTextEntry}
+-        {...inputProps}
+-      />
+-      {passwordVisibility ? (
+-        <Pressable
+-          accessibilityRole="button"
+-          accessibilityLabel={passwordVisibility.visible ? 'Hide password' : 'Show password'}
+-          accessibilityHint="Toggles password visibility"
+-          hitSlop={Spacing.one}
+-          onPress={handlePasswordVisibilityToggle}
+-          style={({ pressed }) => [styles.passwordToggle, pressed && styles.passwordTogglePressed]}>
+-          <Ionicons
+-            name={passwordVisibility.visible ? 'eye-outline' : 'eye-off-outline'}
+-            size={20}
+-            color={theme.textSecondary}
+-          />
+-        </Pressable>
+-      ) : null}
++      {resident ? <View>{input}{toggle}</View> : <>{input}{toggle}</>}
+       {error ? (
+         <View style={styles.statusRow}>
+-          <Ionicons name="alert-circle-outline" size={14} color={theme.accentRed} />
+-          <ThemedText type="small" themeColor="accentRed">
++          <Ionicons name="alert-circle-outline" size={14} color={resident ? theme.resident.danger : theme.accentRed} />
++          <ThemedText type="small" themeColor="accentRed" accessibilityRole={resident ? 'alert' : undefined} style={resident ? { color: theme.resident.danger, flex: 1 } : undefined}>
+             {error}
+           </ThemedText>
+         </View>
+       ) : success ? (
+         <View style={styles.statusRow}>
+-          <Ionicons name="checkmark-circle-outline" size={14} color={theme.accentGreen} />
+-          <ThemedText type="small" themeColor="accentGreen">
++          <Ionicons name="checkmark-circle-outline" size={14} color={resident ? theme.resident.success : theme.accentGreen} />
++          <ThemedText type="small" themeColor="accentGreen" style={resident ? { color: theme.resident.success, flex: 1 } : undefined}>
+             {success}
+           </ThemedText>
+         </View>
+diff --git a/apps/resident-android-mobile/src/components/themed-text.tsx b/apps/resident-android-mobile/src/components/themed-text.tsx
+index aafa225f..474d541d 100644
+--- a/apps/resident-android-mobile/src/components/themed-text.tsx
++++ b/apps/resident-android-mobile/src/components/themed-text.tsx
+@@ -6,7 +6,7 @@ import { useFontPreference } from '@/hooks/use-font-preference';
+ import { useTheme } from '@/hooks/use-theme';
+ 
+ export type ThemedTextProps = TextProps & {
+-  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code' | 'heading' | 'body';
++  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code' | 'heading' | 'body' | 'residentHeader';
+   themeColor?: ThemeColor;
+ };
+ 
+@@ -33,6 +33,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
+         type === 'heading' && styles.heading,
+         type === 'body' && styles.body,
+         style,
++        type === 'residentHeader' && styles.residentHeader,
+       ]}
+       {...rest}
+     />
+@@ -40,6 +41,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
+ }
+ 
+ const styles = StyleSheet.create({
++  residentHeader: { fontFamily: Fonts.gideonRoman, fontWeight: '400' },
+   small: {
+     fontSize: 14,
+     lineHeight: 20,
+diff --git a/apps/resident-android-mobile/src/hooks/use-theme.ts b/apps/resident-android-mobile/src/hooks/use-theme.ts
+index e07fef0b..92713738 100644
+--- a/apps/resident-android-mobile/src/hooks/use-theme.ts
++++ b/apps/resident-android-mobile/src/hooks/use-theme.ts
+@@ -4,15 +4,19 @@
+  */
+ 
+ import { Colors } from '@/constants/theme';
++import { useMemo } from 'react';
++import { getResidentTheme } from '@/constants/resident-theme';
+ import { useThemePreference } from '@/hooks/use-theme-preference';
+ 
+ export function useTheme() {
+   const { scheme, accentColor } = useThemePreference();
++  const resident = useMemo(() => getResidentTheme(scheme, accentColor), [scheme, accentColor]);
+ 
+   return {
+     ...Colors[scheme],
+     // Real per-account accent color (Settings > App Theme) overrides the constant —
+     // onPrimary stays white regardless, it reads fine against all 4 accent swatches.
+     primary: accentColor,
++    resident,
+   };
+ }

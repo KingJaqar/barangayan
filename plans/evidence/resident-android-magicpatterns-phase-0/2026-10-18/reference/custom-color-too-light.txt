@@ -1,0 +1,111 @@
+- generic: 12:17
+- banner:
+  - img "Barangayan"
+  - generic: Settings
+  - button "Search":
+  - button "Announcements, 2 unread":
+    - generic: "2"
+  - button "Open settings":
+- main:
+  - button "James Floyd White Jr white@gmail.com Edit Profile":
+    - generic: JJ
+    - generic: James Floyd White Jr
+    - generic: white@gmail.com
+    - generic: Edit Profile
+  - region "Account":
+    - heading "Account" [level=2]
+    - button "Valid ID Verified":
+      - generic: Valid ID
+      - text: Verified
+    - button "Manage Password Change or recover your existing password":
+      - generic: Manage Password
+      - generic: Change or recover your existing password
+    - button "Email Verification Verify Your Email":
+      - generic: Email Verification
+      - generic: Verify Your Email
+    - button "Location Verification Your location is verified":
+      - generic: Location Verification
+      - text: Your location is verified
+  - region "Preferences":
+    - heading "Preferences" [level=2]
+    - switch "Push Notifications Alerts and updates" [checked]:
+      - generic: Push Notifications
+      - generic: Alerts and updates
+    - switch "SMS Notifications Urgent community alerts":
+      - generic: SMS Notifications
+      - generic: Urgent community alerts
+    - generic: App Theme
+    - radiogroup "Theme":
+      - radio "Light" [checked]: Light
+      - radio "Dark"
+    - 'button "Accent color #0F6B58" [pressed]':
+    - 'button "Accent color #2563EB"'
+    - 'button "Accent color #DC2626"'
+    - 'button "Accent color #7C3AED"'
+    - 'button "Accent color #EA580C"'
+    - 'button "Accent color #0D9488"'
+    - 'button "Accent color #DB2777"'
+    - 'button "Accent color #1565C0"'
+    - 'button "Accent color #B91C1C"'
+    - 'button "Accent color #1B6B30"'
+    - 'button "Custom color #0B5A6E. Hold or press Delete to remove"'
+    - 'button "Custom color #3D5410. Hold or press Delete to remove"'
+    - button "Add a custom color":
+    - button "Scroll accent colors left":
+    - button "Scroll accent colors right":
+    - paragraph: 2/10 custom colors saved · hold a swatch to remove it
+    - generic: Font Style
+    - button "System Default" [pressed]
+    - button "Inter"
+    - button "Arial"
+    - button "Roboto"
+    - button "Georgia"
+    - button "Scroll fonts left":
+    - button "Scroll fonts right":
+  - region "Privacy & Data":
+    - heading "Privacy & Data" [level=2]
+    - button "Download My Data":
+      - generic: Download My Data
+    - button "Delete My Account":
+      - generic: Delete My Account
+  - region "About":
+    - heading "About" [level=2]
+    - button "Help Center":
+      - generic: Help Center
+    - button "Terms & Privacy Policy":
+      - generic: Terms & Privacy Policy
+    - generic: App Version
+    - generic: v1.0.0
+    - button "About Us":
+      - generic: About Us
+  - region "Session":
+    - heading "Session" [level=2]
+    - button "Logout":
+      - generic: Logout
+- navigation "Primary":
+  - list:
+    - button "Home":
+      - generic: Home
+    - button "Services":
+      - generic: Services
+    - button "DRRM":
+      - generic: DRRM
+    - button "Maps":
+      - generic: Maps
+    - button "Health":
+      - generic: Health
+    - button "Reports, 1 active, 1 new updates":
+      - generic: "1"
+      - generic: "1"
+      - generic: Reports
+- dialog "Custom Accent Color":
+  - heading "Custom Accent Color" [level=2]
+  - paragraph: Drag to pick any color. Up to 10 custom colors can be saved.
+  - slider "Shade"
+  - slider "Hue"
+  - generic: Hex color
+  - textbox "Hex color" [active]: "#FFFFFF"
+  - alert:
+    - text: Too light — white text on buttons would be hard to read. Pick a darker shade.
+  - button "Cancel"
+  - button "Save Color" [disabled]

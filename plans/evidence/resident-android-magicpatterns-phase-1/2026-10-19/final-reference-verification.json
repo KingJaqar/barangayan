@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "check": "light final Cancel action",
+      "passed": true
+    },
+    {
+      "check": "light final Delete action",
+      "passed": true
+    },
+    {
+      "check": "light password gate",
+      "passed": true
+    },
+    {
+      "check": "light cancellation removes confirmation",
+      "passed": true
+    },
+    {
+      "check": "dark final Cancel action",
+      "passed": true
+    },
+    {
+      "check": "dark final Delete action",
+      "passed": true
+    },
+    {
+      "check": "dark password gate",
+      "passed": true
+    },
+    {
+      "check": "dark cancellation removes confirmation",
+      "passed": true
+    },
+    {
+      "check": "local appearance case 2 confirmed",
+      "passed": true
+    },
+    {
+      "check": "local appearance case 3 confirmed",
+      "passed": true
+    },
+    {
+      "check": "local appearance case 4 confirmed",
+      "passed": true
+    }
+  ],
+  "passed": 11,
+  "total": 11,
+  "pngVerified": 150,
+  "uiXmlParsed": 149,
+  "limits": "Captured-tree/settled visual evidence only; speech, keyboard and measured motion pending at owner instruction. Earlier performance captures precede final styling correction."
+}

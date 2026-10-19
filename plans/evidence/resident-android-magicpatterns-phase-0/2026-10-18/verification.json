@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-18T15:32:48.832Z",
+  "sourceFilesCompared": 368,
+  "changedSource": [],
+  "supportDocsPreserved": true,
+  "planOutsideInsertionPreserved": true,
+  "ownedPatchReverseCheckExit": 0,
+  "ownedPatchReverseCheckDiagnostics": "",
+  "diffWhitespaceCheckExit": 0,
+  "localLinkCount": 237,
+  "missingLinks": [],
+  "screenRows": 39,
+  "motionRows": 16,
+  "capturedFrames": 120,
+  "capturesValid": true,
+  "nativeEvidenceAssertions": 13,
+  "nativeEvidencePass": true,
+  "verifiedImages": 161,
+  "imageVerificationPass": true,
+  "pass": true
+}

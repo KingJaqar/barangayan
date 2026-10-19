@@ -1,0 +1,23 @@
+{
+  "index": "0",
+  "name": "Android Device",
+  "android_version": "12.0",
+  "is_main": false,
+  "error_code": 0,
+  "disk_size_bytes": 3474026056,
+  "created_timestamp": 1791990346167161,
+  "info_source": "rpc",
+  "is_process_started": true,
+  "hyperv_enabled": true,
+  "main_wnd": "00060904",
+  "render_wnd": "000A052A",
+  "adb_port": 16384,
+  "adb_host_ip": "127.0.0.1",
+  "pid": 32116,
+  "vt_enabled": true,
+  "player_state": "start_finished",
+  "launch_err_msg": "",
+  "launch_err_code": 0,
+  "launch_time": 42339802,
+  "is_android_started": true
+}

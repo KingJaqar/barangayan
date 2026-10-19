@@ -2,6 +2,14 @@
 
 Date: 18 October 2026 (Asia/Manila). Purpose: refine the [presentation implementation plan](<C:/Users/User/barangayan/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md>); no application implementation.
 
+## Document role and required reading
+
+**The [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) is the main execution document. This inspection record is required supporting context to read and analyze before each authorized phase.** Read it alongside the main plan and the [motion and fidelity specification](Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md) to distinguish verified source/interaction evidence from assumptions, incomplete coverage, prototype issues and pending native/integration checks.
+
+This record supplies evidence and limitations; it is not a separate execution plan or authorization to broaden scope. Keep phase progress/completion in the main plan, motion definitions in the specification, and inspection findings/status here. Reconcile material inconsistencies using inspected evidence and applicable instructions, and synchronize the affected documents before relying on them. A recorded prototype interaction or source declaration is never a substitute for the main plan's implementation acceptance checks.
+
+**[Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f) is the primary UI reference.** This record and its captures document what was inspected; they do not replace the actual design or independently define new screens/behavior. During each authorized phase, inspect the corresponding reference in Brave, confirm its version against the recorded v32 baseline, and use this record to identify evidence gaps and limitations. Reconcile version changes or conflicting summaries through the main plan; do not silently adopt a new design, invent unavailable states or copy a prototype defect as a requirement.
+
 Reference: [Magic Patterns design](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f), live viewer labeled **v32**. Its Internal Preview points to `df178e1c-7b6e-4d98-8334-06f3a00f28c3-render.magicpatterns.app`. The URL is Magic Patterns, not a Figma document.
 
 ## Evidence and boundaries
@@ -138,4 +146,4 @@ No browser/UI defect found in the prototype is automatically an application bug 
 
 Phase naming was subsequently standardized to **Phase 0–16** across the implementation plan, motion work packets, dependency references and this record. This renames the existing 17 work packets without adding implementation scope, changing their order or reopening the cancelled usability phase in another plan. The main plan now consolidates mandatory engineering acceptance requirements; those are future implementation gates, not completed test results.
 
-The earlier source revision checked 131 local links. After adding fresh capture evidence, **all 180 local links** across the implementation plan, this record, the motion/fidelity specification and capture index resolved. All 22 derived GIFs decoded; the raw capture count is 624. The motion inventory remains M01–M16. Content hashes still matched the pre-edit baseline for Android `src`, shared `src`, the Android package manifest and repository lockfile. No application edits, dependency changes, cleanup deletions, native runs or project test execution were performed. Document/media checks do not qualify the future implementation.
+The earlier source revision checked 131 local links. The fresh-capture revision checked 180 local links. After making the document hierarchy explicit, **all 186 local links** across the implementation plan, this record, the motion/fidelity specification and capture index resolved. All 22 derived GIFs decoded; the raw capture count is 624. The motion inventory remains M01–M16. Content hashes still matched the pre-edit baseline for Android `src`, shared `src`, the Android package manifest and repository lockfile. No application edits, dependency changes, cleanup deletions, native runs or project test execution were performed. Document/media checks do not qualify the future implementation.

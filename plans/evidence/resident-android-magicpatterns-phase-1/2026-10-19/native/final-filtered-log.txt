@@ -1,0 +1,2 @@
+--------- beginning of main
+10-19 00:32:31.845  4608 22074 W ReactNativeJS: 'Failed to get Expo push token:', { [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.] code: 'E_REGISTRATION_FAILED' }

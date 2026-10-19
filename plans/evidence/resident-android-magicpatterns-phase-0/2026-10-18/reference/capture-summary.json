@@ -1,0 +1,65 @@
+{
+  "capturedAt": "2026-10-18T15:32:46.361Z",
+  "cssViewport": {
+    "width": 1666,
+    "height": 865,
+    "devicePixelRatio": 1.5
+  },
+  "reducedMotion": false,
+  "version": "v32",
+  "artifact": "df178e1c-7b6e-4d98-8334-06f3a00f28c3",
+  "totalFrames": 120,
+  "warning": "Sampling frequency is not rendering FPS. JPEG signature validation is not a full-image decode. Selected frames were visually inspected.",
+  "captures": [
+    {
+      "name": "01-custom-color-open",
+      "frameCount": 24,
+      "approximateMedianSampleHz": 15.04,
+      "actionStarted": "2026-10-18T14:50:26.787Z",
+      "actionResolved": "2026-10-18T14:50:27.067Z",
+      "actionError": null,
+      "jpegHeadersValid": true,
+      "bytes": 958647
+    },
+    {
+      "name": "02-custom-color-cancel",
+      "frameCount": 24,
+      "approximateMedianSampleHz": 14.29,
+      "actionStarted": "2026-10-18T14:50:45.838Z",
+      "actionResolved": "2026-10-18T14:50:46.118Z",
+      "actionError": null,
+      "jpegHeadersValid": true,
+      "bytes": 1123228
+    },
+    {
+      "name": "03-logout-dialog-open",
+      "frameCount": 24,
+      "approximateMedianSampleHz": 15.15,
+      "actionStarted": "2026-10-18T14:50:53.349Z",
+      "actionResolved": "2026-10-18T14:50:53.629Z",
+      "actionError": null,
+      "jpegHeadersValid": true,
+      "bytes": 951965
+    },
+    {
+      "name": "04-logout-dialog-cancel",
+      "frameCount": 24,
+      "approximateMedianSampleHz": 15.75,
+      "actionStarted": "2026-10-18T14:51:01.436Z",
+      "actionResolved": "2026-10-18T14:51:01.717Z",
+      "actionError": null,
+      "jpegHeadersValid": true,
+      "bytes": 956395
+    },
+    {
+      "name": "05-font-inter-select",
+      "frameCount": 24,
+      "approximateMedianSampleHz": 14.81,
+      "actionStarted": "2026-10-18T14:52:43.335Z",
+      "actionResolved": "2026-10-18T14:52:43.620Z",
+      "actionError": null,
+      "jpegHeadersValid": true,
+      "bytes": 1114533
+    }
+  ]
+}

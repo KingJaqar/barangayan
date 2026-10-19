@@ -1,0 +1,119 @@
+{
+  "recordedAt": "2026-10-18T23:00:59.302Z",
+  "label": "performance-baseline-verified",
+  "port": "8096",
+  "control": {
+    "x": 540,
+    "y": 1218
+  },
+  "warmupCycles": 1,
+  "cycles": [
+    {
+      "cycle": 1,
+      "started": "2026-10-18T22:59:55.525Z",
+      "completed": "2026-10-18T23:00:00.835Z"
+    },
+    {
+      "cycle": 2,
+      "started": "2026-10-18T23:00:00.835Z",
+      "completed": "2026-10-18T23:00:06.176Z"
+    },
+    {
+      "cycle": 3,
+      "started": "2026-10-18T23:00:06.176Z",
+      "completed": "2026-10-18T23:00:11.507Z"
+    },
+    {
+      "cycle": 4,
+      "started": "2026-10-18T23:00:11.507Z",
+      "completed": "2026-10-18T23:00:16.829Z"
+    },
+    {
+      "cycle": 5,
+      "started": "2026-10-18T23:00:16.829Z",
+      "completed": "2026-10-18T23:00:22.163Z"
+    },
+    {
+      "cycle": 6,
+      "started": "2026-10-18T23:00:22.163Z",
+      "completed": "2026-10-18T23:00:27.487Z"
+    },
+    {
+      "cycle": 7,
+      "started": "2026-10-18T23:00:27.487Z",
+      "completed": "2026-10-18T23:00:32.839Z"
+    },
+    {
+      "cycle": 8,
+      "started": "2026-10-18T23:00:32.839Z",
+      "completed": "2026-10-18T23:00:38.156Z"
+    },
+    {
+      "cycle": 9,
+      "started": "2026-10-18T23:00:38.156Z",
+      "completed": "2026-10-18T23:00:43.432Z"
+    },
+    {
+      "cycle": 10,
+      "started": "2026-10-18T23:00:43.432Z",
+      "completed": "2026-10-18T23:00:48.752Z"
+    }
+  ],
+  "before": {
+    "reduceMotionListeners": 0,
+    "realtimeChannels": 10
+  },
+  "after": {
+    "reduceMotionListeners": 0,
+    "realtimeChannels": 10
+  },
+  "network": {
+    "requests": 0,
+    "finished": 0,
+    "failed": 0
+  },
+  "returnedToForm": true,
+  "traceEvents": 8101,
+  "names": {
+    "TimeStamp": 1520,
+    "Update": 100,
+    "commit": 140,
+    "​ForwardRef": 40,
+    "​KeyboardAvoidingView": 40,
+    "​View": 1582,
+    "​ScrollView": 120,
+    "​ThemedText": 380,
+    "​Text": 380,
+    "​PrimaryButton": 160,
+    "​Pressable": 300,
+    "​Image": 40,
+    "​ExpoImage": 80,
+    "​Toggle": 80,
+    "​Switch": 40,
+    "​PurposeSheet": 40,
+    "​Modal": 160,
+    "Cascading Update": 40,
+    "Mount": 80,
+    "​VirtualizedListContextResetter": 40,
+    "​LogBoxNotificationContainer": 60,
+    "​AppContainer": 20,
+    "​Animated(View)": 40,
+    "Unmount": 40,
+    "Update Blocked": 2,
+    "TracingStartedInPage": 1,
+    "ReactNative-TracingStopped": 1,
+    "Profile": 1,
+    "ProfileChunk": 2574
+  },
+  "frames": {
+    "count": 0,
+    "p95Ms": null,
+    "maxMs": null,
+    "within15HzBudget": null
+  },
+  "limitations": [
+    "Native development build and inspector overhead; no physical-device claim.",
+    "Network stores aggregate counts only; no headers, credentials or payloads.",
+    "Trace retains CPU/frame arguments and removes other event argument payloads."
+  ]
+}

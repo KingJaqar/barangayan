@@ -29,6 +29,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryButton } from '@/components/primary-button';
+import { Card } from '@/components/card';
 import { PurposeSheet } from '@/components/services/purpose-sheet';
 import { ServiceScreenHeader } from '@/components/services/service-screen-header';
 import { ServiceErrorToast } from '@/components/services/service-error-toast';
@@ -69,6 +70,7 @@ function Field({
     <View style={styles.field} onLayout={onLayout}>
       <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
       <TextField
+        presentation="resident"
         accessibilityLabel={label}
         value={value}
         onChangeText={onChange}
@@ -77,7 +79,7 @@ function Field({
         multiline={!numeric}
         editable={!disabled}
         error={error}
-        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.accentRed, borderWidth: 1.5 } : undefined]}
+        style={[styles.input, { fontFamily: getMobileFontFamily(fontId) }, error ? { borderColor: theme.resident.danger, borderWidth: 1.5 } : undefined]}
       />
     </View>
   );
@@ -108,7 +110,7 @@ function Toggle({
         accessibilityLabel={label}
         value={value}
         onValueChange={onChange}
-        trackColor={{ true: theme.primary }}
+        trackColor={{ true: theme.resident.accentText }}
         disabled={disabled}
       />
     </View>
@@ -272,7 +274,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   const upload = (code: Requirement, label: string, required: boolean) => (
     <View onLayout={(event) => locate(code as ServiceRequestField, event)} style={[styles.card, { borderColor: fieldErrors[code as ServiceRequestField] ? theme.accentRed : theme.backgroundSelected }]} key={code}>
       <View style={styles.cardTitleRow}>
-        <Ionicons name="cloud-upload-outline" size={22} color={theme.primary} />
+        <Ionicons name="cloud-upload-outline" size={22} color={theme.resident.accentText} />
         <View style={{ flex: 1 }}>
           <ThemedText type="smallBold">{label}{required ? <ThemedText themeColor="accentRed"> *</ThemedText> : null}</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
@@ -285,7 +287,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           <ThemedText type="small" numberOfLines={1}>
             {files[code]!.name}
           </ThemedText>
-          <PrimaryButton
+          <PrimaryButton presentation="resident"
             label={`Remove ${label}`}
             variant="secondary"
             disabled={submitting}
@@ -299,7 +301,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
           />
         </>
       ) : null}
-      <PrimaryButton
+      <PrimaryButton presentation="resident"
         label={`Choose ${label}`}
         variant="secondary"
         disabled={submitting}
@@ -310,7 +312,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
   );
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: theme.primary }}>
-      <ServiceScreenHeader title="Request Document" backLabel="Back to document" compact />
+      <ServiceScreenHeader presentation="resident" title="Request Document" backLabel="Back to document" compact />
       <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.background }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView ref={scroll} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <View style={styles.hero}>
@@ -318,31 +320,31 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
               {doc.name}
             </ThemedText>
             <View style={[styles.priceChip, { backgroundColor: theme.backgroundElement }]}>
-              <Ionicons name="cash-outline" size={15} color={theme.primary} />
+              <Ionicons name="cash-outline" size={15} color={theme.resident.accentText} />
               <ThemedText type="smallBold" style={{ flexShrink: 1 }}>
                 {servicePriceLabel(doc)}
               </ThemedText>
             </View>
           </View>
           <ThemedText type="small" themeColor="textSecondary">Fields marked * are required.</ThemedText>
-          <View style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
             <View style={styles.cardTitleRow}>
-              <Ionicons name="person-circle-outline" size={24} color={theme.primary} />
+              <Ionicons name="person-circle-outline" size={24} color={theme.resident.accentText} />
               <ThemedText type="heading" style={styles.cardTitle}>
                 Resident Details
               </ThemedText>
               <View style={styles.inlineAction}>
-                <PrimaryButton label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
+                <PrimaryButton presentation="resident" label="Edit in Profile" variant="secondary" onPress={() => router.push('/settings/profile')} />
               </View>
             </View>
             <ThemedText type="small">
               {profile?.full_name ?? 'Loading resident details…'} ·{' '}
               {profile?.mobile_number ?? 'No mobile number on file'}
             </ThemedText>
-          </View>
-          <View style={[styles.card, { borderColor: theme.backgroundSelected }]}>
+          </Card>
+          <Card variant="resident" style={{ padding: 12, gap: 8 }}>
             <View style={styles.cardTitleRow}>
-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.primary} />
+              <Ionicons name="shield-checkmark-outline" size={24} color={theme.resident.accentText} />
               <ThemedText type="heading" style={styles.cardTitle}>
                 Approved profile ID
               </ThemedText>
@@ -371,16 +373,16 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
                 </View>
               </>
             ) : (
-              <PrimaryButton label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
+              <PrimaryButton presentation="resident" label="Verify Now" onPress={() => router.push('/settings/profile?focus=id')} />
             )}
-            <PrimaryButton label="Refresh verification" variant="secondary" onPress={refetch} />
-          </View>
+            <PrimaryButton presentation="resident" label="Refresh verification" variant="secondary" onPress={refetch} />
+          </Card>
           <View onLayout={(event) => locate('purposeCode', event)} style={styles.field}>
           <ThemedText type="heading" style={styles.cardTitle}>
             Purpose of request<ThemedText themeColor="accentRed"> *</ThemedText>
           </ThemedText>
           <View style={fieldErrors.purposeCode ? [styles.invalid, { borderColor: theme.accentRed }] : undefined}>
-          <PrimaryButton
+          <PrimaryButton presentation="resident"
             label={option?.label ?? 'Choose a purpose'}
             variant="secondary"
             onPress={() => setPurposeOpen(true)}
@@ -462,7 +464,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
             </ThemedText>
           </View>
           <View style={styles.footerAction}>
-            <PrimaryButton
+            <PrimaryButton presentation="resident"
               label="Submit request"
               loading={submitting}
               disabled={!approvedId || approved?.id !== approvedId || submitting}
@@ -472,6 +474,7 @@ export function CharterRequestForm({ doc }: { doc: Tables<'document_types'> }) {
         </View>
       </KeyboardAvoidingView>
       <PurposeSheet
+        presentation="resident"
         visible={purposeOpen}
         title="Purpose of request"
         options={catalog.purposes}

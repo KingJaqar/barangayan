@@ -1,0 +1,9 @@
+Display is 1080x1920 @15.00fps (orientation=ROTATION_0), layerStack=0
+Configuring recorder for 1080x1920 video/avc at 3.00Mbps
+Content area is 1080x1920 at offset x=0 y=0
+Time limit reached
+Encoder stopping; recorded 745 frames in 150 seconds
+Stopping encoder and muxer
+Executing: /system/bin/am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/phase0-magicpatterns-manual-20261018-01.mp4
+Broadcasting: Intent { act=android.intent.action.MEDIA_SCANNER_SCAN_FILE dat=file:///sdcard/phase0-magicpatterns-manual-20261018-01.mp4 flg=0x400000 }
+Broadcast completed: result=0

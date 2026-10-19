@@ -1,11 +1,12 @@
 import type { Session } from '@supabase/supabase-js';
-import { ensureGoogleResidentProfile, getResidentAccountSetupStatus, residentSetupRoute, residentSetupFailure, type ResidentSetupIntent, type ResidentSetupLoad, type ResidentSetupRoute } from '@barangayan/shared';
+import { residentSetupRoute, residentSetupFailure, type ResidentSetupIntent, type ResidentSetupLoad, type ResidentSetupRoute } from '@barangayan/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
 import { SetupRequestGate, SetupOwner, authSetupRequests, profileSetupRequests } from '@/lib/setup-request';
 import { pendingGoogleAuth } from '@/lib/google-auth';
 import { isBackgroundRefresh, refreshFailureOutcome, type OwnedSetup } from '@/lib/setup-refresh';
+import { loadAccountSetupStatus } from '@/lib/account-setup-status';
 
 const INTENT_KEY = 'resident-setup-intent-v1';
 const RECOVERY_KEY = 'resident-recovery-intent-v1';
@@ -98,12 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 10_000);
         try {
-          const { data: profile, error } = await supabase.from('profiles').select('role,deleted_at').eq('id', uid).abortSignal(controller.signal).maybeSingle();
-          if (error) throw error;
-          if (profile?.deleted_at) throw { code: '42501' };
-          if (profile && profile.role !== 'resident') return { actor: 'staff' as const, status: null };
-          await ensureGoogleResidentProfile(supabase, current.user);
-          return { actor: 'resident' as const, status: await getResidentAccountSetupStatus(supabase) };
+          return await loadAccountSetupStatus(supabase, current.user, controller.signal);
         } finally {
           clearTimeout(timer);
           if (sessionRef.current && sessionRef.current.user.id !== uid) setTimeout(() => { void refreshCurrentCompletion(); }, 0);
@@ -111,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       if (!owns()) return;
       setActor(value.actor); setRefreshFailure(null);
-      if (value.status) setOwnedSetup({ uid, value: { state: 'ready', status: value.status } });
+      setOwnedSetup({ uid, value: { state: 'ready', status: value.status } });
     } catch (cause) {
       if (owns()) {
         const failure = residentSetupFailure(cause as { code?: string; name?: string });

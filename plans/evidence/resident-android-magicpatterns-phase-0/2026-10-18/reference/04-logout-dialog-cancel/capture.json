@@ -1,0 +1,131 @@
+{
+  "name": "04-logout-dialog-cancel",
+  "date": "2026-10-18T14:51:01.249Z",
+  "version": "v32",
+  "artifact": "df178e1c-7b6e-4d98-8334-06f3a00f28c3",
+  "kind": "sampled viewport screenshots; not continuous video",
+  "frames": [
+    {
+      "filename": "frame-000.jpg",
+      "started": "2026-10-18T14:51:01.249Z",
+      "ended": "2026-10-18T14:51:01.312Z"
+    },
+    {
+      "filename": "frame-001.jpg",
+      "started": "2026-10-18T14:51:01.314Z",
+      "ended": "2026-10-18T14:51:01.373Z"
+    },
+    {
+      "filename": "frame-002.jpg",
+      "started": "2026-10-18T14:51:01.374Z",
+      "ended": "2026-10-18T14:51:01.434Z"
+    },
+    {
+      "filename": "frame-003.jpg",
+      "started": "2026-10-18T14:51:01.436Z",
+      "ended": "2026-10-18T14:51:01.508Z"
+    },
+    {
+      "filename": "frame-004.jpg",
+      "started": "2026-10-18T14:51:01.510Z",
+      "ended": "2026-10-18T14:51:01.579Z"
+    },
+    {
+      "filename": "frame-005.jpg",
+      "started": "2026-10-18T14:51:01.581Z",
+      "ended": "2026-10-18T14:51:01.652Z"
+    },
+    {
+      "filename": "frame-006.jpg",
+      "started": "2026-10-18T14:51:01.654Z",
+      "ended": "2026-10-18T14:51:01.721Z"
+    },
+    {
+      "filename": "frame-007.jpg",
+      "started": "2026-10-18T14:51:01.723Z",
+      "ended": "2026-10-18T14:51:01.800Z"
+    },
+    {
+      "filename": "frame-008.jpg",
+      "started": "2026-10-18T14:51:01.802Z",
+      "ended": "2026-10-18T14:51:01.870Z"
+    },
+    {
+      "filename": "frame-009.jpg",
+      "started": "2026-10-18T14:51:01.874Z",
+      "ended": "2026-10-18T14:51:01.940Z"
+    },
+    {
+      "filename": "frame-010.jpg",
+      "started": "2026-10-18T14:51:01.941Z",
+      "ended": "2026-10-18T14:51:01.996Z"
+    },
+    {
+      "filename": "frame-011.jpg",
+      "started": "2026-10-18T14:51:01.998Z",
+      "ended": "2026-10-18T14:51:02.046Z"
+    },
+    {
+      "filename": "frame-012.jpg",
+      "started": "2026-10-18T14:51:02.048Z",
+      "ended": "2026-10-18T14:51:02.097Z"
+    },
+    {
+      "filename": "frame-013.jpg",
+      "started": "2026-10-18T14:51:02.100Z",
+      "ended": "2026-10-18T14:51:02.151Z"
+    },
+    {
+      "filename": "frame-014.jpg",
+      "started": "2026-10-18T14:51:02.153Z",
+      "ended": "2026-10-18T14:51:02.211Z"
+    },
+    {
+      "filename": "frame-015.jpg",
+      "started": "2026-10-18T14:51:02.212Z",
+      "ended": "2026-10-18T14:51:02.276Z"
+    },
+    {
+      "filename": "frame-016.jpg",
+      "started": "2026-10-18T14:51:02.278Z",
+      "ended": "2026-10-18T14:51:02.336Z"
+    },
+    {
+      "filename": "frame-017.jpg",
+      "started": "2026-10-18T14:51:02.338Z",
+      "ended": "2026-10-18T14:51:02.402Z"
+    },
+    {
+      "filename": "frame-018.jpg",
+      "started": "2026-10-18T14:51:02.405Z",
+      "ended": "2026-10-18T14:51:02.469Z"
+    },
+    {
+      "filename": "frame-019.jpg",
+      "started": "2026-10-18T14:51:02.471Z",
+      "ended": "2026-10-18T14:51:02.539Z"
+    },
+    {
+      "filename": "frame-020.jpg",
+      "started": "2026-10-18T14:51:02.541Z",
+      "ended": "2026-10-18T14:51:02.605Z"
+    },
+    {
+      "filename": "frame-021.jpg",
+      "started": "2026-10-18T14:51:02.607Z",
+      "ended": "2026-10-18T14:51:02.663Z"
+    },
+    {
+      "filename": "frame-022.jpg",
+      "started": "2026-10-18T14:51:02.665Z",
+      "ended": "2026-10-18T14:51:02.732Z"
+    },
+    {
+      "filename": "frame-023.jpg",
+      "started": "2026-10-18T14:51:02.735Z",
+      "ended": "2026-10-18T14:51:02.801Z"
+    }
+  ],
+  "actionStarted": "2026-10-18T14:51:01.436Z",
+  "actionResolved": "2026-10-18T14:51:01.717Z"
+}

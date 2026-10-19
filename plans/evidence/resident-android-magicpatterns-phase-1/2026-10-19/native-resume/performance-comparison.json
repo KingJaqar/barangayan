@@ -1,0 +1,113 @@
+{
+  "recordedAt": "2026-10-18T23:12:20.712Z",
+  "records": [
+    {
+      "kind": "baseline",
+      "cycleCount": 10,
+      "returnedToForm": true,
+      "before": {
+        "reduceMotionListeners": 0,
+        "realtimeChannels": 10
+      },
+      "after": {
+        "reduceMotionListeners": 0,
+        "realtimeChannels": 10
+      },
+      "network": {
+        "requests": 0,
+        "finished": 0,
+        "failed": 0
+      },
+      "reactCommits": {
+        "count": 70,
+        "p95Ms": 3.922,
+        "maxMs": 5.736
+      },
+      "rendererFrames": {
+        "count": 77,
+        "flaggedExcluded": 9,
+        "invalidExcluded": 0,
+        "p95Ms": 12.923751,
+        "maxMs": 14.640065,
+        "measuredDisplayBudgetMs": 66.66666666666667,
+        "withinBudgetFraction": 1,
+        "over50Ms": 0
+      },
+      "nativeTraceFrameEvents": 0
+    },
+    {
+      "kind": "candidate",
+      "cycleCount": 10,
+      "returnedToForm": true,
+      "before": {
+        "reduceMotionListeners": 6,
+        "realtimeChannels": 10
+      },
+      "after": {
+        "reduceMotionListeners": 6,
+        "realtimeChannels": 10
+      },
+      "network": {
+        "requests": 0,
+        "finished": 0,
+        "failed": 0
+      },
+      "reactCommits": {
+        "count": 118,
+        "p95Ms": 4.732,
+        "maxMs": 13.916
+      },
+      "rendererFrames": {
+        "count": 97,
+        "flaggedExcluded": 4,
+        "invalidExcluded": 0,
+        "p95Ms": 18.032107,
+        "maxMs": 69.21551,
+        "measuredDisplayBudgetMs": 66.66666666666667,
+        "withinBudgetFraction": 0.9896907216494846,
+        "over50Ms": 1
+      },
+      "nativeTraceFrameEvents": 0
+    },
+    {
+      "kind": "candidate-repeat",
+      "cycleCount": 10,
+      "returnedToForm": true,
+      "before": {
+        "reduceMotionListeners": 6,
+        "realtimeChannels": 10
+      },
+      "after": {
+        "reduceMotionListeners": 6,
+        "realtimeChannels": 10
+      },
+      "network": {
+        "requests": 0,
+        "finished": 0,
+        "failed": 0
+      },
+      "reactCommits": {
+        "count": 120,
+        "p95Ms": 5.406,
+        "maxMs": 10.141
+      },
+      "rendererFrames": {
+        "count": 99,
+        "flaggedExcluded": 5,
+        "invalidExcluded": 0,
+        "p95Ms": 16.687605,
+        "maxMs": 21.62025,
+        "measuredDisplayBudgetMs": 66.66666666666667,
+        "withinBudgetFraction": 1,
+        "over50Ms": 0
+      },
+      "nativeTraceFrameEvents": 0
+    }
+  ],
+  "limitations": [
+    "Frame-statistics ring buffers cover surviving windows; dismissed modal windows are not retained here.",
+    "RN trace provides CPU/React events but zero BeginFrame/DrawFrame events despite requesting the installed Frame category.",
+    "UIAutomator state assertions and inspector add overhead; this is not a physical-device or exact motion timing pass.",
+    "No all-M03/M04/M05/M12 frame-budget or stall-attribution claim follows from these scoped observations."
+  ]
+}

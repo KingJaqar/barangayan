@@ -2,6 +2,14 @@
 
 Planning revision: 18 October 2026 (Asia/Manila). **Specification only; no implementation or native validation performed.** This supports the [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) and [inspection record](Resident_Android_MagicPatterns_Prototype_Inspection_Record.md). It does not reopen the cancelled Android usability phase.
 
+## Document role and required reading
+
+**The [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) is the main execution document. This specification is required supporting context to read and analyze before each authorized phase.** Read it alongside the main plan and the [prototype inspection record](Resident_Android_MagicPatterns_Prototype_Inspection_Record.md); use the applicable motion IDs, evidence labels, adaptations and acceptance criteria to implement the phase defined by the main plan.
+
+This file does not independently authorize implementation, redefine scope or phase order, or certify untested motion. Track phase execution/completion in the main plan; maintain motion definitions here and inspection findings in the record. Reconcile material inconsistencies using inspected evidence and applicable instructions, and synchronize the affected documents before relying on them.
+
+**[Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f) is the primary UI and motion reference.** This specification translates its verified design into native implementation requirements; it is not a substitute design. Inspect the relevant screens/transitions in Brave for each phase, use matching-version source for declared timing/easing, and compare native results with that reference. Preserve the inspected v32 baseline until any version change is reconciled in the main plan. Resolve stale summaries against verified reference evidence, keep unavailable states explicitly unverified, and retain all existing functionality/settings/accessibility and frontend-only constraints.
+
 ## Evidence and interpretation
 
 Reference: [Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f), previously verified v32 artifact `df178e1c-7b6e-4d98-8334-06f3a00f28c3`. Source paths below are relative to the retained [artifact source](../tmp/magicpatterns-plan-inspection/source). They describe that snapshot, not a claim that the live editor has remained unchanged indefinitely.

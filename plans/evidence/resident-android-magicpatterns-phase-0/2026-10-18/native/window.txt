@@ -1,0 +1,11 @@
+    isOnScreen=true
+    isOnScreen=true
+    isOnScreen=false
+    isOnScreen=true
+    isOnScreen=false
+    isOnScreen=false
+    isOnScreen=true
+    isOnScreen=false
+    isOnScreen=false
+    isOnScreen=false
+  mObscuringWindow=Window{28dd322 u0 com.barangayan.resident.dev/com.barangayan.resident.dev.MainActivity}

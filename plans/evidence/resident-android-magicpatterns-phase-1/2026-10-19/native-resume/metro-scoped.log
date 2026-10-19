@@ -1,0 +1,33 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Networking has been disabled
+Starting project at C:\Users\User\barangayan\apps\resident-android-mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8098
+
+Logs for your project will appear below.
+Error: EPERM: operation not permitted, rename 'C:\Users\User\barangayan\apps\resident-android-mobile\.expo\devices.json.AsJEWloSkd8Qo8OA4F_ZRyOQ_IX6DMam5sBTXl20rv0' -> 'C:\Users\User\barangayan\apps\resident-android-mobile\.expo\devices.json'
+Error: EPERM: operation not permitted, rename 'C:\Users\User\barangayan\apps\resident-android-mobile\.expo\devices.json.Se5zNAeE4luCiFySOfI5t95anKglrVLkmyG0MSvL7eY' -> 'C:\Users\User\barangayan\apps\resident-android-mobile\.expo\devices.json'
+Android Bundled 15381ms node_modules\expo-router\entry.js (2677 modules)
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+Android Bundled 130ms node_modules\expo-router\entry.js (1 module)
+Android Bundled 131ms node_modules\expo-router\entry.js (1 module)
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+ ERROR  Connection from DevTools failed to be established for origin 'undefined' and path '/inspector/debug?device=40c460f012a920414d69645edc3eef77198f8840&page=1'. Was expecting origin: 'http://127.0.0.1:8098', or origin hostname to be one of: localhost, 127.0.0.1, 0.0.0.0, [::]
+ ERROR  Connection from DevTools failed to be established for origin 'undefined' and path '/inspector/debug?device=40c460f012a920414d69645edc3eef77198f8840&page=1'. Was expecting origin: 'http://127.0.0.1:8098', or origin hostname to be one of: localhost, 127.0.0.1, 0.0.0.0, [::]
+Android Bundled 273ms node_modules\expo-router\entry.js (1 module)
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]
+Android Bundled 194ms node_modules\expo-router\entry.js (1 module)
+ WARN  Failed to get Expo push token: [Error: Unable to get Firebase Messaging instance. Did you configure `googleServicesFile` path in app config? Make sure to complete the guide at https://docs.expo.dev/push-notifications/fcm-credentials/ : Default FirebaseApp is not initialized in this process com.barangayan.resident.dev. Make sure to call FirebaseApp.initializeApp(Context) first.]

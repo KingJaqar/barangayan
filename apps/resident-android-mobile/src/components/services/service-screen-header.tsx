@@ -12,28 +12,30 @@ export function ServiceScreenHeader({
   backLabel = 'Go back',
   onBack,
   compact = false,
+  presentation = 'default',
 }: {
   title: string;
   backLabel?: string;
   onBack?: () => void;
   compact?: boolean;
+  presentation?: 'default' | 'resident';
 }) {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.header, { backgroundColor: theme.primary, paddingTop: insets.top + Spacing.two }]}>
+    <View style={[styles.header, { backgroundColor: presentation === 'resident' ? theme.resident.accent : theme.primary, paddingTop: insets.top + Spacing.two }]}>
       <Pressable
         onPress={onBack ?? (() => router.back())}
         style={styles.backBtn}
         accessibilityRole="button"
         accessibilityLabel={backLabel}
         hitSlop={Spacing.two}>
-        <Ionicons name="chevron-back" size={26} color={theme.onPrimary} />
+        <Ionicons name="chevron-back" size={26} color={presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary} />
       </Pressable>
       <View style={[styles.headerContent, compact && styles.compactContent]}>
-        <ThemedText style={[compact ? styles.compactTitle : styles.headerTitle, { color: theme.onPrimary }]}>
+        <ThemedText type={presentation === 'resident' ? 'residentHeader' : 'default'} style={[compact ? styles.compactTitle : styles.headerTitle, { color: presentation === 'resident' ? theme.resident.onAccent : theme.onPrimary }]}>
           {title}
         </ThemedText>
       </View>

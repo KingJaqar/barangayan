@@ -1,0 +1,42 @@
+[
+  {
+    "name": "expo",
+    "version": "57.0.10",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\expo\\package.json"
+  },
+  {
+    "name": "expo-router",
+    "version": "57.0.10",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\expo-router\\package.json"
+  },
+  {
+    "name": "react",
+    "version": "19.2.3",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\react\\package.json"
+  },
+  {
+    "name": "react-native",
+    "version": "0.86.2",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\react-native\\package.json"
+  },
+  {
+    "name": "react-native-reanimated",
+    "version": "4.5.1",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\react-native-reanimated\\package.json"
+  },
+  {
+    "name": "react-native-worklets",
+    "version": "0.10.1",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\react-native-worklets\\package.json"
+  },
+  {
+    "name": "typescript",
+    "version": "6.0.3",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\typescript\\package.json"
+  },
+  {
+    "name": "vitest",
+    "version": "3.2.7",
+    "manifest": "C:\\Users\\User\\barangayan\\node_modules\\vitest\\package.json"
+  }
+]

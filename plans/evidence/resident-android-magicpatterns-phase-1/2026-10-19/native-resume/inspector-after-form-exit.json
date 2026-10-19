@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-18T23:12:24.879Z",
+  "target": "com.barangayan.resident.dev (Samsung SM-S918U)",
+  "evaluations": [
+    {
+      "context": {
+        "name": "main",
+        "origin": "",
+        "id": 2
+      },
+      "result": {
+        "result": {
+          "type": "string",
+          "value": "{\"globals\":[\"HermesInternal\",\"__r\",\"__rctDeviceEventEmitter\"],\"reduceMotionListeners\":0,\"modules\":[{\"name\":\"src/lib/supabase.ts\",\"exports\":[\"supabase\",\"passwordRecovery\"],\"realtimeChannels\":9}]}"
+        }
+      }
+    }
+  ]
+}

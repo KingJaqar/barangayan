@@ -1,0 +1,5 @@
+ADB serial: 127.0.0.1:16384
+Started UTC: 2026-10-18T15:05:23.6091694Z
+Remote: /sdcard/phase0-magicpatterns-manual-20261018-01.mp4
+Options: --time-limit 150 --bit-rate 3000000 --verbose
+Manual owner navigation only; current device settings unchanged.

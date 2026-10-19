@@ -1,0 +1,179 @@
+{
+  "recordedAt": "2026-10-19T06:38:31.4052365+08:00",
+  "passed": 42,
+  "failed": 1,
+  "results": [
+    {
+      "check": "production purpose cycle 1 open",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 1 closed with no selection",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 1 open",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 1 closed",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 2 open",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 2 closed with no selection",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 2 open",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 2 closed",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 3 open",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 3 closed with no selection",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 3 open",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 3 closed",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 4 open",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 4 closed with no selection",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 4 open",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 4 closed",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 5 open",
+      "passed": true
+    },
+    {
+      "check": "production purpose cycle 5 closed with no selection",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 5 open",
+      "passed": true
+    },
+    {
+      "check": "local dialog cycle 5 closed",
+      "passed": true
+    },
+    {
+      "check": "Fixture 2: light #2563EB georgia",
+      "passed": true
+    },
+    {
+      "check": "Fixture 6: dark #2563EB segoe-ui",
+      "passed": true
+    },
+    {
+      "check": "Fixture 3: light #FFFFFF tahoma",
+      "passed": true
+    },
+    {
+      "check": "Fixture 5: dark #000000 tahoma",
+      "passed": true
+    },
+    {
+      "check": "Fixture 1: light #0F6E5B system",
+      "passed": true
+    },
+    {
+      "check": "Fixture 4: dark #0F6E5B georgia",
+      "passed": true
+    },
+    {
+      "check": "busy button exposes busy label and is disabled",
+      "passed": true
+    },
+    {
+      "check": "disabled button is disabled",
+      "passed": true
+    },
+    {
+      "check": "native reduced motion starts false",
+      "passed": true
+    },
+    {
+      "check": "native reduced motion event becomes true",
+      "passed": true
+    },
+    {
+      "check": "normal dialog opens",
+      "passed": true
+    },
+    {
+      "check": "normal dialog dismisses",
+      "passed": true
+    },
+    {
+      "check": "normal sheet opens",
+      "passed": true
+    },
+    {
+      "check": "normal sheet dismisses",
+      "passed": true
+    },
+    {
+      "check": "reduced dialog opens",
+      "passed": true
+    },
+    {
+      "check": "reduced dialog dismisses",
+      "passed": true
+    },
+    {
+      "check": "reduced sheet opens",
+      "passed": true
+    },
+    {
+      "check": "reduced sheet dismisses",
+      "passed": true
+    },
+    {
+      "check": "background cycle 1 returns to unsaved form",
+      "passed": true
+    },
+    {
+      "check": "background cycle 2 returns to unsaved form",
+      "passed": true
+    },
+    {
+      "check": "original transition scale restored",
+      "passed": true
+    },
+    {
+      "check": "original font scale restored",
+      "passed": false
+    },
+    {
+      "check": "temporary reverse mappings removed",
+      "passed": true
+    }
+  ]
+}

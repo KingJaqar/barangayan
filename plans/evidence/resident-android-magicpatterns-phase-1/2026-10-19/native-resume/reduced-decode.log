@@ -1,0 +1,34 @@
+[in#0 @ 000001549e992680] All samples in data stream index:id [1:2] have zero duration, stream set to be discarded by default. Override using AVStream->discard or -discard for ffmpeg command.
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:/Users/User/barangayan/tmp/resident-android-magicpatterns-phase-1-20261019/native-resume/reduced-motion.mp4':
+  Metadata:
+    major_brand     : mp42
+    minor_version   : 0
+    compatible_brands: isommp42
+    creation_time   : 2026-10-18T22:34:49.000000Z
+    com.android.version: 12
+  Duration: 00:00:20.12, start: 0.000000, bitrate: 1182 kb/s
+  Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1080x1920, 1178 kb/s, 14.27 fps, 15 tbr, 90k tbn (default)
+    Metadata:
+      creation_time   : 2026-10-18T22:34:49.000000Z
+      handler_name    : VideoHandle
+  Stream #0:1[0x2](eng): Data: none (mett / 0x7474656D) (default)
+    Metadata:
+      creation_time   : 2026-10-18T22:34:49.000000Z
+      handler_name    : MetadHandle
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : mp42
+    minor_version   : 0
+    compatible_brands: isommp42
+    com.android.version: 12
+    encoder         : Lavf62.12.102
+  Stream #0:0(eng): Video: wrapped_avframe, yuv420p(tv, bt709, progressive), 1080x1920, q=2-31, 200 kb/s, 15 fps, 90k tbn (default)
+    Metadata:
+      encoder         : Lavc62.28.101 wrapped_avframe
+      creation_time   : 2026-10-18T22:34:49.000000Z
+      handler_name    : VideoHandle
+[out#0/null @ 000001549e9af480] video:119KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=  287 fps=0.0 q=-0.0 Lsize=N/A time=00:00:20.11 bitrate=N/A speed= 116x elapsed=0:00:00.17    

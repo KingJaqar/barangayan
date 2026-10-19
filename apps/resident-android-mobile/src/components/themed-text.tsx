@@ -6,7 +6,7 @@ import { useFontPreference } from '@/hooks/use-font-preference';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedTextProps = TextProps & {
-  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code' | 'heading' | 'body';
+  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code' | 'heading' | 'body' | 'residentHeader';
   themeColor?: ThemeColor;
 };
 
@@ -33,6 +33,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
         type === 'heading' && styles.heading,
         type === 'body' && styles.body,
         style,
+        type === 'residentHeader' && styles.residentHeader,
       ]}
       {...rest}
     />
@@ -40,6 +41,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
 }
 
 const styles = StyleSheet.create({
+  residentHeader: { fontFamily: Fonts.gideonRoman, fontWeight: '400' },
   small: {
     fontSize: 14,
     lineHeight: 20,

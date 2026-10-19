@@ -1,0 +1,33 @@
+{
+  "observedAt": "2026-10-18T15:06:43.292Z",
+  "status": 200,
+  "manifestKeys": [
+    "id",
+    "createdAt",
+    "runtimeVersion",
+    "launchAsset",
+    "assets",
+    "metadata",
+    "extra"
+  ],
+  "extraKeys": [
+    "eas",
+    "expoClient",
+    "expoGo",
+    "scopeKey"
+  ],
+  "expoGoKeys": [
+    "debuggerHost",
+    "developer",
+    "packagerOpts",
+    "mainModuleName",
+    "username"
+  ],
+  "runtimeVersion": "exposdk:57.0.0",
+  "launchAssetUrl": "http://127.0.0.1:8081/node_modules/expo-router/entry.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&transform.reactCompiler=true&unstable_transformProfile=hermes-stable",
+  "developer": {
+    "tool": "expo-cli",
+    "projectRoot": "C:\\Users\\User\\barangayan\\apps\\resident-android-mobile"
+  },
+  "hostUri": "127.0.0.1:8081"
+}

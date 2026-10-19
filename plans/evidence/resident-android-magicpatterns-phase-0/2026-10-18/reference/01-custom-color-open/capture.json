@@ -1,0 +1,131 @@
+{
+  "name": "01-custom-color-open",
+  "date": "2026-10-18T14:50:26.585Z",
+  "version": "v32",
+  "artifact": "df178e1c-7b6e-4d98-8334-06f3a00f28c3",
+  "kind": "sampled viewport screenshots; not continuous video",
+  "frames": [
+    {
+      "filename": "frame-000.jpg",
+      "started": "2026-10-18T14:50:26.589Z",
+      "ended": "2026-10-18T14:50:26.660Z"
+    },
+    {
+      "filename": "frame-001.jpg",
+      "started": "2026-10-18T14:50:26.661Z",
+      "ended": "2026-10-18T14:50:26.723Z"
+    },
+    {
+      "filename": "frame-002.jpg",
+      "started": "2026-10-18T14:50:26.725Z",
+      "ended": "2026-10-18T14:50:26.784Z"
+    },
+    {
+      "filename": "frame-003.jpg",
+      "started": "2026-10-18T14:50:26.787Z",
+      "ended": "2026-10-18T14:50:26.857Z"
+    },
+    {
+      "filename": "frame-004.jpg",
+      "started": "2026-10-18T14:50:26.859Z",
+      "ended": "2026-10-18T14:50:27.039Z"
+    },
+    {
+      "filename": "frame-005.jpg",
+      "started": "2026-10-18T14:50:27.042Z",
+      "ended": "2026-10-18T14:50:27.145Z"
+    },
+    {
+      "filename": "frame-006.jpg",
+      "started": "2026-10-18T14:50:27.147Z",
+      "ended": "2026-10-18T14:50:27.227Z"
+    },
+    {
+      "filename": "frame-007.jpg",
+      "started": "2026-10-18T14:50:27.229Z",
+      "ended": "2026-10-18T14:50:27.303Z"
+    },
+    {
+      "filename": "frame-008.jpg",
+      "started": "2026-10-18T14:50:27.305Z",
+      "ended": "2026-10-18T14:50:27.370Z"
+    },
+    {
+      "filename": "frame-009.jpg",
+      "started": "2026-10-18T14:50:27.372Z",
+      "ended": "2026-10-18T14:50:27.428Z"
+    },
+    {
+      "filename": "frame-010.jpg",
+      "started": "2026-10-18T14:50:27.430Z",
+      "ended": "2026-10-18T14:50:27.486Z"
+    },
+    {
+      "filename": "frame-011.jpg",
+      "started": "2026-10-18T14:50:27.489Z",
+      "ended": "2026-10-18T14:50:27.551Z"
+    },
+    {
+      "filename": "frame-012.jpg",
+      "started": "2026-10-18T14:50:27.553Z",
+      "ended": "2026-10-18T14:50:27.617Z"
+    },
+    {
+      "filename": "frame-013.jpg",
+      "started": "2026-10-18T14:50:27.619Z",
+      "ended": "2026-10-18T14:50:27.685Z"
+    },
+    {
+      "filename": "frame-014.jpg",
+      "started": "2026-10-18T14:50:27.687Z",
+      "ended": "2026-10-18T14:50:27.751Z"
+    },
+    {
+      "filename": "frame-015.jpg",
+      "started": "2026-10-18T14:50:27.753Z",
+      "ended": "2026-10-18T14:50:27.815Z"
+    },
+    {
+      "filename": "frame-016.jpg",
+      "started": "2026-10-18T14:50:27.817Z",
+      "ended": "2026-10-18T14:50:27.870Z"
+    },
+    {
+      "filename": "frame-017.jpg",
+      "started": "2026-10-18T14:50:27.871Z",
+      "ended": "2026-10-18T14:50:27.938Z"
+    },
+    {
+      "filename": "frame-018.jpg",
+      "started": "2026-10-18T14:50:27.942Z",
+      "ended": "2026-10-18T14:50:28.004Z"
+    },
+    {
+      "filename": "frame-019.jpg",
+      "started": "2026-10-18T14:50:28.005Z",
+      "ended": "2026-10-18T14:50:28.061Z"
+    },
+    {
+      "filename": "frame-020.jpg",
+      "started": "2026-10-18T14:50:28.062Z",
+      "ended": "2026-10-18T14:50:28.130Z"
+    },
+    {
+      "filename": "frame-021.jpg",
+      "started": "2026-10-18T14:50:28.132Z",
+      "ended": "2026-10-18T14:50:28.193Z"
+    },
+    {
+      "filename": "frame-022.jpg",
+      "started": "2026-10-18T14:50:28.195Z",
+      "ended": "2026-10-18T14:50:28.262Z"
+    },
+    {
+      "filename": "frame-023.jpg",
+      "started": "2026-10-18T14:50:28.264Z",
+      "ended": "2026-10-18T14:50:28.333Z"
+    }
+  ],
+  "actionStarted": "2026-10-18T14:50:26.787Z",
+  "actionResolved": "2026-10-18T14:50:27.067Z"
+}

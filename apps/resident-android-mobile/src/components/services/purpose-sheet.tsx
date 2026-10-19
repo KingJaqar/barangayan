@@ -15,6 +15,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
+import { ResidentLayout } from '@/constants/resident-theme';
 
 type Option = { code: string; label: string };
 
@@ -31,6 +33,7 @@ export function PurposeSheet({
   selected,
   onSelect,
   onClose,
+  presentation = 'default',
 }: {
   visible: boolean;
   title: string;
@@ -38,17 +41,32 @@ export function PurposeSheet({
   selected?: string;
   onSelect: (code: string) => void;
   onClose: () => void;
+  presentation?: 'default' | 'resident';
 }) {
   const theme = useTheme();
+  const resident = presentation === 'resident';
+  const reducedMotion = useResidentReducedMotion(resident);
   const insets = useSafeAreaInsets();
   const [mounted, setMounted] = useState(visible);
   const progress = useRef(new Animated.Value(0)).current; // 0 = hidden, 1 = shown
   const dragY = useRef(new Animated.Value(0)).current;
+  const scrim = useRef(new Animated.Value(0)).current;
   const height = Dimensions.get('window').height;
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
   useEffect(() => {
+    if (resident) {
+      progress.stopAnimation();
+      scrim.stopAnimation();
+      if (visible) { dragY.setValue(0); setMounted(true); }
+      const animation = Animated.parallel([
+        Animated.timing(progress, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 280, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: visible ? 1 : 0, duration: reducedMotion ? 100 : 200, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: true }),
+      ]);
+      animation.start(({ finished }) => { if (finished && !visible) setMounted(false); });
+      return () => { animation.stop(); dragY.stopAnimation(); };
+    }
     if (visible) {
       dragY.setValue(0);
       setMounted(true);
@@ -68,7 +86,7 @@ export function PurposeSheet({
         if (finished) setMounted(false);
       });
     }
-  }, [visible, progress, dragY]);
+  }, [visible, progress, dragY, scrim, resident, reducedMotion]);
 
   const pan = useMemo(
     () =>
@@ -80,14 +98,16 @@ export function PurposeSheet({
           if (g.dy > 90 || g.vy > 0.8) {
             onCloseRef.current();
           } else {
-            Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+            if (resident && reducedMotion) dragY.setValue(0);
+            else Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
           }
         },
         onPanResponderTerminate: () => {
-          Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+          if (resident && reducedMotion) dragY.setValue(0);
+          else Animated.spring(dragY, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
         },
       }),
-    [dragY],
+    [dragY, resident, reducedMotion],
   );
 
   const translateY = Animated.add(
@@ -103,7 +123,7 @@ export function PurposeSheet({
       statusBarTranslucent
       onRequestClose={onClose}>
       <View style={styles.root}>
-        <Animated.View style={[styles.backdrop, { opacity: progress }]}>
+        <Animated.View style={[styles.backdrop, { opacity: resident ? scrim : progress }, resident && { backgroundColor: theme.resident.scrim }]}>
           <Pressable
             style={StyleSheet.absoluteFill}
             accessibilityRole="button"
@@ -113,12 +133,15 @@ export function PurposeSheet({
         </Animated.View>
 
         <Animated.View
+          accessibilityViewIsModal={resident || undefined}
           style={[
             styles.sheet,
+            resident && { maxHeight: '92%', borderTopLeftRadius: ResidentLayout.overlayRadius, borderTopRightRadius: ResidentLayout.overlayRadius, paddingHorizontal: ResidentLayout.screenPadding },
             {
-              backgroundColor: theme.background,
+              backgroundColor: resident ? theme.resident.card : theme.background,
               paddingBottom: Math.max(insets.bottom, 16) + 8,
-              transform: [{ translateY }],
+              opacity: resident && reducedMotion ? progress : 1,
+              transform: [{ translateY: resident && reducedMotion ? 0 : translateY }],
             },
           ]}>
           <View {...pan.panHandlers} style={styles.dragZone}>
@@ -159,15 +182,15 @@ export function PurposeSheet({
                     styles.row,
                     index > 0 && {
                       borderTopWidth: StyleSheet.hairlineWidth,
-                      borderTopColor: theme.backgroundSelected,
+                      borderTopColor: resident ? theme.resident.border : theme.backgroundSelected,
                     },
-                    pressed && { backgroundColor: theme.backgroundElement },
+                    pressed && { backgroundColor: resident ? theme.resident.pressed : theme.backgroundElement },
                   ]}>
                   <ThemedText style={[styles.rowLabel, active && { fontWeight: '700' }]}>
                     {item.label}
                   </ThemedText>
                   {active ? (
-                    <Ionicons name="checkmark-circle" size={22} color={theme.primary} />
+                    <Ionicons name="checkmark-circle" size={22} color={resident ? theme.resident.accentText : theme.primary} />
                   ) : (
                     <View style={[styles.radio, { borderColor: theme.backgroundSelected }]} />
                   )}

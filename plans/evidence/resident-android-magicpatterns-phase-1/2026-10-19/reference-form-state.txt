@@ -1,0 +1,39 @@
+- generic: 12:17
+- banner:
+  - button "Back":
+  - generic: Request Document
+- main:
+  - heading "Certificate of Indigency" [level=1]
+  - text: ₱100.00
+  - paragraph: Fields marked * are required.
+  - region "Resident Details":
+    - heading "Resident Details" [level=2]
+    - button "Edit in Profile"
+    - paragraph: James Floyd White Jr · 09123456789
+  - region "Approved profile ID":
+    - heading "Approved profile ID" [level=2]
+    - paragraph: Your approved profile ID will be reused for this request.
+    - img "Approved profile ID"
+    - paragraph: James Floyd White Jr · 09123456789
+    - paragraph: Digital PhilSys · version 2
+    - button "Refresh verification":
+      - text: Refresh verification
+    - paragraph
+  - paragraph: Purpose of request *
+  - button "Purpose of request *":
+    - generic: Choose a purpose
+  - paragraph: HOA certification may support or establish residency. The document fee is ₱100.00.
+  - paragraph: HOA certification
+  - paragraph: Optional · JPG, PNG, WEBP or PDF · up to 5 MB
+  - button "Choose HOA certification"
+  - button "Choose HOA certification"
+  - switch "I am a renter":
+    - generic: I am a renter
+  - switch "I understand personal appearance at the Barangay Hall is required":
+    - text: I understand personal appearance at the Barangay Hall is required
+    - generic: "*"
+  - text: Additional notes (optional)
+  - textbox "Additional notes (optional)"
+- paragraph: Fee
+- paragraph: ₱100.00
+- button "Submit request" [disabled]

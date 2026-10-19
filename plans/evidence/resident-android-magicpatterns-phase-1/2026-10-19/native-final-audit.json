@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-10-18T23:53:57.992Z",
+  "phaseStatus": "Partially complete: owner-deferred manual acceptance",
+  "contextInputsFresh": 76,
+  "changedAfterPriorNative": [
+    "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+    "apps/resident-android-mobile/src/components/primary-button.tsx",
+    "apps/resident-android-mobile/src/constants/resident-theme.ts",
+    "apps/resident-android-mobile/src/lib/resident-theme.test.ts"
+  ],
+  "ownershipAuditPassed": true,
+  "legacyButtonBodyUnchanged": true,
+  "checks": [
+    {
+      "name": "types",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "unit",
+      "exit": 0
+    },
+    {
+      "name": "export",
+      "exit": 0
+    }
+  ],
+  "nativeFinalAssertions": 11,
+  "localLinks": 226,
+  "missing": [],
+  "packets": [
+    {
+      "packet": "phase-01-consumers.current.xml",
+      "sha256": "38BA32690759E6F3365CAE8EFEEB661907A9CD069EE334DDB0E9B351F52174B0",
+      "bytes": 31461,
+      "lines": 627,
+      "files": 27,
+      "tokens": "8,498"
+    },
+    {
+      "packet": "phase-01-tokens.current.xml",
+      "sha256": "EAEAED795649BBEABD8C1FA2A510B2A08696F989F17AAF18278FEB55BBA6722D",
+      "bytes": 51212,
+      "lines": 958,
+      "files": 44,
+      "tokens": "13,308"
+    },
+    {
+      "packet": "shared-guidance.current.xml",
+      "sha256": "4D81BF842B39EB0AF4B43B599BCF9DBEEC46363DAC0A50432096DA304653A553",
+      "bytes": 245676,
+      "lines": 1073,
+      "files": 5,
+      "tokens": "50,410"
+    }
+  ],
+  "finalPatchSha256": "E0132A5DCF71C60B7F8E1058D3512B3345FD53ABC82C494DF91FE199D3762D07"
+}

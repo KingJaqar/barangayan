@@ -1,0 +1,67 @@
+{
+  "recordedAt": "2026-10-18T22:49:39.327Z",
+  "target": "com.barangayan.resident.dev (Samsung SM-S918U)",
+  "evaluation": {
+    "exceptionDetails": {
+      "columnNumber": 0,
+      "exception": {
+        "className": "Error",
+        "description": "ReferenceError: Property 'global' doesn't exist\n    at global (:1:39)",
+        "objectId": "5",
+        "preview": {
+          "description": "Object",
+          "overflow": false,
+          "properties": [
+            {
+              "name": "message",
+              "type": "string",
+              "value": "Property 'global' doesn't exist"
+            },
+            {
+              "name": "stack",
+              "type": "string",
+              "value": "ReferenceError: Property 'global' doesn't exist\n    at global (:1:39)"
+            }
+          ],
+          "type": "object"
+        },
+        "subtype": "error",
+        "type": "object"
+      },
+      "exceptionId": 0,
+      "lineNumber": 0,
+      "text": "Property 'global' doesn't exist\nReferenceError: Property 'global' doesn't exist\n    at global (:1:39)"
+    },
+    "result": {
+      "className": "Error",
+      "description": "ReferenceError: Property 'global' doesn't exist\n    at global (:1:39)",
+      "objectId": "6",
+      "preview": {
+        "description": "Object",
+        "overflow": false,
+        "properties": [
+          {
+            "name": "message",
+            "type": "string",
+            "value": "Property 'global' doesn't exist"
+          },
+          {
+            "name": "stack",
+            "type": "string",
+            "value": "ReferenceError: Property 'global' doesn't exist\n    at global (:1:39)"
+          }
+        ],
+        "type": "object"
+      },
+      "subtype": "error",
+      "type": "object"
+    }
+  },
+  "profiler": {
+    "supported": false,
+    "error": "{\"code\":-32601,\"message\":\"Unsupported method 'Profiler.enable'\"}"
+  },
+  "network": {
+    "supported": true
+  }
+}

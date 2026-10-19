@@ -1,0 +1,171 @@
+{
+  "head": "80c2cb9b4695744e0e15ff98a31864507cb95dfc",
+  "recordedAt": "19/10/2026, 07:49:47",
+  "tracked": [
+    {
+      "file": "apps/resident-android-mobile/src/components/card.tsx",
+      "beforeSha256": "fcc5c239b2142630ea20d243d37c18323d36ff62fbde66f338dcf790450cd4c3",
+      "matchesPhaseZero": true,
+      "afterSha256": "372cd1da7fcbc49dab9cfdbba12836cbda75a7fced4e19948717a83719f53903"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/delete-account-modal.tsx",
+      "beforeSha256": "a3ef2e01f1e025700d7e30566eca2fee5929552f47bfc77fae2de574cf3642d6",
+      "matchesPhaseZero": true,
+      "afterSha256": "b7bcf711b2a496d59f96fb9233fd3305765ee2f8a013480ba4e28aed30a47f9a"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/divider.tsx",
+      "beforeSha256": "0eca79d0f4fbfb1fbcd9bf368e6e3e4ded9679f1fa11d85c797b8533a70aa065",
+      "matchesPhaseZero": true,
+      "afterSha256": "d65f57c7b9237f6d125e7337cc84ca4bb1f94d4778863dba112f51e33022973a"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/primary-button.tsx",
+      "beforeSha256": "06bd7743dfdc53632f6d051294dfc9c0b32892659a836199a2346b61a1dcd7cd",
+      "matchesPhaseZero": true,
+      "afterSha256": "5aa2217eef05895cd56e2390a53d689b94e7698ac82bb8df241335649a134a1e"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/progress-bar.tsx",
+      "beforeSha256": "cb35d76e013b3ee10a5acd3671c146992fd78ad3fcfd4731fb3aa62212afb6c9",
+      "matchesPhaseZero": true,
+      "afterSha256": "23784c54093b19fcb8446cde23aa5c6d89cd3192e1f6f8fc136f965e3d5025fe"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/resident-header.tsx",
+      "beforeSha256": "8bb211ffb1fedf73eb82370b45a5033c755f41176ba481f15a847fc9799b35fe",
+      "matchesPhaseZero": true,
+      "afterSha256": "fdd546c2a0f26182308e008890d1a03b989989cee2dd271ff97e11c46246e5b1"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/segmented-control.tsx",
+      "beforeSha256": "8eca2ce565ddfd10f26558d8243e5000fbef68c5d0c7ee5d2bc6e8d30124139e",
+      "matchesPhaseZero": true,
+      "afterSha256": "2ef9c7b946a925f9cccd63fbb280bab2ee84db55cfb83e54760247b4e62d7ee8"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/charter-request-form.tsx",
+      "beforeSha256": "e721f3292ae346150e81cd1e31be725de98a8f0b31bdbf6b4a0d74b71ae837bf",
+      "matchesPhaseZero": true,
+      "afterSha256": "b00939754d0ad211079822eac786e87e3acb809a5a38b77435b27e30d104203f"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/purpose-sheet.tsx",
+      "beforeSha256": "c5da7f291441d9ee831834126a19bde80155774d5ffd26d1a807b7bb9e1fbe7f",
+      "matchesPhaseZero": true,
+      "afterSha256": "1bb3bb6c34a743122ee279331071af4e96f149111202537382c7030089e04775"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/services/service-screen-header.tsx",
+      "beforeSha256": "9ad43e8f2758fbbb4670c338f83f87fc28291141c91a222397d439a2c66e7d8b",
+      "matchesPhaseZero": true,
+      "afterSha256": "e3aac874561d91f0c61a5469cd56499d5d6e8fdcc6016aadd3004b3ea13d949a"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/status-badge.tsx",
+      "beforeSha256": "d5de2fdecd66261879dc99aaab408de269c8757b938eba306696cfe9f611a607",
+      "matchesPhaseZero": true,
+      "afterSha256": "675d132f837de397e9d3199abc354c73e2902a1761ab37bc32be95e2ec2c1fcd"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/text-field.tsx",
+      "beforeSha256": "f22076dde1eb84ed7f127ee6b51a6548c4d3d0f17c19c1bdb54fa3cbfd3f0b5a",
+      "matchesPhaseZero": true,
+      "afterSha256": "50f34d04807569175db41d52b5b0e0084c6de019faf014ed758b82fbbc861d84"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/components/themed-text.tsx",
+      "beforeSha256": "67a685942ea851f954621b9708d5d8428e5748b24d04f5016e60a191d149364d",
+      "matchesPhaseZero": true,
+      "afterSha256": "e0b6aa65059477fc8f4040bdb791ebe0a69265d66232a200f39980a4b9b14666"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-theme.ts",
+      "beforeSha256": "a70d2948f8ef1cf9e21370a47964bd7bc45f0aa9b597051009c4294b95ab9250",
+      "matchesPhaseZero": true,
+      "afterSha256": "b99950984eeff815a3cbf8f63e371f5de37d0e607ae9cf7898012577498131cb"
+    }
+  ],
+  "added": [
+    {
+      "file": "apps/resident-android-mobile/src/constants/resident-theme.ts",
+      "sha256": "9a2bed4e712942d266e61d8bdbe4d9d9a621e36f375836d24d686e05ad2b35ab"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/hooks/use-resident-reduced-motion.ts",
+      "sha256": "ab2f6f926944f0bf2eb8760aa1cca348645d7aa31e2f3eb52d1d1c0a5803f7fc"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/resident-theme.test.ts",
+      "sha256": "241429113265addbeeacd4eb6741a44ef63ea682ac65c3f69dd741d23b53849c"
+    },
+    {
+      "file": "apps/resident-android-mobile/src/lib/resident-reduced-motion.test.ts",
+      "sha256": "cc717967f8e35e253418f4b7887d6a69dc4878a89cbb56584bcf43e385f4213c"
+    }
+  ],
+  "planInsertionOnly": true,
+  "legacyButtonBodyUnchanged": true,
+  "packages": [
+    {
+      "name": "expo",
+      "version": "57.0.10"
+    },
+    {
+      "name": "expo-router",
+      "version": "57.0.10"
+    },
+    {
+      "name": "expo-font",
+      "version": "57.0.1"
+    },
+    {
+      "name": "react",
+      "version": "19.2.3"
+    },
+    {
+      "name": "react-native",
+      "version": "0.86.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "4.5.1"
+    },
+    {
+      "name": "typescript",
+      "version": "6.0.3"
+    },
+    {
+      "name": "vitest",
+      "version": "3.2.7"
+    }
+  ],
+  "bundleExports": [
+    {
+      "folder": "baseline-export",
+      "file": "entry-a66a6d52928b55a541408b4428b92d81.hbc",
+      "bytes": 8144848
+    },
+    {
+      "folder": "final-export-padding-reviewed",
+      "file": "entry-d9671295a6388ed34e1622e63a0d3c64.hbc",
+      "bytes": 8162924
+    }
+  ],
+  "bundleGrowthBytes": 18076,
+  "protectedInputs": [
+    {
+      "path": "C:\\Users\\User\\barangayan\\package-lock.json",
+      "preserved": true
+    },
+    {
+      "path": "C:\\Users\\User\\barangayan\\plans\\Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md",
+      "preserved": true
+    },
+    {
+      "path": "C:\\Users\\User\\barangayan\\plans\\Resident_Android_MagicPatterns_Prototype_Inspection_Record.md",
+      "preserved": true
+    }
+  ]
+}

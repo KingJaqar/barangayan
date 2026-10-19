@@ -1,0 +1,27 @@
+
+ RUN  v3.2.7 C:/Users/User/barangayan/apps/resident-android-mobile
+
+ ✓ src/lib/birthday-wheel.test.ts (6 tests) 8ms
+ ✓ src/lib/setup-request.test.ts (6 tests) 23ms
+ ✓ src/lib/resident-search.test.ts (7 tests) 21ms
+ ✓ src/lib/login-error.test.ts (12 tests) 9ms
+ ✓ src/lib/search-history.test.ts (5 tests) 14ms
+ ✓ src/lib/floating-tab-layout.test.ts (31 tests) 11ms
+ ✓ src/lib/leaflet-assets.test.ts (1 test) 116ms
+ ✓ src/lib/valid-id.test.ts (16 tests) 19ms
+ ✓ src/lib/pkce-crypto.test.ts (2 tests) 24ms
+ ✓ src/lib/auth-cleanup.test.ts (2 tests) 26ms
+ ✓ src/lib/setup-navigation.test.ts (11 tests) 10ms
+ ✓ src/lib/setup-refresh.test.ts (4 tests) 9ms
+ ✓ src/lib/google-auth-flow.test.ts (20 tests) 32ms
+ ✓ src/lib/sensitive-auth.test.ts (9 tests) 15ms
+ ✓ src/lib/google-auth.test.ts (6 tests) 25ms
+ ✓ src/lib/password-recovery.test.ts (16 tests) 53ms
+ ✓ src/lib/offline-routing.test.ts (15 tests) 1806ms
+   ✓ interrupted activation recovers deterministically > a crash after any write leaves either the old or the new pack active, with matching avoidance  1008ms
+
+ Test Files  17 passed (17)
+      Tests  169 passed (169)
+   Start at  00:07:51
+   Duration  6.54s (transform 5.95s, setup 0ms, collect 26.06s, tests 2.22s, environment 5ms, prepare 22.09s)
+

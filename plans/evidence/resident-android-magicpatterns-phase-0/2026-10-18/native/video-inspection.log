@@ -1,0 +1,39 @@
+[in#0 @ 0000022ad6863f00] All samples in data stream index:id [1:2] have zero duration, stream set to be discarded by default. Override using AVStream->discard or -discard for ffmpeg command.
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/native/manual-baseline.mp4':
+  Metadata:
+    major_brand     : mp42
+    minor_version   : 0
+    compatible_brands: isommp42
+    creation_time   : 2026-10-18T15:09:25.000000Z
+    com.android.version: 12
+  Duration: 00:02:06.83, start: 0.000000, bitrate: 1452 kb/s
+  Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1080x1920, 1451 kb/s, 5.87 fps, 90k tbr, 90k tbn (default)
+    Metadata:
+      creation_time   : 2026-10-18T15:09:25.000000Z
+      handler_name    : VideoHandle
+  Stream #0:1[0x2](eng): Data: none (mett / 0x7474656D) (default)
+    Metadata:
+      creation_time   : 2026-10-18T15:09:25.000000Z
+      handler_name    : MetadHandle
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> mjpeg (native))
+Press [q] to stop, [?] for help
+[mjpeg @ 0000022ad68ca6c0] bitrate tolerance 4000000 too small for bitrate 200000, overriding
+Output #0, image2, to 'plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/native/manual-contact-sheet.jpg':
+  Metadata:
+    major_brand     : mp42
+    minor_version   : 0
+    compatible_brands: isommp42
+    com.android.version: 12
+    encoder         : Lavf62.12.102
+  Stream #0:0(eng): Video: mjpeg, yuv420p(pc, bt709, progressive), 1350x1440, q=2-31, 200 kb/s, 0.01 fps, 0.01 tbn (default)
+    Metadata:
+      encoder         : Lavc62.28.101 mjpeg
+      creation_time   : 2026-10-18T15:09:25.000000Z
+      handler_name    : VideoHandle
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[image2 @ 0000022ad8dbcb80] The specified filename 'plans/evidence/resident-android-magicpatterns-phase-0/2026-10-18/native/manual-contact-sheet.jpg' does not contain an image sequence pattern or a pattern is invalid.
+[image2 @ 0000022ad8dbcb80] Use a pattern such as %03d for an image sequence or use the -update option (with -frames:v 1 if needed) to write a single image.
+[out#0/image2 @ 0000022ad6880340] video:107KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=9.8 Lsize=N/A time=00:02:30.00 bitrate=N/A speed= 348x elapsed=0:00:00.43    

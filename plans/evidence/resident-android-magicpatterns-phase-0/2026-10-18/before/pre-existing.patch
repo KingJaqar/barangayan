@@ -1,0 +1,78 @@
+diff --git a/plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md b/plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md
+index 63ea3d7e..ac809513 100644
+--- a/plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md
++++ b/plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md
+@@ -2,6 +2,14 @@
+ 
+ Planning revision: 18 October 2026 (Asia/Manila). **Specification only; no implementation or native validation performed.** This supports the [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) and [inspection record](Resident_Android_MagicPatterns_Prototype_Inspection_Record.md). It does not reopen the cancelled Android usability phase.
+ 
++## Document role and required reading
++
++**The [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) is the main execution document. This specification is required supporting context to read and analyze before each authorized phase.** Read it alongside the main plan and the [prototype inspection record](Resident_Android_MagicPatterns_Prototype_Inspection_Record.md); use the applicable motion IDs, evidence labels, adaptations and acceptance criteria to implement the phase defined by the main plan.
++
++This file does not independently authorize implementation, redefine scope or phase order, or certify untested motion. Track phase execution/completion in the main plan; maintain motion definitions here and inspection findings in the record. Reconcile material inconsistencies using inspected evidence and applicable instructions, and synchronize the affected documents before relying on them.
++
++**[Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f) is the primary UI and motion reference.** This specification translates its verified design into native implementation requirements; it is not a substitute design. Inspect the relevant screens/transitions in Brave for each phase, use matching-version source for declared timing/easing, and compare native results with that reference. Preserve the inspected v32 baseline until any version change is reconciled in the main plan. Resolve stale summaries against verified reference evidence, keep unavailable states explicitly unverified, and retain all existing functionality/settings/accessibility and frontend-only constraints.
++
+ ## Evidence and interpretation
+ 
+ Reference: [Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f), previously verified v32 artifact `df178e1c-7b6e-4d98-8334-06f3a00f28c3`. Source paths below are relative to the retained [artifact source](../tmp/magicpatterns-plan-inspection/source). They describe that snapshot, not a claim that the live editor has remained unchanged indefinitely.
+diff --git a/plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md b/plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md
+index 86c3f1c1..a56e0dda 100644
+--- a/plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md
++++ b/plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md
+@@ -2,6 +2,14 @@
+ 
+ Date: 18 October 2026 (Asia/Manila). Purpose: refine the [presentation implementation plan](<C:/Users/User/barangayan/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md>); no application implementation.
+ 
++## Document role and required reading
++
++**The [implementation plan](Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md) is the main execution document. This inspection record is required supporting context to read and analyze before each authorized phase.** Read it alongside the main plan and the [motion and fidelity specification](Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md) to distinguish verified source/interaction evidence from assumptions, incomplete coverage, prototype issues and pending native/integration checks.
++
++This record supplies evidence and limitations; it is not a separate execution plan or authorization to broaden scope. Keep phase progress/completion in the main plan, motion definitions in the specification, and inspection findings/status here. Reconcile material inconsistencies using inspected evidence and applicable instructions, and synchronize the affected documents before relying on them. A recorded prototype interaction or source declaration is never a substitute for the main plan's implementation acceptance checks.
++
++**[Magic Patterns](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f) is the primary UI reference.** This record and its captures document what was inspected; they do not replace the actual design or independently define new screens/behavior. During each authorized phase, inspect the corresponding reference in Brave, confirm its version against the recorded v32 baseline, and use this record to identify evidence gaps and limitations. Reconcile version changes or conflicting summaries through the main plan; do not silently adopt a new design, invent unavailable states or copy a prototype defect as a requirement.
++
+ Reference: [Magic Patterns design](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f), live viewer labeled **v32**. Its Internal Preview points to `df178e1c-7b6e-4d98-8334-06f3a00f28c3-render.magicpatterns.app`. The URL is Magic Patterns, not a Figma document.
+ 
+ ## Evidence and boundaries
+@@ -138,4 +146,4 @@ No browser/UI defect found in the prototype is automatically an application bug
+ 
+ Phase naming was subsequently standardized to **Phase 0–16** across the implementation plan, motion work packets, dependency references and this record. This renames the existing 17 work packets without adding implementation scope, changing their order or reopening the cancelled usability phase in another plan. The main plan now consolidates mandatory engineering acceptance requirements; those are future implementation gates, not completed test results.
+ 
+-The earlier source revision checked 131 local links. After adding fresh capture evidence, **all 180 local links** across the implementation plan, this record, the motion/fidelity specification and capture index resolved. All 22 derived GIFs decoded; the raw capture count is 624. The motion inventory remains M01–M16. Content hashes still matched the pre-edit baseline for Android `src`, shared `src`, the Android package manifest and repository lockfile. No application edits, dependency changes, cleanup deletions, native runs or project test execution were performed. Document/media checks do not qualify the future implementation.
++The earlier source revision checked 131 local links. The fresh-capture revision checked 180 local links. After making the document hierarchy explicit, **all 186 local links** across the implementation plan, this record, the motion/fidelity specification and capture index resolved. All 22 derived GIFs decoded; the raw capture count is 624. The motion inventory remains M01–M16. Content hashes still matched the pre-edit baseline for Android `src`, shared `src`, the Android package manifest and repository lockfile. No application edits, dependency changes, cleanup deletions, native runs or project test execution were performed. Document/media checks do not qualify the future implementation.
+diff --git a/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md b/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md
+index 70cf017e..8fd1b5e2 100644
+--- a/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md
++++ b/plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md
+@@ -2,6 +2,29 @@
+ 
+ Planning date: 18 October 2026 (Asia/Manila). Status: **planning only; implementation has not started**.
+ 
++## Main execution document and required context
++
++**This file is the main implementation plan and execution guide.** It governs the redesign's scope, Phase 0–16 sequence and dependencies, screen/file mapping, acceptance gates, verification, cleanup, rollback and completion reporting. Use this file to select and track the authorized phase; do not execute from a supporting document alone.
++
++**Primary UI reference: [the Magic Patterns project](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f).** Use its verified screens, components, states, interactions, animations and transitions as the design target throughout execution and visual acceptance. The Markdown documents, design breakdown and saved captures explain and document that reference; they do not replace it or authorize an independently interpreted redesign. Existing Android screens provide the behavior baseline, not the target appearance.
++
++For each authorized phase, inspect the corresponding reference screens/states and motion in Brave, compare them with the current Android implementation, and validate the result against the same reference. Recheck the displayed version/artifact: the inspected baseline is v32. If the project has changed, record the difference and reconcile the intended baseline before adopting it; do not silently expand scope. If reference access or a required state is unavailable, use the linked versioned evidence only within its stated limits and leave the unsupported fidelity claim unverified.
++
++For a visual discrepancy between a written summary and the verified reference, resolve it against the rendered reference and matching-version source, then update the documents together. Keep current functionality, settings, accessibility and frontend-only boundaries binding; document any necessary adaptation rather than copying prototype fixtures, unsupported actions or incidental defects.
++
++The following two documents are **required context to read and analyze**, not optional background:
++
++| Required context | How it informs execution |
++|---|---|
++| [Motion and fidelity specification](Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md) | Apply the relevant M01–M16 animation definitions, source values, native adaptations, phase work packets, reduced-motion rules and visual/performance acceptance criteria. |
++| [Prototype inspection record](Resident_Android_MagicPatterns_Prototype_Inspection_Record.md) | Understand what was actually inspected, the evidence's confidence and limitations, observed prototype issues, unresolved states and remaining native/integration checks. Follow its linked capture evidence where relevant. |
++
++Before each authorized phase, read this main plan and both required context documents, analyze the relevant sections together, then inspect the current application code and reference evidence for that phase. Record which requirements/evidence apply, which adaptations are necessary and which checks remain unverified. Follow applicable user and `AGENTS.md` instructions throughout.
++
++The supporting documents supplement this main plan; they do not independently authorize work, expand scope, change phase order or convert unverified observations into completed checks. Reconcile any material inconsistency against the inspected evidence and current instructions, and synchronize the affected documents before relying on it. Do not silently discard evidence or weaken an acceptance gate. Keep phase progress and acceptance results in this main plan, motion-definition changes in the specification, and inspection findings/status in the record.
++
++This document hierarchy does not begin implementation. When a phase is authorized, execute only that phase and its permitted work, complete its acceptance checks, update the relevant documents and stop before the next phase unless the user authorizes continuation.
++
+ ## Mandatory fidelity requirement
+ 
+ **“Copy the same exact screens and smooth animations from Magic Patterns to resident Android.”** The authoritative reference is [this Magic Patterns design](https://www.magicpatterns.com/c/jhv4ekfl4cidsa3phgrb3f), v32 as rechecked in Brave for the fresh capture session. This is a reproduction task, not discretionary visual redesign or an invitation to approximate the layout with generic components.

@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-10-18T22:51:31.006Z",
+  "target": "com.barangayan.resident.dev (Samsung SM-S918U)",
+  "evaluations": [
+    {
+      "context": {
+        "name": "main",
+        "origin": "",
+        "id": 1
+      },
+      "result": {
+        "result": {
+          "type": "string",
+          "value": "{\"globals\":[\"HermesInternal\",\"__r\",\"__rctDeviceEventEmitter\"],\"reduceMotionListeners\":0,\"modules\":[{\"name\":\"src/lib/supabase.ts\",\"exports\":[\"supabase\",\"passwordRecovery\"]}]}"
+        }
+      }
+    }
+  ],
+  "profiler": {
+    "supported": false,
+    "error": "{\"code\":-32601,\"message\":\"Unsupported method 'Profiler.enable'\"}"
+  },
+  "network": {
+    "supported": true
+  },
+  "tracing": {
+    "supported": true
+  }
+}

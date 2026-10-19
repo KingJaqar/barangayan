@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-10-18T23:24:57.809Z",
+  "contextInputsFresh": 76,
+  "sourceHashesUnchanged": true,
+  "patchUnchanged": true,
+  "localLinks": 200,
+  "missing": [],
+  "guidance": {
+    "packet": "shared-guidance.current.xml",
+    "status": "current",
+    "sha256": "F2708DF8BBD4C8053D0EA6F4C7384520B7D4777E3F4C2528F906E49E9305393C",
+    "lines": 1071,
+    "bytes": 243766,
+    "inputs": [
+      {
+        "path": "CLAUDE.md",
+        "sha256": "336CC4FBF19BEAADA7CCF9986414FA91851A8D7A07DFB3CCBE800A69EED0AB49"
+      },
+      {
+        "path": "plans/Resident_Android_MagicPatterns_Motion_and_Fidelity_Specification.md",
+        "sha256": "8CAAE4ECF284540E173926ADF8DFF6DEBB6C507D6C43C56E02591F9716CBDFEF"
+      },
+      {
+        "path": "plans/Resident_Android_MagicPatterns_Prototype_Inspection_Record.md",
+        "sha256": "37A8853FA25A690FE1261406E104A7CF2CD5AF5F392CB4A8D5CD3CDAA3F3D906"
+      },
+      {
+        "path": "plans/Resident_Android_MagicPatterns_Redesign_Implementation_Plan.md",
+        "sha256": "5ADABAE950FFA273032137D2FA6F5C5A48ABE0867D81C331AE8090A0B8C02D69"
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "CE6542A6B49B5DC27748118CA3B3C1CABA804DAE7133C975B5841DE8EDCBF5EF"
+      }
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-10-18T15:27:57.576Z",
+  "kind": "Evidence assertions for observed UI states; not new production tests",
+  "results": [
+    {
+      "observation": "color-open",
+      "label": "Custom Accent Color",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "color-cancelled",
+      "label": "Custom Accent Color",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "observation": "color-cancelled",
+      "label": "System Default",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "purpose-sheet-open",
+      "label": "Medical assistance",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "purpose-sheet-back",
+      "label": "Medical assistance",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "observation": "purpose-sheet-back",
+      "label": "Choose a purpose",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "guest-home",
+      "label": "Log in to see your requests.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "guest-services",
+      "label": "Available documents",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "guest-services",
+      "label": "Requests",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "observation": "guest-guide-settled",
+      "label": "Log In to Request",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "format-dialog-open",
+      "label": "Choose a format for your export.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "observation": "format-dialog-cancelled",
+      "label": "Choose a format for your export.",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "observation": "signed-in-after-guest",
+      "label": "Valid ID Verified",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

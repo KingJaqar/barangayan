@@ -5,12 +5,16 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withTiming,
+  Easing,
+  cancelAnimation,
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { useResidentReducedMotion } from '@/hooks/use-resident-reduced-motion';
 
 export interface SegmentOption<Key extends string> {
   key: Key;
@@ -24,6 +28,7 @@ export interface SegmentedControlProps<Key extends string> {
   onChange: (key: Key) => void;
   activeColor?: 'primary' | 'accentRed';
   variant?: 'filled' | 'outline';
+  presentation?: 'default' | 'resident';
 }
 
 export function SegmentedControl<Key extends string>({
@@ -32,10 +37,16 @@ export function SegmentedControl<Key extends string>({
   onChange,
   activeColor = 'primary',
   variant = 'filled',
+  presentation = 'default',
 }: SegmentedControlProps<Key>) {
   const theme = useTheme();
+  const resident = presentation === 'resident';
+  const reducedMotion = useResidentReducedMotion(resident);
   const accent = activeColor === 'accentRed' ? Colors.light.accentRed : theme.primary;
-  const pillColor = variant === 'filled' ? accent : theme.background;
+  const residentAccent = resident ? (activeColor === 'accentRed' ? theme.resident.danger : theme.resident.accent) : accent;
+  const residentOnAccent = resident ? (activeColor === 'accentRed' ? theme.resident.onDanger : theme.resident.onAccent) : theme.onPrimary;
+  const residentAccentText = resident ? (activeColor === 'accentRed' ? theme.resident.danger : theme.resident.accentText) : accent;
+  const pillColor = resident ? (variant === 'filled' ? residentAccent : theme.resident.card) : variant === 'filled' ? accent : theme.background;
 
   const translateX = useSharedValue(0);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -46,17 +57,22 @@ export function SegmentedControl<Key extends string>({
   );
 
   const segmentWidth = useMemo(() => {
-    if (containerWidth <= 2 * Spacing.half) return 0;
+    if (containerWidth <= 2 * Spacing.half || segments.length === 0) return 0;
     return (
       (containerWidth - 2 * Spacing.half - (segments.length - 1) * Spacing.half) /
       segments.length
     );
   }, [containerWidth, segments.length]);
 
-  const activeTextStyle = variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
+  const activeTextStyle = resident ? { color: variant === 'filled' ? residentOnAccent : residentAccentText } : variant === 'filled' ? { color: theme.onPrimary } : { color: accent };
 
   useEffect(() => {
-    if (segmentWidth > 0) {
+    if (segmentWidth > 0 && (!resident || activeIndex >= 0)) {
+      const target = activeIndex * (segmentWidth + Spacing.half);
+      if (resident) {
+        translateX.value = reducedMotion ? target : withTiming(target, { duration: 220, easing: Easing.bezier(0.23, 1, 0.32, 1) });
+        return () => cancelAnimation(translateX);
+      }
       // Critically damped — settles on the target segment with zero overshoot/bounce.
       translateX.value = withSpring(activeIndex * (segmentWidth + Spacing.half), {
         damping: 26,
@@ -65,8 +81,7 @@ export function SegmentedControl<Key extends string>({
         overshootClamping: true,
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, segmentWidth]);
+  }, [activeIndex, segmentWidth, resident, reducedMotion, translateX]);
 
   const pillAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -75,9 +90,9 @@ export function SegmentedControl<Key extends string>({
   return (
     <ThemedView
       type="backgroundElement"
-      style={styles.container}
-      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}>
-      {segmentWidth > 0 && (
+      style={[styles.container, resident && { backgroundColor: theme.resident.surface }]}
+      onLayout={(e) => { const next = e.nativeEvent.layout.width; setContainerWidth((current) => current === next ? current : next); }}>
+      {segmentWidth > 0 && (!resident || activeIndex >= 0) && (
         <Animated.View
           style={[
             styles.pill,
@@ -106,17 +121,17 @@ export function SegmentedControl<Key extends string>({
                 <Ionicons
                   name={segment.icon}
                   size={22}
-                  color={isActive ? activeTextStyle.color : theme.textSecondary}
+                  color={isActive ? activeTextStyle.color : resident ? theme.resident.muted : theme.textSecondary}
                   accessible={false}
                 />
               ) : (
                 <ThemedText
                   type={variant === 'outline' && isActive ? 'smallBold' : 'small'}
                   themeColor={isActive ? undefined : 'textSecondary'}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
+                  numberOfLines={resident ? undefined : 1}
+                  adjustsFontSizeToFit={!resident}
                   minimumFontScale={0.65}
-                  style={[styles.label, isActive ? activeTextStyle : undefined]}>
+                  style={[styles.label, resident && { color: theme.resident.muted }, isActive ? activeTextStyle : undefined]}>
                   {segment.label}
                 </ThemedText>
               )}

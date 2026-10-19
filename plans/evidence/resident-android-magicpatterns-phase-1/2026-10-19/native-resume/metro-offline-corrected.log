@@ -1,0 +1,23 @@
+env: load .env
+env: export EXPO_PUBLIC_PAYMONGO_PUBLIC_KEY EXPO_PUBLIC_QRPH_SETTLEMENT_READY EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Networking has been disabled
+Starting project at C:\Users\User\barangayan\apps\resident-android-mobile
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Expo Autolinking module resolution enabled
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:8098
+
+Logs for your project will appear below.
+Error while reading cache, falling back to a full crawl:
+ Error: Unable to deserialize cloned data.
+    at deserialize (node:v8:469:14)
+    at DiskCacheManager.read (C:\Users\User\barangayan\node_modules\@expo\metro-file-map\build\cache\DiskCacheManager.js:55:41)
+    at async FileMap.read (C:\Users\User\barangayan\node_modules\@expo\metro-file-map\build\index.js:371:20)
+    at async C:\Users\User\barangayan\node_modules\@expo\metro-file-map\build\index.js:262:35
+    at async DependencyGraph.ready (C:\Users\User\barangayan\node_modules\metro\src\node-haste\DependencyGraph.js:94:5)
+    at async Bundler.ready (C:\Users\User\barangayan\node_modules\metro\src\Bundler.js:62:5)
+    at async IncrementalBundler.ready (C:\Users\User\barangayan\node_modules\metro\src\IncrementalBundler.js:310:5)
+    at async Server.ready (C:\Users\User\barangayan\node_modules\metro\src\Server.js:1446:5)

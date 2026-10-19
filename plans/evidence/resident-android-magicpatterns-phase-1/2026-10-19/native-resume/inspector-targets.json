@@ -1,0 +1,20 @@
+[
+  {
+    "id": "40c460f012a920414d69645edc3eef77198f8840-1",
+    "title": "com.barangayan.resident.dev (Samsung SM-S918U)",
+    "description": "React Native Bridgeless [C++ connection]",
+    "appId": "com.barangayan.resident.dev",
+    "type": "node",
+    "devtoolsFrontendUrl": "/debugger-frontend/rn_fusebox.html?ws=%2Finspector%2Fdebug%3Fdevice%3D40c460f012a920414d69645edc3eef77198f8840%26page%3D1&sources.hide_add_folder=true&unstable_enableNetworkPanel=true",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:8098/inspector/debug?device=40c460f012a920414d69645edc3eef77198f8840&page=1",
+    "deviceName": "SM-S918U - 12 - API 32",
+    "reactNative": {
+      "logicalDeviceId": "40c460f012a920414d69645edc3eef77198f8840",
+      "capabilities": {
+        "nativePageReloads": true,
+        "nativeSourceCodeFetching": false,
+        "supportsMultipleDebuggers": true
+      }
+    }
+  }
+]
